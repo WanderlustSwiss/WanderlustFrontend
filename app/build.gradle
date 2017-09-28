@@ -1,0 +1,87 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "eu.wise_iot.wanderlust"
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.1'
+
+    // OSM Bonus Pack
+    compile 'com.github.MKergall:osmbonuspack:6.4'
+
+    // GSON for json parsing
+    compile 'com.google.code.gson:gson:2.8.0'
+
+    // PICASSO for images
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    // ANDROID GPX PARSER
+    compile 'io.ticofab.androidgpxparser:parser:1.0.0'
+
+    // Library for image gestures
+    compile 'com.jsibbold:zoomage:1.1.0'
+
+    // Library to turn HTTP API into Java Interface
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0' // maybe not necessary because gson already included?
+
+
+    testCompile 'junit:junit:4.12'
+}
+
+//the following sets the required permissions for API 23+ devices and AVDs
+
+android.applicationVariants.all { variant ->
+    if (variant.getBuildType().name == "debug") {
+        task "configDevice${variant.name.capitalize()}"(type: Exec) {
+            dependsOn variant.install
+
+            group = 'nameofyourtaskgroup'
+            description = 'Describe your task here.'
+
+            def adb = android.getAdbExe().toString()
+            def mypermission = 'android.permission.ACCESS_FINE_LOCATION'
+            commandLine "$adb shell pm grant ${variant.applicationId} $mypermission".split(' ')
+        }
+        variant.testVariant.connectedInstrumentTest.dependsOn "configDevice${variant.name.capitalize()}"
+    }
+}
+
+
+android.applicationVariants.all { variant ->
+    if (variant.getBuildType().name == "debug") {
+        task "configDevice2${variant.name.capitalize()}"(type: Exec) {
+            dependsOn variant.install
+
+            group = 'nameofyourtaskgroup'
+            description = 'Describe your task here.'
+
+            def adb = android.getAdbExe().toString()
+            def mypermission = 'android.permission.WRITE_EXTERNAL_STORAGE '
+            commandLine "$adb shell pm grant ${variant.applicationId} $mypermission".split(' ')
+        }
+        variant.testVariant.connectedInstrumentTest.dependsOn "configDevice2${variant.name.capitalize()}"
+    }
+}

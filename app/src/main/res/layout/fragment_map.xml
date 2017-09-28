@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/myPrimaryBackground"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/myPrimaryDark"
+        tools:context="eu.wise_iot.wanderlust.MapFragment">
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/mapView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:apiKey="b52e68138121400c953136847e9a48cf" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:orientation="horizontal">
+
+            <!--<Button-->
+                <!--android:id="@+id/centerMapOnPOIButton"-->
+                <!--style="@style/my_round_button"-->
+                <!--android:background="@drawable/button_center_map_on_poi" />-->
+
+            <Button
+                android:id="@+id/takePictureButton"
+                style="@style/my_round_button"
+                android:background="@drawable/button_camera" />
+
+            <ToggleButton
+                android:id="@+id/locationButton"
+                style="@style/my_round_button"
+                android:background="@drawable/icon_toggle"
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

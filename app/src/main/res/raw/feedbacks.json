@@ -1,0 +1,612 @@
+[
+  {
+    "id": 1,
+    "timestamp": "2017-07-15_11-35-56",
+    "display_mode": 201,
+    "lat": 47.283781999999995,
+    "lon": 9.485567,
+    "image_name": "img_sfr_20170715_113604.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 2,
+    "timestamp": "2017-07-15_11-39-20",
+    "display_mode": 200,
+    "lat": 47.283761999999996,
+    "lon": 9.485636999999999,
+    "image_name": "img_sfr_20170715_113926.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 3,
+    "timestamp": "2017-07-15_12-07-58",
+    "display_mode": 200,
+    "lat": 47.282045,
+    "lon": 9.481512,
+    "image_name": "img_sfr_20170715_120806.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 4,
+    "timestamp": "2017-07-15_12-14-21",
+    "display_mode": 200,
+    "lat": 47.281273999999996,
+    "lon": 9.480678,
+    "image_name": "img_sfr_20170715_121427.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 5,
+    "timestamp": "2017-07-15_12-18-21",
+    "display_mode": 200,
+    "lat": 47.280483,
+    "lon": 9.479790999999999,
+    "image_name": "img_sfr_20170715_121831.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 6,
+    "timestamp": "2017-07-15_12-21-41",
+    "display_mode": 200,
+    "lat": 47.279593,
+    "lon": 9.478755,
+    "image_name": "img_sfr_20170715_122146.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 7,
+    "timestamp": "2017-07-15_12-26-48",
+    "display_mode": 200,
+    "lat": 47.277741999999996,
+    "lon": 9.477928,
+    "image_name": "img_sfr_20170715_122655.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 8,
+    "timestamp": "2017-07-15_12-32-29",
+    "display_mode": 200,
+    "lat": 47.27718,
+    "lon": 9.477176,
+    "image_name": "img_sfr_20170715_123234.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 9,
+    "timestamp": "2017-07-15_13-21-56",
+    "display_mode": 200,
+    "lat": 47.268606999999996,
+    "lon": 9.467234999999999,
+    "image_name": "img_sfr_20170715_132201.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 10,
+    "timestamp": "2017-07-15_13-37-43",
+    "display_mode": 200,
+    "lat": 47.265332,
+    "lon": 9.462809,
+    "image_name": "img_sfr_20170715_133748.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 11,
+    "timestamp": "2017-07-15_13-44-16",
+    "display_mode": 200,
+    "lat": 47.263376,
+    "lon": 9.459228,
+    "image_name": "img_sfr_20170715_134422.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 12,
+    "timestamp": "2017-07-15_13-48-38",
+    "display_mode": 200,
+    "lat": 47.26307,
+    "lon": 9.457965999999999,
+    "image_name": "img_sfr_20170715_134842.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 13,
+    "timestamp": "2017-07-15_13-49-19",
+    "display_mode": 200,
+    "lat": 47.262995,
+    "lon": 9.457799999999999,
+    "image_name": "img_sfr_20170715_134927.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 14,
+    "timestamp": "2017-07-15_14-25-36",
+    "display_mode": 200,
+    "lat": 47.260911,
+    "lon": 9.451739,
+    "image_name": "img_sfr_20170715_142540.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 15,
+    "timestamp": "2017-07-15_15-01-38",
+    "display_mode": 200,
+    "lat": 47.251069,
+    "lon": 9.435815,
+    "image_name": "img_sfr_20170715_150142.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 16,
+    "timestamp": "2017-07-15_15-05-53",
+    "display_mode": 200,
+    "lat": 47.250122,
+    "lon": 9.432478999999999,
+    "image_name": "img_sfr_20170715_150557.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 17,
+    "timestamp": "2017-07-15_15-14-23",
+    "display_mode": 200,
+    "lat": 47.247502,
+    "lon": 9.426292,
+    "image_name": "img_sfr_20170715_151430.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 18,
+    "timestamp": "2017-08-13_11-12-30",
+    "display_mode": 200,
+    "lat": 47.296327,
+    "lon": 9.43571,
+    "image_name": "img_sfr_20170813_111239_037dsc_0016.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 19,
+    "timestamp": "2017-08-13_11-16-01",
+    "display_mode": 200,
+    "lat": 47.286657999999996,
+    "lon": 9.428514999999999,
+    "image_name": "img_sfr_20170813_111605_413dsc_0017.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 20,
+    "timestamp": "2017-08-13_11-16-14",
+    "display_mode": 201,
+    "lat": 47.286657999999996,
+    "lon": 9.428514999999999,
+    "image_name": "img_sfr_20170813_111618_901dsc_0018.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 21,
+    "timestamp": "2017-08-13_12-07-52",
+    "display_mode": 200,
+    "lat": 47.283476,
+    "lon": 9.411940999999999,
+    "image_name": "img_sfr_20170813_120759_069dsc_0023.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 22,
+    "timestamp": "2017-08-13_12-12-40",
+    "display_mode": 200,
+    "lat": 47.282866999999996,
+    "lon": 9.410542999999999,
+    "image_name": "img_sfr_20170813_121247_277dsc_0030.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 23,
+    "timestamp": "2017-08-13_12-30-44",
+    "display_mode": 200,
+    "lat": 47.278093,
+    "lon": 9.401454,
+    "image_name": "img_sfr_20170813_123048_797dsc_0031.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 24,
+    "timestamp": "2017-08-13_12-32-28",
+    "display_mode": 200,
+    "lat": 47.277845,
+    "lon": 9.400763,
+    "image_name": "img_sfr_20170813_123244_243dsc_0032.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 25,
+    "timestamp": "2017-08-13_12-39-39",
+    "display_mode": 200,
+    "lat": 47.278227,
+    "lon": 9.397138,
+    "image_name": "img_sfr_20170813_123946_568dsc_0033.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 26,
+    "timestamp": "2017-08-13_13-13-39",
+    "display_mode": 200,
+    "lat": 47.278293,
+    "lon": 9.395401,
+    "image_name": "img_sfr_20170813_131344_864dsc_0034.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 27,
+    "timestamp": "2017-08-13_13-18-37",
+    "display_mode": 200,
+    "lat": 47.278195,
+    "lon": 9.394321999999999,
+    "image_name": "img_sfr_20170813_131844_048dsc_0035.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 28,
+    "timestamp": "2017-08-13_13-20-42",
+    "display_mode": 200,
+    "lat": 47.277803999999996,
+    "lon": 9.393854,
+    "image_name": "img_sfr_20170813_132046_900dsc_0036.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 29,
+    "timestamp": "2017-08-13_13-42-00",
+    "display_mode": 201,
+    "lat": 47.276191999999995,
+    "lon": 9.390628999999999,
+    "image_name": "img_sfr_20170813_134204_877dsc_0038.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 30,
+    "timestamp": "2017-08-13_13-49-09",
+    "display_mode": 200,
+    "lat": 47.276505,
+    "lon": 9.391993,
+    "image_name": "img_sfr_20170813_134914_934dsc_0039.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 31,
+    "timestamp": "2017-08-13_14-04-53",
+    "display_mode": 201,
+    "lat": 47.277544,
+    "lon": 9.397829999999999,
+    "image_name": "img_sfr_20170813_140457_567dsc_0040.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 32,
+    "timestamp": "2017-08-13_14-19-14",
+    "display_mode": 200,
+    "lat": 47.278462,
+    "lon": 9.403474,
+    "image_name": "img_sfr_20170813_141920_727dsc_0042.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 33,
+    "timestamp": "2017-08-13_14-38-42",
+    "display_mode": 200,
+    "lat": 47.280853,
+    "lon": 9.409106,
+    "image_name": "img_sfr_20170813_143845_177dsc_0044.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 34,
+    "timestamp": "2017-08-13_14-58-41",
+    "display_mode": 201,
+    "lat": 47.281369999999995,
+    "lon": 9.411933,
+    "image_name": "img_sfr_20170813_145847_163dsc_0046.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 35,
+    "timestamp": "2017-08-13_15-36-20",
+    "display_mode": 200,
+    "lat": 47.271919999999994,
+    "lon": 9.404838,
+    "image_name": "img_sfr_20170813_153625_896dsc_0049.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 36,
+    "timestamp": "2017-08-13_15-37-20",
+    "display_mode": 200,
+    "lat": 47.271828,
+    "lon": 9.404665999999999,
+    "image_name": "img_sfr_20170813_153726_839dsc_0050.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 37,
+    "timestamp": "2017-08-13_15-41-46",
+    "display_mode": 200,
+    "lat": 47.270106999999996,
+    "lon": 9.401143,
+    "image_name": null,
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "id": 38,
+    "timestamp": "2017-08-13_16-21-26",
+    "display_mode": 200,
+    "lat": 47.274623,
+    "lon": 9.409996999999999,
+    "image_name": "img_sfr_20170813_162131_124dsc_0053.jpg",
+    "feedback_type": 0,
+    "description": null
+  },
+  {
+    "description": "eine bays tells. ",
+    "image_name": "jpeg_20170903_133517_664531050.jpg",
+    "timestamp": "2017-09-03_13-35-57",
+    "display_mode": 201,
+    "lat": 46.58882817,
+    "lon": 9.7752543,
+    "feedback_type": 100,
+    "id": 236422351
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_134300_596138176.jpg",
+    "timestamp": "2017-09-03_13-43-24",
+    "display_mode": 202,
+    "lat": 46.58682923,
+    "lon": 9.77639866,
+    "feedback_type": 100,
+    "id": 141204279
+  },
+  {
+    "description": "Winter is coming...",
+    "image_name": "jpeg_20170903_134738_1341537482.jpg",
+    "timestamp": "2017-09-03_13-48-08",
+    "display_mode": 200,
+    "lat": 46.58626411,
+    "lon": 9.77522213,
+    "feedback_type": 100,
+    "id": 156583439
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_135417_1413100815.jpg",
+    "timestamp": "2017-09-03_13-54-36",
+    "display_mode": 200,
+    "lat": 46.58417452,
+    "lon": 9.77935466,
+    "feedback_type": 100,
+    "id": 282622458
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_135513_1541539507.jpg",
+    "timestamp": "2017-09-03_13-55-48",
+    "display_mode": 200,
+    "lat": 46.58401447,
+    "lon": 9.77959749,
+    "feedback_type": 100,
+    "id": 260331508
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_140018_427531795.jpg",
+    "timestamp": "2017-09-03_14-02-22",
+    "display_mode": 200,
+    "lat": 46.58234923,
+    "lon": 9.78287658,
+    "feedback_type": 100,
+    "id": 143622746
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_140224_1989209745.jpg",
+    "timestamp": "2017-09-03_14-02-54",
+    "display_mode": 200,
+    "lat": 46.5816907,
+    "lon": 9.7835657,
+    "feedback_type": 100,
+    "id": 269104319
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_140813_1127990910.jpg",
+    "timestamp": "2017-09-03_14-09-23",
+    "display_mode": 200,
+    "lat": 46.58022299,
+    "lon": 9.78543498,
+    "feedback_type": 100,
+    "id": 58098814
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_141206_664531050.jpg",
+    "timestamp": "2017-09-03_14-12-38",
+    "display_mode": 200,
+    "lat": 46.58069286,
+    "lon": 9.78595099,
+    "feedback_type": 101,
+    "id": 243265533
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_141841_596138176.jpg",
+    "timestamp": "2017-09-03_14-19-07",
+    "display_mode": 202,
+    "lat": 46.5808016,
+    "lon": 9.78715785,
+    "feedback_type": 100,
+    "id": 68795371
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_141929_1341537482.jpg",
+    "timestamp": "2017-09-03_14-20-06",
+    "display_mode": 200,
+    "lat": 46.5807692,
+    "lon": 9.78706475,
+    "feedback_type": 100,
+    "id": 29736304
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_142628_1413100815.jpg",
+    "timestamp": "2017-09-03_14-27-05",
+    "display_mode": 200,
+    "lat": 46.58091235,
+    "lon": 9.78920232,
+    "feedback_type": 100,
+    "id": 228658353
+  },
+  {
+    "description": "Speedos verboten?",
+    "image_name": "jpeg_20170903_142757_1541539507.jpg",
+    "timestamp": "2017-09-03_14-29-02",
+    "display_mode": 202,
+    "lat": 46.58099651,
+    "lon": 9.78968688,
+    "feedback_type": 100,
+    "id": 4059679
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_143652_427531795.jpg",
+    "timestamp": "2017-09-03_14-37-51",
+    "display_mode": 200,
+    "lat": 46.58220934,
+    "lon": 9.78440608,
+    "feedback_type": 100,
+    "id": 230925871
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_143916_1989209745.jpg",
+    "timestamp": "2017-09-03_14-40-31",
+    "display_mode": 200,
+    "lat": 46.58283973,
+    "lon": 9.78332795,
+    "feedback_type": 100,
+    "id": 294083404
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_144113_1127990910.jpg",
+    "timestamp": "2017-09-03_14-41-49",
+    "display_mode": 200,
+    "lat": 46.58280753,
+    "lon": 9.78281045,
+    "feedback_type": 100,
+    "id": 243176673
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_144428_252254795.jpg",
+    "timestamp": "2017-09-03_14-44-47",
+    "display_mode": 200,
+    "lat": 46.58335715,
+    "lon": 9.78097212,
+    "feedback_type": 100,
+    "id": 201574231
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_144451_783112461.jpg",
+    "timestamp": "2017-09-03_14-45-25",
+    "display_mode": 200,
+    "lat": 46.5833544,
+    "lon": 9.78097543,
+    "feedback_type": 100,
+    "id": 16297951
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170903_151929_29340204.jpg",
+    "timestamp": "2017-09-03_15-20-07",
+    "display_mode": 201,
+    "lat": 46.58836345,
+    "lon": 9.77722743,
+    "feedback_type": 100,
+    "id": 40270125
+  },
+  {
+    "description": "Alp Darlux",
+    "image_name": "jpeg_20170904_110649_2098318554.jpg",
+    "timestamp": "2017-09-04_11-07-25",
+    "display_mode": 200,
+    "lat": 46.62461189,
+    "lon": 9.7799136,
+    "feedback_type": 100,
+    "id": 216725237
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170904_114529_1347782301.jpg",
+    "timestamp": "2017-09-04_11-45-51",
+    "display_mode": 200,
+    "lat": 46.62143287,
+    "lon": 9.78957343,
+    "feedback_type": 101,
+    "id": 247808114
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170904_123334_1859154140.jpg",
+    "timestamp": "2017-09-04_12-33-50",
+    "display_mode": 200,
+    "lat": 46.62274165,
+    "lon": 9.79584988,
+    "feedback_type": 100,
+    "id": 165800577
+  },
+  {
+    "description": "Keine Beschreibung vorhanden",
+    "image_name": "jpeg_20170904_140020_944638076.jpg",
+    "timestamp": "2017-09-04_14-00-43",
+    "display_mode": 202,
+    "lat": 46.6243051,
+    "lon": 9.77329846,
+    "feedback_type": 100,
+    "id": 121430439
+  }
+]
