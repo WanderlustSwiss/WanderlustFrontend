@@ -1,0 +1,42 @@
+# folder with private content #
+admin/
+
+# intelliJ #
+.idea/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# iOS specific stuff #
+*.DS_Store
+
+lt application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+gen-external-apklibs/
+target/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Intellij project files
+*.iml
+*.ipr
+*.iws
+
+# Gradle
+build/
+.gradle/local.properties
+
