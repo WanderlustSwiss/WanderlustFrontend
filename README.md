@@ -3,3 +3,4 @@ Hristian Stoilov
 Rilind Gashi
 Alexander Weinbeck
 Joshua Meier
+Baris Demirci
