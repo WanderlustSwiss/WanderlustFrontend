@@ -1,4 +1,4 @@
-image: showcheap/gitlab-ci-android:latest
+image: showcheap/gitlab-ci-android
 
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
