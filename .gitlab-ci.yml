@@ -1,20 +1,24 @@
-image: showcheap/gitlab-ci-android
+image: registry.gitlab.com/showcheap/android-ci:T25-B25.0.3
 
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - chmod +x ./gradlew
 
 cache:
+  key: "$CI_COMMIT_REF_NAME"
   paths:
-     - .gradle/wrapper
-     - .gradle/caches
+     - .gradle/
 
-build:
-  stage: build
-  script:
-     - ./gradlew assemble
+stages:
+  - test
+  - build
 
 test:
   stage: test
   script:
      - ./gradlew check
+
+build:
+  stage: build
+  script:
+     - ./gradlew assemble
