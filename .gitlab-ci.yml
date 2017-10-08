@@ -41,7 +41,7 @@ stages:
 build_debug:
   <<: *build_template_def
   only:
-    - develop
+    - development
 
   script:
     - ./gradlew assembleDebug
@@ -61,7 +61,7 @@ unit_test:
   stage: test
   only:
     - master
-    - develop
+    - development
 
   before_script:
     - export ANDROID_HOME=$PWD/.android
@@ -96,7 +96,7 @@ package_develop:
   stage: package
   environment: Development
   only:
-    - develop
+    - development
   script:
     - mv app/build/outputs/apk/app-debug.apk ./deliverables/NameOfTheApp-v$VERSION_NAME-$VERSION_CODE-debug.apk
   artifacts:
