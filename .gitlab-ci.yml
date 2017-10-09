@@ -18,6 +18,7 @@ Build Package:
 Test Source:
   stage: test
   script:
+    - chmod 755 gradlew
     - ./gradlew check
   only:
     - development
@@ -25,6 +26,7 @@ Test Source:
 Release Package:
   stage: release
   script:
+    - chmod 755 gradlew
     - ./gradlew assembleRelease
   only:
     - development
