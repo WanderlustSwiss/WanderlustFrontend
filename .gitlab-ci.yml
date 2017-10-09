@@ -4,11 +4,27 @@ before_script:
 
 stages:
   - build
+  - test
+  - release
 
-job1:
+Build Package:
   stage: build
   script:
     - chmod 755 gradlew
-    - ./gradlew build --stacktrace
+    - ./gradlew assembleDebug --stacktrace
+  only:
+    - development
+
+Test Source:
+  stage: test
+  script:
+    - ./gradlew check
+  only:
+    - development
+
+Release Package:
+  stage: release
+  script:
+    - ./gradlew assembleRelease
   only:
     - development
