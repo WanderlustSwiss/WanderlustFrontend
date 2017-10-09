@@ -13,16 +13,12 @@ Build Package:
   script:
     - chmod 755 gradlew
     - ./gradlew assembleDebug --stacktrace
-  only:
-    - development
 
 Test Source:
   stage: test
   script:
     - chmod 755 gradlew
     - ./gradlew check
-  only:
-    - development
 
 Deploy Package:
   stage: deploy
