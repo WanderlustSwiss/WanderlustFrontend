@@ -3,6 +3,7 @@
 ## Table of contents
 
 - [Introduction](#Introduction)
+- [Build Status](#Build Status)
 - [Releases](#Releases)
 - [License](#License)
 
@@ -11,6 +12,10 @@
 This is project of the Wanderlust Android App.
 TODO: --> More description
 
+## Build Status
+### Branch: Development
+
+[![pipeline status](https://gitlab.fhnw.ch/IP-34v_Wanderlust/Wanderlust_Frontend_Application/badges/development/pipeline.svg)](https://gitlab.fhnw.ch/IP-34v_Wanderlust/Wanderlust_Frontend_Application/commits/development)
 
 ## Releases
 
