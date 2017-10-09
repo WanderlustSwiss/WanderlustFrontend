@@ -9,6 +9,6 @@ job1:
   stage: build
   script:
     - chmod 755 gradlew
-    - ./gradlew build
+    - ./gradlew build --stacktrace
   only:
     - development
