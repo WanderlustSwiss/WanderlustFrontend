@@ -1,10 +1,12 @@
 before_script:
   - export ANDROID_HOME="/opt/android-sdk-linux"
   - export JAVA_HOME="/home/ubuntu/.sdkman/candidates/java/current"
+  - export Version=$(cat app/build.gradle | grep "versionName" | grep -oE "[0-9]*\.[0-9]*\.[0-9]*")
 
 stages:
   - build
   - test
+  - deploy
 
 Build Package:
   stage: build
@@ -21,3 +23,13 @@ Test Source:
     - ./gradlew check
   only:
     - development
+
+Deploy Package:
+  stage: deploy
+  script:
+    - chmod 755 gradlew
+    - ./gradlew assembleRelease
+    - cp build/apk/app-release-unsigned.apk /var/www/html/Frontend_Android_App/wanderlust-app-${Version}-${CI_PIPELINE_ID}.apk
+  only:
+    - development
+    - master
