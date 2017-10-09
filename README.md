@@ -13,6 +13,9 @@ This is project of the Wanderlust Android App.
 TODO: --> More description
 
 ## Build Status
+### Branch: Master
+[![pipeline status](https://gitlab.fhnw.ch/IP-34v_Wanderlust/Wanderlust_Frontend_Application/badges/master/pipeline.svg)](https://gitlab.fhnw.ch/IP-34v_Wanderlust/Wanderlust_Frontend_Application/commits/master)
+
 ### Branch: Development
 
 [![pipeline status](https://gitlab.fhnw.ch/IP-34v_Wanderlust/Wanderlust_Frontend_Application/badges/development/pipeline.svg)](https://gitlab.fhnw.ch/IP-34v_Wanderlust/Wanderlust_Frontend_Application/commits/development)
