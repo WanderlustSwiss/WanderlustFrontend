@@ -5,7 +5,6 @@ before_script:
 stages:
   - build
   - test
-  - release
 
 Build Package:
   stage: build
@@ -20,13 +19,5 @@ Test Source:
   script:
     - chmod 755 gradlew
     - ./gradlew check
-  only:
-    - development
-
-Release Package:
-  stage: release
-  script:
-    - chmod 755 gradlew
-    - ./gradlew assembleRelease
   only:
     - development
