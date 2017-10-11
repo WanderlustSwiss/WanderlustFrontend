@@ -85,3 +85,18 @@ android.applicationVariants.all { variant ->
         variant.testVariant.connectedInstrumentTest.dependsOn "configDevice2${variant.name.capitalize()}"
     }
 }
+android.applicationVariants.all { variant ->
+    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+        title = 'Wanderlust API'
+        description = 'This documentation is about the Android API'
+        source = variant.javaCompile.source
+        classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
+        destinationDir = file("../javadoc/")
+        options {
+            links "http://docs.oracle.com/javase/8/docs/api/"
+            linksOffline("https://d.android.com/reference", "${android.sdkDirectory}/docs/reference")
+        }
+        exclude '**/BuildConfig.java'
+        exclude '**/R.java'
+    }
+}
