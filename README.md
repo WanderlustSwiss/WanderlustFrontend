@@ -32,6 +32,9 @@ Released .apk packages: [Browse Packages](http://86.119.40.34:8080/Frontend_Andr
 ### Release 0.1
 The release contains first basic functionality of the android app and enables saving and retrieving data from the database with a spring framework backend.
 
+**Package**
+[wanderlust-app-1.0.0-11407.apk](http://86.119.40.34:8080/Frontend_Android_App/wanderlust-app-1.0.0-11407.apk)
+
 **Date**
 20.09.2017
 
