@@ -5,7 +5,7 @@ before_script:
 
 stages:
   - build
-  - test
+  - testAndDoc
   - deploy
 
 Build Package:
@@ -15,10 +15,16 @@ Build Package:
     - ./gradlew assembleDebug --stacktrace
 
 Test Source:
-  stage: test
+  stage: testAndDoc
   script:
     - chmod 755 gradlew
     - ./gradlew check
+
+Generate Javadoc:
+  stage: testAndDoc
+  script:
+    - chmod 755 gradlew
+    - ./gradlew generateReleaseJavadoc
 
 Deploy Package:
   stage: deploy
