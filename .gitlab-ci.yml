@@ -25,6 +25,8 @@ Generate Javadoc:
   script:
     - chmod 755 gradlew
     - ./gradlew generateReleaseJavadoc
+    - rm -rf /var/www/html/Documentation/*
+    - cp -r javadoc/* /var/www/html/Documentation/
 
 Deploy Package:
   stage: deploy
