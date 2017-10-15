@@ -4,7 +4,8 @@
 
 - [Introduction](#Introduction)
 - [Build Status](#Build Status)
-- [Documentation] (#Documentation)
+- [HowTo Developing](#HowTo Developing)
+- [Documentation](#Documentation)
 - [Releases](#Releases)
 - [License](#License)
 
@@ -12,6 +13,11 @@
 ## Introduction
 This is project of the Wanderlust Android App.
 TODO: --> More description
+
+## HowTo Developing
+Befor you start with developing please read these wiki articles:
+
+ - [Repository Structure](https://gitlab.fhnw.ch/IP-34v_Wanderlust/Wanderlust_Frontend_Application/wikis/Repository-Structure)
 
 ## Build Status
 ### Branch: Master
