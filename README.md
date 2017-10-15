@@ -18,6 +18,7 @@ TODO: --> More description
 Befor you start with developing please read these wiki articles:
 
  - [Repository Structure](https://gitlab.fhnw.ch/IP-34v_Wanderlust/Wanderlust_Frontend_Application/wikis/Repository-Structure)
+ - [Code Guidelines](https://www.cs.technik.fhnw.ch/confluence16/display/VT341710/SA+Artifact?preview=/76874293/87425074/CodeGuidelines_V1.0.pdf)
 
 ## Build Status
 ### Branch: Master
