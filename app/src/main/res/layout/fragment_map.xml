@@ -8,8 +8,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/myPrimaryDark"
@@ -24,26 +23,50 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:orientation="horizontal">
+            android:layout_gravity="top|right"
+            android:orientation="vertical">
+            <SearchView android:layout_width="382dp"
+                        android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right">
+
+                <Button
+                    android:id="@+id/layerButton"
+                    style="@style/my_round_button_default"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/button_layers" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:orientation="vertical">
 
             <!--<Button-->
-                <!--android:id="@+id/centerMapOnPOIButton"-->
-                <!--style="@style/my_round_button"-->
-                <!--android:background="@drawable/button_center_map_on_poi" />-->
-
-            <Button
-                android:id="@+id/takePictureButton"
-                style="@style/my_round_button"
-                android:background="@drawable/button_camera" />
+            <!--android:id="@+id/centerMapOnPOIButton"-->
+            <!--style="@style/my_round_button"-->
+            <!--android:background="@drawable/button_center_map_on_poi" />-->
 
             <ToggleButton
                 android:id="@+id/locationButton"
                 style="@style/my_round_button"
-                android:background="@drawable/icon_toggle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/button_location_find"
                 android:textOff=""
                 android:textOn="" />
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/takePictureButton"
+                style="@style/my_floatingactionbutton"
+                android:layout_gravity="center_horizontal|center"
+                android:src="@drawable/ic_layers_black_18dp"/>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

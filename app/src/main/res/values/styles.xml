@@ -2,9 +2,9 @@
 
     <!-- APPLICATION THEME -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/myYellow</item>
+        <item name="colorPrimary">@color/materialGreen</item>
         <item name="colorPrimaryDark">@color/myPrimaryDark</item>
-        <item name="colorAccent">@color/myRed</item>
+        <item name="colorAccent">@color/materialGreen</item>
     </style>
 
 
@@ -35,11 +35,24 @@
         <item name="android:layout_margin">10dp</item>
     </style>
 
+    <style name="my_round_button_default">
+        <item name="android:layout_width">55dp</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:background">#38d1b0</item>
+    </style>
+
     <style name="my_click_button">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">false</item>
     </style>
+        <!-- FLOATINGACTIONBUTTON -->
+        <style name="my_floatingactionbutton">
+            <item name="android:layout_width">56dp</item>
+            <item name="android:layout_height">56dp</item>
+            <item name="android:scaleType">fitXY</item>
+        </style>
 
     <!-- TRANSPARENT CONTAINER -->
     <style name="transparent_container">

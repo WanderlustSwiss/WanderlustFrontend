@@ -55,6 +55,9 @@ dependencies {
 
     //JUnit 4
     testCompile 'junit:junit:4.12'
+
+    //Material Design
+    compile 'com.android.support:design:25.3.1'
 }
 
 //the following sets the required permissions for API 23+ devices and AVDs
