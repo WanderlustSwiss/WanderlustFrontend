@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/myPrimaryBackground"
     android:orientation="vertical"
     tools:context=".MainActivity">
@@ -19,33 +20,45 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:apiKey="b52e68138121400c953136847e9a48cf" />
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
             android:orientation="vertical">
-            <SearchView android:layout_width="382dp"
-                        android:layout_height="wrap_content"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|right">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_gravity="top|center_horizontal"
+                    android:orientation="horizontal">
+                    <android.support.v7.widget.SearchView
+                        android:id="@+id/searchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp">
 
-                <Button
-                    android:id="@+id/layerButton"
-                    style="@style/my_round_button_default"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/button_layers" />
-            </LinearLayout>
-
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/layerButton"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/ic_layers_black_24dp" />
+                </LinearLayout>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
@@ -57,22 +70,21 @@
             <!--style="@style/my_round_button"-->
             <!--android:background="@drawable/button_center_map_on_poi" />-->
 
-            <android.support.design.widget.CheckableImageButton
-                android:id="@+id/locationButton"
-                style="@style/my_round_button"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:background="@drawable/button_location_find"
-                android:textOff=""
-                android:textOn=" "/>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/locationButton"
+                    app:fabSize="normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/ic_location_disabled_black_24dp"/>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/takePictureButton"
-                android:layout_height="56dp"
-                android:layout_width="56dp"
-                android:layout_gravity="center_horizontal|center"
-                android:src = "@drawable/ic_layers_black_18dp"/>
-
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/takePictureButton"
+                    app:fabSize="normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center"
+                    android:src="@drawable/ic_camera_black_24dp"/>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
