@@ -46,6 +46,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
             android:orientation="vertical">
 
             <!--<Button-->
@@ -53,20 +57,22 @@
             <!--style="@style/my_round_button"-->
             <!--android:background="@drawable/button_center_map_on_poi" />-->
 
-            <ToggleButton
+            <android.support.design.widget.CheckableImageButton
                 android:id="@+id/locationButton"
                 style="@style/my_round_button"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:background="@drawable/button_location_find"
                 android:textOff=""
-                android:textOn="" />
+                android:textOn=""/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/takePictureButton"
-                style="@style/my_floatingactionbutton"
+                android:layout_height="56dp"
+                android:layout_width="56dp"
                 android:layout_gravity="center_horizontal|center"
-                android:src="@drawable/ic_layers_black_18dp"/>
+                android:src = "@drawable/ic_layers_black_18dp"/>
+
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

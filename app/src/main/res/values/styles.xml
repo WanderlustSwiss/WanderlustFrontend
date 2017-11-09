@@ -1,7 +1,7 @@
 <resources>
 
     <!-- APPLICATION THEME -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
         <item name="colorPrimary">@color/materialGreen</item>
         <item name="colorPrimaryDark">@color/myPrimaryDark</item>
         <item name="colorAccent">@color/materialGreen</item>
@@ -33,6 +33,7 @@
         <item name="android:layout_width">55dp</item>
         <item name="android:layout_height">55dp</item>
         <item name="android:layout_margin">10dp</item>
+        <item name="android:elevation">5dp</item>
     </style>
 
     <style name="my_round_button_default">
