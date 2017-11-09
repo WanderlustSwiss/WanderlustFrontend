@@ -64,7 +64,7 @@
                 android:layout_height="56dp"
                 android:background="@drawable/button_location_find"
                 android:textOff=""
-                android:textOn=""/>
+                android:textOn=" "/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/takePictureButton"
