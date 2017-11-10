@@ -17,8 +17,8 @@
 
         <org.osmdroid.views.MapView
             android:id="@+id/mapView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:apiKey="b52e68138121400c953136847e9a48cf" />
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_gravity="top|center_horizontal"
                     android:orientation="horizontal">
-                    <android.support.v7.widget.SearchView
+                    <SearchView
                         android:id="@+id/searchView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -46,22 +46,21 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp">
 
-                    <android.support.design.widget.FloatingActionButton
+                    <ImageButton
                         android:id="@+id/layerButton"
+                        style="@style/Button.FloatingButton"
                         android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginTop="16dp"
-                        android:src="@drawable/ic_layers_black_24dp" />
+                        android:layout_height="40dp" />
                 </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:orientation="vertical">
 
@@ -70,21 +69,17 @@
             <!--style="@style/my_round_button"-->
             <!--android:background="@drawable/button_center_map_on_poi" />-->
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/locationButton"
-                    app:fabSize="normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:src="@drawable/ic_location_disabled_black_24dp"/>
+            <ImageButton
+                android:id="@+id/locationButton"
+                style="@style/Button.locationButton"
+                android:layout_marginBottom="16dp"
+                android:paddingBottom="5dp"
+                tools:padding="5dp" />
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/takePictureButton"
-                    app:fabSize="normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center"
-                    android:src="@drawable/ic_camera_black_24dp"/>
+            <ImageButton
+                android:id="@+id/takePictureButton"
+                style="@style/Button.takePictureButton"
+                android:layout_gravity="center_horizontal|center" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

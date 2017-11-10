@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -59,8 +60,8 @@ public class MapFragment extends Fragment {
     private static String imageFileName;
     private static String photoPath;
 
-    private ToggleButton locationToggler;
-    private Button cameraButton;
+    private ImageButton locationToggler;
+    private ImageButton cameraButton;
     private Button centerMapOnPoiButton;
 
     /**
@@ -231,12 +232,12 @@ public class MapFragment extends Fragment {
     }
 
     private void initLocationToggler(View view) {
-        locationToggler = (ToggleButton) view.findViewById(R.id.locationButton);
-        locationToggler.setChecked(myLocationIsEnabled);
+        locationToggler = (ImageButton) view.findViewById(R.id.locationButton);
+        //locationToggler.setChecked(myLocationIsEnabled);
         displayMyLocationOnMap(myLocationIsEnabled);
 
         /** toggle listener */
-        locationToggler.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /*locationToggler.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
@@ -261,7 +262,7 @@ public class MapFragment extends Fragment {
     }
 
     private void initCameraButton(View view) {
-        cameraButton = (Button) view.findViewById(R.id.takePictureButton);
+        cameraButton = (ImageButton) view.findViewById(R.id.takePictureButton);
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -324,7 +325,7 @@ public class MapFragment extends Fragment {
         Toast.makeText(getActivity(), R.string.msg_button_for_dev_only, Toast.LENGTH_LONG).show();
         mapController.setZoom(Defaults.ZOOM_ENLARGED);
         mapController.animateTo(Defaults.GEO_POINT_POI);
-        locationToggler.setChecked(false);
+        //locationToggler.setChecked(false);
     }
 
     private void setZoomToDefault(boolean setZoom) {

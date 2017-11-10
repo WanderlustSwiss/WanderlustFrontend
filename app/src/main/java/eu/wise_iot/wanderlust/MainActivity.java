@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
                 selectItem(position);
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     private void selectItem(int position) {
@@ -147,14 +147,14 @@ public class MainActivity extends AppCompatActivity {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle(mActivityTitle);
+                //getSupportActionBar().setTitle(mActivityTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mActivityTitle);
+                //getSupportActionBar().setTitle(mActivityTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
