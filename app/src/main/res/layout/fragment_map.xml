@@ -72,9 +72,7 @@
             <ImageButton
                 android:id="@+id/locationButton"
                 style="@style/Button.locationButton"
-                android:layout_marginBottom="16dp"
-                android:paddingBottom="5dp"
-                tools:padding="5dp" />
+                android:layout_marginBottom="16dp"/>
 
             <ImageButton
                 android:id="@+id/takePictureButton"

@@ -34,6 +34,12 @@
         <item name="android:elevation">5dp</item>
         <item name="backgroundTint">@color/materialGreen</item>
         <item name="android:src">@drawable/ic_layers_black_24dp</item>
+        <!-- give button space for the shadow -->
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
     </style>
     <style name="Button.takePictureButton" parent="Widget.Design.FloatingActionButton">
         <item name="android:elevation">5dp</item>
@@ -41,6 +47,12 @@
         <item name="android:src">@drawable/ic_camera_black_24dp</item>
         <item name="android:layout_width">56dp</item>
         <item name="android:layout_height">56dp</item>
+        <!-- give button space for the shadow -->
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
     <style name="Button.locationButton" parent="Widget.Design.FloatingActionButton">
         <item name="android:elevation">5dp</item>
@@ -48,7 +60,7 @@
         <item name="android:src">@drawable/ic_location_disabled_black_24dp</item>
         <item name="android:layout_width">56dp</item>
         <item name="android:layout_height">56dp</item>
-
+        <!-- give button space for the shadow -->
         <item name="android:layout_margin">5dp</item>
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginLeft">5dp</item>

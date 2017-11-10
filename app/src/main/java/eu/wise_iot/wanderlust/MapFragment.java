@@ -237,12 +237,20 @@ public class MapFragment extends Fragment {
         displayMyLocationOnMap(myLocationIsEnabled);
 
         /** toggle listener */
-        /*locationToggler.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+        locationToggler.setTag("off");
+        locationToggler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(locationToggler.getTag().toString().trim().equals("on")) {
+                    locationToggler.setTag("off");
+                    locationToggler.setImageResource(R.drawable.ic_location_searching_black_24dp);
                     Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
                     myLocationIsEnabled = true;
-                } else {
+                }
+                else if(locationToggler.getTag().toString().trim().equals("off")) {
+                    locationToggler.setTag("on");
+                    locationToggler.setImageResource(R.drawable.ic_location_disabled_black_24dp);
                     Toast.makeText(getActivity(), R.string.msg_follow_mode_disabled, Toast.LENGTH_SHORT).show();
                     myLocationIsEnabled = false;
                 }
@@ -256,6 +264,7 @@ public class MapFragment extends Fragment {
             public boolean onLongClick(View view) {
                 Toast.makeText(getActivity(), R.string.msg_map_centered_on_long_click, Toast.LENGTH_SHORT).show();
                 centerMapOnCurrentPosition();
+                locationToggler.setImageResource(R.drawable.ic_my_location_black_24dp);
                 return true;
             }
         });
