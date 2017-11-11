@@ -67,11 +67,17 @@ public class MyMapOverlays implements Serializable {
 //        initGpxTourlistOverlay();
     }
 
+    /**
+     * initialize scalebar and its position
+     * @author Fabian Schwander
+     * @author Alexander Weinbeck
+     */
     private void initScaleBarOverlay() {
         ScaleBarOverlay scaleBarOverlay = new ScaleBarOverlay(mapView);
         scaleBarOverlay.setCentred(true);
         DisplayMetrics dm = activity.getResources().getDisplayMetrics();
-        scaleBarOverlay.setScaleBarOffset(dm.widthPixels / 4 * 3, 25);
+        //set position of scale bar
+        scaleBarOverlay.setScaleBarOffset(dm.widthPixels /3 * 1, dm.heightPixels/10*9);
         mapView.getOverlays().add(scaleBarOverlay);
     }
 

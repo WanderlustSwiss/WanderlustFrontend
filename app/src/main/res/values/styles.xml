@@ -28,9 +28,8 @@
     </style>
 
 
-    <!-- BUTTON -->
-    <!-- use as an example -->
-    <style name="Button.FloatingButton" parent="Widget.Design.FloatingActionButton">
+    <!-- BUTTONS -->
+    <style name="button_layers" parent="Widget.Design.FloatingActionButton">
         <item name="android:elevation">5dp</item>
         <item name="backgroundTint">@color/materialGreen</item>
         <item name="android:src">@drawable/ic_layers_black_24dp</item>
@@ -41,7 +40,7 @@
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:layout_marginBottom">10dp</item>
     </style>
-    <style name="Button.takePictureButton" parent="Widget.Design.FloatingActionButton">
+    <style name="button_takepicture" parent="Widget.Design.FloatingActionButton">
         <item name="android:elevation">5dp</item>
         <item name="backgroundTint">@color/materialGreen</item>
         <item name="android:src">@drawable/ic_camera_black_24dp</item>
@@ -54,7 +53,7 @@
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:layout_marginBottom">5dp</item>
     </style>
-    <style name="Button.locationButton" parent="Widget.Design.FloatingActionButton">
+    <style name="button_location" parent="Widget.Design.FloatingActionButton">
         <item name="android:elevation">5dp</item>
         <item name="backgroundTint">@color/materialGreen</item>
         <item name="android:src">@drawable/ic_location_disabled_black_24dp</item>
@@ -67,32 +66,11 @@
         <item name="android:layout_marginRight">5dp</item>
         <item name="android:layout_marginBottom">10dp</item>
     </style>
-
-    <style name="my_round_button">
-        <item name="android:layout_width">55dp</item>
-        <item name="android:layout_height">55dp</item>
-        <item name="android:layout_margin">10dp</item>
-        <item name="android:elevation">5dp</item>
-    </style>
-
-    <style name="my_round_button_default">
-        <item name="android:layout_width">55dp</item>
-        <item name="android:layout_height">55dp</item>
-        <item name="android:layout_margin">10dp</item>
-        <item name="android:background">#38d1b0</item>
-    </style>
-
     <style name="my_click_button">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">false</item>
     </style>
-        <!-- FLOATINGACTIONBUTTON -->
-        <style name="my_floatingactionbutton">
-            <item name="android:layout_width">56dp</item>
-            <item name="android:layout_height">56dp</item>
-            <item name="android:scaleType">fitXY</item>
-        </style>
 
     <!-- TRANSPARENT CONTAINER -->
     <style name="transparent_container">

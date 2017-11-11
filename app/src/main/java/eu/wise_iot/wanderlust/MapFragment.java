@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -17,8 +19,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -40,7 +44,7 @@ import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.dialog.CreateFeedbackDialog;
 import eu.wise_iot.wanderlust.utils.MyCamera;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment{
     private static final String TAG = "MapFragment";
 
     // preferences and default settings
@@ -62,6 +66,7 @@ public class MapFragment extends Fragment {
 
     private ImageButton locationToggler;
     private ImageButton cameraButton;
+    private ImageButton layerButton;
     private Button centerMapOnPoiButton;
 
     /**
@@ -97,6 +102,7 @@ public class MapFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initLocationToggler(view);
         initCameraButton(view);
+        initLayerButton(view);
         initCenterMapOnPoiButton(view);
     }
 
@@ -231,24 +237,30 @@ public class MapFragment extends Fragment {
         }
     }
 
+    /**
+     * initializes location toggler
+     * @author Fabian Schwander
+     * @author Alexander Weinbeck
+     * @param view
+     */
     private void initLocationToggler(View view) {
         locationToggler = (ImageButton) view.findViewById(R.id.locationButton);
-        //locationToggler.setChecked(myLocationIsEnabled);
         displayMyLocationOnMap(myLocationIsEnabled);
 
-        /** toggle listener */
-        locationToggler.setTag("off");
+        //register behavior on touched
+        StyleBehavior.buttonEffectOnTouched(locationToggler);
+        //set as default on
+        locationToggler.setTag("on");
+        //toggle listener
         locationToggler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(locationToggler.getTag().toString().trim().equals("on")) {
+                if (locationToggler.getTag().toString().trim().equals("on")) {
                     locationToggler.setTag("off");
                     locationToggler.setImageResource(R.drawable.ic_location_searching_black_24dp);
                     Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
                     myLocationIsEnabled = true;
-                }
-                else if(locationToggler.getTag().toString().trim().equals("off")) {
+                } else if (locationToggler.getTag().toString().trim().equals("off")) {
                     locationToggler.setTag("on");
                     locationToggler.setImageResource(R.drawable.ic_location_disabled_black_24dp);
                     Toast.makeText(getActivity(), R.string.msg_follow_mode_disabled, Toast.LENGTH_SHORT).show();
@@ -258,7 +270,8 @@ public class MapFragment extends Fragment {
                 setZoomToDefault(!locationTogglerHasBeenClicked);
             }
         });
-        /** long click listener */
+
+        //long click listener
         locationToggler.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -270,8 +283,17 @@ public class MapFragment extends Fragment {
         });
     }
 
+    /**
+     * initializes camera button
+     * @author Fabian Schwander
+     * @author Alexander Weinbeck
+     * @param view
+     */
     private void initCameraButton(View view) {
         cameraButton = (ImageButton) view.findViewById(R.id.takePictureButton);
+        //register behavior on touched
+        StyleBehavior.buttonEffectOnTouched(cameraButton);
+
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -293,6 +315,24 @@ public class MapFragment extends Fragment {
                         photoPath = camera.getImagePath();
                     }
                 });
+            }
+        });
+    }
+    /**
+     * initializes layer button
+     * @author Alexander Weinbeck
+     * @param view
+     */
+    private void initLayerButton(View view) {
+        //get instance
+        layerButton = (ImageButton) view.findViewById(R.id.layerButton);
+        //register behavior on touched
+        StyleBehavior.buttonEffectOnTouched(layerButton);
+        //register behavior on clicked
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO show here layer selection
             }
         });
     }
