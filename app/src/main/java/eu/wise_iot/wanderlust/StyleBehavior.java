@@ -1,12 +1,8 @@
 package eu.wise_iot.wanderlust;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.RippleDrawable;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 
 /**
  * Created by Alexander Weinbeck on 11.11.2017.
