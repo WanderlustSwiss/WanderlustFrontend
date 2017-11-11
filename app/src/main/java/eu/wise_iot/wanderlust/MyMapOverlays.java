@@ -77,7 +77,7 @@ public class MyMapOverlays implements Serializable {
         scaleBarOverlay.setCentred(true);
         DisplayMetrics dm = activity.getResources().getDisplayMetrics();
         //set position of scale bar
-        scaleBarOverlay.setScaleBarOffset(dm.widthPixels /3 * 1, dm.heightPixels/10*9);
+        scaleBarOverlay.setScaleBarOffset(dm.widthPixels/3*1, dm.heightPixels/10*9);
         mapView.getOverlays().add(scaleBarOverlay);
     }
 
