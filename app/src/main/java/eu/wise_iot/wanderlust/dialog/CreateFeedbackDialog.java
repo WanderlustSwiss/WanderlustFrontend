@@ -15,9 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import org.osmdroid.util.GeoPoint;
-
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
@@ -30,9 +28,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by fabianschwander on 24.08.17.
+ * CreateFeedbackDialog:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class CreateFeedbackDialog extends DialogFragment {
     private static final String TAG = "CreateFeedbackDialog";
     private Context context;

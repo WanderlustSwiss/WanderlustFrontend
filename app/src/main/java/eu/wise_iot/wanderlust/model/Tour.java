@@ -3,9 +3,10 @@ package eu.wise_iot.wanderlust.model;
 import android.location.Location;
 
 /**
- * Created by fabianschwander on 24.03.17.
+ * Tour:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class Tour {
     private int tourId;
     private String editor;

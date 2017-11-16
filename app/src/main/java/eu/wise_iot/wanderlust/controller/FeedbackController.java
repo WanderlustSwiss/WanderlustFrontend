@@ -13,9 +13,10 @@ import eu.wise_iot.wanderlust.utils.MyFileManager;
 import eu.wise_iot.wanderlust.utils.MyJsonParser;
 
 /**
- * Created by fabianschwander on 17.08.17.
+ * FeedbackController:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class FeedbackController {
     private static final String TAG = "FeedbackController";
     private MyFileManager myFileManager = new MyFileManager("feedbacks_json.txt");

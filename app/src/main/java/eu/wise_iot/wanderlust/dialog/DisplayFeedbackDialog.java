@@ -33,9 +33,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by fabianschwander on 31.08.17.
+ * DisplayFeedbackDialog:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class DisplayFeedbackDialog extends DialogFragment {
     private static final String TAG = "DisplayFeedbackDialog";
     private Activity activity;

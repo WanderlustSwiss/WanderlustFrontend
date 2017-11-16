@@ -4,6 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+/**
+ * Feedback:
+ * @author Fabian Schwander
+ * @license MIT
+ */
 public class Feedback {
     private long id; // todo: get data from db
     private String timestamp;

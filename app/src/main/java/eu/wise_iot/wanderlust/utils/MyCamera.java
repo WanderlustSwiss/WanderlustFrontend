@@ -30,9 +30,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by fabianschwander on 23.08.17.
+ * MyCamera:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class MyCamera {
     private static final String TAG = "MyCamera";
     private Activity activity;

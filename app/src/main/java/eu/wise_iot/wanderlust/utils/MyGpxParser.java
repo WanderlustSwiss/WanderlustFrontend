@@ -14,9 +14,10 @@ import io.ticofab.androidgpxparser.parser.domain.Gpx;
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 
 /**
- * Created by fabianschwander on 17.08.17.
+ * MyGpxParser:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class MyGpxParser {
     private static final String TAG = "MyGpxParser";
     private final GPXParser gpxParser = new GPXParser();

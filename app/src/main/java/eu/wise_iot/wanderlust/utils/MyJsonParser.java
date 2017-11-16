@@ -13,9 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by fabianschwander on 16.08.17.
+ * MyJsonParser:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class MyJsonParser<T> {
     private static final String TAG = "MyJsonParser";
     private Context context;

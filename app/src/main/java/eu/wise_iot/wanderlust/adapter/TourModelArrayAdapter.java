@@ -17,9 +17,10 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.model.Tour;
 
 /**
- * Created by fabianschwander on 21.04.17.
+ * TourModelArrayAdapter:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class TourModelArrayAdapter extends ArrayAdapter<Tour> {
     private static final String TAG = "TourModelArrayAdapter";
     private Context context;

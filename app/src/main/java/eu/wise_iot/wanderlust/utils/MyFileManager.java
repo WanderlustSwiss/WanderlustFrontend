@@ -12,9 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by fabianschwander on 07.07.17.
+ * MyFileManager:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class MyFileManager {
     private static final String TAG = "MyFileManager";
 

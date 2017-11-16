@@ -1,9 +1,10 @@
 package eu.wise_iot.wanderlust.constants;
 
 /**
- * Created by fabianschwander on 28.08.17.
+ * Constants:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public interface Constants {
 
     /* DISPLAY MODE */
