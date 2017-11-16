@@ -44,9 +44,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by fabianschwander on 08.08.17.
+ * MyMapFragment:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class MyMapOverlays implements Serializable {
     private static final String TAG = "MyMapOverlays";
     private Activity activity;

@@ -29,9 +29,10 @@ import java.util.List;
 import eu.wise_iot.wanderlust.constants.Constants;
 
 /**
- * @Author: Fabian Schwander
+ * MainActivity:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private ListView mDrawerList;

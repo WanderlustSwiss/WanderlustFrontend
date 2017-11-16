@@ -5,8 +5,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * Created by Alexander Weinbeck on 11.11.2017.
+ * StyleBehavior:
+ * @author Fabian Schwander
  * @author Alexander Weinbeck
+ * @license MIT
  */
 public class StyleBehavior {
 

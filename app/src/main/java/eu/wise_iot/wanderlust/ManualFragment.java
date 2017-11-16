@@ -14,9 +14,10 @@ import com.squareup.picasso.Picasso;
 import eu.wise_iot.wanderlust.constants.Constants;
 
 /**
- * Created by fabianschwander on 17.09.17.
+ * ManualFragment:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public class ManualFragment extends Fragment {
 
     public ManualFragment() {

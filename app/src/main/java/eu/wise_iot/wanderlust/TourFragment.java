@@ -19,6 +19,11 @@ import eu.wise_iot.wanderlust.model.Tour;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.utils.MyJsonParser;
 
+/**
+ * TourFragment:
+ * @author Fabian Schwander
+ * @license MIT
+ */
 public class TourFragment extends Fragment {
     private static final String TAG = "TourFragment";
     private Tour tour;

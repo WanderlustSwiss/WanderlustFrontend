@@ -44,6 +44,11 @@ import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.dialog.CreateFeedbackDialog;
 import eu.wise_iot.wanderlust.utils.MyCamera;
 
+/**
+ * MapFragment:
+ * @author Fabian Schwander
+ * @license MIT
+ */
 public class MapFragment extends Fragment{
     private static final String TAG = "MapFragment";
 

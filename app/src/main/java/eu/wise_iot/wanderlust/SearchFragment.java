@@ -22,7 +22,9 @@ import eu.wise_iot.wanderlust.adapter.TourModelArrayAdapter;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * SearchFragment:
+ * @author Fabian Schwander
+ * @license MIT
  */
 public class SearchFragment extends Fragment {
     private static final String TAG = "SearchFragment";
