@@ -70,8 +70,6 @@ public class MyMapOverlays implements Serializable {
 
     /**
      * initialize scalebar and its position
-     * @author Fabian Schwander
-     * @author Alexander Weinbeck
      */
     private void initScaleBarOverlay() {
         ScaleBarOverlay scaleBarOverlay = new ScaleBarOverlay(mapView);
