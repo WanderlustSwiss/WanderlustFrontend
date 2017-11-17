@@ -4,13 +4,10 @@ import android.app.Activity;
 
 import org.osmdroid.util.GeoPoint;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.model.Feedback;
-import eu.wise_iot.wanderlust.utils.MyFileManager;
-import eu.wise_iot.wanderlust.utils.MyJsonParser;
+import eu.wise_iot.wanderlust.model.FileHandler;
+import eu.wise_iot.wanderlust.model.JsonParser;
 
 /**
  * FeedbackController:
@@ -19,18 +16,18 @@ import eu.wise_iot.wanderlust.utils.MyJsonParser;
  */
 public class FeedbackController {
     private static final String TAG = "FeedbackController";
-    private MyFileManager myFileManager = new MyFileManager("feedbacks_json.txt");
+    private FileHandler fileHandler = new FileHandler("feedbacks_json.txt");
 //    private List<Feedback> feedbackList = new ArrayList<>();
-    private MyJsonParser parser;
+    private JsonParser parser;
 
     public FeedbackController(Activity activity) {
-        parser = new MyJsonParser(Feedback.class, activity, R.raw.feedbacks);
+        parser = new JsonParser(Feedback.class, activity, R.raw.feedbacks);
 //        feedbackList =  parser.getListFromResourceFile(R.raw.feedbacks);
     }
 
     public void saveFeedbackInFile(GeoPoint myLocation, int displayMode, int feedbackType,  String description, String imageFileName) { // todo: move to addFeedbackToList()
         String message = getFeedbackString(myLocation, displayMode, feedbackType, description, imageFileName);
-        myFileManager.saveDataInFile(message);
+        fileHandler.saveDataInFile(message);
     }
 
 //    public List<Feedback> getFeedbackList() {

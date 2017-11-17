@@ -1,4 +1,4 @@
-package eu.wise_iot.wanderlust;
+package eu.wise_iot.wanderlust.controller;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
+
+import eu.wise_iot.wanderlust.R;
 
 /**
  * DisclaimerFragment:

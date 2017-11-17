@@ -26,7 +26,7 @@
         <!-- FileProvider is needed for targetSDKVersion >= 24 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="eu.wise_iot.wanderlust.utils.MyCamera"
+            android:authorities="eu.wise_iot.wanderlust.model.Camera"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -35,7 +35,7 @@
         </provider>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".controller.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,33 +1,24 @@
-package eu.wise_iot.wanderlust;
+package eu.wise_iot.wanderlust.controller;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -36,13 +27,13 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
+import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
-import eu.wise_iot.wanderlust.dialog.CreateFeedbackDialog;
-import eu.wise_iot.wanderlust.utils.MyCamera;
+import eu.wise_iot.wanderlust.controller.dialog.CreateFeedbackDialog;
+import eu.wise_iot.wanderlust.model.Camera;
+import eu.wise_iot.wanderlust.model.StyleBehavior;
 
 /**
  * MapFragment:
@@ -65,7 +56,7 @@ public class MapFragment extends Fragment{
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
 
-    private MyCamera camera;
+    private Camera camera;
     private static String imageFileName;
     private static String photoPath;
 
@@ -310,7 +301,7 @@ public class MapFragment extends Fragment{
                     public void run() {
                         lastKnownLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
                         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                        camera = new MyCamera(getActivity(), mapFragment);
+                        camera = new Camera(getActivity(), mapFragment);
                         camera.start();
                         imageFileName = camera.getImageName();
                         photoPath = camera.getImagePath();

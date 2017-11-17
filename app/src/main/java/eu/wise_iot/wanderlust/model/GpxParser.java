@@ -1,4 +1,4 @@
-package eu.wise_iot.wanderlust.utils;
+package eu.wise_iot.wanderlust.model;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,16 +14,16 @@ import io.ticofab.androidgpxparser.parser.domain.Gpx;
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 
 /**
- * MyGpxParser:
+ * GpxParser:
  * @author Fabian Schwander
  * @license MIT
  */
-public class MyGpxParser {
-    private static final String TAG = "MyGpxParser";
+public class GpxParser {
+    private static final String TAG = "GpxParser";
     private final GPXParser gpxParser = new GPXParser();
     private Context context;
 
-    public MyGpxParser(Context context) {
+    public GpxParser(Context context) {
         this.context = context;
     }
 

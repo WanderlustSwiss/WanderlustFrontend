@@ -1,6 +1,5 @@
-package eu.wise_iot.wanderlust;
+package eu.wise_iot.wanderlust.model;
 
-import android.annotation.SuppressLint;
 import android.graphics.PorterDuff;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.view.View;
  * @license MIT
  */
 public class StyleBehavior {
-
     public static void  buttonEffectOnTouched(final View button) {
         button.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {

@@ -1,4 +1,4 @@
-package eu.wise_iot.wanderlust.utils;
+package eu.wise_iot.wanderlust.model;
 
 import android.content.Context;
 
@@ -13,22 +13,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MyJsonParser:
+ * JsonParser:
  * @author Fabian Schwander
  * @license MIT
  */
-public class MyJsonParser<T> {
-    private static final String TAG = "MyJsonParser";
+public class JsonParser<T> {
+    private static final String TAG = "JsonParser";
     private Context context;
     private Class<T> clazz; // is not pretty, but so far unavoidable in order to pass the class generically
 
-    public MyJsonParser(Class<T> clazz, Context context, int resourceId) {
+    public JsonParser(Class<T> clazz, Context context, int resourceId) {
         this.clazz = clazz;
         this.context = context;
         getTempListFromParsedJsonFile(resourceId);
     }
 
-    public MyJsonParser(Class<T> clazz, Context context) {
+    public JsonParser(Class<T> clazz, Context context) {
         this.clazz = clazz;
         this.context = context;
     }

@@ -1,4 +1,4 @@
-package eu.wise_iot.wanderlust;
+package eu.wise_iot.wanderlust.controller;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -30,12 +30,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
-import eu.wise_iot.wanderlust.dialog.DisplayFeedbackDialog;
+import eu.wise_iot.wanderlust.controller.dialog.DisplayFeedbackDialog;
 import eu.wise_iot.wanderlust.model.Feedback;
+import eu.wise_iot.wanderlust.model.GpxParser;
 import eu.wise_iot.wanderlust.service.FeedbackService;
-import eu.wise_iot.wanderlust.utils.MyGpxParser;
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -142,8 +143,8 @@ public class MyMapOverlays implements Serializable {
     }
 
     private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
-        MyGpxParser myGpxParser = new MyGpxParser(activity);
-        List<TrackPoint> gpxList = myGpxParser.getTrackPointList(R.raw.gpx1);
+        GpxParser gpxParser = new GpxParser(activity);
+        List<TrackPoint> gpxList = gpxParser.getTrackPointList(R.raw.gpx1);
         ArrayList<GeoPoint> geoPointList = new ArrayList<>();
 
         for (TrackPoint model : gpxList) {

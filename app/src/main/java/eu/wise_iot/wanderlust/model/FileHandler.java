@@ -1,28 +1,24 @@
-package eu.wise_iot.wanderlust.utils;
+package eu.wise_iot.wanderlust.model;
 
 import android.os.Environment;
-import android.util.Log;
 
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
- * MyFileManager:
+ * FileHandler:
  * @author Fabian Schwander
  * @license MIT
  */
-public class MyFileManager {
-    private static final String TAG = "MyFileManager";
+public class FileHandler {
+    private static final String TAG = "FileHandler";
 
     private File file;
     private String filename;
 
-    public MyFileManager(String filename) {
+    public FileHandler(String filename) {
         this.filename = filename;
     }
 

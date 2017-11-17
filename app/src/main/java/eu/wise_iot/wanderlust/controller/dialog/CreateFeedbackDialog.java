@@ -1,4 +1,4 @@
-package eu.wise_iot.wanderlust.dialog;
+package eu.wise_iot.wanderlust.controller.dialog;
 
 import android.app.DialogFragment;
 import android.content.Context;

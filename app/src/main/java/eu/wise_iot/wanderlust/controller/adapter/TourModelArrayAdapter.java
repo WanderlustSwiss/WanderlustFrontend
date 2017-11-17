@@ -1,6 +1,5 @@
-package eu.wise_iot.wanderlust.adapter;
+package eu.wise_iot.wanderlust.controller.adapter;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;

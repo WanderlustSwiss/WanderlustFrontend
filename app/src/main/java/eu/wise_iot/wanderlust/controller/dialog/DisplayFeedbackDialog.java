@@ -1,9 +1,8 @@
-package eu.wise_iot.wanderlust.dialog;
+package eu.wise_iot.wanderlust.controller.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;

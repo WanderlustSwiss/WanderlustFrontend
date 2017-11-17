@@ -30,7 +30,7 @@ public interface Constants {
 
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
-    String CAMERA_ACTIVITY = "MyCamera";
+    String CAMERA_ACTIVITY = "Camera";
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
     String CREATE_FEEDBACK_DIALOG = "CreateFeedbackDialog";
 

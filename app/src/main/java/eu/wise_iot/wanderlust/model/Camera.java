@@ -1,4 +1,4 @@
-package eu.wise_iot.wanderlust.utils;
+package eu.wise_iot.wanderlust.model;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import eu.wise_iot.wanderlust.MapFragment;
+import eu.wise_iot.wanderlust.controller.MapFragment;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
@@ -30,12 +30,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * MyCamera:
+ * Camera:
  * @author Fabian Schwander
  * @license MIT
  */
-public class MyCamera {
-    private static final String TAG = "MyCamera";
+public class Camera {
+    private static final String TAG = "Camera";
     private Activity activity;
     private MapFragment mapFragment;
 
@@ -44,7 +44,7 @@ public class MyCamera {
     private File photoFile;
     private Uri imageUri;
 
-    public MyCamera(Activity activity, MapFragment fragment) {
+    public Camera(Activity activity, MapFragment fragment) {
         this.activity = activity;
         this.mapFragment = fragment;
     }
@@ -68,7 +68,7 @@ public class MyCamera {
             }
             if (photoFile != null) {
                 // FileProvider is needed for targetSDKVersion >= 24
-                imageUri = FileProvider.getUriForFile(activity, "eu.wise_iot.wanderlust.utils.MyCamera", photoFile);
+                imageUri = FileProvider.getUriForFile(activity, "eu.wise_iot.wanderlust.model.Camera", photoFile);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 mapFragment.startActivityForResult(takePictureIntent, Constants.TAKE_PHOTO);

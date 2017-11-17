@@ -1,4 +1,4 @@
-package eu.wise_iot.wanderlust;
+package eu.wise_iot.wanderlust.controller;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -15,9 +15,10 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.model.JsonParser;
 import eu.wise_iot.wanderlust.model.Tour;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.utils.MyJsonParser;
 
 /**
  * TourFragment:
@@ -98,7 +99,7 @@ public class TourFragment extends Fragment {
     }
 
     private Tour initTourModel() {
-        MyJsonParser<Tour> parser = new MyJsonParser<>(Tour.class, context);
+        JsonParser<Tour> parser = new JsonParser<>(Tour.class, context);
         String transmittedTourDataAsJsonString = getArguments().getString(Constants.CLICKED_TOUR);
         Tour tour = parser.getObjectFromJsonString(transmittedTourDataAsJsonString);
         return tour;
