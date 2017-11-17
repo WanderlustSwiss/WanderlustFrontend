@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.model;
 
+import android.annotation.SuppressLint;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;

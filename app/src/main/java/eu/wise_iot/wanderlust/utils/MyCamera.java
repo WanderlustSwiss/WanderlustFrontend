@@ -86,6 +86,7 @@ public class MyCamera {
             }
         }
         // set up file name
+        //TODO: add locale to SimpleDateFormat (Multilingual)
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String fileName = "img_" + timeStamp + "_";
         String suffix = ".jpg";

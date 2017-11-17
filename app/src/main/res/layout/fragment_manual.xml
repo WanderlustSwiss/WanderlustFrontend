@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/background_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -36,6 +38,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:contentDescription="@null"
                         android:id="@+id/image4"
                         android:layout_width="20dp"
                         android:layout_height="20dp" />
@@ -45,7 +48,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image4"
-                        android:text="@string/msg_manual_p1_header" />
+                        android:text="@string/msg_manual_p1_header"
+                        tools:ignore="RtlHardcoded" />
 
                     <TextView
                         android:id="@+id/line_4_1"
@@ -75,6 +79,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:contentDescription="@null"
                         android:id="@+id/image5"
                         android:layout_width="20dp"
                         android:layout_height="20dp" />
@@ -84,7 +89,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image5"
-                        android:text="@string/msg_manual_p2_header" />
+                        android:text="@string/msg_manual_p2_header"
+                        tools:ignore="RtlHardcoded" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -99,6 +105,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:contentDescription="@null"
                         android:id="@+id/image1"
                         android:layout_width="25dp"
                         android:layout_height="25dp" />
@@ -108,7 +115,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image1"
-                        android:text="@string/msg_manual_p3_header" />
+                        android:text="@string/msg_manual_p3_header"
+                        tools:ignore="RtlHardcoded" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -122,6 +130,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:contentDescription="@null"
                         android:id="@+id/image2"
                         android:layout_width="25dp"
                         android:layout_height="25dp" />
@@ -131,7 +140,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image2"
-                        android:text="@string/msg_manual_p4_header" />
+                        android:text="@string/msg_manual_p4_header"
+                        tools:ignore="RtlHardcoded" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -145,6 +155,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:contentDescription="@null"
                         android:id="@+id/image3"
                         android:layout_width="25dp"
                         android:layout_height="25dp" />
@@ -154,7 +165,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image3"
-                        android:text="@string/msg_manual_p5_header" />
+                        android:text="@string/msg_manual_p5_header"
+                        tools:ignore="RtlHardcoded" />
 
                     <TextView
                         android:layout_width="match_parent"

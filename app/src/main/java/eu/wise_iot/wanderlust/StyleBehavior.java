@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust;
 
+import android.annotation.SuppressLint;
 import android.graphics.PorterDuff;
 import android.view.MotionEvent;
 import android.view.View;

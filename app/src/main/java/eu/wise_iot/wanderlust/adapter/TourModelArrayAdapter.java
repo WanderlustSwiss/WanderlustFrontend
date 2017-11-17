@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class TourModelArrayAdapter extends ArrayAdapter<Tour> {
 
         // get the Inflater and inflate the XML layout for each item
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.list_item, null);
+        View view = inflater.inflate(R.layout.list_item, parent, false);
 
         TextView title = (TextView) view.findViewById(R.id.tour_title);
         TextView subtitle = (TextView) view.findViewById(R.id.tour_subtitle);

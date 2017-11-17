@@ -244,8 +244,6 @@ public class MapFragment extends Fragment{
 
     /**
      * initializes location toggler
-     * @author Fabian Schwander
-     * @author Alexander Weinbeck
      * @param view
      */
     private void initLocationToggler(View view) {
@@ -290,8 +288,6 @@ public class MapFragment extends Fragment{
 
     /**
      * initializes camera button
-     * @author Fabian Schwander
-     * @author Alexander Weinbeck
      * @param view
      */
     private void initCameraButton(View view) {
@@ -325,7 +321,6 @@ public class MapFragment extends Fragment{
     }
     /**
      * initializes layer button
-     * @author Alexander Weinbeck
      * @param view
      */
     private void initLayerButton(View view) {
