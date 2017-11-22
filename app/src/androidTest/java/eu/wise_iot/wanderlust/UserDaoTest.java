@@ -1,11 +1,14 @@
 package eu.wise_iot.wanderlust;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
 
-import android.app.Instrumentation;
-import android.content.Context;
+import static org.junit.Assert.*;
 
 import eu.wise_iot.wanderlust.model.MyObjectBox;
 import eu.wise_iot.wanderlust.model.User;
@@ -17,10 +20,11 @@ import io.objectbox.query.QueryBuilder;
 
 
 /**
- * Created by rilindgashi on 22.11.17.
+ * @author Rilind Gashi
  */
 
-public class UserDaoTest extends Instrumentation{
+@RunWith(AndroidJUnit4.class)
+public class UserDaoTest {
 
     BoxStore boxStore;
     Box<User> userBox;
@@ -30,14 +34,12 @@ public class UserDaoTest extends Instrumentation{
 
     @Before
     public void setUpBefore(){
-        //TODO: Context von irgendwo herholen
-        //Context context = InstrumentationRegistry.getContext();
-        //boxStore = MyObjectBox.builder().androidContext(context).build();
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        boxStore = MyObjectBox.builder().androidContext(appContext).build();
         userDao = new UserDao(boxStore);
         userBox = boxStore.boxFor(User.class);
         userQueryBuilder = userBox.query();
         testUser = new User(0, "TestUser1", "TestUserMailAdress", "TestUserPassword");
-
     }
 
     @Test
@@ -51,7 +53,5 @@ public class UserDaoTest extends Instrumentation{
         userBox.put(testUser);
         assertEquals("TestUser1", userDao.findOne("nickname", "TestUser1").getNickname());
     }
-
-
 
 }

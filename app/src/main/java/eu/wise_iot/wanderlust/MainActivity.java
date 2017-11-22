@@ -73,19 +73,6 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-
-        /*
-        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        alertDialog.setTitle("Alert");
-        alertDialog.setMessage(userDao.findOne("nickname", "testUser").getNickname());
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-        */
     }
 
     @Override
