@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.objectbox'
 
 android {
     compileSdkVersion 25
@@ -47,8 +48,17 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0' // maybe not necessary because gson already included?
 
+    compile "io.objectbox:objectbox-android:$objectboxVersion"
+    // some useful Kotlin extension functions
+    // compile "io.objectbox:objectbox-kotlin:$objectboxVersion"
+
+    annotationProcessor "io.objectbox:objectbox-processor:$objectboxVersion"
+    // When using Kotlin use kapt instead:
+    // kapt "io.objectbox:objectbox-processor:$objectboxVersion"
 
     testCompile 'junit:junit:4.12'
+    // Optional -- Mockito framework
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }
 
 //the following sets the required permissions for API 23+ devices and AVDs

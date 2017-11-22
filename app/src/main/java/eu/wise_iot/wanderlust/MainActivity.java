@@ -1,10 +1,9 @@
 package eu.wise_iot.wanderlust;
 
 import android.Manifest;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -27,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.model.MyObjectBox;
+import eu.wise_iot.wanderlust.model.UserDao;
+import io.objectbox.BoxStore;
 
 /**
  * @Author: Fabian Schwander
@@ -47,8 +49,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupNavigation();
-
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+
+        BoxStore boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        UserDao userDao = new UserDao(boxStore);
+
         // check if app is opened for the first time
         if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
@@ -67,6 +72,20 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
+
+
+        /*
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage(userDao.findOne("nickname", "testUser").getNickname());
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+        */
     }
 
     @Override
