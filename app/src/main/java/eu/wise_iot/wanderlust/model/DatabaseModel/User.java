@@ -1,21 +1,16 @@
-package eu.wise_iot.wanderlust.model;
+package eu.wise_iot.wanderlust.model.DatabaseModel;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * User Model Object
- *
- * <P>Various attributes of User, and related behaviour.
- *
- * <P>Note that this class is an @Entity class for the Database
- *
+ * User
  * @author Rilind Gashi
- * @version 1.0
+ * @license MIT <license in our case always MIT>
  */
 
 @Entity
-public class User {
+public class User extends AbstractModel{
 
     @Id
     long id;

@@ -1,9 +1,11 @@
-package eu.wise_iot.wanderlust.model;
+package eu.wise_iot.wanderlust.model.DatabaseObject;
 
-import android.content.Context;
-
+import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.model.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.model.DatabaseModel.User;
+import eu.wise_iot.wanderlust.model.DatabaseModel.User_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -11,16 +13,12 @@ import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
 
 /**
- * User Dataobject
- *
- * <P>Handles the database queries for User Object
- *
- *
+ * UserDao
  * @author Rilind Gashi
- * @version 1.0
+ * @license MIT <license in our case always MIT>
  */
 
-public class UserDao {
+public class UserDao extends DatabaseObjectAbstract{
 
     private Box<User> userBox;
     private Query<User> userQuery;
@@ -38,12 +36,20 @@ public class UserDao {
         userQueryBuilder = userBox.query();
     }
 
+    public int count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        return 0;
+    }
+
+    public User update(User user){
+        return null;
+    }
     /**
      * Insert an user into the database.
      *
      * @param user (required).
+     *
      */
-    public void insertUser(User user){
+    public void create(User user){
         userBox.put(user);
     }
 
@@ -52,7 +58,7 @@ public class UserDao {
      *
      * @return List<User>
      */
-    public List<User> findAll() {
+    public List<User> find() {
         return userBox.getAll();
     }
 
@@ -64,21 +70,11 @@ public class UserDao {
      *
      * @return User who match to the search pattern in the searched columns
      */
-    public User findOne(String searchedColumn, String searchPattern){
-        switch (searchedColumn) {
-            case "id":
-                columnProperty = User_.id;
-                break;
-            case "nickname":
-                columnProperty = User_.nickname;
-                break;
-            case "mail":
-                columnProperty = User_.mail;
-                break;
-            case "password":
-                columnProperty = User_.password;
-                break;
-        }
+    public User findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = User_.class.getClass().getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(User_.class);
         userQueryBuilder.equal(columnProperty, searchPattern);
         userQuery = userQueryBuilder.build();
         return userQuery.findFirst();
@@ -92,48 +88,26 @@ public class UserDao {
      *
      * @return List<User> which contains the users, who match to the search pattern in the searched columns
      */
-    public List<User> findWithFilter(String searchedColumn, String searchPattern){
-        switch (searchedColumn) {
-            case "id":
-                columnProperty = User_.id;
-                break;
-            case "nickname":
-                columnProperty = User_.nickname;
-                break;
-            case "mail":
-                columnProperty = User_.mail;
-                break;
-            case "password":
-                columnProperty = User_.password;
-                break;
-        }
+    public List<User> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = User_.class.getClass().getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(User_.class);
         userQueryBuilder.equal(columnProperty , searchPattern);
         userQuery = userQueryBuilder.build();
         return userQuery.find();
     }
 
-    //Wird nicht benötigt, da man im Frontend den User nicht löschen kann.
-    //Habe ich aber als Beispiel gelassen, falls du es dir anschauen möchtest
-    /*
-    public void deleteUser(String searchedColumn, String searchPattern){
-        switch (searchedColumn) {
-            case "id":
-                columnProperty = User_.id;
-                break;
-            case "nickname":
-                columnProperty = User_.nickname;
-                break;
-            case "mail":
-                columnProperty = User_.mail;
-                break;
-            case "password":
-                columnProperty = User_.password;
-                break;
-        }
+    public User delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = User_.class.getClass().getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(User_.class);
         userQueryBuilder.equal(columnProperty , searchPattern);
         userQuery = userQueryBuilder.build();
         userQuery.remove();
+        return null;
     }
-    */
+
 
 }

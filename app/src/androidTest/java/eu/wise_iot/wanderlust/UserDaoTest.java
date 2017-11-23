@@ -4,16 +4,17 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
-import eu.wise_iot.wanderlust.model.MyObjectBox;
-import eu.wise_iot.wanderlust.model.User;
-import eu.wise_iot.wanderlust.model.UserDao;
-import eu.wise_iot.wanderlust.model.User_;
+import eu.wise_iot.wanderlust.model.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.model.DatabaseModel.User;
+import eu.wise_iot.wanderlust.model.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.model.DatabaseModel.User_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.query.QueryBuilder;
@@ -44,14 +45,22 @@ public class UserDaoTest {
 
     @Test
     public void insertUserTest(){
-        userDao.insertUser(testUser);
+        userDao.create(testUser);
         assertEquals("TestUser1", userQueryBuilder.equal(User_.nickname, "TestUser1").build().findFirst().getNickname());
     }
 
     @Test
     public void findOne(){
         userBox.put(testUser);
-        assertEquals("TestUser1", userDao.findOne("nickname", "TestUser1").getNickname());
+        try {
+            assertEquals("TestUser1", userDao.findOne("nickname", "TestUser1").getNickname());
+        }catch (NoSuchFieldException | IllegalAccessException e){
+
+        }
     }
 
+    @After
+    public void after() {
+        boxStore.close();
+    }
 }
