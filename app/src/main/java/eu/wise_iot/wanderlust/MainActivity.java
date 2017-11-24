@@ -1,7 +1,9 @@
 package eu.wise_iot.wanderlust;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.model.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.model.DatabaseModel.User;
 import eu.wise_iot.wanderlust.model.DatabaseObject.UserDao;
 import io.objectbox.BoxStore;
 
@@ -50,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
         BoxStore boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
-        UserDao userDao = new UserDao(boxStore);
 
         // check if app is opened for the first time
         if (preferences.getBoolean("firstTimeOpened", true)) {
@@ -70,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
-
     }
 
     @Override

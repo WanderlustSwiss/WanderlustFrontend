@@ -99,14 +99,13 @@ public class UserDao extends DatabaseObjectAbstract{
     }
 
     public User delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = User_.class.getClass().getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+        userBox.remove(findOne(searchedColumn, searchPattern));
 
-        columnProperty = (Property) searchedField.get(User_.class);
-        userQueryBuilder.equal(columnProperty , searchPattern);
-        userQuery = userQueryBuilder.build();
-        userQuery.remove();
         return null;
+    }
+
+    public void deleteAll(){
+        userBox.removeAll();
     }
 
 

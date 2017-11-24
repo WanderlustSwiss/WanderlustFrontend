@@ -44,13 +44,13 @@ public class UserDaoTest {
     }
 
     @Test
-    public void insertUserTest(){
+    public void createTest(){
         userDao.create(testUser);
         assertEquals("TestUser1", userQueryBuilder.equal(User_.nickname, "TestUser1").build().findFirst().getNickname());
     }
 
     @Test
-    public void findOne(){
+    public void findOneTest(){
         userBox.put(testUser);
         try {
             assertEquals("TestUser1", userDao.findOne("nickname", "TestUser1").getNickname());
@@ -59,8 +59,55 @@ public class UserDaoTest {
         }
     }
 
+    @Test
+    public void findTest(){
+        User userOne = new User(0, "TestUser2", "TestUser2Mail", "TestUser2Password");
+        User userTwo = new User(0, "TestUser3", "TestUser2Mail", "TestUser2Password");
+
+        userBox.put(userOne);
+        userBox.put(userTwo);
+
+        assertEquals(2, userDao.find().size());
+    }
+
+    @Test
+    public void findDetailedTest(){
+        User userOne = new User(0, "TestUser1", "TestUser2Mail", "TestUser2Password");
+        User userTwo = new User(0, "TestUser2", "TestUser2Mail", "TestUser2Password");
+        User userThree = new User(0, "TestUser3", "TestUser2Mail", "TestUser2Password");
+        User userFour = new User(0, "TestUser4", "TestUser3Mail", "TestUser2Password");
+
+        userBox.put(userOne);
+        userBox.put(userTwo);
+        userBox.put(userThree);
+        userBox.put(userFour);
+
+        try {
+            assertEquals(3, userDao.find("mail", "TestUser2Mail").size());
+        }catch (NoSuchFieldException | IllegalAccessException e){
+
+        }
+    }
+
+    public void removeTest(){
+        User userOne = new User(0, "TestUser1", "TestUser2Mail", "TestUser2Password");
+        User userTwo = new User(0, "TestUser2", "TestUser2Mail", "TestUser2Password");
+
+        userBox.put(userOne);
+        userBox.put(userTwo);
+
+        try {
+            userDao.delete("nickname", "TestUser1");
+        }catch (NoSuchFieldException | IllegalAccessException e){
+
+        }
+
+        assertEquals(1, userDao.find().size());
+    }
+
     @After
     public void after() {
+        userBox.removeAll();
         boxStore.close();
     }
 }

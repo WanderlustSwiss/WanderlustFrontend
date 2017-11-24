@@ -26,33 +26,9 @@
         }
       ],
       "relations": []
-    },
-    {
-      "id": "2:2896838780533976671",
-      "lastPropertyId": "4:1038541337969426723",
-      "name": "Device",
-      "properties": [
-        {
-          "id": "1:403439432854185830",
-          "name": "deviceId"
-        },
-        {
-          "id": "2:2829396270124199534",
-          "name": "identifier"
-        },
-        {
-          "id": "3:8058714619860709336",
-          "name": "language"
-        },
-        {
-          "id": "4:1038541337969426723",
-          "name": "searchFilter"
-        }
-      ],
-      "relations": []
     }
   ],
-  "lastEntityId": "2:2896838780533976671",
+  "lastEntityId": "1:1030489358373602829",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

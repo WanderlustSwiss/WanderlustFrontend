@@ -6,7 +6,7 @@ import io.objectbox.annotation.Id;
 /**
  * User
  * @author Rilind Gashi
- * @license MIT <license in our case always MIT>
+ * @license MIT
  */
 
 @Entity
