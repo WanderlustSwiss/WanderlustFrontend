@@ -1,38 +1,60 @@
 <resources>
 
     <!-- APPLICATION THEME -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/myYellow</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/materialGreen</item>
         <item name="colorPrimaryDark">@color/myPrimaryDark</item>
-        <item name="colorAccent">@color/myRed</item>
+        <item name="colorAccent">@color/materialGreen</item>
     </style>
 
 
     <!-- TEXT STYLES -->
     <style name="h1">
-        <item name="android:textSize">23dp</item>
+        <item name="android:textSize">23sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
     <style name="h2">
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">5dp</item>
     </style>
 
     <style name="h3">
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">3dp</item>
     </style>
 
 
-    <!-- BUTTON -->
-    <style name="my_round_button">
-        <item name="android:layout_width">55dp</item>
-        <item name="android:layout_height">55dp</item>
-        <item name="android:layout_margin">10dp</item>
+    <!-- BUTTONS -->
+    <style name="floatingactionbutton_normal" parent="Widget.Design.FloatingActionButton">
+        <!-- properties -->
+        <item name="android:elevation">5dp</item>
+        <item name="backgroundTint">@color/materialGreen</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <!-- give button space for the shadow -->
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="floatingactionbutton_mini" parent="Widget.Design.FloatingActionButton">
+        <!-- properties (material standard) -->
+        <item name="android:elevation">5dp</item>
+        <item name="backgroundTint">@color/materialGreen</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <!-- give button space for the shadow -->
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
     </style>
 
     <style name="my_click_button">

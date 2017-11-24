@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/background_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -26,6 +27,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:contentDescription="@null"
                     android:id="@+id/welcome_header"
                     style="@style/h2"
                     android:layout_width="match_parent"

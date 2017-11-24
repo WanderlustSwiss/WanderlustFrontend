@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -43,14 +44,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/publication_mode_spinner"
-            android:text="@string/dialog_feedback_publication_mode" />
+            android:text="@string/dialog_feedback_publication_mode"
+            tools:ignore="RtlHardcoded" />
 
         <Spinner
             android:id="@+id/publication_mode_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:entries="@array/dialog_feedback_spinner_mode" />
+            android:entries="@array/dialog_feedback_spinner_mode"
+            tools:ignore="RtlHardcoded" />
     </RelativeLayout>
 
     <!-- FEEDBACK TYPE -->
@@ -67,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/feedback_type_radio_group"
-            android:text="@string/dialog_feedback_feedback_type" />
+            android:text="@string/dialog_feedback_feedback_type"/>
 
         <RadioGroup
             android:id="@+id/feedback_type_radio_group"
@@ -127,7 +130,7 @@
             android:id="@+id/dialog_post_feedback_button_save"
             style="@style/my_click_button"
             android:layout_alignParentRight="true"
-            android:text="@string/action_confirm" />
+            android:text="@string/action_confirm"/>
     </RelativeLayout>
 
 

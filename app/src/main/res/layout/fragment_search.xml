@@ -7,8 +7,9 @@
     android:background="@color/myPrimaryBackground"
     android:padding="10dp"
     android:gravity="end"
-    tools:context="eu.wise_iot.wanderlust.MainActivity"
-    android:clickable="true">
+    tools:context="eu.wise_iot.wanderlust.views.MainActivity"
+    android:clickable="true"
+    android:focusable="true">
 
     <EditText
         android:id="@+id/editText"

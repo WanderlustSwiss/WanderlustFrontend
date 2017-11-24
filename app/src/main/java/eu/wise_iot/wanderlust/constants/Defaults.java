@@ -3,9 +3,10 @@ package eu.wise_iot.wanderlust.constants;
 import org.osmdroid.util.GeoPoint;
 
 /**
- * Created by fabianschwander on 12.09.17.
+ * Defaults:
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public interface Defaults {
 
     /* ZOOM */
