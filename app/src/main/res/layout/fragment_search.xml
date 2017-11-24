@@ -7,7 +7,7 @@
     android:background="@color/myPrimaryBackground"
     android:padding="10dp"
     android:gravity="end"
-    tools:context="eu.wise_iot.wanderlust.controller.MainActivity"
+    tools:context="eu.wise_iot.wanderlust.views.MainActivity"
     android:clickable="true"
     android:focusable="true">
 
