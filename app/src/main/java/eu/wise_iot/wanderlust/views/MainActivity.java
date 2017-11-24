@@ -1,7 +1,11 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -25,6 +29,10 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.model.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.model.DatabaseModel.User;
+import eu.wise_iot.wanderlust.model.DatabaseObject.UserDao;
+import io.objectbox.BoxStore;
 
 /**
  * MainActivity:
@@ -46,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupNavigation();
-
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+
+        BoxStore boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+
         // check if app is opened for the first time
         if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
