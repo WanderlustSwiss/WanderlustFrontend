@@ -2,7 +2,7 @@ package eu.wise_iot.wanderlust.services;
 
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.Feedback;
+import eu.wise_iot.wanderlust.models.Old.Feedback;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;

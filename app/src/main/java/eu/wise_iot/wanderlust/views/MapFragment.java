@@ -32,8 +32,8 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.views.dialog.CreateFeedbackDialog;
-import eu.wise_iot.wanderlust.models.Camera;
-import eu.wise_iot.wanderlust.models.StyleBehavior;
+import eu.wise_iot.wanderlust.models.Old.Camera;
+import eu.wise_iot.wanderlust.models.Old.StyleBehavior;
 
 /**
  * MapFragment:

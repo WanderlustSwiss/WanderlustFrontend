@@ -5,9 +5,9 @@ import android.app.Activity;
 import org.osmdroid.util.GeoPoint;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.models.Feedback;
-import eu.wise_iot.wanderlust.models.FileHandler;
-import eu.wise_iot.wanderlust.models.JsonParser;
+import eu.wise_iot.wanderlust.models.Old.Feedback;
+import eu.wise_iot.wanderlust.models.Old.FileHandler;
+import eu.wise_iot.wanderlust.models.Old.JsonParser;
 
 /**
  * FeedbackController:

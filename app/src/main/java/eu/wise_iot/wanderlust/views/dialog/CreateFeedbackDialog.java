@@ -19,7 +19,7 @@ import org.osmdroid.util.GeoPoint;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
-import eu.wise_iot.wanderlust.models.Feedback;
+import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.services.FeedbackService;
 import retrofit2.Call;
 import retrofit2.Callback;

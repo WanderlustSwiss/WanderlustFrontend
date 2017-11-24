@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.models.Tour;
+import eu.wise_iot.wanderlust.models.Old.Tour;
 
 /**
  * TourModelArrayAdapter:

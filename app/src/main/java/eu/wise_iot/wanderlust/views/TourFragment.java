@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.models.JsonParser;
-import eu.wise_iot.wanderlust.models.Tour;
+import eu.wise_iot.wanderlust.models.Old.JsonParser;
+import eu.wise_iot.wanderlust.models.Old.Tour;
 import eu.wise_iot.wanderlust.constants.Constants;
 
 /**
