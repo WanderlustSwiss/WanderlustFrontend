@@ -35,13 +35,31 @@ public class DeviceDao extends DatabaseObjectAbstract{
         deviceQueryBuilder = deviceBox.query();
     }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        return 0;
+    public long count(){
+        return deviceBox.count();
     }
 
-    public Device update(Device device){
-        return null;
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = Device_.class.getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(Device_.class);
+        deviceQueryBuilder.equal(columnProperty , searchPattern);
+        deviceQuery = deviceQueryBuilder.build();
+        return deviceQuery.find().size();
     }
+
+    /**
+     * Update an existing user in the database.
+     *
+     * @param device (required).
+     *
+     */
+    public Device update(Device device){
+        deviceBox.put(device);
+        return device;
+    }
+
     /**
      * Insert a device into the database.
      *
@@ -70,7 +88,7 @@ public class DeviceDao extends DatabaseObjectAbstract{
      * @return Device which match to the search pattern in the searched columns
      */
     public Device findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = Device_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(Device_.class);
@@ -88,7 +106,7 @@ public class DeviceDao extends DatabaseObjectAbstract{
      * @return List<Device> which contains the users, who match to the search pattern in the searched columns
      */
     public List<Device> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = Device_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(Device_.class);

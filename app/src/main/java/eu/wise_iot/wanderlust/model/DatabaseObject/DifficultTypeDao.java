@@ -34,12 +34,29 @@ public class DifficultTypeDao extends DatabaseObjectAbstract{
         difficultTypeQueryBuilder = difficultTypeBox.query();
     }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        return 0;
+    public long count(){
+        return difficultTypeBox.count();
     }
 
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = DifficultType_.class.getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(DifficultType_.class);
+        difficultTypeQueryBuilder.equal(columnProperty , searchPattern);
+        difficultTypeQuery = difficultTypeQueryBuilder.build();
+        return difficultTypeQuery.find().size();
+    }
+
+    /**
+     * Update an existing difficulty in the database.
+     *
+     * @param difficultType (required).
+     *
+     */
     public DifficultType update(DifficultType difficultType){
-        return null;
+        difficultTypeBox.put(difficultType);
+        return difficultType;
     }
     /**
      * Insert a difficulty type into the database.
@@ -69,7 +86,7 @@ public class DifficultTypeDao extends DatabaseObjectAbstract{
      * @return Difficulty type which match to the search pattern in the searched columns
      */
     public DifficultType findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = DifficultType_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = DifficultType_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(DifficultType_.class);
@@ -87,7 +104,7 @@ public class DifficultTypeDao extends DatabaseObjectAbstract{
      * @return List<DifficultType> which contains the difficulty types, which match to the search pattern in the searched columns
      */
     public List<DifficultType> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = DifficultType_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = DifficultType_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(DifficultType_.class);
@@ -97,9 +114,10 @@ public class DifficultTypeDao extends DatabaseObjectAbstract{
     }
 
     public DifficultType delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        difficultTypeBox.remove(findOne(searchedColumn, searchPattern));
+        DifficultType difficultType = findOne(searchedColumn, searchPattern);
+        difficultTypeBox.remove(difficultType);
 
-        return null;
+        return difficultType;
     }
 
     public void deleteAll(){

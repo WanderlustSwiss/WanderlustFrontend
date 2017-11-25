@@ -35,12 +35,29 @@ public class HistoryDao {
         historyQueryBuilder = historyBox.query();
     }
 
-    public int count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        return 0;
+    public long count(){
+        return historyBox.count();
     }
 
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = History_.class.getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(History_.class);
+        historyQueryBuilder.equal(columnProperty , Integer.valueOf(searchPattern));
+        historyQuery = historyQueryBuilder.build();
+        return historyQuery.find().size();
+    }
+
+    /**
+     * Update an existing user in the database.
+     *
+     * @param history (required).
+     *
+     */
     public History update(History history){
-        return null;
+        historyBox.put(history);
+        return history;
     }
     /**
      * Insert an history into the database.
@@ -70,11 +87,11 @@ public class HistoryDao {
      * @return History which match to the search pattern in the searched columns
      */
     public History findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = History_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = History_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(History_.class);
-        historyQueryBuilder.equal(columnProperty, searchPattern);
+        historyQueryBuilder.equal(columnProperty, Integer.valueOf(searchPattern));
         historyQuery = historyQueryBuilder.build();
         return historyQuery.findFirst();
     }
@@ -88,11 +105,11 @@ public class HistoryDao {
      * @return List<History> which contains the equipements, which match to the search pattern in the searched columns
      */
     public List<History> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = History_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = History_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(History_.class);
-        historyQueryBuilder.equal(columnProperty , searchPattern);
+        historyQueryBuilder.equal(columnProperty , Integer.valueOf(searchPattern));
         historyQuery = historyQueryBuilder.build();
         return historyQuery.find();
     }

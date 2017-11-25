@@ -35,12 +35,29 @@ public class RouteDao {
         routeQueryBuilder = routeBox.query();
     }
 
-    public int count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        return 0;
+    public long count(){
+        return routeBox.count();
     }
 
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = Route_.class.getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(Route_.class);
+        routeQueryBuilder.equal(columnProperty , searchPattern);
+        routeQuery = routeQueryBuilder.build();
+        return routeQuery.find().size();
+    }
+
+    /**
+     * Update an existing user in the database.
+     *
+     * @param route (required).
+     *
+     */
     public Route update(Route route){
-        return null;
+        routeBox.put(route);
+        return route;
     }
     /**
      * Insert an history into the database.
@@ -70,7 +87,7 @@ public class RouteDao {
      * @return Route which match to the search pattern in the searched columns
      */
     public Route findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Route_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = Route_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(Route_.class);
@@ -88,7 +105,7 @@ public class RouteDao {
      * @return List<Route> which contains the equipements, which match to the search pattern in the searched columns
      */
     public List<Route> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Route_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = Route_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(Route_.class);

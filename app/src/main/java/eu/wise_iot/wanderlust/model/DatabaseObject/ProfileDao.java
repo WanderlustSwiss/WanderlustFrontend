@@ -34,12 +34,29 @@ public class ProfileDao extends DatabaseObjectAbstract {
         profileQueryBuilder = profileBox.query();
     }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        return 0;
+    public long count(){
+        return profileBox.count();
     }
 
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = Profile_.class.getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(Profile_.class);
+        profileQueryBuilder.equal(columnProperty , searchPattern);
+        profileQuery = profileQueryBuilder.build();
+        return profileQuery.find().size();
+    }
+
+    /**
+     * Update an existing user in the database.
+     *
+     * @param profile (required).
+     *
+     */
     public Profile update(Profile profile){
-        return null;
+        profileBox.put(profile);
+        return profile;
     }
     /**
      * Insert a profile into the database.
@@ -69,7 +86,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @return Profile who match to the search pattern in the searched columns
      */
     public Profile findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Profile_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = Profile_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(Profile_.class);
@@ -87,7 +104,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @return List<Profile> which contains the users, who match to the search pattern in the searched columns
      */
     public List<Profile> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Profile_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = Profile_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(Profile_.class);

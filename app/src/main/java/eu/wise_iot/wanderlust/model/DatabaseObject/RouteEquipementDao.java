@@ -3,7 +3,7 @@ package eu.wise_iot.wanderlust.model.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.model.DatabaseModel.Device_;
+import eu.wise_iot.wanderlust.model.DatabaseModel.RouteEquipement_;
 import eu.wise_iot.wanderlust.model.DatabaseModel.RouteEquipement_;
 import eu.wise_iot.wanderlust.model.DatabaseModel.RouteEquipement;
 import io.objectbox.Box;
@@ -20,9 +20,9 @@ import io.objectbox.query.QueryBuilder;
 
 public class RouteEquipementDao extends DatabaseObjectAbstract{
 
-    private Box<RouteEquipement> deviceBox;
-    private Query<RouteEquipement> deviceQuery;
-    private QueryBuilder<RouteEquipement> deviceQueryBuilder;
+    private Box<RouteEquipement> routeEquipementBox;
+    private Query<RouteEquipement> routeEquipementQuery;
+    private QueryBuilder<RouteEquipement> routeEquipementQueryBuilder;
     Property columnProperty;
 
     /**
@@ -32,26 +32,26 @@ public class RouteEquipementDao extends DatabaseObjectAbstract{
      */
 
     public RouteEquipementDao(BoxStore boxStore){
-        deviceBox = boxStore.boxFor(RouteEquipement.class);
-        deviceQueryBuilder = deviceBox.query();
+        routeEquipementBox = boxStore.boxFor(RouteEquipement.class);
+        routeEquipementQueryBuilder = routeEquipementBox.query();
     }
 
     public long count(){
-        return deviceBox.count();
+        return routeEquipementBox.count();
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = RouteEquipement_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Device_.class);
-        deviceQueryBuilder.equal(columnProperty , searchPattern);
-        deviceQuery = deviceQueryBuilder.build();
-        return deviceQuery.find().size();
+        columnProperty = (Property) searchedField.get(RouteEquipement_.class);
+        routeEquipementQueryBuilder.equal(columnProperty , Integer.valueOf(searchPattern));
+        routeEquipementQuery = routeEquipementQueryBuilder.build();
+        return routeEquipementQuery.find().size();
     }
 
 
-    public RouteEquipement update(RouteEquipement device){
+    public RouteEquipement update(RouteEquipement routeEquipement){
         return null;
     }
 
@@ -62,16 +62,16 @@ public class RouteEquipementDao extends DatabaseObjectAbstract{
      *
      */
     public void create(RouteEquipement routeEquipement){
-        deviceBox.put(routeEquipement);
+        routeEquipementBox.put(routeEquipement);
     }
 
     /**
-     * Return a list with all device
+     * Return a list with all routeEquipement
      *
      * @return List<RouteEquipement>
      */
     public List<RouteEquipement> find() {
-        return deviceBox.getAll();
+        return routeEquipementBox.getAll();
     }
 
     /**
@@ -83,13 +83,13 @@ public class RouteEquipementDao extends DatabaseObjectAbstract{
      * @return Route Equipement which match to the search pattern in the searched columns
      */
     public RouteEquipement findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = RouteEquipement_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = RouteEquipement_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(RouteEquipement_.class);
-        deviceQueryBuilder.equal(columnProperty, searchPattern);
-        deviceQuery = deviceQueryBuilder.build();
-        return deviceQuery.findFirst();
+        routeEquipementQueryBuilder.equal(columnProperty, Integer.valueOf(searchPattern));
+        routeEquipementQuery = routeEquipementQueryBuilder.build();
+        return routeEquipementQuery.findFirst();
     }
 
     /**
@@ -101,23 +101,23 @@ public class RouteEquipementDao extends DatabaseObjectAbstract{
      * @return List<RouteEquipement> which contains the route equipements, which match to the search pattern in the searched columns
      */
     public List<RouteEquipement> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = RouteEquipement_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = RouteEquipement_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(RouteEquipement_.class);
-        deviceQueryBuilder.equal(columnProperty , searchPattern);
-        deviceQuery = deviceQueryBuilder.build();
-        return deviceQuery.find();
+        routeEquipementQueryBuilder.equal(columnProperty , Integer.valueOf(searchPattern));
+        routeEquipementQuery = routeEquipementQueryBuilder.build();
+        return routeEquipementQuery.find();
     }
 
     public RouteEquipement delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        deviceBox.remove(findOne(searchedColumn, searchPattern));
+        routeEquipementBox.remove(findOne(searchedColumn, searchPattern));
 
         return null;
     }
 
     public void deleteAll(){
-        deviceBox.removeAll();
+        routeEquipementBox.removeAll();
     }
 
 

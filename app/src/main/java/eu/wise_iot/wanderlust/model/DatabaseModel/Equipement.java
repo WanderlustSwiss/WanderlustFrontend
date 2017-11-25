@@ -13,22 +13,22 @@ import io.objectbox.annotation.Id;
 public class Equipement extends AbstractModel{
 
     @Id
-    long equipement_id;
+    long equipementId;
     String name;
     String description;
 
-    public Equipement(long equipement_id, String name, String description) {
-        this.equipement_id = equipement_id;
+    public Equipement(long equipementId, String name, String description) {
+        this.equipementId = equipementId;
         this.name = name;
         this.description = description;
     }
 
-    public long getEquipement_id() {
-        return equipement_id;
+    public long getEquipementId() {
+        return equipementId;
     }
 
-    public void setEquipement_id(long equipement_id) {
-        this.equipement_id = equipement_id;
+    public void setEquipementId(long equipementId) {
+        this.equipementId = equipementId;
     }
 
     public String getName() {

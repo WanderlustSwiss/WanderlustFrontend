@@ -69,13 +69,9 @@
     },
     {
       "id": "4:3869637647644772983",
-      "lastPropertyId": "3:2905598888233403068",
+      "lastPropertyId": "4:1003601049222985642",
       "name": "Equipement",
       "properties": [
-        {
-          "id": "1:1766140205456540098",
-          "name": "equipement_id"
-        },
         {
           "id": "2:2747744528948397377",
           "name": "name"
@@ -83,6 +79,10 @@
         {
           "id": "3:2905598888233403068",
           "name": "description"
+        },
+        {
+          "id": "4:1003601049222985642",
+          "name": "equipementId"
         }
       ],
       "relations": []
@@ -232,7 +232,9 @@
   "modelVersionParserMinimum": 4,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    1766140205456540098
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
