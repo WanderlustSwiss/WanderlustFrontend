@@ -12,7 +12,9 @@ import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
 
 /**
- * Created by rilindgashi on 24.11.17.
+ * DeviceDao
+ * @author Rilind Gashi
+ * @license MIT
  */
 
 public class DeviceDao extends DatabaseObjectAbstract{
@@ -33,7 +35,7 @@ public class DeviceDao extends DatabaseObjectAbstract{
         deviceQueryBuilder = deviceBox.query();
     }
 
-    public int count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         return 0;
     }
 
@@ -41,9 +43,9 @@ public class DeviceDao extends DatabaseObjectAbstract{
         return null;
     }
     /**
-     * Insert an user into the database.
+     * Insert a device into the database.
      *
-     * @param user (required).
+     * @param device (required).
      *
      */
     public void create(Device device){
@@ -51,21 +53,21 @@ public class DeviceDao extends DatabaseObjectAbstract{
     }
 
     /**
-     * Return a list with all user
+     * Return a list with all devices
      *
-     * @return List<User>
+     * @return List<Device>
      */
     public List<Device> find() {
         return deviceBox.getAll();
     }
 
     /**
-     * Searching for a single user with a search pattern in a column.
+     * Searching for a single device with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.
      *
-     * @return User who match to the search pattern in the searched columns
+     * @return Device which match to the search pattern in the searched columns
      */
     public Device findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         Field searchedField = Device_.class.getClass().getDeclaredField(searchedColumn);
@@ -78,7 +80,7 @@ public class DeviceDao extends DatabaseObjectAbstract{
     }
 
     /**
-     * Searching for user matching with the search pattern in a the selected column.
+     * Searching for device matching with the search pattern in a the selected column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.

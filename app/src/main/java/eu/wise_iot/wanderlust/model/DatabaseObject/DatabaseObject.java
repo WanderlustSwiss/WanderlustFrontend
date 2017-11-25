@@ -18,6 +18,6 @@ public interface DatabaseObject {
     public List<? extends AbstractModel> find();
     public List<? extends AbstractModel> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException ;
     public AbstractModel findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException ;
-    public int count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
 
 }

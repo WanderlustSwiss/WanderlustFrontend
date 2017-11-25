@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.model.DatabaseModel;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.NameInDb;
 
 /**
  * User
@@ -14,9 +15,11 @@ public class User extends AbstractModel{
 
     @Id
     long id;
-
+    @NameInDb("nickname")
     String nickname;
+    @NameInDb("mail")
     String mail;
+    @NameInDb("password")
     String password;
 
     /**
@@ -35,6 +38,11 @@ public class User extends AbstractModel{
         this.password = password;
     }
 
+    /**
+     * Returns the id.
+     *
+     * @return id
+     */
     public long getId() { return id; }
 
     /**

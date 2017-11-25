@@ -1,8 +1,49 @@
 package eu.wise_iot.wanderlust.model.DatabaseModel;
 
+import io.objectbox.annotation.Entity;
+import io.objectbox.annotation.Id;
+
 /**
- * Created by rilindgashi on 24.11.17.
+ * RouteEquipement
+ * @author Rilind Gashi
+ * @license MIT
  */
 
-public class RouteEquipement {
+@Entity
+public class RouteEquipement extends AbstractModel{
+
+    @Id
+    long routeEquipementId;
+    long routeId;
+    long equipementId;
+
+    public RouteEquipement(long routeEquipementId, long routeId, long equipementId) {
+        this.routeEquipementId = routeEquipementId;
+        this.routeId = routeId;
+        this.equipementId = equipementId;
+    }
+
+    public long getRouteEquipementId() {
+        return routeEquipementId;
+    }
+
+    public void setRouteEquipementId(long routeEquipementId) {
+        this.routeEquipementId = routeEquipementId;
+    }
+
+    public long getRouteId() {
+        return routeId;
+    }
+
+    public void setRouteId(long routeId) {
+        this.routeId = routeId;
+    }
+
+    public long getEquipementId() {
+        return equipementId;
+    }
+
+    public void setEquipementId(long equipementId) {
+        this.equipementId = equipementId;
+    }
 }

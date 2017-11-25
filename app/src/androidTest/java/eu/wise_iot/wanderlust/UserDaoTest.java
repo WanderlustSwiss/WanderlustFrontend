@@ -50,6 +50,15 @@ public class UserDaoTest {
     }
 
     @Test
+    public void updateTest(){
+        userBox.put(testUser);
+        testUser.setNickname("UpdatedTestUser");
+        userBox.put(testUser);
+        assertEquals("UpdatedTestUser", userQueryBuilder.equal(User_.id, testUser.getId()).build().findFirst().getNickname());
+
+    }
+
+    @Test
     public void findOneTest(){
         userBox.put(testUser);
         try {
@@ -89,7 +98,38 @@ public class UserDaoTest {
         }
     }
 
-    public void removeTest(){
+    @Test
+    public void countTest(){
+        User userOne = new User(0, "TestUser1", "TestUser2Mail", "TestUser2Password");
+        User userTwo = new User(0, "TestUser2", "TestUser2Mail", "TestUser2Password");
+        User userThree = new User(0, "TestUser3", "TestUser2Mail", "TestUser2Password");
+        User userFour = new User(0, "TestUser4", "TestUser3Mail", "TestUser2Password");
+
+        userBox.put(userOne);
+        userBox.put(userTwo);
+        userBox.put(userThree);
+        userBox.put(userFour);
+
+        assertEquals(4, userDao.count());
+    }
+
+    @Test
+    public void countTestTwo() throws NoSuchFieldException, IllegalAccessException {
+        User userOne = new User(0, "TestUser1", "TestUser2Mail", "TestUser2Password");
+        User userTwo = new User(0, "TestUser2", "TestUser2Mail", "TestUser2Password");
+        User userThree = new User(0, "TestUser3", "TestUser2Mail", "TestUser2Password");
+        User userFour = new User(0, "TestUser4", "TestUser3Mail", "TestUser2Password");
+
+        userBox.put(userOne);
+        userBox.put(userTwo);
+        userBox.put(userThree);
+        userBox.put(userFour);
+
+        assertEquals(3, userDao.count("mail", "TestUser2Mail"));
+    }
+
+    @Test
+    public void deleteTest(){
         User userOne = new User(0, "TestUser1", "TestUser2Mail", "TestUser2Password");
         User userTwo = new User(0, "TestUser2", "TestUser2Mail", "TestUser2Password");
 
@@ -103,6 +143,17 @@ public class UserDaoTest {
         }
 
         assertEquals(1, userDao.find().size());
+    }
+
+    @Test
+    public void deleteAllTest(){
+        User userOne = new User(0, "TestUser1", "TestUser2Mail", "TestUser2Password");
+        User userTwo = new User(0, "TestUser2", "TestUser2Mail", "TestUser2Password");
+
+        userBox.put(userOne);
+        userBox.put(userTwo);
+        userDao.deleteAll();
+        assertEquals(0, userDao.count());
     }
 
     @After
