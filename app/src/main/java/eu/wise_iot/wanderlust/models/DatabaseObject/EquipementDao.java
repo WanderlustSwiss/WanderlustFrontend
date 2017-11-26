@@ -3,7 +3,8 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.Equipement;
+import eu.wise_iot.wanderlust.model.DatabaseModel.Equipement;
+import eu.wise_iot.wanderlust.model.DatabaseModel.Equipement_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -38,10 +39,10 @@ public class EquipementDao extends DatabaseObjectAbstract {
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Equipement.class.getDeclaredField(searchedColumn);
+        Field searchedField = Equipement_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Equipement.class);
+        columnProperty = (Property) searchedField.get(Equipement_.class);
         equipementQueryBuilder.equal(columnProperty , searchPattern);
         equipementQuery = equipementQueryBuilder.build();
         return equipementQuery.find().size();
@@ -85,10 +86,10 @@ public class EquipementDao extends DatabaseObjectAbstract {
      * @return Equipement which match to the search pattern in the searched columns
      */
     public Equipement findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Equipement.class.getDeclaredField(searchedColumn);
+        Field searchedField = Equipement_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Equipement.class);
+        columnProperty = (Property) searchedField.get(Equipement_.class);
         equipementQueryBuilder.equal(columnProperty, searchPattern);
         equipementQuery = equipementQueryBuilder.build();
         return equipementQuery.findFirst();
@@ -103,10 +104,10 @@ public class EquipementDao extends DatabaseObjectAbstract {
      * @return List<Equipement> which contains the equipements, which match to the search pattern in the searched columns
      */
     public List<Equipement> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Equipement.class.getDeclaredField(searchedColumn);
+        Field searchedField = Equipement_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Equipement.class);
+        columnProperty = (Property) searchedField.get(Equipement_.class);
         equipementQueryBuilder.equal(columnProperty , searchPattern);
         equipementQuery = equipementQueryBuilder.build();
         return equipementQuery.find();

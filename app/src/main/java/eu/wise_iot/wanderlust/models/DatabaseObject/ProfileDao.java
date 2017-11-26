@@ -3,7 +3,8 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
+import eu.wise_iot.wanderlust.model.DatabaseModel.Profile_;
+import eu.wise_iot.wanderlust.model.DatabaseModel.Profile;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -38,10 +39,10 @@ public class ProfileDao extends DatabaseObjectAbstract {
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Profile.class.getDeclaredField(searchedColumn);
+        Field searchedField = Profile_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Profile.class);
+        columnProperty = (Property) searchedField.get(Profile_.class);
         profileQueryBuilder.equal(columnProperty , searchPattern);
         profileQuery = profileQueryBuilder.build();
         return profileQuery.find().size();
@@ -85,10 +86,10 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @return Profile who match to the search pattern in the searched columns
      */
     public Profile findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Profile.class.getDeclaredField(searchedColumn);
+        Field searchedField = Profile_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Profile.class);
+        columnProperty = (Property) searchedField.get(Profile_.class);
         profileQueryBuilder.equal(columnProperty, searchPattern);
         profileQuery = profileQueryBuilder.build();
         return profileQuery.findFirst();
@@ -103,10 +104,10 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @return List<Profile> which contains the users, who match to the search pattern in the searched columns
      */
     public List<Profile> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Profile.class.getDeclaredField(searchedColumn);
+        Field searchedField = Profile_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Profile.class);
+        columnProperty = (Property) searchedField.get(Profile_.class);
         profileQueryBuilder.equal(columnProperty , searchPattern);
         profileQuery = profileQueryBuilder.build();
         return profileQuery.find();

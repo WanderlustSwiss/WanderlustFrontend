@@ -3,7 +3,8 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.Route;
+import eu.wise_iot.wanderlust.model.DatabaseModel.Route;
+import eu.wise_iot.wanderlust.model.DatabaseModel.Route_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -39,10 +40,10 @@ public class RouteDao {
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Route.class.getDeclaredField(searchedColumn);
+        Field searchedField = Route_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Route.class);
+        columnProperty = (Property) searchedField.get(Route_.class);
         routeQueryBuilder.equal(columnProperty , searchPattern);
         routeQuery = routeQueryBuilder.build();
         return routeQuery.find().size();
@@ -86,10 +87,10 @@ public class RouteDao {
      * @return Route which match to the search pattern in the searched columns
      */
     public Route findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Route.class.getDeclaredField(searchedColumn);
+        Field searchedField = Route_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Route.class);
+        columnProperty = (Property) searchedField.get(Route_.class);
         routeQueryBuilder.equal(columnProperty, searchPattern);
         routeQuery = routeQueryBuilder.build();
         return routeQuery.findFirst();
@@ -104,10 +105,10 @@ public class RouteDao {
      * @return List<Route> which contains the equipements, which match to the search pattern in the searched columns
      */
     public List<Route> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Route.class.getDeclaredField(searchedColumn);
+        Field searchedField = Route_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Route.class);
+        columnProperty = (Property) searchedField.get(Route_.class);
         routeQueryBuilder.equal(columnProperty , searchPattern);
         routeQuery = routeQueryBuilder.build();
         return routeQuery.find();

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Device;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Device_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -39,10 +40,10 @@ public class DeviceDao extends DatabaseObjectAbstract{
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device.class.getDeclaredField(searchedColumn);
+        Field searchedField = Device_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Device.class);
+        columnProperty = (Property) searchedField.get(Device_.class);
         deviceQueryBuilder.equal(columnProperty , searchPattern);
         deviceQuery = deviceQueryBuilder.build();
         return deviceQuery.find().size();
@@ -87,10 +88,10 @@ public class DeviceDao extends DatabaseObjectAbstract{
      * @return Device which match to the search pattern in the searched columns
      */
     public Device findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device.class.getDeclaredField(searchedColumn);
+        Field searchedField = Device_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Device.class);
+        columnProperty = (Property) searchedField.get(Device_.class);
         deviceQueryBuilder.equal(columnProperty, searchPattern);
         deviceQuery = deviceQueryBuilder.build();
         return deviceQuery.findFirst();
@@ -105,10 +106,10 @@ public class DeviceDao extends DatabaseObjectAbstract{
      * @return List<Device> which contains the users, who match to the search pattern in the searched columns
      */
     public List<Device> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device.class.getDeclaredField(searchedColumn);
+        Field searchedField = Device_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Device.class);
+        columnProperty = (Property) searchedField.get(Device_.class);
         deviceQueryBuilder.equal(columnProperty , searchPattern);
         deviceQuery = deviceQueryBuilder.build();
         return deviceQuery.find();

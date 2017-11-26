@@ -6,7 +6,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.model.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -42,10 +43,10 @@ public class UserDao extends DatabaseObjectAbstract{
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = User.class.getDeclaredField(searchedColumn);
+        Field searchedField = User_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(User.class);
+        columnProperty = (Property) searchedField.get(User_.class);
         userQueryBuilder.equal(columnProperty , searchPattern);
         userQuery = userQueryBuilder.build();
         return userQuery.find().size();
@@ -90,10 +91,10 @@ public class UserDao extends DatabaseObjectAbstract{
      * @return User who match to the search pattern in the searched columns
      */
     public User findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = User.class.getDeclaredField(searchedColumn);
+        Field searchedField = User_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(User.class);
+        columnProperty = (Property) searchedField.get(User_.class);
         userQueryBuilder.equal(columnProperty, searchPattern);
         userQuery = userQueryBuilder.build();
         return userQuery.findFirst();
@@ -108,12 +109,12 @@ public class UserDao extends DatabaseObjectAbstract{
      * @return List<User> which contains the users, who match to the search pattern in the searched columns
      */
     public List<User> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = User.class.getDeclaredField(searchedColumn);
+        Field searchedField = User_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         Log.d("List<User> find()", searchedField.toString());
 
-        columnProperty = (Property) searchedField.get(User.class);
+        columnProperty = (Property) searchedField.get(User_.class);
         userQueryBuilder.equal(columnProperty , searchPattern);
         userQuery = userQueryBuilder.build();
         return userQuery.find();
