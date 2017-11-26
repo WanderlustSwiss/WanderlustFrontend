@@ -1,10 +1,10 @@
-package eu.wise_iot.wanderlust.model.DatabaseObject;
+package eu.wise_iot.wanderlust.models.DatabaseObject;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.model.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.model.DatabaseModel.Poi_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseObject.DatabaseObjectAbstract;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -39,10 +39,10 @@ public class PoiDao extends DatabaseObjectAbstract{
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Poi_.class.getDeclaredField(searchedColumn);
+        Field searchedField = Poi.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Poi_.class);
+        columnProperty = (Property) searchedField.get(Poi.class);
         poiQueryBuilder.equal(columnProperty , searchPattern);
         poiQuery = poiQueryBuilder.build();
         return poiQuery.find().size();
@@ -86,10 +86,10 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @return User who match to the search pattern in the searched columns
      */
     public Poi findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Poi_.class.getDeclaredField(searchedColumn);
+        Field searchedField = Poi.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Poi_.class);
+        columnProperty = (Property) searchedField.get(Poi.class);
         poiQueryBuilder.equal(columnProperty, searchPattern);
         poiQuery = poiQueryBuilder.build();
         return poiQuery.findFirst();
@@ -104,10 +104,10 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @return List<Poi> which contains the users, who match to the search pattern in the searched columns
      */
     public List<Poi> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Poi_.class.getDeclaredField(searchedColumn);
+        Field searchedField = Poi.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Poi_.class);
+        columnProperty = (Property) searchedField.get(Poi.class);
         poiQueryBuilder.equal(columnProperty , searchPattern);
         poiQuery = poiQueryBuilder.build();
         return poiQuery.find();
