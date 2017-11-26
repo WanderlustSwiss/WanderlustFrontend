@@ -23,8 +23,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.services.LoginService;
@@ -78,24 +81,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
         LoginService loginService =
-                ServiceGenerator.createService(LoginService.class, "user", "secretpassword");
-        Call<User> call = loginService.basicLogin();
+                ServiceGenerator.createService(LoginService.class, "zumsel", "Ha11loW3lt");
+
+        LoginUser testUser = new LoginUser("zumsel", "Ha11loW3lt");
+        Call<User> call = loginService.basicLogin(testUser);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "success", Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(MainActivity.this, "derp", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "good but fail", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "fail", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.v(TAG, t.getMessage());
             }
         });
     }

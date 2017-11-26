@@ -1,18 +1,28 @@
-package eu.wise_iot.wanderlust.services;
+package eu.wise_iot.wanderlust.models.DatabaseModel;
 
-/**
- * Created by truee on 11/24/2017.
- */
+import java.util.HashSet;
+
+import okhttp3.Cookie;
 
 public class LoginUser {
     private String identifier;
     private String password;
+    static private HashSet<String> cookies;
 
-    LoginUser(String identifier, String password){
+
+    public LoginUser(String identifier, String password){
         this.identifier = identifier;
         this.password = password;
     }
 
+
+    public static HashSet<String> getCookies() {
+        return cookies;
+    }
+
+    public static void setCookies(HashSet<String> cookiesC) {
+        cookies = cookiesC;
+    }
     public String getIdentifier(){
         return identifier;
     }
