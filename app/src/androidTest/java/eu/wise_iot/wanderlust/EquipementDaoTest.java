@@ -11,11 +11,11 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
-import eu.wise_iot.wanderlust.model.DatabaseModel.Equipement;
-import eu.wise_iot.wanderlust.model.DatabaseModel.Equipement_;
-import eu.wise_iot.wanderlust.model.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.model.DatabaseObject.DifficultTypeDao;
-import eu.wise_iot.wanderlust.model.DatabaseObject.EquipementDao;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipement;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipement_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultTypeDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.EquipementDao;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.query.QueryBuilder;
