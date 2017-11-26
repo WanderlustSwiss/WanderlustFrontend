@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.model.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;

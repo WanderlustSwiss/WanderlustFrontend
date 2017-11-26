@@ -4,7 +4,7 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
-import eu.wise_iot.wanderlust.model.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
 /**
  * DatabaseObjectAbstract

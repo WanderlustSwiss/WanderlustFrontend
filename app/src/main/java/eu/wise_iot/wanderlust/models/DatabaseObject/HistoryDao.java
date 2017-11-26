@@ -3,8 +3,8 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.model.DatabaseModel.History_;
-import eu.wise_iot.wanderlust.model.DatabaseModel.History;
+import eu.wise_iot.wanderlust.models.DatabaseModel.History_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.History;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;

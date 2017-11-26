@@ -1,10 +1,10 @@
-package eu.wise_iot.wanderlust.model.DatabaseObject;
+package eu.wise_iot.wanderlust.models.DatabaseObject;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.model.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.model.DatabaseModel.Poi_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;

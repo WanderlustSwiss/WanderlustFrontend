@@ -11,10 +11,10 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
-import eu.wise_iot.wanderlust.model.DatabaseModel.History;
-import eu.wise_iot.wanderlust.model.DatabaseModel.History_;
-import eu.wise_iot.wanderlust.model.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.model.DatabaseObject.HistoryDao;
+import eu.wise_iot.wanderlust.models.DatabaseModel.History;
+import eu.wise_iot.wanderlust.models.DatabaseModel.History_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseObject.HistoryDao;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.query.QueryBuilder;
