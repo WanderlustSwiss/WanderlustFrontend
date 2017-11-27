@@ -8,11 +8,17 @@ package eu.wise_iot.wanderlust.controllers;
  */
 
 public class WelcomeController {
+
+    public WelcomeController(){
+
+    }
+
     /**
      * returns welcome string
      * @return String
      */
-   public static String getGreeting(){
+
+   public String getGreeting(){
         return "Welcome";
     }
 
