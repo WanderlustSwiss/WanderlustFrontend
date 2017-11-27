@@ -171,21 +171,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
+        Fragment fragment = null;
+        String fragmentTag = null;
+
         int id = item.getItemId();
 
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
+
+        if (id == R.id.nav_map) {
+            fragment = MapFragment.newInstance();
+            fragmentTag = Constants.MAP_FRAGMENT;
+        } else if (id == R.id.nav_tours) {
+            fragment = SearchFragment.newInstance();
+            fragmentTag = Constants.SEARCH_FRAGMENT;
+        } else if (id == R.id.nav_profile) {
+            // TODO: add ProfileFragment here
+        } else if (id == R.id.nav_manual) {
+            fragment = new ManualFragment();
+            fragmentTag = Constants.MANUAL_FRAGMENT;
+        } else if (id == R.id.nav_about) {
+            fragment = new DisclaimerFragment();
+            fragmentTag = Constants.DISCLAIMER_FRAGMENT;
+        }
+
+        if (fragment != null) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, fragment, fragmentTag)
+                    .addToBackStack(null)
+                    .commit();
+//            mDrawerList.setItemChecked(position, true);
+//            mDrawerList.setSelection(position);
+//            setTitle(mMenuItems[position]);
+
+//            mDrawerLayout.closeDrawer(mDrawerList);
+        } else {
+            Log.e(TAG, "Error in creating fragment");
+            Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
+        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

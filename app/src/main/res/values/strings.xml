@@ -109,5 +109,11 @@
     <string name="action_dismiss">verwerfen</string>
     <string name="action_close">schliessen</string>
     <string name="action_foreward">weiter</string>
+    <string name="menu_map">Karte</string>
+    <string name="menu_tours">Touren</string>
+    <string name="menu_profile">Profil</string>
+    <string name="menu_manual">Bedienungsanleitung</string>
+    <string name="menu_about">Über Wanderlust</string>
+    <string name="menu_title_other">Anderes (Platzhalter)</string>
 
 </resources>
