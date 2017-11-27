@@ -17,8 +17,8 @@ public class Poi extends AbstractModel{
     String title;
     String description;
     String imagePath;
-    float longitude;
-    float latitude;
+    double longitude;
+    double latitude;
     long user;
     long type;
     boolean isPublic;
@@ -72,19 +72,19 @@ public class Poi extends AbstractModel{
         this.description = description;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
