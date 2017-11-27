@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_tab_mytours">My Tours</string>
+    <string name="profile_tab_favorites">Favorites</string>
+    <string name="profile_tab_pois">POI\'s</string>
+    <string name="profile_tab_saved">Saved</string>
+    <string name="profile_bg_description">background</string>
+</resources>

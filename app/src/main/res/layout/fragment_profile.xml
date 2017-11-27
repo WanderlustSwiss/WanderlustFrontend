@@ -1,0 +1,122 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="eu.wise_iot.wanderlust.views.ProfileFragment">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:adjustViewBounds="false"
+        android:background="@color/primaryTwo"
+        android:contentDescription="@string/profile_bg_description"
+        android:cropToPadding="false"
+
+        >
+
+        <ImageView
+            android:id="@+id/profileBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@color/primaryTwo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="50dp">
+
+            <ImageView
+                android:id="@+id/profilePicture"
+                android:layout_width="225dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:src="@color/myPrimaryDarkTransparent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="30dp">
+
+                <TextView
+                    android:id="@+id/profileName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:text="TextView"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:id="@+id/profileScore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:text="TextView"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/profileCreatedTours"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textSize="15dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/profileTabs"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/primaryOne"
+        android:clickable="false"
+        android:contextClickable="false"
+        android:focusable="true"
+        android:splitMotionEvents="false"
+        app:tabIndicatorColor="@color/highlightOne">
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_mytours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_directions_black_24dp"
+            android:text="@string/profile_tab_mytours" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_favorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:text="@string/profile_tab_favorites" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_poi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_nature_people_black_24dp"
+            android:text="@string/profile_tab_pois" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_saved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_save_black_24dp"
+            android:text="@string/profile_tab_saved" />
+    </android.support.design.widget.TabLayout>
+
+    <FrameLayout
+        android:id="@+id/profileTabContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+
+</LinearLayout>
