@@ -1,17 +1,18 @@
 package eu.wise_iot.wanderlust.services;
 
-import android.content.Context;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+
+/**
+ * AddCookiesInterceptor adds the cookie to each request
+ * @author Tobias Rüegsegger
+ * @license MIT
+ */
 
 public class AddCookiesInterceptor implements Interceptor {
 

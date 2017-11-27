@@ -1,32 +1,28 @@
 package eu.wise_iot.wanderlust.services;
 
-import android.text.TextUtils;
-
-import java.util.HashSet;
-
-import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
-import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * ServiceGenerator handles all request for the backend database
+ * @author Tobias Rüegsegger
+ * @license MIT
+ */
 
 public class ServiceGenerator {
 
+    //TODO change for production
+    /*
+     * Defines the URL for the backend communication
+     */
     public static final String API_BASE_URL = "http://10.0.2.2:1337/";
 
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-    private static Retrofit.Builder builder =
-            new Retrofit.Builder()
-                    .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create());
-
-
-    private static Retrofit retrofit = builder.build();
-
-
+    /**
+     * Create service for a new backend request
+     * @param serviceClass
+     * @return service for respective model
+     */
     public static <S> S createService(Class<S> serviceClass) {
 
         OkHttpClient client = new OkHttpClient();

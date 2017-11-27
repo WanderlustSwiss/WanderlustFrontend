@@ -1,4 +1,4 @@
-"id";"timestamp";"description";"image_name";"lat";"lon";"display_mode";"feedback_type"
+"poi_id";"timestamp";"description";"image_name";"lat";"lon";"display_mode";"feedback_type"
 1;"2017-07-15 11:35:56";"";"img_sfr_20170715_113604.jpg";47.283781999999995;9.485567;100;201
 2;"2017-07-15 11:39:20";"";"img_sfr_20170715_113926.jpg";47.283761999999996;9.485636999999999;100;200
 3;"2017-07-15 12:07:58";"";"img_sfr_20170715_120806.jpg";47.282045;9.481512;100;200

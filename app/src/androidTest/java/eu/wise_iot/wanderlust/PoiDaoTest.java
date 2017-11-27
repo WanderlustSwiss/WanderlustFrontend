@@ -56,7 +56,7 @@ public class PoiDaoTest {
         testPoi.setName("Matterhorn (VS)");
         poiBox.put(testPoi);
         assertEquals("Matterhorn (VS)", poiQueryBuilder.
-                equal(Poi_.id, testPoi.getId()).build().findFirst().getName());
+                equal(Poi_.id, testPoi.getPoi_id()).build().findFirst().getName());
     }
 
     @Test

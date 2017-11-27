@@ -54,7 +54,7 @@ public class UserDaoTest {
         userBox.put(testUser);
         testUser.setNickname("UpdatedTestUser");
         userBox.put(testUser);
-        assertEquals("UpdatedTestUser", userQueryBuilder.equal(User_.id, testUser.getId()).build().findFirst().getNickname());
+        assertEquals("UpdatedTestUser", userQueryBuilder.equal(User_.id, testUser.getUser_id()).build().findFirst().getNickname());
     }
 
     @Test

@@ -1,16 +1,16 @@
 package eu.wise_iot.wanderlust.services;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import okhttp3.Interceptor;
 import okhttp3.Response;
+
+/**
+ * ReceivedCookiesInterceptor saves the cookie from backend
+ * @author Tobias Rüegsegger
+ * @license MIT
+ */
 
 public class ReceivedCookiesInterceptor implements Interceptor {
 
