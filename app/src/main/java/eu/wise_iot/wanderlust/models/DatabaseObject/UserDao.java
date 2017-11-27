@@ -1,9 +1,12 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
+import android.util.Log;
+
 import java.lang.reflect.Field;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
@@ -22,7 +25,7 @@ public class UserDao extends DatabaseObjectAbstract{
     private Box<User> userBox;
     private Query<User> userQuery;
     private QueryBuilder<User> userQueryBuilder;
-    private Property columnProperty = User_.id;
+    private Property columnProperty;// = User_.id;
 
     /**
      * Constructor.
@@ -35,13 +38,31 @@ public class UserDao extends DatabaseObjectAbstract{
         userQueryBuilder = userBox.query();
     }
 
-    public int count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        return 0;
+    public long count(){
+        return userBox.count();
     }
 
-    public User update(User user){
-        return null;
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = User_.class.getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(User_.class);
+        userQueryBuilder.equal(columnProperty , searchPattern);
+        userQuery = userQueryBuilder.build();
+        return userQuery.find().size();
     }
+
+    /**
+     * Update an existing user in the database.
+     *
+     * @param user (required).
+     *
+     */
+    public User update(User user){
+        userBox.put(user);
+        return user;
+    }
+
     /**
      * Insert an user into the database.
      *
@@ -70,7 +91,7 @@ public class UserDao extends DatabaseObjectAbstract{
      * @return User who match to the search pattern in the searched columns
      */
     public User findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = User_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = User_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(User_.class);
@@ -88,8 +109,10 @@ public class UserDao extends DatabaseObjectAbstract{
      * @return List<User> which contains the users, who match to the search pattern in the searched columns
      */
     public List<User> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = User_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = User_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
+
+        Log.d("List<User> find()", searchedField.toString());
 
         columnProperty = (Property) searchedField.get(User_.class);
         userQueryBuilder.equal(columnProperty , searchPattern);
@@ -98,9 +121,9 @@ public class UserDao extends DatabaseObjectAbstract{
     }
 
     public User delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        userBox.remove(findOne(searchedColumn, searchPattern));
-
-        return null;
+        User toDeleteUser = findOne(searchedColumn, searchPattern);
+        userBox.remove(toDeleteUser);
+        return toDeleteUser;
     }
 
     public void deleteAll(){

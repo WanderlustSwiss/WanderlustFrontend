@@ -4,11 +4,7 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
-import io.objectbox.Box;
-import io.objectbox.BoxStore;
-import io.objectbox.Property;
-import io.objectbox.query.Query;
-import io.objectbox.query.QueryBuilder;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
 /**
  * DatabaseObjectAbstract
@@ -41,7 +37,11 @@ public abstract class DatabaseObjectAbstract implements DatabaseObject{
         throw new UnsupportedOperationException();
     }
 
-    public int count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException{
+    public long count(){
+        throw new UnsupportedOperationException();
+    }
+
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException{
         throw new UnsupportedOperationException();
     }
 

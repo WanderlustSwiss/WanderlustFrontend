@@ -12,7 +12,9 @@ import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
 
 /**
- * Created by rilindgashi on 24.11.17.
+ * DeviceDao
+ * @author Rilind Gashi
+ * @license MIT
  */
 
 public class DeviceDao extends DatabaseObjectAbstract{
@@ -33,17 +35,35 @@ public class DeviceDao extends DatabaseObjectAbstract{
         deviceQueryBuilder = deviceBox.query();
     }
 
-    public int count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        return 0;
+    public long count(){
+        return deviceBox.count();
     }
 
-    public Device update(Device device){
-        return null;
+    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = Device_.class.getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(Device_.class);
+        deviceQueryBuilder.equal(columnProperty , searchPattern);
+        deviceQuery = deviceQueryBuilder.build();
+        return deviceQuery.find().size();
     }
+
     /**
-     * Insert an user into the database.
+     * Update an existing user in the database.
      *
-     * @param user (required).
+     * @param device (required).
+     *
+     */
+    public Device update(Device device){
+        deviceBox.put(device);
+        return device;
+    }
+
+    /**
+     * Insert a device into the database.
+     *
+     * @param device (required).
      *
      */
     public void create(Device device){
@@ -51,24 +71,24 @@ public class DeviceDao extends DatabaseObjectAbstract{
     }
 
     /**
-     * Return a list with all user
+     * Return a list with all devices
      *
-     * @return List<User>
+     * @return List<Device>
      */
     public List<Device> find() {
         return deviceBox.getAll();
     }
 
     /**
-     * Searching for a single user with a search pattern in a column.
+     * Searching for a single device with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.
      *
-     * @return User who match to the search pattern in the searched columns
+     * @return Device which match to the search pattern in the searched columns
      */
     public Device findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = Device_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(Device_.class);
@@ -78,7 +98,7 @@ public class DeviceDao extends DatabaseObjectAbstract{
     }
 
     /**
-     * Searching for user matching with the search pattern in a the selected column.
+     * Searching for device matching with the search pattern in a the selected column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.
@@ -86,7 +106,7 @@ public class DeviceDao extends DatabaseObjectAbstract{
      * @return List<Device> which contains the users, who match to the search pattern in the searched columns
      */
     public List<Device> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device_.class.getClass().getDeclaredField(searchedColumn);
+        Field searchedField = Device_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(Device_.class);

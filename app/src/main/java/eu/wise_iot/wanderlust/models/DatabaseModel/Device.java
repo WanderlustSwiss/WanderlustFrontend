@@ -8,6 +8,7 @@ import io.objectbox.annotation.Id;
  * @author Rilind Gashi
  * @license MIT
  */
+
 @Entity
 public class Device extends AbstractModel{
 
