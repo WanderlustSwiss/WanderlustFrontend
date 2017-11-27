@@ -21,7 +21,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
@@ -30,12 +32,18 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.services.AddCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.LoginService;
+import eu.wise_iot.wanderlust.services.ReceivedCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.BoxStore;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * MainActivity:
@@ -80,27 +88,53 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+    }
 
-        LoginService loginService =
-                ServiceGenerator.createService(LoginService.class, "zumsel", "Ha11loW3lt");
+
+    //TODO move to login view
+    private void login(){
+        LoginService loginService = ServiceGenerator.createService(LoginService.class);
 
         LoginUser testUser = new LoginUser("zumsel", "Ha11loW3lt");
-        Call<User> call = loginService.basicLogin(testUser);
-        call.enqueue(new Callback<User>() {
+        Call<LoginUser> call = loginService.basicLogin(testUser);
+        call.enqueue(new Callback<LoginUser>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
                 if (response.isSuccessful()) {
 
-                    Toast.makeText(MainActivity.this, "derp", Toast.LENGTH_SHORT).show();
+                    Headers headerResponse = response.headers();
+                    //convert header to Map
+                    Map<String, List<String>> headerMapList = headerResponse.toMultimap();
+                    LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
+                    Toast.makeText(MainActivity.this, "Cookie saved!", Toast.LENGTH_SHORT).show();
+
+                    testCookieAuth();
                 } else {
                     Toast.makeText(MainActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<LoginUser> call, Throwable t) {
                 Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.v(TAG, t.getMessage());
+            }
+        });
+    }
+
+    //TODO move to login view
+    private void testCookieAuth(){
+        LoginService loginService = ServiceGenerator.createService(LoginService.class);
+        Call<LoginUser> cookieCall = loginService.cookieTest();
+        cookieCall.enqueue(new Callback<LoginUser>() {
+            @Override
+            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
+                Toast.makeText(MainActivity.this, "cookie auth: " + response.message(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<LoginUser> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "cookie auth failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

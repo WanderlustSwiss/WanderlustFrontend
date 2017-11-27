@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import okhttp3.Cookie;
@@ -7,7 +8,7 @@ import okhttp3.Cookie;
 public class LoginUser {
     private String identifier;
     private String password;
-    static private HashSet<String> cookies;
+    static private ArrayList<String> cookies = new ArrayList<>();
 
 
     public LoginUser(String identifier, String password){
@@ -16,11 +17,11 @@ public class LoginUser {
     }
 
 
-    public static HashSet<String> getCookies() {
+    public static ArrayList<String> getCookies() {
         return cookies;
     }
 
-    public static void setCookies(HashSet<String> cookiesC) {
+    public static void setCookies(ArrayList<String> cookiesC) {
         cookies = cookiesC;
     }
     public String getIdentifier(){
