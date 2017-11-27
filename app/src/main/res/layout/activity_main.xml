@@ -14,15 +14,6 @@
         android:layout_height="match_parent"
         android:background="@color/myPrimaryDark" />
 
-    <!--<ListView-->
-    <!--android:id="@+id/navDrawerList"-->
-    <!--android:layout_width="200dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="left|start"-->
-    <!--android:background="@color/myPrimaryBackground"-->
-    <!--android:paddingBottom="10dp"-->
-    <!--tools:ignore="RtlHardcoded" />-->
-
     <include
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
