@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupNavigation() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -124,6 +124,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
 //        mDrawerList = (ListView) findViewById(R.id.navDrawerList);
 //        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        mActivityTitle = getTitle().toString();

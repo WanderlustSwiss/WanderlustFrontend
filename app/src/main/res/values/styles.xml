@@ -1,12 +1,12 @@
 <resources>
 
     <!-- APPLICATION THEME -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/materialGreen</item>
         <item name="colorPrimaryDark">@color/myPrimaryDark</item>
         <item name="colorAccent">@color/myYellow</item>
-        <item name="windowActionBar">true</item>
+        <!--<item name="windowActionBar">true</item>-->
         <!--<item name="windowNoTitle">true</item>-->
     </style>
 
