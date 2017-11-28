@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
-        login();
+        //login();
     }
 
 
