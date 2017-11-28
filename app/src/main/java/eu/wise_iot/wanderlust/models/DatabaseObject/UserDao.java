@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -114,17 +115,16 @@ public class UserDao extends DatabaseObjectAbstract{
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+
                 if(response.isSuccessful()){
                     userBox.put((User)user);
-                    handler.onResponse(new Event(Event.EventType.SUCCESSFUL, response.body()));
-                } else{
-                    handler.onResponse(new Event(Event.EventType.BAD_REQUEST, null));
                 }
+                handler.onResponse(new Event(EventType.getTypeByCode(response.code()),null));
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                    handler.onResponse(new Event(Event.EventType.SERVER_ERROR, null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
             }
         });
     }
