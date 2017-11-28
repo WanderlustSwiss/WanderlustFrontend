@@ -124,13 +124,24 @@ public class MapFragment extends Fragment{
         loadPreferences();
     }
 
+    /**
+     * Generates a options menu in the toolbar and inflates it. Menu is specific for this Fragment and is
+     * only shown in this toolbar.
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.map_fragment_layer_menu, menu);
     }
 
+    /**
+     * Toggler for options menu in toolbar.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
