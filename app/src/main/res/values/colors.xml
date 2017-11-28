@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="myPrimaryDark">#2B2825</color>
+    <color name="myPrimaryDark">#2b2825</color>
     <color name="myPrimaryDarkTransparent">#dd2b2825</color>
     <color name="myPrimaryBackground">#FFFFFF</color>
     <color name="myPrimaryBackgroundTransparent">#DDFFFFFF</color>
@@ -9,8 +9,8 @@
     <color name="myRed">#e50000</color>
     <color name="materialGreen">#38d1b0</color>
 
-    <color name="primaryOne">#3ace7d</color>
-    <color name="primaryTwo">#31a863</color>
-    <color name="highlightOne">#f24c3c</color>
-    <color name="highlightTwo">#CC3D36</color>
+    <color name="primaryOne">#126178</color>
+    <color name="primaryTwo">#05424c</color>
+    <color name="highlightOne">#cc3d54</color>
+    <color name="highlightTwo">#f24e75</color>
 </resources>

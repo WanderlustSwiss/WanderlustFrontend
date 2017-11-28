@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profileLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:adjustViewBounds="false"
-        android:background="@color/primaryTwo"
+        android:background="@color/primaryOne"
         android:contentDescription="@string/profile_bg_description"
         android:cropToPadding="false"
 
@@ -21,7 +22,7 @@
             android:id="@+id/profileBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@color/primaryTwo" />
+            android:src="@color/primaryOne" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,6 +68,12 @@
                     android:layout_height="wrap_content"
                     android:text="TextView"
                     android:textSize="15dp" />
+
+                <Button
+                    android:id="@+id/testbutton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Button" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
@@ -75,9 +82,9 @@
         android:id="@+id/profileTabs"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/primaryOne"
+        android:background="@color/primaryTwo"
         android:clickable="false"
-        android:contextClickable="false"
+        android:contextClickable="true"
         android:focusable="true"
         android:splitMotionEvents="false"
         app:tabIndicatorColor="@color/highlightOne">
@@ -87,7 +94,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:icon="@drawable/ic_directions_black_24dp"
-            android:text="@string/profile_tab_mytours" />
+            android:text="@string/profile_tab_mytours"
+            android:visibility="visible" />
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_favorites"
