@@ -79,13 +79,13 @@ public class MainActivity extends AppCompatActivity {
         boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
         // check if app is opened for the first time
-        if (preferences.getBoolean("firstTimeOpened", true)) {
+        if (preferences.getBoolean("firstTimeOpened", true) || true) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
             editor.apply();
 
             // start welcome screen
-            WelcomeFragment welcomeFragment = new WelcomeFragment();
+            RegistrationFragment welcomeFragment = new RegistrationFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, welcomeFragment)
                     .commit();
