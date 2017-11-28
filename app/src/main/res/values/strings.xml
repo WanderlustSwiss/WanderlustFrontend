@@ -115,5 +115,6 @@
     <string name="menu_manual">Bedienungsanleitung</string>
     <string name="menu_about">Über Wanderlust</string>
     <string name="menu_title_other">Anderes (Platzhalter)</string>
+    <string name="action_search">suchen</string>
 
 </resources>
