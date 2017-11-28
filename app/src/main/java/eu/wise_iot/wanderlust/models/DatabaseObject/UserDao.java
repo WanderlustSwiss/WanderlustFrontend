@@ -118,8 +118,10 @@ public class UserDao extends DatabaseObjectAbstract{
 
                 if(response.isSuccessful()){
                     userBox.put((User)user);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
                 }
-                handler.onResponse(new Event(EventType.getTypeByCode(response.code()),null));
             }
 
             @Override
