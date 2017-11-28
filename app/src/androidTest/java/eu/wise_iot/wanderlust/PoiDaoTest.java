@@ -15,7 +15,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.views.MainActivity;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.query.QueryBuilder;
@@ -38,34 +37,33 @@ public class PoiDaoTest {
     public void setUpBefore(){
         Context appContext = InstrumentationRegistry.getTargetContext();
         boxStore = MyObjectBox.builder().androidContext(appContext).build();
-        poiDao = new PoiDao(boxStore, appContext);
+        poiDao = new PoiDao(boxStore);
         poiBox = boxStore.boxFor(Poi.class);
         poiQueryBuilder = poiBox.query();
-        testPoi = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+        testPoi = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53, 53.53, 1);
     }
 
     @Test
     public void createTest(){
         poiDao.create(testPoi);
-        assertEquals("Matterhorn", poiQueryBuilder.equal(Poi_.title, "Matterhorn")
-                .build().findFirst().getTitle());
-
+        assertEquals("Matterhorn", poiQueryBuilder.equal(Poi_.name, "Matterhorn")
+                .build().findFirst().getName());
     }
 
     @Test
     public void updateTest(){
         poiBox.put(testPoi);
-        testPoi.setTitle("Matterhorn (VS)");
+        testPoi.setName("Matterhorn (VS)");
         poiBox.put(testPoi);
         assertEquals("Matterhorn (VS)", poiQueryBuilder.
-                equal(Poi_.poi_id, testPoi.getPoi_id()).build().findFirst().getTitle());
+                equal(Poi_.id, testPoi.getPoi_id()).build().findFirst().getName());
     }
 
     @Test
     public void findOneTest(){
         poiBox.put(testPoi);
         try {
-            assertEquals("Matterhorn", poiDao.findOne("name", "Matterhorn").getTitle());
+            assertEquals("Matterhorn", poiDao.findOne("name", "Matterhorn").getName());
         }catch (NoSuchFieldException | IllegalAccessException e){
 
         }
@@ -73,8 +71,8 @@ public class PoiDaoTest {
 
     @Test
     public void findTest(){
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiTwo = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53, 53.53, 1);
 
         poiBox.put(poiOne);
         poiBox.put(poiTwo);
@@ -84,10 +82,10 @@ public class PoiDaoTest {
 
     @Test
     public void findDetailedTest(){
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53, 53.53, 1);
 
         poiBox.put(poiOne);
         poiBox.put(poiTwo);
@@ -103,10 +101,10 @@ public class PoiDaoTest {
 
     @Test
     public void countTest(){
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53, 53.53, 1);
 
         poiBox.put(poiOne);
         poiBox.put(poiTwo);
@@ -118,11 +116,10 @@ public class PoiDaoTest {
 
     @Test
     public void countTestTwo() throws NoSuchFieldException, IllegalAccessException {
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-
+        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53, 53.53, 1);
 
         poiBox.put(poiOne);
         poiBox.put(poiTwo);
@@ -134,8 +131,8 @@ public class PoiDaoTest {
 
     @Test
     public void deleteTest(){
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53, 53.53, 1);
 
         poiBox.put(poiOne);
         poiBox.put(poiTwo);
@@ -151,8 +148,8 @@ public class PoiDaoTest {
 
     @Test
     public void deleteAllTest(){
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53, 53.53, 1);
+        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53, 53.53, 1);
 
         poiBox.put(poiOne);
         poiBox.put(poiTwo);

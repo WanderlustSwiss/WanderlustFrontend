@@ -1,9 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
-import android.accounts.NetworkErrorException;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -33,19 +31,14 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.AddCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ReceivedCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.services.UserService;
 import io.objectbox.BoxStore;
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
 
-    private static BoxStore boxStore;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
-        boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        BoxStore boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
         // check if app is opened for the first time
         if (preferences.getBoolean("firstTimeOpened", true)) {
@@ -96,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
-        login();
+
     }
 
 
@@ -104,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private void login(){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
 
-        LoginUser testUser = new LoginUser("zumsel128", "Ha11loW3lt");
+        LoginUser testUser = new LoginUser("zumsel", "Ha11loW3lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
         call.enqueue(new Callback<LoginUser>() {
             @Override
@@ -139,33 +130,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
                 Toast.makeText(MainActivity.this, "cookie auth: " + response.message(), Toast.LENGTH_SHORT).show();
-                testSavePoi();
             }
 
             @Override
             public void onFailure(Call<LoginUser> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "cookie auth failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-
             }
         });
-    }
-
-
-    private void testSavePoi(){
-        Poi testPoi = new Poi(0, "testPoi", "des", "path/whatever",
-                5.2f, 6.2f, 6, 5, false);
-        PoiDao testPoiDao = new PoiDao(boxStore, MainActivity.this);
-        testPoiDao.create(testPoi);
-
-//        UserDao testUserDao = new UserDao(boxStore);
-//        User testUser = new User(0, "derp", "pipu@popo.miau", "secret",
-//                1, false, false, "lastLogin", "acc type");
-//        testUserDao.update(testUser, MainActivity.this);
-
-    }
-
-    public void makeToast(String s){
-        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
