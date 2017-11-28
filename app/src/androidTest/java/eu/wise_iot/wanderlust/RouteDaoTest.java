@@ -56,7 +56,7 @@ public class RouteDaoTest {
         testRoute.setTitle("UpdatedRouteTitle");
         routeBox.put(testRoute);
         assertEquals("UpdatedRouteTitle", routeQueryBuilder.
-                equal(Route_.routeId, testRoute.getRouteId()).build().findFirst().getTitle());
+                equal(Route_.routeId, testRoute.getRoute_id()).build().findFirst().getTitle());
     }
 
     @Test

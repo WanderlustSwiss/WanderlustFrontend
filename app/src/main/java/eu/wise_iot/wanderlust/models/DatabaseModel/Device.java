@@ -13,42 +13,38 @@ import io.objectbox.annotation.Id;
 public class Device extends AbstractModel{
 
     @Id
-    long deviceId;
+    long device_id;
     String identifier;
-    int language;
-    int searchFilter;
 
     /**
      * Constructor.
      *
-     * @param deviceId (required) device_id which is needed for saving into the database. Should be a long.
+     * @param device_id (required) device_id which is needed for saving into the database. Should be a long.
      * @param identifier (required) nickname of the user
-     * @param language (required) mail of the user
+     * @param language (required) email of the user
      * @param searchFilter (required) password of the user
      */
-    public Device(long deviceId, String identifier, int language, int searchFilter) {
-        this.deviceId = deviceId;
+    public Device(long device_id, String identifier, int language, int searchFilter) {
+        this.device_id = device_id;
         this.identifier = identifier;
-        this.language = language;
-        this.searchFilter = searchFilter;
     }
 
     /**
-     * Returns the deviceId.
+     * Returns the device_id.
      *
-     * @return deviceId
+     * @return device_id
      */
-    public long getDeviceId() {
-        return deviceId;
+    public long getDevice_id() {
+        return device_id;
     }
 
     /**
-     * Sets the deviceId
+     * Sets the device_id
      *
-     * @param deviceId set deviceId to set
+     * @param device_id set device_id to set
      */
-    public void setDeviceId(long deviceId) {
-        this.deviceId = deviceId;
+    public void setDevice_id(long device_id) {
+        this.device_id = device_id;
     }
 
     /**
@@ -69,39 +65,4 @@ public class Device extends AbstractModel{
         this.identifier = identifier;
     }
 
-    /**
-     * Returns the language.
-     *
-     * @return language
-     */
-    public int getLanguage() {
-        return language;
-    }
-
-    /**
-     * Sets the language
-     *
-     * @param language set language to set
-     */
-    public void setLanguage(int language) {
-        this.language = language;
-    }
-
-    /**
-     * Returns the searchFilter.
-     *
-     * @return searchFilter
-     */
-    public int getSearchFilter() {
-        return searchFilter;
-    }
-
-    /**
-     * Sets the searchFilter
-     *
-     * @param searchFilter set id to set
-     */
-    public void setSearchFilter(int searchFilter) {
-        this.searchFilter = searchFilter;
-    }
 }

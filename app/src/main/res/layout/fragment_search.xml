@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:layout_width="fill_parent"
     android:orientation="vertical"
-    android:background="@color/myPrimaryBackground"
+    android:background="@color/white"
     android:padding="10dp"
     android:gravity="end"
     tools:context="eu.wise_iot.wanderlust.views.MainActivity"

@@ -5,4 +5,9 @@
     <string name="profile_tab_pois">POI\'s</string>
     <string name="profile_tab_saved">Saved</string>
     <string name="profile_bg_description">background</string>
+    <string name="registration_passsword_repeat">Passwort wiederholen</string>
+    <string name="registration_passsword">Passwort</string>
+    <string name="registration_registrieren_btn">Registrieren</string>
+    <string name="registration_account_exist">Bereits registriert? Login</string>
+    <string name="registration_create_account">Registrieren</string>
 </resources>

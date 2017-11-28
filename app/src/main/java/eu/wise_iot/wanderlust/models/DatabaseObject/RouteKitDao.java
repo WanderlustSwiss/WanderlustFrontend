@@ -3,9 +3,8 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.RouteEquipement_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.RouteEquipement_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.RouteEquipement;
+import eu.wise_iot.wanderlust.models.DatabaseModel.RouteKit_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.RouteKit;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -13,16 +12,16 @@ import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
 
 /**
- * RouteEquipementDao
+ * RouteKitDao
  * @author Rilind Gashi
  * @license MIT
  */
 
-public class RouteEquipementDao extends DatabaseObjectAbstract{
+public class RouteKitDao extends DatabaseObjectAbstract{
 
-    private Box<RouteEquipement> routeEquipementBox;
-    private Query<RouteEquipement> routeEquipementQuery;
-    private QueryBuilder<RouteEquipement> routeEquipementQueryBuilder;
+    private Box<RouteKit> routeEquipementBox;
+    private Query<RouteKit> routeEquipementQuery;
+    private QueryBuilder<RouteKit> routeEquipementQueryBuilder;
     Property columnProperty;
 
     /**
@@ -31,8 +30,8 @@ public class RouteEquipementDao extends DatabaseObjectAbstract{
      * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public RouteEquipementDao(BoxStore boxStore){
-        routeEquipementBox = boxStore.boxFor(RouteEquipement.class);
+    public RouteKitDao(BoxStore boxStore){
+        routeEquipementBox = boxStore.boxFor(RouteKit.class);
         routeEquipementQueryBuilder = routeEquipementBox.query();
     }
 
@@ -41,36 +40,36 @@ public class RouteEquipementDao extends DatabaseObjectAbstract{
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = RouteEquipement_.class.getDeclaredField(searchedColumn);
+        Field searchedField = RouteKit_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(RouteEquipement_.class);
+        columnProperty = (Property) searchedField.get(RouteKit_.class);
         routeEquipementQueryBuilder.equal(columnProperty , Integer.valueOf(searchPattern));
         routeEquipementQuery = routeEquipementQueryBuilder.build();
         return routeEquipementQuery.find().size();
     }
 
 
-    public RouteEquipement update(RouteEquipement routeEquipement){
+    public RouteKit update(RouteKit routeKit){
         return null;
     }
 
     /**
      * Insert an user into the database.
      *
-     * @param routeEquipement (required).
+     * @param routeKit (required).
      *
      */
-    public void create(RouteEquipement routeEquipement){
-        routeEquipementBox.put(routeEquipement);
+    public void create(RouteKit routeKit){
+        routeEquipementBox.put(routeKit);
     }
 
     /**
      * Return a list with all routeEquipement
      *
-     * @return List<RouteEquipement>
+     * @return List<RouteKit>
      */
-    public List<RouteEquipement> find() {
+    public List<RouteKit> find() {
         return routeEquipementBox.getAll();
     }
 
@@ -80,13 +79,13 @@ public class RouteEquipementDao extends DatabaseObjectAbstract{
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.
      *
-     * @return Route Equipement which match to the search pattern in the searched columns
+     * @return Route Equipment which match to the search pattern in the searched columns
      */
-    public RouteEquipement findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = RouteEquipement_.class.getDeclaredField(searchedColumn);
+    public RouteKit findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = RouteKit_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(RouteEquipement_.class);
+        columnProperty = (Property) searchedField.get(RouteKit_.class);
         routeEquipementQueryBuilder.equal(columnProperty, Integer.valueOf(searchPattern));
         routeEquipementQuery = routeEquipementQueryBuilder.build();
         return routeEquipementQuery.findFirst();
@@ -98,19 +97,19 @@ public class RouteEquipementDao extends DatabaseObjectAbstract{
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.
      *
-     * @return List<RouteEquipement> which contains the route equipements, which match to the search pattern in the searched columns
+     * @return List<RouteKit> which contains the route equipements, which match to the search pattern in the searched columns
      */
-    public List<RouteEquipement> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = RouteEquipement_.class.getDeclaredField(searchedColumn);
+    public List<RouteKit> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = RouteKit_.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(RouteEquipement_.class);
+        columnProperty = (Property) searchedField.get(RouteKit_.class);
         routeEquipementQueryBuilder.equal(columnProperty , Integer.valueOf(searchPattern));
         routeEquipementQuery = routeEquipementQueryBuilder.build();
         return routeEquipementQuery.find();
     }
 
-    public RouteEquipement delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public RouteKit delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         routeEquipementBox.remove(findOne(searchedColumn, searchPattern));
 
         return null;

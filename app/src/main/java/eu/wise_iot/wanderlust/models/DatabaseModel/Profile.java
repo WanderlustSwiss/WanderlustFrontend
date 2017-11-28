@@ -13,32 +13,50 @@ import io.objectbox.annotation.Id;
 public class Profile extends AbstractModel{
 
     @Id
-    long profileId;
-    String birthdate;
+    long profile_id;
+    String imagePath;
     int score;
-    String picturePath;
+    String birthday;
+    String language;
+    long user;
+    long difficulty;
 
-    public Profile(long profileId, String birthdate, int score, String picturePath) {
-        this.profileId = profileId;
-        this.birthdate = birthdate;
+    public Profile(long profile_id, String imagePath, int score, String birthday, String language, long user, long difficulty) {
+        this.profile_id = profile_id;
+        this.imagePath = imagePath;
         this.score = score;
-        this.picturePath = picturePath;
+        this.birthday = birthday;
+        this.language = language;
+        this.user = user;
+        this.difficulty = difficulty;
     }
 
-    public long getProfileId() {
-        return profileId;
+    public String getLanguage() { return language; }
+
+    public void setLanguage(String language) { this.language = language; }
+
+    public long getUser() { return user; }
+
+    public void setUser(long user) { this.user = user; }
+
+    public long getDifficulty() { return difficulty; }
+
+    public void setDifficulty(long difficulty) { this.difficulty = difficulty; }
+
+    public long getProfile_id() {
+        return profile_id;
     }
 
-    public void setProfileId(long profileId) {
-        this.profileId = profileId;
+    public void setProfile_id(long profile_id) {
+        this.profile_id = profile_id;
     }
 
-    public String getBirthdate() {
-        return birthdate;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public int getScore() {
@@ -49,11 +67,11 @@ public class Profile extends AbstractModel{
         this.score = score;
     }
 
-    public String getPicturePath() {
-        return picturePath;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setPicturePath(String picturePath) {
-        this.picturePath = picturePath;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }
