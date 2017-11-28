@@ -16,4 +16,7 @@ public interface UserService {
 
     @GET("/user")
         Call<User> requestUserData();
+
+    @POST("/auth/register")
+        Call<User> registerUser(@Body User user);
 }

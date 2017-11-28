@@ -1,6 +1,8 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.views.MainActivity;
 import eu.wise_iot.wanderlust.views.RegistrationFragment;
 
 /**
@@ -15,7 +17,8 @@ public class RegistrationController{
     }
 
     public void registerUser(User user, FragmentHandler handler){
-        // todo
+        UserDao newUser = new UserDao(MainActivity.boxStore);
+        newUser.create(user);
     }
 
 }
