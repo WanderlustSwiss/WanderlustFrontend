@@ -13,38 +13,55 @@ import io.objectbox.annotation.Id;
 public class Poi extends AbstractModel{
 
     @Id
-    long id;
-    String name;
+    long poi_id;
+    String title;
     String description;
-    String picturePath;
+    String imagePath;
     double longitude;
     double latitude;
-    long userId;
+    long user;
+    long type;
+    boolean isPublic;
 
-    public Poi(long id, String name, String description, String picturePath, double longitude, double latitude, long userId) {
-        this.id = id;
-        this.name = name;
+    public Poi(long poi_id, String name, String description, String picturePath,
+               float longitude, float latitude, long user, long type, boolean isPublic) {
+        this.poi_id = poi_id;
+        this.title = name;
         this.description = description;
-        this.picturePath = picturePath;
+        this.imagePath = picturePath;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.userId = userId;
+        this.user = user;
+        this.type = type;
+        this.isPublic = isPublic;
     }
 
-    public long getId() {
-        return id;
+    public String getImagePath() { return imagePath; }
+
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
+    public long getType() { return type; }
+
+    public void setType(long type) { this.type = type; }
+
+    public boolean isPublic() { return isPublic; }
+
+    public void setPublic(boolean isPublic) { this.isPublic = isPublic; }
+
+    public long getPoi_id() {
+        return poi_id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setPoi_id(long poi_id) {
+        this.poi_id = poi_id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -53,14 +70,6 @@ public class Poi extends AbstractModel{
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getPicturePath() {
-        return picturePath;
-    }
-
-    public void setPicturePath(String picturePath) {
-        this.picturePath = picturePath;
     }
 
     public double getLongitude() {
@@ -79,11 +88,11 @@ public class Poi extends AbstractModel{
         this.latitude = latitude;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(long user) {
+        this.user = user;
     }
 }
