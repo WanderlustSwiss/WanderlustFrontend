@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="registration_passsword_repeat">Passwort wiederholen</string>
+    <string name="registration_passsword">Passwort</string>
+    <string name="registration_registrieren_btn">Registrieren</string>
+    <string name="registration_account_exist">Bereits registriert? Login</string>
+    <string name="registration_create_account">Registrieren</string>
+</resources>

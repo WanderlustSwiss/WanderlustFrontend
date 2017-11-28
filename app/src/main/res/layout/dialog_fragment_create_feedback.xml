@@ -83,21 +83,21 @@
                 android:id="@+id/radio_button_positive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/myGreen"
+                android:buttonTint="@color/black"
                 android:checked="true" />
 
             <RadioButton
                 android:id="@+id/radio_button_negative"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/myRed"
+                android:buttonTint="@color/highlightRed"
                 android:checked="false" />
 
             <RadioButton
                 android:id="@+id/radio_button_alert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/myYellow"
+                android:buttonTint="@color/structureYellow"
                 android:checked="false" />
         </RadioGroup>
     </RelativeLayout>

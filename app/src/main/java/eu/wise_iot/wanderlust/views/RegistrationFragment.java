@@ -94,6 +94,7 @@ public class RegistrationFragment extends Fragment {
      */
    private boolean validateInput() {
         boolean isValid = true;
+        String text = "";
         if (nickNameTextfield.getText().equals("")
                 || eMailTextfield.getText() .equals("")
                 || passwordTextfield.getText().equals("")
