@@ -16,6 +16,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
 
 public class RegistrationFragment extends Fragment {
@@ -29,6 +30,8 @@ public class RegistrationFragment extends Fragment {
     private TextView redirectToLogin;
 
     private RegistrationController registrationController;
+
+    private User user;
 
     public RegistrationFragment() {
         this.registrationController = new RegistrationController(this);
@@ -55,24 +58,29 @@ public class RegistrationFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-       super.onViewCreated(view, savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
         initActionControls();
 
     }
-
-
 
 
     private void initActionControls() {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                user = new User(0
+                        , nickNameTextfield.getText().toString()
+                        , eMailTextfield.getText().toString()
+                        , passwordTextfield.getText().toString()
+                        , 0, true, true, "", "");
                 if (validateInput()) {
-                    registrationController.registerUser(null, new FragmentHandler() {
+
+
+                    registrationController.registerUser(user, new FragmentHandler() {
                         @Override
                         public void onResponse(Event event) {
                             Event.EventType eventType = event.getType();
-                            switch (eventType){
+                            switch (eventType) {
                                 case SUCCESSFUL:
 
                                     break;
@@ -85,25 +93,36 @@ public class RegistrationFragment extends Fragment {
                     });
                 }
             }
-      });
+        });
     }
 
 
     /*** Validates the input of the user. And
      * @return true if the input is valid
      */
-   private boolean validateInput() {
+    private boolean validateInput() {
         boolean isValid = true;
         String text = "";
-        if (nickNameTextfield.getText().equals("")
-                || eMailTextfield.getText() .equals("")
-                || passwordTextfield.getText().equals("")
-                || repeatedPasswordTextfield.getText().equals("")) {
-            Toast.makeText(context, "Bitte alle Felder ausfüllen", Toast.LENGTH_LONG).show();
+        if (user.getNickname().equals("")) {
             isValid = false;
-        } else if(!passwordTextfield.equals(repeatedPasswordTextfield)){
-         //   Toast.makeText(context, "Die Passwörter stimmen nicht überein", Toast.LENGTH_LONG).show();
         }
+
+        if (user.getEmail().equals("")) {
+            isValid = false;
+
+        } else if (false) {
+
+        }
+        if (user.getPassword().equals("")) {
+            isValid = false;
+
+        } else if (user.getPassword().equals(repeatedPasswordTextfield.getText().toString())) {
+            isValid = false;
+
+        }
+
+
         return isValid;
     }
+
 }
