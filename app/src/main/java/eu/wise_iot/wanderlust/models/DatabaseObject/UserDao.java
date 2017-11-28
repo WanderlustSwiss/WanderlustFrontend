@@ -7,6 +7,8 @@ import android.widget.Toast;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
@@ -39,6 +41,8 @@ public class UserDao extends DatabaseObjectAbstract{
     private QueryBuilder<User> userQueryBuilder;
     private Property columnProperty;// = User_.id;
 
+    private static UserService service;
+
     /**
      * Constructor.
      *
@@ -48,6 +52,10 @@ public class UserDao extends DatabaseObjectAbstract{
     public UserDao(BoxStore boxStore){
         userBox = boxStore.boxFor(User.class);
         userQueryBuilder = userBox.query();
+
+        if(service != null){
+            service = ServiceGenerator.createService(UserService.class);
+        }
     }
 
     public long count(){
@@ -99,8 +107,25 @@ public class UserDao extends DatabaseObjectAbstract{
      * @param user (required).
      *
      */
-    public void create(User user){
-        userBox.put(user);
+    public void create(final User user, final FragmentHandler handler){
+
+        Call<User> call = service.registerUser(user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    userBox.put(user);
+                    handler.onResponse(new Event(Event.EventType.SUCCESSFUL, response.body()));
+                } else{
+                    handler.onResponse(new Event(Event.EventType.BAD_REQUEST, null));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                    handler.onResponse(new Event(Event.EventType.SERVER_ERROR, null));
+            }
+        });
     }
 
     /**

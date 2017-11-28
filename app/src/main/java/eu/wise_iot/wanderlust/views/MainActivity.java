@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
 
-    private static BoxStore boxStore;
+    public static BoxStore boxStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
+
+        //TODO where to put this?
         boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
         // check if app is opened for the first time
