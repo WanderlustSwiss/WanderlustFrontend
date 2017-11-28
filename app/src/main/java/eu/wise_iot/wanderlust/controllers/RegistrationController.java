@@ -18,7 +18,7 @@ public class RegistrationController{
 
     public void registerUser(User user, FragmentHandler handler){
         UserDao newUser = new UserDao(MainActivity.boxStore);
-        newUser.create(user);
+        newUser.create(user, handler);
     }
 
 }

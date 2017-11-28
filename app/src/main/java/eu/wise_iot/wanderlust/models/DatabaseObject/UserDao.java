@@ -53,7 +53,7 @@ public class UserDao extends DatabaseObjectAbstract{
         userBox = boxStore.boxFor(User.class);
         userQueryBuilder = userBox.query();
 
-        if(service != null){
+        if(service == null){
             service = ServiceGenerator.createService(UserService.class);
         }
     }
@@ -107,14 +107,15 @@ public class UserDao extends DatabaseObjectAbstract{
      * @param user (required).
      *
      */
-    public void create(final User user, final FragmentHandler handler){
+    @Override
+    public void create(final AbstractModel user, final FragmentHandler handler){
 
-        Call<User> call = service.registerUser(user);
+        Call<User> call = service.registerUser((User)user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.isSuccessful()){
-                    userBox.put(user);
+                    userBox.put((User)user);
                     handler.onResponse(new Event(Event.EventType.SUCCESSFUL, response.body()));
                 } else{
                     handler.onResponse(new Event(Event.EventType.BAD_REQUEST, null));

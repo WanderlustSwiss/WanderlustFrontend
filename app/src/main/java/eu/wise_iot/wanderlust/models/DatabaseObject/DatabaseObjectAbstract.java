@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -14,7 +15,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
 public abstract class DatabaseObjectAbstract implements DatabaseObject{
 
-    public AbstractModel create(AbstractModel abstractModel){
+    public void create(final AbstractModel abstractModel, final FragmentHandler handler){
         throw new UnsupportedOperationException();
     }
 
