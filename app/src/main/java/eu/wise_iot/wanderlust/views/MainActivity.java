@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_profile);
+        setContentView(R.layout.activity_main);
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
         // check if app is opened for the first time
-        if (preferences.getBoolean("firstTimeOpened", true) || true) {
+        if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
             editor.apply();

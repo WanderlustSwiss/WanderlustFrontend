@@ -3,16 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="fill_parent"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
     android:background="@color/white"
     android:padding="10dp"
     android:gravity="end"
-    tools:context="eu.wise_iot.wanderlust.views.MainActivity"
     android:clickable="true"
     android:focusable="true"
-    android:gravity="end"
     android:orientation="vertical"
-    android:padding="10dp"
     tools:context="eu.wise_iot.wanderlust.views.MainActivity">
 
     <EditText
