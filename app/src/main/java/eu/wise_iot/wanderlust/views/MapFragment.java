@@ -1,11 +1,9 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
@@ -20,9 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
@@ -32,7 +28,6 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -42,11 +37,12 @@ import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.models.Old.StyleBehavior;
 
 /**
- * MapFragment:
+ * MapFragment: The Fragment that contains the map view, map functionality and buttons.
+ *
  * @author Fabian Schwander
  * @license MIT
  */
-public class MapFragment extends Fragment{
+public class MapFragment extends Fragment {
     private static final String TAG = "MapFragment";
 
     // preferences and default settings
@@ -72,9 +68,9 @@ public class MapFragment extends Fragment{
     private Button centerMapOnPoiButton;
 
     /**
-     * Static instance constructor. Used after a Picture was taken and image file name is passed to Mapfragment.
+     * Static instance constructor.
      *
-     * @return MapFragment
+     * @return Fragment: MapFragment
      */
     public static MapFragment newInstance() {
         Bundle args = new Bundle();
@@ -111,7 +107,7 @@ public class MapFragment extends Fragment{
     @Override
     public void onStart() {
         super.onStart();
-        if(myLocationIsEnabled) {
+        if (myLocationIsEnabled) {
             centerMapOnCurrentPosition();
         }
         // quickfix to make sure that the cameraButton is enabled after beeing disabled in onClick todo: add better way
@@ -136,8 +132,9 @@ public class MapFragment extends Fragment{
     /**
      * Generates a options menu in the toolbar and inflates it. Menu is specific for this Fragment and is
      * only shown in this toolbar.
-     * @param menu
-     * @param inflater
+     *
+     * @param menu     Menu: options menu
+     * @param inflater MenuInflater: menu inflater of options menu
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -147,8 +144,9 @@ public class MapFragment extends Fragment{
     }
 
     /**
-     * Toggler for options menu in toolbar.
-     * @param item
+     * Generates checkable menu items for layers in options menu
+     *
+     * @param item MenuItem: selected item by user
      * @return
      */
     @Override
@@ -179,6 +177,13 @@ public class MapFragment extends Fragment{
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Receive the result from a previous call to startActivityForResult(Intent, int)
+     *
+     * @param requestCode int: The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
+     * @param resultCode  int: The integer result code returned by the child activity through its setResult().
+     * @param data        Intent: An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -193,6 +198,9 @@ public class MapFragment extends Fragment{
         }
     }
 
+    /**
+     * Loads user preferences of map settings in shared preferences
+     */
     private void loadPreferences() {
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         double defaultMapCenterLat = Defaults.GEO_POINT_CENTER_OF_SWITZERLAND.getLatitude();
@@ -212,6 +220,9 @@ public class MapFragment extends Fragment{
         myLocationIsEnabled = sharedPreferences.getBoolean(Constants.MY_LOCATION_ENABLED, myLocationIsEnabled);
     }
 
+    /**
+     * Saves user preferences of map settings in shared preferences
+     */
     private void savePreferences() {
         int lastZoomLevel = mapView.getZoomLevel();
         double lastMapCenterLat = mapView.getMapCenter().getLatitude();
@@ -226,6 +237,11 @@ public class MapFragment extends Fragment{
         editor.apply();
     }
 
+    /**
+     * Initializes map view
+     *
+     * @param view View: view of current fragment
+     */
     private void initMap(View view) {
         mapView = (MapView) view.findViewById(R.id.mapView);
         ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
@@ -235,6 +251,9 @@ public class MapFragment extends Fragment{
         mapView.setMultiTouchControls(true);
     }
 
+    /**
+     * Initializes map controller
+     */
     private void initMapController() {
         mapController = mapView.getController();
         mapController.setCenter(centerOfMap);
@@ -243,6 +262,9 @@ public class MapFragment extends Fragment{
         else mapController.setZoom(zoomLevel);
     }
 
+    /**
+     * Initializes map overlays
+     */
     private void initOverlays() {
         mapOverlays = new MyMapOverlays(getActivity(), mapView);
         // set position marker if last location is available
@@ -254,24 +276,23 @@ public class MapFragment extends Fragment{
     }
 
     /**
-     * initializes location toggler
-     * @param view
+     * Initializes location toggler and sets icon of toggler to saved state in preferences
+     *
+     * @param view View: view of current fragment
      */
     private void initLocationToggler(View view) {
         locationToggler = (ImageButton) view.findViewById(R.id.locationButton);
         displayMyLocationOnMap(myLocationIsEnabled);
 
-        if(myLocationIsEnabled) {
+        if (myLocationIsEnabled) {
             centerMapOnCurrentPosition();
-            locationToggler.setImageResource(R.drawable.ic_location_searching_black_24dp);
+            locationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
         } else {
-            locationToggler.setImageResource(R.drawable.ic_location_disabled_black_24dp);
+            locationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
         }
 
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(locationToggler);
-        //set as default on
-//        locationToggler.setTag("on");
         //toggle listener
         locationToggler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,14 +302,14 @@ public class MapFragment extends Fragment{
                     myLocationIsEnabled = false;
                     displayMyLocationOnMap(false);
 
-                    locationToggler.setImageResource(R.drawable.ic_location_disabled_black_24dp);
+                    locationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
                     Toast.makeText(getActivity(), R.string.msg_follow_mode_disabled, Toast.LENGTH_SHORT).show();
                 } else {
                     // toggle to enabled
                     myLocationIsEnabled = true;
                     displayMyLocationOnMap(true);
 
-                    locationToggler.setImageResource(R.drawable.ic_location_searching_black_24dp);
+                    locationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
                     Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
                     centerMapOnCurrentPosition();
                 }
@@ -309,8 +330,9 @@ public class MapFragment extends Fragment{
     }
 
     /**
-     * initializes camera button
-     * @param view
+     * Initializes camera button
+     *
+     * @param view View: view of current fragment
      */
     private void initCameraButton(View view) {
         cameraButton = (ImageButton) view.findViewById(R.id.takePictureButton);
@@ -324,18 +346,17 @@ public class MapFragment extends Fragment{
                 cameraButton.setEnabled(false);
 
 
-                final LocationManager manager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
+                final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                 //check if gps is activated and show corresponding toast
-                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                   // buildAlertMessageNoGps();
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    // buildAlertMessageNoGps();
                     Toast.makeText(getActivity(), R.string.msg_camera_no_gps, Toast.LENGTH_SHORT).show();
                     MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
                     camera = new Camera(getActivity(), mapFragment);
                     camera.start();
                     imageFileName = camera.getImageName();
                     photoPath = camera.getImagePath();
-                }
-                else {
+                } else {
                     mapOverlays.getMyLocationNewOverlay().enableMyLocation();
                     Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
                     mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
@@ -355,8 +376,9 @@ public class MapFragment extends Fragment{
     }
 
     /**
-     * initializes layer button
-     * @param view
+     * Initializes layer button
+     *
+     * @param view View: view of current fragment
      */
     private void initLayerButton(View view) {
         //get instance
@@ -382,6 +404,9 @@ public class MapFragment extends Fragment{
 //        });
     }
 
+    /**
+     * Centers map on the current location of the user after refreshing his current position
+     */
     private void centerMapOnCurrentPosition() {
         // enable myLocation if service is not running
         if (!mapOverlays.getMyLocationNewOverlay().isMyLocationEnabled()) {
@@ -398,11 +423,10 @@ public class MapFragment extends Fragment{
                 if (!myLocationIsEnabled) {
                     mapOverlays.getMyLocationNewOverlay().disableMyLocation();
                 }
-//                locationToggler.setImageResource(R.drawable.ic_my_location_black_24dp);
-//                if (!myLocationIsEnabled) mapOverlays.addPositionMarker(myLocation); // FIXME: add position marker in ui thread after position locatet without enabling myLocation
             }
         });
-        // zoom in on toggler first dime clicked
+
+        // set zoom to default zoom level when toggler is clicked for the first time
         setZoomToDefault(!locationTogglerHasBeenClicked);
     }
 
@@ -413,6 +437,11 @@ public class MapFragment extends Fragment{
         //locationToggler.setChecked(false);
     }
 
+    /**
+     * Sets zoom to default zoom level
+     *
+     * @param setZoom boolean: true if zoom level should be set to default
+     */
     private void setZoomToDefault(boolean setZoom) {
         if (setZoom) {
             mapController.setZoom(Defaults.ZOOM_ENLARGED);
@@ -425,6 +454,11 @@ public class MapFragment extends Fragment{
         }
     }
 
+    /**
+     * Displays current location of user in map as person
+     *
+     * @param showMyLocation boolean: true if current location should be shown
+     */
     private void displayMyLocationOnMap(boolean showMyLocation) {
         GeoPoint myLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
         if (showMyLocation) {
@@ -436,6 +470,9 @@ public class MapFragment extends Fragment{
         }
     }
 
+    /**
+     * Shows dialog after successfully returning from camera activity
+     */
     private void dispatchPostFeedbackDialogFragment() {
         FragmentTransaction fragmentTransaction = getActivity().getFragmentManager().beginTransaction();
         // make sure that no other dialog is running
