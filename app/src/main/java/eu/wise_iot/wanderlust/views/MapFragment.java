@@ -1,11 +1,14 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
@@ -17,7 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
@@ -27,6 +32,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -124,13 +130,24 @@ public class MapFragment extends Fragment{
         loadPreferences();
     }
 
+    /**
+     * Generates a options menu in the toolbar and inflates it. Menu is specific for this Fragment and is
+     * only shown in this toolbar.
+     * @param menu
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.map_fragment_layer_menu, menu);
     }
 
+    /**
+     * Toggler for options menu in toolbar.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -291,25 +308,38 @@ public class MapFragment extends Fragment{
             public void onClick(View view) {
                 // prevent multiple clicks on button
                 cameraButton.setEnabled(false);
-                Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
 
-                if (!mapOverlays.getMyLocationNewOverlay().isMyLocationEnabled()) {
-                    mapOverlays.getMyLocationNewOverlay().enableMyLocation();
+
+                final LocationManager manager = (LocationManager) getActivity().getSystemService( Context.LOCATION_SERVICE );
+                //check if gps is activated and show corresponding toast
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                   // buildAlertMessageNoGps();
+                    Toast.makeText(getActivity(), R.string.msg_camera_no_gps, Toast.LENGTH_SHORT).show();
+                    MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+                    camera = new Camera(getActivity(), mapFragment);
+                    camera.start();
+                    imageFileName = camera.getImageName();
+                    photoPath = camera.getImagePath();
                 }
-                mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
-                    @Override
-                    public void run() {
-                        lastKnownLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
-                        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                        camera = new Camera(getActivity(), mapFragment);
-                        camera.start();
-                        imageFileName = camera.getImageName();
-                        photoPath = camera.getImagePath();
-                    }
-                });
+                else {
+                    mapOverlays.getMyLocationNewOverlay().enableMyLocation();
+                    Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
+                    mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
+                        @Override
+                        public void run() {
+                            lastKnownLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
+                            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+                            camera = new Camera(getActivity(), mapFragment);
+                            camera.start();
+                            imageFileName = camera.getImageName();
+                            photoPath = camera.getImagePath();
+                        }
+                    });
+                }
             }
         });
     }
+
     /**
      * initializes layer button
      * @param view
@@ -320,7 +350,7 @@ public class MapFragment extends Fragment{
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
         //register behavior on clicked
-        cameraButton.setOnClickListener(new View.OnClickListener() {
+        layerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO show here layer selection
