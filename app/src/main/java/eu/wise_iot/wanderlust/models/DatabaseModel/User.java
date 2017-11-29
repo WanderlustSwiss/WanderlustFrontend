@@ -2,7 +2,6 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
-import io.objectbox.annotation.NameInDb;
 
 /**
  * User
@@ -14,44 +13,73 @@ import io.objectbox.annotation.NameInDb;
 public class User extends AbstractModel{
 
     @Id
-    long id;
-    @NameInDb("nickname")
+    long user_id;
     String nickname;
-    @NameInDb("mail")
-    String mail;
-    @NameInDb("password")
+    String email;
     String password;
+    long profile;
+    boolean isActive;
+    boolean isValid;
+    String lastLogin;
+    String accountType;
 
     /**
      * Constructor.
      *
-     * @param id (required) userid which is needed for saving into the database. Should be a long.
+     * @param user_id (required) userid which is needed for saving into the database. Should be a long.
      * @param nickname (required) nickname of the user
-     * @param mail (required) mail of the user
+     * @param email (required) email of the user
      * @param password (required) password of the user
      */
 
-    public User(long id, String nickname, String mail, String password) {
-        this.id = id;
+    public User(long user_id, String nickname, String email, String password, long profile,
+                boolean isActive, boolean isValid, String lastLogin, String accountType) {
+        this.user_id = user_id;
         this.nickname = nickname;
-        this.mail = mail;
+        this.email = email;
         this.password = password;
+        this.profile = profile;
+        this.isActive = isActive;
+        this.isValid = isValid;
+        this.lastLogin = lastLogin;
+        this.accountType = accountType;
     }
 
-    /**
-     * Returns the id.
-     *
-     * @return id
-     */
-    public long getId() { return id; }
+
+    public long getProfile() { return profile; }
+
+    public void setProfile(long profile) { this.profile = profile; }
+
+    public boolean isActive() { return isActive; }
+
+    public void setActive(boolean active) { isActive = active; }
+
+    public boolean isValid() { return isValid; }
+
+    public void setValid(boolean valid) { isValid = valid; }
+
+    public String getLastLogin() { return lastLogin; }
+
+    public void setLastLogin(String lastLogin) { this.lastLogin = lastLogin; }
+
+    public String getAccountType() { return accountType; }
+
+    public void setAccountType(String accountType) { this.accountType = accountType; }
 
     /**
-     * Sets the id
+     * Returns the poi_id.
      *
-     * @param id set id to set
+     * @return poi_id
      */
-    public void setId(long id) {
-        this.id = id;
+    public long getUser_id() { return user_id; }
+
+    /**
+     * Sets the poi_id
+     *
+     * @param user_id set poi_id to set
+     */
+    public void setUser_id(long user_id) {
+        this.user_id = user_id;
     }
 
     /**
@@ -75,19 +103,19 @@ public class User extends AbstractModel{
     /**
      * Returns the mailadress.
      *
-     * @return mail
+     * @return email
      */
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
     /**
      * Sets the mailadress
      *
-     * @param mail mailadress to set
+     * @param email mailadress to set
      */
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     /**

@@ -56,7 +56,7 @@ public class HistoryDaoTest {
         testHistory.setAbsolvedRoute(2);
         historyBox.put(testHistory);
         assertEquals(2, historyQueryBuilder.
-                equal(History_.historyId, testHistory.getHistoryId()).build().findFirst().getAbsolvedRoute());
+                equal(History_.historyId, testHistory.getHistory_id()).build().findFirst().getAbsolvedRoute());
     }
 
     @Test

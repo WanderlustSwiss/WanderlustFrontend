@@ -46,22 +46,22 @@ public class DifficultTypeDaoTest {
     @Test
     public void createTest(){
         difficultTypeDao.create(testDifficulty);
-        assertEquals("T1", difficultyQueryBuilder.equal(DifficultType_.typename, "T1").build().findFirst().getTypename());
+        assertEquals("T1", difficultyQueryBuilder.equal(DifficultType_.typename, "T1").build().findFirst().getName());
     }
 
     @Test
     public void updateTest(){
         difficultyBox.put(testDifficulty);
-        testDifficulty.setTypename("T2");
+        testDifficulty.setName("T2");
         difficultyBox.put(testDifficulty);
-        assertEquals("T2", difficultyQueryBuilder.equal(DifficultType_.id, testDifficulty.getId()).build().findFirst().getTypename());
+        assertEquals("T2", difficultyQueryBuilder.equal(DifficultType_.id, testDifficulty.getDifft_id()).build().findFirst().getName());
     }
 
     @Test
     public void findOneTest(){
         difficultyBox.put(testDifficulty);
         try {
-            assertEquals("T1", difficultTypeDao.findOne("identifier", "deviceIdentifier").getTypename());
+            assertEquals("T1", difficultTypeDao.findOne("identifier", "deviceIdentifier").getName());
         }catch (NoSuchFieldException | IllegalAccessException e){
 
         }

@@ -5,19 +5,19 @@
             android:title="@string/mapfragment_menu_feedbacks"
             android:checked="true"
             android:checkable="true" />
-        <!--<item android:id="@+id/trails_overlay"-->  <!-- FIXME: UNCOMMENTED FOR RELEASE 1.0 -->
+        <!--<item andrpoi_idd:idpoi_poi_id@+id/trails_overlay"-->  <!-- FIXME: UNCOMMENTED FOR RELEASE 1.0 -->
             <!--android:title="@string/mapfragment_menu_trails"-->
             <!--android:checked="false"-->
             <!--android:checkable="false" />-->
-        <!--<item android:id="@+id/heatmap_overlay"-->
+        <!--<item andrpoi_idd:idpoi_poi_id@+id/heatmap_overlay"-->
             <!--android:title="@string/mapfragment_menu_heatmap"-->
             <!--android:checked="false"-->
             <!--android:checkable="false" />-->
-        <!--<item android:id="@+id/public_transport_overlay"-->
+        <!--<item andrpoi_idd:idpoi_poi_id@+id/public_transport_overlay"-->
             <!--android:title="@string/mapfragment_menu_transport"-->
             <!--android:checked="false"-->
             <!--android:checkable="false" />-->
-        <!--<item android:id="@+id/restaurants_overlay"-->
+        <!--<item andrpoi_idd:idpoi_poi_id@+id/restaurants_overlay"-->
             <!--android:title="@string/mapfragment_menu_restaurants"-->
             <!--android:checked="false"-->
             <!--android:checkable="false" />-->

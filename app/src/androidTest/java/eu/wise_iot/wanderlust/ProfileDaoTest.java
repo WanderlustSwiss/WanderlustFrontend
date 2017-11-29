@@ -47,23 +47,23 @@ public class ProfileDaoTest {
     public void createTest(){
         profileDao.create(testProfile);
         assertEquals("13.09.1995", profileQueryBuilder.equal(Profile_.birthdate, "13.09.1995")
-                .build().findFirst().getBirthdate());
+                .build().findFirst().getBirthday());
     }
 
     @Test
     public void updateTest(){
         profileBox.put(testProfile);
-        testProfile.setBirthdate("13.09.2017");
+        testProfile.setBirthday("13.09.2017");
         profileBox.put(testProfile);
         assertEquals("13.09.2017", profileQueryBuilder.
-                equal(Profile_.profileId, testProfile.getProfileId()).build().findFirst().getBirthdate());
+                equal(Profile_.profileId, testProfile.getProfile_id()).build().findFirst().getBirthday());
     }
 
     @Test
     public void findOneTest(){
         profileBox.put(testProfile);
         try {
-            assertEquals("13.09.1995", profileDao.findOne("birthdate", "13.09.1995").getBirthdate());
+            assertEquals("13.09.1995", profileDao.findOne("birthdate", "13.09.1995").getBirthday());
         }catch (NoSuchFieldException | IllegalAccessException e){
 
         }

@@ -112,4 +112,23 @@
     <string name="action_close">schliessen</string>
     <string name="action_foreward">weiter</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="profile_tab_mytours">My Tours</string>
+    <string name="profile_tab_favorites">Favorites</string>
+    <string name="profile_tab_saved">Saved</string>
+    <string name="profile_tab_pois">POI\'s</string>
+    <string name="profile_bg_description">background</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- REGISTRATION -->
+    <string name="registration_name">Nickname</string>
+    <string name="registration_email">E-Mail</string>
+    <string name="registration_registrieren_btn">Registrieren</string>
+    <string name="registration_passsword">Passwort</string>
+    <string name="registration_passsword_repeat">Passwort wiederholen</string>
+    <string name="registration_account_exist">Already a registered? Login</string>
+    <string name="registration_create_account">Create Account</string>
+
+
 </resources>

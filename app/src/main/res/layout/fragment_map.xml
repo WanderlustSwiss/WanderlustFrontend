@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/myPrimaryBackground"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".views.MainActivity">
 
@@ -65,7 +65,7 @@
             android:orientation="vertical">
 
             <!--<Button-->
-            <!--android:id="@+id/centerMapOnPOIButton"-->
+            <!--andrpoi_idd:idpoi_poi_id@+id/centerMapOnPOIButton"-->
             <!--style="@style/my_round_button"-->
             <!--android:background="@drawable/button_center_map_on_poi" />-->
 
