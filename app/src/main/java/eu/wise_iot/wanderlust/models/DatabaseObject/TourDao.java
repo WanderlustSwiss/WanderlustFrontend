@@ -3,13 +3,21 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.TourService;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * TourDao
@@ -18,11 +26,13 @@ import io.objectbox.query.QueryBuilder;
  */
 
 
-public class TourDao {
+public class TourDao extends DatabaseObjectAbstract {
     private Box<Tour> routeBox;
     private Query<Tour> routeQuery;
     private QueryBuilder<Tour> routeQueryBuilder;
     Property columnProperty;
+
+    private static TourService service;
 
     /**
      * Constructor.
@@ -33,6 +43,8 @@ public class TourDao {
     public TourDao(BoxStore boxStore){
         routeBox = boxStore.boxFor(Tour.class);
         routeQueryBuilder = routeBox.query();
+
+        if(service == null) service = ServiceGenerator.createService(TourService.class);
     }
 
     public long count(){
@@ -40,10 +52,10 @@ public class TourDao {
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Tour_.class.getDeclaredField(searchedColumn);
+        Field searchedField = Tour.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Tour_.class);
+        columnProperty = (Property) searchedField.get(Tour.class);
         routeQueryBuilder.equal(columnProperty , searchPattern);
         routeQuery = routeQueryBuilder.build();
         return routeQuery.find().size();
@@ -58,6 +70,28 @@ public class TourDao {
     public Tour update(Tour tour){
         routeBox.put(tour);
         return tour;
+    }
+    /**
+     * Delete a user out of the database
+     * @param tour
+     * @param handler
+     */
+    public void retrieveAll(final AbstractModel tour, final FragmentHandler handler){
+        Call<Tour> call = service.retrieveAll((Tour)tour);
+        call.enqueue(new Callback<Tour>() {
+            @Override
+            public void onResponse(Call<Tour> call, Response<Tour> response) {
+                if(response.isSuccessful()){
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<Tour> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
     }
     /**
      * Insert an history into the database.
@@ -87,10 +121,10 @@ public class TourDao {
      * @return Tour which match to the search pattern in the searched columns
      */
     public Tour findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Tour_.class.getDeclaredField(searchedColumn);
+        Field searchedField = Tour.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Tour_.class);
+        columnProperty = (Property) searchedField.get(Tour.class);
         routeQueryBuilder.equal(columnProperty, searchPattern);
         routeQuery = routeQueryBuilder.build();
         return routeQuery.findFirst();
@@ -105,24 +139,28 @@ public class TourDao {
      * @return List<Tour> which contains the equipements, which match to the search pattern in the searched columns
      */
     public List<Tour> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Tour_.class.getDeclaredField(searchedColumn);
+        Field searchedField = Tour.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Tour_.class);
+        columnProperty = (Property) searchedField.get(Tour.class);
         routeQueryBuilder.equal(columnProperty , searchPattern);
         routeQuery = routeQueryBuilder.build();
         return routeQuery.find();
     }
 
-    public Tour delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    /**
+     * delete:
+     * Deleting a Tour which matches the given pattern
+     * @param searchedColumn
+     * @param searchPattern
+     * @return
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         routeBox.remove(findOne(searchedColumn, searchPattern));
-
-        return null;
     }
 
-    public void deleteAll(){
-        routeBox.removeAll();
-    }
 
 
 }

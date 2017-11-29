@@ -113,10 +113,9 @@ public class ProfileDao extends DatabaseObjectAbstract {
         return profileQuery.find();
     }
 
-    public Profile delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         profileBox.remove(findOne(searchedColumn, searchPattern));
 
-        return null;
     }
 
     public void deleteAll(){

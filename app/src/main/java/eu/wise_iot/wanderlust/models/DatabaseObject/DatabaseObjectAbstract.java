@@ -14,7 +14,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.User;
  * @license MIT
  */
 
-public abstract class DatabaseObjectAbstract implements DatabaseObject{
+public class DatabaseObjectAbstract implements DatabaseObject{
 
     public void create(final AbstractModel abstractModel, final FragmentHandler handler){
         throw new UnsupportedOperationException();
@@ -24,11 +24,13 @@ public abstract class DatabaseObjectAbstract implements DatabaseObject{
         throw new UnsupportedOperationException();
     }
 
-    public AbstractModel update(AbstractModel abstractModel){
+    public void update(final AbstractModel abstractModel, final FragmentHandler handler){
         throw new UnsupportedOperationException();
     }
 
-    public abstract List<? extends AbstractModel> find();
+    public List<? extends AbstractModel> find(){
+        throw new UnsupportedOperationException();
+    }
 
     public AbstractModel findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         throw new UnsupportedOperationException();
@@ -39,7 +41,7 @@ public abstract class DatabaseObjectAbstract implements DatabaseObject{
 
     }
 
-    public AbstractModel delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException{
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException{
         throw new UnsupportedOperationException();
     }
 

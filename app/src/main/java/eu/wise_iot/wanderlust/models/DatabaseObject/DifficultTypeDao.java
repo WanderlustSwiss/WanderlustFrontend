@@ -113,11 +113,9 @@ public class DifficultTypeDao extends DatabaseObjectAbstract{
         return difficultTypeQuery.find();
     }
 
-    public DifficultType delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         DifficultType difficultType = findOne(searchedColumn, searchPattern);
         difficultTypeBox.remove(difficultType);
-
-        return difficultType;
     }
 
     public void deleteAll(){

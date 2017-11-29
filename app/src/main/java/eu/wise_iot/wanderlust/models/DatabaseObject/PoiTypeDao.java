@@ -109,10 +109,9 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
         return deviceQuery.find();
     }
 
-    public PoiType delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         deviceBox.remove(findOne(searchedColumn, searchPattern));
 
-        return null;
     }
 
     public void deleteAll(){

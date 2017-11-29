@@ -187,10 +187,8 @@ public class PoiDao extends DatabaseObjectAbstract {
         return poiQuery.find();
     }
 
-    public Poi delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         poiBox.remove(findOne(searchedColumn, searchPattern));
-
-        return null;
     }
 
     public void deleteAll() {

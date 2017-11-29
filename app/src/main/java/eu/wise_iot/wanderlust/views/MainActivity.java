@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
-
         //TODO where to put this?
         boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         //login();
     }
 
-
     //TODO move to login view
     private void login(){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
@@ -124,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<LoginUser> call, Throwable t) {
                 Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();

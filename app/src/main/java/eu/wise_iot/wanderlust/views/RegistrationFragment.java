@@ -74,7 +74,15 @@ public class RegistrationFragment extends Fragment {
                         , passwordTextfield.getText().toString()
                         , 0, true, true, "", "");
                 if (validateInput()) {
-                    
+                    //get response
+                    registrationController.registerUser(user, new FragmentHandler() {
+                        @Override
+                        public void onResponse(Event event) {
+                            //OK(user) event.getModel();
+                            //CAREFUL NULLPOINTER!
+                            //gang zum login screen
+                        }
+                    });
                 }
             }
         });

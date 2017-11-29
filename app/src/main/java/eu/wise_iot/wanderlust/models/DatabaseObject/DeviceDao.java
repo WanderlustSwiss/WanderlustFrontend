@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Device;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Device_;
 import io.objectbox.Box;
@@ -55,7 +56,8 @@ public class DeviceDao extends DatabaseObjectAbstract{
      * @param device (required).
      *
      */
-    public Device update(Device device){
+
+    public Device update(final Device device,final FragmentHandler handler){
         deviceBox.put(device);
         return device;
     }
@@ -115,10 +117,9 @@ public class DeviceDao extends DatabaseObjectAbstract{
         return deviceQuery.find();
     }
 
-    public Device delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         deviceBox.remove(findOne(searchedColumn, searchPattern));
 
-        return null;
     }
 
     public void deleteAll(){

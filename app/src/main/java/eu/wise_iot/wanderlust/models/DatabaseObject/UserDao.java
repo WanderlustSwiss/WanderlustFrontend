@@ -29,6 +29,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static eu.wise_iot.wanderlust.models.DatabaseModel.Poi_.user;
+
 /**
  * UserDao
  * @author Rilind Gashi
@@ -54,9 +56,7 @@ public class UserDao extends DatabaseObjectAbstract{
         userBox = boxStore.boxFor(User.class);
         userQueryBuilder = userBox.query();
 
-        if(service == null){
-            service = ServiceGenerator.createService(UserService.class);
-        }
+        if(service == null) service = ServiceGenerator.createService(UserService.class);
     }
 
     public long count(){
@@ -77,45 +77,43 @@ public class UserDao extends DatabaseObjectAbstract{
      * Update an existing user in the database.
      *
      * @param user (required).
-     *
+     * @param handler
      */
-    public User update(final User user, final Context context){
+    @Override
+    public void update(final AbstractModel user, final FragmentHandler handler){
 
-        UserService service = ServiceGenerator.createService(UserService.class);
-
-        Call<ResponseBody> call = service.changeEmail(user);
-        call.enqueue(new Callback<ResponseBody>() {
+        //UserService service = ServiceGenerator.createService(UserService.class);
+        Call<User> call = service.updateUser((User)user);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "Success", Toast.LENGTH_LONG).show();
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    if(response.body() != null) userBox.put(response.body());
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    Toast.makeText(context, "Fail: " + response, Toast.LENGTH_LONG).show();
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
                 }
             }
-
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
             }
         });
-        return user;
     }
 
     /**
      * Insert an user into the database.
      *
      * @param user (required).
-     *
+     * @param handler
      */
     @Override
     public void create(final AbstractModel user, final FragmentHandler handler){
 
-        Call<User> call = service.registerUser((User)user);
+        Call<User> call = service.createUser((User)user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-
                 if(response.isSuccessful()){
                     userBox.put((User)user);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
@@ -123,7 +121,6 @@ public class UserDao extends DatabaseObjectAbstract{
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
                 }
             }
-
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
@@ -178,15 +175,74 @@ public class UserDao extends DatabaseObjectAbstract{
         return userQuery.find();
     }
 
-    public User delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    /**
+     * Deleting a user matching the corresponding searchpattern in given column
+     * @param searchedColumn
+     * @param searchPattern
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    public void deleteByPattern(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         User toDeleteUser = findOne(searchedColumn, searchPattern);
         userBox.remove(toDeleteUser);
-        return toDeleteUser;
+        //return toDeleteUser;
+    }
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        User toDeleteUser = findOne(searchedColumn, searchPattern);
+        userBox.remove(toDeleteUser);
+        //return toDeleteUser;
     }
 
+    /**
+     * Delete a user out of the database
+     * @param user
+     * @param handler
+     */
+    public void delete(final AbstractModel user, final FragmentHandler handler){
+        Call<User> call = service.deleteUser((User)user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    userBox.remove((User)user);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+
+    /**
+     * Delete a user out of the database
+     * @param user
+     * @param handler
+     */
+    public void retrieve(final AbstractModel user, final FragmentHandler handler){
+        Call<User> call = service.retrieveUser((User)user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
+     * Delete all users out of the database
+     */
     public void deleteAll(){
-        userBox.removeAll();
+
     }
-
-
 }

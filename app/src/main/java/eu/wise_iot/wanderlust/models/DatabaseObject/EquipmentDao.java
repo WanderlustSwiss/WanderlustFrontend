@@ -113,10 +113,8 @@ public class EquipmentDao extends DatabaseObjectAbstract {
         return equipmentQuery.find();
     }
 
-    public Equipment delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         equipmentBox.remove(findOne(searchedColumn, searchPattern));
-
-        return null;
     }
 
     public void deleteAll(){

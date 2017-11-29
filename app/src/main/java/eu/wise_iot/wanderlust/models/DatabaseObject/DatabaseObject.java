@@ -14,13 +14,12 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 
 public interface DatabaseObject {
 
-    public void create(final AbstractModel abstractModel, final FragmentHandler handler);
-    void addImage(final File file, final int poiId);
-    public AbstractModel update(AbstractModel abstractModel);
-    public AbstractModel delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
-    public List<? extends AbstractModel> find();
-    public List<? extends AbstractModel> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException ;
-    public AbstractModel findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException ;
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
+    void create(final AbstractModel abstractModel, final FragmentHandler handler);
+    void update(final AbstractModel abstractModel, final FragmentHandler handler);
+    void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
+    List<? extends AbstractModel> find();
+    List<? extends AbstractModel> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException ;
+    AbstractModel findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException ;
+    long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
 
 }
