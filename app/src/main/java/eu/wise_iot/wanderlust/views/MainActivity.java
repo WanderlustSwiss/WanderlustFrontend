@@ -95,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (Build.VERSION.SDK_INT >= 23) checkPermissions();
     }
 
+    /**
+     * Initializes the navigation and elements
+     */
     private void setupNavigation() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -109,6 +112,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    /**
+     * Manages drawer menu back navigation
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -119,33 +125,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.context_menu, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
+    /**
+     * Handles click events in the drawer menu. Contains all selectable links to fragments
+     * @param item
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
         String fragmentTag = null;
         int id = item.getItemId();
 
+        // MAIN FRAGMENTS
         if (id == R.id.nav_map) {
             fragment = MapFragment.newInstance();
             fragmentTag = Constants.MAP_FRAGMENT;
@@ -154,7 +145,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTag = Constants.SEARCH_FRAGMENT;
         } else if (id == R.id.nav_profile) {
             // TODO: add ProfileFragment here
-        } else if (id == R.id.nav_manual) {
+        }
+
+        // OTHER FRAGMENTS
+        else if (id == R.id.nav_manual) {
             fragment = new ManualFragment();
             fragmentTag = Constants.MANUAL_FRAGMENT;
         } else if (id == R.id.nav_about) {
@@ -172,12 +166,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
         }
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    /**
+     * Checks if device has granted permissions to access location manager and permissions to
+     * write on storage. Requires API Level >= 23
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void checkPermissions() {
         List<String> permissionsList = new ArrayList<>();

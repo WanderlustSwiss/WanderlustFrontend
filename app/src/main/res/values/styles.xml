@@ -1,22 +1,11 @@
 <resources>
 
-    <!-- APPLICATION THEME -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
+    <!-- THEME FOR APPLICATION -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/materialGreen</item>
         <item name="colorPrimaryDark">@color/myPrimaryDark</item>
-        <item name="colorAccent">@color/myYellow</item>
-        <!--<item name="windowActionBar">true</item>-->
-        <!--<item name="windowNoTitle">true</item>-->
+        <item name="colorAccent">@color/materialGreen</item>
     </style>
-
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-
-
 
     <!-- TEXT STYLES -->
     <style name="h1">

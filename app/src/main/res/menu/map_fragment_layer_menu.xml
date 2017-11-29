@@ -4,8 +4,8 @@
     <group android:checkableBehavior="all">
         <item android:id="@+id/action_search"
             android:title="@string/action_search"
-            android:icon="@drawable/ic_search_white_24dp"
-            app:showAsAction="ifRoom|collapseActionView"
+            android:icon="@drawable/ic_search_black_24dp"
+            app:showAsAction="always|collapseActionView"
             app:actionViewClass="android.support.v7.widget.SearchView" />
 
         <item android:id="@+id/feedback_overlay"
