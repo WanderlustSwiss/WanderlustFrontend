@@ -1,12 +1,11 @@
 <resources>
 
-    <!-- APPLICATION THEME -->
+    <!-- THEME FOR APPLICATION -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/materialGreen</item>
         <item name="colorPrimaryDark">@color/myPrimaryDark</item>
         <item name="colorAccent">@color/materialGreen</item>
     </style>
-
 
     <!-- TEXT STYLES -->
     <style name="h1">
