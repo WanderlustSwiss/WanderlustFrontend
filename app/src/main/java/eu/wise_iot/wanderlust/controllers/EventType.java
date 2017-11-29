@@ -13,6 +13,7 @@ public enum EventType {
 
     /**
      * Create EventType
+     *
      * @param code
      */
     EventType(int code) {
@@ -21,6 +22,7 @@ public enum EventType {
 
     /**
      * Get the enum from a specific code
+     *
      * @param code
      */
     public static EventType getTypeByCode(int code) {
