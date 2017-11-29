@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="myPrimaryDark">#2B2825</color>
-    <color name="myPrimaryDarkTransparent">#DD2B2825</color>
-    <color name="myPrimaryBackground">#FFFFFF</color>
+    <color name="myPrimaryDark">#7A7A7C</color>
+    <color name="myPrimaryDarkTransparent">#dd2b2825</color>
+    <color name="white">#FFFFFF</color>
     <color name="myPrimaryBackgroundTransparent">#DDFFFFFF</color>
-    <color name="myYellow">#FFC200</color>
-    <color name="myGreen">#417505</color>
-    <color name="myRed">#E50000</color>
-    <color name="materialGreen">#38d1b0</color>
+    <color name="structureYellow">#D1A928</color>
+    <color name="myGreen">#4a7e0f</color>
+    <color name="myRed">#e50000</color>
+    <color name="black">#000000</color>
+    <color name="highlightRed">#CC3D54</color>
+    <color name="primaryColor">#126178</color>
+
+    <color name="primaryOne">#126178</color>
+    <color name="primaryTwo">#05424c</color>
+    <color name="highlightOne">#cc3d54</color>
+    <color name="highlightTwo">#f24e75</color>
 </resources>

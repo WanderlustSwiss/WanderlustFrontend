@@ -56,7 +56,7 @@ public class DeviceDaoTest {
         testDevice.setIdentifier("UpdatedDeviceIdentifier");
         deviceBox.put(testDevice);
         assertEquals("UpdatedDeviceIdentifier", deviceQueryBuilder.
-                equal(Device_.deviceId, testDevice.getDeviceId()).build().findFirst().getIdentifier());
+                equal(Device_.deviceId, testDevice.getDevice_id()).build().findFirst().getIdentifier());
     }
 
     @Test

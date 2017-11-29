@@ -4,42 +4,49 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * Route
+ * Tour
  * @author Rilind Gashi
  * @license MIT
  */
 
 @Entity
-public class Route extends AbstractModel{
+public class Tour extends AbstractModel{
 
     @Id
-    long routeId;
+    long tour_id;
     String title;
     String description;
-    String picturePath;
+    String imagePath;
     String polyline;
     long difficulty;
-    int weatherRegion;
+    long tourKit;
     boolean editable;
 
-    public Route(long routeId, String title, String description, String picturePath,
-                 String polyline, long difficulty, int weatherRegion, boolean editable) {
-        this.routeId = routeId;
+    public Tour(long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+        this.tour_id = tour_id;
         this.title = title;
         this.description = description;
-        this.picturePath = picturePath;
+        this.imagePath = imagePath;
         this.polyline = polyline;
         this.difficulty = difficulty;
-        this.weatherRegion = weatherRegion;
+        this.tourKit = tourKit;
         this.editable = editable;
     }
 
-    public long getRouteId() {
-        return routeId;
+    public long getTourKit() {
+        return tourKit;
     }
 
-    public void setRouteId(long routeId) {
-        this.routeId = routeId;
+    public void setTourKit(long tourKit) {
+        this.tourKit = tourKit;
+    }
+
+    public long getTour_id() {
+        return tour_id;
+    }
+
+    public void setTour_id(long tour_id) {
+        this.tour_id = tour_id;
     }
 
     public String getTitle() {
@@ -58,12 +65,12 @@ public class Route extends AbstractModel{
         this.description = description;
     }
 
-    public String getPicturePath() {
-        return picturePath;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setPicturePath(String picturePath) {
-        this.picturePath = picturePath;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public String getPolyline() {
@@ -80,14 +87,6 @@ public class Route extends AbstractModel{
 
     public void setDifficulty(long difficulty) {
         this.difficulty = difficulty;
-    }
-
-    public int getWeatherRegion() {
-        return weatherRegion;
-    }
-
-    public void setWeatherRegion(int weatherRegion) {
-        this.weatherRegion = weatherRegion;
     }
 
     public boolean isEditable() {
