@@ -8,5 +8,5 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
  * @license MIT
  */
 public interface FragmentHandler {
-    void onResponse(Event event, AbstractModel model);
+    void onResponse(Event event);
 }

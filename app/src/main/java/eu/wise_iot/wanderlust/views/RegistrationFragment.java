@@ -74,23 +74,7 @@ public class RegistrationFragment extends Fragment {
                         , passwordTextfield.getText().toString()
                         , 0, true, true, "", "");
                 if (validateInput()) {
-
-
-                    registrationController.registerUser(user, new FragmentHandler() {
-                        @Override
-                        public void onResponse(Event event) {
-                            Event.EventType eventType = event.getType();
-                            switch (eventType) {
-                                case SUCCESSFUL:
-
-                                    break;
-
-                                default:
-
-                            }
-
-                        }
-                    });
+                    
                 }
             }
         });
