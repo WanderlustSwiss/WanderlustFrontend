@@ -86,11 +86,16 @@ public class MainActivity extends AppCompatActivity {
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
             editor.apply();
 
+            ProfileFragment profileFragment = new ProfileFragment();
+            getFragmentManager().beginTransaction()
+                                .add(R.id.content_frame, profileFragment)
+                                .commit();
+/*
             // start welcome screen
             RegistrationFragment welcomeFragment = new RegistrationFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, welcomeFragment)
-                    .commit();
+                    .commit();*/
             // else start the map screen
         } else {
             MapFragment mapFragment = MapFragment.newInstance();

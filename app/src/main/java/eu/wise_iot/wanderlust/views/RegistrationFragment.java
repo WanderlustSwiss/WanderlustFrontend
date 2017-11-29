@@ -79,7 +79,7 @@ public class RegistrationFragment extends Fragment {
                     registrationController.registerUser(user, new FragmentHandler() {
                         @Override
                         public void onResponse(Event event) {
-                            Event.EventType eventType = event.getType();
+                            /*Event.EventType eventType = event.getType();
                             switch (eventType) {
                                 case SUCCESSFUL:
 
@@ -87,7 +87,7 @@ public class RegistrationFragment extends Fragment {
 
                                 default:
 
-                            }
+                            }*/
 
                         }
                     });
