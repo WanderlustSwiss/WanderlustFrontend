@@ -111,6 +111,9 @@ public class MapFragment extends Fragment{
     @Override
     public void onStart() {
         super.onStart();
+        if(myLocationIsEnabled) {
+            centerMapOnCurrentPosition();
+        }
         // quickfix to make sure that the cameraButton is enabled after beeing disabled in onClick todo: add better way
         cameraButton.setEnabled(true);
     }
@@ -258,26 +261,38 @@ public class MapFragment extends Fragment{
         locationToggler = (ImageButton) view.findViewById(R.id.locationButton);
         displayMyLocationOnMap(myLocationIsEnabled);
 
+        if(myLocationIsEnabled) {
+            centerMapOnCurrentPosition();
+            locationToggler.setImageResource(R.drawable.ic_location_searching_black_24dp);
+        } else {
+            locationToggler.setImageResource(R.drawable.ic_location_disabled_black_24dp);
+        }
+
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(locationToggler);
         //set as default on
-        locationToggler.setTag("on");
+//        locationToggler.setTag("on");
         //toggle listener
         locationToggler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (locationToggler.getTag().toString().trim().equals("on")) {
-                    locationToggler.setTag("off");
-                    locationToggler.setImageResource(R.drawable.ic_location_searching_black_24dp);
-                    Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
-                    myLocationIsEnabled = true;
-                } else if (locationToggler.getTag().toString().trim().equals("off")) {
-                    locationToggler.setTag("on");
+                if (myLocationIsEnabled) {
+                    // toggle to disabled
+                    myLocationIsEnabled = false;
+                    displayMyLocationOnMap(false);
+
                     locationToggler.setImageResource(R.drawable.ic_location_disabled_black_24dp);
                     Toast.makeText(getActivity(), R.string.msg_follow_mode_disabled, Toast.LENGTH_SHORT).show();
-                    myLocationIsEnabled = false;
+                } else {
+                    // toggle to enabled
+                    myLocationIsEnabled = true;
+                    displayMyLocationOnMap(true);
+
+                    locationToggler.setImageResource(R.drawable.ic_location_searching_black_24dp);
+                    Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
+                    centerMapOnCurrentPosition();
                 }
-                displayMyLocationOnMap(myLocationIsEnabled);
+
                 setZoomToDefault(!locationTogglerHasBeenClicked);
             }
         });
@@ -288,7 +303,6 @@ public class MapFragment extends Fragment{
             public boolean onLongClick(View view) {
                 Toast.makeText(getActivity(), R.string.msg_map_centered_on_long_click, Toast.LENGTH_SHORT).show();
                 centerMapOnCurrentPosition();
-                locationToggler.setImageResource(R.drawable.ic_my_location_black_24dp);
                 return true;
             }
         });
@@ -384,6 +398,7 @@ public class MapFragment extends Fragment{
                 if (!myLocationIsEnabled) {
                     mapOverlays.getMyLocationNewOverlay().disableMyLocation();
                 }
+//                locationToggler.setImageResource(R.drawable.ic_my_location_black_24dp);
 //                if (!myLocationIsEnabled) mapOverlays.addPositionMarker(myLocation); // FIXME: add position marker in ui thread after position locatet without enabling myLocation
             }
         });
