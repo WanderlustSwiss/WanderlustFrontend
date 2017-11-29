@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -65,7 +64,6 @@ public class MapFragment extends Fragment {
     private ImageButton locationToggler;
     private ImageButton cameraButton;
     private ImageButton layerButton;
-    private Button centerMapOnPoiButton;
 
     /**
      * Static instance constructor.
@@ -101,7 +99,6 @@ public class MapFragment extends Fragment {
         initLocationToggler(view);
         initCameraButton(view);
         initLayerButton(view);
-        initCenterMapOnPoiButton(view);
     }
 
     @Override
@@ -313,8 +310,6 @@ public class MapFragment extends Fragment {
                     Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
                     centerMapOnCurrentPosition();
                 }
-
-                setZoomToDefault(!locationTogglerHasBeenClicked);
             }
         });
 
@@ -394,16 +389,6 @@ public class MapFragment extends Fragment {
         });
     }
 
-    private void initCenterMapOnPoiButton(View view) { // FIXME: UNCOMMENTED FOR RELEASE 0.1
-//        centerMapOnPoiButton = (Button) view.findViewById(R.id.centerMapOnPOIButton);
-//        centerMapOnPoiButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                centerMapOnPoi();
-//            }
-//        });
-    }
-
     /**
      * Centers map on the current location of the user after refreshing his current position
      */
@@ -428,13 +413,6 @@ public class MapFragment extends Fragment {
 
         // set zoom to default zoom level when toggler is clicked for the first time
         setZoomToDefault(!locationTogglerHasBeenClicked);
-    }
-
-    private void centerMapOnPoi() {
-        Toast.makeText(getActivity(), R.string.msg_button_for_dev_only, Toast.LENGTH_LONG).show();
-        mapController.setZoom(Defaults.ZOOM_ENLARGED);
-        mapController.animateTo(Defaults.GEO_POINT_POI);
-        //locationToggler.setChecked(false);
     }
 
     /**
