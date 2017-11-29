@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +17,14 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.Old.JsonParser;
 import eu.wise_iot.wanderlust.models.Old.Tour;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.views.adapters.MyAdapter;
 
 /**
  * TourFragment:
@@ -30,17 +36,39 @@ public class TourFragment extends Fragment {
     private Tour tour;
     private Context context;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initTourModel();
         context = getActivity().getApplicationContext();
         tour = initTourModel();
+
+        super.onCreate(savedInstanceState);
+        //fetch data from database here
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tour, container, false);
+
+
+        View view = inflater.inflate(R.layout.fragment_tourslist, container, false);
+        RecyclerView MyRecyclerView = (RecyclerView) view.findViewById(R.id.cardView);
+        MyRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
+        MyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        ArrayList<String> array = new ArrayList<>();
+        array.add("hello");
+        array.add("hello");
+
+        if (array.size() > 0 & MyRecyclerView != null)
+            MyRecyclerView.setAdapter(new MyAdapter(array));
+
+        MyRecyclerView.setLayoutManager(MyLayoutManager);
+
+        return view;
+
+        //return inflater.inflate(R.layout.fragment_tour, container, false);
     }
 
     @Override

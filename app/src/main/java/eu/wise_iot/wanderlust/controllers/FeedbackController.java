@@ -26,7 +26,7 @@ public class FeedbackController {
     }
 
     public void saveFeedbackInFile(GeoPoint myLocation, int displayMode, int feedbackType,  String description, String imageFileName) { // todo: move to addFeedbackToList()
-        String message = getFeedbackString(myLocation, displayMode, feedbackType, description, imageFileName);
+        String message = getFeedbackString(mygiLocation, displayMode, feedbackType, description, imageFileName);
         fileHandler.saveDataInFile(message);
     }
 
