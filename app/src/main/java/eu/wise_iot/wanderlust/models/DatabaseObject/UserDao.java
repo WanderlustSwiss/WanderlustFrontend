@@ -1,8 +1,6 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -10,11 +8,9 @@ import java.util.List;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
-import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.UserService;
 import io.objectbox.Box;
@@ -22,14 +18,10 @@ import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static eu.wise_iot.wanderlust.models.DatabaseModel.Poi_.user;
 
 /**
  * UserDao
@@ -104,10 +96,9 @@ public class UserDao extends DatabaseObjectAbstract{
     }
     /**
      * Retrieve a user out of the database
-     * @param user
      * @param handler
      */
-    public void retrieve(final AbstractModel user, final FragmentHandler handler){
+    public void retrieve(final FragmentHandler handler){
         Call<User> call = service.retrieveUser();
         call.enqueue(new Callback<User>() {
             @Override

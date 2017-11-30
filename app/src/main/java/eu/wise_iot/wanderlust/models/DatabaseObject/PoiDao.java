@@ -60,6 +60,163 @@ public class PoiDao extends DatabaseObjectAbstract {
         }
     }
 
+    /**
+     * Insert a poi into the database.
+     *
+     * @param poi (required).
+     */
+    public void create(final AbstractModel poi, final FragmentHandler handler) {
+        Call<Poi> call = service.createPoi((Poi)poi);
+        call.enqueue(new Callback<Poi>() {
+            @Override
+            public void onResponse(Call<Poi> call, Response<Poi> response) {
+                if(response.isSuccessful()) {
+                    poiBox.put((Poi) poi);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+            }
+            @Override
+            public void onFailure(Call<Poi> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
+     * get poi out of the remote database by entity
+     * @param handler
+     */
+    public void retrieve(int id, final FragmentHandler handler){
+        Call<Poi> call = service.retrievePoi(id);
+        call.enqueue(new Callback<Poi>() {
+            @Override
+            public void onResponse(Call<Poi> call, Response<Poi> response) {
+                if(response.isSuccessful()){
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<Poi> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
+     * get all pois out of the remote database by entity
+     * @param handler
+     */
+    public void retrieveAll(final FragmentHandler handler){
+        Call<Poi> call = service.retrieveAllPois();
+        call.enqueue(new Callback<Poi>() {
+            @Override
+            public void onResponse(Call<Poi> call, Response<Poi> response) {
+                if(response.isSuccessful()){
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<Poi> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
+     * update a poi in the database.
+     *
+     * @param poi (required).
+     */
+    public void update(final AbstractModel poi, final FragmentHandler handler) {
+        Call<Poi> call = service.updatePoi((Poi)poi);
+        call.enqueue(new Callback<Poi>() {
+            @Override
+            public void onResponse(Call<Poi> call, Response<Poi> response) {
+                if(response.isSuccessful()) {
+                    poiBox.put((Poi) poi);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+            }
+            @Override
+            public void onFailure(Call<Poi> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
+     * delete a poi in the database.
+     *
+     * @param poi (required).
+     */
+    public void delete(final AbstractModel poi, final FragmentHandler handler) {
+        Call<Poi> call = service.deletePoi((Poi)poi);
+        call.enqueue(new Callback<Poi>() {
+            @Override
+            public void onResponse(Call<Poi> call, Response<Poi> response) {
+                if(response.isSuccessful()) {
+                    poiBox.remove((Poi) poi);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+            }
+            @Override
+            public void onFailure(Call<Poi> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+
+    /**
+     * Return a list with all poi
+     *
+     * @return List<Poi>
+     */
+    public List<Poi> find() {
+        return poiBox.getAll();
+    }
+
+    /**
+     * Searching for a single user with a search pattern in a column.
+     *
+     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
+     * @param searchPattern  (required) contain the search pattern.
+     * @return User who match to the search pattern in the searched columns
+     */
+    public Poi findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = Poi_.class.getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(Poi_.class);
+        poiQueryBuilder.equal(columnProperty, searchPattern);
+        poiQuery = poiQueryBuilder.build();
+        return poiQuery.findFirst();
+    }
+
+    /**
+     * Searching for user matching with the search pattern in a the selected column.
+     *
+     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
+     * @param searchPattern  (required) contain the search pattern.
+     * @return List<Poi> which contains the users, who match to the search pattern in the searched columns
+     */
+    public List<Poi> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        Field searchedField = Poi_.class.getDeclaredField(searchedColumn);
+        searchedField.setAccessible(true);
+
+        columnProperty = (Property) searchedField.get(Poi_.class);
+        poiQueryBuilder.equal(columnProperty, searchPattern);
+        poiQuery = poiQueryBuilder.build();
+        return poiQuery.find();
+    }
+
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        poiBox.remove(findOne(searchedColumn, searchPattern));
+    }
+
+    public void deleteAll() {
+        poiBox.removeAll();
+    }
+
     public long count() {
         return poiBox.count();
     }
@@ -114,81 +271,6 @@ public class PoiDao extends DatabaseObjectAbstract {
 
             }
         });
-    }
-    /**
-     * Insert an user into the database.
-     *
-     * @param poi (required).
-     */
-    public void create(final Poi poi) {
-        PoiService service = ServiceGenerator.createService(PoiService.class);
-        Call<Poi> call = service.createPoi(poi);
-        call.enqueue(new Callback<Poi>() {
-            @Override
-            public void onResponse(Call<Poi> call, Response<Poi> response) {
-                if(response.isSuccessful()) {
-                    poiBox.put(poi);
-                } else{
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Poi> call, Throwable t) {
-
-            }
-        });
-    }
-
-    /**
-     * Return a list with all poi
-     *
-     * @return List<Poi>
-     */
-    public List<Poi> find() {
-        return poiBox.getAll();
-    }
-
-    /**
-     * Searching for a single user with a search pattern in a column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return User who match to the search pattern in the searched columns
-     */
-    public Poi findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Poi_.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(Poi_.class);
-        poiQueryBuilder.equal(columnProperty, searchPattern);
-        poiQuery = poiQueryBuilder.build();
-        return poiQuery.findFirst();
-    }
-
-    /**
-     * Searching for user matching with the search pattern in a the selected column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return List<Poi> which contains the users, who match to the search pattern in the searched columns
-     */
-    public List<Poi> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Poi_.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(Poi_.class);
-        poiQueryBuilder.equal(columnProperty, searchPattern);
-        poiQuery = poiQueryBuilder.build();
-        return poiQuery.find();
-    }
-
-    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        poiBox.remove(findOne(searchedColumn, searchPattern));
-    }
-
-    public void deleteAll() {
-        poiBox.removeAll();
     }
 
 }

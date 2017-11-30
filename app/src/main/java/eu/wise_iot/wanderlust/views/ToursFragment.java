@@ -35,8 +35,8 @@ import eu.wise_iot.wanderlust.views.adapters.TourModelArrayAdapter;
 //    public void onViewCreated(View rootView, Bundle savedInstanceState) {
 //        super.onViewCreated(rootView, savedInstanceState);
 //        controller.getAllTours();
-//        Tour e = new Tour(,);
-//        List<Tour> t = new ArrayList<>();
+//        CommunityTours e = new CommunityTours(,);
+//        List<CommunityTours> t = new ArrayList<>();
 //        t.add(To)
 //        ListView myListView = (ListView) rootView.findViewById(R.id.ListSearchToursList);
 //        TourModelArrayAdapter adapter = new TourModelArrayAdapter(getActivity(), R.layout.row_tours_search, );

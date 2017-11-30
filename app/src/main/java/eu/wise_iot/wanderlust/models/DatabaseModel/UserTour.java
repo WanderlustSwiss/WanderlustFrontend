@@ -4,13 +4,13 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * Tour
- * @author Rilind Gashi
+ * CommunityTours
+ * @author Alexander Weinbeck
  * @license MIT
  */
 
 @Entity
-public class Tour extends AbstractModel{
+public class UserTour extends AbstractModel{
 
     @Id
     long tour_id;
@@ -22,7 +22,7 @@ public class Tour extends AbstractModel{
     long tourKit;
     boolean editable;
 
-    public Tour(long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+    public UserTour(long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
         this.tour_id = tour_id;
         this.title = title;
         this.description = description;

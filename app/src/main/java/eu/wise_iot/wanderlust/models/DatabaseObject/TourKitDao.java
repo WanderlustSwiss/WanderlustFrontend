@@ -79,7 +79,7 @@ public class TourKitDao extends DatabaseObjectAbstract{
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.
      *
-     * @return Tour Equipment which match to the search pattern in the searched columns
+     * @return CommunityTours Equipment which match to the search pattern in the searched columns
      */
     public TourKit findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         Field searchedField = TourKit.class.getDeclaredField(searchedColumn);

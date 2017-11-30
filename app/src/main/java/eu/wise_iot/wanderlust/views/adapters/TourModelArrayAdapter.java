@@ -35,7 +35,7 @@ public class TourModelArrayAdapter extends ArrayAdapter<Tour> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        // get the Tour we are displaying
+        // get the CommunityTours we are displaying
         Tour tour = allTours.get(position);
 
         // get the Inflater and inflate the XML layout for each item

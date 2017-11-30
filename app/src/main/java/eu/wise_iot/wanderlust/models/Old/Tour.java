@@ -3,7 +3,7 @@ package eu.wise_iot.wanderlust.models.Old;
 import android.location.Location;
 
 /**
- * Tour:
+ * CommunityTours:
  * @author Fabian Schwander
  * @license MIT
  */

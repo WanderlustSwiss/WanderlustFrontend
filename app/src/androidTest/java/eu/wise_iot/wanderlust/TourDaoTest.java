@@ -11,10 +11,10 @@
 //
 //import static org.junit.Assert.*;
 //
-//import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+//import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTours;
 //import eu.wise_iot.wanderlust.models.DatabaseModel.Route_;
 //import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-//import eu.wise_iot.wanderlust.models.DatabaseObject.TourDao;
+//import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 //import io.objectbox.Box;
 //import io.objectbox.BoxStore;
 //import io.objectbox.query.QueryBuilder;
@@ -28,19 +28,19 @@
 //public class TourDaoTest {
 //
 //    BoxStore boxStore;
-//    Box<Tour> routeBox;
-//    QueryBuilder<Tour> routeQueryBuilder;
-//    Tour testTour;
-//    TourDao tourDao;
+//    Box<CommunityTours> routeBox;
+//    QueryBuilder<CommunityTours> routeQueryBuilder;
+//    CommunityTours testTour;
+//    TripDao tourDao;
 //
 //    @Before
 //    public void setUpBefore(){
 //        Context appContext = InstrumentationRegistry.getTargetContext();
 //        boxStore = MyObjectBox.builder().androidContext(appContext).build();
-//        tourDao = new TourDao(boxStore);
-//        routeBox = boxStore.boxFor(Tour.class);
+//        tourDao = new TripDao(boxStore);
+//        routeBox = boxStore.boxFor(CommunityTours.class);
 //        routeQueryBuilder = routeBox.query();
-//        testTour = new Tour(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        testTour = new CommunityTours(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
 //    }
 //
 //    @Test
@@ -71,8 +71,8 @@
 //
 //    @Test
 //    public void findTest(){
-//        Tour tourOne = new Tour(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourTwo = new Tour(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourOne = new CommunityTours(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourTwo = new CommunityTours(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
 //
 //        routeBox.put(tourOne);
 //        routeBox.put(tourTwo);
@@ -82,10 +82,10 @@
 //
 //    @Test
 //    public void findDetailedTest(){
-//        Tour tourOne = new Tour(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourTwo = new Tour(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourThree = new Tour(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourFour = new Tour(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourOne = new CommunityTours(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourTwo = new CommunityTours(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourThree = new CommunityTours(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourFour = new CommunityTours(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
 //
 //        routeBox.put(tourOne);
 //        routeBox.put(tourTwo);
@@ -101,10 +101,10 @@
 //
 //    @Test
 //    public void countTest(){
-//        Tour tourOne = new Tour(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourTwo = new Tour(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourThree = new Tour(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourFour = new Tour(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourOne = new CommunityTours(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourTwo = new CommunityTours(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourThree = new CommunityTours(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourFour = new CommunityTours(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
 //
 //        routeBox.put(tourOne);
 //        routeBox.put(tourTwo);
@@ -116,10 +116,10 @@
 //
 //    @Test
 //    public void countTestTwo() throws NoSuchFieldException, IllegalAccessException {
-//        Tour tourOne = new Tour(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourTwo = new Tour(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourThree = new Tour(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourFour = new Tour(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourOne = new CommunityTours(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourTwo = new CommunityTours(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourThree = new CommunityTours(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourFour = new CommunityTours(0, "Tour3", "TourDescription", "picturePath", "polyline", 1,1, true);
 //
 //        routeBox.put(tourOne);
 //        routeBox.put(tourTwo);
@@ -131,8 +131,8 @@
 //
 //    @Test
 //    public void deleteTest(){
-//        Tour tourOne = new Tour(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourTwo = new Tour(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourOne = new CommunityTours(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourTwo = new CommunityTours(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
 //
 //        routeBox.put(tourOne);
 //        routeBox.put(tourTwo);
@@ -148,8 +148,8 @@
 //
 //    @Test
 //    public void deleteAllTest(){
-//        Tour tourOne = new Tour(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
-//        Tour tourTwo = new Tour(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourOne = new CommunityTours(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+//        CommunityTours tourTwo = new CommunityTours(0, "Tour2", "TourDescription", "picturePath", "polyline", 1,1, true);
 //
 //        routeBox.put(tourOne);
 //        routeBox.put(tourTwo);
