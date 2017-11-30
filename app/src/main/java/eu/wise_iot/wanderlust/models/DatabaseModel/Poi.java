@@ -24,7 +24,7 @@ public class Poi extends AbstractModel{
     boolean isPublic;
 
     public Poi(long poi_id, String name, String description, String picturePath,
-               float longitude, float latitude, long user, long type, boolean isPublic) {
+               double longitude, double latitude, long user, long type, boolean isPublic) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;

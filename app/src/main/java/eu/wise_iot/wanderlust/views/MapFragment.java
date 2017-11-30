@@ -320,10 +320,14 @@ public class MapFragment extends Fragment{
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
         //register behavior on clicked
-        cameraButton.setOnClickListener(new View.OnClickListener() {
+        layerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO show here layer selection
+                PoiFragment poiFragment = new PoiFragment();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, poiFragment, Constants.MANUAL_FRAGMENT)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }
