@@ -10,6 +10,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TripService;
+import eu.wise_iot.wanderlust.services.UserTourService;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -33,7 +34,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
     private QueryBuilder<UserTour> routeQueryBuilder;
     Property columnProperty;
 
-    private static TripService service;
+    private static UserTourService service;
 
     /**
      * Constructor.
@@ -45,7 +46,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
         routeBox = boxStore.boxFor(UserTour.class);
         routeQueryBuilder = routeBox.query();
 
-        if(service == null) service = ServiceGenerator.createService(TripService.class);
+        if(service == null) service = ServiceGenerator.createService(UserTourService.class);
     }
 
     public long count(){
@@ -98,7 +99,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
     }
     /**
      * get usertour out of the remote database by entity
-     * @param usertour
+     * @param id
      * @param handler
      */
     public void retrieve(int id, final FragmentHandler handler){
@@ -120,11 +121,12 @@ public class UserTourDao extends DatabaseObjectAbstract {
     }
     /**
      * update a usertour
+     * @param id
      * @param usertour
      * @param handler
      */
-    public void update(final AbstractModel usertour, final FragmentHandler handler){
-        Call<UserTour> call = service.updateUserTour((UserTour)usertour);
+    public void update(int id, final AbstractModel usertour, final FragmentHandler handler){
+        Call<UserTour> call = service.updateUserTour(id, (UserTour)usertour);
         call.enqueue(new Callback<UserTour>() {
             @Override
             public void onResponse(Call<UserTour> call, Response<UserTour> response) {

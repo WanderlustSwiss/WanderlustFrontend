@@ -11,6 +11,14 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 
+/**
+ * AuthController
+ * register
+ * UserController
+ * show 	GET	    /user | restricted
+ * update	PUT	    /user | restricted
+ * disable	DELETE	/user | restricted
+ */
 public interface UserService {
     @POST("/auth/register")
         Call<User> createUser(@Body User user);
