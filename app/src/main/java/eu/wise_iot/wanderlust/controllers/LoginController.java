@@ -1,13 +1,17 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import org.apache.commons.lang3.NotImplementedException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.services.LoginService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.LoginFragment;
-
-/**
- * Created by Joshi on 30.11.2017.
- */
+import okhttp3.Headers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginController {
     private LoginFragment loginFragment;
@@ -16,10 +20,28 @@ public class LoginController {
         this.loginFragment = fragment;
     }
 
-    public void logIn(LoginUser user, FragmentHandler handler){
-        // Todo
-        throw new NotImplementedException("Not Implemented :(");
+    public void logIn(LoginUser user, final FragmentHandler handler){
 
+        LoginService service = ServiceGenerator.createService(LoginService.class);
+        Call<LoginUser> call = service.basicLogin(user);
+        call.enqueue(new Callback<LoginUser>() {
+            @Override
+            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
+                if(response.isSuccessful()){
+                    Headers headerResponse = response.headers();
+                    Map<String, List<String>> headerMapList = headerResponse.toMultimap();
+                    LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else{
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),null));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginUser> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
     }
 
 }
