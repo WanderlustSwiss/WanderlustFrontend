@@ -83,6 +83,7 @@ public class LoginFragment extends Fragment {
                         EventType eventType = event.getType();
                         switch (eventType) {
                             case OK:
+                                Toast.makeText(context, "Hello " + ((User)event.getModel()).getNickname() + "!", Toast.LENGTH_LONG).show();
                                 MapFragment tourFragment = new MapFragment();
                                 getFragmentManager().beginTransaction()
                                         .add(R.id.content_frame, tourFragment)

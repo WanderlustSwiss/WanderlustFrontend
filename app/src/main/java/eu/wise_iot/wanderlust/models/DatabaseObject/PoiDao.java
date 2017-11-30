@@ -110,7 +110,6 @@ public class PoiDao extends DatabaseObjectAbstract {
                     Toast.makeText(context, "Poi saved!", Toast.LENGTH_LONG).show();
 
                     MainActivity main = (MainActivity) context;
-                    main.makeToast("hello");
                 } else{
                     Toast.makeText(context, "Failed to save Poi", Toast.LENGTH_LONG).show();
                 }

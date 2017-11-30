@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.LoginFragment;
@@ -23,10 +24,10 @@ public class LoginController {
     public void logIn(LoginUser user, final FragmentHandler handler){
 
         LoginService service = ServiceGenerator.createService(LoginService.class);
-        Call<LoginUser> call = service.basicLogin(user);
-        call.enqueue(new Callback<LoginUser>() {
+        Call<User> call = service.basicLogin(user);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 if(response.isSuccessful()){
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
@@ -38,7 +39,7 @@ public class LoginController {
             }
 
             @Override
-            public void onFailure(Call<LoginUser> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
             }
         });
