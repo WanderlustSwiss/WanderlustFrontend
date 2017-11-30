@@ -89,7 +89,7 @@ public class LoginFragment extends Fragment {
                                         .commit();
                                 break;
                             case CONFLICT:
-                                nicknameEmailTextfield.setError(getString(R.string.login_failure));
+                                nicknameEmailLayout.setError(getString(R.string.login_failure));
                                 break;
                             default:
                             Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
