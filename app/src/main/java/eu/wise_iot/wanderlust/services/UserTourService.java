@@ -24,7 +24,6 @@ import retrofit2.http.Path;
  * uploadImage	    POST	    /tour/:id/img           | restricted
  * deleteImage	    DELETE	    /tour/:id/img/:image_id | restricted
  * @author Alexander Weinbeck
- *
  */
 public interface UserTourService {
     @GET("/tour/{id}")

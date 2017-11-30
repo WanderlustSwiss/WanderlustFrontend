@@ -32,9 +32,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * PoiDao
- *
- * @author Rilind Gashi
+ * PoiDao:
+ * Represents POI controller
+ * @author Rilind Gashi, Alexander Weinbeck
  * @license MIT
  */
 
@@ -46,9 +46,9 @@ public class PoiDao extends DatabaseObjectAbstract {
     private static PoiService service;
 
     /**
-     * Constructor.
-     *
+     * constructor
      * @param boxStore (required) delivers the connection to the frontend database
+     * @param context
      */
 
     public PoiDao(BoxStore boxStore, Context context) {
@@ -61,9 +61,9 @@ public class PoiDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * Insert a poi into the database.
-     *
-     * @param poi (required).
+     * Insert a poi into the database
+     * @param poi (required)
+     * @param handler
      */
     public void create(final AbstractModel poi, final FragmentHandler handler) {
         Call<Poi> call = service.createPoi((Poi)poi);
@@ -83,6 +83,7 @@ public class PoiDao extends DatabaseObjectAbstract {
     }
     /**
      * get poi out of the remote database by entity
+     * @param id
      * @param handler
      */
     public void retrieve(int id, final FragmentHandler handler){
@@ -123,13 +124,16 @@ public class PoiDao extends DatabaseObjectAbstract {
             }
         });
     }
+
     /**
-     * update a poi in the database.
-     *
-     * @param poi (required).
+     * update:
+     * update a poi in the database
+     * @param id
+     * @param poi
+     * @param handler
      */
-    public void update(final AbstractModel poi, final FragmentHandler handler) {
-        Call<Poi> call = service.updatePoi((Poi)poi);
+    public void update(int id, final AbstractModel poi, final FragmentHandler handler) {
+        Call<Poi> call = service.updatePoi(id,(Poi)poi);
         call.enqueue(new Callback<Poi>() {
             @Override
             public void onResponse(Call<Poi> call, Response<Poi> response) {
@@ -144,10 +148,11 @@ public class PoiDao extends DatabaseObjectAbstract {
             }
         });
     }
+
     /**
-     * delete a poi in the database.
-     *
-     * @param poi (required).
+     * delete a poi in the database
+     * @param poi
+     * @param handler
      */
     public void delete(final AbstractModel poi, final FragmentHandler handler) {
         Call<Poi> call = service.deletePoi((Poi)poi);
@@ -167,7 +172,30 @@ public class PoiDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * Return a list with all poi
+     * add an image to the db
+     * @param file
+     * @param poiID
+     */
+    @Override
+    public void addImage(final File file, final int poiID){
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+        Call<Poi> call = service.uploadImage(poiID, body);
+        call.enqueue(new Callback<Poi>() {
+            @Override
+            public void onResponse(Call<Poi> call, Response<Poi> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Poi> call, Throwable t) {
+
+            }
+        });
+    }
+    /**
+     * returns a list with all poi
      *
      * @return List<Poi>
      */
@@ -209,6 +237,13 @@ public class PoiDao extends DatabaseObjectAbstract {
         return poiQuery.find();
     }
 
+    /**
+     * delete by pattern
+     * @param searchedColumn
+     * @param searchPattern
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
     public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         poiBox.remove(findOne(searchedColumn, searchPattern));
     }
@@ -231,46 +266,5 @@ public class PoiDao extends DatabaseObjectAbstract {
         return poiQuery.find().size();
     }
 
-    /**
-     * Update an existing user in the database.
-     *
-     * @param poi (required).
-     */
-    /*
-    public Poi update(final AbstractModel poi, final FragmentHandler handler) {
-        PoiService service = ServiceGenerator.createService(PoiService.class);
-
-        Call<Poi> call = service.createPoi(poi);
-        @Override
-        public void onResponse(Call<Poi> call, Response<Poi> response) {
-            if(response.isSuccessful()) handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-            else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
-        }
-        @Override
-        public void onFailure(Call<Poi> call, Throwable t) {
-            handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
-        }
-
-        return poi;
-    }
-*/
-    @Override
-    public void addImage(final File file, final int poiID){
-
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        Call<Poi> call = service.uploadImage(poiID, body);
-        call.enqueue(new Callback<Poi>() {
-            @Override
-            public void onResponse(Call<Poi> call, Response<Poi> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<Poi> call, Throwable t) {
-
-            }
-        });
-    }
 
 }

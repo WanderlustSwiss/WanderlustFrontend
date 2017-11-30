@@ -14,12 +14,12 @@ public class UserTour extends AbstractModel{
 
     @Id
     long tour_id;
-    String title;
-    String description;
-    String imagePath;
-    String polyline;
-    long difficulty;
-    long tourKit;
+    String  title;
+    String  description;
+    String  imagePath;
+    String  polyline;
+    long    difficulty;
+    long    tourKit;
     boolean editable;
 
     public UserTour(long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
