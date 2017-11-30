@@ -110,4 +110,11 @@
     <string name="action_close">schliessen</string>
     <string name="action_foreward">weiter</string>
 
+
+    <!-- POI -->
+    <string name="poi_fragment_textview_title">Titel</string>
+    <string name="poi_fragment_textview_description">POI Beschreibung</string>
+    <string name="poi_fragment_privacy_private_item">Privat</string>
+    <string name="poi_fragment_privacy_public_item">Öffentlich</string>
+
 </resources>
