@@ -118,5 +118,19 @@
     <string name="registration_passsword_repeat">Passwort wiederholen</string>
     <string name="registration_account_exist">Already a registered? Login</string>
     <string name="registration_create_account">Create Account</string>
+    <string name="registration_password_required">A password is required</string>
+    <string name="registration_password_no_match">Password don\'t match</string>
+    <string name="registration_username_required">A nickname is required</string>
+    <string name="registration_email_required">An email is required</string>
+    <string name="registration_nickname_mail_used">That email or nickname is already being used</string>
+    <string name="registration_email_invalid">Invalid email address</string>
+    <string name="registration_password_invalid">Minimum eight characters, at least one letter and one number</string>
+    <string name="registration_connection_error">Not possible to connect with the server</string>
+
+    <!-- LOGIN -->
+    <string name="login_nickname_email">Nickname / E-Mail</string>
+    <string name="login_password">Password</string>
+    <string name="login_login">Login</string>
+    <string name="login_failure">Kein User mit folgenden Angaben gefunden</string>
 
 </resources>

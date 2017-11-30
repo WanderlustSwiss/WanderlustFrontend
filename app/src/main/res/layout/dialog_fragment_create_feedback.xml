@@ -90,14 +90,14 @@
                 android:id="@+id/radio_button_negative"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/highlightRed"
+                android:buttonTint="@color/myRed"
                 android:checked="false" />
 
             <RadioButton
                 android:id="@+id/radio_button_alert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/structureYellow"
+                android:buttonTint="@color/myYellow"
                 android:checked="false" />
         </RadioGroup>
     </RelativeLayout>

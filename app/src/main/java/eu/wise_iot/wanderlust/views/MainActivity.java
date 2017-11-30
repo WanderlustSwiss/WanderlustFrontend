@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
 
             // start welcome screen
-            RegistrationFragment welcomeFragment = new RegistrationFragment();
+            LoginFragment welcomeFragment = new LoginFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, welcomeFragment)
                     .commit();

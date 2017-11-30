@@ -4,9 +4,9 @@
     <color name="myPrimaryDarkTransparent">#DD2B2825</color>
     <color name="white">#FFFFFF</color>
     <color name="myPrimaryBackgroundTransparent">#DDFFFFFF</color>
-    <color name="structureYellow">#D1A928</color>
+    <color name="myYellow">#D1A928</color>
     <color name="black">#000000</color>
-    <color name="highlightRed">#CC3D54</color>
-    <color name="primaryColor">#126178</color>
+    <color name="myRed">#CC3D54</color>
+    <color name="materialGreen">#126178</color>
 
 </resources>
