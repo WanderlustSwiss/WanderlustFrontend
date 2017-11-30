@@ -15,7 +15,7 @@ import retrofit2.http.Path;
 public interface PoiService {
 
     @POST("/poi")
-    Call<Poi> postPoi(@Body Poi poi);
+    Call<Poi> createPoi(@Body Poi poi);
 
     @Multipart
     @POST("/poi/{id}/img")

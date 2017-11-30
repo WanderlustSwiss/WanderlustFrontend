@@ -12,13 +12,13 @@ import retrofit2.http.Path;
 
 public interface TourService {
     @POST("/auth/register")
-        Call<Tour> create(@Body Tour tour);
+        Call<Tour> createTour(@Body Tour tour);
     @GET("/tour/{id}")
-        Call<Tour> retrieve(@Path("id") int id, @Body User user);
+        Call<Tour> retrieveTour(@Path("id") int id);
     @GET("/tour/")
-        Call<Tour> retrieveAll(@Body Tour tour);
-    @PUT("/tour/")
-        Call<Tour> update(@Body Tour tour);
+        Call<Tour> retrieveAllTours();
+    @PUT("/tour")
+        Call<Tour> updateTour(@Body Tour tour);
     @DELETE("/tour")
-        Call<Tour> delete(@Body Tour tour);
+        Call<Tour> deleteTour(@Body Tour tour);
 }

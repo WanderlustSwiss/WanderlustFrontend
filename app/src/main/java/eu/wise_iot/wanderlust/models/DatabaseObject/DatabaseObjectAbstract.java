@@ -19,7 +19,9 @@ public class DatabaseObjectAbstract implements DatabaseObject{
     public void create(final AbstractModel abstractModel, final FragmentHandler handler){
         throw new UnsupportedOperationException();
     }
-
+    public void retrieve(final AbstractModel abstractModel, final FragmentHandler handler){
+        throw new UnsupportedOperationException();
+    }
     public void addImage(final File file, final int poiId){
         throw new UnsupportedOperationException();
     }

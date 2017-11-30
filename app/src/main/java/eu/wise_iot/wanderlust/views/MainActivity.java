@@ -97,14 +97,14 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
-        //login();
+        login();
     }
 
     //TODO move to login view
     private void login(){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
 
-        LoginUser testUser = new LoginUser("zumsel128", "Ha11loW3lt");
+        LoginUser testUser = new LoginUser("lauchgesichtzs", "Ha11loW4lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
         call.enqueue(new Callback<LoginUser>() {
             @Override

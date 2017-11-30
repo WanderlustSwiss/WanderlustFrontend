@@ -74,6 +74,57 @@ public class UserDao extends DatabaseObjectAbstract{
     }
 
     /**
+     * Insert an user into the database.
+     *
+     * @param user (required).
+     * @param handler
+     */
+    @Override
+    public void create(final AbstractModel user, final FragmentHandler handler){
+
+        Call<User> call = service.createUser((User)user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    User newUser = response.body();
+                    newUser.setUser_id(1);
+                    newUser.setPassword(((User) user).getPassword());
+                    userBox.put(newUser);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
+     * Retrieve a user out of the database
+     * @param user
+     * @param handler
+     */
+    public void retrieve(final AbstractModel user, final FragmentHandler handler){
+        Call<User> call = service.retrieveUser();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
      * Update an existing user in the database.
      *
      * @param user (required).
@@ -100,22 +151,18 @@ public class UserDao extends DatabaseObjectAbstract{
             }
         });
     }
-
     /**
-     * Insert an user into the database.
-     *
-     * @param user (required).
+     * Delete a user out of the database
+     * @param user
      * @param handler
      */
-    @Override
-    public void create(final AbstractModel user, final FragmentHandler handler){
-
-        Call<User> call = service.createUser((User)user);
+    public void delete(final AbstractModel user, final FragmentHandler handler){
+        Call<User> call = service.deleteUser((User)user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.isSuccessful()){
-                    userBox.put((User)user);
+                    userBox.remove((User)user);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
@@ -187,58 +234,7 @@ public class UserDao extends DatabaseObjectAbstract{
         userBox.remove(toDeleteUser);
         //return toDeleteUser;
     }
-    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        User toDeleteUser = findOne(searchedColumn, searchPattern);
-        userBox.remove(toDeleteUser);
-        //return toDeleteUser;
-    }
 
-    /**
-     * Delete a user out of the database
-     * @param user
-     * @param handler
-     */
-    public void delete(final AbstractModel user, final FragmentHandler handler){
-        Call<User> call = service.deleteUser((User)user);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful()){
-                    userBox.remove((User)user);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
-                }
-            }
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
-            }
-        });
-    }
-
-    /**
-     * Delete a user out of the database
-     * @param user
-     * @param handler
-     */
-    public void retrieve(final AbstractModel user, final FragmentHandler handler){
-        Call<User> call = service.retrieveUser((User)user);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful()){
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
-                }
-            }
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
-            }
-        });
-    }
     /**
      * Delete all users out of the database
      */

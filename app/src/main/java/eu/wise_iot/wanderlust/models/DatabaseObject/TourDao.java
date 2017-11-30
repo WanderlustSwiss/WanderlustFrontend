@@ -8,6 +8,7 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TourService;
 import io.objectbox.Box;
@@ -72,12 +73,31 @@ public class TourDao extends DatabaseObjectAbstract {
         return tour;
     }
     /**
-     * Delete a user out of the database
+     * get all tours out of the database
      * @param tour
      * @param handler
      */
     public void retrieveAll(final AbstractModel tour, final FragmentHandler handler){
-        Call<Tour> call = service.retrieveAll((Tour)tour);
+        Call<Tour> call = service.retrieveAllTours();
+        call.enqueue(new Callback<Tour>() {
+            @Override
+            public void onResponse(Call<Tour> call, Response<Tour> response) {
+                if(response.isSuccessful()) handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+            }
+            @Override
+            public void onFailure(Call<Tour> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
+     * get tour out of the database by entity
+     * @param tour
+     * @param handler
+     */
+    public void retrieve(int id, final AbstractModel tour, final FragmentHandler handler){
+        Call<Tour> call = service.retrieveTour(id);
         call.enqueue(new Callback<Tour>() {
             @Override
             public void onResponse(Call<Tour> call, Response<Tour> response) {
@@ -94,19 +114,77 @@ public class TourDao extends DatabaseObjectAbstract {
         });
     }
     /**
-     * Insert an history into the database.
-     *
-     * @param tour (required).
-     *
+     * insert a tour
+     * @param tour
+     * @param handler
      */
-    public void create(Tour tour){
-        routeBox.put(tour);
+    public void create(final AbstractModel tour, final FragmentHandler handler){
+        Call<Tour> call = service.createTour((Tour)tour);
+        call.enqueue(new Callback<Tour>() {
+            @Override
+            public void onResponse(Call<Tour> call, Response<Tour> response) {
+                if(response.isSuccessful()){
+                    routeBox.put((Tour)tour);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<Tour> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
     }
-
     /**
-     * Return a list with all routes
+     * delete a tour
+     * @param tour
+     * @param handler
+     */
+    public void delete(final AbstractModel tour, final FragmentHandler handler){
+        Call<Tour> call = service.deleteTour((Tour)tour);
+        call.enqueue(new Callback<Tour>() {
+            @Override
+            public void onResponse(Call<Tour> call, Response<Tour> response) {
+                if(response.isSuccessful()){
+                    routeBox.remove((Tour)tour);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<Tour> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
+     * update a tour
+     * @param tour
+     * @param handler
+     */
+    public void update(final AbstractModel tour, final FragmentHandler handler){
+        Call<Tour> call = service.updateTour((Tour)tour);
+        call.enqueue(new Callback<Tour>() {
+            @Override
+            public void onResponse(Call<Tour> call, Response<Tour> response) {
+                if(response.isSuccessful()){
+                    routeBox.put((Tour)tour);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<Tour> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            }
+        });
+    }
+    /**
      *
-     * @return List<Tour>
+     * @return
      */
     public List<Tour> find() {
         return routeBox.getAll();
@@ -157,10 +235,7 @@ public class TourDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void deleteByPattern(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
-
-
-
 }

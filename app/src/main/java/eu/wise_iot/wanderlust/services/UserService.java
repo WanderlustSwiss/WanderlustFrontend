@@ -15,7 +15,7 @@ public interface UserService {
     @POST("/auth/register")
         Call<User> createUser(@Body User user);
     @GET("/user")
-        Call<User> retrieveUser(@Body User user);
+        Call<User> retrieveUser();
     @PUT("/user")
         Call<User> updateUser(@Body User user);
     @DELETE("/user")

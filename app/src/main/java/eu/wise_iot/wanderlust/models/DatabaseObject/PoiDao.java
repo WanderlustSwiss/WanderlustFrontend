@@ -10,6 +10,10 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.services.PoiService;
@@ -75,30 +79,24 @@ public class PoiDao extends DatabaseObjectAbstract {
      *
      * @param poi (required).
      */
-    public Poi update(final Poi poi) {
-
+    /*
+    public Poi update(final AbstractModel poi, final FragmentHandler handler) {
         PoiService service = ServiceGenerator.createService(PoiService.class);
 
-        Call<Poi> call = service.postPoi(poi);
-        call.enqueue(new Callback<Poi>() {
-             @Override
-             public void onResponse(Call<Poi> call, Response<Poi> response) {
-                 if(response.isSuccessful()) {
-                     poiBox.put(poi);
-                 } else{
-
-                 }
-             }
-
-             @Override
-             public void onFailure(Call<Poi> call, Throwable t) {
-
-             }
-        });
+        Call<Poi> call = service.createPoi(poi);
+        @Override
+        public void onResponse(Call<Poi> call, Response<Poi> response) {
+            if(response.isSuccessful()) handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+            else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+        }
+        @Override
+        public void onFailure(Call<Poi> call, Throwable t) {
+            handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+        }
 
         return poi;
     }
-
+*/
     @Override
     public void addImage(final File file, final int poiID){
 
@@ -123,10 +121,8 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param poi (required).
      */
     public void create(final Poi poi) {
-
-
         PoiService service = ServiceGenerator.createService(PoiService.class);
-        Call<Poi> call = service.postPoi(poi);
+        Call<Poi> call = service.createPoi(poi);
         call.enqueue(new Callback<Poi>() {
             @Override
             public void onResponse(Call<Poi> call, Response<Poi> response) {
