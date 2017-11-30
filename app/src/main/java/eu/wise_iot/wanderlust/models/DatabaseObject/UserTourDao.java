@@ -36,18 +36,18 @@ public class UserTourDao extends DatabaseObjectAbstract {
 
     private static UserTourService service;
 
-    /**
-     * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
-     */
-
-    public UserTourDao(BoxStore boxStore){
-        routeBox = boxStore.boxFor(UserTour.class);
-        routeQueryBuilder = routeBox.query();
-
-        if(service == null) service = ServiceGenerator.createService(UserTourService.class);
-    }
+//    /**
+//     * Constructor.
+//     *
+//     * @param boxStore (required) delivers the connection to the frontend database
+//     */
+//
+//    public UserTourDao(BoxStore boxStore){
+//        routeBox = boxStore.boxFor(UserTour.class);
+//        routeQueryBuilder = routeBox.query();
+//
+//        if(service == null) service = ServiceGenerator.createService(UserTourService.class);
+//    }
 
     public long count(){
         return routeBox.count();
@@ -79,24 +79,24 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param usertour
      * @param handler
      */
-    public void create(final AbstractModel usertour, final FragmentHandler handler){
-        Call<UserTour> call = service.createUserTour((UserTour)usertour);
-        call.enqueue(new Callback<UserTour>() {
-            @Override
-            public void onResponse(Call<UserTour> call, Response<UserTour> response) {
-                if(response.isSuccessful()){
-                    routeBox.put((UserTour)usertour);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
-                }
-            }
-            @Override
-            public void onFailure(Call<UserTour> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
-            }
-        });
-    }
+//    public void create(final AbstractModel usertour, final FragmentHandler handler){
+//        Call<UserTour> call = service.createUserTour((UserTour)usertour);
+//        call.enqueue(new Callback<UserTour>() {
+//            @Override
+//            public void onResponse(Call<UserTour> call, Response<UserTour> response) {
+//                if(response.isSuccessful()){
+//                    routeBox.put((UserTour)usertour);
+//                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+//                } else {
+//                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<UserTour> call, Throwable t) {
+//                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+//            }
+//        });
+//    }
     /**
      * get usertour out of the remote database by entity
      * @param id

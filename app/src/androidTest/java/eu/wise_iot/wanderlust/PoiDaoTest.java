@@ -4,18 +4,12 @@
 //import android.support.test.InstrumentationRegistry;
 //import android.support.test.runner.AndroidJUnit4;
 //
-//import org.junit.After;
 //import org.junit.Before;
-//import org.junit.Test;
 //import org.junit.runner.RunWith;
 //
-//import static org.junit.Assert.*;
-//
 //import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-//import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 //import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 //import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-//import eu.wise_iot.wanderlust.views.MainActivity;
 //import io.objectbox.Box;
 //import io.objectbox.BoxStore;
 //import io.objectbox.query.QueryBuilder;
@@ -43,6 +37,7 @@
 //        poiQueryBuilder = poiBox.query();
 //        testPoi = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //    }
+//
 //
 //    @Test
 //    public void createTest(){

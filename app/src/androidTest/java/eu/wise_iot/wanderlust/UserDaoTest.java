@@ -3,10 +3,6 @@ package eu.wise_iot.wanderlust;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
-import android.widget.Toast;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,21 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import static android.os.Build.VERSION_CODES.N;
 import static org.junit.Assert.*;
 
-import eu.wise_iot.wanderlust.controllers.Event;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.views.MainActivity;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.query.QueryBuilder;
@@ -52,8 +41,6 @@ public class UserDaoTest {
     User testUser;
     UserDao userDao;
 
-    static boolean waitForResponse;
-
     @Before
     public void setUpBefore(){
         Context appContext = InstrumentationRegistry.getTargetContext();
@@ -61,7 +48,7 @@ public class UserDaoTest {
         userDao = new UserDao(boxStore);
         userBox = boxStore.boxFor(User.class);
         userQueryBuilder = userBox.query();
-        testUser = new User(1, "TestUser11", "Test11@UserMailAdress.com", "Password123",
+        testUser = new User(1, "TestUser14", "Test14@UserMailAdress.com", "Password123",
                 0,true,true,"12.22.2202","local");
 
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
@@ -80,7 +67,6 @@ public class UserDaoTest {
                 }else{
                     fail();
                 }
-
             }
             @Override
             public void onFailure(Call<LoginUser> call, Throwable t) {
@@ -93,17 +79,37 @@ public class UserDaoTest {
     public void createTest(){
         try {
             CountDownLatch doneSignal = new CountDownLatch(1);
-            //boolean waitForRequest = true;
-            userDao.create(testUser, new FragmentHandler() {
-                @Override
-                public void onResponse(Event event) {
-                    switch (event.getType()) {
-                        case OK:
-                            doneSignal.countDown();
-                            break;
-                        default:
-                            fail(event.getType().toString());
-                    }
+            userDao.create(testUser, event -> {
+                switch (event.getType()) {
+                    case OK:
+                        doneSignal.countDown();
+                        break;
+                    default:
+                        fail(event.getType().toString());
+                }
+            });
+            doneSignal.await();
+        } catch (Exception e){
+            fail();
+        }
+        assertEquals(userBox.get(1).getUser_id(),testUser.getUser_id());
+        assertEquals(userBox.get(1).getAccountType(), testUser.getAccountType());
+        assertEquals(userBox.get(1).isActive(),testUser.isActive());
+        assertEquals(userBox.get(1).getEmail(), testUser.getEmail());
+        assertEquals(userBox.get(1).getPassword(), testUser.getPassword());
+        assertEquals(userBox.get(1).getNickname(), testUser.getNickname());
+    }
+    @Test
+    public void updateTest(){
+        try {
+            CountDownLatch doneSignal = new CountDownLatch(1);
+            userDao.update(testUser, event -> {
+                switch (event.getType()) {
+                    case OK:
+                        doneSignal.countDown();
+                        break;
+                    default:
+                        fail(event.getType().toString());
                 }
             });
             doneSignal.await();
@@ -115,11 +121,11 @@ public class UserDaoTest {
         assertEquals(userBox.get(1).getNickname(), testUser.getNickname());
     }
 //    @Test
-//    public void updateTest(){
+//    public void updateLocallyTest(){
 //        userBox.put(testUser);
 //        testUser.setNickname("UpdatedTestUser");
 //        userBox.put(testUser);
-//        assertEquals("UpdatedTestUser", userQueryBuilder.equal(User_.id, testUser.getUser_id()).build().findFirst().getNickname());
+//        assertEquals("UpdatedTestUser", userQueryBuilder.equal(User.get, testUser.getUser_id()).build().findFirst().getNickname());
 //    }
 //
 //    @Test

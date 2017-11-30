@@ -1,9 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
-import android.accounts.NetworkErrorException;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -21,36 +19,24 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import javax.security.auth.login.LoginException;
-
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.services.AddCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.LoginService;
-import eu.wise_iot.wanderlust.services.ReceivedCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.services.UserService;
 import io.objectbox.BoxStore;
 import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * MainActivity:
@@ -151,10 +137,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void testSavePoi(){
-        Poi testPoi = new Poi(0, "testPoi", "des", "path/whatever",
-                5.2f, 6.2f, 6, 5, false);
-        PoiDao testPoiDao = new PoiDao(boxStore, MainActivity.this);
-        testPoiDao.create(testPoi);
+        //TODO: update according to new update function
+//        Poi testPoi = new Poi(0, "testPoi", "des", "path/whatever",
+//                5.2f, 6.2f, 6, 5, false);
+//        PoiDao testPoiDao = new PoiDao(boxStore, MainActivity.this);
+//        testPoiDao.create(testPoi);
 
 //        UserDao testUserDao = new UserDao(boxStore);
 //        User testUser = new User(0, "derp", "pipu@popo.miau", "secret",

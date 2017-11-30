@@ -13,27 +13,87 @@ import io.objectbox.annotation.Id;
 public class CommunityTour extends AbstractModel{
 
     @Id
-    int userTour_id;
-    UserTour userTourModel;
+    long tour_id;
+    String  title;
+    String  description;
+    String  imagePath;
+    String  polyline;
+    long    difficulty;
+    long    tourKit;
+    boolean editable;
 
-    public CommunityTour(int userTour_id, UserTour userTourModel) {
-        this.userTour_id = userTour_id;
-        this.userTourModel = userTourModel;
+    public CommunityTour(long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+        this.tour_id = tour_id;
+        this.title = title;
+        this.description = description;
+        this.imagePath = imagePath;
+        this.polyline = polyline;
+        this.difficulty = difficulty;
+        this.tourKit = tourKit;
+        this.editable = editable;
     }
 
-    public int getUserTour_id() {
-        return userTour_id;
+    public long getTour_id() {
+        return tour_id;
     }
 
-    public void setUserTour_id(int userTour_id) {
-        this.userTour_id = userTour_id;
+    public void setTour_id(long tour_id) {
+        this.tour_id = tour_id;
     }
 
-    public UserTour getUserTourModel() {
-        return userTourModel;
+    public String getTitle() {
+        return title;
     }
 
-    public void setUserTourModel(UserTour userTourModel) {
-        this.userTourModel = userTourModel;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getPolyline() {
+        return polyline;
+    }
+
+    public void setPolyline(String polyline) {
+        this.polyline = polyline;
+    }
+
+    public long getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(long difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public long getTourKit() {
+        return tourKit;
+    }
+
+    public void setTourKit(long tourKit) {
+        this.tourKit = tourKit;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 }
