@@ -19,9 +19,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
+ sourceSets {
+     test {
+         java {
+             srcDirs = ["src/androidTest/java/eu/wise_iot/wanderlust"]
+         }
+     }
+ }
+
 dependencies {
+    implementation 'com.android.support:support-v4:25.4.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //Espresso
@@ -53,7 +66,8 @@ dependencies {
 
     // Library to turn HTTP API into Java Interface
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0' // maybe not necessary because gson already included?
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    // maybe not necessary because gson already included?
 
     compile "io.objectbox:objectbox-android:$objectboxVersion"
     //JUnit 4
@@ -68,6 +82,8 @@ dependencies {
     //Material Design
     compile 'com.android.support:design:25.4.0'
 }
+
+
 
 //the following sets the required permissions for API 23+ devices and AVDs
 

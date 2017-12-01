@@ -66,9 +66,9 @@ public class Camera {
                 e.printStackTrace();
                 Toast.makeText(activity, R.string.msg_picture_not_saved, Toast.LENGTH_LONG).show();
             }
-            if (photoFile != null) {
+            if (photoFile != null && activity != null) {
                 // FileProvider is needed for targetSDKVersion >= 24
-                imageUri = FileProvider.getUriForFile(activity, "eu.wise_iot.wanderlust.model.Camera", photoFile);
+                imageUri = FileProvider.getUriForFile(this.activity,"eu.wise_iot.wanderlust.models.Old.Camera", photoFile);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 mapFragment.startActivityForResult(takePictureIntent, Constants.TAKE_PHOTO);

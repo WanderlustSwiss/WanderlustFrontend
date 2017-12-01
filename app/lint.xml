@@ -11,9 +11,11 @@
     <issue id="GoogleAppIndexingWarning" severity="ignore" />
     <issue id="SameParameterValue" severity="ignore" />
     <issue id="ClickableViewAccessibility" severity="ignore"/>
+	
     <!-- set info checks -->
     <issue id="GradleDependency" severity="informational" />
     <issue id="UnusedResources" severity="informational" />
     <issue id="IconLocation" severity="informational" />
     <issue id="IconDuplicates" severity="informational" />
+	<issue id="MissingTranslation" severity="informational" />
 </lint>

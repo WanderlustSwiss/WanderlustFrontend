@@ -1,11 +1,19 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
+
+import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.converter.PropertyConverter;
 
 /**
  * Poi
  * @author Rilind Gashi
+ * @author Tobias Rüegsegger
  * @license MIT
  */
 
@@ -16,19 +24,21 @@ public class Poi extends AbstractModel{
     long poi_id;
     String title;
     String description;
-    String imagePath;
+
+    @Convert(converter =  imageInfoConverter.class, dbType = String.class)
+    List<ImageInfo> imagePaths;
     double longitude;
     double latitude;
     long user;
     long type;
     boolean isPublic;
 
-    public Poi(long poi_id, String name, String description, String picturePath,
+    public Poi(long poi_id, String name, String description, List<ImageInfo> picturePath,
                double longitude, double latitude, long user, long type, boolean isPublic) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;
-        this.imagePath = picturePath;
+        this.imagePaths = picturePath;
         this.longitude = longitude;
         this.latitude = latitude;
         this.user = user;
@@ -36,9 +46,9 @@ public class Poi extends AbstractModel{
         this.isPublic = isPublic;
     }
 
-    public String getImagePath() { return imagePath; }
+    public List<ImageInfo> getImagePath() { return imagePaths; }
 
-    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public void setImagePath(List<ImageInfo> imagePath) { this.imagePaths = imagePath; }
 
     public long getType() { return type; }
 
@@ -95,4 +105,63 @@ public class Poi extends AbstractModel{
     public void setUser(long user) {
         this.user = user;
     }
+
+    //@Entity
+    public class ImageInfo{
+        //@Id
+        long id;
+        String name;
+        String path;
+
+        public ImageInfo(int id, String name, String path) {
+            this.id = id;
+            this.name = name;
+            this.path = path;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+    }
+
+    public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {
+        @Override
+        public List<ImageInfo> convertToEntityProperty(String databaseValue) {
+            if (databaseValue == null) {
+                return null;
+            }
+            Gson gson = new Gson();
+            return gson.fromJson(databaseValue, new TypeToken<List<ImageInfo>>() {}.getType());
+        }
+
+        @Override
+        public String convertToDatabaseValue(List<ImageInfo> entityProperty) {
+            if (entityProperty == null) {
+                return null;
+            }
+            Gson gson = new Gson();
+            return gson.toJson(entityProperty, new TypeToken<List<ImageInfo>>() {}.getType());
+        }
+    }
+
 }
