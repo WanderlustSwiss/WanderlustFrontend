@@ -25,13 +25,13 @@ android {
     }
 }
 
- sourceSets {
+sourceSets {
      test {
          java {
-             srcDirs = ["src/androidTest/java/eu/wise_iot/wanderlust"]
+             srcDirs = ["androidTest/java/eu/wise_iot/wanderlust"]
          }
      }
- }
+}
 
 dependencies {
     implementation 'com.android.support:support-v4:25.4.0'

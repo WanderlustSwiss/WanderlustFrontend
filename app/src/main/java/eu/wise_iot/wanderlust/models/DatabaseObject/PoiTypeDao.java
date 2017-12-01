@@ -4,17 +4,23 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
+import eu.wise_iot.wanderlust.services.PoiService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PoiTypeDao extends DatabaseObjectAbstract {
     
-    private Box<PoiType> deviceBox;
-    private Query<PoiType> deviceQuery;
-    private QueryBuilder<PoiType> deviceQueryBuilder;
+    private Box<PoiType> poiTypeBox;
+    private Query<PoiType> poiTypeQuery;
+    private QueryBuilder<PoiType> poiTypeQueryBuilder;
+    private static PoiService service;
     Property columnProperty;
 
     /**
@@ -24,43 +30,32 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
      */
 
     public PoiTypeDao(BoxStore boxStore){
-        deviceBox = boxStore.boxFor(PoiType.class);
-        deviceQueryBuilder = deviceBox.query();
-    }
-
-    public long count(){
-        return deviceBox.count();
-    }
-
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = PoiType.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(PoiType.class);
-        deviceQueryBuilder.equal(columnProperty , searchPattern);
-        deviceQuery = deviceQueryBuilder.build();
-        return deviceQuery.find().size();
+        poiTypeBox = boxStore.boxFor(PoiType.class);
+        poiTypeQueryBuilder = poiTypeBox.query();
+        if (service == null) service = ServiceGenerator.createService(PoiService.class);
     }
 
     /**
-     * Update an existing user in the database.
-     *
-     * @param device (required).
+     * Update all Poit types in the database.
      *
      */
-    public PoiType update(PoiType device){
-        deviceBox.put(device);
-        return device;
-    }
+    public void sync(){
+        Call<List<PoiType>> call = service.retrieveAllPoiTypes();
+        call.enqueue(new Callback<List<PoiType>>() {
+             @Override
+             public void onResponse(Call<List<PoiType>> call, Response<List<PoiType>> response) {
+                if (response.isSuccessful()) {
+                    for (PoiType poiType : response.body()){
+                        poiTypeBox.put(poiType);
+                    }
+                }
+             }
 
-    /**
-     * Insert a device into the database.
-     *
-     * @param device (required).
-     *
-     */
-    public void create(PoiType device){
-        deviceBox.put(device);
+             @Override
+             public void onFailure(Call<List<PoiType>> call, Throwable t) {
+
+             }
+         });
     }
 
     /**
@@ -69,11 +64,12 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
      * @return List<PoiType>
      */
     public List<PoiType> find() {
-        return deviceBox.getAll();
+        return poiTypeBox.getAll();
     }
 
     /**
-     * Searching for a single device with a search pattern in a column.
+     * Searching for a single poi t
+     * ype with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.
@@ -85,38 +81,8 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(PoiType.class);
-        deviceQueryBuilder.equal(columnProperty, searchPattern);
-        deviceQuery = deviceQueryBuilder.build();
-        return deviceQuery.findFirst();
+        poiTypeQueryBuilder.equal(columnProperty, searchPattern);
+        poiTypeQuery = poiTypeQueryBuilder.build();
+        return poiTypeQuery.findFirst();
     }
-
-    /**
-     * Searching for device matching with the search pattern in a the selected column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
-     * @return List<PoiType> which contains the users, who match to the search pattern in the searched columns
-     */
-    public List<PoiType> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = PoiType.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(PoiType.class);
-        deviceQueryBuilder.equal(columnProperty , searchPattern);
-        deviceQuery = deviceQueryBuilder.build();
-        return deviceQuery.find();
-    }
-
-    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        deviceBox.remove(findOne(searchedColumn, searchPattern));
-
-    }
-
-    public void deleteAll(){
-        deviceBox.removeAll();
-    }
-
-
-
 }
