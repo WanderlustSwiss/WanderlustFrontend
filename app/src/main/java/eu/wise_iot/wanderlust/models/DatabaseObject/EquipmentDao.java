@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -39,10 +38,10 @@ public class EquipmentDao extends DatabaseObjectAbstract {
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Equipment_.class.getDeclaredField(searchedColumn);
+        Field searchedField = Equipment.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Equipment_.class);
+        columnProperty = (Property) searchedField.get(Equipment.class);
         equipmentQueryBuilder.equal(columnProperty , searchPattern);
         equipmentQuery = equipmentQueryBuilder.build();
         return equipmentQuery.find().size();
@@ -86,10 +85,10 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      * @return Equipment which match to the search pattern in the searched columns
      */
     public Equipment findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Equipment_.class.getDeclaredField(searchedColumn);
+        Field searchedField = Equipment.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Equipment_.class);
+        columnProperty = (Property) searchedField.get(Equipment.class);
         equipmentQueryBuilder.equal(columnProperty, searchPattern);
         equipmentQuery = equipmentQueryBuilder.build();
         return equipmentQuery.findFirst();
@@ -104,10 +103,10 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      * @return List<Equipment> which contains the equipments, which match to the search pattern in the searched columns
      */
     public List<Equipment> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Equipment_.class.getDeclaredField(searchedColumn);
+        Field searchedField = Equipment.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(Equipment_.class);
+        columnProperty = (Property) searchedField.get(Equipment.class);
         equipmentQueryBuilder.equal(columnProperty , searchPattern);
         equipmentQuery = equipmentQueryBuilder.build();
         return equipmentQuery.find();

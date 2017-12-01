@@ -6,6 +6,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
@@ -24,8 +25,8 @@ public interface TripService {
         Call<Trip> retrieveTrip(@Path("id") int id);
     @POST("/Trip/")
         Call<Trip> createTrip(@Body Trip user);
-   // @PUT("/Trip")
-   //     Call<Trip> updateTrip(int id,@Body Trip Trip);
+    @PUT("/Trip")
+        Call<Trip> updateTrip(int id,@Body Trip Trip);
     @DELETE("/Trip/{")
         Call<Trip> deleteTrip(@Body Trip Trip);
 }

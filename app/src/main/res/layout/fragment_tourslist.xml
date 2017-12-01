@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="fill_parent"
-    android:layout_width="fill_parent"
-    android:orientation="vertical"
-    android:padding="10dp"
-    android:gravity="end"
-    tools:context="eu.wise_iot.wanderlust.views.MainActivity"
-    android:clickable="true"
-    android:focusable="true">
-
-    <SearchView
-        android:id="@+id/searchBarToursList"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50px" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:text="Trips"
+            android:textSize="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvTrips"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:text="Favoriten"
+            android:textSize="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvFavorites"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-    <ListView
-        android:id="@+id/ListSearchToursList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    </LinearLayout>
 
-    </ListView>
-</LinearLayout>
+</RelativeLayout>

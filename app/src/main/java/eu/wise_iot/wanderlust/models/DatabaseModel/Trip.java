@@ -1,14 +1,16 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Transient;
 
 /**
  * Trip
  * trip_id          integer	Primary Key, auto increment
  * communityTours	model	Foreign key, communityTours model
  * user	            model	Foreign key, user model
- * @author Alexander Weinbeck
+ * @author Alexander Weinbeck, Tobias Ruegsegger
  * @license MIT
  */
 
@@ -19,6 +21,7 @@ public class Trip extends AbstractModel{
     long trip_id;
     long userTour ;
     long user;
+    @Transient
 
     public Trip(long trip_id, long usertour, long user) {
         this.trip_id = trip_id;

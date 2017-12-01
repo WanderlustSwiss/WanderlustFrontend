@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultType;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
@@ -39,10 +38,10 @@ public class DifficultTypeDao extends DatabaseObjectAbstract{
     }
 
     public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = DifficultType_.class.getDeclaredField(searchedColumn);
+        Field searchedField = DifficultType.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(DifficultType_.class);
+        columnProperty = (Property) searchedField.get(DifficultType.class);
         difficultTypeQueryBuilder.equal(columnProperty , searchPattern);
         difficultTypeQuery = difficultTypeQueryBuilder.build();
         return difficultTypeQuery.find().size();
@@ -86,10 +85,10 @@ public class DifficultTypeDao extends DatabaseObjectAbstract{
      * @return Difficulty type which match to the search pattern in the searched columns
      */
     public DifficultType findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = DifficultType_.class.getDeclaredField(searchedColumn);
+        Field searchedField = DifficultType.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(DifficultType_.class);
+        columnProperty = (Property) searchedField.get(DifficultType.class);
         difficultTypeQueryBuilder.equal(columnProperty, searchPattern);
         difficultTypeQuery = difficultTypeQueryBuilder.build();
         return difficultTypeQuery.findFirst();
@@ -104,10 +103,10 @@ public class DifficultTypeDao extends DatabaseObjectAbstract{
      * @return List<DifficultType> which contains the difficulty types, which match to the search pattern in the searched columns
      */
     public List<DifficultType> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = DifficultType_.class.getDeclaredField(searchedColumn);
+        Field searchedField = DifficultType.class.getDeclaredField(searchedColumn);
         searchedField.setAccessible(true);
 
-        columnProperty = (Property) searchedField.get(DifficultType_.class);
+        columnProperty = (Property) searchedField.get(DifficultType.class);
         difficultTypeQueryBuilder.equal(columnProperty , searchPattern);
         difficultTypeQuery = difficultTypeQueryBuilder.build();
         return difficultTypeQuery.find();
