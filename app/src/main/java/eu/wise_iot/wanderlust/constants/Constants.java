@@ -32,7 +32,7 @@ public interface Constants {
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
-    String CREATE_FEEDBACK_DIALOG = "CreateFeedbackDialog";
+    String CREATE_FEEDBACK_DIALOG = "PoiFeedbackDialog";
 
     /* PHOTO INTENT */
     String IMAGE_FILE_NAME = "imageFileName";
