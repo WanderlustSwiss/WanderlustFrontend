@@ -5,30 +5,31 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-
 /**
  * DatabaseObjectAbstract
  * @author Rilind Gashi
  * @license MIT
  */
 
-public abstract class DatabaseObjectAbstract implements DatabaseObject{
+public class DatabaseObjectAbstract implements DatabaseObject{
 
     public void create(final AbstractModel abstractModel, final FragmentHandler handler){
         throw new UnsupportedOperationException();
     }
-
+    public void retrieve(final AbstractModel abstractModel, final FragmentHandler handler){
+        throw new UnsupportedOperationException();
+    }
     public void addImage(final File file, final int poiId){
         throw new UnsupportedOperationException();
     }
 
-    public AbstractModel update(AbstractModel abstractModel){
+    public void update(final AbstractModel abstractModel, final FragmentHandler handler){
         throw new UnsupportedOperationException();
     }
 
-    public abstract List<? extends AbstractModel> find();
+    public List<? extends AbstractModel> find(){
+        throw new UnsupportedOperationException();
+    }
 
     public AbstractModel findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         throw new UnsupportedOperationException();
@@ -39,7 +40,7 @@ public abstract class DatabaseObjectAbstract implements DatabaseObject{
 
     }
 
-    public AbstractModel delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException{
+    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException{
         throw new UnsupportedOperationException();
     }
 

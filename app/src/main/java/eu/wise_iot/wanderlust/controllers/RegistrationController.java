@@ -6,9 +6,8 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 import eu.wise_iot.wanderlust.views.RegistrationFragment;
 
 /**
- * Created by Joshi on 28.11.2017.
+ * @author Yoshi
  */
-
 public class RegistrationController{
     private RegistrationFragment registrationFragment;
 

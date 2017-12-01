@@ -88,6 +88,13 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <!-- Full screen dialog -->
+    <style name="FullScreenDialogStyle">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
 
     <!-- Input Fields -->
     <style name="default_input">

@@ -1,12 +1,11 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
-import android.accounts.NetworkErrorException;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -21,35 +20,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.security.auth.login.LoginException;
-
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.services.AddCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.LoginService;
-import eu.wise_iot.wanderlust.services.ReceivedCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.services.UserService;
 import io.objectbox.BoxStore;
 import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * MainActivity:
@@ -68,9 +57,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
-
         //TODO where to put this?
         boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        //login();
+
 
         // check if app is opened for the first time
         if (preferences.getBoolean("firstTimeOpened", true)) {
@@ -80,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 /*
             // start welcome screen
-            RegistrationFragment welcomeFragment = new RegistrationFragment();
+            //RegistrationFragment welcomeFragment = new RegistrationFragment();
+            MapFragment welcomeFragment = new MapFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, welcomeFragment)
                     .commit();*/
@@ -91,13 +82,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
-        //login();
     }
 
-    //TODO move to login view
     private void login(){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
-        LoginUser testUser = new LoginUser("zumsel128", "Ha11loW3lt");
+        LoginUser testUser = new LoginUser("zumsel321", "Ha11loW3lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
         call.enqueue(new Callback<LoginUser>() {
             @Override
@@ -108,57 +97,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //convert header to Map
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-                    Toast.makeText(MainActivity.this, "Cookie saved!", Toast.LENGTH_SHORT).show();
-
-                    testCookieAuth();
+                    uploadImage();
                 } else {
-                    Toast.makeText(MainActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginUser> call, Throwable t) {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.v(TAG, t.getMessage());
             }
         });
     }
 
-    //TODO move to login view
-    private void testCookieAuth(){
-        LoginService loginService = ServiceGenerator.createService(LoginService.class);
-        Call<LoginUser> cookieCall = loginService.cookieTest();
-        cookieCall.enqueue(new Callback<LoginUser>() {
-            @Override
-            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
-                Toast.makeText(MainActivity.this, "cookie auth: " + response.message(), Toast.LENGTH_SHORT).show();
-                testSavePoi();
-            }
+    private void uploadImage(){
+        PoiDao poi = new PoiDao(boxStore);
 
-            @Override
-            public void onFailure(Call<LoginUser> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "cookie auth failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+        File[] testimages = Environment.getExternalStorageDirectory().listFiles();
+        File[] downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
+        File testImage = downloads[0];
 
+
+
+
+        poi.addImage(testImage, 1, new FragmentHandler() {
+            @Override
+            public void onResponse(Event event) {
+                Toast.makeText(MainActivity.this, "image saved", Toast.LENGTH_LONG);
             }
         });
-    }
-
-
-    private void testSavePoi(){
-        Poi testPoi = new Poi(0, "testPoi", "des", "path/whatever",
-                5.2f, 6.2f, 6, 5, false);
-        PoiDao testPoiDao = new PoiDao(boxStore, MainActivity.this);
-        testPoiDao.create(testPoi);
-
-//        UserDao testUserDao = new UserDao(boxStore);
-//        User testUser = new User(0, "derp", "pipu@popo.miau", "secret",
-//                1, false, false, "lastLogin", "acc type");
-//        testUserDao.update(testUser, MainActivity.this);
-
-    }
-
-    public void makeToast(String s){
-        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
     }
 
     @Override

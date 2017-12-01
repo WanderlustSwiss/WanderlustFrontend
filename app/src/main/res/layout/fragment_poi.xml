@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    >
+
+        <TextView
+            android:id="@+id/poiTitleTextView"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="@string/poi_fragment_textview_title"
+            android:editable="true"
+            />
+
+        <TextView
+            android:id="@+id/poiDescriptionTextView"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="@string/poi_fragment_textview_description"
+            android:layout_below="@id/poiTitleTextView"
+            />
+
+        <Spinner
+            android:id="@+id/poiTypeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@id/poiDescriptionTextView"
+            >
+        </Spinner>
+
+        <Spinner
+            android:id="@+id/poiIsPublicSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@id/poiTypeSpinner"
+            >
+        </Spinner>
+
+</RelativeLayout>

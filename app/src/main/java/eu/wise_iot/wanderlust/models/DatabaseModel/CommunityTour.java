@@ -4,49 +4,43 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * Route
- * @author Rilind Gashi
+ * CommunityTour
+ * @author Alexander Weinbeck
  * @license MIT
  */
 
 @Entity
-public class Route extends AbstractModel{
+public class CommunityTour extends AbstractModel{
 
     @Id
-    long route_id;
-    String title;
-    String description;
-    String imagePath;
-    String polyline;
-    long difficulty;
-    long routeKit;
+    long userTour_id;
+    long userTourModel;
+    long tour_id;
+    String  title;
+    String  description;
+    String  imagePath;
+    String  polyline;
+    long    difficulty;
+    long    tourKit;
     boolean editable;
 
-    public Route(long route_id, String title, String description, String imagePath, String polyline, long difficulty, long routeKit, boolean editable) {
-        this.route_id = route_id;
+    public CommunityTour(long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+        this.tour_id = tour_id;
         this.title = title;
         this.description = description;
         this.imagePath = imagePath;
         this.polyline = polyline;
         this.difficulty = difficulty;
-        this.routeKit = routeKit;
+        this.tourKit = tourKit;
         this.editable = editable;
     }
 
-    public long getRouteKit() {
-        return routeKit;
+    public long getTour_id() {
+        return tour_id;
     }
 
-    public void setRouteKit(long routeKit) {
-        this.routeKit = routeKit;
-    }
-
-    public long getRoute_id() {
-        return route_id;
-    }
-
-    public void setRoute_id(long route_id) {
-        this.route_id = route_id;
+    public void setUserTour_id(long userTour_id) {
+        this.tour_id = tour_id;
     }
 
     public String getTitle() {
@@ -87,6 +81,14 @@ public class Route extends AbstractModel{
 
     public void setDifficulty(long difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public long getTourKit() {
+        return tourKit;
+    }
+
+    public void setTourKit(long tourKit) {
+        this.tourKit = tourKit;
     }
 
     public boolean isEditable() {
