@@ -189,7 +189,10 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @return
      */
     public List<UserTour> find() {
-        return routeBox.getAll();
+        if(routeBox != null)
+            return routeBox.getAll();
+        else
+            return null;
     }
 
     /**
