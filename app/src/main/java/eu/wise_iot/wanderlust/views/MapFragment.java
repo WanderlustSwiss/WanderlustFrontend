@@ -342,11 +342,7 @@ public class MapFragment extends Fragment{
         layerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PoiFragment poiFragment = new PoiFragment();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, poiFragment, Constants.MANUAL_FRAGMENT)
-                        .addToBackStack(null)
-                        .commit();
+                dispatchPostFeedbackDialogFragment();
             }
         });
     }

@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
         //TODO where to put this?
-        BoxStore boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+//        BoxStore boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
         // check if app is opened for the first time
         if (preferences.getBoolean("firstTimeOpened", true)) {

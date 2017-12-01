@@ -68,13 +68,14 @@ public class CreateFeedbackDialog extends DialogFragment {
         double lon = args.getDouble(Constants.LAST_POS_LON);
         lastKnownLocation = new GeoPoint(lat, lon);
         context = getActivity();
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_fragment_create_feedback, container);
-        descriptionEditText = (EditText) view.findViewById(R.id.dialog_post_feedback_description_edit_text);
-        publicationModeSpinner = (Spinner) view.findViewById(R.id.publication_mode_spinner);
+        descriptionEditText = (EditText) view.findViewById(R.id.description);
+        publicationModeSpinner = (Spinner) view.findViewById(R.id.typeSpinner);
         feedbackTypeRadioGroup = (RadioGroup) view.findViewById(R.id.feedback_type_radio_group);
         buttonSave = (Button) view.findViewById(R.id.dialog_post_feedback_button_save);
         buttonCancel = (Button) view.findViewById(R.id.dialog_post_feedback_button_cancel);
