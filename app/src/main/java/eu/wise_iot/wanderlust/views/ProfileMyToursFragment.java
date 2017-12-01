@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.views.adapter.TourModelArrayAdapter;
 
 /**
  * ProfileFragment:
