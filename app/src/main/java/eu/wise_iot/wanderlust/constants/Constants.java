@@ -12,9 +12,15 @@ public interface Constants {
     int MODE_PRIVATE = 101;
 
     /* FEEDBACK TYPE */
+    // old types // todo: delete
     int TYPE_POSITIVE = 200;
     int TYPE_NEGATIVE = 201;
     int TYPE_ALERT = 202;
+    // new types
+    int TYPE_VIEW = 300;
+    int TYPE_RESTAURANT = 301;
+    int TYPE_REST_AREA = 302;
+    int TYPE_FLORA_FAUNA = 303;
 
 
     /* ACTIVITIES */
