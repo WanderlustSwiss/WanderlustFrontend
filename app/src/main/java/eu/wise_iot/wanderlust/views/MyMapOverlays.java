@@ -209,9 +209,8 @@ public class MyMapOverlays implements Serializable {
 
     public void addPositionMarker(GeoPoint geoPoint) {
         if (geoPoint != null) {
-            Drawable drawable = activity.getResources().getDrawable(R.drawable.icon_person_follow_disabled);
-            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            drawable = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, 70, 70, true));
+            // TODO: Move position of icon so that the pointy end marks the exact position of the user
+            Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
 
             positionMarker = new Marker(mapView);
             positionMarker.setIcon(drawable);

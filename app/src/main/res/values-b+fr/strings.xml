@@ -104,16 +104,9 @@
 
 
     <!-- USER ACTIONS -->
-    <string name="action_confirm">bestätigen</string>
+    <string name="action_confirm">accepter</string>
     <string name="action_dismiss">verwerfen</string>
     <string name="action_close">schliessen</string>
     <string name="action_foreward">weiter</string>
-
-    <!-- REGISTRATION -->
-    <string name="registration_name">Nickname</string>
-    <string name="registration_email">E-Mail</string>
-    <string name="registration_registrieren_btn">Registrieren</string>
-    <string name="registration_passsword">Passwort</string>
-    <string name="registration_passsword_repeat">Passwort wiederholen</string>
 
 </resources>
