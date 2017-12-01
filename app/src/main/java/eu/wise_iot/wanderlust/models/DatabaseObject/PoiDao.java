@@ -151,6 +151,7 @@ public class PoiDao extends DatabaseObjectAbstract{
             }
         });
     }
+
     /**
      * delete a poi in the database
      * @param poi
@@ -232,11 +233,40 @@ public class PoiDao extends DatabaseObjectAbstract{
                 handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
-
     }
 
     public void deleteImage(final int poiID, final int imageID, final FragmentHandler handler){
         Call<Poi.ImageInfo> call = service.deleteImage(poiID, imageID);
+        call.enqueue(new Callback<Poi.ImageInfo>() {
+            @Override
+            public void onResponse(Call<Poi.ImageInfo> call, Response<Poi.ImageInfo> response) {
+                if(response.isSuccessful()){
+                    Poi poi = poiBox.get(poiID);
+
+                    Poi.ImageInfo imageInfoToDelete = null;
+                    for (Poi.ImageInfo imageInfo : poi.getImagePath()){
+                        if(imageInfo.getId() == imageID){
+                            imageInfoToDelete = imageInfo;
+                            break;
+                        }
+                    }
+                    if (imageInfoToDelete == null){
+                        //TODO image not found
+                    } else {
+                        poi.getImagePath().remove(imageInfoToDelete);
+                        poiBox.put(poi);
+                    }
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Poi.ImageInfo> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+            }
+        });
     }
 
     /**

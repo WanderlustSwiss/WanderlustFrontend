@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
         //TODO where to put this?
-        boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        if( boxStore == null)  boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
         //login();
 
 
