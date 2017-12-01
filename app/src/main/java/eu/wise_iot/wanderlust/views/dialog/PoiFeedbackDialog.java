@@ -7,6 +7,8 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,12 +30,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * CreateFeedbackDialog:
+ * PoiFeedbackDialog:
  * @author Fabian Schwander
  * @license MIT
  */
-public class CreateFeedbackDialog extends DialogFragment {
-    private static final String TAG = "CreateFeedbackDialog";
+public class PoiFeedbackDialog extends DialogFragment {
+    private static final String TAG = "PoiFeedbackDialog";
     private Context context;
 
     private String imageFileName;
@@ -49,8 +51,8 @@ public class CreateFeedbackDialog extends DialogFragment {
     private Button buttonCancel;
     private Feedback feedback;
 
-    public static CreateFeedbackDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
-        CreateFeedbackDialog fragment = new CreateFeedbackDialog();
+    public static PoiFeedbackDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
+        PoiFeedbackDialog fragment = new PoiFeedbackDialog();
         Bundle args = new Bundle();
         args.putString(Constants.IMAGE_FILE_NAME, imageFileName);
         args.putDouble(Constants.LAST_POS_LAT, lastKnownLocation.getLatitude());
@@ -69,6 +71,7 @@ public class CreateFeedbackDialog extends DialogFragment {
         lastKnownLocation = new GeoPoint(lat, lon);
         context = getActivity();
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -173,7 +176,7 @@ public class CreateFeedbackDialog extends DialogFragment {
             public void onResponse(Call<Feedback> call, Response<Feedback> response) {
                 Toast.makeText(context, R.string.msg_visible_after_refresh, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "photo saved and response received: " + response.isSuccessful());
-//                mapOverlays.addFeedbackIconToOverlay(CreateFeedbackDialog.this.feedback); // FIXME: throws NPE
+//                mapOverlays.addFeedbackIconToOverlay(PoiFeedbackDialog.this.feedback); // FIXME: throws NPE
             }
 
             @Override
@@ -183,5 +186,10 @@ public class CreateFeedbackDialog extends DialogFragment {
                 Log.e(TAG, t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.map_fragment_layer_menu, menu);
     }
 }
