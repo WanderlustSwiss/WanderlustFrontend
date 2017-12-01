@@ -173,6 +173,7 @@ public class PoiDao extends DatabaseObjectAbstract{
             }
         });
     }
+
     /**
      * add an image to the db
      * @param file
@@ -208,9 +209,36 @@ public class PoiDao extends DatabaseObjectAbstract{
         });
     }
 
-    public void getImage(final int poiId, final FragmentHandler handler){
+    /**
+     * receive an image from the server
+     * @param poiID
+     * @param imageID
+     * @param handler
+     */
+    public void getImage(final int poiID, final int imageID, final FragmentHandler handler){
+        Call<Poi.ImageInfo> call = service.downloadImage(poiID, imageID);
+        call.enqueue(new Callback<Poi.ImageInfo>() {
+            @Override
+            public void onResponse(Call<Poi.ImageInfo> call, Response<Poi.ImageInfo> response) {
+                if(response.isSuccessful()){
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Poi.ImageInfo> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+            }
+        });
 
     }
+
+    public void deleteImage(final int poiID, final int imageID, final FragmentHandler handler){
+        Call<Poi.ImageInfo> call = service.deleteImage(poiID, imageID);
+    }
+
     /**
      * returns a list with all poi
      *
