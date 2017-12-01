@@ -79,6 +79,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param usertour
      * @param handler
      */
+    /*
     public void create(final AbstractModel usertour, final FragmentHandler handler){
         Call<UserTour> call = service.createUserTour((UserTour)usertour);
         call.enqueue(new Callback<UserTour>() {
@@ -97,6 +98,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
         });
     }
+    */
     /**
      * get usertour out of the remote database by entity
      * @param id

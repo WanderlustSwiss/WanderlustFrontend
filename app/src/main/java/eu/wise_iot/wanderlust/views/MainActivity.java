@@ -1,9 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
-import android.accounts.NetworkErrorException;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -23,34 +21,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-
-import javax.security.auth.login.LoginException;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.services.AddCookiesInterceptor;
-import eu.wise_iot.wanderlust.services.LoginService;
-import eu.wise_iot.wanderlust.services.ReceivedCookiesInterceptor;
-import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.services.UserService;
 import io.objectbox.BoxStore;
-import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * MainActivity:
@@ -97,74 +73,6 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
-        login();
-    }
-
-    //TODO move to login view
-    private void login(){
-        LoginService loginService = ServiceGenerator.createService(LoginService.class);
-
-        LoginUser testUser = new LoginUser("lauchgesichtzs", "Ha11loW4lt");
-        Call<LoginUser> call = loginService.basicLogin(testUser);
-        call.enqueue(new Callback<LoginUser>() {
-            @Override
-            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
-                if (response.isSuccessful()) {
-
-                    Headers headerResponse = response.headers();
-                    //convert header to Map
-                    Map<String, List<String>> headerMapList = headerResponse.toMultimap();
-                    LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-                    Toast.makeText(MainActivity.this, "Cookie saved!", Toast.LENGTH_SHORT).show();
-
-                    testCookieAuth();
-                } else {
-                    Toast.makeText(MainActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<LoginUser> call, Throwable t) {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.v(TAG, t.getMessage());
-            }
-        });
-    }
-
-    //TODO move to login view
-    private void testCookieAuth(){
-        LoginService loginService = ServiceGenerator.createService(LoginService.class);
-        Call<LoginUser> cookieCall = loginService.cookieTest();
-        cookieCall.enqueue(new Callback<LoginUser>() {
-            @Override
-            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
-                Toast.makeText(MainActivity.this, "cookie auth: " + response.message(), Toast.LENGTH_SHORT).show();
-                testSavePoi();
-            }
-
-            @Override
-            public void onFailure(Call<LoginUser> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "cookie auth failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
-
-    private void testSavePoi(){
-        Poi testPoi = new Poi(0, "testPoi", "des", "path/whatever",
-                5.2f, 6.2f, 6, 5, false);
-        PoiDao testPoiDao = new PoiDao(boxStore, MainActivity.this);
-        testPoiDao.create(testPoi);
-
-//        UserDao testUserDao = new UserDao(boxStore);
-//        User testUser = new User(0, "derp", "pipu@popo.miau", "secret",
-//                1, false, false, "lastLogin", "acc type");
-//        testUserDao.update(testUser, MainActivity.this);
-
-    }
-
-    public void makeToast(String s){
-        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
     }
 
     @Override

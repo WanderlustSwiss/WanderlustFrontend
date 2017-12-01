@@ -52,7 +52,7 @@ public class UserDaoTest {
     User testUser;
     UserDao userDao;
 
-    static boolean waitForResponse;
+
 
     @Before
     public void setUpBefore(){
@@ -66,7 +66,7 @@ public class UserDaoTest {
 
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
 
-        LoginUser testUser = new LoginUser("lauchgesichtzs", "Ha11loW4lt");
+        LoginUser testUser = new LoginUser("testuser", "Ha1loW3lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
         call.enqueue(new Callback<LoginUser>() {
             @Override

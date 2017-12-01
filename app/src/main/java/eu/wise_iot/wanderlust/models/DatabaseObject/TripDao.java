@@ -124,6 +124,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param trip
      * @param handler
      */
+    /*
     public void update(int id, final AbstractModel trip, final FragmentHandler handler){
         Call<Trip> call = service.updateTrip(id, (Trip)trip);
         call.enqueue(new Callback<Trip>() {
@@ -142,6 +143,7 @@ public class TripDao extends DatabaseObjectAbstract {
             }
         });
     }
+    */
     /**
      * delete a trip local and remote
      * @param trip
