@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,8 @@ public class ProfileFragment extends Fragment {
     private TextView birthday;
 
     private TabLayout tabLayout;
+
+    private ListView listView;
 
     private User user;
 
@@ -100,7 +103,11 @@ public class ProfileFragment extends Fragment {
         amountTours = (TextView) view.findViewById(R.id.profileAmountTours);
         amountScore = (TextView) view.findViewById(R.id.profileAmountScore);
 
-        getActivity().setTitle("nicname");
+        //Liste
+        listView = (ListView) view.findViewById(R.id.listContent);
+
+        //set nickname in App Bar
+        getActivity().setTitle("nickname");
 
     }
 
