@@ -107,7 +107,7 @@ public class Poi extends AbstractModel{
     }
 
     //@Entity
-    public class ImageInfo{
+    public class ImageInfo extends AbstractModel{
         //@Id
         long id;
         String name;
