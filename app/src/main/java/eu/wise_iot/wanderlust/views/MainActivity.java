@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,12 +20,26 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.services.LoginService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.BoxStore;
+import okhttp3.Headers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * MainActivity:
@@ -42,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private String mActivityTitle;
 
     public static BoxStore boxStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,16 +66,19 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
         //TODO where to put this?
-        BoxStore boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        //login();
+
 
         // check if app is opened for the first time
-        if (preferences.getBoolean("firstTimeOpened", true)) {
+        if (preferences.getBoolean("firstTimeOpened", true || true)) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
             editor.apply();
 
             // start welcome screen
-            RegistrationFragment welcomeFragment = new RegistrationFragment();
+            //RegistrationFragment welcomeFragment = new RegistrationFragment();
+            MapFragment welcomeFragment = new MapFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, welcomeFragment)
                     .commit();
@@ -70,8 +89,49 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
+    }
 
-//        testPoiDao.create(testPoi);
+    private void login(){
+        LoginService loginService = ServiceGenerator.createService(LoginService.class);
+
+        LoginUser testUser = new LoginUser("zumsel321", "Ha11loW3lt");
+        Call<LoginUser> call = loginService.basicLogin(testUser);
+        call.enqueue(new Callback<LoginUser>() {
+            @Override
+            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
+                if (response.isSuccessful()) {
+
+                    Headers headerResponse = response.headers();
+                    //convert header to Map
+                    Map<String, List<String>> headerMapList = headerResponse.toMultimap();
+                    LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
+                    uploadImage();
+                } else {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginUser> call, Throwable t) {
+            }
+        });
+    }
+
+    private void uploadImage(){
+        PoiDao poi = new PoiDao(boxStore);
+
+        File[] testimages = Environment.getExternalStorageDirectory().listFiles();
+        File[] downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
+        File testImage = downloads[0];
+
+
+
+
+        poi.addImage(testImage, 1, new FragmentHandler() {
+            @Override
+            public void onResponse(Event event) {
+                Toast.makeText(MainActivity.this, "image saved", Toast.LENGTH_LONG);
+            }
+        });
     }
 
     @Override
