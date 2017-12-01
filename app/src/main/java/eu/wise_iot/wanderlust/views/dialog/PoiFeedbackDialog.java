@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.views.dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 import org.osmdroid.util.GeoPoint;
@@ -42,11 +40,12 @@ public class PoiFeedbackDialog extends DialogFragment {
     private GeoPoint lastKnownLocation;
     private int displayMode;
     private int feedbackType;
+    private String title; // todo: has to be added to model
     private String description;
 
+    private EditText titleEditText;
     private EditText descriptionEditText;
     private Spinner typeSpinner;
-    private RadioGroup feedbackTypeRadioGroup;
     private Button buttonSave;
     private Button buttonCancel;
     private Feedback feedback;
@@ -70,15 +69,17 @@ public class PoiFeedbackDialog extends DialogFragment {
         double lon = args.getDouble(Constants.LAST_POS_LON);
         lastKnownLocation = new GeoPoint(lat, lon);
         context = getActivity();
+        // set style and options menu
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_fragment_create_feedback, container);
-        descriptionEditText = (EditText) view.findViewById(R.id.description);
-        typeSpinner = (Spinner) view.findViewById(R.id.typeSpinner);
+        View view = inflater.inflate(R.layout.dialog_fragment_poi, container);
+        titleEditText = (EditText) view.findViewById(R.id.title);
+        descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
+        typeSpinner = (Spinner) view.findViewById(R.id.poi_typeSpinner);
         buttonSave = (Button) view.findViewById(R.id.dialog_post_feedback_button_save);
         buttonCancel = (Button) view.findViewById(R.id.dialog_post_feedback_button_cancel);
         return view;
@@ -90,8 +91,6 @@ public class PoiFeedbackDialog extends DialogFragment {
         initPublicationModeControls();
         initPublicationTypeControls();
         initActionControls();
-        // prevents closing of dialog when taped on the outside
-        setCancelable(false);
     }
 
     private void initPublicationModeControls() {
@@ -146,6 +145,9 @@ public class PoiFeedbackDialog extends DialogFragment {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (titleEditText.getText() != null) {
+                    title = titleEditText.getText().toString();
+                }
                 if (descriptionEditText.getText() != null) {
                    description = descriptionEditText.getText().toString();
                 }
