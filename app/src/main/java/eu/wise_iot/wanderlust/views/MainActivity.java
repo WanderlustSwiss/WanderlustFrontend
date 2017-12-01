@@ -24,12 +24,8 @@ import java.util.List;
 import java.util.Map;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.Event;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.BoxStore;
@@ -65,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         //TODO where to put this?
         boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
+        TourOverviewFragment tourFragment = new TourOverviewFragment();
+        getFragmentManager().beginTransaction()
+                .add(R.id.content_frame, tourFragment)
+                .commit();
+        /*
         // check if app is opened for the first time
         if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
         login();
+        */
 
     }
 
