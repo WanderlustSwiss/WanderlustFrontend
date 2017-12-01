@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="profile_tab_mytours">My Tours</string>
-    <string name="profile_tab_favorites">Favorites</string>
-    <string name="profile_tab_pois">POI\'s</string>
-    <string name="profile_tab_saved">Saved</string>
-    <string name="profile_bg_description">background</string>
     <string name="registration_passsword_repeat">Passwort wiederholen</string>
     <string name="registration_passsword">Passwort</string>
     <string name="registration_registrieren_btn">Registrieren</string>
