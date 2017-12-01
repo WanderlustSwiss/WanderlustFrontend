@@ -1,6 +1,11 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
+import android.os.Environment;
+import android.util.Log;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,21 +178,32 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @param file
      * @param poiID
      */
-    @Override
-    public void addImage(final File file, final int poiID){
+    public void addImage(final File file, final int poiID, final FragmentHandler handler){
         PoiService service = ServiceGenerator.createService(PoiService.class);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        Call<Poi> call = service.uploadImage(poiID, body);
-        call.enqueue(new Callback<Poi>() {
+        Call<Poi.ImageInfo> call = service.uploadImage(poiID, body);
+        call.enqueue(new Callback<Poi.ImageInfo>() {
             @Override
-            public void onResponse(Call<Poi> call, Response<Poi> response) {
-                //TODO
+            public void onResponse(Call<Poi.ImageInfo> call, Response<Poi.ImageInfo> response) {
+                if(response.isSuccessful()){
+
+                    File filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                    if (!filepath.exists()) {
+                        ;
+                        if (!filepath.mkdirs()) {
+                            ;
+                        }
+                    }
+                    File image = new File(filepath, response.body().getName());
+                    file.renameTo(image);
+                }
+                handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
             }
 
             @Override
-            public void onFailure(Call<Poi> call, Throwable t) {
-
+            public void onFailure(Call<Poi.ImageInfo> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }

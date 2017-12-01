@@ -5,43 +5,51 @@ import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.content.res.Configuration;
+import android.os.Environment;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.services.LoginService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.BoxStore;
+import okhttp3.Headers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * MainActivity:
  * @author Fabian Schwander
  * @license MIT
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
-    private ListView mDrawerList;
-    private ArrayAdapter<String> mAdapter;
-    private String[] mMenuItems;
-
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
-    private String mActivityTitle;
 
     public static BoxStore boxStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,16 +58,19 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
         //TODO where to put this?
-//        BoxStore boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        //login();
+
 
         // check if app is opened for the first time
-        if (preferences.getBoolean("firstTimeOpened", true)) {
+        if (preferences.getBoolean("firstTimeOpened", true || true)) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
             editor.apply();
 
             // start welcome screen
-            RegistrationFragment welcomeFragment = new RegistrationFragment();
+            //RegistrationFragment welcomeFragment = new RegistrationFragment();
+            MapFragment welcomeFragment = new MapFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, welcomeFragment)
                     .commit();
@@ -70,8 +81,48 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
+    }
 
-//        testPoiDao.create(testPoi);
+    private void login(){
+        LoginService loginService = ServiceGenerator.createService(LoginService.class);
+        LoginUser testUser = new LoginUser("zumsel321", "Ha11loW3lt");
+        Call<LoginUser> call = loginService.basicLogin(testUser);
+        call.enqueue(new Callback<LoginUser>() {
+            @Override
+            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
+                if (response.isSuccessful()) {
+
+                    Headers headerResponse = response.headers();
+                    //convert header to Map
+                    Map<String, List<String>> headerMapList = headerResponse.toMultimap();
+                    LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
+                    uploadImage();
+                } else {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginUser> call, Throwable t) {
+            }
+        });
+    }
+
+    private void uploadImage(){
+        PoiDao poi = new PoiDao(boxStore);
+
+        File[] testimages = Environment.getExternalStorageDirectory().listFiles();
+        File[] downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
+        File testImage = downloads[0];
+
+
+
+
+        poi.addImage(testImage, 1, new FragmentHandler() {
+            @Override
+            public void onResponse(Event event) {
+                Toast.makeText(MainActivity.this, "image saved", Toast.LENGTH_LONG);
+            }
+        });
     }
 
     @Override
@@ -80,129 +131,86 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 23) checkPermissions();
     }
 
+    /**
+     * Initializes the navigation and elements
+     */
     private void setupNavigation() {
-        mDrawerList = (ListView) findViewById(R.id.navDrawerList);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mActivityTitle = getTitle().toString();
-        addDrawerItems();
-        setupDrawer();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void addDrawerItems() {
-        mMenuItems = getResources().getStringArray(R.array.drawer_menu_items);
-        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mMenuItems);
-        mDrawerList.setAdapter(mAdapter);
-
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
+    /**
+     * Manages drawer menu back navigation
+     */
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    private void selectItem(int position) {
+    /**
+     * Handles click events in the drawer menu. Contains all selectable links to fragments
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
         String fragmentTag = null;
+        int id = item.getItemId();
 
-        switch (position) {
-            case 0:
-                fragment = MapFragment.newInstance();
-                fragmentTag = Constants.MAP_FRAGMENT;
-                break;
-//            case 1: // FIXME: UNCOMMENTED FOR RELEASE 0.1
-//                fragment = SearchFragment.newInstance();
-//                break;
-            case 1:
-                fragment = new ManualFragment();
-                fragmentTag = Constants.MANUAL_FRAGMENT;
-                break;
-            case 2:
-                fragment = new DisclaimerFragment();
-                fragmentTag = Constants.DISCLAIMER_FRAGMENT;
-                break;
-            default:
-                Toast.makeText(this, R.string.msg_page_not_existing, Toast.LENGTH_SHORT).show();
+        // MAIN FRAGMENTS
+        if (id == R.id.nav_map) {
+            fragment = MapFragment.newInstance();
+            fragmentTag = Constants.MAP_FRAGMENT;
+        } else if (id == R.id.nav_tours) {
+            fragment = SearchFragment.newInstance();
+            fragmentTag = Constants.SEARCH_FRAGMENT;
+        } else if (id == R.id.nav_profile) {
+            // TODO: add ProfileFragment here
         }
+
+        // OTHER FRAGMENTS
+        else if (id == R.id.nav_manual) {
+            fragment = new ManualFragment();
+            fragmentTag = Constants.MANUAL_FRAGMENT;
+        } else if (id == R.id.nav_about) {
+            fragment = new DisclaimerFragment();
+            fragmentTag = Constants.DISCLAIMER_FRAGMENT;
+        }
+
         if (fragment != null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, fragment, fragmentTag)
                     .addToBackStack(null)
                     .commit();
-            mDrawerList.setItemChecked(position, true);
-            mDrawerList.setSelection(position);
-            setTitle(mMenuItems[position]);
-
-            mDrawerLayout.closeDrawer(mDrawerList);
         } else {
             Log.e(TAG, "Error in creating fragment");
+            Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
         }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
-    private void setupDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                   // host Activity
-                mDrawerLayout,          // DrawerLayout object
-                R.string.drawer_open,
-                R.string.drawer_close
-        ) {
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                //getSupportActionBar().setTitle(mActivityTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                //getSupportActionBar().setTitle(mActivityTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerToggle.setDrawerIndicatorEnabled(true); // has to be false when adding custom drawer menu icon
-
-        //TODO: Change drawer menu icon to custom icon
-//        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.drawer_menu_icon, this.getTheme());
-//        mDrawerToggle.setHomeAsUpIndicator(drawable);
-//        mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mDrawerLayout.isDrawerVisible(GravityCompat.START)) {
-//                    mDrawerLayout.closeDrawer(GravityCompat.START);
-//                } else {
-//                    mDrawerLayout.openDrawer(GravityCompat.START);
-//                }
-//            }
-//        });
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Activate the navigation drawer toggle
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
+    /**
+     * Checks if device has granted permissions to access location manager and permissions to
+     * write on storage. Requires API Level >= 23
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void checkPermissions() {
         List<String> permissionsList = new ArrayList<>();
@@ -217,13 +225,5 @@ public class MainActivity extends AppCompatActivity {
             String[] params = permissionsList.toArray(new String[permissionsList.size()]);
             requestPermissions(params, Constants.REQUEST_FOR_MULTIPLE_PERMISSIONS);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // preventing that activity gets destroyed when back button is pressed on empty back stack
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            moveTaskToBack(true);
-        } else super.onBackPressed();
     }
 }

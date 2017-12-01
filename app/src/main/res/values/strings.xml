@@ -28,7 +28,7 @@
     <!-- DISCLAIMER FRAGMENT -->
     <string name="disclaimer_header">Über Wanderlust</string>
     <string name="disclaimer_text1">MIT Lizenz</string>
-    <string name="disclaimer_text2">&#169; 2017 Fabian Schwander, Samuel Fricker, Rilind Gashi, Hristian Stoilov</string>
+    <string name="disclaimer_text2">© 2017 Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Müller, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov, Alexander Weinbeck &amp; Samuel Fricker</string>
     <string name="disclaimer_text3">Die Software wird ohne jede ausdrückliche oder implizierte Garantie bereitgestellt, einschliesslich der Garantie zur Benutzung für den Vorgesehenen oder einem bestimmten Zweck sowie jeglicher Rechtsverletzung, jedoch nicht darauf beschränkt. In keinem Fall sind die Autoren oder Copyrightinhaber für jeglichen Schaden oder sonstige Ansprüche haftbar zu machen, ob infolge der Erfüllung eines Vertrages, eines Deliktes oder anders im Zusammenhang mit der Software oder sonstiger Verwendung der Software entstanden.</string>
 
 
@@ -111,6 +111,13 @@
     <string name="action_dismiss">verwerfen</string>
     <string name="action_close">schliessen</string>
     <string name="action_foreward">weiter</string>
+    <string name="menu_map">Karte</string>
+    <string name="menu_tours">Touren</string>
+    <string name="menu_profile">Profil</string>
+    <string name="menu_manual">Bedienungsanleitung</string>
+    <string name="menu_about">Über Wanderlust</string>
+    <string name="menu_title_other">Anderes (Platzhalter)</string>
+    <string name="action_search">suchen</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="profile_tab_mytours">My Tours</string>

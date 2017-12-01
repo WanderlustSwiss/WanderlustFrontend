@@ -40,7 +40,7 @@ public interface PoiService {
         Call<Poi> deletePoi(@Body Poi tour);
     @Multipart
     @POST("/poi/{id}/img")
-        Call<Poi> uploadImage(@Path("id") int id, @Part MultipartBody.Part image);
+        Call<Poi.ImageInfo> uploadImage(@Path("id") int id, @Part MultipartBody.Part image);
     @DELETE("/poi/{id}/img/{image_id}")
         Call<Poi> deleteImage(@Path("id") int id, @Path("image_id") int image_id);
     @GET("/poi/{id}/img/{image_id}")
