@@ -34,7 +34,6 @@ public class ProfileFragment extends Fragment {
     private TabItem favoritesTab;
     private TabItem poiTab;
     private TabItem savedTab;
-    private Button button;
 
     private User user;
 
@@ -45,13 +44,7 @@ public class ProfileFragment extends Fragment {
         profileController = new ProfileController(this);
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
@@ -62,11 +55,10 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UserDao userDao = new UserDao(MainActivity.boxStore);
+        /*UserDao userDao = new UserDao(MainActivity.boxStore);
         this.user = userDao.getUser();
-        user.setNickname("Baris");
 
-        initializeProfileData();
+        initializeProfileData();*/
     }
 
     @Override
@@ -93,39 +85,85 @@ public class ProfileFragment extends Fragment {
         nickName = (TextView) view.findViewById(R.id.profileName);
         score = (TextView) view.findViewById(R.id.profileScore);
         createdTours = (TextView) view.findViewById(R.id.profileCreatedTours);
+
+        //TODO:: get infos from database
     }
 
     public void setupTabs(View view){
         tabLayout = (TabLayout) view.findViewById(R.id.profileTabs);
-        tabLayout.addTab(tabLayout.newTab().setCustomView(view.findViewById(R.id.tab_mytours)));
-        tabLayout.addTab(tabLayout.newTab().setCustomView(view.findViewById(R.id.tab_favorites)));
-        tabLayout.addTab(tabLayout.newTab().setCustomView(view.findViewById(R.id.tab_poi)));
-        tabLayout.getTabAt(1).setCustomView(view.findViewById(R.id.tab_mytours));
-        tabLayout.setSelectedTabIndicatorHeight(10);
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                ProfileMyToursFragment profileMyToursFragment = new ProfileMyToursFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.profileTabContent, profileMyToursFragment)
-                        .commit();
+                int id = tab.getPosition();
 
-                Toast.makeText(getActivity(), "geklickt...", Toast.LENGTH_SHORT).show();
+                switch(id){
+                    case 0:
+                        setupMyTours();
+                        break;
+                    case 1:
+                        setupFavorites();
+                        break;
+                    case 2:
+                        setupPOIs();
+                        break;
+                    case 3:
+                        setupSaved();
+                        break;
+                    default:
+                        setupMyTours();
+                        break;
+                }
+
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
     }
 
     public void initializeProfileData(){
         nickName.setText(profileController.getNickName());
 
+    }
+
+    public void setupMyTours(){
+        ProfileMyToursFragment profileMyToursFragment = new ProfileMyToursFragment();
+        getFragmentManager().beginTransaction()
+                .add(R.id.profileTabContent, profileMyToursFragment)
+                .commit();
+
+        Toast.makeText(getActivity(), "Deine Touren", Toast.LENGTH_SHORT).show();
+    }
+
+    public void setupFavorites(){
+        ProfileFavoritesFragment profileFavoritesFragment = new ProfileFavoritesFragment();
+        getFragmentManager().beginTransaction()
+                .add(R.id.profileTabContent, profileFavoritesFragment)
+                .commit();
+
+        Toast.makeText(getActivity(), "Deine Favoriten", Toast.LENGTH_SHORT).show();
+    }
+
+    public void setupPOIs(){
+        ProfilePOIFragment profilePOIFragment = new ProfilePOIFragment();
+        getFragmentManager().beginTransaction()
+                .add(R.id.profileTabContent, profilePOIFragment)
+                .commit();
+
+        Toast.makeText(getActivity(), "Deine POI's", Toast.LENGTH_SHORT).show();
+    }
+
+    public void setupSaved(){
+        ProfileSavedFragment profileSavedFragment = new ProfileSavedFragment();
+        getFragmentManager().beginTransaction()
+                .add(R.id.profileTabContent, profileSavedFragment)
+                .commit();
+
+        Toast.makeText(getActivity(), "Deine gespeicherten Touren", Toast.LENGTH_SHORT).show();
     }
 
 

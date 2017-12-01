@@ -67,7 +67,6 @@ public class ListElementTourFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 
 }

@@ -78,10 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
             editor.apply();
 
-            ProfileFragment profileFragment = new ProfileFragment();
-            getFragmentManager().beginTransaction()
-                                .add(R.id.content_frame, profileFragment)
-                                .commit();
 /*
             // start welcome screen
             RegistrationFragment welcomeFragment = new RegistrationFragment();
@@ -220,7 +216,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = SearchFragment.newInstance();
             fragmentTag = Constants.SEARCH_FRAGMENT;
         } else if (id == R.id.nav_profile) {
-            // TODO: add ProfileFragment here
+            fragment = ProfileFragment.newInstance();
+            fragmentTag = Constants.PROFILE_FRAGMENT;
         }
 
         // OTHER FRAGMENTS

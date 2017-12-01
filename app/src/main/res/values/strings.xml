@@ -120,9 +120,9 @@
     <string name="action_search">suchen</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="profile_tab_mytours">My Tours</string>
-    <string name="profile_tab_favorites">Favorites</string>
-    <string name="profile_tab_saved">Saved</string>
+    <string name="profile_tab_mytours">Touren</string>
+    <string name="profile_tab_favorites">Favoriten</string>
+    <string name="profile_tab_saved">Gespeichert</string>
     <string name="profile_tab_pois">POI\'s</string>
     <string name="profile_bg_description">background</string>
 

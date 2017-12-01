@@ -10,7 +10,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:adjustViewBounds="false"
         android:background="@color/primaryOne"
         android:contentDescription="@string/profile_bg_description"
@@ -28,7 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingLeft="50dp">
+            android:paddingLeft="50dp"
+            android:paddingTop="50dp">
 
             <ImageView
                 android:id="@+id/profilePicture"
@@ -51,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:text="TextView"
+                    android:text="Nick-Name"
                     android:textSize="25dp" />
 
                 <TextView
@@ -59,21 +60,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:text="TextView"
+                    android:text="Score"
                     android:textSize="15dp" />
 
                 <TextView
                     android:id="@+id/profileCreatedTours"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text="Created Tours"
                     android:textSize="15dp" />
 
-                <Button
-                    android:id="@+id/testbutton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Button" />
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
@@ -91,32 +87,37 @@
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_mytours"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:icon="@drawable/ic_directions_black_24dp"
             android:text="@string/profile_tab_mytours"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:layout_gravity="fill"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_favorites"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:icon="@drawable/ic_favorite_black_24dp"
-            android:text="@string/profile_tab_favorites" />
+            android:text="@string/profile_tab_favorites"
+            
+            android:layout_gravity="fill"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_poi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:icon="@drawable/ic_nature_people_black_24dp"
-            android:text="@string/profile_tab_pois" />
+            android:text="@string/profile_tab_pois"
+            android:layout_gravity="fill"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_saved"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:icon="@drawable/ic_save_black_24dp"
-            android:text="@string/profile_tab_saved" />
+            android:text="@string/profile_tab_saved"
+            android:layout_gravity="fill"/>
     </android.support.design.widget.TabLayout>
 
     <FrameLayout

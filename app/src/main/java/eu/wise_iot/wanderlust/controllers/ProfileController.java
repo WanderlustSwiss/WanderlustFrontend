@@ -23,7 +23,6 @@ public class ProfileController {
     public ProfileController(ProfileFragment fragment){
         profileFragment = fragment;
         userDao = new UserDao(MainActivity.boxStore);
-
     }
 
     public String getNickName(){
