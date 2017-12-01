@@ -65,11 +65,6 @@ public class MainActivity extends AppCompatActivity {
         //TODO where to put this?
         boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
-        TourFragment tourFragment = new TourFragment();
-        getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, tourFragment)
-                .commit();
-        /*
         // check if app is opened for the first time
         if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
@@ -89,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
         login();
-        */
+
     }
 
     //TODO move to login view
