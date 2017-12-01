@@ -1,8 +1,8 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import android.util.Log;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.Event;
@@ -10,6 +10,8 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.services.PoiService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -18,6 +20,9 @@ import io.objectbox.query.QueryBuilder;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * PoiDao:
@@ -37,7 +42,6 @@ public class PoiDao extends DatabaseObjectAbstract{
     /**
      * constructor
      * @param boxStore (required) delivers the connection to the frontend database
-     * @param context
      */
 
     public PoiDao(BoxStore boxStore){
@@ -45,10 +49,8 @@ public class PoiDao extends DatabaseObjectAbstract{
         poiQueryBuilder = poiBox.query();
 
         if(service == null){
-    public long count(){
             service = ServiceGenerator.createService(PoiService.class);
         }
-        poiQueryBuilder.equal(columnProperty , searchPattern);
     }
 
     /**
@@ -57,19 +59,21 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @param handler
      *
      */
-    public Poi update(Poi poi){
     public void create(final AbstractModel poi, final FragmentHandler handler) {
+
         Call<Poi> call = service.createPoi((Poi)poi);
-             @Override
-             public void onResponse(Call<Poi> call, Response<Poi> response) {
-                 if(response.isSuccessful()) {
+        call.enqueue(new Callback<Poi>() {
+            @Override
+            public void onResponse(Call<Poi> call, retrofit2.Response<Poi> response) {
+                if(response.isSuccessful()) {
                     poiBox.put((Poi) poi);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
             }
+
             @Override
             public void onFailure(Call<Poi> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -78,22 +82,21 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @param id
      * @param handler
      */
-    public void retrieve(int id, final FragmentHandler handler){
+    public void retrieve(int id, final FragmentHandler handler) {
         Call<Poi> call = service.retrievePoi(id);
         call.enqueue(new Callback<Poi>() {
             @Override
-            public void onResponse(Call<Poi> call, Response<Poi> response) {
-                if(response.isSuccessful()){
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                 } else{
+            public void onResponse(Call<Poi> call, retrofit2.Response<Poi> response) {
+                if (response.isSuccessful()) {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                }
+            }
 
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
-                 }
-             }
-             @Override
-             public void onFailure(Call<Poi> call, Throwable t) {
-
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+            @Override
+            public void onFailure(Call<Poi> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -101,21 +104,24 @@ public class PoiDao extends DatabaseObjectAbstract{
      * get all pois out of the remote database by entity
      * @param handler
      */
-    public void retrieveAll(final FragmentHandler handler){
-        Call<Poi> call = service.retrieveAllPois();
-        call.enqueue(new Callback<Poi>() {
+    public void retrieveAll(final FragmentHandler handler) {
+        Call<List<Poi>> call = service.retrieveAllPois();
+        call.enqueue(new Callback<List<Poi>>() {
             @Override
-            public void onResponse(Call<Poi> call, Response<Poi> response) {
-                if(response.isSuccessful()){
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+            public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
+                if (response.isSuccessful()) {
+
+                    //TODO response list
+                    //handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body());
+                } else
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
-            }
+
             @Override
-            public void onFailure(Call<Poi> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
-             }
+            public void onFailure(Call<List<Poi>> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+            }
+        });
     }
     /**
      * update:
@@ -132,11 +138,11 @@ public class PoiDao extends DatabaseObjectAbstract{
                 if(response.isSuccessful()) {
                     poiBox.put((Poi) poi);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
             }
             @Override
             public void onFailure(Call<Poi> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -154,11 +160,11 @@ public class PoiDao extends DatabaseObjectAbstract{
                 if(response.isSuccessful()) {
                     poiBox.remove((Poi) poi);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
             }
             @Override
             public void onFailure(Call<Poi> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -170,11 +176,20 @@ public class PoiDao extends DatabaseObjectAbstract{
     @Override
     public void addImage(final File file, final int poiID){
         PoiService service = ServiceGenerator.createService(PoiService.class);
-        Call<Poi> call = service.postPoi(poi);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
         Call<Poi> call = service.uploadImage(poiID, body);
-        poiBox.put(poi);
+        call.enqueue(new Callback<Poi>() {
+            @Override
+            public void onResponse(Call<Poi> call, Response<Poi> response) {
+                //TODO
+            }
+
+            @Override
+            public void onFailure(Call<Poi> call, Throwable t) {
+
+            }
+        });
     }
     /**
      * returns a list with all poi

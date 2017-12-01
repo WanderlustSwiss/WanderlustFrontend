@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.services;
 
+import java.util.List;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -29,7 +31,7 @@ public interface PoiService {
     @GET("/poi/{id}")
         Call<Poi> retrievePoi(@Path("id") int id);
     @GET("/poi/")
-        Call<Poi> retrieveAllPois();
+        Call<List<Poi>> retrieveAllPois();
     @POST("/poi")
         Call<Poi> createPoi(@Body Poi poi);
     @PUT("/poi/{id}")

@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import java.util.List;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 
 /*
@@ -11,7 +13,7 @@ public class Event {
 
     private EventType type;
     private AbstractModel model;
-
+    private List<AbstractModel> modelList;
     /**
      * Create response event
      * @param event
@@ -22,6 +24,19 @@ public class Event {
         this.model = model;
     }
 
+    public Event(EventType event, List<AbstractModel> modelList){
+        this.type = event;
+        this.modelList = modelList;
+    }
+
+    public Event(EventType event){
+        this.type = event;
+    }
+
     public EventType getType(){ return  this.type; }
     public AbstractModel getModel() { return this.model; }
+    public List<AbstractModel> getModelList() { return this.modelList; }
+
+
+
 }

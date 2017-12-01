@@ -110,12 +110,12 @@ public class UserTourDao extends DatabaseObjectAbstract {
                 if(response.isSuccessful()){
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<UserTour> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -134,12 +134,12 @@ public class UserTourDao extends DatabaseObjectAbstract {
                     routeBox.put((UserTour)usertour);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<UserTour> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -157,12 +157,12 @@ public class UserTourDao extends DatabaseObjectAbstract {
                     routeBox.remove((UserTour)usertour);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<UserTour> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -176,11 +176,11 @@ public class UserTourDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<UserTour> call, Response<UserTour> response) {
                 if(response.isSuccessful()) handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
             }
             @Override
             public void onFailure(Call<UserTour> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }

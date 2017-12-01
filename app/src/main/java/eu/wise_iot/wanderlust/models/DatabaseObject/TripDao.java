@@ -87,12 +87,12 @@ public class TripDao extends DatabaseObjectAbstract {
                     routeBox.put((Trip)trip);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -109,12 +109,12 @@ public class TripDao extends DatabaseObjectAbstract {
                 if(response.isSuccessful()){
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -158,12 +158,12 @@ public class TripDao extends DatabaseObjectAbstract {
                     routeBox.remove((Trip)trip);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -177,11 +177,11 @@ public class TripDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
                 if(response.isSuccessful()) handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                else handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
             }
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }

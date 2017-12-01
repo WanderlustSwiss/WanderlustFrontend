@@ -11,11 +11,17 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.UserService;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -66,19 +72,25 @@ public class UserDao extends DatabaseObjectAbstract{
      * @param user (required).
      * @param handler
      */
-    @Override
-    public void create(final AbstractModel user, final FragmentHandler handler){
-        Call<User> call = service.createUser((User)user);
+    public void create(final User user, final FragmentHandler handler){
+        Call<User> call = service.createUser(user);
         call.enqueue(new Callback<User>() {
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
                     User newUser = response.body();
                     newUser.setUser_id(1);
                     newUser.setPassword(((User) user).getPassword());
                     userBox.put(newUser);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
+                }
+                else{
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                }
+            }
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+            }
+    });
     }
     /**
      * Retrieve a user out of the database
@@ -92,12 +104,12 @@ public class UserDao extends DatabaseObjectAbstract{
                 if(response.isSuccessful()){
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -107,10 +119,10 @@ public class UserDao extends DatabaseObjectAbstract{
      * @param user (required).
      * @param handler
      */
-    public void update(final AbstractModel user, final FragmentHandler handler){
+    public void update(final User user, final FragmentHandler handler){
 
         //UserService service = ServiceGenerator.createService(UserService.class);
-        Call<User> call = service.updateUser((User)user);
+        Call<User> call = service.updateUser(user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -118,12 +130,12 @@ public class UserDao extends DatabaseObjectAbstract{
                     userBox.put(response.body());
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -141,12 +153,12 @@ public class UserDao extends DatabaseObjectAbstract{
                     userBox.remove((User)user);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
         });
     }
