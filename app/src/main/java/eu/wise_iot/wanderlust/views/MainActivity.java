@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.Event;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import io.objectbox.BoxStore;
 

@@ -21,7 +21,6 @@ public class Trip extends AbstractModel{
     long trip_id;
     long userTour ;
     long user;
-    @Transient
 
     public Trip(long trip_id, long usertour, long user) {
         this.trip_id = trip_id;

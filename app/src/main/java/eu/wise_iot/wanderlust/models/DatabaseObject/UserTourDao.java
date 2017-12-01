@@ -97,7 +97,6 @@ public class UserTourDao extends DatabaseObjectAbstract {
 //            }
 //        });
 //    }
-    */
     /**
      * get usertour out of the remote database by entity
      * @param id
