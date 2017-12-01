@@ -27,42 +27,13 @@
         android:id="@+id/typeSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:entries="@array/dialog_feedback_spinner_mode" />
+        android:entries="@array/dialog_feedback_spinner_type" />
 
     <Spinner
         android:id="@+id/modeSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/dialog_feedback_spinner_mode" />
-
-    <RadioGroup
-        android:id="@+id/feedback_type_radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/radio_button_positive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/black"
-            android:checked="true" />
-
-        <RadioButton
-            android:id="@+id/radio_button_negative"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/highlightRed"
-            android:checked="false" />
-
-        <RadioButton
-            android:id="@+id/radio_button_alert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/structureYellow"
-            android:checked="false" />
-    </RadioGroup>
-
 
     <RelativeLayout
         android:id="@+id/action_control_buttons"

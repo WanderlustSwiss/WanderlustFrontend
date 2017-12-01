@@ -45,7 +45,7 @@ public class PoiFeedbackDialog extends DialogFragment {
     private String description;
 
     private EditText descriptionEditText;
-    private Spinner publicationModeSpinner;
+    private Spinner typeSpinner;
     private RadioGroup feedbackTypeRadioGroup;
     private Button buttonSave;
     private Button buttonCancel;
@@ -78,8 +78,7 @@ public class PoiFeedbackDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_fragment_create_feedback, container);
         descriptionEditText = (EditText) view.findViewById(R.id.description);
-        publicationModeSpinner = (Spinner) view.findViewById(R.id.typeSpinner);
-        feedbackTypeRadioGroup = (RadioGroup) view.findViewById(R.id.feedback_type_radio_group);
+        typeSpinner = (Spinner) view.findViewById(R.id.typeSpinner);
         buttonSave = (Button) view.findViewById(R.id.dialog_post_feedback_button_save);
         buttonCancel = (Button) view.findViewById(R.id.dialog_post_feedback_button_cancel);
         return view;
@@ -89,14 +88,14 @@ public class PoiFeedbackDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initPublicationModeControls();
-        initFeedbackTypeControls();
+        initPublicationTypeControls();
         initActionControls();
         // prevents closing of dialog when taped on the outside
         setCancelable(false);
     }
 
     private void initPublicationModeControls() {
-        publicationModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
@@ -116,23 +115,29 @@ public class PoiFeedbackDialog extends DialogFragment {
         });
     }
 
-    private void initFeedbackTypeControls() {
-        // default value
-        feedbackType = Constants.TYPE_POSITIVE;
-        feedbackTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+    private void initPublicationTypeControls() {
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch (checkedId) {
-                    case R.id.radio_button_positive:
-                        feedbackType = Constants.TYPE_POSITIVE;
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        feedbackType = Constants.TYPE_VIEW;
                         break;
-                    case R.id.radio_button_negative:
-                        feedbackType = Constants.TYPE_NEGATIVE;
+                    case 1:
+                        feedbackType = Constants.TYPE_RESTAURANT;
                         break;
-                    case R.id.radio_button_alert:
-                        feedbackType = Constants.TYPE_ALERT;
+                    case 2:
+                        feedbackType = Constants.TYPE_REST_AREA;
+                        break;
+                    case 3:
+                        feedbackType = Constants.TYPE_FLORA_FAUNA;
                         break;
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Toast.makeText(context, R.string.msg_please_choose_mode, Toast.LENGTH_LONG).show();
             }
         });
     }
