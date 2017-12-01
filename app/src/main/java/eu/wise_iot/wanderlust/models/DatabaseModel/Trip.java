@@ -19,12 +19,10 @@ public class Trip extends AbstractModel{
 
     @Id
     long trip_id;
-    @Transient
-    UserTour userTour;
-    @Transient
-    User user;
+    long userTour ;
+    long user;
 
-    public Trip(long trip_id, UserTour usertour, User user) {
+    public Trip(long trip_id, long usertour, long user) {
         this.trip_id = trip_id;
         this.userTour = usertour;
         this.user = user;
@@ -38,19 +36,19 @@ public class Trip extends AbstractModel{
         this.trip_id = trip_id;
     }
 
-    public UserTour getUserTour() {
+    public long getUserTour() {
         return userTour;
     }
 
-    public void setUserTour(UserTour userTour) {
+    public void setUserTour(long userTour) {
         this.userTour = userTour;
     }
 
-    public User getUser() {
+    public long getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(long user) {
         this.user = user;
     }
 }

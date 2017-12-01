@@ -13,6 +13,8 @@ import io.objectbox.annotation.Id;
 public class CommunityTour extends AbstractModel{
 
     @Id
+    long userTour_id;
+    long userTourModel;
     long tour_id;
     String  title;
     String  description;
@@ -37,7 +39,7 @@ public class CommunityTour extends AbstractModel{
         return tour_id;
     }
 
-    public void setTour_id(long tour_id) {
+    public void setUserTour_id(long userTour_id) {
         this.tour_id = tour_id;
     }
 
