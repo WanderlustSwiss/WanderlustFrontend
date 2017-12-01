@@ -90,7 +90,7 @@ public class UserDao extends DatabaseObjectAbstract{
             public void onFailure(Call<User> call, Throwable t) {
                 handler.onResponse(new Event(EventType.NETWORK_ERROR));
             }
-    });
+        });
     }
     /**
      * Retrieve a user out of the database

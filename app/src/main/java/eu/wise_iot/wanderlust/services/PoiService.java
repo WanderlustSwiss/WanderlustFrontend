@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.services;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -19,6 +20,7 @@ import retrofit2.http.Path;
  * POIController
  * show	            GET	    /poi/:id                | restricted
  * show	            GET	    /poi                    | restricted
+ * show             GET     /poitype                | restricted
  * create	        POST	/poi                    | restricted
  * update	        PUT	    /poi/:id                | restricted
  * disable	        DELETE	/poi/:id                | restricted
@@ -45,4 +47,6 @@ public interface PoiService {
         Call<Poi> deleteImage(@Path("id") int id, @Path("image_id") int image_id);
     @GET("/poi/{id}/img/{image_id}")
         Call<Poi> downloadImage(@Path("id") int id, @Path("image_id") int image_id);
+    @GET("/poitype")
+        Call<List<PoiType>> retrieveAllPoiTypes();
 }
