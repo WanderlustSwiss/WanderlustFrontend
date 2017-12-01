@@ -7,17 +7,16 @@ import java.util.List;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
+import eu.wise_iot.wanderlust.views.MainActivity;
 import io.objectbox.BoxStore;
 
 
 public class PoiController {
 
-    private BoxStore boxStore;
     private PoiTypeDao poiTypeDao;
 
     public PoiController(Context context){
-        boxStore = MyObjectBox.builder().androidContext(context).build();
-        poiTypeDao = new PoiTypeDao(boxStore);
+        poiTypeDao = new PoiTypeDao(MainActivity.boxStore);
         /*
         PoiType poiTypeOne = new PoiType(0, "Sehenswürdigkeit");
         PoiType poiTypeTwo = new PoiType(0, "Berg");

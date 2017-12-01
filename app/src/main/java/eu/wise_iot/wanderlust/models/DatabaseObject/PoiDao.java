@@ -207,6 +207,10 @@ public class PoiDao extends DatabaseObjectAbstract{
             }
         });
     }
+
+    public void getImage(final int poiId, final FragmentHandler handler){
+
+    }
     /**
      * returns a list with all poi
      *
