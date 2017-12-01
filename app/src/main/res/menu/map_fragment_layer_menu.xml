@@ -13,6 +13,7 @@
             android:checked="true"
             android:checkable="true"
             app:showAsAction="never"/>
+
         <!--<item android:id="@+id/trails_overlay"-->  <!-- FIXME: UNCOMMENTED FOR RELEASE 1.0 -->
         <!--android:title="@string/mapfragment_menu_trails"-->
         <!--android:checked="false"-->
