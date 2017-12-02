@@ -33,6 +33,8 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.views.dialog.DisplayFeedbackDialog;
 import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.models.Old.GpxParser;
@@ -91,7 +93,14 @@ public class MyMapOverlays implements Serializable {
         mapView.getOverlays().add(myLocationNewOverlay);
     }
 
-    private void initFeedbackIconsOverlay() {
+    private void initFeedbackIconsOverlay(){
+
+
+        //TODO move
+        initItemizedOverlayWithFocus();
+        populateFeedbackOverlay();
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Defaults.URL_SERVER)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -104,7 +113,9 @@ public class MyMapOverlays implements Serializable {
             public void onResponse(Call<List<Feedback>> call, Response<List<Feedback>> response) {
                 feedbackList = response.body();
                 initItemizedOverlayWithFocus();
-                populateFeedbackOverlay();
+
+                //TODO outcommented to make it run
+                //populateFeedbackOverlay();
             }
 
             @Override
@@ -159,6 +170,7 @@ public class MyMapOverlays implements Serializable {
         mapView.invalidate();
     }
 
+
     public void addFeedbackIconToOverlay(Feedback feedback) {
         long feedbackId = feedback.getId();
         int feedbackType = feedback.getFeedbackType();
@@ -166,6 +178,7 @@ public class MyMapOverlays implements Serializable {
         String description = feedback.getDescription();
         GeoPoint geoPoint = new GeoPoint(feedback.getLat(), feedback.getLon());
         Drawable drawable = null;
+
 
         // check if img exists
         int checkImageIdentifier = activity.getResources().getIdentifier(feedback.getImageNameWithoutSuffix(), "drawable", activity.getPackageName());
@@ -207,6 +220,52 @@ public class MyMapOverlays implements Serializable {
         }
     }
 
+    public void addPoiToOverlay(Poi poi){
+        Drawable drawable;
+
+        //TODO initialize poi with empty list
+        boolean hasImage = poi.getImagePath() != null;
+        switch ((int)poi.getType()) {
+            case 0:
+                if (hasImage)
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
+                else
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive_nophoto);
+                break;
+            case 1:
+                if (hasImage)
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_negative);
+                else
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_negative_nophoto);
+                break;
+            case 2:
+                if (hasImage)
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_alert);
+                else
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_alert_nophoto);
+                break;
+            default:
+                drawable = null;
+        }
+
+        if(drawable != null){
+
+            //TODO ask fabian what this is
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            drawable = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, 80, 80, true));
+
+
+            //TODO not sure if what to put to image title and if other values are correct
+            OverlayItem overlayItem = new OverlayItem(poi.getTitle(), poi.getTitle(),
+                    poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
+
+            overlayItem.setMarker(drawable);
+            itemizedOverlayWithFocus.addItem(overlayItem);
+            mapView.invalidate();
+        }
+
+    }
+
     public void addPositionMarker(GeoPoint geoPoint) {
         if (geoPoint != null) {
             // TODO: Move position of icon so that the pointy end marks the exact position of the user
@@ -224,9 +283,22 @@ public class MyMapOverlays implements Serializable {
     }
 
     private void populateFeedbackOverlay() {
+
+        //Feedback is a poi now!
+        /*
         for (Feedback feedback : feedbackList) {
             addFeedbackIconToOverlay(feedback);
         }
+        */
+        //TODO mit gashi besprechen ob nicht alle daoModels statisch zu machen.
+        //TODO mit einer initialisiermethode zu beginn
+        PoiDao poiDao = new PoiDao(MainActivity.boxStore);
+        List<Poi> pois = poiDao.find();
+        for(Poi poi : pois){
+            addPoiToOverlay(poi);
+        }
+
+
         mapView.getOverlays().add(itemizedOverlayWithFocus);
         mapView.invalidate();
     }

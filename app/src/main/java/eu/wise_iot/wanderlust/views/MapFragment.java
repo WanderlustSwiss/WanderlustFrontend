@@ -186,10 +186,12 @@ public class MapFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         // photo intent finished and image saved
         if (requestCode == Constants.TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+            //save / publish photo
             dispatchPostFeedbackDialogFragment();
         }
         // photo intent aborted
         if (requestCode == Constants.TAKE_PHOTO && resultCode != Activity.RESULT_OK) {
+            //discard photo
             File file = new File(photoPath);
             file.delete();
         }

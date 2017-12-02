@@ -35,6 +35,8 @@ public class PoiFragment extends Fragment{
     private List<Poi> poiTypeList = new ArrayList<>();
     private PoiController poiController;
 
+    public static PoiFragment fragment;
+
     public static PoiFragment newInstance() {
         Bundle args = new Bundle();
         PoiFragment fragment = new PoiFragment();
@@ -45,8 +47,9 @@ public class PoiFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragment = this;
         context = getActivity().getApplicationContext();
-        poiController = new PoiController(context);
+        poiController = new PoiController(this);
     }
 
     @Override
