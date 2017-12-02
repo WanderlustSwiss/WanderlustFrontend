@@ -90,6 +90,7 @@ public class ViewPoiDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         feedbackImage = (ImageView) view.findViewById(R.id.feedback_image);
         displayModeImage = (ImageView) view.findViewById(R.id.mode_private_image);
+        titelTextView = (TextView) view.findViewById(R.id.title_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.description_text_view);
         closeDialogButton = (Button) view.findViewById(R.id.closeDialogButton);
         closeDialogButton.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +133,7 @@ public class ViewPoiDialog extends DialogFragment {
             public void onResponse(Call<Feedback> call, Response<Feedback> response) {
                 if (response.isSuccessful()) {
                     feedback = response.body();
+                    titelTextView.setText("Titel"); // TODO: get real title
                     descriptionTextView.setText(feedback.getDescription());
                     if (feedback.getDisplayMode() == Constants.MODE_PRIVATE) {
                         Picasso.with(activity).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
