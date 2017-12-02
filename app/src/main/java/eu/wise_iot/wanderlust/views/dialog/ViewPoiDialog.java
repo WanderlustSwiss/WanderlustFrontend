@@ -32,24 +32,25 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * DisplayPoiDialog:
+ * ViewPoiDialog:
  * @author Fabian Schwander
  * @license MIT
  */
-public class DisplayPoiDialog extends DialogFragment {
-    private static final String TAG = "DisplayPoiDialog";
+public class ViewPoiDialog extends DialogFragment {
+    private static final String TAG = "ViewPoiDialog";
     private Activity activity;
 
     private ImageView feedbackImage;
     private ImageView displayModeImage;
     private Button closeDialogButton;
+    private TextView titelTextView;
     private TextView descriptionTextView;
 
     private long feedbackId;
     private Feedback feedback;
 
-    public static DisplayPoiDialog newInstance(OverlayItem overlayItem) {
-        DisplayPoiDialog fragment = new DisplayPoiDialog();
+    public static ViewPoiDialog newInstance(OverlayItem overlayItem) {
+        ViewPoiDialog fragment = new ViewPoiDialog();
         fragment.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         long feedbackId = Long.valueOf(overlayItem.getUid());
         Bundle args = new Bundle();
@@ -81,7 +82,7 @@ public class DisplayPoiDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_fragment_display_feedback, container);
+        return inflater.inflate(R.layout.dialog_view_poi, container);
     }
 
     @Override

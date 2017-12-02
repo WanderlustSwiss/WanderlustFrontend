@@ -81,7 +81,7 @@ public class EditPoiDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_fragment_poi, container);
+        View view = inflater.inflate(R.layout.dialog_edit_poi, container);
         titleEditText = (EditText) view.findViewById(R.id.title);
         descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
         typeSpinner = (Spinner) view.findViewById(R.id.poi_typeSpinner);
