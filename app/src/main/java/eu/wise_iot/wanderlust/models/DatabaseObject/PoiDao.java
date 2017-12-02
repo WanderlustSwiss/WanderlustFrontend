@@ -66,13 +66,14 @@ public class PoiDao extends DatabaseObjectAbstract{
      */
     public void create(final Poi poi, final FragmentHandler handler) {
 
-        Call<Poi> call = service.createPoi((Poi)poi);
+        Call<Poi> call = service.createPoi(poi);
         call.enqueue(new Callback<Poi>() {
             @Override
             public void onResponse(Call<Poi> call, retrofit2.Response<Poi> response) {
                 if(response.isSuccessful()) {
-                    poiBox.put((Poi) poi);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                    poi.setPoi_id(response.body().getPoi_id());
+                    poiBox.put(poi);
+                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),poi));
                 } else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
             }
 

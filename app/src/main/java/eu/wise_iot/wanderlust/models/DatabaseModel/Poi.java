@@ -21,6 +21,7 @@ import io.objectbox.converter.PropertyConverter;
 public class Poi extends AbstractModel{
 
     @Id
+    long internalId;
     long poi_id;
     String title;
     String description;
@@ -29,30 +30,33 @@ public class Poi extends AbstractModel{
     List<ImageInfo> imagePaths;
     double longitude;
     double latitude;
+    int rate;
     long user;
     long type;
     boolean isPublic;
 
     public Poi(long poi_id, String name, String description, List<ImageInfo> picturePath,
-               double longitude, double latitude, long user, long type, boolean isPublic) {
+               double longitude, double latitude, int rate, long user, long type, boolean isPublic) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;
         this.imagePaths = picturePath;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.rate = rate;
         this.user = user;
         this.type = type;
         this.isPublic = isPublic;
     }
 
     public Poi(){
-        this.poi_id = 0;
+        this.internalId = 0;
         this.title = "No Title";
         this.description = "No Description";
         this.imagePaths = null;
         this.longitude = 0;
         this.latitude = 0;
+        this.rate = 3;
         this.user = 1;
         this.type = 1; //TODO what should be default type??
         this.isPublic = false;

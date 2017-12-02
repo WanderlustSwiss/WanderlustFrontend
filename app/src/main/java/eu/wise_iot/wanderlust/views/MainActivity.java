@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //TODO where to put this?
         if( boxStore == null)  boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
-        //login();
+        fakeLogin();
 
 
         // check if app is opened for the first time
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void login(){
+    private void fakeLogin(){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
         LoginUser testUser = new LoginUser("zumsel321", "Ha11loW3lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //convert header to Map
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-                    uploadImage();
                 } else {
                 }
             }
