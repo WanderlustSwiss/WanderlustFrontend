@@ -356,6 +356,13 @@ public class MapFragment extends Fragment {
                 } else {
                     mapOverlays.getMyLocationNewOverlay().enableMyLocation();
                     Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
+
+                    //TODO fabian fragen
+                    MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+                    camera = new Camera(getActivity(), mapFragment);
+                    camera.start();
+
+
                     mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
                         @Override
                         public void run() {

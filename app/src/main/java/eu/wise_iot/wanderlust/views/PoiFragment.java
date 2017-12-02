@@ -35,6 +35,7 @@ public class PoiFragment extends Fragment{
     private List<Poi> poiTypeList = new ArrayList<>();
     private PoiController poiController;
 
+    //TODO remove as when fixed
     public static PoiFragment fragment;
 
     public static PoiFragment newInstance() {

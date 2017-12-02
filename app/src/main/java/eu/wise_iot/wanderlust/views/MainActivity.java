@@ -113,9 +113,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         File[] downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
         File testImage = downloads[0];
 
-
-
-
         poi.addImage(testImage, 1, new FragmentHandler() {
             @Override
             public void onResponse(Event event) {

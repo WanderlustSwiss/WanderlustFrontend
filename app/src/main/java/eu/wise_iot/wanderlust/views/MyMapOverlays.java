@@ -256,7 +256,7 @@ public class MyMapOverlays implements Serializable {
 
 
             //TODO not sure if what to put to image title and if other values are correct
-            OverlayItem overlayItem = new OverlayItem(poi.getTitle(), poi.getTitle(),
+            OverlayItem overlayItem = new OverlayItem(Long.toString(poi.getInternalId()), poi.getTitle(),
                     poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
 
             overlayItem.setMarker(drawable);
@@ -284,7 +284,7 @@ public class MyMapOverlays implements Serializable {
 
     private void populateFeedbackOverlay() {
 
-        //Feedback is a poi now!
+        //Feedback is a Poi now!
         /*
         for (Feedback feedback : feedbackList) {
             addFeedbackIconToOverlay(feedback);

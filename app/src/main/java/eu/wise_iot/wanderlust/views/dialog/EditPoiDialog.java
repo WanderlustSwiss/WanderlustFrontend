@@ -157,7 +157,7 @@ public class EditPoiDialog extends DialogFragment {
 
                 //TODO get nullpointer, text from textfield may not be read properly?
 
-                //TODO remove if after it works
+                //TODO remove it after it works
                 if(titleEditText != null && descriptionEditText == null) {
 
 
