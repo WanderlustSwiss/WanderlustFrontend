@@ -64,7 +64,7 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @param handler
      *
      */
-    public void create(final AbstractModel poi, final FragmentHandler handler) {
+    public void create(final Poi poi, final FragmentHandler handler) {
 
         Call<Poi> call = service.createPoi((Poi)poi);
         call.enqueue(new Callback<Poi>() {

@@ -19,8 +19,13 @@ import org.osmdroid.util.GeoPoint;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
+import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.services.FeedbackService;
+import eu.wise_iot.wanderlust.views.PoiFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -145,13 +150,64 @@ public class PoiFeedbackDialog extends DialogFragment {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (titleEditText.getText() != null) {
-                    title = titleEditText.getText().toString();
+
+
+                Poi poi = new Poi();
+
+
+                //TODO get nullpointer, text from textfield may not be read properly?
+
+                //TODO remove if after it works
+                if(titleEditText != null && descriptionEditText == null) {
+
+
+                    if (titleEditText.getText() != null) {
+                        title = titleEditText.getText().toString();
+                    }
+                    if (descriptionEditText.getText() != null) {
+                        description = descriptionEditText.getText().toString();
+                    }
+
+                    poi.setDescription(description);
+                    poi.setType(feedbackType);
                 }
-                if (descriptionEditText.getText() != null) {
-                   description = descriptionEditText.getText().toString();
-                }
-                onSaveFeedbackButtonClicked();
+
+                poi.setLatitude(lastKnownLocation.getLatitude());
+                poi.setLongitude(lastKnownLocation.getLongitude());
+
+                //TODO refactor display mode into boolean
+                poi.setPublic(displayMode == 0);
+
+                //TODO move this to Poi Fragment or save/send fragment into this dialog
+                PoiController controller = new PoiController(PoiFragment.fragment);
+
+                controller.saveNewPoi(poi, new FragmentHandler() {
+                    @Override
+                    public void onResponse(Event event) {
+                        switch (event.getType()){
+                            case OK:
+                                //TODO take closer look :)
+                                //copy pasta from existing code:
+                                Toast.makeText(context, R.string.msg_visible_after_refresh, Toast.LENGTH_SHORT).show();
+                                //mapOverlays.addFeedbackIconToOverlay(PoiFeedbackDialog.this.feedback); // FIXME: throws NPE
+                                break;
+                            default:
+                                Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                /*
+                 * Feedback is now a poi!
+                 */
+                //feedback = new Feedback(displayMode, feedbackType, lat, lon, imageFileName, description);
+
+
+                /*
+                 * will be done in controller & PoiDao
+                 */
+                //sendSaveFeedbackNetworkRequest(feedback);
+
                 dismiss();
             }
         });
@@ -161,13 +217,6 @@ public class PoiFeedbackDialog extends DialogFragment {
                 dismiss();
             }
         });
-    }
-
-    public void onSaveFeedbackButtonClicked() {
-        double lat = lastKnownLocation.getLatitude();
-        double lon = lastKnownLocation.getLongitude();
-        feedback = new Feedback(displayMode, feedbackType, lat, lon, imageFileName, description);
-        sendSaveFeedbackNetworkRequest(feedback);
     }
 
     private void sendSaveFeedbackNetworkRequest(final Feedback feedback) {

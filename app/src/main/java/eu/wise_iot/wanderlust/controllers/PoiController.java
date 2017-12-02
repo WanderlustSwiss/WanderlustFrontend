@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
@@ -33,6 +34,10 @@ public class PoiController {
     public void savePoiToDatabase(String poiTitle, String poiDescription, String poiPrivacy,
                                   String poiType, String poiPicture){
 
+    }
+
+    public void saveNewPoi(Poi poi, FragmentHandler handler){
+        poiDao.create(poi, handler);
     }
 
     public void uploadImage(File image, int poiID, FragmentHandler handler){

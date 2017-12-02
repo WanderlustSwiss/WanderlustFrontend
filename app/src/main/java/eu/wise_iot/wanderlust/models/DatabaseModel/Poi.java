@@ -46,6 +46,18 @@ public class Poi extends AbstractModel{
         this.isPublic = isPublic;
     }
 
+    public Poi(){
+        this.poi_id = 0;
+        this.title = "No Title";
+        this.description = "No Description";
+        this.imagePaths = null;
+        this.longitude = 0;
+        this.latitude = 0;
+        this.user = 1;
+        this.type = 1; //TODO what should be default type??
+        this.isPublic = false;
+    }
+
     public List<ImageInfo> getImagePath() { return imagePaths; }
 
     public void setImagePath(List<ImageInfo> imagePath) { this.imagePaths = imagePath; }

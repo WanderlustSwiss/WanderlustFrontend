@@ -104,7 +104,9 @@ public class MyMapOverlays implements Serializable {
             public void onResponse(Call<List<Feedback>> call, Response<List<Feedback>> response) {
                 feedbackList = response.body();
                 initItemizedOverlayWithFocus();
-                populateFeedbackOverlay();
+
+                //TODO outcommented to make it run
+//                populateFeedbackOverlay();
             }
 
             @Override
