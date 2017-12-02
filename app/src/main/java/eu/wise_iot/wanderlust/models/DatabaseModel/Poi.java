@@ -36,7 +36,7 @@ public class Poi extends AbstractModel{
     boolean isPublic;
 
     public Poi(long poi_id, String name, String description, List<ImageInfo> picturePath,
-               double longitude, double latitude, int rate, long user, long type, boolean isPublic) {
+               double longitude, double latitude, int rate, long user, int type, boolean isPublic) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;
@@ -80,6 +80,22 @@ public class Poi extends AbstractModel{
 
     public void setPoi_id(long poi_id) {
         this.poi_id = poi_id;
+    }
+
+    public long getInternalId() {
+        return internalId;
+    }
+
+    public void setInternalId(long internalId) {
+        this.internalId = internalId;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
     }
 
     public String getTitle() {
