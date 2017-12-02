@@ -35,7 +35,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.views.dialog.DisplayFeedbackDialog;
+import eu.wise_iot.wanderlust.views.dialog.DisplayPoiDialog;
 import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.models.Old.GpxParser;
 import eu.wise_iot.wanderlust.services.FeedbackService;
@@ -139,7 +139,7 @@ public class MyMapOverlays implements Serializable {
                         if (prevFragment != null) fragmentTransaction.remove(prevFragment);
                         fragmentTransaction.addToBackStack(null);
 
-                        DisplayFeedbackDialog dialogFragment = DisplayFeedbackDialog.newInstance(overlayItem);
+                        DisplayPoiDialog dialogFragment = DisplayPoiDialog.newInstance(overlayItem);
                         dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
                         return true;
                     }

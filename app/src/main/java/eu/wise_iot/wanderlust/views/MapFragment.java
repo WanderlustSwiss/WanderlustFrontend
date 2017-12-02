@@ -31,7 +31,7 @@ import java.io.File;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
-import eu.wise_iot.wanderlust.views.dialog.PoiFeedbackDialog;
+import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.models.Old.StyleBehavior;
 
@@ -460,7 +460,7 @@ public class MapFragment extends Fragment {
         if (prevFragment != null) fragmentTransaction.remove(prevFragment);
         fragmentTransaction.addToBackStack(null);
 
-        PoiFeedbackDialog dialog = PoiFeedbackDialog.newInstance(imageFileName, lastKnownLocation);
+        EditPoiDialog dialog = EditPoiDialog.newInstance(imageFileName, lastKnownLocation);
         Log.d(TAG, "lastKnownLocation: " + lastKnownLocation);
         dialog.show(fragmentTransaction, Constants.CREATE_FEEDBACK_DIALOG);
     }

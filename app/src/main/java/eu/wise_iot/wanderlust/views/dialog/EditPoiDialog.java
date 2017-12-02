@@ -33,12 +33,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * PoiFeedbackDialog:
+ * EditPoiDialog:
  * @author Fabian Schwander
  * @license MIT
  */
-public class PoiFeedbackDialog extends DialogFragment {
-    private static final String TAG = "PoiFeedbackDialog";
+public class EditPoiDialog extends DialogFragment {
+    private static final String TAG = "EditPoiDialog";
     private Context context;
 
     private String imageFileName;
@@ -55,8 +55,8 @@ public class PoiFeedbackDialog extends DialogFragment {
     private Button buttonCancel;
     private Feedback feedback;
 
-    public static PoiFeedbackDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
-        PoiFeedbackDialog fragment = new PoiFeedbackDialog();
+    public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
+        EditPoiDialog fragment = new EditPoiDialog();
         Bundle args = new Bundle();
         args.putString(Constants.IMAGE_FILE_NAME, imageFileName);
         args.putDouble(Constants.LAST_POS_LAT, lastKnownLocation.getLatitude());
@@ -189,7 +189,7 @@ public class PoiFeedbackDialog extends DialogFragment {
                                 //TODO take closer look :)
                                 //copy pasta from existing code:
                                 Toast.makeText(context, R.string.msg_visible_after_refresh, Toast.LENGTH_SHORT).show();
-                                //mapOverlays.addFeedbackIconToOverlay(PoiFeedbackDialog.this.feedback); // FIXME: throws NPE
+                                //mapOverlays.addFeedbackIconToOverlay(EditPoiDialog.this.feedback); // FIXME: throws NPE
                                 break;
                             default:
                                 Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
@@ -232,7 +232,7 @@ public class PoiFeedbackDialog extends DialogFragment {
             public void onResponse(Call<Feedback> call, Response<Feedback> response) {
                 Toast.makeText(context, R.string.msg_visible_after_refresh, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "photo saved and response received: " + response.isSuccessful());
-//                mapOverlays.addFeedbackIconToOverlay(PoiFeedbackDialog.this.feedback); // FIXME: throws NPE
+//                mapOverlays.addFeedbackIconToOverlay(EditPoiDialog.this.feedback); // FIXME: throws NPE
             }
 
             @Override

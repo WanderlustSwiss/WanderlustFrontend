@@ -32,12 +32,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * DisplayFeedbackDialog:
+ * DisplayPoiDialog:
  * @author Fabian Schwander
  * @license MIT
  */
-public class DisplayFeedbackDialog extends DialogFragment {
-    private static final String TAG = "DisplayFeedbackDialog";
+public class DisplayPoiDialog extends DialogFragment {
+    private static final String TAG = "DisplayPoiDialog";
     private Activity activity;
 
     private ImageView feedbackImage;
@@ -48,8 +48,8 @@ public class DisplayFeedbackDialog extends DialogFragment {
     private long feedbackId;
     private Feedback feedback;
 
-    public static DisplayFeedbackDialog newInstance(OverlayItem overlayItem) {
-        DisplayFeedbackDialog fragment = new DisplayFeedbackDialog();
+    public static DisplayPoiDialog newInstance(OverlayItem overlayItem) {
+        DisplayPoiDialog fragment = new DisplayPoiDialog();
         fragment.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         long feedbackId = Long.valueOf(overlayItem.getUid());
         Bundle args = new Bundle();
