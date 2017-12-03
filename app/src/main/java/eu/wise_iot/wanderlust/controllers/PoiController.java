@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.app.DialogFragment;
 import android.content.Context;
 
 import java.io.File;
@@ -17,15 +18,14 @@ import io.objectbox.BoxStore;
 
 public class PoiController {
 
-    private PoiFragment fragment;
     private PoiTypeDao poiTypeDao;
     private PoiDao poiDao;
 
-    public PoiController(PoiFragment fragment){
-        this.fragment = fragment;
+    public PoiController(){
         poiTypeDao = new PoiTypeDao(MainActivity.boxStore);
         poiDao = new PoiDao(MainActivity.boxStore);
     }
+
 
     public List<PoiType> getAllPoiTypes(){
         return poiTypeDao.find();
@@ -34,6 +34,11 @@ public class PoiController {
     public void savePoiToDatabase(String poiTitle, String poiDescription, String poiPrivacy,
                                   String poiType, String poiPicture){
 
+    }
+
+    public List<PoiType> getTypes(){
+        PoiTypeDao poiTypeDao = new PoiTypeDao(MainActivity.boxStore);
+        return poiTypeDao.find();
     }
 
     public void saveNewPoi(Poi poi, FragmentHandler handler){

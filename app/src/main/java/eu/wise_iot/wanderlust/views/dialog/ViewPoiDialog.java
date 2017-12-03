@@ -20,6 +20,8 @@ import com.squareup.picasso.Picasso;
 
 import org.osmdroid.views.overlay.OverlayItem;
 
+import java.util.List;
+
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
@@ -27,8 +29,11 @@ import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.services.FeedbackService;
+import eu.wise_iot.wanderlust.views.MainActivity;
 import eu.wise_iot.wanderlust.views.PoiFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +59,10 @@ public class ViewPoiDialog extends DialogFragment {
     private long feedbackId;
     private Feedback feedback;
 
+    private static PoiController controller;
+
     public static ViewPoiDialog newInstance(OverlayItem overlayItem) {
+
         ViewPoiDialog fragment = new ViewPoiDialog();
         fragment.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         long feedbackId = Long.valueOf(overlayItem.getUid());
@@ -68,6 +76,7 @@ public class ViewPoiDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
+        controller = new PoiController();
 //        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED); // TODO: added for screen orientation change (see TODO below)
 
         Bundle args = getArguments();
@@ -128,13 +137,17 @@ public class ViewPoiDialog extends DialogFragment {
     private void loadPoiById(long id){
 
         //TODO Poicontroller wird statisch
-        PoiFragment.fragment.poiController.getPoiById(id, new FragmentHandler() {
+        controller.getPoiById(id, new FragmentHandler() {
             @Override
             public void onResponse(Event event) {
                 switch (event.getType()){
                     case OK:
                         //TODO was passiert wenn gefunden..
                         Poi poi = (Poi) event.getModel();
+
+                        //poi types which have to go to a select box or somthing:
+                        List<PoiType> poiTypes =  controller.getTypes();
+
                         break;
                     default:
                         //TODO was passiert wenn nicht gefunden..

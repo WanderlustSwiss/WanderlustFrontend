@@ -52,7 +52,7 @@ public class PoiFragment extends Fragment{
         super.onCreate(savedInstanceState);
         fragment = this;
         context = getActivity().getApplicationContext();
-        poiController = new PoiController(this);
+        poiController = new PoiController();
     }
 
     @Override

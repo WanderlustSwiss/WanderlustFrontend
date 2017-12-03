@@ -59,6 +59,7 @@ public class EditPoiDialog extends DialogFragment {
     private Button buttonSave;
     private Button buttonCancel;
     private Feedback feedback;
+    private PoiController controller;
 
     public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
         EditPoiDialog fragment = new EditPoiDialog();
@@ -73,6 +74,7 @@ public class EditPoiDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PoiController controller = new PoiController();
         Bundle args = getArguments();
         imageFileName = args.getString(Constants.IMAGE_FILE_NAME);
         double lat = args.getDouble(Constants.LAST_POS_LAT);
@@ -182,9 +184,6 @@ public class EditPoiDialog extends DialogFragment {
 
                 //TODO refactor display mode into boolean
                 poi.setPublic(displayMode == 0);
-
-                //TODO move this to Poi Fragment or save/send fragment into this dialog
-                PoiController controller = new PoiController(PoiFragment.fragment);
 
                 controller.saveNewPoi(poi, new FragmentHandler() {
                     @Override
