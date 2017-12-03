@@ -245,10 +245,8 @@ public class MyMapOverlays implements Serializable {
                     drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_alert_nophoto);
                 break;
             default:
-                drawable = null;
+                drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
         }
-
-        if(drawable != null){
 
             //TODO ask fabian what this is
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
@@ -262,7 +260,6 @@ public class MyMapOverlays implements Serializable {
             overlayItem.setMarker(drawable);
             itemizedOverlayWithFocus.addItem(overlayItem);
             mapView.invalidate();
-        }
 
     }
 
