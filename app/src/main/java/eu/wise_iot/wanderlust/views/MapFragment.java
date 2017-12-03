@@ -59,7 +59,7 @@ public class MapFragment extends Fragment {
 
     private Camera camera;
     private static String imageFileName;
-    private static String photoPath;
+    public static String photoPath;
 
     private ImageButton locationToggler;
     private ImageButton cameraButton;
@@ -361,8 +361,10 @@ public class MapFragment extends Fragment {
                     MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
                     camera = new Camera(getActivity(), mapFragment);
                     camera.start();
+                    imageFileName = camera.getImageName();
+                    photoPath = camera.getImagePath();
 
-
+/*
                     mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
                         @Override
                         public void run() {
@@ -374,6 +376,7 @@ public class MapFragment extends Fragment {
                             photoPath = camera.getImagePath();
                         }
                     });
+                    */
                 }
             }
         });

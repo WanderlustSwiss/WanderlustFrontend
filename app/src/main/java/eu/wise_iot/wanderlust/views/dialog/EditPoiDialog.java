@@ -16,6 +16,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import org.osmdroid.util.GeoPoint;
+
+import java.io.File;
+
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
@@ -25,6 +28,8 @@ import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.services.FeedbackService;
+import eu.wise_iot.wanderlust.views.MainActivity;
+import eu.wise_iot.wanderlust.views.MapFragment;
 import eu.wise_iot.wanderlust.views.PoiFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -154,7 +159,6 @@ public class EditPoiDialog extends DialogFragment {
 
                 Poi poi = new Poi();
 
-
                 //TODO get nullpointer, text from textfield may not be read properly?
 
                 //TODO remove it after it works
@@ -187,6 +191,25 @@ public class EditPoiDialog extends DialogFragment {
                     public void onResponse(Event event) {
                         switch (event.getType()){
                             case OK:
+
+                                Poi poi = (Poi) event.getModel();
+                                //TODO looks ugly
+                                //Poi image has to be uploaded after the poi is saved
+                                controller.uploadImage(new File(MapFragment.photoPath), poi.getPoi_id(), new FragmentHandler() {
+                                    @Override
+                                    public void onResponse(Event event) {
+                                        switch (event.getType()){
+                                            case OK:
+                                                Toast.makeText(context, "image upload good", Toast.LENGTH_LONG).show();
+                                                //TODO what to do if image could be saved
+                                                break;
+                                            default:
+                                                Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
+                                                //TODO what to do if image upload fails
+                                        }
+                                    }
+                                });
+
                                 //TODO take closer look :)
                                 //copy pasta from existing code:
                                 Toast.makeText(context, R.string.msg_visible_after_refresh, Toast.LENGTH_SHORT).show();

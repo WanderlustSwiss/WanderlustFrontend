@@ -181,7 +181,7 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @param file
      * @param poiID
      */
-    public void addImage(final File file, final int poiID, final FragmentHandler handler){
+    public void addImage(final File file, final long poiID, final FragmentHandler handler){
         PoiService service = ServiceGenerator.createService(PoiService.class);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
@@ -217,7 +217,7 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @param imageID
      * @param handler
      */
-    public void getImage(final int poiID, final int imageID, final FragmentHandler handler){
+    public void getImage(final long poiID, final long imageID, final FragmentHandler handler){
         Call<Poi.ImageInfo> call = service.downloadImage(poiID, imageID);
         call.enqueue(new Callback<Poi.ImageInfo>() {
             @Override
@@ -236,7 +236,7 @@ public class PoiDao extends DatabaseObjectAbstract{
         });
     }
 
-    public void deleteImage(final int poiID, final int imageID, final FragmentHandler handler){
+    public void deleteImage(final long poiID, final long imageID, final FragmentHandler handler){
         Call<Poi.ImageInfo> call = service.deleteImage(poiID, imageID);
         call.enqueue(new Callback<Poi.ImageInfo>() {
             @Override

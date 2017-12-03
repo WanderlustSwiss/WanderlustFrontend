@@ -44,15 +44,15 @@ public class PoiController {
         poiDao.retrieve(id, handler);
     }
 
-    public void uploadImage(File image, int poiID, FragmentHandler handler){
+    public void uploadImage(File image, long poiID, FragmentHandler handler){
         poiDao.addImage(image, poiID, handler);
     }
 
-    public void downloadImage(int poiID, int imageID, FragmentHandler handler){
+    public void downloadImage(long poiID, long imageID, FragmentHandler handler){
         poiDao.getImage(poiID, imageID, handler);
     }
 
-    public void deleteImage(int poiID, int imageID, FragmentHandler handler){
+    public void deleteImage(long poiID, long imageID, FragmentHandler handler){
         poiDao.deleteImage(poiID, imageID, handler);
     }
 
