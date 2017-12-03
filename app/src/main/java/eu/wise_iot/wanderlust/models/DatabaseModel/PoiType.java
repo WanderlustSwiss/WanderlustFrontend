@@ -6,10 +6,13 @@ import io.objectbox.annotation.Id;
 @Entity
 public class PoiType extends AbstractModel {
     @Id
+    long id;
+
     long poit_id;
     String name;
 
-    public PoiType(long poit_id, String name) {
+    public PoiType(long id, long poit_id, String name) {
+        this.id = id;
         this.poit_id = poit_id;
         this.name = name;
     }

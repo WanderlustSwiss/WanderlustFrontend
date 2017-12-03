@@ -45,6 +45,11 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
              @Override
              public void onResponse(Call<List<PoiType>> call, Response<List<PoiType>> response) {
                 if (response.isSuccessful()) {
+
+
+                    //TODO make more efficient
+                    //List<PoiType> poiTypesFrontend = find();
+                    poiTypeBox.removeAll();
                     for (PoiType poiType : response.body()){
                         poiTypeBox.put(poiType);
                     }

@@ -31,7 +31,9 @@ import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.BoxStore;
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //TODO where to put this?
         if( boxStore == null)  boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
         fakeLogin();
+        PoiTypeDao poiTypeDao = new PoiTypeDao(boxStore);
+        poiTypeDao.sync();
 
 
         // check if app is opened for the first time
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void fakeLogin(){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
-        LoginUser testUser = new LoginUser("testuser", "Ha1loW3lt");
+        LoginUser testUser = new LoginUser("testuser", "HalloW3lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
         call.enqueue(new Callback<LoginUser>() {
             @Override

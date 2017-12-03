@@ -74,7 +74,7 @@ public class EditPoiDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PoiController controller = new PoiController();
+        controller = new PoiController();
         Bundle args = getArguments();
         imageFileName = args.getString(Constants.IMAGE_FILE_NAME);
         double lat = args.getDouble(Constants.LAST_POS_LAT);
