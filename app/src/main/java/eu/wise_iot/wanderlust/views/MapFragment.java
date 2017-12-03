@@ -357,14 +357,6 @@ public class MapFragment extends Fragment {
                     mapOverlays.getMyLocationNewOverlay().enableMyLocation();
                     Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
 
-                    //TODO fabian fragen
-                    MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                    camera = new Camera(getActivity(), mapFragment);
-                    camera.start();
-                    imageFileName = camera.getImageName();
-                    photoPath = camera.getImagePath();
-
-/*
                     mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
                         @Override
                         public void run() {
@@ -376,7 +368,6 @@ public class MapFragment extends Fragment {
                             photoPath = camera.getImagePath();
                         }
                     });
-                    */
                 }
             }
         });
