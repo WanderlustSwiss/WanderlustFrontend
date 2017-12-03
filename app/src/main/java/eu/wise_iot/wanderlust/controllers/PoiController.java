@@ -40,6 +40,10 @@ public class PoiController {
         poiDao.create(poi, handler);
     }
 
+    public void getPoiById(long id, FragmentHandler handler){
+        poiDao.retrieve(id, handler);
+    }
+
     public void uploadImage(File image, int poiID, FragmentHandler handler){
         poiDao.addImage(image, poiID, handler);
     }

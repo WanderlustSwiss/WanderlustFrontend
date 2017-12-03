@@ -33,7 +33,9 @@ public class PoiFragment extends Fragment{
     private static final String TAG = "PoiFragment";
     private Context context;
     private List<Poi> poiTypeList = new ArrayList<>();
-    private PoiController poiController;
+
+    //TODO mit gashi besprechen
+    public PoiController poiController;
 
     //TODO remove as when fixed
     public static PoiFragment fragment;

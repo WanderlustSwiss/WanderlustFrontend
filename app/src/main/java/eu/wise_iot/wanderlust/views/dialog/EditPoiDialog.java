@@ -172,6 +172,7 @@ public class EditPoiDialog extends DialogFragment {
                     poi.setType(feedbackType);
                 }
 
+                //TODO
                 poi.setLatitude(lastKnownLocation.getLatitude());
                 poi.setLongitude(lastKnownLocation.getLongitude());
 

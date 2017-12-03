@@ -31,7 +31,7 @@ import retrofit2.http.Path;
  */
 public interface PoiService {
     @GET("/poi/{id}")
-        Call<Poi> retrievePoi(@Path("id") int id);
+        Call<Poi> retrievePoi(@Path("id") long id);
     @GET("/poi/")
         Call<List<Poi>> retrieveAllPois();
     @POST("/poi")

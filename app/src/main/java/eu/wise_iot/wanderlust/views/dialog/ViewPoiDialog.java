@@ -23,8 +23,13 @@ import org.osmdroid.views.overlay.OverlayItem;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
+import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.services.FeedbackService;
+import eu.wise_iot.wanderlust.views.PoiFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -120,6 +125,27 @@ public class ViewPoiDialog extends DialogFragment {
 //        }
 //    }
 
+    private void loadPoiById(long id){
+
+        //TODO Poicontroller wird statisch
+        PoiFragment.fragment.poiController.getPoiById(id, new FragmentHandler() {
+            @Override
+            public void onResponse(Event event) {
+                switch (event.getType()){
+                    case OK:
+                        //TODO was passiert wenn gefunden..
+                        Poi poi = (Poi) event.getModel();
+                        break;
+                    default:
+                        //TODO was passiert wenn nicht gefunden..
+                        //Careful getModel() will return null!
+                }
+            }
+        });
+    }
+
+
+    //TODO remove, feedback doesnt exist anymore
     private void loadFeedbackById(long id) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Defaults.URL_SERVER)

@@ -88,7 +88,7 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @param id
      * @param handler
      */
-    public void retrieve(int id, final FragmentHandler handler) {
+    public void retrieve(long id, final FragmentHandler handler) {
         Call<Poi> call = service.retrievePoi(id);
         call.enqueue(new Callback<Poi>() {
             @Override
