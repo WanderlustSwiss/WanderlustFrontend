@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
@@ -39,6 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * EditPoiDialog:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -89,7 +91,7 @@ public class EditPoiDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_edit_poi, container);
-        titleEditText = (EditText) view.findViewById(R.id.title);
+        titleEditText = (EditText) view.findViewById(R.id.poi_title);
         descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
         typeSpinner = (Spinner) view.findViewById(R.id.poi_typeSpinner);
         buttonSave = (Button) view.findViewById(R.id.dialog_post_feedback_button_save);
@@ -164,19 +166,23 @@ public class EditPoiDialog extends DialogFragment {
                 //TODO get nullpointer, text from textfield may not be read properly?
 
                 //TODO remove it after it works
-                if(titleEditText != null && descriptionEditText == null) {
-
-
+                if (titleEditText != null) {
                     if (titleEditText.getText() != null) {
                         title = titleEditText.getText().toString();
                     }
+                }
+
+                if (descriptionEditText != null) {
                     if (descriptionEditText.getText() != null) {
                         description = descriptionEditText.getText().toString();
                     }
-
-                    poi.setDescription(description);
-                    poi.setType(feedbackType);
                 }
+
+
+
+                poi.setDescription(description);
+                poi.setType(feedbackType);
+
 
                 //TODO
                 poi.setLatitude(lastKnownLocation.getLatitude());
@@ -188,7 +194,7 @@ public class EditPoiDialog extends DialogFragment {
                 controller.saveNewPoi(poi, new FragmentHandler() {
                     @Override
                     public void onResponse(Event event) {
-                        switch (event.getType()){
+                        switch (event.getType()) {
                             case OK:
 
                                 Poi poi = (Poi) event.getModel();
@@ -197,7 +203,7 @@ public class EditPoiDialog extends DialogFragment {
                                 controller.uploadImage(new File(MapFragment.photoPath), poi.getPoi_id(), new FragmentHandler() {
                                     @Override
                                     public void onResponse(Event event) {
-                                        switch (event.getType()){
+                                        switch (event.getType()) {
                                             case OK:
                                                 Toast.makeText(context, "image upload good", Toast.LENGTH_LONG).show();
                                                 //TODO what to do if image could be saved
