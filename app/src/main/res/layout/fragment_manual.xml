@@ -5,10 +5,10 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:contentDescription="@null"
         android:id="@+id/background_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@null" />
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -38,10 +38,10 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:contentDescription="@null"
                         android:id="@+id/image4"
                         android:layout_width="20dp"
-                        android:layout_height="20dp" />
+                        android:layout_height="20dp"
+                        android:contentDescription="@null" />
 
                     <TextView
                         style="@style/h3"
@@ -67,10 +67,10 @@
 
                     <TextView
                         android:id="@+id/line_4_3"
-                        android:layout_below="@+id/line_4_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/msg_manual_p1_text3"/>
+                        android:layout_below="@+id/line_4_2"
+                        android:text="@string/msg_manual_p1_text3" />
 
                 </RelativeLayout>
 
@@ -79,10 +79,10 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:contentDescription="@null"
                         android:id="@+id/image5"
                         android:layout_width="20dp"
-                        android:layout_height="20dp" />
+                        android:layout_height="20dp"
+                        android:contentDescription="@null" />
 
                     <TextView
                         style="@style/h3"
@@ -105,10 +105,10 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:contentDescription="@null"
                         android:id="@+id/image1"
                         android:layout_width="25dp"
-                        android:layout_height="25dp" />
+                        android:layout_height="25dp"
+                        android:contentDescription="@null" />
 
                     <TextView
                         style="@style/h3"
@@ -130,10 +130,10 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:contentDescription="@null"
                         android:id="@+id/image2"
                         android:layout_width="25dp"
-                        android:layout_height="25dp" />
+                        android:layout_height="25dp"
+                        android:contentDescription="@null" />
 
                     <TextView
                         style="@style/h3"
@@ -155,10 +155,10 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:contentDescription="@null"
                         android:id="@+id/image3"
                         android:layout_width="25dp"
-                        android:layout_height="25dp" />
+                        android:layout_height="25dp"
+                        android:contentDescription="@null" />
 
                     <TextView
                         style="@style/h3"

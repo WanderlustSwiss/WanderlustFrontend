@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import org.osmdroid.views.overlay.OverlayItem;
 
+import java.io.File;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
@@ -82,7 +83,8 @@ public class ViewPoiDialog extends DialogFragment {
         Bundle args = getArguments();
         feedbackId = args.getLong(Constants.FEEDBACK_ID);
         setRetainInstance(true);
-        loadFeedbackById(feedbackId);
+//        loadFeedbackById(feedbackId);
+        loadPoiById(feedbackId);
     }
 
     @Override
@@ -144,6 +146,27 @@ public class ViewPoiDialog extends DialogFragment {
                     case OK:
                         //TODO was passiert wenn gefunden..
                         Poi poi = (Poi) event.getModel();
+                        titelTextView.setText(poi.getTitle()); // TODO: get real title
+                        descriptionTextView.setText(poi.getDescription());
+
+                        File image = new File(poi.getImagePath().get(0).getPath());
+                        Picasso.with(activity).load(image).into(feedbackImage);
+
+                        // get all images of poi
+//                        for (Poi.ImageInfo imageInfo : poi.getImagePath()) {
+//                            File image = new File(imageInfo.getPath());
+//
+//                            controller.downloadImage(poi.getPoi_id(), imageInfo.getId(), new FragmentHandler() {
+//                                @Override
+//                                public void onResponse(Event event) {
+//                                    switch (event.getType()) {
+//                                        case OK:
+//                                            // image zuweisen
+//                                    }
+//                                }
+//                            });
+//                        }
+
 
                         //poi types which have to go to a select box or somthing:
                         List<PoiType> poiTypes =  controller.getTypes();

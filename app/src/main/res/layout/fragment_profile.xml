@@ -14,9 +14,7 @@
         android:adjustViewBounds="false"
         android:background="@color/primaryOne"
         android:contentDescription="@string/profile_bg_descriptionpri"
-        android:cropToPadding="false"
-
-        >
+        android:cropToPadding="false">
 
         <ImageView
             android:id="@+id/profileBackground"

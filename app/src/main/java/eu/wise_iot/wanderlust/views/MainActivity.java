@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void fakeLogin(){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
-        LoginUser testUser = new LoginUser("zumsel321", "Ha11loW3lt");
+        LoginUser testUser = new LoginUser("testuser", "Ha1loW3lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
         call.enqueue(new Callback<LoginUser>() {
             @Override
