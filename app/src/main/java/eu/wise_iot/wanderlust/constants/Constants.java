@@ -8,19 +8,14 @@ package eu.wise_iot.wanderlust.constants;
 public interface Constants {
 
     /* DISPLAY MODE */
-    int MODE_PUBLIC = 100;
-    int MODE_PRIVATE = 101;
+    boolean MODE_PUBLIC = true;
+    boolean MODE_PRIVATE = false;
 
-    /* FEEDBACK TYPE */
-    // old types // todo: delete
-    int TYPE_POSITIVE = 200;
-    int TYPE_NEGATIVE = 201;
-    int TYPE_ALERT = 202;
     // new types
-    int TYPE_VIEW = 300;
-    int TYPE_RESTAURANT = 301;
-    int TYPE_REST_AREA = 302;
-    int TYPE_FLORA_FAUNA = 303;
+    int TYPE_VIEW = 0;
+    int TYPE_RESTAURANT = 1;
+    int TYPE_REST_AREA = 2;
+    int TYPE_FLORA_FAUNA = 3;
 
 
     /* ACTIVITIES */

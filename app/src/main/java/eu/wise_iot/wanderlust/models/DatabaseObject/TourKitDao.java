@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
@@ -26,12 +27,10 @@ public class TourKitDao extends DatabaseObjectAbstract{
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public TourKitDao(BoxStore boxStore){
-        tourEquipementBox = boxStore.boxFor(TourKit.class);
+    public TourKitDao(){
+        tourEquipementBox = DatabaseController.boxStore.boxFor(TourKit.class);
         tourEquipementQueryBuilder = tourEquipementBox.query();
     }
 

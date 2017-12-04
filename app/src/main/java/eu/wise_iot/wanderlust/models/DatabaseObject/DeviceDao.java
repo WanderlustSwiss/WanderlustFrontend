@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Device;
 import io.objectbox.Box;
@@ -26,12 +27,10 @@ public class DeviceDao extends DatabaseObjectAbstract{
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public DeviceDao(BoxStore boxStore){
-        deviceBox = boxStore.boxFor(Device.class);
+    public DeviceDao(){
+        deviceBox = DatabaseController.boxStore.boxFor(Device.class);
         deviceQueryBuilder = deviceBox.query();
     }
 

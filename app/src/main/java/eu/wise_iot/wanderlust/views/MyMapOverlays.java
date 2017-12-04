@@ -33,6 +33,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
@@ -65,7 +66,8 @@ public class MyMapOverlays implements Serializable {
         this.activity = activity;
         this.mapView = mapView;
 
-        initFeedbackIconsOverlay();
+        initItemizedOverlayWithFocus();
+        populateFeedbackOverlay();
         initScaleBarOverlay();
         initMyLocationNewOverlay();
 //        initGpxTourlistOverlay();
@@ -91,39 +93,6 @@ public class MyMapOverlays implements Serializable {
 
         myLocationNewOverlay = new MyLocationNewOverlay(locationProvider, mapView);
         mapView.getOverlays().add(myLocationNewOverlay);
-    }
-
-    private void initFeedbackIconsOverlay(){
-
-
-        //TODO move
-        initItemizedOverlayWithFocus();
-        populateFeedbackOverlay();
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Defaults.URL_SERVER)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        FeedbackService service = retrofit.create(FeedbackService.class);
-        Call<List<Feedback>> call = service.loadFeedbackList();
-        call.enqueue(new Callback<List<Feedback>>() {
-            @Override
-            public void onResponse(Call<List<Feedback>> call, Response<List<Feedback>> response) {
-                feedbackList = response.body();
-                initItemizedOverlayWithFocus();
-
-                //TODO outcommented to make it run
-                //populateFeedbackOverlay();
-            }
-
-            @Override
-            public void onFailure(Call<List<Feedback>> call, Throwable t) {
-                Toast.makeText(activity, R.string.msg_e_feedback_loading_error, Toast.LENGTH_LONG).show();
-                Log.e(TAG, t.getMessage());
-            }
-        });
     }
 
     private void initItemizedOverlayWithFocus() {
@@ -170,97 +139,51 @@ public class MyMapOverlays implements Serializable {
         mapView.invalidate();
     }
 
-
-    public void addFeedbackIconToOverlay(Feedback feedback) {
-        long feedbackId = feedback.getId();
-        int feedbackType = feedback.getFeedbackType();
-        String imageName = feedback.getImageName();
-        String description = feedback.getDescription();
-        GeoPoint geoPoint = new GeoPoint(feedback.getLat(), feedback.getLon());
-        Drawable drawable = null;
-
-
-        // check if img exists
-        int checkImageIdentifier = activity.getResources().getIdentifier(feedback.getImageNameWithoutSuffix(), "drawable", activity.getPackageName());
-        boolean hasImage = false;
-        // if identifier == 0, img does NOT exist
-        if (checkImageIdentifier != 0) {
-            hasImage = true;
-        } else  hasImage = false;
-
-        switch (feedbackType) {
-            case Constants.TYPE_POSITIVE:
-                if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
-                else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive_nophoto);
-                break;
-            case Constants.TYPE_NEGATIVE:
-                if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_negative);
-                else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_negative_nophoto);
-                break;
-            case Constants.TYPE_ALERT:
-                if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_alert);
-                else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_alert_nophoto);
-                break;
-        }
-        if (drawable != null) {
-            String id = Long.toString(feedbackId);
-            OverlayItem overlayItem = new OverlayItem(id, imageName, description, geoPoint);
-            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            drawable = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, 80, 80, true));
-
-            overlayItem.setMarker(drawable);
-            itemizedOverlayWithFocus.addItem(overlayItem);
-            mapView.invalidate();
-        }
-    }
-
+    /*
+     * Adds a poi on the mapview with the icon based on
+     * the poi type
+     */
     public void addPoiToOverlay(Poi poi){
         Drawable drawable;
-
-        //TODO initialize poi with empty list
-        boolean hasImage = poi.getImagePath() != null;
+        boolean hasImage = poi.getImagePath() != null && !poi.getImagePath().isEmpty();
         switch ((int)poi.getType()) {
-            case 0:
+            case Constants.TYPE_VIEW:
                 if (hasImage)
                     drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
                 else
                     drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive_nophoto);
                 break;
-            case 1:
+            case Constants.TYPE_RESTAURANT:
                 if (hasImage)
                     drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_negative);
                 else
                     drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_negative_nophoto);
                 break;
-            case 2:
+            case Constants.TYPE_REST_AREA:
                 if (hasImage)
                     drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_alert);
                 else
                     drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_alert_nophoto);
+                break;
+            //TODO add new image
+            case Constants.TYPE_FLORA_FAUNA:
+                if (hasImage)
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
+                else
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
                 break;
             default:
                 drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
         }
 
-            //TODO ask fabian what this is
             Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
             drawable = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, 80, 80, true));
 
-
-            //TODO not sure if what to put to image title and if other values are correct
             OverlayItem overlayItem = new OverlayItem(Long.toString(poi.getPoi_id()), poi.getTitle(),
                     poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
 
             overlayItem.setMarker(drawable);
             itemizedOverlayWithFocus.addItem(overlayItem);
-            mapView.invalidate();
-
     }
 
     public void addPositionMarker(GeoPoint geoPoint) {
@@ -279,22 +202,17 @@ public class MyMapOverlays implements Serializable {
         }
     }
 
+
+    /**
+     * Take all pois from the database and add
+     * them to the map overlay
+     */
     private void populateFeedbackOverlay() {
 
-        //Feedback is a Poi now!
-        /*
-        for (Feedback feedback : feedbackList) {
-            addFeedbackIconToOverlay(feedback);
-        }
-        */
-        //TODO mit gashi besprechen ob nicht alle daoModels statisch zu machen.
-        //TODO mit einer initialisiermethode zu beginn
-        PoiDao poiDao = new PoiDao(MainActivity.boxStore);
-        List<Poi> pois = poiDao.find();
+        List<Poi> pois = DatabaseController.poiDao.find();
         for(Poi poi : pois){
             addPoiToOverlay(poi);
         }
-
 
         mapView.getOverlays().add(itemizedOverlayWithFocus);
         mapView.invalidate();

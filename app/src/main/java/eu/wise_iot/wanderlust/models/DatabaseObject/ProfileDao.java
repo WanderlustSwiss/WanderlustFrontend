@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
@@ -24,12 +25,10 @@ public class ProfileDao extends DatabaseObjectAbstract {
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public ProfileDao(BoxStore boxStore){
-        profileBox = boxStore.boxFor(Profile.class);
+    public ProfileDao(){
+        profileBox = DatabaseController.boxStore.boxFor(Profile.class);
         profileQueryBuilder = profileBox.query();
     }
 

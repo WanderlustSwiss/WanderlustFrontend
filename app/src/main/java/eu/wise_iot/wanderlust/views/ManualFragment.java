@@ -21,8 +21,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
  */
 public class ManualFragment extends Fragment {
 
-    public ManualFragment() {
-    }
+    public ManualFragment() {}
 
     @Nullable
     @Override

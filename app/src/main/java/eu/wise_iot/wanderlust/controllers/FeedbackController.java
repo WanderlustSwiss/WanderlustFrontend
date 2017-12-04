@@ -9,6 +9,8 @@ import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.models.Old.FileHandler;
 import eu.wise_iot.wanderlust.models.Old.JsonParser;
 
+//TODO move or delete, should not exist anymore
+
 /**
  * FeedbackController:
  * @author Fabian Schwander

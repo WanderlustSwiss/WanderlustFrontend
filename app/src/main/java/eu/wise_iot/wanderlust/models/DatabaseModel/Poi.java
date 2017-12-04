@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.objectbox.annotation.Convert;
@@ -53,7 +54,7 @@ public class Poi extends AbstractModel{
         this.internalId = 0;
         this.title = "No Title";
         this.description = "No Description";
-        this.imagePaths = null;
+        this.imagePaths = new ArrayList<>();
         this.longitude = 0;
         this.latitude = 0;
         this.rate = 3;

@@ -5,6 +5,7 @@ import android.util.Log;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.EventType;
@@ -41,12 +42,10 @@ public class UserDao extends DatabaseObjectAbstract{
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public UserDao(BoxStore boxStore){
-        userBox = boxStore.boxFor(User.class);
+    public UserDao(){
+        userBox = DatabaseController.boxStore.boxFor(User.class);
         userQueryBuilder = userBox.query();
 
         if(service == null) service = ServiceGenerator.createService(UserService.class);

@@ -9,15 +9,11 @@ import eu.wise_iot.wanderlust.views.RegistrationFragment;
  * @author Yoshi
  */
 public class RegistrationController{
-    private RegistrationFragment registrationFragment;
 
-    public RegistrationController(RegistrationFragment fragment){
-        this.registrationFragment = fragment;
-    }
+    public RegistrationController(){}
 
     public void registerUser(User user, FragmentHandler handler){
-        UserDao newUser = new UserDao(MainActivity.boxStore);
-        newUser.create(user, handler);
+        DatabaseController.userDao.create(user, handler);
     }
 
 }

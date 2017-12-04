@@ -34,7 +34,7 @@ public class RegistrationFragment extends Fragment {
     private User user;
 
     public RegistrationFragment() {
-        this.registrationController = new RegistrationController(this);
+        this.registrationController = new RegistrationController();
     }
 
 

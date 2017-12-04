@@ -138,7 +138,6 @@ public class ViewPoiDialog extends DialogFragment {
 
     private void loadPoiById(long id){
 
-        //TODO Poicontroller wird statisch
         controller.getPoiById(id, new FragmentHandler() {
             @Override
             public void onResponse(Event event) {
@@ -181,41 +180,41 @@ public class ViewPoiDialog extends DialogFragment {
     }
 
 
-    //TODO remove, feedback doesnt exist anymore
-    private void loadFeedbackById(long id) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Defaults.URL_SERVER)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        FeedbackService service = retrofit.create(FeedbackService.class);
-        Call<Feedback> call = service.loadFeedbackById(id);
-        call.enqueue(new Callback<Feedback>() {
-            @Override
-            public void onResponse(Call<Feedback> call, Response<Feedback> response) {
-                if (response.isSuccessful()) {
-                    feedback = response.body();
-                    titelTextView.setText("Titel"); // TODO: get real title
-                    descriptionTextView.setText(feedback.getDescription());
-                    if (feedback.getDisplayMode() == Constants.MODE_PRIVATE) {
-                        Picasso.with(activity).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
-                    }
-
-                    int imageId = activity.getResources().getIdentifier(feedback.getImageNameWithoutSuffix(), "drawable", activity.getPackageName());
-                    if (imageId != 0) {
-                        // todo: work with .error() from the Picasso library
-                        Picasso.with(activity).load(imageId).into(feedbackImage);
-                    } else {
-                        Picasso.with(activity).load(R.drawable.image_msg_file_missing).into(feedbackImage);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Feedback> call, Throwable t) {
-                Toast.makeText(activity, R.string.msg_e_feedback_loading_error, Toast.LENGTH_LONG).show();
-                Log.d(TAG, t.getMessage());
-            }
-        });
-    }
+//    //TODO remove, feedback doesnt exist anymore
+//    private void loadFeedbackById(long id) {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(Defaults.URL_SERVER)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        FeedbackService service = retrofit.create(FeedbackService.class);
+//        Call<Feedback> call = service.loadFeedbackById(id);
+//        call.enqueue(new Callback<Feedback>() {
+//            @Override
+//            public void onResponse(Call<Feedback> call, Response<Feedback> response) {
+//                if (response.isSuccessful()) {
+//                    feedback = response.body();
+//                    titelTextView.setText("Titel"); // TODO: get real title
+//                    descriptionTextView.setText(feedback.getDescription());
+//                    if (feedback.getDisplayMode() == Constants.MODE_PRIVATE) {
+//                        Picasso.with(activity).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
+//                    }
+//
+//                    int imageId = activity.getResources().getIdentifier(feedback.getImageNameWithoutSuffix(), "drawable", activity.getPackageName());
+//                    if (imageId != 0) {
+//                        // todo: work with .error() from the Picasso library
+//                        Picasso.with(activity).load(imageId).into(feedbackImage);
+//                    } else {
+//                        Picasso.with(activity).load(R.drawable.image_msg_file_missing).into(feedbackImage);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Feedback> call, Throwable t) {
+//                Toast.makeText(activity, R.string.msg_e_feedback_loading_error, Toast.LENGTH_LONG).show();
+//                Log.d(TAG, t.getMessage());
+//            }
+//        });
+//    }
 }

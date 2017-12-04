@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -25,12 +26,10 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public PoiTypeDao(BoxStore boxStore){
-        poiTypeBox = boxStore.boxFor(PoiType.class);
+    public PoiTypeDao(){
+        poiTypeBox = DatabaseController.boxStore.boxFor(PoiType.class);
         poiTypeQueryBuilder = poiTypeBox.query();
         if (service == null) service = ServiceGenerator.createService(PoiService.class);
     }

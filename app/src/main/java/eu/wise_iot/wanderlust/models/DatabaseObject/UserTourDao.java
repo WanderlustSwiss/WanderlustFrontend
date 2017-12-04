@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
@@ -36,18 +37,16 @@ public class UserTourDao extends DatabaseObjectAbstract {
 
     private static UserTourService service;
 
-//    /**
-//     * Constructor.
-//     *
-//     * @param boxStore (required) delivers the connection to the frontend database
-//     */
-//
-//    public UserTourDao(BoxStore boxStore){
-//        routeBox = boxStore.boxFor(UserTour.class);
-//        routeQueryBuilder = routeBox.query();
-//
-//        if(service == null) service = ServiceGenerator.createService(UserTourService.class);
-//    }
+    /**
+     * Constructor.
+     */
+
+    public UserTourDao(){
+        routeBox = DatabaseController.boxStore.boxFor(UserTour.class);
+        routeQueryBuilder = routeBox.query();
+
+        if(service == null) service = ServiceGenerator.createService(UserTourService.class);
+    }
 
     public long count(){
         return routeBox.count();

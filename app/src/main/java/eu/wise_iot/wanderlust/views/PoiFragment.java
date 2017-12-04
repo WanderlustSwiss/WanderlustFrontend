@@ -33,12 +33,8 @@ public class PoiFragment extends Fragment{
     private static final String TAG = "PoiFragment";
     private Context context;
     private List<Poi> poiTypeList = new ArrayList<>();
+    private PoiController poiController;
 
-    //TODO mit gashi besprechen
-    public PoiController poiController;
-
-    //TODO remove as when fixed
-    public static PoiFragment fragment;
 
     public static PoiFragment newInstance() {
         Bundle args = new Bundle();
@@ -50,15 +46,13 @@ public class PoiFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragment = this;
         context = getActivity().getApplicationContext();
         poiController = new PoiController();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_poi, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_poi, container, false);
     }
 
     @Override

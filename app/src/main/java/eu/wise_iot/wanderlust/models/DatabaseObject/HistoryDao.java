@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.History;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
@@ -25,12 +26,10 @@ public class HistoryDao {
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public HistoryDao(BoxStore boxStore){
-        historyBox = boxStore.boxFor(History.class);
+    public HistoryDao(){
+        historyBox = DatabaseController.boxStore.boxFor(History.class);
         historyQueryBuilder = historyBox.query();
     }
 

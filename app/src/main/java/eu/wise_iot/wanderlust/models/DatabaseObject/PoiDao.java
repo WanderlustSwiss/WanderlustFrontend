@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
@@ -46,13 +47,13 @@ public class PoiDao extends DatabaseObjectAbstract{
 
     /**
      * constructor
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public PoiDao(BoxStore boxStore){
-        poiBox = boxStore.boxFor(Poi.class);
+    public PoiDao(){
+        poiBox = DatabaseController.boxStore.boxFor(Poi.class);
         poiQueryBuilder = poiBox.query();
 
+        //TODO no longer required?
         if(service == null){
             service = ServiceGenerator.createService(PoiService.class);
         }

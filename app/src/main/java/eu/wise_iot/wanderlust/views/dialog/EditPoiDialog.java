@@ -31,6 +31,7 @@ import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.services.FeedbackService;
 import eu.wise_iot.wanderlust.views.MainActivity;
 import eu.wise_iot.wanderlust.views.MapFragment;
+import eu.wise_iot.wanderlust.views.MyMapOverlays;
 import eu.wise_iot.wanderlust.views.PoiFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +51,7 @@ public class EditPoiDialog extends DialogFragment {
 
     private String imageFileName;
     private GeoPoint lastKnownLocation;
-    private int displayMode;
+    private boolean displayMode;
     private int feedbackType;
     private String title; // todo: has to be added to model
     private String description;
@@ -62,14 +63,16 @@ public class EditPoiDialog extends DialogFragment {
     private Button buttonCancel;
     private Feedback feedback;
     private PoiController controller;
+    private static MyMapOverlays mapOverlays;
 
-    public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
+    public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation, MyMapOverlays overlays) {
         EditPoiDialog fragment = new EditPoiDialog();
         Bundle args = new Bundle();
         args.putString(Constants.IMAGE_FILE_NAME, imageFileName);
         args.putDouble(Constants.LAST_POS_LAT, lastKnownLocation.getLatitude());
         args.putDouble(Constants.LAST_POS_LON, lastKnownLocation.getLongitude());
         fragment.setArguments(args);
+        mapOverlays = overlays;
         return fragment;
     }
 
@@ -160,36 +163,20 @@ public class EditPoiDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-
                 Poi poi = new Poi();
 
-                //TODO get nullpointer, text from textfield may not be read properly?
-
-                //TODO remove it after it works
-                if (titleEditText != null) {
-                    if (titleEditText.getText() != null) {
-                        title = titleEditText.getText().toString();
-                    }
+                if (titleEditText != null && titleEditText.getText() != null) {
+                    title = titleEditText.getText().toString();
+                }
+                if (descriptionEditText != null && descriptionEditText.getText() != null) {
+                    description = descriptionEditText.getText().toString();
+                    poi.setDescription(description);
                 }
 
-                if (descriptionEditText != null) {
-                    if (descriptionEditText.getText() != null) {
-                        description = descriptionEditText.getText().toString();
-                    }
-                }
-
-
-
-                poi.setDescription(description);
                 poi.setType(feedbackType);
-
-
-                //TODO
                 poi.setLatitude(lastKnownLocation.getLatitude());
                 poi.setLongitude(lastKnownLocation.getLongitude());
-
-                //TODO refactor display mode into boolean
-                poi.setPublic(displayMode == 0);
+                poi.setPublic(displayMode);
 
                 controller.saveNewPoi(poi, new FragmentHandler() {
                     @Override
@@ -198,7 +185,6 @@ public class EditPoiDialog extends DialogFragment {
                             case OK:
 
                                 Poi poi = (Poi) event.getModel();
-                                //TODO looks ugly
                                 //Poi image has to be uploaded after the poi is saved
                                 controller.uploadImage(new File(MapFragment.photoPath), poi.getPoi_id(), new FragmentHandler() {
                                     @Override
@@ -215,28 +201,13 @@ public class EditPoiDialog extends DialogFragment {
                                     }
                                 });
 
-                                //TODO take closer look :)
-                                //copy pasta from existing code:
-                                Toast.makeText(context, R.string.msg_visible_after_refresh, Toast.LENGTH_SHORT).show();
-                                //mapOverlays.addFeedbackIconToOverlay(EditPoiDialog.this.feedback); // FIXME: throws NPE
+                                mapOverlays.addPoiToOverlay(poi);
                                 break;
                             default:
                                 Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-
-                /*
-                 * Feedback is now a poi!
-                 */
-                //feedback = new Feedback(displayMode, feedbackType, lat, lon, imageFileName, description);
-
-
-                /*
-                 * will be done in controller & PoiDao
-                 */
-                //sendSaveFeedbackNetworkRequest(feedback);
-
                 dismiss();
             }
         });
@@ -244,31 +215,6 @@ public class EditPoiDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-            }
-        });
-    }
-
-    private void sendSaveFeedbackNetworkRequest(final Feedback feedback) {
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(Defaults.URL_SERVER)
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.build();
-
-        FeedbackService client = retrofit.create(FeedbackService.class);
-        Call<Feedback> call = client.saveNewFeedback(feedback);
-        call.enqueue(new Callback<Feedback>() {
-            @Override
-            public void onResponse(Call<Feedback> call, Response<Feedback> response) {
-                Toast.makeText(context, R.string.msg_visible_after_refresh, Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "photo saved and response received: " + response.isSuccessful());
-//                mapOverlays.addFeedbackIconToOverlay(EditPoiDialog.this.feedback); // FIXME: throws NPE
-            }
-
-            @Override
-            public void onFailure(Call<Feedback> call, Throwable t) {
-                Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "saving photo failed");
-                Log.e(TAG, t.getMessage());
             }
         });
     }

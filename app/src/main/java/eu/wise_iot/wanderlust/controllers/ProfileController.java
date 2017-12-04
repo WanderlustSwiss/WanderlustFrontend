@@ -5,10 +5,6 @@ import android.app.Fragment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.views.ProfileFragment;
 
-/**
- * Created by Ali Laptop on 28.11.2017.
- */
-
 public class ProfileController {
 
 

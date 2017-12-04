@@ -27,8 +27,10 @@ import java.util.Map;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
@@ -50,8 +52,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
 
-    public static BoxStore boxStore;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,23 +60,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
         //TODO where to put this?
-        if( boxStore == null)  boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        if(!DatabaseController.initialized) DatabaseController.initDaoModels(getApplicationContext());
         fakeLogin();
-        PoiTypeDao poiTypeDao = new PoiTypeDao(boxStore);
-        poiTypeDao.sync();
+        DatabaseController.poiTypeDao.sync();
 
 
         // check if app is opened for the first time
-        if (preferences.getBoolean("firstTimeOpened", true || true)) {
+        if (preferences.getBoolean("firstTimeOpened", true) && false) { //TODO for testing
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
             editor.apply();
 
             // start welcome screen
             //RegistrationFragment welcomeFragment = new RegistrationFragment();
-            MapFragment welcomeFragment = new MapFragment();
+            RegistrationFragment registrationFragment = new RegistrationFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, welcomeFragment)
+                    .add(R.id.content_frame, registrationFragment)
                     .commit();
             // else start the map screen
         } else {
@@ -106,21 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<LoginUser> call, Throwable t) {
-            }
-        });
-    }
-
-    private void uploadImage(){
-        PoiDao poi = new PoiDao(boxStore);
-
-        File[] testimages = Environment.getExternalStorageDirectory().listFiles();
-        File[] downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
-        File testImage = downloads[0];
-
-        poi.addImage(testImage, 1, new FragmentHandler() {
-            @Override
-            public void onResponse(Event event) {
-                Toast.makeText(MainActivity.this, "image saved", Toast.LENGTH_LONG);
             }
         });
     }

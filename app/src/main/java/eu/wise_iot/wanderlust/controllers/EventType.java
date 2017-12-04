@@ -9,7 +9,7 @@ package eu.wise_iot.wanderlust.controllers;
 
     OK(200), NOT_FOUND(404), CONFLICT(409), BAD_REQUEST(400), SERVER_ERROR(500), NETWORK_ERROR(0);
 
-    private int code;
+    int code;
 
     /**
      * Create EventType

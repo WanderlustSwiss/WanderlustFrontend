@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
@@ -28,12 +29,10 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public CommunityTourDao(BoxStore boxStore){
-        communityTourBox = boxStore.boxFor(CommunityTour.class);
+    public CommunityTourDao(){
+        communityTourBox = DatabaseController.boxStore.boxFor(CommunityTour.class);
         routeQueryBuilder = communityTourBox.query();
 
     }

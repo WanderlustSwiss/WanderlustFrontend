@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
@@ -37,12 +38,10 @@ public class TripDao extends DatabaseObjectAbstract {
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public TripDao(BoxStore boxStore){
-        routeBox = boxStore.boxFor(Trip.class);
+    public TripDao(){
+        routeBox = DatabaseController.boxStore.boxFor(Trip.class);
         routeQueryBuilder = routeBox.query();
 
         if(service == null) service = ServiceGenerator.createService(TripService.class);
