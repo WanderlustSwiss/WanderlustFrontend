@@ -43,8 +43,6 @@ public class EditPoiDialog extends DialogFragment {
     private GeoPoint lastKnownLocation;
     private boolean displayMode;
     private int poiType;
-    private String title; // todo: has to be added to model
-    private String description;
 
     private EditText titleEditText;
     private EditText descriptionEditText;
@@ -156,10 +154,11 @@ public class EditPoiDialog extends DialogFragment {
                 Poi poi = new Poi();
 
                 if (titleEditText != null && titleEditText.getText() != null) {
-                    title = titleEditText.getText().toString();
+                    String title = titleEditText.getText().toString();
+                    poi.setTitle(title);
                 }
                 if (descriptionEditText != null && descriptionEditText.getText() != null) {
-                    description = descriptionEditText.getText().toString();
+                    String description = descriptionEditText.getText().toString();
                     poi.setDescription(description);
                 }
 
