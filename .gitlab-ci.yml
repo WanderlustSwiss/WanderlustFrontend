@@ -19,7 +19,6 @@ Test Source:
   script:
     - sudo /etc/init.d/wanderlust-api stop
     - echo "truncate table user; truncate table profile" | mysql -u root --password="X2E8BH5RLqwgnQ3L" wanderlust
-    - echo "CREATE DATABASE wanderlust;" | mysql -u root --password="X2E8BH5RLqwgnQ3L" wanderlust
     - sudo /etc/init.d/wanderlust-api start
     - sleep 6
     - cat basic_database.sql | mysql -u root --password="X2E8BH5RLqwgnQ3L" wanderlust
