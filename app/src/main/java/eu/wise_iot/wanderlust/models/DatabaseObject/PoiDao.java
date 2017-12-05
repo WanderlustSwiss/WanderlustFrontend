@@ -52,11 +52,7 @@ public class PoiDao extends DatabaseObjectAbstract{
     public PoiDao(){
         poiBox = DatabaseController.boxStore.boxFor(Poi.class);
         poiQueryBuilder = poiBox.query();
-
-        //TODO no longer required?
-        if(service == null){
-            service = ServiceGenerator.createService(PoiService.class);
-        }
+        service = ServiceGenerator.createService(PoiService.class);
     }
 
     /**
@@ -160,13 +156,13 @@ public class PoiDao extends DatabaseObjectAbstract{
      * @param handler
      *
      */
-    public void delete(final AbstractModel poi, final FragmentHandler handler) {
-        Call<Poi> call = service.deletePoi((Poi)poi);
+    public void delete(final Poi poi, final FragmentHandler handler) {
+        Call<Poi> call = service.deletePoi(poi);
         call.enqueue(new Callback<Poi>() {
             @Override
             public void onResponse(Call<Poi> call, Response<Poi> response) {
                 if(response.isSuccessful()) {
-                    poiBox.remove((Poi) poi);
+                    poiBox.remove(poi);
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
                 } else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
             }

@@ -1,8 +1,12 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import android.graphics.Path;
+import android.os.Environment;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,8 +172,11 @@ public class Poi extends AbstractModel{
             this.name = name;
         }
 
-        public String getPath() {
-            return path;
+        private String getPath() { return path;}
+
+        public File getImage(){
+            File filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            return new File(filepath, getName());
         }
 
         public void setPath(String path) {

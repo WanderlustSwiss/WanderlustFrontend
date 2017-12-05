@@ -136,6 +136,12 @@ public class ViewPoiDialog extends DialogFragment {
 //        }
 //    }
 
+
+    /*
+     * Für Fabian: File image = poi.getImagePath().get(0).getImage();
+     */
+
+
     private void loadPoiById(long id){
 
         controller.getPoiById(id, new FragmentHandler() {
@@ -148,7 +154,7 @@ public class ViewPoiDialog extends DialogFragment {
                         titelTextView.setText(poi.getTitle()); // TODO: get real title
                         descriptionTextView.setText(poi.getDescription());
 
-                        File image = new File(poi.getImagePath().get(0).getPath());
+                        File image = poi.getImagePath().get(0).getImage();
                         Picasso.with(activity).load(image).into(feedbackImage);
 
                         // get all images of poi
