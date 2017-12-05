@@ -7,14 +7,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -25,22 +23,11 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
-import eu.wise_iot.wanderlust.models.Old.Feedback;
-import eu.wise_iot.wanderlust.services.FeedbackService;
-import eu.wise_iot.wanderlust.views.MainActivity;
-import eu.wise_iot.wanderlust.views.PoiFragment;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * ViewPoiDialog:
@@ -51,14 +38,13 @@ public class ViewPoiDialog extends DialogFragment {
     private static final String TAG = "ViewPoiDialog";
     private Activity context;
 
-    private ImageView feedbackImage;
+    private ImageView poiImage;
     private ImageView displayModeImage;
     private Button closeDialogButton;
     private TextView titelTextView;
     private TextView descriptionTextView;
 
-    private long feedbackId;
-    private Feedback feedback;
+    private long poiId;
 
     private static PoiController controller;
 
@@ -66,12 +52,11 @@ public class ViewPoiDialog extends DialogFragment {
 
         ViewPoiDialog dialog = new ViewPoiDialog();
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
-        long feedbackId = Long.valueOf(overlayItem.getUid());
+        long poiId = Long.valueOf(overlayItem.getUid());
         Bundle args = new Bundle();
-        args.putLong(Constants.POI_ID, feedbackId);
+        args.putLong(Constants.POI_ID, poiId);
         dialog.setArguments(args);
         return dialog;
-
     }
 
     @Override
@@ -82,10 +67,10 @@ public class ViewPoiDialog extends DialogFragment {
 //        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED); // TODO: added for screen orientation change (see TODO below)
 
         Bundle args = getArguments();
-        feedbackId = args.getLong(Constants.POI_ID);
+        poiId = args.getLong(Constants.POI_ID);
         setRetainInstance(true);
-//        loadFeedbackById(feedbackId);
-        loadPoiById(feedbackId);
+//        loadFeedbackById(poiId);
+        loadPoiById(poiId);
     }
 
     @Override
@@ -105,6 +90,7 @@ public class ViewPoiDialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        poiImage = (ImageView) view.findViewById(R.id.poi_image);
         displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
         titelTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
@@ -121,21 +107,25 @@ public class ViewPoiDialog extends DialogFragment {
 //    @Override
 //    public void onDestroy() {
 //        super.onDestroy();
-//        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 //    }
 //    @Override
 //    public void onSaveInstanceState(Bundle outState) {
-//        outState.putLong("id", feedbackId);
+//        outState.putLong("id", poiId);
 //        super.onSaveInstanceState(outState);
 //    }
 //    @Override
 //    public void onViewStateRestored(Bundle savedInstanceState) {
 //        super.onViewStateRestored(savedInstanceState);
 //        if (savedInstanceState != null) {
-//            feedbackId = savedInstanceState.getLong("id");
+//            poiId = savedInstanceState.getLong("id");
 //        }
 //    }
 
+
+    /*
+     * Für Fabian: File image = poi.getImagePath().get(0).getImage();
+     */
 
     private void loadPoiById(long id){
 
@@ -170,7 +160,7 @@ public class ViewPoiDialog extends DialogFragment {
                                 switch (event.getType()){
                                     case OK:
                                         List<File> images = (List<File>) event.getModel();
-                                        Picasso.with(context).load(images.get(0)).into(feedbackImage);
+                                        Picasso.with(context).load(images.get(0)).into(poiImage);
                                         break;
                                     default:
 
@@ -230,22 +220,22 @@ public class ViewPoiDialog extends DialogFragment {
 //                    titelTextView.setText("Titel"); // TODO: get real title
 //                    descriptionTextView.setText(feedback.getDescription());
 //                    if (feedback.getDisplayMode() == Constants.MODE_PRIVATE) {
-//                        Picasso.with(activity).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
+//                        Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
 //                    }
 //
-//                    int imageId = activity.getResources().getIdentifier(feedback.getImageNameWithoutSuffix(), "drawable", activity.getPackageName());
+//                    int imageId = context.getResources().getIdentifier(feedback.getImageNameWithoutSuffix(), "drawable", context.getPackageName());
 //                    if (imageId != 0) {
 //                        // todo: work with .error() from the Picasso library
-//                        Picasso.with(activity).load(imageId).into(feedbackImage);
+//                        Picasso.with(context).load(imageId).into(poiImage);
 //                    } else {
-//                        Picasso.with(activity).load(R.drawable.image_msg_file_missing).into(feedbackImage);
+//                        Picasso.with(context).load(R.drawable.image_msg_file_missing).into(poiImage);
 //                    }
 //                }
 //            }
 //
 //            @Override
 //            public void onFailure(Call<Feedback> call, Throwable t) {
-//                Toast.makeText(activity, R.string.msg_e_feedback_loading_error, Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, R.string.msg_e_feedback_loading_error, Toast.LENGTH_LONG).show();
 //                Log.d(TAG, t.getMessage());
 //            }
 //        });
