@@ -4,7 +4,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,22 +21,13 @@ import java.io.File;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.Old.Feedback;
-import eu.wise_iot.wanderlust.services.FeedbackService;
-import eu.wise_iot.wanderlust.views.MainActivity;
 import eu.wise_iot.wanderlust.views.MapFragment;
 import eu.wise_iot.wanderlust.views.MyMapOverlays;
-import eu.wise_iot.wanderlust.views.PoiFragment;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * EditPoiDialog:
@@ -52,7 +42,7 @@ public class EditPoiDialog extends DialogFragment {
     private String imageFileName;
     private GeoPoint lastKnownLocation;
     private boolean displayMode;
-    private int feedbackType;
+    private int poiType;
     private String title; // todo: has to be added to model
     private String description;
 
@@ -97,8 +87,8 @@ public class EditPoiDialog extends DialogFragment {
         titleEditText = (EditText) view.findViewById(R.id.poi_title);
         descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
         typeSpinner = (Spinner) view.findViewById(R.id.poi_typeSpinner);
-        buttonSave = (Button) view.findViewById(R.id.dialog_post_feedback_button_save);
-        buttonCancel = (Button) view.findViewById(R.id.dialog_post_feedback_button_cancel);
+        buttonSave = (Button) view.findViewById(R.id.dialog_edit_poi_save_button);
+        buttonCancel = (Button) view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
     }
 
@@ -137,16 +127,16 @@ public class EditPoiDialog extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        feedbackType = Constants.TYPE_VIEW;
+                        poiType = Constants.TYPE_VIEW;
                         break;
                     case 1:
-                        feedbackType = Constants.TYPE_RESTAURANT;
+                        poiType = Constants.TYPE_RESTAURANT;
                         break;
                     case 2:
-                        feedbackType = Constants.TYPE_REST_AREA;
+                        poiType = Constants.TYPE_REST_AREA;
                         break;
                     case 3:
-                        feedbackType = Constants.TYPE_FLORA_FAUNA;
+                        poiType = Constants.TYPE_FLORA_FAUNA;
                         break;
                 }
             }
@@ -173,7 +163,7 @@ public class EditPoiDialog extends DialogFragment {
                     poi.setDescription(description);
                 }
 
-                poi.setType(feedbackType);
+                poi.setType(poiType);
                 poi.setLatitude(lastKnownLocation.getLatitude());
                 poi.setLongitude(lastKnownLocation.getLongitude());
                 poi.setPublic(displayMode);
