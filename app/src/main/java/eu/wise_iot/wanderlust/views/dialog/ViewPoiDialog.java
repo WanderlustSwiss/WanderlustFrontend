@@ -28,7 +28,6 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
-import eu.wise_iot.wanderlust.models.Old.Feedback;
 
 /**
  * ViewPoiDialog:
@@ -91,7 +90,7 @@ public class ViewPoiDialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        poiImage = (ImageView) view.findViewById(R.id.feedback_image);
+        poiImage = (ImageView) view.findViewById(R.id.poi_image);
         displayModeImage = (ImageView) view.findViewById(R.id.mode_private_image);
         titelTextView = (TextView) view.findViewById(R.id.title_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.description_text_view);
