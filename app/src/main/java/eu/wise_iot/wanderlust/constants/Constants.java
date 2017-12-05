@@ -44,7 +44,7 @@ public interface Constants {
     String LAST_ZOOM_LEVEL = "last_zoom_level";
     String LAST_POS_LAT = "last_position_lat";
     String LAST_POS_LON = "last_position_lon";
-    String FEEDBACK_ID = "feedback_id";
+    String POI_ID = "feedback_id";
     String FEEDBACK_TYPE = "feedback_type";
     String DISPLAY_MODE = "feedback_display_mode";
     String FEEDBACK_DESCRIPTION = "feedback_description";

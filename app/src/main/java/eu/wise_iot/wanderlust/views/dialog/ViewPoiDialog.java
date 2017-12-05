@@ -7,14 +7,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -25,22 +23,12 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import eu.wise_iot.wanderlust.models.Old.Feedback;
-import eu.wise_iot.wanderlust.services.FeedbackService;
-import eu.wise_iot.wanderlust.views.MainActivity;
-import eu.wise_iot.wanderlust.views.PoiFragment;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * ViewPoiDialog:
@@ -51,14 +39,13 @@ public class ViewPoiDialog extends DialogFragment {
     private static final String TAG = "ViewPoiDialog";
     private Activity activity;
 
-    private ImageView feedbackImage;
+    private ImageView poiImage;
     private ImageView displayModeImage;
     private Button closeDialogButton;
     private TextView titelTextView;
     private TextView descriptionTextView;
 
-    private long feedbackId;
-    private Feedback feedback;
+    private long poiId;
 
     private static PoiController controller;
 
@@ -66,9 +53,9 @@ public class ViewPoiDialog extends DialogFragment {
 
         ViewPoiDialog fragment = new ViewPoiDialog();
         fragment.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
-        long feedbackId = Long.valueOf(overlayItem.getUid());
+        long poiId = Long.valueOf(overlayItem.getUid());
         Bundle args = new Bundle();
-        args.putLong(Constants.FEEDBACK_ID, feedbackId);
+        args.putLong(Constants.POI_ID, poiId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,10 +68,10 @@ public class ViewPoiDialog extends DialogFragment {
 //        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED); // TODO: added for screen orientation change (see TODO below)
 
         Bundle args = getArguments();
-        feedbackId = args.getLong(Constants.FEEDBACK_ID);
+        poiId = args.getLong(Constants.POI_ID);
         setRetainInstance(true);
-//        loadFeedbackById(feedbackId);
-        loadPoiById(feedbackId);
+//        loadFeedbackById(poiId);
+        loadPoiById(poiId);
     }
 
     @Override
@@ -104,7 +91,7 @@ public class ViewPoiDialog extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        feedbackImage = (ImageView) view.findViewById(R.id.feedback_image);
+        poiImage = (ImageView) view.findViewById(R.id.feedback_image);
         displayModeImage = (ImageView) view.findViewById(R.id.mode_private_image);
         titelTextView = (TextView) view.findViewById(R.id.title_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.description_text_view);
@@ -125,14 +112,14 @@ public class ViewPoiDialog extends DialogFragment {
 //    }
 //    @Override
 //    public void onSaveInstanceState(Bundle outState) {
-//        outState.putLong("id", feedbackId);
+//        outState.putLong("id", poiId);
 //        super.onSaveInstanceState(outState);
 //    }
 //    @Override
 //    public void onViewStateRestored(Bundle savedInstanceState) {
 //        super.onViewStateRestored(savedInstanceState);
 //        if (savedInstanceState != null) {
-//            feedbackId = savedInstanceState.getLong("id");
+//            poiId = savedInstanceState.getLong("id");
 //        }
 //    }
 
@@ -155,7 +142,7 @@ public class ViewPoiDialog extends DialogFragment {
                         descriptionTextView.setText(poi.getDescription());
 
                         File image = poi.getImagePath().get(0).getImage();
-                        Picasso.with(activity).load(image).into(feedbackImage);
+                        Picasso.with(activity).load(image).into(poiImage);
 
                         // get all images of poi
 //                        for (Poi.ImageInfo imageInfo : poi.getImagePath()) {
@@ -209,9 +196,9 @@ public class ViewPoiDialog extends DialogFragment {
 //                    int imageId = activity.getResources().getIdentifier(feedback.getImageNameWithoutSuffix(), "drawable", activity.getPackageName());
 //                    if (imageId != 0) {
 //                        // todo: work with .error() from the Picasso library
-//                        Picasso.with(activity).load(imageId).into(feedbackImage);
+//                        Picasso.with(activity).load(imageId).into(poiImage);
 //                    } else {
-//                        Picasso.with(activity).load(R.drawable.image_msg_file_missing).into(feedbackImage);
+//                        Picasso.with(activity).load(R.drawable.image_msg_file_missing).into(poiImage);
 //                    }
 //                }
 //            }

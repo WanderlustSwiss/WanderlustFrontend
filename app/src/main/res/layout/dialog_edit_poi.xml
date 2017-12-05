@@ -44,13 +44,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/dialog_post_feedback_button_cancel"
+            android:id="@+id/dialog_edit_poi_cancel_button"
             style="@style/my_click_button"
             android:layout_alignParentLeft="true"
             android:text="@string/action_dismiss" />
 
         <Button
-            android:id="@+id/dialog_post_feedback_button_save"
+            android:id="@+id/dialog_edit_poi_save_button"
             style="@style/my_click_button"
             android:layout_alignParentRight="true"
             android:text="@string/action_confirm" />
