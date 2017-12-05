@@ -37,7 +37,7 @@
             android:padding="10dp" />
 
         <Button
-            android:id="@+id/closeDialogButton"
+            android:id="@+id/poi_close_dialog_button"
             style="@style/my_click_button"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
