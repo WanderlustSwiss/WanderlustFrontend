@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,17 +40,15 @@ public class EditPoiDialog extends DialogFragment {
     private static final String TAG = "EditPoiDialog";
     private Context context;
 
-    private String imageFileName;
+    private Poi poi;
     private GeoPoint lastKnownLocation;
-    private boolean displayMode;
-    private int poiType;
 
     private EditText titleEditText;
     private EditText descriptionEditText;
     private Spinner typeSpinner;
     private Button buttonSave;
     private Button buttonCancel;
-    private Feedback feedback;
+
     private PoiController controller;
     private static MyMapOverlays mapOverlays;
 
@@ -67,13 +66,15 @@ public class EditPoiDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        poi = new Poi();
         controller = new PoiController();
+        context = getActivity();
+
         Bundle args = getArguments();
-        imageFileName = args.getString(Constants.IMAGE_FILE_NAME);
         double lat = args.getDouble(Constants.LAST_POS_LAT);
         double lon = args.getDouble(Constants.LAST_POS_LON);
         lastKnownLocation = new GeoPoint(lat, lon);
-        context = getActivity();
+
         // set style and options menu
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
         setHasOptionsMenu(true);
@@ -104,10 +105,12 @@ public class EditPoiDialog extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        displayMode = Constants.MODE_PUBLIC;
+                        // set mode public
+                        poi.setPublic(true);
                         break;
                     case 1:
-                        displayMode = Constants.MODE_PRIVATE;
+                        // set mode private
+                        poi.setPublic(false);
                         break;
                 }
             }
@@ -125,87 +128,79 @@ public class EditPoiDialog extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        poiType = Constants.TYPE_VIEW;
+                        // set type to view
+                        poi.setType(Constants.TYPE_VIEW);
                         break;
                     case 1:
-                        poiType = Constants.TYPE_RESTAURANT;
+                        // set type to view
+                        poi.setType(Constants.TYPE_RESTAURANT);
                         break;
                     case 2:
-                        poiType = Constants.TYPE_REST_AREA;
+                        // set type to view
+                        poi.setType(Constants.TYPE_REST_AREA);
                         break;
                     case 3:
-                        poiType = Constants.TYPE_FLORA_FAUNA;
+                        // set type to view
+                        poi.setType(Constants.TYPE_FLORA_FAUNA);
                         break;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(context, R.string.msg_please_choose_mode, Toast.LENGTH_LONG).show();
+                // default: set type to view
+                Log.d(TAG, "default type: view");
+                poi.setType(Constants.TYPE_VIEW);
             }
         });
     }
 
     private void initActionControls() {
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        buttonSave.setOnClickListener(v -> {
 
-                Poi poi = new Poi();
-
-                if (titleEditText != null && titleEditText.getText() != null) {
-                    String title = titleEditText.getText().toString();
-                    poi.setTitle(title);
-                }
-                if (descriptionEditText != null && descriptionEditText.getText() != null) {
-                    String description = descriptionEditText.getText().toString();
-                    poi.setDescription(description);
-                }
-
-                poi.setType(poiType);
-                poi.setLatitude(lastKnownLocation.getLatitude());
-                poi.setLongitude(lastKnownLocation.getLongitude());
-                poi.setPublic(displayMode);
-
-                controller.saveNewPoi(poi, new FragmentHandler() {
-                    @Override
-                    public void onResponse(Event event) {
-                        switch (event.getType()) {
-                            case OK:
-
-                                Poi poi = (Poi) event.getModel();
-                                //Poi image has to be uploaded after the poi is saved
-                                controller.uploadImage(new File(MapFragment.photoPath), poi.getPoi_id(), new FragmentHandler() {
-                                    @Override
-                                    public void onResponse(Event event) {
-                                        switch (event.getType()) {
-                                            case OK:
-                                                Toast.makeText(context, "image upload good", Toast.LENGTH_LONG).show();
-                                                //TODO what to do if image could be saved
-                                                break;
-                                            default:
-                                                Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
-                                                //TODO what to do if image upload fails
-                                        }
-                                    }
-                                });
-
-                                mapOverlays.addPoiToOverlay(poi);
-                                break;
-                            default:
-                                Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                dismiss();
+            if (titleEditText != null && titleEditText.getText() != null) {
+                String title = titleEditText.getText().toString();
+                poi.setTitle(title);
             }
-        });
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
+            if (descriptionEditText != null && descriptionEditText.getText() != null) {
+                String description = descriptionEditText.getText().toString();
+                poi.setDescription(description);
             }
+
+            poi.setPublic(true);
+            poi.setType(Constants.TYPE_VIEW);
+            poi.setLatitude(lastKnownLocation.getLatitude());
+            poi.setLongitude(lastKnownLocation.getLongitude());
+
+            controller.saveNewPoi(poi, event -> {
+                switch (event.getType()) {
+                    case OK:
+                        Poi tempPoi = (Poi) event.getModel();
+                        //Poi image has to be uploaded after the poi is saved
+                        controller.uploadImage(new File(MapFragment.photoPath), tempPoi.getPoi_id(), new FragmentHandler() {
+                            @Override
+                            public void onResponse(Event event) {
+                                switch (event.getType()) {
+                                    case OK:
+                                        Toast.makeText(context, "image upload good", Toast.LENGTH_LONG).show();
+                                        //TODO what to do if image could be saved
+                                        break;
+                                    default:
+                                        Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
+                                        //TODO what to do if image upload fails
+                                }
+                            }
+                        });
+                        mapOverlays.addPoiToOverlay(tempPoi);
+                        break;
+
+                    default:
+                        Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
+                }
+            });
+            dismiss();
         });
+        buttonCancel.setOnClickListener(view -> dismiss());
     }
 
     @Override
