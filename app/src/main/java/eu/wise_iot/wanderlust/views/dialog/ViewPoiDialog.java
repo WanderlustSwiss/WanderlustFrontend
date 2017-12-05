@@ -134,6 +134,10 @@ public class ViewPoiDialog extends DialogFragment {
                     File image = poi.getImagePath().get(0).getImage();
                     Picasso.with(context).load(image).into(poiImage);
 
+                    if (!poi.isPublic()) {
+                        Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
+                    }
+
                     // get all images of poi
 //                        for (Poi.ImageInfo imageInfo : poi.getImagePath()) {
 //                            File image = new File(imageInfo.getPath());

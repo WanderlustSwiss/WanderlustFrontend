@@ -100,6 +100,9 @@ public class EditPoiDialog extends DialogFragment {
     }
 
     private void initPublicationModeControls() {
+        // set default
+        poi.setPublic(true);
+
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -107,10 +110,12 @@ public class EditPoiDialog extends DialogFragment {
                     case 0:
                         // set mode public
                         poi.setPublic(true);
+                        Log.d(TAG, "public");
                         break;
                     case 1:
                         // set mode private
                         poi.setPublic(false);
+                        Log.d(TAG, "false");
                         break;
                 }
             }
@@ -118,11 +123,16 @@ public class EditPoiDialog extends DialogFragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 Toast.makeText(context, R.string.msg_please_choose_mode, Toast.LENGTH_LONG).show();
+                poi.setPublic(true);
+                Log.d(TAG, "no mode selected");
             }
         });
     }
 
     private void initPublicationTypeControls() {
+        // set default
+        poi.setType(Constants.TYPE_VIEW);
+
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -130,27 +140,28 @@ public class EditPoiDialog extends DialogFragment {
                     case 0:
                         // set type to view
                         poi.setType(Constants.TYPE_VIEW);
+                        Log.d(TAG, "type view");
                         break;
                     case 1:
                         // set type to view
                         poi.setType(Constants.TYPE_RESTAURANT);
+                        Log.d(TAG, "type restaurant");
                         break;
                     case 2:
                         // set type to view
                         poi.setType(Constants.TYPE_REST_AREA);
+                        Log.d(TAG, "type picnic");
                         break;
                     case 3:
                         // set type to view
                         poi.setType(Constants.TYPE_FLORA_FAUNA);
+                        Log.d(TAG, "type fauna flora");
                         break;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // default: set type to view
-                Log.d(TAG, "default type: view");
-                poi.setType(Constants.TYPE_VIEW);
             }
         });
     }
@@ -167,8 +178,6 @@ public class EditPoiDialog extends DialogFragment {
                 poi.setDescription(description);
             }
 
-            poi.setPublic(true);
-            poi.setType(Constants.TYPE_VIEW);
             poi.setLatitude(lastKnownLocation.getLatitude());
             poi.setLongitude(lastKnownLocation.getLongitude());
 
