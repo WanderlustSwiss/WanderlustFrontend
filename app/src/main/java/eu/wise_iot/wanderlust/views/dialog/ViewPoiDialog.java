@@ -29,7 +29,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 
 /**
  * ViewPoiDialog:
- *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -94,7 +93,12 @@ public class ViewPoiDialog extends DialogFragment {
         titelTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
         closeDialogButton = (Button) view.findViewById(R.id.poi_close_dialog_button);
-        closeDialogButton.setOnClickListener(v -> dismiss());
+        closeDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     // TODO: enable screen orientation in this dialog so that landscape pictures can be displayed full size
@@ -122,9 +126,10 @@ public class ViewPoiDialog extends DialogFragment {
      */
 
 
-    private void loadPoiById(long id) {
+    private void loadPoiById(long id){
+
         controller.getPoiById(id, event -> {
-            switch (event.getType()) {
+            switch (event.getType()){
                 case OK:
                     //TODO was passiert wenn gefunden..
                     Poi poi = (Poi) event.getModel();
@@ -133,10 +138,6 @@ public class ViewPoiDialog extends DialogFragment {
 
                     File image = poi.getImagePath().get(0).getImage();
                     Picasso.with(context).load(image).into(poiImage);
-
-                    if (!poi.isPublic()) {
-                        Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
-                    }
 
                     // get all images of poi
 //                        for (Poi.ImageInfo imageInfo : poi.getImagePath()) {
@@ -155,7 +156,7 @@ public class ViewPoiDialog extends DialogFragment {
 
 
                     //poi types which have to go to a select box or somthing:
-                    List<PoiType> poiTypes = controller.getTypes();
+                    List<PoiType> poiTypes =  controller.getTypes();
 
                     break;
                 default:

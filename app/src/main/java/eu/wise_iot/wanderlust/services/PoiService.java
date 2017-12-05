@@ -5,6 +5,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -46,7 +47,7 @@ public interface PoiService {
     @DELETE("/poi/{id}/img/{image_id}")
         Call<Poi.ImageInfo> deleteImage(@Path("id") long id, @Path("image_id") long image_id);
     @GET("/poi/{id}/img/{image_id}")
-        Call<Poi.ImageInfo> downloadImage(@Path("id") long id, @Path("image_id") long image_id);
+        Call<ResponseBody> downloadImage(@Path("id") long id, @Path("image_id") long image_id);
     @GET("/poitype")
         Call<List<PoiType>> retrieveAllPoiTypes();
 }

@@ -9,24 +9,18 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
  * @author Tobias Rüegsegger
  * @license MIT
  */
-public class Event {
+public class Event<T> {
 
     private EventType type;
-    private AbstractModel model;
-    private List<AbstractModel> modelList;
+    private T model;
     /**
      * Create response event
      * @param event
      * @param model
      */
-    public Event(EventType event, AbstractModel model){
+    public Event(EventType event, T model){
         this.type = event;
         this.model = model;
-    }
-
-    public Event(EventType event, List<AbstractModel> modelList){
-        this.type = event;
-        this.modelList = modelList;
     }
 
     public Event(EventType event){
@@ -34,8 +28,7 @@ public class Event {
     }
 
     public EventType getType(){ return  this.type; }
-    public AbstractModel getModel() { return this.model; }
-    public List<AbstractModel> getModelList() { return this.modelList; }
+    public T getModel() { return this.model; }
 
 
 
