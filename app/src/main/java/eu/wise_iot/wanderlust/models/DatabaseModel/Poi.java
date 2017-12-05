@@ -156,6 +156,8 @@ public class Poi extends AbstractModel{
             this.path = path;
         }
 
+        public String getName() { return name; }
+
         public long getId() {
             return id;
         }
@@ -164,24 +166,11 @@ public class Poi extends AbstractModel{
             this.id = id;
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        private String getPath() { return path;}
-
         public File getImage(){
             File filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            return new File(filepath, getName());
+            return new File(filepath, this.name);
         }
 
-        public void setPath(String path) {
-            this.path = path;
-        }
     }
 
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {
