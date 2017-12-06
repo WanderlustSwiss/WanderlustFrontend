@@ -41,7 +41,7 @@ public class ViewPoiDialog extends DialogFragment {
     private ImageView displayModeImage;
     private Button closeDialogButton;
     private TextView typeTextView;
-    private TextView titelTextView;
+    private TextView titleTextView;
     private TextView dateTextView;
     private TextView descriptionTextView;
 
@@ -93,7 +93,7 @@ public class ViewPoiDialog extends DialogFragment {
         poiImage = (ImageView) view.findViewById(R.id.poi_image);
         displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
         typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
-        titelTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
+        titleTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
         dateTextView = (TextView) view.findViewById(R.id.poi_date_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
         closeDialogButton = (Button) view.findViewById(R.id.poi_close_dialog_button);
@@ -122,7 +122,7 @@ public class ViewPoiDialog extends DialogFragment {
                     String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
                     typeTextView.setText(typeValues[(int) poi.getType()]);
 
-                    titelTextView.setText(poi.getTitle());
+                    titleTextView.setText(poi.getTitle());
 
                     dateTextView.setText(poi.getCreatedAtInGerman());
                     descriptionTextView.setText(poi.getDescription());
