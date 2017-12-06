@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -64,6 +65,9 @@ public class MapFragment extends Fragment {
     private ImageButton locationToggler;
     private ImageButton cameraButton;
     private ImageButton layerButton;
+
+    // bottom sheet
+    private ImageButton poiLayerButton;
 
     /**
      * Static instance constructor.
@@ -136,42 +140,8 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+        menu.clear(); // makes shure that the menu was not inflated yet
         inflater.inflate(R.menu.map_fragment_layer_menu, menu);
-    }
-
-    /**
-     * Generates checkable menu items for layers in options menu
-     *
-     * @param item MenuItem: selected item by user
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.feedback_overlay:
-                if (item.isChecked()) {
-                    item.setChecked(false);
-                    mapOverlays.showOverlay(false);
-                } else {
-                    item.setChecked(true);
-                    mapOverlays.showOverlay(true);
-                }
-                break;
-//            case R.id.trails_overlay: // FIXME: UNCOMMENTED FOR RELEASE 0.1
-//                // TODO: Add actions
-//                break;
-//            case R.id.heatmap_overlay:
-//                // TODO: Add actions
-//                break;
-//            case R.id.public_transport_overlay:
-//                // TODO: Add actions
-//                break;
-//            case R.id.restaurants_overlay:
-//                // TODO: Add actions
-//                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -342,7 +312,6 @@ public class MapFragment extends Fragment {
                 // prevent multiple clicks on button
                 cameraButton.setEnabled(false);
 
-
                 final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                 //check if gps is activated and show corresponding toast
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -378,17 +347,43 @@ public class MapFragment extends Fragment {
      * @param view View: view of current fragment
      */
     private void initLayerButton(View view) {
-        //get instance
         layerButton = (ImageButton) view.findViewById(R.id.layerButton);
+
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
-        //register behavior on clicked
+
+        View bottomSheet = view.findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        // register behavior on clicked
         layerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchPostFeedbackDialogFragment();
+                // FIXME: State is always STATE_EXPANDING, so view does not get collapsed or expanded
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    Log.d(TAG, "state was collapsed, " + bottomSheetBehavior.getState());
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    Log.d(TAG, "state was expanded, " + bottomSheetBehavior.getState());
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
             }
         });
+
+        poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
+        poiLayerButton.setOnClickListener(v -> {
+            if(!poiLayerButton.isSelected()) {
+                poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+                poiLayerButton.setSelected(true);
+                mapOverlays.showOverlay(true);
+            } else {
+                poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+                poiLayerButton.setSelected(false);
+                mapOverlays.showOverlay(false);
+            }
+        });
+
     }
 
     /**
