@@ -29,6 +29,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 
 /**
  * ViewPoiDialog:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -39,7 +40,9 @@ public class ViewPoiDialog extends DialogFragment {
     private ImageView poiImage;
     private ImageView displayModeImage;
     private Button closeDialogButton;
+    private TextView typeTextView;
     private TextView titelTextView;
+    private TextView dateTextView;
     private TextView descriptionTextView;
 
     private long poiId;
@@ -90,7 +93,9 @@ public class ViewPoiDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         poiImage = (ImageView) view.findViewById(R.id.poi_image);
         displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
+        typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
         titelTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
+        dateTextView = (TextView) view.findViewById(R.id.poi_date_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
         closeDialogButton = (Button) view.findViewById(R.id.poi_close_dialog_button);
         closeDialogButton.setOnClickListener(new View.OnClickListener() {
@@ -126,18 +131,25 @@ public class ViewPoiDialog extends DialogFragment {
      */
 
 
-    private void loadPoiById(long id){
+    private void loadPoiById(long id) {
 
         controller.getPoiById(id, event -> {
-            switch (event.getType()){
+            switch (event.getType()) {
                 case OK:
                     //TODO was passiert wenn gefunden..
                     Poi poi = (Poi) event.getModel();
-                    titelTextView.setText(poi.getTitle()); // TODO: get real title
-                    descriptionTextView.setText(poi.getDescription());
 
                     File image = poi.getImagePath().get(0).getImage();
                     Picasso.with(context).load(image).into(poiImage);
+
+                    if (!poi.isPublic()) {
+                        Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
+                    }
+
+                    typeTextView.setText(("" + poi.getType())); // TODO: add switch
+                    titelTextView.setText(poi.getTitle());
+                    dateTextView.setText("01.Dezember 2016"); //Todo: get real date
+                    descriptionTextView.setText(poi.getDescription());
 
                     // get all images of poi
 //                        for (Poi.ImageInfo imageInfo : poi.getImagePath()) {
@@ -156,7 +168,7 @@ public class ViewPoiDialog extends DialogFragment {
 
 
                     //poi types which have to go to a select box or somthing:
-                    List<PoiType> poiTypes =  controller.getTypes();
+                    List<PoiType> poiTypes = controller.getTypes();
 
                     break;
                 default:
