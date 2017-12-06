@@ -26,7 +26,7 @@
 
             <ImageView
                 android:contentDescription="@null"
-                android:id="@+id/teaser_image"
+                android:id="@+id/tourImage"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:adjustViewBounds="true"
@@ -66,7 +66,7 @@
                         android:layout_marginStart="13dp" />
 
                     <TextView
-                        android:id="@+id/textDate"
+                        android:id="@+id/tourDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"

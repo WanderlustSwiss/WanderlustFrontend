@@ -80,7 +80,7 @@ public class RegistrationFragment extends Fragment {
                         public void onResponse(Event event) {
                             //OK(user) event.getModel();
                             //CAREFUL NULLPOINTER!
-                            //gang zum login screen
+                            //go to login screen
                         }
                     });
                 }
