@@ -13,7 +13,7 @@ public class DatabaseEvent {
 
     private SyncType type;
 
-    DatabaseEvent(SyncType type){
+    public DatabaseEvent(SyncType type){
         this.type = type;
     }
 

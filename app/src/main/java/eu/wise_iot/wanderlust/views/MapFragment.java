@@ -461,7 +461,7 @@ public class MapFragment extends Fragment {
         if (prevFragment != null) fragmentTransaction.remove(prevFragment);
         fragmentTransaction.addToBackStack(null);
 
-        EditPoiDialog dialog = EditPoiDialog.newInstance(imageFileName, lastKnownLocation, mapOverlays);
+        EditPoiDialog dialog = EditPoiDialog.newInstance(imageFileName, lastKnownLocation);
         Log.d(TAG, "lastKnownLocation: " + lastKnownLocation);
         dialog.show(fragmentTransaction, Constants.CREATE_FEEDBACK_DIALOG);
     }
