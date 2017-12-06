@@ -148,7 +148,8 @@ public class ViewPoiDialog extends DialogFragment {
 
                     typeTextView.setText(("" + poi.getType())); // TODO: add switch
                     titelTextView.setText(poi.getTitle());
-                    dateTextView.setText(poi.getCreatedAt());
+
+                    dateTextView.setText(poi.getCreatedAtInGerman());
                     descriptionTextView.setText(poi.getDescription());
 
                     // get all images of poi
