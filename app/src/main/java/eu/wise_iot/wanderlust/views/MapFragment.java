@@ -66,6 +66,9 @@ public class MapFragment extends Fragment {
     private ImageButton cameraButton;
     private ImageButton layerButton;
 
+    // bottom sheet
+    private ImageButton poiLayerButton;
+
     /**
      * Static instance constructor.
      *
@@ -402,7 +405,12 @@ public class MapFragment extends Fragment {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }
             }
+
+
         });
+
+        poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
+//        switch (poiLayerButton.get)
 
     }
 
