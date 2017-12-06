@@ -29,7 +29,9 @@ sourceSets {
      test {
          java {
              srcDirs = ["androidTest/java/eu/wise_iot/wanderlust"]
-         }
+         },
+         junitXml.enabled = false,
+         html.enabled = true
      }
 }
 
