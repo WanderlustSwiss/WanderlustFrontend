@@ -199,17 +199,9 @@ public class Poi extends AbstractModel{
             return this.path;
         }
 
-        public File getImage(boolean isPublic){
-            File image;
-            if(isPublic) {
-                image = new File(
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                        this.name);
-            } else{
-                image = new File(DatabaseController.mainContext.getApplicationInfo().dataDir
+        public File getImage(){
+            return new File(DatabaseController.mainContext.getApplicationInfo().dataDir
                         + this.name);
-            }
-            return image;
         }
 
     }
