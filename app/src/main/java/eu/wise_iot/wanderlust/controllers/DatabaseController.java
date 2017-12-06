@@ -97,6 +97,7 @@ public final class DatabaseController {
 
     public static void syncAll(){
 
+        lastSync = new Date();
         if(!syncingPoiTypes){
             syncingPoiTypes = true;
             poiTypeDao.syncTypes();
@@ -118,27 +119,15 @@ public final class DatabaseController {
         sendUpdate();
     }
 
-    public static Date lastSync(){
+    /**
+     * @return the time when the last sync !STARTED!
+     */
+    public static Date lastMasterSync(){
         return lastSync;
     }
     private static void sendUpdate(){
         for (DatabaseListener listener: listeners) {
             listener.update();
-        }
-    }
-
-    /**
-     * The asynchronous task which handles sync updates
-     * Should be running at all times
-     */
-    class GetImagesTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            while(true){
-
-            }
-
         }
     }
 }
