@@ -380,18 +380,6 @@ public class MapFragment extends Fragment {
      * @param view View: view of current fragment
      */
     private void initLayerButton(View view) {
-//        //get instance
-//        layerButton = (ImageButton) view.findViewById(R.id.layerButton);
-//        //register behavior on touched
-//        StyleBehavior.buttonEffectOnTouched(layerButton);
-//        //register behavior on clicked
-//        layerButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                dispatchPostFeedbackDialogFragment();
-//            }
-//        });
-
         layerButton = (ImageButton) view.findViewById(R.id.layerButton);
 
         //register behavior on touched
@@ -399,6 +387,7 @@ public class MapFragment extends Fragment {
 
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         // register behavior on clicked
         layerButton.setOnClickListener(new View.OnClickListener() {
