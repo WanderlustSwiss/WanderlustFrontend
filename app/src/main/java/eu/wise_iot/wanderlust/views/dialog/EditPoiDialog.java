@@ -83,10 +83,12 @@ public class EditPoiDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_edit_poi, container);
+
         titleEditText = (EditText) view.findViewById(R.id.poi_title);
         descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
         typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
         modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
+
         buttonSave = (Button) view.findViewById(R.id.dialog_edit_poi_save_button);
         buttonCancel = (Button) view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
@@ -101,62 +103,46 @@ public class EditPoiDialog extends DialogFragment {
     }
 
     private void initPublicationModeControls() {
-        // set default
-        poi.setPublic(true);
-
         modeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        // set mode public
+                        // set mode public -> first item is default
                         poi.setPublic(true);
-                        Log.d(TAG, "public");
                         break;
                     case 1:
                         // set mode private
                         poi.setPublic(false);
-                        Log.d(TAG, "false");
                         break;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-//                Toast.makeText(context, R.string.msg_please_choose_mode, Toast.LENGTH_LONG).show();
-//                poi.setPublic(true);
-//                Log.d(TAG, "no mode selected");
             }
         });
     }
 
     private void initPublicationTypeControls() {
-        // set default
-        poi.setType(Constants.TYPE_VIEW);
-
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        // set type to view
+                        // set type to view -> first item is default
                         poi.setType(Constants.TYPE_VIEW);
-                        Log.d(TAG, "type view");
                         break;
                     case 1:
-                        // set type to view
+                        // set type to restaurant
                         poi.setType(Constants.TYPE_RESTAURANT);
-                        Log.d(TAG, "type restaurant");
-                        break;
                     case 2:
-                        // set type to view
+                        // set type to picnic place
                         poi.setType(Constants.TYPE_REST_AREA);
-                        Log.d(TAG, "type picnic");
                         break;
                     case 3:
-                        // set type to view
+                        // set type to flora and fauna
                         poi.setType(Constants.TYPE_FLORA_FAUNA);
-                        Log.d(TAG, "type fauna flora");
                         break;
                 }
             }
