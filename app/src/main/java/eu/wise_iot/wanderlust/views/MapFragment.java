@@ -140,42 +140,8 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+        menu.clear(); // makes shure that the menu was not inflated yet
         inflater.inflate(R.menu.map_fragment_layer_menu, menu);
-    }
-
-    /**
-     * Generates checkable menu items for layers in options menu
-     *
-     * @param item MenuItem: selected item by user
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.feedback_overlay:
-//                if (item.isChecked()) {
-//                    item.setChecked(false);
-//                    mapOverlays.showOverlay(false);
-//                } else {
-//                    item.setChecked(true);
-//                    mapOverlays.showOverlay(true);
-//                }
-//                break;
-//            case R.id.trails_overlay: // FIXME: UNCOMMENTED FOR RELEASE 0.1
-//                // TODO: Add actions
-//                break;
-//            case R.id.heatmap_overlay:
-//                // TODO: Add actions
-//                break;
-//            case R.id.public_transport_overlay:
-//                // TODO: Add actions
-//                break;
-//            case R.id.restaurants_overlay:
-//                // TODO: Add actions
-//                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
