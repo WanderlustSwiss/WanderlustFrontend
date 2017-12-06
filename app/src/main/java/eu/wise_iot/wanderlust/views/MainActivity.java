@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
         //TODO where to put this?
-        boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        //boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
-        TourOverviewFragment tourFragment = new TourOverviewFragment();
+        TourFragment tourFragment = new TourFragment();
         getFragmentManager().beginTransaction()
                 .add(R.id.content_frame, tourFragment)
                 .commit();

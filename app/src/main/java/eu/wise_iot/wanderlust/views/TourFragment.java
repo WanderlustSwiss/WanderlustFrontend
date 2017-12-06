@@ -52,8 +52,6 @@ public class TourFragment extends Fragment {
 
 //        TextView nameView = (TextView) view.findViewById(R.id.tour_title);
 //        nameView.setText(tour.getName());
-//
-
     }
 
 }

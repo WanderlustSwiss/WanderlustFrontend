@@ -67,7 +67,7 @@
 //                }else{
 //                    fail();
 //                }
-        LoginUser testUser = new LoginUser("testuser", "Ha1loW3lt");
+//        LoginUser testUser = new LoginUser("testuser", "Ha1loW3lt");
 //            }
 //            @Override
 //            public void onFailure(Call<LoginUser> call, Throwable t) {
@@ -232,4 +232,4 @@
 //        userBox.removeAll();
 //        boxStore.close();
 //    }
-}
+//}
