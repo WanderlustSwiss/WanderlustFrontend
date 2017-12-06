@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(!DatabaseController.initialized) DatabaseController.initDaoModels(getApplicationContext());
         //TODO remove after login works
-        DatabaseController.deleteAllPois();
         fakeLogin(new FragmentHandler(){
             @Override
             public void onResponse(Event event) {
