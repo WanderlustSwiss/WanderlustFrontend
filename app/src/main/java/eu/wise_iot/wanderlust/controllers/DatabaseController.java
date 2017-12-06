@@ -86,7 +86,13 @@ public final class DatabaseController {
     }
 
     public static void register(DatabaseListener listener){
-        listeners.add(listener);
+        if(!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    public static void unregister(DatabaseListener listener){
+        listeners.remove(listener);
     }
 
     public static void syncAll(){

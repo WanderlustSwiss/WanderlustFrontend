@@ -44,6 +44,7 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
              @Override
              public void onResponse(Call<List<PoiType>> call, Response<List<PoiType>> response) {
                 if (response.isSuccessful()) {
+                    poiTypeBox.removeAll();
                     poiTypeBox.put(response.body());
                 }
 

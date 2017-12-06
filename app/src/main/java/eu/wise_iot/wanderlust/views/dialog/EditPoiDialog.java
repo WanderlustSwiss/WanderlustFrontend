@@ -187,7 +187,7 @@ public class EditPoiDialog extends DialogFragment {
                                 }
                             }
                         });
-                        DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POI));
+                        DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
                         break;
 
                     default:

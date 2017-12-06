@@ -465,4 +465,11 @@ public class MapFragment extends Fragment {
         Log.d(TAG, "lastKnownLocation: " + lastKnownLocation);
         dialog.show(fragmentTransaction, Constants.CREATE_FEEDBACK_DIALOG);
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapOverlays.unregister();
+    }
 }
+

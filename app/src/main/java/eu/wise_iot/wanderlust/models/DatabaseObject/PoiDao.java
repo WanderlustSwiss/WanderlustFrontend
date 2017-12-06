@@ -333,6 +333,7 @@ public class PoiDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
                 if(response.isSuccessful()){
+                    poiBox.removeAll();
                     poiBox.put(response.body());
                 }
                 DatabaseController.syncPoisDone();
