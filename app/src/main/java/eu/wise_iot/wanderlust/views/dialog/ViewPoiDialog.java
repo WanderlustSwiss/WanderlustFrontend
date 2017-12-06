@@ -70,7 +70,6 @@ public class ViewPoiDialog extends DialogFragment {
         Bundle args = getArguments();
         poiId = args.getLong(Constants.POI_ID);
         setRetainInstance(true);
-//        loadFeedbackById(poiId);
         loadPoiById(poiId);
     }
 
@@ -106,37 +105,11 @@ public class ViewPoiDialog extends DialogFragment {
         });
     }
 
-    // TODO: enable screen orientation in this dialog so that landscape pictures can be displayed full size
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//    }
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        outState.putLong("id", poiId);
-//        super.onSaveInstanceState(outState);
-//    }
-//    @Override
-//    public void onViewStateRestored(Bundle savedInstanceState) {
-//        super.onViewStateRestored(savedInstanceState);
-//        if (savedInstanceState != null) {
-//            poiId = savedInstanceState.getLong("id");
-//        }
-//    }
-
-
-    /*
-     * Für Fabian: File image = poi.getImagePath().get(0).getImage();
-     */
-
-
     private void loadPoiById(long id) {
 
         controller.getPoiById(id, event -> {
             switch (event.getType()) {
                 case OK:
-                    //TODO was passiert wenn gefunden..
                     Poi poi = (Poi) event.getModel();
 
                     File image = poi.getImagePath().get(0).getImage();
@@ -181,42 +154,22 @@ public class ViewPoiDialog extends DialogFragment {
         });
     }
 
-
-//    //TODO remove, feedback doesnt exist anymore
-//    private void loadFeedbackById(long id) {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(Defaults.URL_SERVER)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        FeedbackService service = retrofit.create(FeedbackService.class);
-//        Call<Feedback> call = service.loadFeedbackById(id);
-//        call.enqueue(new Callback<Feedback>() {
-//            @Override
-//            public void onResponse(Call<Feedback> call, Response<Feedback> response) {
-//                if (response.isSuccessful()) {
-//                    feedback = response.body();
-//                    titelTextView.setText("Titel"); // TODO: get real title
-//                    descriptionTextView.setText(feedback.getDescription());
-//                    if (feedback.getDisplayMode() == Constants.MODE_PRIVATE) {
-//                        Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
-//                    }
-//
-//                    int imageId = context.getResources().getIdentifier(feedback.getImageNameWithoutSuffix(), "drawable", context.getPackageName());
-//                    if (imageId != 0) {
-//                        // todo: work with .error() from the Picasso library
-//                        Picasso.with(context).load(imageId).into(poiImage);
-//                    } else {
-//                        Picasso.with(context).load(R.drawable.image_msg_file_missing).into(poiImage);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Feedback> call, Throwable t) {
-//                Toast.makeText(context, R.string.msg_e_feedback_loading_error, Toast.LENGTH_LONG).show();
-//                Log.d(TAG, t.getMessage());
-//            }
-//        });
+    // TODO: maybe enable screen orientation in this dialog so that landscape pictures can be displayed full size
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        outState.putLong("id", poiId);
+//        super.onSaveInstanceState(outState);
+//    }
+//    @Override
+//    public void onViewStateRestored(Bundle savedInstanceState) {
+//        super.onViewStateRestored(savedInstanceState);
+//        if (savedInstanceState != null) {
+//            poiId = savedInstanceState.getLong("id");
+//        }
 //    }
 }
