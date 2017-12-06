@@ -157,7 +157,7 @@ public class EditPoiDialog extends DialogFragment {
                     case OK:
                         Poi tempPoi = (Poi) event.getModel();
                         //Poi image has to be uploaded after the poi is saved
-                        controller.uploadImage(new File(MapFragment.photoPath), tempPoi.getPoi_id(), new FragmentHandler() {
+                        controller.uploadImage(new File(MapFragment.photoPath), tempPoi, new FragmentHandler() {
                             @Override
                             public void onResponse(ControllerEvent controllerEvent) {
                                 switch (controllerEvent.getType()) {

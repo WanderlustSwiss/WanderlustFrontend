@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 
@@ -65,11 +66,11 @@ public class PoiController {
     /**
      * Adds an image to a existing poi and saves it in the database
      * @param image
-     * @param poiID
+     * @param poi
      * @param handler
      */
-    public void uploadImage(File image, long poiID, FragmentHandler handler) {
-        DatabaseController.poiDao.addImage(image, poiID, handler);
+    public void uploadImage(File image, Poi poi, FragmentHandler handler) {
+        DatabaseController.poiDao.addImage(image, poi, handler);
     }
 
     /**
@@ -80,9 +81,19 @@ public class PoiController {
      * @param handler
      */
     public void getImages(Poi poi, FragmentHandler handler) {
-        List<Poi.ImageInfo> imageInfos = poi.getImagePath();
-        GetImagesTask imagesTask = new GetImagesTask();
-        imagesTask.execute(new GetImagesTaskParameters(poi.getPoi_id(), imageInfos, handler));
+        if(poi.isPublic()) {
+            List<Poi.ImageInfo> imageInfos = poi.getImagePath();
+            //Download images if necessary
+            GetImagesTask imagesTask = new GetImagesTask();
+            imagesTask.execute(new GetImagesTaskParameters(poi.getPoi_id(), imageInfos, poi.isPublic(), handler));
+        } else{
+            //Images should be local
+            List<File> images = new ArrayList<>();
+
+//            File image = new File(DatabaseController.mainContext.getApplicationInfo().dataDir
+//                    + this.name);
+
+        }
     }
 
     /**
@@ -103,11 +114,14 @@ public class PoiController {
     private class GetImagesTaskParameters {
         long poiId;
         List<Poi.ImageInfo> imageInfos;
+        boolean isPublic;
         FragmentHandler handler;
 
-        GetImagesTaskParameters(long poiId, List<Poi.ImageInfo> imageInfos, FragmentHandler handler) {
+        GetImagesTaskParameters(long poiId, List<Poi.ImageInfo> imageInfos,
+                                boolean isPublic, FragmentHandler handler) {
             this.poiId = poiId;
             this.imageInfos = imageInfos;
+            this.isPublic = isPublic;
             this.handler = handler;
         }
     }
@@ -131,11 +145,12 @@ public class PoiController {
 
             long poiId = parameters[0].poiId;
             List<Poi.ImageInfo> imageInfos = parameters[0].imageInfos;
+            boolean isPublic = parameters[0].isPublic;
             handler = parameters[0].handler;
 
             List<File> images = new ArrayList<>(imageInfos.size());
             for (Poi.ImageInfo imageinfo : imageInfos) {
-                File image = imageinfo.getImage();
+                File image = imageinfo.getImage(isPublic);
                 if (image.exists()) {
                     //looks like we already have it
                     images.add(image);
@@ -187,6 +202,7 @@ public class PoiController {
 
                 inputStream = body.byteStream();
                 outputStream = new FileOutputStream(filepath);
+
 
                 while (true) {
                     int read = inputStream.read(fileReader);

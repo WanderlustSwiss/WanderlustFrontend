@@ -23,6 +23,8 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
@@ -112,8 +114,17 @@ public class ViewPoiDialog extends DialogFragment {
                 case OK:
                     Poi poi = (Poi) event.getModel();
 
-                    File image = poi.getImagePath().get(0).getImage();
-                    Picasso.with(context).load(image).into(poiImage);
+                    controller.getImages(poi, new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            List<File> images = (List<File>) controllerEvent.getModel();
+                            if(images.size() > 0) {
+                                //TODO put them in some kind of swipe container
+                                Picasso.with(context).load(images.get(0)).into(poiImage);
+                            }
+                        }
+                    });
+
 
                     if (!poi.isPublic()) {
                         Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
