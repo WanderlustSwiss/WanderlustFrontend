@@ -182,7 +182,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     public void addPositionMarker(GeoPoint geoPoint) {
         if (geoPoint != null) {
-            // TODO: Move position of icon so that the pointy end marks the exact position of the user
             Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
 
             positionMarker = new Marker(mapView);

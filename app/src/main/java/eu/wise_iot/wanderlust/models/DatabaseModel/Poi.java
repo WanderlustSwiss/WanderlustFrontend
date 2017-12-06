@@ -91,6 +91,17 @@ public class Poi extends AbstractModel{
         }
     }
 
+    public String getCreatedAtInGerman() {
+        SimpleDateFormat formatterDate = new SimpleDateFormat("dd-MM-yy");
+        SimpleDateFormat formatterString = new SimpleDateFormat("d. MMMM yyyy", Locale.GERMAN);
+        try{
+            Date date = formatterDate.parse(createdAt.substring(0, createdAt.indexOf('T')));
+            return formatterString.format(date);
+        } catch(Exception e){
+            return "invalid Date";
+        }
+    }
+
     public long getType() { return type; }
 
     public void setType(long type) { this.type = type; }
