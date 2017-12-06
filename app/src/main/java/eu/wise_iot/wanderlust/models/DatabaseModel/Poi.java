@@ -1,14 +1,15 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
-import android.graphics.Path;
 import android.os.Environment;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
@@ -30,6 +31,7 @@ public class Poi extends AbstractModel{
     long poi_id;
     String title;
     String description;
+    String createdAt;
 
     @Convert(converter =  imageInfoConverter.class, dbType = String.class)
     List<ImageInfo> imagePaths;
@@ -63,13 +65,24 @@ public class Poi extends AbstractModel{
         this.latitude = 0;
         this.rate = 3;
         this.user = 1;
-        this.type = 1; //TODO what should be default type??
+        this.type = 0;
         this.isPublic = false;
     }
 
     public List<ImageInfo> getImagePath() { return imagePaths; }
 
     public void setImagePath(List<ImageInfo> imagePath) { this.imagePaths = imagePath; }
+
+    public String getCreatedAt() {
+        SimpleDateFormat formatterDate = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatterString = new SimpleDateFormat("yyyy MMMM dd", Locale.GERMAN);
+        try{
+            Date date = formatterDate.parse(createdAt.substring(0, createdAt.indexOf('T')));
+            return formatterString.format(date);
+        } catch(Exception e){
+            return "invalid Date";
+        }
+    }
 
     public long getType() { return type; }
 
@@ -192,5 +205,4 @@ public class Poi extends AbstractModel{
             return gson.toJson(entityProperty, new TypeToken<List<ImageInfo>>() {}.getType());
         }
     }
-
 }
