@@ -10,10 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -77,8 +76,8 @@ public class RegistrationFragment extends Fragment {
                     //get response
                     registrationController.registerUser(user, new FragmentHandler() {
                         @Override
-                        public void onResponse(Event event) {
-                            //OK(user) event.getModel();
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            //OK(user) controllerEvent.getModel();
                             //CAREFUL NULLPOINTER!
                             //gang zum login screen
                         }

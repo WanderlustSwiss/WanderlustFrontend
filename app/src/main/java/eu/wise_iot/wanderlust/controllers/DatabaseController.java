@@ -2,7 +2,6 @@ package eu.wise_iot.wanderlust.controllers;
 
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DeviceDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
@@ -23,11 +21,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
-import eu.wise_iot.wanderlust.views.DatabaseListener;
 import io.objectbox.BoxStore;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Database controller which initializes all Model Dao objects
@@ -111,12 +105,12 @@ public final class DatabaseController {
 
     public static void syncPoiTypesDone(){
         syncingPoiTypes = false;
-        sendUpdate(); //TODO hoch komplex, aber mues effizient werde
+        sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
     }
 
     public static void syncPoisDone(){
         syncingPois = false;
-        sendUpdate();
+        sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POI));
     }
 
     /**
@@ -125,9 +119,9 @@ public final class DatabaseController {
     public static Date lastMasterSync(){
         return lastSync;
     }
-    private static void sendUpdate(){
+    private static void sendUpdate(DatabaseEvent event){
         for (DatabaseListener listener: listeners) {
-            listener.update();
+            listener.update(event);
         }
     }
 }

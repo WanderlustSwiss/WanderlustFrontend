@@ -157,7 +157,7 @@ public class ViewPoiDialog extends DialogFragment {
 //
 //                            controller.downloadImage(poi.getPoi_id(), imageInfo.getId(), new FragmentHandler() {
 //                                @Override
-//                                public void onResponse(Event event) {
+//                                public void onResponse(ControllerEvent event) {
 //                                    switch (event.getType()) {
 //                                        case OK:
 //                                            // image zuweisen

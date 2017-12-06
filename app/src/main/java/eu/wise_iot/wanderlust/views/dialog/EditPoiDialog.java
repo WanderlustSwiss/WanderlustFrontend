@@ -4,7 +4,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +21,7 @@ import java.io.File;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -175,8 +174,8 @@ public class EditPoiDialog extends DialogFragment {
                         //Poi image has to be uploaded after the poi is saved
                         controller.uploadImage(new File(MapFragment.photoPath), tempPoi.getPoi_id(), new FragmentHandler() {
                             @Override
-                            public void onResponse(Event event) {
-                                switch (event.getType()) {
+                            public void onResponse(ControllerEvent controllerEvent) {
+                                switch (controllerEvent.getType()) {
                                     case OK:
                                         Toast.makeText(context, "image upload good", Toast.LENGTH_LONG).show();
                                         //TODO what to do if image could be saved

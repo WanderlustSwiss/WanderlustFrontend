@@ -1,19 +1,13 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
-import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
@@ -21,14 +15,12 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
-import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,13 +66,13 @@ public class PoiDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
                     poi.setPoi_id(response.body().getPoi_id());
                     poiBox.put(poi);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), poi));
-                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), poi));
+                } else handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
 
             @Override
             public void onFailure(Call<Poi> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -97,15 +89,15 @@ public class PoiDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Poi> call, retrofit2.Response<Poi> response) {
                 if (response.isSuccessful()) {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
             public void onFailure(Call<Poi> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -123,14 +115,14 @@ public class PoiDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
 
                     //TODO response list
-                    //handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body());
+                    //handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body());
                 } else
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
 
             @Override
             public void onFailure(Call<List<Poi>> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -150,13 +142,13 @@ public class PoiDao extends DatabaseObjectAbstract {
             public void onResponse(Call<Poi> call, Response<Poi> response) {
                 if (response.isSuccessful()) {
                     poiBox.put((Poi) poi);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
-                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
 
             @Override
             public void onFailure(Call<Poi> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -174,13 +166,13 @@ public class PoiDao extends DatabaseObjectAbstract {
             public void onResponse(Call<Poi> call, Response<Poi> response) {
                 if (response.isSuccessful()) {
                     poiBox.remove(poi);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
-                } else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
 
             @Override
             public void onFailure(Call<Poi> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -211,12 +203,12 @@ public class PoiDao extends DatabaseObjectAbstract {
                     File image = new File(filepath, response.body().getName());
                     file.renameTo(image);
                 }
-                handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
 
             @Override
             public void onFailure(Call<Poi.ImageInfo> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -249,15 +241,15 @@ public class PoiDao extends DatabaseObjectAbstract {
                         poi.getImagePath().remove(imageInfoToDelete);
                         poiBox.put(poi);
                     }
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
             public void onFailure(Call<Poi.ImageInfo> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }

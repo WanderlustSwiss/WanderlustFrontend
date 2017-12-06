@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
@@ -159,7 +158,7 @@ public class PoiController {
 
         @Override
         protected void onPostExecute(List<File> images) {
-            handler.onResponse(new Event<List<File>>(EventType.OK, images));
+            handler.onResponse(new ControllerEvent<List<File>>(EventType.OK, images));
         }
 
         /**

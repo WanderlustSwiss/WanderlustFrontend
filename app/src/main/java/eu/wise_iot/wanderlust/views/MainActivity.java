@@ -25,7 +25,7 @@ import java.util.Map;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
-import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //TODO remove after login works
         fakeLogin(new FragmentHandler(){
             @Override
-            public void onResponse(Event event) {
+            public void onResponse(ControllerEvent controllerEvent) {
                 // check if app is opened for the first time
                 if (preferences.getBoolean("firstTimeOpened", true) && false) { //TODO for testing
                     SharedPreferences.Editor editor = preferences.edit();
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //convert header to Map
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-                    handler.onResponse(new Event(EventType.OK));
+                    handler.onResponse(new ControllerEvent(EventType.OK));
                 } else {
                 }
             }

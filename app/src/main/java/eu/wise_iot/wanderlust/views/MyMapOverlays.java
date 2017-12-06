@@ -33,6 +33,8 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
+import eu.wise_iot.wanderlust.controllers.DatabaseListener;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
 import eu.wise_iot.wanderlust.models.Old.GpxParser;
@@ -43,7 +45,7 @@ import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
  * @author Fabian Schwander
  * @license MIT
  */
-public class MyMapOverlays implements Serializable, DatabaseListener  {
+public class MyMapOverlays implements Serializable, DatabaseListener {
     private static final String TAG = "MyMapOverlays";
     private Activity activity;
     private MapView mapView;
@@ -234,7 +236,10 @@ public class MyMapOverlays implements Serializable, DatabaseListener  {
     }
 
     @Override
-    public void update() {
-        populatePoiOverlay();
+    public void update(DatabaseEvent event) {
+
+        if(event.getType() == DatabaseEvent.SyncType.POI) {
+            populatePoiOverlay();
+        }
     }
 }

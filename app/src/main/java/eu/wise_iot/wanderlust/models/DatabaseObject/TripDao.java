@@ -3,8 +3,8 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
-import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
@@ -12,7 +12,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TripService;
 import io.objectbox.Box;
-import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
@@ -84,14 +83,14 @@ public class TripDao extends DatabaseObjectAbstract {
             public void onResponse(Call<Trip> call, Response<Trip> response) {
                 if(response.isSuccessful()){
                     routeBox.put((Trip)trip);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -106,14 +105,14 @@ public class TripDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
                 if(response.isSuccessful()){
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -131,14 +130,14 @@ public class TripDao extends DatabaseObjectAbstract {
             public void onResponse(Call<Trip> call, Response<Trip> response) {
                 if(response.isSuccessful()){
                     routeBox.put((Trip)trip);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), null));
                 }
             }
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR,null));
             }
         });
     }
@@ -155,14 +154,14 @@ public class TripDao extends DatabaseObjectAbstract {
             public void onResponse(Call<Trip> call, Response<Trip> response) {
                 if(response.isSuccessful()){
                     routeBox.remove((Trip)trip);
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -175,12 +174,12 @@ public class TripDao extends DatabaseObjectAbstract {
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
-                if(response.isSuccessful()) handler.onResponse(new Event(EventType.getTypeByCode(response.code()),response.body()));
-                else handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
+                if(response.isSuccessful()) handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
+                else handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
