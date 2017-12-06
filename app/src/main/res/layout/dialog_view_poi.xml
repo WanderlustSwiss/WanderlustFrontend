@@ -15,7 +15,7 @@
         android:background="@color/white">
 
         <TextView
-            android:id="@+id/poi_title_text_view"
+            android:id="@+id/poi_type_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -26,12 +26,36 @@
             android:padding="10dp" />
 
         <TextView
+            android:id="@+id/poi_title_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/poi_close_dialog_button"
+            android:layout_toStartOf="@+id/poi_close_dialog_button"
+            android:layout_below="@id/poi_type_text_view"
+            android:background="@color/white"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/poi_date_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/poi_close_dialog_button"
+            android:layout_toStartOf="@+id/poi_close_dialog_button"
+            android:layout_below="@id/poi_title_text_view"
+            android:background="@color/white"
+            android:padding="10dp" />
+
+        <TextView
             android:id="@+id/poi_description_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/poi_title_text_view"
+            android:layout_below="@id/poi_date_text_view"
             android:layout_toLeftOf="@+id/poi_close_dialog_button"
             android:layout_toStartOf="@+id/poi_close_dialog_button"
             android:background="@color/white"

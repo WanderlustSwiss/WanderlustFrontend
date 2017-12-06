@@ -24,13 +24,13 @@
         android:maxLength="200" />
 
     <Spinner
-        android:id="@+id/poi_typeSpinner"
+        android:id="@+id/poi_type_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/dialog_feedback_spinner_type" />
 
     <Spinner
-        android:id="@+id/poi_modeSpinner"
+        android:id="@+id/poi_mode_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/dialog_feedback_spinner_mode" />
