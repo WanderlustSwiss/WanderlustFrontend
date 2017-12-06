@@ -27,8 +27,8 @@ android {
 
 sourceSets {
      test {
-         reports.junitXml.destination = file('build/integration-tests-results')
-         reports.html.destination = file('build/integration-tests-results')
+         junitXml.destination = file('build/integration-tests-results')
+         html.destination = file('build/integration-tests-results')
          java {
              srcDirs = ["androidTest/java/eu/wise_iot/wanderlust"]
          }
