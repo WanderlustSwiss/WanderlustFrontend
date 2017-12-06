@@ -46,6 +46,7 @@ public class EditPoiDialog extends DialogFragment {
     private EditText titleEditText;
     private EditText descriptionEditText;
     private Spinner typeSpinner;
+    private Spinner modeSpinner;
     private Button buttonSave;
     private Button buttonCancel;
 
@@ -86,6 +87,7 @@ public class EditPoiDialog extends DialogFragment {
         titleEditText = (EditText) view.findViewById(R.id.poi_title);
         descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
         typeSpinner = (Spinner) view.findViewById(R.id.poi_typeSpinner);
+        modeSpinner = (Spinner) view.findViewById(R.id.poi_modeSpinner);
         buttonSave = (Button) view.findViewById(R.id.dialog_edit_poi_save_button);
         buttonCancel = (Button) view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
@@ -103,7 +105,7 @@ public class EditPoiDialog extends DialogFragment {
         // set default
         poi.setPublic(true);
 
-        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        modeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
@@ -122,9 +124,9 @@ public class EditPoiDialog extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(context, R.string.msg_please_choose_mode, Toast.LENGTH_LONG).show();
-                poi.setPublic(true);
-                Log.d(TAG, "no mode selected");
+//                Toast.makeText(context, R.string.msg_please_choose_mode, Toast.LENGTH_LONG).show();
+//                poi.setPublic(true);
+//                Log.d(TAG, "no mode selected");
             }
         });
     }
