@@ -22,6 +22,9 @@ import java.io.File;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -49,16 +52,14 @@ public class EditPoiDialog extends DialogFragment {
     private Button buttonCancel;
 
     private PoiController controller;
-    private static MyMapOverlays mapOverlays;
 
-    public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation, MyMapOverlays overlays) {
+    public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
         EditPoiDialog fragment = new EditPoiDialog();
         Bundle args = new Bundle();
         args.putString(Constants.IMAGE_FILE_NAME, imageFileName);
         args.putDouble(Constants.LAST_POS_LAT, lastKnownLocation.getLatitude());
         args.putDouble(Constants.LAST_POS_LON, lastKnownLocation.getLongitude());
         fragment.setArguments(args);
-        mapOverlays = overlays;
         return fragment;
     }
 
@@ -186,7 +187,7 @@ public class EditPoiDialog extends DialogFragment {
                                 }
                             }
                         });
-                        mapOverlays.addPoiToOverlay(tempPoi);
+                        DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
                         break;
 
                     default:

@@ -5,19 +5,29 @@ package eu.wise_iot.wanderlust.controllers;
  * @author Tobias Rüegsegger
  * @license MIT
  */
-public class DatabaseEvent {
+public class DatabaseEvent<T> {
 
     public enum SyncType{
-        POI, POITYPE;
+        POI, SINGLEPOI, POITYPE;
     }
 
     private SyncType type;
+    private T obj;
 
-    DatabaseEvent(SyncType type){
+    public DatabaseEvent(SyncType type){
         this.type = type;
+    }
+
+    public DatabaseEvent(SyncType type, T obj){
+        this.type = type;
+        this.obj = obj;
     }
 
     public SyncType getType(){
         return type;
+    }
+
+    public T getObj(){
+        return obj;
     }
 }

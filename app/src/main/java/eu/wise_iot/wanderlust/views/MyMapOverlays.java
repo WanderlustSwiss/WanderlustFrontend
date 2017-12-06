@@ -237,8 +237,17 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     @Override
     public void update(DatabaseEvent event) {
 
-        if(event.getType() == DatabaseEvent.SyncType.POI) {
-            populatePoiOverlay();
+        if(event.getType() == DatabaseEvent.SyncType.POI) { populatePoiOverlay(); }
+        else if(event.getType() == DatabaseEvent.SyncType.SINGLEPOI){
+            //More efficient, Stamm approves
+            Poi poi = (Poi) event.getObj();
+            addPoiToOverlay(poi);
+            mapView.getOverlays().add(itemizedOverlayWithFocus);
+            mapView.invalidate();
         }
+    }
+
+    public void unregister(){
+        DatabaseController.unregister(this);
     }
 }
