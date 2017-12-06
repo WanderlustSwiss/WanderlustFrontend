@@ -106,16 +106,7 @@ public class EditPoiDialog extends DialogFragment {
         modeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        // set mode public -> first item is default
-                        poi.setPublic(true);
-                        break;
-                    case 1:
-                        // set mode private
-                        poi.setPublic(false);
-                        break;
-                }
+                poi.setPublic(position == 0);
             }
 
             @Override
