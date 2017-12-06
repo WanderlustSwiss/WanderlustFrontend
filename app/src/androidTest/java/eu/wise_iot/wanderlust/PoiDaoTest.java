@@ -38,18 +38,18 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //        testPoi = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //    }
 //
-        poiDao = new PoiDao(boxStore);
+//        poiDao = new PoiDao(boxStore);
 //
 //    @Test
 //    public void createTest(){
-        testPoi = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        testPoi = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //        poiDao.create(testPoi);
 //        assertEquals("Matterhorn", poiQueryBuilder.equal(Poi_.title, "Matterhorn")
 //                .build().findFirst().getTitle());
 //
 //    }
 //
-        assertEquals("Matterhorn", poiQueryBuilder.equal(Poi_.title, "Matterhorn")
+//        assertEquals("Matterhorn", poiQueryBuilder.equal(Poi_.title, "Matterhorn")
                 .build().findFirst().getTitle());
 
 //    @Test
@@ -60,11 +60,11 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //        assertEquals("Matterhorn (VS)", poiQueryBuilder.
 //                equal(Poi_.poi_id, testPoi.getPoi_id()).build().findFirst().getTitle());
 //    }
-        testPoi.setTitle("Matterhorn (VS)");
+//        testPoi.setTitle("Matterhorn (VS)");
 //
 //    @Test
 //    public void findOneTest(){
-                equal(Poi_.poi_id, testPoi.getPoi_id()).build().findFirst().getTitle());
+//                equal(Poi_.poi_id, testPoi.getPoi_id()).build().findFirst().getTitle());
 //        poiBox.put(testPoi);
 //        try {
 //            assertEquals("Matterhorn", poiDao.findOne("name", "Matterhorn").getTitle());
@@ -72,7 +72,7 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //
 //        }
 //    }
-            assertEquals("Matterhorn", poiDao.findOne("name", "Matterhorn").getTitle());
+//            assertEquals("Matterhorn", poiDao.findOne("name", "Matterhorn").getTitle());
 //
 //    @Test
 //    public void findTest(){
@@ -81,8 +81,8 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //
 //        poiBox.put(poiOne);
 //        poiBox.put(poiTwo);
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiTwo = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //
 //        assertEquals(2, poiDao.find().size());
 //    }
@@ -94,10 +94,10 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //        poiBox.put(poiOne);
 //        poiBox.put(poiTwo);
 //        poiBox.put(poiThree);
@@ -117,10 +117,10 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //        poiBox.put(poiOne);
 //        poiBox.put(poiTwo);
 //        poiBox.put(poiThree);
@@ -136,10 +136,10 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiThree = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiFour = new Poi(0, "Mount Everest", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 
 //
 //        poiBox.put(poiOne);
@@ -157,8 +157,8 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //
 //        poiBox.put(poiOne);
 //        poiBox.put(poiTwo);
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //
 //        try {
 //            poiDao.delete("name", "Matterhorn");
@@ -176,8 +176,8 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //
 //        poiBox.put(poiOne);
 //        poiBox.put(poiTwo);
-        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
-        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiOne = new Poi(0, "Matterhorn", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
+//        Poi poiTwo = new Poi(0, "Zugspitze", "Berg", "picturePath", 53.53f, 53.53f, 1, 1, false);
 //
 //        poiDao.deleteAll();
 //        assertEquals(0, poiDao.count());
