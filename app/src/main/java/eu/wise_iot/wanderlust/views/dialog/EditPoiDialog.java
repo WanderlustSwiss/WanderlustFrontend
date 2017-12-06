@@ -26,7 +26,6 @@ import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.views.MapFragment;
 import eu.wise_iot.wanderlust.views.MyMapOverlays;
 
@@ -86,8 +85,8 @@ public class EditPoiDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_edit_poi, container);
         titleEditText = (EditText) view.findViewById(R.id.poi_title);
         descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
-        typeSpinner = (Spinner) view.findViewById(R.id.poi_typeSpinner);
-        modeSpinner = (Spinner) view.findViewById(R.id.poi_modeSpinner);
+        typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
+        modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
         buttonSave = (Button) view.findViewById(R.id.dialog_edit_poi_save_button);
         buttonCancel = (Button) view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
