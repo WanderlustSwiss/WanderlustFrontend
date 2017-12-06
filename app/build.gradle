@@ -23,12 +23,13 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 sourceSets {
      test {
-         test.junitXml.destination = file('build/integration-tests-results')
-         test.html.destination = file('build/integration-tests-results')
          java {
              srcDirs = ["androidTest/java/eu/wise_iot/wanderlust"]
          }
