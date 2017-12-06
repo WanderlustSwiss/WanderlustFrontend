@@ -50,7 +50,7 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 //    }
 //
 //        assertEquals("Matterhorn", poiQueryBuilder.equal(Poi_.title, "Matterhorn")
-                .build().findFirst().getTitle());
+//                .build().findFirst().getTitle());
 
 //    @Test
 //    public void updateTest(){
