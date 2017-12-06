@@ -24,7 +24,7 @@ Test Source:
     - cat basic_database.sql | mysql -u root --password="X2E8BH5RLqwgnQ3L" wanderlust
     - chmod 755 gradlew
     - ./gradlew test
-    - ./gradlew connectedAndroidTest mergeAndroidReports
+    - ./gradlew connectedAndroidTest
 
 Generate Javadoc:
   stage: testAndDoc
