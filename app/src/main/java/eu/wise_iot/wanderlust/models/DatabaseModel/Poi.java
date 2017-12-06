@@ -36,15 +36,15 @@ public class Poi extends AbstractModel{
 
     @Convert(converter =  imageInfoConverter.class, dbType = String.class)
     List<ImageInfo> imagePaths;
-    double longitude;
-    double latitude;
+    float longitude;
+    float latitude;
     int rate;
     long user;
     long type;
     boolean isPublic;
 
     public Poi(long poi_id, String name, String description, List<ImageInfo> picturePath,
-               double longitude, double latitude, int rate, long user, int type, boolean isPublic) {
+               float longitude, float latitude, int rate, long user, int type, boolean isPublic) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;
@@ -150,19 +150,19 @@ public class Poi extends AbstractModel{
         this.description = description;
     }
 
-    public double getLongitude() {
+    public float getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(float longitude) {
         this.longitude = longitude;
     }
 
-    public double getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(float latitude) {
         this.latitude = latitude;
     }
 

@@ -76,13 +76,10 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
      *
      * @return PoiType which match to the search pattern in the searched columns
      */
-    public PoiType findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = PoiType.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(PoiType.class);
-        poiTypeQueryBuilder.equal(columnProperty, searchPattern);
-        poiTypeQuery = poiTypeQueryBuilder.build();
-        return poiTypeQuery.findFirst();
+    public PoiType findOne(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        return poiTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
+    }
+    public PoiType findOne(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        return poiTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 }

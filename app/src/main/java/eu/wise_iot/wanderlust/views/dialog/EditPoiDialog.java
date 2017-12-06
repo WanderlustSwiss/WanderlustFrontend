@@ -128,23 +128,7 @@ public class EditPoiDialog extends DialogFragment {
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        // set type to view -> first item is default
-                        poi.setType(Constants.TYPE_VIEW);
-                        break;
-                    case 1:
-                        // set type to restaurant
-                        poi.setType(Constants.TYPE_RESTAURANT);
-                    case 2:
-                        // set type to picnic place
-                        poi.setType(Constants.TYPE_REST_AREA);
-                        break;
-                    case 3:
-                        // set type to flora and fauna
-                        poi.setType(Constants.TYPE_FLORA_FAUNA);
-                        break;
-                }
+                poi.setType(position);
             }
 
             @Override
@@ -165,8 +149,8 @@ public class EditPoiDialog extends DialogFragment {
                 poi.setDescription(description);
             }
 
-            poi.setLatitude(lastKnownLocation.getLatitude());
-            poi.setLongitude(lastKnownLocation.getLongitude());
+            poi.setLatitude((float) lastKnownLocation.getLatitude());
+            poi.setLongitude((float) lastKnownLocation.getLongitude());
 
             controller.saveNewPoi(poi, event -> {
                 switch (event.getType()) {
