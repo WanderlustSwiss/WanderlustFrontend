@@ -263,7 +263,7 @@ public class PoiDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * returns a list with all poi
+     * returns a list with all poi from the frontend database
      *
      * @return List<Poi>
      */
@@ -333,6 +333,24 @@ public class PoiDao extends DatabaseObjectAbstract {
         poiQueryBuilder.equal(columnProperty, searchPattern);
         poiQuery = poiQueryBuilder.build();
         return poiQuery.find().size();
+    }
+
+    public void syncPois(){
+        Call<List<Poi>> call = service.retrieveAllPois();
+        call.enqueue(new Callback<List<Poi>>() {
+            @Override
+            public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
+                if(response.isSuccessful()){
+                    poiBox.put(response.body());
+                }
+                DatabaseController.syncPoisDone();
+            }
+
+            @Override
+            public void onFailure(Call<List<Poi>> call, Throwable t) {
+                DatabaseController.syncPoisDone();
+            }
+        });
     }
 
 

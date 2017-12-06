@@ -32,27 +32,18 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
-import eu.wise_iot.wanderlust.models.Old.Feedback;
 import eu.wise_iot.wanderlust.models.Old.GpxParser;
-import eu.wise_iot.wanderlust.services.FeedbackService;
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * MyMapFragment:
  * @author Fabian Schwander
  * @license MIT
  */
-public class MyMapOverlays implements Serializable {
+public class MyMapOverlays implements Serializable, DatabaseListener  {
     private static final String TAG = "MyMapOverlays";
     private Activity activity;
     private MapView mapView;
@@ -60,16 +51,17 @@ public class MyMapOverlays implements Serializable {
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> itemizedOverlayWithFocus;
     private Marker positionMarker;
-    private List<Feedback> feedbackList = new ArrayList<>();
 
     public MyMapOverlays(Activity activity, MapView mapView) {
         this.activity = activity;
         this.mapView = mapView;
 
         initItemizedOverlayWithFocus();
-        populateFeedbackOverlay();
+        populatePoiOverlay();
         initScaleBarOverlay();
         initMyLocationNewOverlay();
+        DatabaseController.register(this);
+        DatabaseController.syncAll(); //TODO specific sync
 //        initGpxTourlistOverlay();
     }
 
@@ -207,7 +199,7 @@ public class MyMapOverlays implements Serializable {
      * Take all pois from the database and add
      * them to the map overlay
      */
-    private void populateFeedbackOverlay() {
+    public void populatePoiOverlay() {
 
         List<Poi> pois = DatabaseController.poiDao.find();
         for(Poi poi : pois){
@@ -239,5 +231,10 @@ public class MyMapOverlays implements Serializable {
 
     public MyLocationNewOverlay getMyLocationNewOverlay() {
         return myLocationNewOverlay;
+    }
+
+    @Override
+    public void update() {
+        populatePoiOverlay();
     }
 }

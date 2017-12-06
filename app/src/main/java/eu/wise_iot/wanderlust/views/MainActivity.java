@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -16,11 +15,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,16 +26,11 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
-import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import io.objectbox.BoxStore;
 import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,34 +51,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
-        //TODO where to put this?
         if(!DatabaseController.initialized) DatabaseController.initDaoModels(getApplicationContext());
-        fakeLogin();
-        DatabaseController.poiTypeDao.sync();
+        //TODO remove after login works
+        DatabaseController.deleteAllPois();
+        fakeLogin(new FragmentHandler(){
+            @Override
+            public void onResponse(Event event) {
+                // check if app is opened for the first time
+                if (preferences.getBoolean("firstTimeOpened", true) && false) { //TODO for testing
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("firstTimeOpened", false); // save that app has been opened
+                    editor.apply();
 
-
-        // check if app is opened for the first time
-        if (preferences.getBoolean("firstTimeOpened", true) && false) { //TODO for testing
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean("firstTimeOpened", false); // save that app has been opened
-            editor.apply();
-
-            // start welcome screen
-            //RegistrationFragment welcomeFragment = new RegistrationFragment();
-            RegistrationFragment registrationFragment = new RegistrationFragment();
-            getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, registrationFragment)
-                    .commit();
-            // else start the map screen
-        } else {
-            MapFragment mapFragment = MapFragment.newInstance();
-            getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                    .commit();
-        }
+                    // start welcome screen
+                    //RegistrationFragment welcomeFragment = new RegistrationFragment();
+                    RegistrationFragment registrationFragment = new RegistrationFragment();
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.content_frame, registrationFragment)
+                            .commit();
+                    // else start the map screen
+                } else {
+                    MapFragment mapFragment = MapFragment.newInstance();
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                            .commit();
+                }
+            }
+        });
     }
 
-    private void fakeLogin(){
+    private void fakeLogin(FragmentHandler handler){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
         LoginUser testUser = new LoginUser("testuser", "HalloW3lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
@@ -99,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //convert header to Map
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
+                    handler.onResponse(new Event(EventType.OK));
                 } else {
                 }
             }

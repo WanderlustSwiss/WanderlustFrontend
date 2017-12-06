@@ -35,10 +35,10 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * Update all Poit types in the database.
+     * Update all Poi types in the database.
      *
      */
-    public void sync(){
+    public void syncTypes(){
         Call<List<PoiType>> call = service.retrieveAllPoiTypes();
         call.enqueue(new Callback<List<PoiType>>() {
              @Override
@@ -53,11 +53,13 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
                         poiTypeBox.put(poiType);
                     }
                 }
+
+                DatabaseController.syncPoiTypesDone();
              }
 
              @Override
              public void onFailure(Call<List<PoiType>> call, Throwable t) {
-
+                 DatabaseController.syncPoiTypesDone();
              }
          });
     }
