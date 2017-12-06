@@ -11,15 +11,18 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
  */
 public class Event<T> {
 
+
     private EventType type;
     private T model;
+
     /**
      * Create response event
-     * @param event
-     * @param model
+     * @param type represents the type as HTTP code
+     * @param model represents the object of the event.
+     *              Could also be a list objects
      */
-    public Event(EventType event, T model){
-        this.type = event;
+    public Event(EventType type, T model){
+        this.type = type;
         this.model = model;
     }
 

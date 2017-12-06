@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.services.DifficultyTypeService;
@@ -26,18 +27,16 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public DifficultyTypeDao(BoxStore boxStore){
-        difficultyTypeBox = boxStore.boxFor(DifficultyType.class);
+    public DifficultyTypeDao(){
+        difficultyTypeBox = DatabaseController.boxStore.boxFor(DifficultyType.class);
         difficultyTypeQueryBuilder = difficultyTypeBox.query();
         if (service == null) service = ServiceGenerator.createService(DifficultyTypeService.class);
     }
 
     /**
-     * Update all Poit types in the database.
+     * Update all Poi types in the database.
      *
      */
     public void sync(){
