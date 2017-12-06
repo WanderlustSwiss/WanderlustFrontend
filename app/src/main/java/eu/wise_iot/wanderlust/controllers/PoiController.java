@@ -20,48 +20,88 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 
+/**
+ * Handles the communication between the fragments and the
+ * frontend & backend database
+ * @author Tobias Rüegsegger
+ * @license MIT
+ */
 public class PoiController {
 
-    public PoiController() {
-    }
+    public PoiController() {}
 
+    /**
+     * @return List of all poi types
+     */
     public List<PoiType> getAllPoiTypes() {
         return DatabaseController.poiTypeDao.find();
     }
 
+    /**
+     * @return a specific poi type
+     */
     public List<PoiType> getTypes() {
         return DatabaseController.poiTypeDao.find();
     }
 
+
+    /**
+     * saves a newly generated poi into the database
+     * @param poi
+     * @param handler
+     */
     public void saveNewPoi(Poi poi, FragmentHandler handler) {
         DatabaseController.poiDao.create(poi, handler);
     }
 
+    /**
+     * Gets a poi by id and returns it in the event
+     * @param id
+     * @param handler
+     */
     public void getPoiById(long id, FragmentHandler handler) {
         DatabaseController.poiDao.retrieve(id, handler);
     }
 
+    /**
+     * Adds an image to a existing poi and saves it in the database
+     * @param image
+     * @param poiID
+     * @param handler
+     */
     public void uploadImage(File image, long poiID, FragmentHandler handler) {
         DatabaseController.poiDao.addImage(image, poiID, handler);
     }
 
+    /**
+     * Returns all images in the event as List<File>
+     * if the image already exists on the phone database
+     * it will attempt to download it from the backend database
+     * @param poi
+     * @param handler
+     */
     public void getImages(Poi poi, FragmentHandler handler) {
         List<Poi.ImageInfo> imageInfos = poi.getImagePath();
-
-        File filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File imagetoDelete = new File(filepath, "45-1.jpg");
-        imagetoDelete.delete();
-
         GetImagesTask imagesTask = new GetImagesTask();
         imagesTask.execute(new GetImagesTaskParameters(poi.getPoi_id(), imageInfos, handler));
     }
 
+    /**
+     * Deletes an image from a specific poi from the database
+     * @param poiID
+     * @param imageID
+     * @param handler
+     */
     public void deleteImage(long poiID, long imageID, FragmentHandler handler) {
         DatabaseController.poiDao.deleteImage(poiID, imageID, handler);
     }
 
 
-    private static class GetImagesTaskParameters {
+    /**
+     * Parameters for the getImages method
+     * if this was c++ i could have just use a tuple
+     */
+    private class GetImagesTaskParameters {
         long poiId;
         List<Poi.ImageInfo> imageInfos;
         FragmentHandler handler;
@@ -73,10 +113,20 @@ public class PoiController {
         }
     }
 
+    /**
+     * The asynchronous task for receiving all images from a specific poi
+     */
     class GetImagesTask extends AsyncTask<GetImagesTaskParameters, Void, List<File>> {
 
         private FragmentHandler handler;
 
+        /**
+         * Task which iterates over all images of a specific poi
+         * and checks if it was already downloaded in the frontend database.
+         * if the images doesn't exists it will attempt to download it.
+         * @param parameters which are used for the task
+         * @return all images from a specific poi
+         */
         @Override
         protected List<File> doInBackground(GetImagesTaskParameters... parameters) {
 
@@ -112,6 +162,13 @@ public class PoiController {
             handler.onResponse(new Event<List<File>>(EventType.OK, images));
         }
 
+        /**
+         * Writes a downloaded poi to the phone and names it correctly
+         * @param body which represents the image downloaded
+         * @param poiId
+         * @param imageId
+         * @return true if everything went ok
+         */
         private boolean writeToDisk(ResponseBody body, long poiId, long imageId) {
 
 

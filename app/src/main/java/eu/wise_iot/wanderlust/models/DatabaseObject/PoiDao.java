@@ -38,7 +38,7 @@ import retrofit2.Response;
  * <p>
  * Represents POI controller
  *
- * @author Rilind Gashi, Alexander Weinbeck
+ * @author Rilind Gashi, Alexander Weinbeck, Tobias Rüegsegger
  * @license MIT
  */
 
@@ -222,32 +222,12 @@ public class PoiDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * receive an image from the server DO NOT USE!!
-     *
-     * @param poiId
-     * @param imageId
+     * deletes an image from a specific poi from the database
+     * and return it in the event
+     * @param poiID
+     * @param imageID
      * @param handler
      */
-    public void getImage(final long poiId, final long imageId, final FragmentHandler handler) {
-        Call<ResponseBody> call = service.downloadImage(poiId, imageId);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
-                    }
-                    else{
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code())));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR));
-            }
-        });
-    }
-
     public void deleteImage(final long poiID, final long imageID, final FragmentHandler handler) {
         Call<Poi.ImageInfo> call = service.deleteImage(poiID, imageID);
         call.enqueue(new Callback<Poi.ImageInfo>() {

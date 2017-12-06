@@ -3,11 +3,10 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DeviceDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.EquipmentDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.HistoryDao;
@@ -20,9 +19,17 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import io.objectbox.BoxStore;
 
+/**
+ * Database controller which initializes all Model Dao objects
+ * Use this statically to use dao models or boxstore
+ * @author Tobias Rüegsegger
+ * @license MIT
+ */
 public final class DatabaseController {
 
+    //true as soon intDaoModels was executed
     public static boolean initialized;
+
     public static BoxStore boxStore;
     public static CommunityTourDao communityTourDao;
     public static DeviceDao deviceDao;
@@ -43,7 +50,7 @@ public final class DatabaseController {
         boxStore = MyObjectBox.builder().androidContext(mainContext).build();
         communityTourDao = new CommunityTourDao();
         deviceDao = new DeviceDao();
-        //difficultyTypeDao //TODO simon fragen
+        difficultyTypeDao = new DifficultyTypeDao();
         equipmentDao = new EquipmentDao();
         historyDao = new HistoryDao();
         poiDao = new PoiDao();
