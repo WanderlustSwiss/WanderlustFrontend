@@ -154,14 +154,14 @@ public class MapFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.feedback_overlay:
-                if (item.isChecked()) {
-                    item.setChecked(false);
-                    mapOverlays.showOverlay(false);
-                } else {
-                    item.setChecked(true);
-                    mapOverlays.showOverlay(true);
-                }
-                break;
+//                if (item.isChecked()) {
+//                    item.setChecked(false);
+//                    mapOverlays.showOverlay(false);
+//                } else {
+//                    item.setChecked(true);
+//                    mapOverlays.showOverlay(true);
+//                }
+//                break;
 //            case R.id.trails_overlay: // FIXME: UNCOMMENTED FOR RELEASE 0.1
 //                // TODO: Add actions
 //                break;
@@ -346,7 +346,6 @@ public class MapFragment extends Fragment {
                 // prevent multiple clicks on button
                 cameraButton.setEnabled(false);
 
-
                 final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                 //check if gps is activated and show corresponding toast
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -405,12 +404,20 @@ public class MapFragment extends Fragment {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }
             }
-
-
         });
 
         poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
-//        switch (poiLayerButton.get)
+        poiLayerButton.setOnClickListener(v -> {
+            if(!poiLayerButton.isSelected()) {
+                poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+                poiLayerButton.setSelected(true);
+                mapOverlays.showOverlay(true);
+            } else {
+                poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+                poiLayerButton.setSelected(false);
+                mapOverlays.showOverlay(false);
+            }
+        });
 
     }
 
