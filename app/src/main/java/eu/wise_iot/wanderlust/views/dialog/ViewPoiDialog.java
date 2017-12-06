@@ -131,7 +131,7 @@ public class ViewPoiDialog extends DialogFragment {
                     }
 
                     String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
-                    typeTextView.setText(typeValues[(int) poi.getType()]);
+                    typeTextView.setText(controller.getType(poi.getType()).getName());
 
                     titleTextView.setText(poi.getTitle());
 
@@ -155,7 +155,7 @@ public class ViewPoiDialog extends DialogFragment {
 
 
                     //poi types which have to go to a select box or somthing:
-                    List<PoiType> poiTypes = controller.getTypes();
+                    List<PoiType> poiTypes = controller.getAllPoiTypes();
 
                     break;
                 default:
