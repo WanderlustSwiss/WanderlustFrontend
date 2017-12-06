@@ -376,11 +376,11 @@ public class MapFragment extends Fragment {
             if(!poiLayerButton.isSelected()) {
                 poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
                 poiLayerButton.setSelected(true);
-                mapOverlays.showOverlay(true);
+                mapOverlays.showPoiLayer(true);
             } else {
                 poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
                 poiLayerButton.setSelected(false);
-                mapOverlays.showOverlay(false);
+                mapOverlays.showPoiLayer(false);
             }
         });
 

@@ -19,7 +19,6 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
@@ -51,7 +50,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private MapView mapView;
 
     private MyLocationNewOverlay myLocationNewOverlay;
-    private ItemizedOverlayWithFocus<OverlayItem> itemizedOverlayWithFocus;
+    private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private Marker positionMarker;
 
     public MyMapOverlays(Activity activity, MapView mapView) {
@@ -92,7 +91,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private void initItemizedOverlayWithFocus() {
         // add items with on click listener plus define actions for clicks
         List<OverlayItem> itemizedIconsList = new ArrayList<>();
-        itemizedOverlayWithFocus = new ItemizedOverlayWithFocus<>(activity, itemizedIconsList,
+        poiOverlay = new ItemizedOverlayWithFocus<>(activity, itemizedIconsList,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem overlayItem) {
@@ -177,7 +176,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                     poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
 
             overlayItem.setMarker(drawable);
-            itemizedOverlayWithFocus.addItem(overlayItem);
+            poiOverlay.addItem(overlayItem);
     }
 
     public void addPositionMarker(GeoPoint geoPoint) {
@@ -201,13 +200,11 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      * them to the map overlay
      */
     public void populatePoiOverlay() {
-
         List<Poi> pois = DatabaseController.poiDao.find();
         for(Poi poi : pois){
             addPoiToOverlay(poi);
         }
-
-        mapView.getOverlays().add(itemizedOverlayWithFocus);
+        mapView.getOverlays().add(poiOverlay);
         mapView.invalidate();
     }
 
@@ -215,18 +212,12 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.getOverlays().remove(positionMarker);
     }
 
-    void showOverlay(boolean showOverlay) {
-        if (showOverlay) displayOverlay(itemizedOverlayWithFocus);
-        else hideOverlay(itemizedOverlayWithFocus);
-    }
-
-    private void displayOverlay(Overlay overlay) {
-        mapView.getOverlays().add(overlay);
-        mapView.invalidate();
-    }
-
-    private void hideOverlay(Overlay overlay) {
-        mapView.getOverlays().remove(overlay);
+    void showPoiLayer(boolean setVisible) {
+        if (setVisible) {
+            mapView.getOverlays().add(poiOverlay);
+        } else {
+            mapView.getOverlays().remove(poiOverlay);
+        }
         mapView.invalidate();
     }
 
@@ -242,7 +233,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             //More efficient, Stamm approves
             Poi poi = (Poi) event.getObj();
             addPoiToOverlay(poi);
-            mapView.getOverlays().add(itemizedOverlayWithFocus);
+            mapView.getOverlays().add(poiOverlay);
             mapView.invalidate();
         }
     }
