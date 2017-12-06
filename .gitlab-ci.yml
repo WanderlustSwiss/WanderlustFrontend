@@ -18,9 +18,9 @@ Test Source:
   stage: testAndDoc
   script:
     - sudo /etc/init.d/wanderlust-api stop
-    - echo "DROP DATABASE wanderlust;" | mysql -u root --password="X2E8BH5RLqwgnQ3L"
-    - echo "CREATE DATABASE wanderlust;" | mysql -u root --password="X2E8BH5RLqwgnQ3L"
+    - echo "truncate table user; truncate table profile" | mysql -u root --password="X2E8BH5RLqwgnQ3L" wanderlust
     - sudo /etc/init.d/wanderlust-api start
+    - sleep 6
     - cat basic_database.sql | mysql -u root --password="X2E8BH5RLqwgnQ3L" wanderlust
     - chmod 755 gradlew
     - ./gradlew test
