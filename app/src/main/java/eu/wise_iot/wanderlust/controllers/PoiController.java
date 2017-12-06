@@ -15,6 +15,7 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
+import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -40,8 +41,12 @@ public class PoiController {
     /**
      * @return a specific poi type
      */
-    public List<PoiType> getTypes() {
-        return DatabaseController.poiTypeDao.find();
+    public PoiType getType(long poit_id) {
+        try {
+            return DatabaseController.poiTypeDao.findOne(PoiType_.poit_id, poit_id);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            return null;
+        }
     }
 
 

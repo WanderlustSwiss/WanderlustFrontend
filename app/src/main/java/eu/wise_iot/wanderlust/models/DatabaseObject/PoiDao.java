@@ -329,8 +329,6 @@ public class PoiDao extends DatabaseObjectAbstract {
         return poiBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-
-    //TODO overload for numbers
     /**
      * Searching for user matching with the search pattern in a the selected column.
      *
@@ -339,6 +337,10 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @return List<Poi> which contains the users, who match to the search pattern in the searched columns
      */
     public List<Poi> find(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        return poiBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public List<Poi> find(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
         return poiBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
@@ -353,16 +355,35 @@ public class PoiDao extends DatabaseObjectAbstract {
     public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         poiBox.remove(findOne(searchedColumn, searchPattern));
     }
+    public void delete(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        poiBox.remove(findOne(searchedColumn, searchPattern));
+    }
 
+    /**
+     * delete all poi
+     */
     public void deleteAll() {
         poiBox.removeAll();
     }
-
+    /**
+     * delete all poi
+     * @return Total number of records
+     */
     public long count() {
         return poiBox.count();
     }
 
+    /**
+     * delete all poi
+     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
+     * @param searchPattern  (required) contain the search pattern.
+     * @return Total number of records
+     */
     public long count(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
+    }
+
+    public long count(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
         return find(searchedColumn, searchPattern).size();
     }
 

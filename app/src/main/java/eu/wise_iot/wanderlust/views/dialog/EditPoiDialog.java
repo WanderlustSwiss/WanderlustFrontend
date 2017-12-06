@@ -149,8 +149,8 @@ public class EditPoiDialog extends DialogFragment {
                 poi.setDescription(description);
             }
 
-            poi.setLatitude(lastKnownLocation.getLatitude());
-            poi.setLongitude(lastKnownLocation.getLongitude());
+            poi.setLatitude((float) lastKnownLocation.getLatitude());
+            poi.setLongitude((float) lastKnownLocation.getLongitude());
 
             controller.saveNewPoi(poi, event -> {
                 switch (event.getType()) {
