@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -379,17 +380,41 @@ public class MapFragment extends Fragment {
      * @param view View: view of current fragment
      */
     private void initLayerButton(View view) {
-        //get instance
+//        //get instance
+//        layerButton = (ImageButton) view.findViewById(R.id.layerButton);
+//        //register behavior on touched
+//        StyleBehavior.buttonEffectOnTouched(layerButton);
+//        //register behavior on clicked
+//        layerButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dispatchPostFeedbackDialogFragment();
+//            }
+//        });
+
         layerButton = (ImageButton) view.findViewById(R.id.layerButton);
+
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
-        //register behavior on clicked
+
+        View bottomSheet = view.findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+        // register behavior on clicked
         layerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchPostFeedbackDialogFragment();
+                // FIXME: State is always STATE_EXPANDING, so view does not get collapsed or expanded
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    Log.d(TAG, "state was collapsed, " + bottomSheetBehavior.getState());
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    Log.d(TAG, "state was expanded, " + bottomSheetBehavior.getState());
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
             }
         });
+
     }
 
     /**
