@@ -348,29 +348,28 @@ public class MapFragment extends Fragment {
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     // buildAlertMessageNoGps();
                     Toast.makeText(getActivity(), R.string.msg_camera_no_gps, Toast.LENGTH_SHORT).show();
-                    MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                    camera = new Camera(getActivity(), mapFragment);
-                    camera.start();
-                    imageFileName = camera.getImageName();
-                    photoPath = camera.getImagePath();
+                    takePicture();
                 } else {
                     mapOverlays.getMyLocationNewOverlay().enableMyLocation();
                     Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
-
                     mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
                         @Override
                         public void run() {
                             lastKnownLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
-                            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                            camera = new Camera(getActivity(), mapFragment);
-                            camera.start();
-                            imageFileName = camera.getImageName();
-                            photoPath = camera.getImagePath();
+                            takePicture();
                         }
                     });
                 }
             }
         });
+    }
+
+    private void takePicture(){
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+        camera = new Camera(getActivity(), mapFragment);
+        camera.start();
+        imageFileName = camera.getImageName();
+        photoPath = camera.getImagePath();
     }
 
     /**

@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -69,9 +70,15 @@ public class Poi extends AbstractModel{
         this.isPublic = false;
     }
 
+    public ImageInfo createImageInfo(int id, String name, String path){
+        return new ImageInfo(id, name, path);
+    }
+
     public List<ImageInfo> getImagePath() { return imagePaths; }
 
-    public void setImagePath(List<ImageInfo> imagePath) { this.imagePaths = imagePath; }
+    public void addImageInfo(long id, String name, String path){
+        this.imagePaths.add(new ImageInfo(id, name, path));
+    }
 
     public String getCreatedAt() {
         SimpleDateFormat formatterDate = new SimpleDateFormat("yyyy-MM-dd");
@@ -156,14 +163,12 @@ public class Poi extends AbstractModel{
         this.user = user;
     }
 
-    //@Entity
     public class ImageInfo extends AbstractModel{
-        //@Id
         long id;
         String name;
         String path;
 
-        public ImageInfo(int id, String name, String path) {
+        public ImageInfo(long id, String name, String path) {
             this.id = id;
             this.name = name;
             this.path = path;
@@ -179,9 +184,21 @@ public class Poi extends AbstractModel{
             this.id = id;
         }
 
-        public File getImage(){
-            File filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-            return new File(filepath, this.name);
+        public String getPath(){
+            return this.path;
+        }
+
+        public File getImage(boolean isPublic){
+            File image;
+            if(isPublic) {
+                image = new File(
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                        this.name);
+            } else{
+                image = new File(DatabaseController.mainContext.getApplicationInfo().dataDir
+                        + this.name);
+            }
+            return image;
         }
 
     }
@@ -193,7 +210,8 @@ public class Poi extends AbstractModel{
                 return null;
             }
             Gson gson = new Gson();
-            return gson.fromJson(databaseValue, new TypeToken<List<ImageInfo>>() {}.getType());
+            List<ImageInfo> list = gson.fromJson(databaseValue, new TypeToken<List<ImageInfo>>() {}.getType());
+            return list;
         }
 
         @Override

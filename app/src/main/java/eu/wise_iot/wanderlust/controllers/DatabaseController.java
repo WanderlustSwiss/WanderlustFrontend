@@ -48,14 +48,18 @@ public final class DatabaseController {
     public static UserDao userDao;
     public static UserTourDao userTourDao;
 
+    public static Context mainContext;
+
     private static List<DatabaseListener> listeners = new ArrayList<>();
     private static Date lastSync;
     private static boolean syncingPoiTypes;
     private static boolean syncingPois;
 
-    public static void initDaoModels(Context mainContext){
 
-        boxStore = MyObjectBox.builder().androidContext(mainContext).build();
+    public static void initDaoModels(Context context){
+
+
+        boxStore = MyObjectBox.builder().androidContext(context).build();
         communityTourDao = new CommunityTourDao();
         deviceDao = new DeviceDao();
         difficultyTypeDao = new DifficultyTypeDao();
@@ -68,6 +72,7 @@ public final class DatabaseController {
         tripDao = new TripDao();
         userDao = new UserDao();
         userTourDao = new UserTourDao();
+        mainContext = context;
         initialized = true;
     }
 

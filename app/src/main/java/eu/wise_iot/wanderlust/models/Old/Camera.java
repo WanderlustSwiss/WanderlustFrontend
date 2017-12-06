@@ -52,7 +52,6 @@ public class Camera {
     public void start() {
         dispatchPictureIntent();
         addPictureToGallery();
-//        uploadFile();
     }
 
     private void dispatchPictureIntent() {

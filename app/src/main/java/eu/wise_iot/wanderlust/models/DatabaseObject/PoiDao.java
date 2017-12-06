@@ -1,9 +1,18 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
+import android.content.Context;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.nio.channels.FileChannel;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -12,8 +21,10 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.views.MainActivity;
 import io.objectbox.Box;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
@@ -37,7 +48,6 @@ import retrofit2.Response;
 public class PoiDao extends DatabaseObjectAbstract {
     private Box<Poi> poiBox;
     private Query<Poi> poiQuery;
-    private QueryBuilder<Poi> poiQueryBuilder;
     Property columnProperty;
     public static PoiService service;
 
@@ -47,7 +57,6 @@ public class PoiDao extends DatabaseObjectAbstract {
 
     public PoiDao() {
         poiBox = DatabaseController.boxStore.boxFor(Poi.class);
-        poiQueryBuilder = poiBox.query();
         service = ServiceGenerator.createService(PoiService.class);
     }
 
@@ -89,6 +98,16 @@ public class PoiDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Poi> call, retrofit2.Response<Poi> response) {
                 if (response.isSuccessful()) {
+
+                    if(!response.body().isPublic()){
+                        for (Poi poi :  poiBox.getAll()){
+                            if(poi.getPoi_id() == id){
+                                for(Poi.ImageInfo imageInfo : poi.getImagePath()) {
+                                    response.body().addImageInfo(imageInfo.getId(), imageInfo.getName(), imageInfo.getPath());
+                                }
+                            }
+                        }
+                    }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
@@ -181,36 +200,68 @@ public class PoiDao extends DatabaseObjectAbstract {
      * add an image to the db
      *
      * @param file
-     * @param poiID
+     * @param poi
      */
-    public void addImage(final File file, final long poiID, final FragmentHandler handler) {
-        PoiService service = ServiceGenerator.createService(PoiService.class);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        Call<Poi.ImageInfo> call = service.uploadImage(poiID, body);
-        call.enqueue(new Callback<Poi.ImageInfo>() {
-            @Override
-            public void onResponse(Call<Poi.ImageInfo> call, Response<Poi.ImageInfo> response) {
-                if (response.isSuccessful()) {
+    public void addImage(final File file, final Poi poi, final FragmentHandler handler) {
 
-                    File filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                    if (!filepath.exists()) {
-                        ;
-                        if (!filepath.mkdirs()) {
-                            ;
+        if(poi.isPublic()) {
+            //Upload image to backend
+            PoiService service = ServiceGenerator.createService(PoiService.class);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+            Call<Poi.ImageInfo> call = service.uploadImage(poi.getPoi_id(), body);
+            call.enqueue(new Callback<Poi.ImageInfo>() {
+                @Override
+                public void onResponse(Call<Poi.ImageInfo> call, Response<Poi.ImageInfo> response) {
+                    if (response.isSuccessful()) {
+                        try {
+                            saveImageOnApp(response.body().getName(), file);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
-                    File image = new File(filepath, response.body().getName());
-                    file.renameTo(image);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
-                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
-            }
 
-            @Override
-            public void onFailure(Call<Poi.ImageInfo> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+                @Override
+                public void onFailure(Call<Poi.ImageInfo> call, Throwable t) {
+                    handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+                }
+            });
+        } else{
+            try {
+                int id = poi.getImagePath().size()+1;
+                String name = poi.getPoi_id() + "-" + (id) + ".jpg";
+                saveImageOnApp(name, file);
+                try {
+                    Poi poiTemp = this.findOne(Poi_.poi_id, poi.getPoi_id());
+                    poiTemp.addImageInfo(id, name, file.getAbsolutePath());
+                    poiBox.put(poiTemp);
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+
+                handler.onResponse(new ControllerEvent(EventType.OK));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
+        }
+    }
+
+    private void saveImageOnApp(String name, File file) throws IOException {
+
+        InputStream in = new FileInputStream(file);
+        FileOutputStream out = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
+
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        out.close();
+        in.close();
     }
 
     /**
@@ -270,16 +321,16 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return User who match to the search pattern in the searched columns
      */
-    public Poi findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Poi.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(Poi.class);
-        poiQueryBuilder.equal(columnProperty, searchPattern);
-        poiQuery = poiQueryBuilder.build();
-        return poiQuery.findFirst();
+    public Poi findOne(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        return poiBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
+    public Poi findOne(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        return poiBox.query().equal(searchedColumn, searchPattern).build().findFirst();
+    }
+
+
+    //TODO overload for numbers
     /**
      * Searching for user matching with the search pattern in a the selected column.
      *
@@ -287,14 +338,8 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Poi> which contains the users, who match to the search pattern in the searched columns
      */
-    public List<Poi> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Poi.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(Poi.class);
-        poiQueryBuilder.equal(columnProperty, searchPattern);
-        poiQuery = poiQueryBuilder.build();
-        return poiQuery.find();
+    public List<Poi> find(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        return poiBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
     /**
@@ -305,7 +350,7 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         poiBox.remove(findOne(searchedColumn, searchPattern));
     }
 
@@ -317,14 +362,8 @@ public class PoiDao extends DatabaseObjectAbstract {
         return poiBox.count();
     }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Poi.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(Poi.class);
-        poiQueryBuilder.equal(columnProperty, searchPattern);
-        poiQuery = poiQueryBuilder.build();
-        return poiQuery.find().size();
+    public long count(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
     }
 
     public void syncPois(){
