@@ -61,8 +61,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         populatePoiOverlay();
         initScaleBarOverlay();
         initMyLocationNewOverlay();
-        DatabaseController.register(this);
-        //DatabaseController.syncAll(); //TODO specific sync
 //        initGpxTourlistOverlay();
     }
 

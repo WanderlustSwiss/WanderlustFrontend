@@ -222,8 +222,9 @@ public class PoiDao extends DatabaseObjectAbstract {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                     }
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
 
                 @Override

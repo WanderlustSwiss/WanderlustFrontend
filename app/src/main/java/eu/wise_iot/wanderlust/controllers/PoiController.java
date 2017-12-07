@@ -228,15 +228,15 @@ public class PoiController {
             handler = parameters[0].handler;
 
             List<File> images = new ArrayList<>(imageInfos.size());
-            for (Poi.ImageInfo imageinfo : imageInfos) {
-                File image = imageinfo.getImage();
+            for (Poi.ImageInfo imageInfo : imageInfos) {
+                File image = imageInfo.getImage();
                 //Download it!
-                Call<ResponseBody> call = PoiDao.service.downloadImage(poiId, imageinfo.getId());
+                Call<ResponseBody> call = PoiDao.service.downloadImage(poiId, imageInfo.getId());
                 try {
                     Response<ResponseBody> response = call.execute();
                     if (response.isSuccessful()) {
                         ResponseBody downloadedImg = response.body();
-                        if (writeToDisk(downloadedImg, poiId, imageinfo.getId())) {
+                        if (writeToDisk(downloadedImg, poiId, imageInfo.getId())) {
                             images.add(image);
                         }
                     }
