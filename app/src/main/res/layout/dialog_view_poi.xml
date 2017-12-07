@@ -44,6 +44,15 @@
         android:layout_marginBottom="1dp"
         android:background="@color/white">
 
+        <ImageButton
+            android:id="@+id/poi_edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_edit_black_24dp"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/poi_type_text_view"
             android:layout_width="0dp"
@@ -61,9 +70,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_below="@id/poi_type_text_view"
             android:layout_toLeftOf="@+id/poi_close_dialog_button"
             android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:layout_below="@id/poi_type_text_view"
             android:background="@color/white"
             android:padding="10dp" />
 
@@ -73,9 +82,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_below="@id/poi_title_text_view"
             android:layout_toLeftOf="@+id/poi_close_dialog_button"
             android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:layout_below="@id/poi_title_text_view"
             android:background="@color/white"
             android:padding="10dp" />
 
