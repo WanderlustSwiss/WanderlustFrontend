@@ -30,6 +30,7 @@ import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
 import eu.wise_iot.wanderlust.views.MyMapOverlays;
+import retrofit2.Response;
 
 /**
  * EditPoiDialog:
@@ -147,26 +148,23 @@ public class EditPoiDialog extends DialogFragment {
             controller.saveNewPoi(poi, event -> {
                 switch (event.getType()) {
                     case OK:
-                        Poi tempPoi = (Poi) event.getModel();
+                        poi = (Poi) event.getModel();
                         //Poi image has to be uploaded after the poi is saved
-                        controller.uploadImage(new File(MapFragment.photoPath), tempPoi, new FragmentHandler() {
+                        controller.uploadImage(new File(MapFragment.photoPath), poi, new FragmentHandler() {
                             @Override
                             public void onResponse(ControllerEvent controllerEvent) {
-                                switch (controllerEvent.getType()) {
+                                switch (controllerEvent.getType()){
                                     case OK:
-                                        Poi poi = (Poi) event.getModel();
+                                        Poi.ImageInfo imageInfo = (Poi.ImageInfo) controllerEvent.getModel();
+                                        poi.addImageInfo(imageInfo);
                                         DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
-                                        Toast.makeText(context, "image upload good", Toast.LENGTH_LONG).show();
-                                        //TODO what to do if image could be saved
                                         break;
                                     default:
                                         Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
-                                        //TODO what to do if image upload fails
                                 }
                             }
                         });
                         break;
-
                     default:
                         Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
                 }

@@ -46,7 +46,7 @@ import retrofit2.Response;
  */
 
 public class PoiDao extends DatabaseObjectAbstract {
-    private Box<Poi> poiBox;
+    public Box<Poi> poiBox;
     public static PoiService service;
 
     /**
@@ -218,6 +218,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                     if (response.isSuccessful()) {
                         try {
                             saveImageOnApp(response.body().getName(), file);
+                            handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -237,9 +238,9 @@ public class PoiDao extends DatabaseObjectAbstract {
                 saveImageOnApp(name, file);
                 try {
                     Poi poiTemp = this.findOne(Poi_.poi_id, poi.getPoi_id());
-                    poiTemp.addImageInfo(id, name, file.getAbsolutePath());
+                    Poi.ImageInfo imageInfo = poiTemp.addImageInfo(id, name, file.getAbsolutePath());
                     poiBox.put(poiTemp);
-                    handler.onResponse(new ControllerEvent(EventType.OK, poiTemp));
+                    handler.onResponse(new ControllerEvent(EventType.OK, imageInfo));
                 } catch (NoSuchFieldException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
@@ -251,7 +252,7 @@ public class PoiDao extends DatabaseObjectAbstract {
         }
     }
 
-    private void saveImageOnApp(String name, File file) throws IOException {
+    public void saveImageOnApp(String name, File file) throws IOException {
 
         InputStream in = new FileInputStream(file);
         FileOutputStream out = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
