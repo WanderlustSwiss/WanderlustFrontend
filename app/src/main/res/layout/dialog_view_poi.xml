@@ -99,6 +99,4 @@
             android:text="@string/action_close" />
     </RelativeLayout>
 
-
-
 </LinearLayout>

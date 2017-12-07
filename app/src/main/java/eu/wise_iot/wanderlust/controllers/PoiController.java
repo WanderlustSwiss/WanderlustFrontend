@@ -16,6 +16,8 @@ import java.util.List;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -109,6 +111,18 @@ public class PoiController {
      */
     public void deleteImage(long poiID, long imageID, FragmentHandler handler) {
         DatabaseController.poiDao.deleteImage(poiID, imageID, handler);
+    }
+
+    /**
+     * Check if user is owner of specific poi
+     * @param poi Poi:poi to check
+     * @return boolean:true if user is owner
+     */
+    public boolean isOwnerOf(Poi poi) {
+        long thisUserId = DatabaseController.userDao.find().get(0).getUser_id();
+        long userId = poi.getUser();
+//        DatabaseController.poiDao.findOne(Poi_.poi_id, id);
+        return thisUserId == userId;
     }
 
 
