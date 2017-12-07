@@ -154,6 +154,7 @@ public class PoiController {
         if (poi.isPublic()) {
             //Download images if necessary
             GetImagesTask imagesTask = new GetImagesTask();
+            //CAREFUL asynchron task, will fire the handler
             imagesTask.execute(new GetImagesTaskParameters(poi.getPoi_id(), imageInfos, handler));
         } else {
             //Images should be local
@@ -161,6 +162,7 @@ public class PoiController {
             for (Poi.ImageInfo imageInfo : imageInfos) {
                 images.add(imageInfo.getImage());
             }
+            handler.onResponse(new ControllerEvent(EventType.OK, images));
         }
     }
 
