@@ -13,6 +13,7 @@ import io.objectbox.annotation.Id;
 public class User extends AbstractModel{
 
     @Id
+    long internalId;
     long user_id;
     String nickname;
     String email;
@@ -31,7 +32,6 @@ public class User extends AbstractModel{
      * @param email (required) email of the user
      * @param password (required) password of the user
      */
-
     public User(long user_id, String nickname, String email, String password, long profile,
                 boolean isActive, boolean isValid, String lastLogin, String accountType) {
         this.user_id = user_id;

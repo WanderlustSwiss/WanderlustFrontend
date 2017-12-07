@@ -47,8 +47,6 @@ import retrofit2.Response;
 
 public class PoiDao extends DatabaseObjectAbstract {
     private Box<Poi> poiBox;
-    private Query<Poi> poiQuery;
-    Property columnProperty;
     public static PoiService service;
 
     /**
@@ -73,9 +71,10 @@ public class PoiDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Poi> call, retrofit2.Response<Poi> response) {
                 if (response.isSuccessful()) {
-                    poi.setPoi_id(response.body().getPoi_id());
-                    poiBox.put(poi);
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), poi));
+                    Poi newPoi = response.body();
+                    newPoi.setInternal_id(0);
+                    poiBox.put(newPoi);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), newPoi));
                 } else handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
 
@@ -100,15 +99,18 @@ public class PoiDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
 
                     if(!response.body().isPublic()){
-                        for (Poi poi :  poiBox.getAll()){
-                            if(poi.getPoi_id() == id){
-                                for(Poi.ImageInfo imageInfo : poi.getImagePath()) {
-                                    response.body().addImageInfo(imageInfo.getId(), imageInfo.getName(), imageInfo.getPath());
-                                }
-                            }
+                        try {
+                            handler.onResponse(new ControllerEvent(
+                                    EventType.getTypeByCode(response.code()), findOne(Poi_.poi_id, id)));
+
+                        } catch (NoSuchFieldException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
                         }
+                    } else {
+                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                     }
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
@@ -237,13 +239,12 @@ public class PoiDao extends DatabaseObjectAbstract {
                     Poi poiTemp = this.findOne(Poi_.poi_id, poi.getPoi_id());
                     poiTemp.addImageInfo(id, name, file.getAbsolutePath());
                     poiBox.put(poiTemp);
+                    handler.onResponse(new ControllerEvent(EventType.OK, poiTemp));
                 } catch (NoSuchFieldException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-
-                handler.onResponse(new ControllerEvent(EventType.OK));
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -154,6 +154,8 @@ public class EditPoiDialog extends DialogFragment {
                             public void onResponse(ControllerEvent controllerEvent) {
                                 switch (controllerEvent.getType()) {
                                     case OK:
+                                        Poi poi = (Poi) event.getModel();
+                                        DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
                                         Toast.makeText(context, "image upload good", Toast.LENGTH_LONG).show();
                                         //TODO what to do if image could be saved
                                         break;
@@ -163,7 +165,6 @@ public class EditPoiDialog extends DialogFragment {
                                 }
                             }
                         });
-                        DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
                         break;
 
                     default:

@@ -62,7 +62,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         initScaleBarOverlay();
         initMyLocationNewOverlay();
         DatabaseController.register(this);
-        DatabaseController.syncAll(); //TODO specific sync
+        //DatabaseController.syncAll(); //TODO specific sync
 //        initGpxTourlistOverlay();
     }
 
@@ -96,7 +96,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem overlayItem) {
                         FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
-                        // make shure that no other dialog is running
+                        // make sure that no other dialog is running
                         Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
                         if (prevFragment != null) fragmentTransaction.remove(prevFragment);
                         fragmentTransaction.addToBackStack(null);
