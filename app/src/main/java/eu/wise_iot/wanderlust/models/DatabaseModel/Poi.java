@@ -76,8 +76,13 @@ public class Poi extends AbstractModel{
 
     public List<ImageInfo> getImagePath() { return imagePaths; }
 
-    public void addImageInfo(long id, String name, String path){
-        this.imagePaths.add(new ImageInfo(id, name, path));
+    public ImageInfo addImageInfo(long id, String name, String path){
+        ImageInfo imageInfo = new ImageInfo(id, name, path);
+        this.imagePaths.add(imageInfo);
+        return imageInfo;
+    }
+    public void addImageInfo(ImageInfo imageInfo) {
+        this.imagePaths.add(imageInfo);
     }
 
     public String getCreatedAt() {

@@ -19,19 +19,25 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 
 /**
  * Handles the communication between the fragments and the
  * frontend & backend database
+ *
  * @author Tobias Rüegsegger
  * @license MIT
  */
 public class PoiController {
 
-    public PoiController() {}
+    public PoiController() {
+    }
 
     /**
      * @return List of all poi types
@@ -54,6 +60,7 @@ public class PoiController {
 
     /**
      * saves a newly generated poi into the database
+     *
      * @param poi
      * @param handler
      */
@@ -63,6 +70,7 @@ public class PoiController {
 
     /**
      * Gets a poi by id and returns it in the event
+     *
      * @param id
      * @param handler
      */
@@ -72,6 +80,7 @@ public class PoiController {
 
     /**
      * Adds an image to a existing poi and saves it in the database
+     *
      * @param image
      * @param poi
      * @param handler
@@ -81,22 +90,75 @@ public class PoiController {
     }
 
     /**
+     * Adds an image to a existing poi and saves it in the database
+     *
+     * @param image
+     * @param poi
+     * @return ImageInfo check uf null!
+     */
+    public Poi.ImageInfo uploadImage(File image, Poi poi) {
+        Poi.ImageInfo imageInfo = null;
+        if (poi.isPublic()) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("image", image.getName(), requestFile);
+            Call<Poi.ImageInfo> call = DatabaseController.poiDao.service.uploadImage(poi.getPoi_id(), body);
+
+            try {
+                Response<Poi.ImageInfo> response = call.execute();
+                if(response.isSuccessful()){
+                    try{
+                       DatabaseController.poiDao.saveImageOnApp(response.body().getName(),image);
+                       imageInfo = response.body();
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else{
+            //Private
+            try {
+                int id = poi.getImagePath().size()+1;
+                String name = poi.getPoi_id() + "-" + (id) + ".jpg";
+                DatabaseController.poiDao.saveImageOnApp(name, image);
+                try {
+                    Poi poiTemp = DatabaseController.poiDao.findOne(Poi_.poi_id, poi.getPoi_id());
+                    imageInfo = poiTemp.addImageInfo(id, name, image.getAbsolutePath());
+                    DatabaseController.poiDao.poiBox.put(poiTemp);
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return imageInfo;
+    }
+
+
+
+    /**
      * Returns all images in the event as List<File>
      * if the image already exists on the phone database
      * it will attempt to download it from the backend database
+     *
      * @param poi
      * @param handler
      */
     public void getImages(Poi poi, FragmentHandler handler) {
         List<Poi.ImageInfo> imageInfos = poi.getImagePath();
-        if(poi.isPublic()) {
+        if (poi.isPublic()) {
             //Download images if necessary
             GetImagesTask imagesTask = new GetImagesTask();
             imagesTask.execute(new GetImagesTaskParameters(poi.getPoi_id(), imageInfos, handler));
-        } else{
+        } else {
             //Images should be local
             List<File> images = new ArrayList<>();
-            for(Poi.ImageInfo imageInfo : imageInfos){
+            for (Poi.ImageInfo imageInfo : imageInfos) {
                 images.add(imageInfo.getImage());
             }
         }
@@ -104,6 +166,7 @@ public class PoiController {
 
     /**
      * Deletes an image from a specific poi from the database
+     *
      * @param poiID
      * @param imageID
      * @param handler
@@ -114,6 +177,7 @@ public class PoiController {
 
     /**
      * Check if user is owner of specific poi
+     *
      * @param poi Poi:poi to check
      * @return boolean:true if user is owner
      */
@@ -155,6 +219,7 @@ public class PoiController {
          * Task which iterates over all images of a specific poi
          * and checks if it was already downloaded in the frontend database.
          * if the images doesn't exists it will attempt to download it.
+         *
          * @param parameters which are used for the task
          * @return all images from a specific poi
          */
@@ -166,19 +231,22 @@ public class PoiController {
             handler = parameters[0].handler;
 
             List<File> images = new ArrayList<>(imageInfos.size());
-            for (Poi.ImageInfo imageinfo : imageInfos) {
-                File image = imageinfo.getImage();
-                    //Download it!
-                    Call<ResponseBody> call = PoiDao.service.downloadImage(poiId, imageinfo.getId());
-                    try {
-                        ResponseBody downloadedImg = call.execute().body();
-                        if (writeToDisk(downloadedImg, poiId, imageinfo.getId())) {
+            for (Poi.ImageInfo imageInfo : imageInfos) {
+                File image = imageInfo.getImage();
+                //Download it!
+                Call<ResponseBody> call = PoiDao.service.downloadImage(poiId, imageInfo.getId());
+                try {
+                    Response<ResponseBody> response = call.execute();
+                    if (response.isSuccessful()) {
+                        ResponseBody downloadedImg = response.body();
+                        if (writeToDisk(downloadedImg, poiId, imageInfo.getId())) {
                             images.add(image);
                         }
-                    } catch (IOException e) {
-                        //What if failed?
-                        e.printStackTrace();
                     }
+                } catch (IOException e) {
+                    //What if failed?
+                    e.printStackTrace();
+                }
             }
             return images;
         }
@@ -190,7 +258,8 @@ public class PoiController {
 
         /**
          * Writes a downloaded poi to the phone and names it correctly
-         * @param body which represents the image downloaded
+         *
+         * @param body    which represents the image downloaded
          * @param poiId
          * @param imageId
          * @return true if everything went ok

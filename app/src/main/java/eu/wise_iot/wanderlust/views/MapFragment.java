@@ -32,6 +32,7 @@ import java.io.File;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.models.Old.StyleBehavior;
@@ -128,6 +129,7 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadPreferences();
+        DatabaseController.register(mapOverlays);
     }
 
     /**
