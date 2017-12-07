@@ -8,6 +8,36 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.jsibbold.zoomage.ZoomageView
+            android:id="@+id/poi_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@android:color/background_light"
+            app:zoomage_animateOnReset="true"
+            app:zoomage_autoCenter="true"
+            app:zoomage_autoResetMode="NEVER"
+            app:zoomage_maxScale="6"
+            app:zoomage_minScale="1"
+            app:zoomage_restrictBounds="true"
+            app:zoomage_translatable="true"
+            app:zoomage_zoomable="true" />
+
+        <ImageView
+            android:id="@+id/poi_mode_private_image"
+            android:layout_width="96dp"
+            android:layout_height="36dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp"
+            android:contentDescription="@null" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/content_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,34 +99,6 @@
             android:text="@string/action_close" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <com.jsibbold.zoomage.ZoomageView
-            android:id="@+id/poi_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:background="@android:color/background_light"
-            app:zoomage_animateOnReset="true"
-            app:zoomage_autoCenter="true"
-            app:zoomage_autoResetMode="NEVER"
-            app:zoomage_maxScale="6"
-            app:zoomage_minScale="1"
-            app:zoomage_restrictBounds="true"
-            app:zoomage_translatable="true"
-            app:zoomage_zoomable="true" />
-
-        <ImageView
-            android:id="@+id/poi_mode_private_image"
-            android:layout_width="96dp"
-            android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="10dp"
-            android:contentDescription="@null" />
-    </RelativeLayout>
 
 </LinearLayout>
