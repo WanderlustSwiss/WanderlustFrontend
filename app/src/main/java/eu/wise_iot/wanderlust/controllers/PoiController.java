@@ -88,18 +88,17 @@ public class PoiController {
      * @param handler
      */
     public void getImages(Poi poi, FragmentHandler handler) {
+        List<Poi.ImageInfo> imageInfos = poi.getImagePath();
         if(poi.isPublic()) {
-            List<Poi.ImageInfo> imageInfos = poi.getImagePath();
             //Download images if necessary
             GetImagesTask imagesTask = new GetImagesTask();
-            imagesTask.execute(new GetImagesTaskParameters(poi.getPoi_id(), imageInfos, poi.isPublic(), handler));
+            imagesTask.execute(new GetImagesTaskParameters(poi.getPoi_id(), imageInfos, handler));
         } else{
             //Images should be local
             List<File> images = new ArrayList<>();
-
-//            File image = new File(DatabaseController.mainContext.getApplicationInfo().dataDir
-//                    + this.name);
-
+            for(Poi.ImageInfo imageInfo : imageInfos){
+                images.add(imageInfo.getImage());
+            }
         }
     }
 
@@ -136,14 +135,11 @@ public class PoiController {
     private class GetImagesTaskParameters {
         long poiId;
         List<Poi.ImageInfo> imageInfos;
-        boolean isPublic;
         FragmentHandler handler;
 
-        GetImagesTaskParameters(long poiId, List<Poi.ImageInfo> imageInfos,
-                                boolean isPublic, FragmentHandler handler) {
+        GetImagesTaskParameters(long poiId, List<Poi.ImageInfo> imageInfos, FragmentHandler handler) {
             this.poiId = poiId;
             this.imageInfos = imageInfos;
-            this.isPublic = isPublic;
             this.handler = handler;
         }
     }
@@ -167,16 +163,11 @@ public class PoiController {
 
             long poiId = parameters[0].poiId;
             List<Poi.ImageInfo> imageInfos = parameters[0].imageInfos;
-            boolean isPublic = parameters[0].isPublic;
             handler = parameters[0].handler;
 
             List<File> images = new ArrayList<>(imageInfos.size());
             for (Poi.ImageInfo imageinfo : imageInfos) {
-                File image = imageinfo.getImage(isPublic);
-                if (image.exists()) {
-                    //looks like we already have it
-                    images.add(image);
-                } else {
+                File image = imageinfo.getImage();
                     //Download it!
                     Call<ResponseBody> call = PoiDao.service.downloadImage(poiId, imageinfo.getId());
                     try {
@@ -188,7 +179,6 @@ public class PoiController {
                         //What if failed?
                         e.printStackTrace();
                     }
-                }
             }
             return images;
         }
@@ -207,11 +197,6 @@ public class PoiController {
          */
         private boolean writeToDisk(ResponseBody body, long poiId, long imageId) {
 
-
-            File filepath = new File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                    poiId + "-" + imageId + ".jpg");
-
             InputStream inputStream = null;
             OutputStream outputStream = null;
             try {
@@ -222,8 +207,9 @@ public class PoiController {
                 long fileSize = body.contentLength();
                 long fileSizeDownloaded = 0;
 
+                String name = poiId + "-" + imageId + ".jpg";
                 inputStream = body.byteStream();
-                outputStream = new FileOutputStream(filepath);
+                outputStream = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
 
 
                 while (true) {

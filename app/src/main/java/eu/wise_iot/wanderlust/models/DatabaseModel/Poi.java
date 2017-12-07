@@ -1,10 +1,10 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
-import android.os.Environment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +28,7 @@ import io.objectbox.converter.PropertyConverter;
 public class Poi extends AbstractModel{
 
     @Id
-    long internalId;
+    long internal_id;
     long poi_id;
     String title;
     String description;
@@ -58,7 +58,7 @@ public class Poi extends AbstractModel{
     }
 
     public Poi(){
-        this.internalId = 0;
+        this.internal_id = 0;
         this.title = "No Title";
         this.description = "No Description";
         this.imagePaths = new ArrayList<>();
@@ -118,12 +118,12 @@ public class Poi extends AbstractModel{
         this.poi_id = poi_id;
     }
 
-    public long getInternalId() {
-        return internalId;
+    public long getInternal_id() {
+        return internal_id;
     }
 
-    public void setInternalId(long internalId) {
-        this.internalId = internalId;
+    public void setInternal_id(long internal_id) {
+        this.internal_id = internal_id;
     }
 
     public int getRate() {
@@ -200,8 +200,8 @@ public class Poi extends AbstractModel{
         }
 
         public File getImage(){
-            return new File(DatabaseController.mainContext.getApplicationInfo().dataDir
-                        + this.name);
+            return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
+                        "/files/" + this.name);
         }
 
     }
@@ -213,8 +213,8 @@ public class Poi extends AbstractModel{
                 return null;
             }
             Gson gson = new Gson();
-            List<ImageInfo> list = gson.fromJson(databaseValue, new TypeToken<List<ImageInfo>>() {}.getType());
-            return list;
+            Type type= new TypeToken<List<ImageInfo>>() {}.getType();
+            return gson.fromJson(databaseValue, type);
         }
 
         @Override
@@ -223,7 +223,8 @@ public class Poi extends AbstractModel{
                 return null;
             }
             Gson gson = new Gson();
-            return gson.toJson(entityProperty, new TypeToken<List<ImageInfo>>() {}.getType());
+            Type type = new TypeToken<List<ImageInfo>>() {}.getType();
+            return gson.toJson(entityProperty, type);
         }
     }
 }

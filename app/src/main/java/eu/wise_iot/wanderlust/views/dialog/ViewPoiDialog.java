@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.views.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,10 +24,12 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 
 /**
  * ViewPoiDialog:
@@ -49,11 +49,9 @@ public class ViewPoiDialog extends DialogFragment {
     private TextView dateTextView;
     private TextView descriptionTextView;
 
-    private ImageButton editPoiButton;
-
     private long poiId;
 
-    private static PoiController controller;
+    private PoiController controller;
 
     public static ViewPoiDialog newInstance(OverlayItem overlayItem) {
 
@@ -90,7 +88,12 @@ public class ViewPoiDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_view_poi, container);
+        return inflater.inflate(R.layout.dialog_view_poi, container);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         poiImage = (ImageView) view.findViewById(R.id.poi_image);
         displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
         typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
@@ -98,29 +101,13 @@ public class ViewPoiDialog extends DialogFragment {
         dateTextView = (TextView) view.findViewById(R.id.poi_date_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
         closeDialogButton = (Button) view.findViewById(R.id.poi_close_dialog_button);
-        editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initActionControls();
-    }
-
-    private void initActionControls() {
-        // dismisses fragment without action
-        closeDialogButton.setOnClickListener(v -> dismiss());
-    }
-
-    private void initEditButton() {
-        editPoiButton.setVisibility(View.VISIBLE);
-        editPoiButton.setOnClickListener(v -> {
-            Intent intent = new Intent();
-
+        closeDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
         });
     }
-
 
     private void loadPoiById(long id) {
 
@@ -129,59 +116,46 @@ public class ViewPoiDialog extends DialogFragment {
                 case OK:
                     Poi poi = (Poi) event.getModel();
 
-                    controller.getImages(poi, new FragmentHandler() {
-                        @Override
-                        public void onResponse(ControllerEvent controllerEvent) {
-                            List<File> images = (List<File>) controllerEvent.getModel();
-                            if (images.size() > 0) {
-                                //TODO put them in some kind of swipe container
-                                Picasso.with(context).load(images.get(0)).into(poiImage);
+
+                        controller.getImages(poi, new FragmentHandler() {
+                            @Override
+                            public void onResponse(ControllerEvent controllerEvent) {
+                                List<File> images = (List<File>) controllerEvent.getModel();
+                                if (images.size() > 0) {
+                                    //TODO put them in some kind of swipe container
+                                    Picasso.with(context).load(images.get(0)).into(poiImage);
+                                }
                             }
+                        });
+
+
+                        if (!poi.isPublic()) {
+                            Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
                         }
-                    });
+
+                        //String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
+                        //typeTextView.setText(controller.getType(poi.getType()).getName());
+                        typeTextView.setText("blabla");
+                        titleTextView.setText(poi.getTitle());
+
+                        dateTextView.setText(poi.getCreatedAtInGerman());
+                        descriptionTextView.setText(poi.getDescription());
 
 
-                    if (!poi.isPublic()) {
-                        Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
+                        //poi types which have to go to a select box or somthing:
+                        List<PoiType> poiTypes = controller.getAllPoiTypes();
+
+                        break;
+                        default:
+                            //TODO was passiert wenn nicht gefunden..
+                            //Careful getModel() will return null!
+
+
                     }
 
-                    String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
-                    typeTextView.setText(controller.getType(poi.getType()).getName());
 
-                    titleTextView.setText(poi.getTitle());
-
-                    dateTextView.setText(poi.getCreatedAtInGerman());
-                    descriptionTextView.setText(poi.getDescription());
-
-                    if(controller.isOwnerOf(poi)) {
-                        initEditButton();
-                    }
-
-                    // get all images of poi
-//                        for (Poi.ImageInfo imageInfo : poi.getImagePath()) {
-//                            File image = new File(imageInfo.getPath());
-//
-//                            controller.downloadImage(poi.getPoi_id(), imageInfo.getId(), new FragmentHandler() {
-//                                @Override
-//                                public void onResponse(ControllerEvent event) {
-//                                    switch (event.getType()) {
-//                                        case OK:
-//                                            // image zuweisen
-//                                    }
-//                                }
-//                            });
-//                        }
-
-
-                    //poi types which have to go to a select box or somthing:
-                    List<PoiType> poiTypes = controller.getAllPoiTypes();
-
-                    break;
-                default:
-                    //TODO was passiert wenn nicht gefunden..
-                    //Careful getModel() will return null!
-            }
         });
+
     }
 
     // TODO: maybe enable screen orientation in this dialog so that landscape pictures can be displayed full size
