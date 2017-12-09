@@ -155,8 +155,7 @@ public class EditPoiDialog extends DialogFragment {
                             public void onResponse(ControllerEvent controllerEvent) {
                                 switch (controllerEvent.getType()){
                                     case OK:
-                                        Poi.ImageInfo imageInfo = (Poi.ImageInfo) controllerEvent.getModel();
-                                        poi.addImageInfo(imageInfo);
+                                        poi = (Poi) controllerEvent.getModel();
                                         DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
                                         break;
                                     default:

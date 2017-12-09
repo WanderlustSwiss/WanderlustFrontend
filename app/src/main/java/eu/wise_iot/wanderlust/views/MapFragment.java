@@ -33,6 +33,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.models.Old.StyleBehavior;
@@ -130,6 +131,13 @@ public class MapFragment extends Fragment {
         super.onResume();
         loadPreferences();
         DatabaseController.register(mapOverlays);
+        DatabaseController.sync(DatabaseEvent.SyncType.POI);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DatabaseController.unregister(mapOverlays);
     }
 
     /**
@@ -460,12 +468,6 @@ public class MapFragment extends Fragment {
         EditPoiDialog dialog = EditPoiDialog.newInstance(imageFileName, lastKnownLocation);
         Log.d(TAG, "lastKnownLocation: " + lastKnownLocation);
         dialog.show(fragmentTransaction, Constants.CREATE_FEEDBACK_DIALOG);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mapOverlays.unregister();
     }
 }
 

@@ -20,6 +20,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -138,7 +139,7 @@ public class ViewPoiDialog extends DialogFragment {
                         typeTextView.setText("blabla");
                         titleTextView.setText(poi.getTitle());
 
-                        dateTextView.setText(poi.getCreatedAtInGerman());
+                        dateTextView.setText(poi.getCreatedAt(Locale.GERMAN));
                         descriptionTextView.setText(poi.getDescription());
 
 

@@ -2,13 +2,18 @@ package eu.wise_iot.wanderlust.controllers;
 
 
 import android.content.Context;
+import android.util.Log;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DeviceDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
@@ -21,11 +26,13 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
+import eu.wise_iot.wanderlust.views.MainActivity;
 import io.objectbox.BoxStore;
 
 /**
  * Database controller which initializes all Model Dao objects
  * Use this statically to use dao models or boxstore
+ *
  * @author Tobias Rüegsegger
  * @license MIT
  */
@@ -55,71 +62,79 @@ public final class DatabaseController {
     private static boolean syncingPoiTypes;
     private static boolean syncingPois;
 
+    private static LinkedList<DownloadedImage> downloadedImages = new LinkedList<>();
+    private static long cacheSize;
 
-    public static void initDaoModels(Context context){
+    //in bytes
+    private static final long MAXCACHESIZE = 20_000_000;
 
+    public static void initDaoModels(Context context) {
 
-        boxStore = MyObjectBox.builder().androidContext(context).build();
-        communityTourDao = new CommunityTourDao();
-        deviceDao = new DeviceDao();
-        difficultyTypeDao = new DifficultyTypeDao();
-        equipmentDao = new EquipmentDao();
-        historyDao = new HistoryDao();
-        poiDao = new PoiDao();
-        poiTypeDao = new PoiTypeDao();
-        profileDao = new ProfileDao();
-        tourKitDao = new TourKitDao();
-        tripDao = new TripDao();
-        userDao = new UserDao();
-        userTourDao = new UserTourDao();
-        mainContext = context;
-        initialized = true;
+        if (!initialized) {
+            boxStore = MyObjectBox.builder().androidContext(context).build();
+            communityTourDao = new CommunityTourDao();
+            deviceDao = new DeviceDao();
+            difficultyTypeDao = new DifficultyTypeDao();
+            equipmentDao = new EquipmentDao();
+            historyDao = new HistoryDao();
+            poiDao = new PoiDao();
+            poiTypeDao = new PoiTypeDao();
+            profileDao = new ProfileDao();
+            tourKitDao = new TourKitDao();
+            tripDao = new TripDao();
+            userDao = new UserDao();
+            userTourDao = new UserTourDao();
+            mainContext = context;
+            initialized = true;
+        }
     }
 
     /**
      * Deletes all files in the frontend database
      */
-    public static void flushDatabase(){
+    public static void flushDatabase() {
         boxStore.deleteAllFiles();
     }
 
     /**
      * Deletes all pois from the frontend database
      */
-    public static void deleteAllPois(){
+    public static void deleteAllPois() {
         poiDao.deleteAll();
     }
 
-    public static void register(DatabaseListener listener){
-        if(!listeners.contains(listener)) {
-            listeners.add(listener);
-        }
-    }
 
-    public static void unregister(DatabaseListener listener){
-        listeners.remove(listener);
-    }
-
-    public static void syncAll(){
+    /**
+     * syncs models based on syncType
+     * @param type
+     */
+    public static void sync(DatabaseEvent.SyncType type) {
 
         lastSync = new Date();
-        if(!syncingPoiTypes){
-            syncingPoiTypes = true;
-            poiTypeDao.syncTypes();
-        }
-
-        if(!syncingPois){
-            syncingPoiTypes = true;
-            poiDao.syncPois();
+        switch (type){
+            case POI:
+                if (!syncingPois) {
+                    syncingPoiTypes = true;
+                    poiDao.syncPois();
+                }
+                break;
+            case SINGLEPOI:
+                if (!syncingPoiTypes) {
+                    syncingPoiTypes = true;
+                    poiTypeDao.syncTypes();
+                }
+                break;
+            default:
         }
     }
 
-    public static void syncPoiTypesDone(){
+
+    public static void syncPoiTypesDone() {
         syncingPoiTypes = false;
         sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
     }
 
-    public static void syncPoisDone(){
+    public static void syncPoisDone() {
         syncingPois = false;
         sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POI));
     }
@@ -127,13 +142,81 @@ public final class DatabaseController {
     /**
      * @return the time when the last sync !STARTED!
      */
-    public static Date lastMasterSync(){
+    public static Date lastSync() {
         return lastSync;
     }
 
-    public static void sendUpdate(DatabaseEvent event){
-        for (DatabaseListener listener: listeners) {
+
+    public static void addDownloadedImages(List<DownloadedImage> images){
+
+        for (DownloadedImage image : images){
+            downloadedImages.add(image);
+            cacheSize += image.getSize();
+        }
+        clearCache();
+    }
+
+    public static void clearCache(){
+
+        //TODO endless loop if userimages are higher than maxchachesize
+        while(cacheSize >= MAXCACHESIZE){
+            DownloadedImage image = downloadedImages.getFirst();
+            if(image.isPublic()) {
+                if (image.getImage().delete()) {
+                    cacheSize -= image.getSize();
+                    downloadedImages.remove(image);
+                } else {
+                    Log.e(DatabaseController.class.toString(),
+                            "image " + image.getImage().getAbsolutePath() + " could not be deleted");
+                    break;
+                }
+            }
+        }
+
+    }
+
+
+    /**
+     * Deletes all .jpg files in the app storage
+     */
+    public static void clearAllDownloadedImages(){
+        List<Long> privatePoiIds = new ArrayList<>();
+        for(Poi poi : poiDao.find(Poi_.isPublic, false)){
+            privatePoiIds.add(poi.getPoi_id());
+        }
+        File filesDir = mainContext.getApplicationContext().getFilesDir();
+
+        for(File image : filesDir.listFiles()){
+            String name = image.getName();
+            int dotIndex = name.lastIndexOf('.');
+            if(dotIndex == -1) continue; //not a valid file
+            String extension = name.substring(dotIndex+1);
+            long imageId = Long.parseLong(name.substring(name.indexOf('-')+1, name.indexOf('.')));
+            if(privatePoiIds.contains(imageId) && extension.equals("jpg")) {
+                if (!image.delete()) {
+                    Log.e(DatabaseController.class.toString(),
+                            "image " + image.getAbsolutePath() + " could not be deleted");
+                    break;
+                }
+            }
+        }
+        cacheSize = 0;
+    }
+
+
+    public static void sendUpdate(DatabaseEvent event) {
+        for (DatabaseListener listener : listeners) {
             listener.update(event);
         }
+    }
+
+    public static void register(DatabaseListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    public static void unregister(DatabaseListener listener) {
+        listeners.remove(listener);
     }
 }
