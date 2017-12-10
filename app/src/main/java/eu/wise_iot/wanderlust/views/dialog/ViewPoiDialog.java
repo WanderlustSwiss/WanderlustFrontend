@@ -11,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -44,11 +46,14 @@ public class ViewPoiDialog extends DialogFragment {
 
     private ImageView poiImage;
     private ImageView displayModeImage;
-    private Button closeDialogButton;
     private TextView typeTextView;
     private TextView titleTextView;
     private TextView dateTextView;
     private TextView descriptionTextView;
+
+    private ImageButton closeDialogButton;
+    private ImageButton editPoiButton;
+    private ImageButton deletePoiButton;
 
     private long poiId;
 
@@ -97,12 +102,20 @@ public class ViewPoiDialog extends DialogFragment {
         titleTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
         dateTextView = (TextView) view.findViewById(R.id.poi_date_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
-        closeDialogButton = (Button) view.findViewById(R.id.poi_close_dialog_button);
-        closeDialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
+        closeDialogButton = (ImageButton) view.findViewById(R.id.poi_close_dialog_button);
+        closeDialogButton.setOnClickListener(v -> {
+            // dismisses the current dialog view
+            dismiss();
+        });
+        editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
+        editPoiButton.setOnClickListener(v -> {
+            // todo: add action
+            Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
+        });
+        deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
+        deletePoiButton.setOnClickListener(v -> {
+            // todo: add action
+            Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
         });
     }
 
