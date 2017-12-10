@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/myPrimaryDarkTransparent"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -40,7 +39,7 @@
     <RelativeLayout
         android:id="@+id/content_header"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginBottom="1dp"
         android:background="@color/white">
 
@@ -50,8 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_edit_black_24dp"
-            android:visibility="gone" />
+            android:src="@drawable/ic_edit_black_24dp" />
 
         <TextView
             android:id="@+id/poi_type_text_view"
@@ -61,7 +59,6 @@
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@+id/poi_close_dialog_button"
             android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:background="@color/white"
             android:padding="10dp" />
 
         <TextView
@@ -73,7 +70,6 @@
             android:layout_below="@id/poi_type_text_view"
             android:layout_toLeftOf="@+id/poi_close_dialog_button"
             android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:background="@color/white"
             android:padding="10dp" />
 
         <TextView
@@ -85,7 +81,6 @@
             android:layout_below="@id/poi_title_text_view"
             android:layout_toLeftOf="@+id/poi_close_dialog_button"
             android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:background="@color/white"
             android:padding="10dp" />
 
         <TextView
@@ -97,7 +92,6 @@
             android:layout_below="@id/poi_date_text_view"
             android:layout_toLeftOf="@+id/poi_close_dialog_button"
             android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:background="@color/white"
             android:padding="10dp" />
 
         <Button
