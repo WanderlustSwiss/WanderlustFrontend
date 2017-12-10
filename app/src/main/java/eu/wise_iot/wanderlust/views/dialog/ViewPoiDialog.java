@@ -134,9 +134,9 @@ public class ViewPoiDialog extends DialogFragment {
                             Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
                         }
 
-                        //String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
-                        //typeTextView.setText(controller.getType(poi.getType()).getName());
-                        typeTextView.setText("blabla");
+                        String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
+                        typeTextView.setText(typeValues[(int) poi.getType()]);
+
                         titleTextView.setText(poi.getTitle());
 
                         dateTextView.setText(poi.getCreatedAt(Locale.GERMAN));
