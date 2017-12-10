@@ -3,14 +3,11 @@ package eu.wise_iot.wanderlust.views.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,12 +24,9 @@ import java.util.Locale;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 
 /**
  * ViewPoiDialog:
@@ -90,12 +84,7 @@ public class ViewPoiDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_view_poi, container);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        View view = inflater.inflate(R.layout.dialog_view_poi, container);
         poiImage = (ImageView) view.findViewById(R.id.poi_image);
         displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
         typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
@@ -103,16 +92,26 @@ public class ViewPoiDialog extends DialogFragment {
         dateTextView = (TextView) view.findViewById(R.id.poi_date_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
         closeDialogButton = (ImageButton) view.findViewById(R.id.poi_close_dialog_button);
+        editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
+        deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initActionControls();
+    }
+
+    private void initActionControls() {
         closeDialogButton.setOnClickListener(v -> {
             // dismisses the current dialog view
             dismiss();
         });
-        editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
         editPoiButton.setOnClickListener(v -> {
             // todo: add action
             Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
         });
-        deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
         deletePoiButton.setOnClickListener(v -> {
             // todo: add action
             Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
