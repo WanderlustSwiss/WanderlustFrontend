@@ -108,6 +108,8 @@ public class ViewPoiDialog extends DialogFragment {
             // dismisses the current dialog view
             dismiss();
         });
+
+        // todo: add check if user is owner of poi. only then make action controls visible
         editPoiButton.setOnClickListener(v -> {
             // todo: add action
             Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
@@ -138,6 +140,7 @@ public class ViewPoiDialog extends DialogFragment {
                         Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
                     }
 
+
                     String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
                     typeTextView.setText(typeValues[(int) poi.getType()]);
 
@@ -152,5 +155,9 @@ public class ViewPoiDialog extends DialogFragment {
                     //Careful getModel() will return null!
             }
         });
+    }
+
+    private void showControlsForOwner() {
+
     }
 }
