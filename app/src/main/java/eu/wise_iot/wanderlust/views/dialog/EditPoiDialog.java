@@ -77,9 +77,8 @@ public class EditPoiDialog extends DialogFragment {
         double lon = args.getDouble(Constants.LAST_POS_LON);
         lastKnownLocation = new GeoPoint(lat, lon);
 
-        // set style and options menu
+        // set style
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -137,6 +136,12 @@ public class EditPoiDialog extends DialogFragment {
                 String title = titleEditText.getText().toString();
                 poi.setTitle(title);
             }
+
+            // todo: poi can't be saved when title is empty. why? quickfix. add better reaction to missing user input
+            if (poi.getTitle().isEmpty()) {
+                Toast.makeText(context, "bitte Titel hinzufügen", Toast.LENGTH_LONG).show();
+                return;
+            }
             if (descriptionEditText != null && descriptionEditText.getText() != null) {
                 String description = descriptionEditText.getText().toString();
                 poi.setDescription(description);
@@ -153,7 +158,7 @@ public class EditPoiDialog extends DialogFragment {
                         controller.uploadImage(new File(MapFragment.photoPath), poi, new FragmentHandler() {
                             @Override
                             public void onResponse(ControllerEvent controllerEvent) {
-                                switch (controllerEvent.getType()){
+                                switch (controllerEvent.getType()) {
                                     case OK:
                                         poi = (Poi) controllerEvent.getModel();
                                         DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
@@ -171,10 +176,5 @@ public class EditPoiDialog extends DialogFragment {
             dismiss();
         });
         buttonCancel.setOnClickListener(view -> dismiss());
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.map_fragment_layer_menu, menu);
     }
 }
