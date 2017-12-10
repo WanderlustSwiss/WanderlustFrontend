@@ -24,10 +24,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.api.IMapView;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
@@ -63,8 +59,8 @@ public class MapFragment extends Fragment {
     private GeoPoint centerOfMap;
     private GeoPoint lastKnownLocation;
 
-    private MapView mapView;
-    //private WanderlustMapView mapView;
+    //private MapView mapView;
+    private WanderlustMapView mapView;
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
 
@@ -224,13 +220,14 @@ public class MapFragment extends Fragment {
         editor.apply();
     }
 
+
     /**
      * Initializes map view
      *
      * @param view View: view of current fragment
      */
     private void initMap(View view) {
-        mapView = (MapView) view.findViewById(R.id.mapView);
+        mapView = (WanderlustMapView) view.findViewById(R.id.mapView);
         ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
                 new String[]{"https://opentopomap.org/"});
         mapView.setTileSource(tileSource);
@@ -238,13 +235,14 @@ public class MapFragment extends Fragment {
         mapView.setMultiTouchControls(true);
 
         //TODO fabian fragen wie mapView initialisiert wird
-        mapView.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
-                return true;
-            }
-        });
+
+//        mapView.setOnDragListener(new View.OnDragListener() {
+//            @Override
+//            public boolean onDrag(View v, DragEvent event) {
+//                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
+//                return true;
+//            }
+//        });
     }
 
     /**
