@@ -389,10 +389,8 @@ public class MapFragment extends Fragment {
             public void onClick(View view) {
                 // FIXME: State is always STATE_EXPANDING, so view does not get collapsed or expanded
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-                    Log.d(TAG, "state was collapsed, " + bottomSheetBehavior.getState());
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 } else {
-                    Log.d(TAG, "state was expanded, " + bottomSheetBehavior.getState());
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }
             }
