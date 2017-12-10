@@ -15,7 +15,7 @@
         android:background="@color/myPrimaryDark"
         tools:context="eu.wise_iot.wanderlust.views.MapFragment">
 
-        <org.osmdroid.views.MapView
+        <eu.wise_iot.wanderlust.views.WanderlustMapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
