@@ -70,7 +70,6 @@ public class ViewPoiDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         context = getActivity();
         controller = new PoiController();
-//        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED); // TODO: added for screen orientation change (see TODO below)
 
         Bundle args = getArguments();
         poiId = args.getLong(Constants.POI_ID);
@@ -111,12 +110,10 @@ public class ViewPoiDialog extends DialogFragment {
     }
 
     private void loadPoiById(long id) {
-
         controller.getPoiById(id, event -> {
             switch (event.getType()) {
                 case OK:
                     Poi poi = (Poi) event.getModel();
-
 
                         controller.getImages(poi, new FragmentHandler() {
                             @Override
@@ -128,7 +125,6 @@ public class ViewPoiDialog extends DialogFragment {
                                 }
                             }
                         });
-
 
                         if (!poi.isPublic()) {
                             Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
@@ -150,31 +146,7 @@ public class ViewPoiDialog extends DialogFragment {
                         default:
                             //TODO was passiert wenn nicht gefunden..
                             //Careful getModel() will return null!
-
-
                     }
-
-
         });
-
     }
-
-    // TODO: maybe enable screen orientation in this dialog so that landscape pictures can be displayed full size
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//    }
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        outState.putLong("id", poiId);
-//        super.onSaveInstanceState(outState);
-//    }
-//    @Override
-//    public void onViewStateRestored(Bundle savedInstanceState) {
-//        super.onViewStateRestored(savedInstanceState);
-//        if (savedInstanceState != null) {
-//            poiId = savedInstanceState.getLong("id");
-//        }
-//    }
 }
