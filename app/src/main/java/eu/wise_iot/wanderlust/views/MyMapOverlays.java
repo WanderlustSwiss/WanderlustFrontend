@@ -14,6 +14,7 @@ import android.widget.Toast;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -223,6 +224,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         return myLocationNewOverlay;
     }
 
+
     @Override
     public void update(DatabaseEvent event) {
 
@@ -235,4 +237,5 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             mapView.invalidate();
         }
     }
+
 }

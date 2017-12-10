@@ -15,6 +15,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * PoiService:
@@ -35,6 +36,9 @@ public interface PoiService {
         Call<Poi> retrievePoi(@Path("id") long id);
     @GET("/poi")
         Call<List<Poi>> retrieveAllPois();
+    @GET("/poi")
+        Call<List<Poi>> retrievePoisByArea(@Query("lat1") double lat1, @Query("long1") double lon1,
+                                           @Query("lat2") double lat2, @Query("long2") double lon2);
     @POST("/poi")
         Call<Poi> createPoi(@Body Poi poi);
     @PUT("/poi/{id}")

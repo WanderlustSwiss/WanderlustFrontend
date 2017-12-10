@@ -31,8 +31,10 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import io.objectbox.BoxStore;
 import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
+        BoxStore store = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        store.close();
+        store.deleteAllFiles();
         DatabaseController.initDaoModels(getApplicationContext());
 
         //TODO remove after login works
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onResponse(ControllerEvent controllerEvent) {
 
 
-                DatabaseController.sync(DatabaseEvent.SyncType.POITYPE);
+                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
                 DatabaseController.clearAllDownloadedImages();
 
 

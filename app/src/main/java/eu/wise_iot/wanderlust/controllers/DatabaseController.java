@@ -5,6 +5,9 @@ import android.content.Context;
 import android.util.Log;
 
 
+import org.osmdroid.util.BoundingBox;
+import org.osmdroid.util.GeoPoint;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,12 +109,12 @@ public final class DatabaseController {
 
     /**
      * syncs models based on syncType
-     * @param type
+     * @param event
      */
-    public static void sync(DatabaseEvent.SyncType type) {
+    public static void sync(DatabaseEvent event) {
 
         lastSync = new Date();
-        switch (type){
+        switch (event.getType()){
             case POI:
                 if (!syncingPois) {
                     syncingPoiTypes = true;
@@ -124,6 +127,12 @@ public final class DatabaseController {
                     poiTypeDao.syncTypes();
                 }
                 break;
+            case POIAREA:
+                if (!syncingPois) {
+                    syncingPois = true;
+                    BoundingBox box = (BoundingBox) event.getObj();
+                    poiDao.syncPois(box);
+                }
             default:
         }
     }
