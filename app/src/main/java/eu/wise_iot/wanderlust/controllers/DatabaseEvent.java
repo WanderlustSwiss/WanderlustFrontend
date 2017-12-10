@@ -1,5 +1,8 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import org.osmdroid.util.BoundingBox;
+import org.osmdroid.util.GeoPoint;
+
 /*
  * ControllerEvent has information of a made request
  * @author Tobias Rüegsegger
@@ -8,7 +11,7 @@ package eu.wise_iot.wanderlust.controllers;
 public class DatabaseEvent<T> {
 
     public enum SyncType{
-        POI, SINGLEPOI, POITYPE;
+        POI, SINGLEPOI, POITYPE, POIAREA;
     }
 
     private SyncType type;

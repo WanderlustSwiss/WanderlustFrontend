@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.provider.MediaStore;
 
+import org.osmdroid.util.BoundingBox;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -131,6 +133,7 @@ public class PoiDao extends DatabaseObjectAbstract {
             }
         });
     }
+
 
     /**
      * get all pois out of the remote database by entity
@@ -427,6 +430,32 @@ public class PoiDao extends DatabaseObjectAbstract {
 
     public void syncPois() {
         Call<List<Poi>> call = service.retrieveAllPois();
+        call.enqueue(new Callback<List<Poi>>() {
+            @Override
+            public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
+                if (response.isSuccessful()) {
+                    poiBox.remove(find(Poi_.isPublic, true));
+                    for(Poi poi : response.body()){
+                        if(poi.isPublic()) {
+                            poi.setInternal_id(0);
+                            poiBox.put(poi);
+                        }
+                    }
+
+                }
+                DatabaseController.syncPoisDone();
+            }
+
+            @Override
+            public void onFailure(Call<List<Poi>> call, Throwable t) {
+                DatabaseController.syncPoisDone();
+            }
+        });
+    }
+
+    public void syncPois(BoundingBox box) {
+        Call<List<Poi>> call = service.retrievePoisByArea(
+                box.getLatNorth(), box.getLonWest(), box.getLatSouth(), box.getLonEast());
         call.enqueue(new Callback<List<Poi>>() {
             @Override
             public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {

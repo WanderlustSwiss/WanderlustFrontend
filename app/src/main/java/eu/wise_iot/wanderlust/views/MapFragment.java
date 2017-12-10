@@ -12,18 +12,25 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.api.IMapView;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
@@ -57,6 +64,7 @@ public class MapFragment extends Fragment {
     private GeoPoint lastKnownLocation;
 
     private MapView mapView;
+    //private WanderlustMapView mapView;
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
 
@@ -131,7 +139,7 @@ public class MapFragment extends Fragment {
         super.onResume();
         loadPreferences();
         DatabaseController.register(mapOverlays);
-        DatabaseController.sync(DatabaseEvent.SyncType.POI);
+        //DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POI));
     }
 
     @Override
@@ -228,6 +236,15 @@ public class MapFragment extends Fragment {
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
         mapView.setMultiTouchControls(true);
+
+        //TODO fabian fragen wie mapView initialisiert wird
+        mapView.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
+                return true;
+            }
+        });
     }
 
     /**
