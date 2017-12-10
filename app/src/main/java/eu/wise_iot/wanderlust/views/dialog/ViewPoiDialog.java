@@ -55,7 +55,6 @@ public class ViewPoiDialog extends DialogFragment {
     private PoiController controller;
 
     public static ViewPoiDialog newInstance(OverlayItem overlayItem) {
-
         ViewPoiDialog dialog = new ViewPoiDialog();
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         long poiId = Long.valueOf(overlayItem.getUid());
@@ -80,8 +79,6 @@ public class ViewPoiDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        // make the background of the dialog transparent
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return dialog;
     }
 
@@ -114,39 +111,34 @@ public class ViewPoiDialog extends DialogFragment {
             switch (event.getType()) {
                 case OK:
                     Poi poi = (Poi) event.getModel();
-
-                        controller.getImages(poi, new FragmentHandler() {
-                            @Override
-                            public void onResponse(ControllerEvent controllerEvent) {
-                                List<File> images = (List<File>) controllerEvent.getModel();
-                                if (images.size() > 0) {
-                                    //TODO put them in some kind of swipe container
-                                    Picasso.with(context).load(images.get(0)).into(poiImage);
-                                }
+                    controller.getImages(poi, new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            List<File> images = (List<File>) controllerEvent.getModel();
+                            if (images.size() > 0) {
+                                //TODO put them in some kind of swipe container
+                                Picasso.with(context).load(images.get(0)).into(poiImage);
                             }
-                        });
-
-                        if (!poi.isPublic()) {
-                            Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
                         }
+                    });
 
-                        String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
-                        typeTextView.setText(typeValues[(int) poi.getType()]);
-
-                        titleTextView.setText(poi.getTitle());
-
-                        dateTextView.setText(poi.getCreatedAt(Locale.GERMAN));
-                        descriptionTextView.setText(poi.getDescription());
-
-
-                        //poi types which have to go to a select box or somthing:
-                        List<PoiType> poiTypes = controller.getAllPoiTypes();
-
-                        break;
-                        default:
-                            //TODO was passiert wenn nicht gefunden..
-                            //Careful getModel() will return null!
+                    if (!poi.isPublic()) {
+                        Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
                     }
+
+                    String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
+                    typeTextView.setText(typeValues[(int) poi.getType()]);
+
+                    titleTextView.setText(poi.getTitle());
+
+                    dateTextView.setText(poi.getCreatedAt(Locale.GERMAN));
+                    descriptionTextView.setText(poi.getDescription());
+
+                    break;
+                default:
+                    //TODO was passiert wenn nicht gefunden..
+                    //Careful getModel() will return null!
+            }
         });
     }
 }
