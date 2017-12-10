@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -49,8 +50,8 @@ public class EditPoiDialog extends DialogFragment {
     private EditText descriptionEditText;
     private Spinner typeSpinner;
     private Spinner modeSpinner;
-    private Button buttonSave;
-    private Button buttonCancel;
+    private ImageButton buttonSave;
+    private ImageButton buttonCancel;
 
     private PoiController controller;
 
@@ -90,8 +91,8 @@ public class EditPoiDialog extends DialogFragment {
         typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
         modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
 
-        buttonSave = (Button) view.findViewById(R.id.dialog_edit_poi_save_button);
-        buttonCancel = (Button) view.findViewById(R.id.dialog_edit_poi_cancel_button);
+        buttonSave = (ImageButton) view.findViewById(R.id.dialog_edit_poi_save_button);
+        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
     }
 
@@ -132,7 +133,6 @@ public class EditPoiDialog extends DialogFragment {
 
     private void initActionControls() {
         buttonSave.setOnClickListener(v -> {
-
             if (titleEditText != null && titleEditText.getText() != null) {
                 String title = titleEditText.getText().toString();
                 poi.setTitle(title);
