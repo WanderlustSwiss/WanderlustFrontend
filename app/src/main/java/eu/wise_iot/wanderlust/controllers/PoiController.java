@@ -141,7 +141,10 @@ public class PoiController {
         long thisUserId = DatabaseController.userDao.find().get(0).getUser_id();
         long userId = poi.getUser();
 //        DatabaseController.poiDao.findOne(Poi_.poi_id, id);
-        return thisUserId == userId;
+//        return thisUserId == userId;
+
+        // todo: remove and replace with return above
+        return true;
     }
 
 

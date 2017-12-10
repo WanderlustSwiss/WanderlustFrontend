@@ -14,7 +14,6 @@ import android.widget.Toast;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -58,7 +57,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         this.activity = activity;
         this.mapView = mapView;
 
-        initItemizedOverlayWithFocus();
+        initPoiOverlay();
         populatePoiOverlay();
         initScaleBarOverlay();
         initMyLocationNewOverlay();
@@ -87,20 +86,20 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.getOverlays().add(myLocationNewOverlay);
     }
 
-    private void initItemizedOverlayWithFocus() {
+    private void initPoiOverlay() {
         // add items with on click listener plus define actions for clicks
-        List<OverlayItem> itemizedIconsList = new ArrayList<>();
-        poiOverlay = new ItemizedOverlayWithFocus<>(activity, itemizedIconsList,
+        List<OverlayItem> poiList = new ArrayList<>();
+        poiOverlay = new ItemizedOverlayWithFocus<>(activity, poiList,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
-                    public boolean onItemSingleTapUp(final int index, final OverlayItem overlayItem) {
+                    public boolean onItemSingleTapUp(final int index, final OverlayItem poiOverlayItem) {
                         FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
                         // make sure that no other dialog is running
                         Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
                         if (prevFragment != null) fragmentTransaction.remove(prevFragment);
                         fragmentTransaction.addToBackStack(null);
 
-                        ViewPoiDialog dialogFragment = ViewPoiDialog.newInstance(overlayItem);
+                        ViewPoiDialog dialogFragment = ViewPoiDialog.newInstance(poiOverlayItem);
                         dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
                         return true;
                     }
