@@ -109,7 +109,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                                 //count will be increases automatically
                                 backendPoi.addImageId((byte) imageInfo.getId());
                             }
-                            backendPoi.setInternal_id(internalPoi.getPoi_id());
+                            backendPoi.setInternal_id(0);
                         } else {
                             //imagepaths will always be empty
                             backendPoi.setInternal_id(internalPoi.getInternal_id());
