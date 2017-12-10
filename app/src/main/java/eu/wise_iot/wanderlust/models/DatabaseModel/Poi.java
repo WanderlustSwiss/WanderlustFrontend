@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +26,8 @@ import io.objectbox.converter.PropertyConverter;
 @Entity
 public class Poi extends AbstractModel{
 
+    private static final int MAX_IMAGES = 32;
+
     @Id
     long internal_id;
     long poi_id;
@@ -36,6 +37,8 @@ public class Poi extends AbstractModel{
 
     @Convert(converter =  imageInfoConverter.class, dbType = String.class)
     List<ImageInfo> imagePaths;
+    byte[] imageIds;
+    int imageCount;
     float longitude;
     float latitude;
     int rate;
@@ -43,25 +46,27 @@ public class Poi extends AbstractModel{
     long type;
     boolean isPublic;
 
-    public Poi(long poi_id, String name, String description, List<ImageInfo> picturePath,
-               float longitude, float latitude, int rate, long user, int type, boolean isPublic) {
+    public Poi(long poi_id, String name, String description, byte[] imageIds, float longitude,
+               float latitude, int rate, long user, int type, boolean isPublic, int imageCount) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;
-        this.imagePaths = picturePath;
+        this.imageIds = imageIds;
         this.longitude = longitude;
         this.latitude = latitude;
         this.rate = rate;
         this.user = user;
         this.type = type;
         this.isPublic = isPublic;
+        this.imageCount = imageCount;
     }
 
     public Poi(){
         this.internal_id = 0;
         this.title = "No Title";
         this.description = "No Description";
-        this.imagePaths = new ArrayList<>();
+        this.imageIds = new byte[MAX_IMAGES];
+        this.imageCount = 0;
         this.longitude = 0;
         this.latitude = 0;
         this.rate = 3;
@@ -70,35 +75,54 @@ public class Poi extends AbstractModel{
         this.isPublic = false;
     }
 
-    public ImageInfo createImageInfo(int id, String name, String path){
-        return new ImageInfo(id, name, path);
+    public byte[] getImageIds() { return imageIds; }
+
+    public void addImageId(byte id){
+        imageIds[imageCount++] = id;
     }
 
-    public List<ImageInfo> getImagePath() { return imagePaths; }
-
-    public ImageInfo addImageInfo(long id, String name, String path){
-        ImageInfo imageInfo = new ImageInfo(id, name, path);
-        this.imagePaths.add(imageInfo);
-        return imageInfo;
-    }
-    public void addImageInfo(ImageInfo imageInfo) {
-        this.imagePaths.add(imageInfo);
-    }
-
-    public String getCreatedAt() {
-        SimpleDateFormat formatterDate = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat formatterString = new SimpleDateFormat("yyyy MMMM dd", Locale.GERMAN);
-        try{
-            Date date = formatterDate.parse(createdAt.substring(0, createdAt.indexOf('T')));
-            return formatterString.format(date);
-        } catch(Exception e){
-            return "invalid Date";
+    public boolean removeImageId(byte id){
+        int index = 0;
+        while(imageIds[index] != id){
+            index++;
+            if(index == imageCount){
+                return false;
+            }
         }
+        for(int i = index; i < imageCount; i++){
+            imageIds[i] = imageIds[i+1];
+        }
+        imageCount--;
+        return true;
     }
 
-    public String getCreatedAtInGerman() {
+    public File getImageById(byte imageId){
+        for(int i = 0; i < imageCount; i++){
+            if(imageIds[i] == imageId){
+                String name = poi_id + "-" + imageIds[i] + ".jpg";
+                return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
+                        "/files/" + name);
+            }
+        }
+        return null;
+    }
+
+    public void setImageIds(byte[] imageIds, int imageCount){
+        this.imageIds = imageIds;
+        this.imageCount = imageCount;
+    }
+
+    public int getImageCount(){
+        return imageCount;
+    }
+
+    public List<ImageInfo> getImagePaths(){
+        return imagePaths;
+    }
+
+    public String getCreatedAt(Locale language) {
         SimpleDateFormat formatterDate = new SimpleDateFormat("dd-MM-yy");
-        SimpleDateFormat formatterString = new SimpleDateFormat("d. MMMM yyyy", Locale.GERMAN);
+        SimpleDateFormat formatterString = new SimpleDateFormat("d. MMMM yyyy", language);
         try{
             Date date = formatterDate.parse(createdAt.substring(0, createdAt.indexOf('T')));
             return formatterString.format(date);
@@ -179,7 +203,7 @@ public class Poi extends AbstractModel{
         this.user = user;
     }
 
-    public class ImageInfo extends AbstractModel{
+    public class ImageInfo{
         long id;
         String name;
         String path;
@@ -190,25 +214,9 @@ public class Poi extends AbstractModel{
             this.path = path;
         }
 
-        public String getName() { return name; }
-
         public long getId() {
             return id;
         }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getPath(){
-            return this.path;
-        }
-
-        public File getImage(){
-            return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
-                        "/files/" + this.name);
-        }
-
     }
 
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {
@@ -218,7 +226,8 @@ public class Poi extends AbstractModel{
                 return null;
             }
             Gson gson = new Gson();
-            Type type= new TypeToken<List<ImageInfo>>() {}.getType();
+            Type type = new TypeToken<List<ImageInfo>>() {
+            }.getType();
             return gson.fromJson(databaseValue, type);
         }
 
@@ -228,7 +237,8 @@ public class Poi extends AbstractModel{
                 return null;
             }
             Gson gson = new Gson();
-            Type type = new TypeToken<List<ImageInfo>>() {}.getType();
+            Type type = new TypeToken<List<ImageInfo>>() {
+            }.getType();
             return gson.toJson(entityProperty, type);
         }
     }

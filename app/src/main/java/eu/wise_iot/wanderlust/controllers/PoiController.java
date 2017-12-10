@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -68,6 +69,10 @@ public class PoiController {
         DatabaseController.poiDao.create(poi, handler);
     }
 
+    public void updatePoi(Poi poi, FragmentHandler handler){
+        DatabaseController.poiDao.update(poi, handler);
+    }
+
     /**
      * Gets a poi by id and returns it in the event
      *
@@ -89,57 +94,6 @@ public class PoiController {
         DatabaseController.poiDao.addImage(image, poi, handler);
     }
 
-    /**
-     * Adds an image to a existing poi and saves it in the database
-     *
-     * @param image
-     * @param poi
-     * @return ImageInfo check uf null!
-     */
-    public Poi.ImageInfo uploadImage(File image, Poi poi) {
-        Poi.ImageInfo imageInfo = null;
-        if (poi.isPublic()) {
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("image", image.getName(), requestFile);
-            Call<Poi.ImageInfo> call = DatabaseController.poiDao.service.uploadImage(poi.getPoi_id(), body);
-
-            try {
-                Response<Poi.ImageInfo> response = call.execute();
-                if(response.isSuccessful()){
-                    try{
-                       DatabaseController.poiDao.saveImageOnApp(response.body().getName(),image);
-                       imageInfo = response.body();
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else{
-            //Private
-            try {
-                int id = poi.getImagePath().size()+1;
-                String name = poi.getPoi_id() + "-" + (id) + ".jpg";
-                DatabaseController.poiDao.saveImageOnApp(name, image);
-                try {
-                    Poi poiTemp = DatabaseController.poiDao.findOne(Poi_.poi_id, poi.getPoi_id());
-                    imageInfo = poiTemp.addImageInfo(id, name, image.getAbsolutePath());
-                    DatabaseController.poiDao.poiBox.put(poiTemp);
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return imageInfo;
-    }
-
-
 
     /**
      * Returns all images in the event as List<File>
@@ -150,17 +104,19 @@ public class PoiController {
      * @param handler
      */
     public void getImages(Poi poi, FragmentHandler handler) {
-        List<Poi.ImageInfo> imageInfos = poi.getImagePath();
         if (poi.isPublic()) {
             //Download images if necessary
             GetImagesTask imagesTask = new GetImagesTask();
-            imagesTask.execute(new GetImagesTaskParameters(poi.getPoi_id(), imageInfos, handler));
+            //CAREFUL asynchron task, will fire the handler
+            imagesTask.execute(new GetImagesTaskParameters(poi, handler));
         } else {
+            byte[] imageIds = poi.getImageIds();
             //Images should be local
             List<File> images = new ArrayList<>();
-            for (Poi.ImageInfo imageInfo : imageInfos) {
-                images.add(imageInfo.getImage());
+            for(int i = 0 ; i < poi.getImageCount(); i++){
+                images.add(poi.getImageById(imageIds[i]));
             }
+            handler.onResponse(new ControllerEvent(EventType.OK, images));
         }
     }
 
@@ -193,17 +149,15 @@ public class PoiController {
 
 
     /**
-     * Parameters for the getImages method
+     * Parameters for the getImageIds method
      * if this was c++ i could have just use a tuple
      */
     private class GetImagesTaskParameters {
-        long poiId;
-        List<Poi.ImageInfo> imageInfos;
+        Poi poi;
         FragmentHandler handler;
 
-        GetImagesTaskParameters(long poiId, List<Poi.ImageInfo> imageInfos, FragmentHandler handler) {
-            this.poiId = poiId;
-            this.imageInfos = imageInfos;
+        GetImagesTaskParameters(Poi poi, FragmentHandler handler) {
+            this.poi = poi;
             this.handler = handler;
         }
     }
@@ -214,7 +168,7 @@ public class PoiController {
     class GetImagesTask extends AsyncTask<GetImagesTaskParameters, Void, List<File>> {
 
         private FragmentHandler handler;
-
+        private List<DownloadedImage> downloadedImages = new LinkedList<>();
         /**
          * Task which iterates over all images of a specific poi
          * and checks if it was already downloaded in the frontend database.
@@ -226,26 +180,31 @@ public class PoiController {
         @Override
         protected List<File> doInBackground(GetImagesTaskParameters... parameters) {
 
-            long poiId = parameters[0].poiId;
-            List<Poi.ImageInfo> imageInfos = parameters[0].imageInfos;
+            Poi poi = parameters[0].poi;
             handler = parameters[0].handler;
 
-            List<File> images = new ArrayList<>(imageInfos.size());
-            for (Poi.ImageInfo imageInfo : imageInfos) {
-                File image = imageInfo.getImage();
-                //Download it!
-                Call<ResponseBody> call = PoiDao.service.downloadImage(poiId, imageInfo.getId());
-                try {
-                    Response<ResponseBody> response = call.execute();
-                    if (response.isSuccessful()) {
-                        ResponseBody downloadedImg = response.body();
-                        if (writeToDisk(downloadedImg, poiId, imageInfo.getId())) {
-                            images.add(image);
+            byte[] imageIds = poi.getImageIds();
+            List<File> images = new ArrayList<>();
+            for (int i = 0; i < poi.getImageCount(); i++) {
+                File image = poi.getImageById(imageIds[i]);
+                if(!image.exists()) {
+                    //Download it!
+                    Call<ResponseBody> call = PoiDao.service.downloadImage(poi.getPoi_id(), imageIds[i]);
+                    try {
+                        Response<ResponseBody> response = call.execute();
+                        if (response.isSuccessful()) {
+                            ResponseBody downloadedImg = response.body();
+                            if (writeToDisk(downloadedImg, poi.getPoi_id(), imageIds[i])) {
+                                downloadedImages.add(new DownloadedImage(image, downloadedImg.contentLength(), true));
+                                images.add(image);
+                            }
                         }
+                    } catch (IOException e) {
+                        //What if failed?
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    //What if failed?
-                    e.printStackTrace();
+                } else{
+                    images.add(image);
                 }
             }
             return images;
@@ -253,7 +212,8 @@ public class PoiController {
 
         @Override
         protected void onPostExecute(List<File> images) {
-            handler.onResponse(new ControllerEvent<List<File>>(EventType.OK, images));
+            DatabaseController.addDownloadedImages(downloadedImages);
+            handler.onResponse(new ControllerEvent<>(EventType.OK, images));
         }
 
         /**
@@ -273,7 +233,6 @@ public class PoiController {
                 //if pictures get too large, need to implement a stream:
                 // https://futurestud.io/tutorials/retrofit-2-how-to-download-files-from-server
 
-                long fileSize = body.contentLength();
                 long fileSizeDownloaded = 0;
 
                 String name = poiId + "-" + imageId + ".jpg";

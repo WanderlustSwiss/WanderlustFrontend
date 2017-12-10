@@ -52,7 +52,7 @@ The release contains first basic functionality of the android app and enables sa
 - collecting and saving feedbacks
 
 **Not included features**
-- uploading and downloading images dynamically
+- uploading and downloading imageIds dynamically
 
 
 ## License

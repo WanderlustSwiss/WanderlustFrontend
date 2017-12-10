@@ -27,6 +27,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
@@ -52,11 +53,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
-        if(!DatabaseController.initialized) DatabaseController.initDaoModels(getApplicationContext());
+        DatabaseController.initDaoModels(getApplicationContext());
+
         //TODO remove after login works
         fakeLogin(new FragmentHandler(){
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
+
+
+                DatabaseController.sync(DatabaseEvent.SyncType.POITYPE);
+                DatabaseController.clearAllDownloadedImages();
+
+
                 // check if app is opened for the first time
                 if (preferences.getBoolean("firstTimeOpened", true) && false) { //TODO for testing
                     SharedPreferences.Editor editor = preferences.edit();

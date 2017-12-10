@@ -136,7 +136,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      */
     public void addPoiToOverlay(Poi poi){
         Drawable drawable;
-        boolean hasImage = poi.getImagePath() != null && !poi.getImagePath().isEmpty();
+        boolean hasImage = poi.getImageCount() > 0;
         switch ((int)poi.getType()) {
             case Constants.TYPE_VIEW:
                 if (hasImage)
@@ -234,9 +234,5 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             mapView.getOverlays().add(poiOverlay);
             mapView.invalidate();
         }
-    }
-
-    public void unregister(){
-        DatabaseController.unregister(this);
     }
 }
