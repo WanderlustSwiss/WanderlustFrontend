@@ -13,7 +13,7 @@ import io.objectbox.annotation.Id;
 public class CommunityTour extends AbstractModel{
 
     @Id
-    long userTour_internal_id;
+    long internal_id;
     long userTour_id;
     long userTourModel;
     long tour_id;
@@ -25,8 +25,8 @@ public class CommunityTour extends AbstractModel{
     long    tourKit;
     boolean editable;
 
-    public CommunityTour(long userTour_internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
-        this.userTour_internal_id = userTour_internal_id;
+    public CommunityTour(long internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+        this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
         this.description = description;
@@ -35,6 +35,14 @@ public class CommunityTour extends AbstractModel{
         this.difficulty = difficulty;
         this.tourKit = tourKit;
         this.editable = editable;
+    }
+
+    public long getInternal_id() {
+        return internal_id;
+    }
+
+    public void setInternal_id(long internal_id) {
+        this.internal_id = internal_id;
     }
 
     public long getTour_id() {
