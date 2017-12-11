@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                 // check if app is opened for the first time
-                if (preferences.getBoolean("firstTimeOpened", true) || true) { //TODO for testing
+                if (preferences.getBoolean("firstTimeOpened", true) && false) { //TODO for testing
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putBoolean("firstTimeOpened", false); // save that app has been opened
                     editor.apply();
