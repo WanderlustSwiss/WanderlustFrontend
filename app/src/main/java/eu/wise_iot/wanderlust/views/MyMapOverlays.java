@@ -59,10 +59,10 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         this.mapView = mapView;
 
         initPoiOverlay();
-        populatePoiOverlay();
+        //populatePoiOverlay();
+        mapView.getOverlays().add(poiOverlay);
         initScaleBarOverlay();
         initMyLocationNewOverlay();
-        DatabaseController.sync(new DatabaseEvent<BoundingBox>(DatabaseEvent.SyncType.POIAREA, mapView.getBoundingBox()));
 //        initGpxTourlistOverlay();
     }
 
@@ -206,7 +206,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         for(Poi poi : pois){
             addPoiToOverlay(poi);
         }
-        mapView.getOverlays().add(poiOverlay);
         mapView.invalidate();
     }
 
@@ -216,13 +215,12 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     void showPoiLayer(boolean setVisible) {
         if (setVisible) {
-            mapView.getOverlays().add(poiOverlay);
+            if(!mapView.getOverlays().contains(poiOverlay)) {
+                mapView.getOverlays().add(poiOverlay);
+            }
         } else {
-            // quickfix to remove all poiOverlays -> todo: check that poiOverlay only gets added once
-            while (mapView.getOverlays().contains(poiOverlay)) {
                 mapView.getOverlays().remove(poiOverlay);
             }
-        }
         mapView.invalidate();
     }
 
@@ -235,19 +233,10 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public void update(DatabaseEvent event) {
 
         if(event.getType() == DatabaseEvent.SyncType.POIAREA) { populatePoiOverlay(); }
-        //fixme: poiOverlay gets added multiple times
-        if(event.getType() == DatabaseEvent.SyncType.POI) {
-            // quickfix to prevent from adding multiple times
-            if (mapView.getOverlays().contains(poiOverlay)) {
-                mapView.getOverlays().remove(poiOverlay);
-            }
-            populatePoiOverlay();
-        }
         else if(event.getType() == DatabaseEvent.SyncType.SINGLEPOI){
             //More efficient, Stamm approves
             Poi poi = (Poi) event.getObj();
             addPoiToOverlay(poi);
-//            mapView.getOverlays().add(poiOverlay); //removed: not necessary
             mapView.invalidate();
         }
     }

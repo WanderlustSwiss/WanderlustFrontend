@@ -136,14 +136,6 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadPreferences();
-        //TODO very gefährlich
-        mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
-                v.removeOnLayoutChangeListener(this);
-            }
-        });
         DatabaseController.register(mapOverlays);
     }
 
@@ -252,6 +244,14 @@ public class MapFragment extends Fragment {
      */
     private void initMapController() {
         mapController = mapView.getController();
+        //TODO very gefährlich
+        mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
+                v.removeOnLayoutChangeListener(this);
+            }
+        });
         mapController.setCenter(centerOfMap);
         mapController.animateTo(centerOfMap);
         if (zoomLevel > 20 || zoomLevel < 1)

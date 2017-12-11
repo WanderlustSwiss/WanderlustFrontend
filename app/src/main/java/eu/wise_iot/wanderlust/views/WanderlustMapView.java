@@ -15,23 +15,16 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 
 public class WanderlustMapView extends MapView {
 
-    //private WanderlustMapController controller;
     private boolean initMap;
 
     public WanderlustMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        //this.controller = new MapController(this);
     }
 
     public WanderlustMapView(Context context) {
         super(context);
     }
 
-
-//    @Override
-//    public IMapController getController() {
-//        return this.controller;
-//    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event)
@@ -42,9 +35,4 @@ public class WanderlustMapView extends MapView {
         }
         return result;
     }
-
-//    @Override
-//    protected void setProjection(Projection p){
-//        super.setProjection(p);
-//    }
 }
