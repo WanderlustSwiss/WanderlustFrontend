@@ -217,6 +217,7 @@ public class Poi extends AbstractModel{
         public long getId() {
             return id;
         }
+        public String getPath(){ return this.path;}
     }
 
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {

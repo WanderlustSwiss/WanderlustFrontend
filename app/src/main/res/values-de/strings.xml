@@ -10,4 +10,7 @@
     <string name="registration_registrieren_btn">Registrieren</string>
     <string name="registration_account_exist">Bereits registriert? Login</string>
     <string name="registration_create_account">Registrieren</string>
+    <string name="poi_fragment_not_found">POI wurde nicht gefunden</string>
+    <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
+    <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
 </resources>

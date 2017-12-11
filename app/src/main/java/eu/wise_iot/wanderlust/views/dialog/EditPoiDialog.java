@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -49,11 +50,41 @@ public class EditPoiDialog extends DialogFragment {
     private EditText descriptionEditText;
     private Spinner typeSpinner;
     private Spinner modeSpinner;
-    private Button buttonSave;
-    private Button buttonCancel;
+    private ImageButton buttonSave;
+    private ImageButton buttonCancel;
 
     private PoiController controller;
+    private boolean isNewPoi;
 
+    FragmentHandler poiPhotoUploadHandler = event -> {
+        switch (event.getType()) {
+            case OK:
+                poi = (Poi) event.getModel();
+                DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
+                break;
+            default:
+                Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
+        }
+    };
+
+    FragmentHandler poiHandler = event -> {
+        switch (event.getType()) {
+            case OK:
+                if(isNewPoi){
+                    poi = (Poi) event.getModel();
+                    //Poi image has to be uploaded after the poi is saved
+                    controller.uploadImage(new File(MapFragment.photoPath), poi, poiPhotoUploadHandler);
+                }
+                break;
+            default:
+                Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+
+
+
+    // creating of new POI
     public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
         EditPoiDialog fragment = new EditPoiDialog();
         Bundle args = new Bundle();
@@ -61,6 +92,17 @@ public class EditPoiDialog extends DialogFragment {
         args.putDouble(Constants.LAST_POS_LAT, lastKnownLocation.getLatitude());
         args.putDouble(Constants.LAST_POS_LON, lastKnownLocation.getLongitude());
         fragment.setArguments(args);
+        fragment.isNewPoi = true;
+        return fragment;
+    }
+
+    // editing existing POI
+    public static EditPoiDialog newInstance(Poi poi) {
+        EditPoiDialog fragment = new EditPoiDialog();
+        Bundle args = new Bundle();
+        fragment.poi = poi;
+        fragment.setArguments(args);
+        fragment.isNewPoi = false;
         return fragment;
     }
 
@@ -76,9 +118,8 @@ public class EditPoiDialog extends DialogFragment {
         double lon = args.getDouble(Constants.LAST_POS_LON);
         lastKnownLocation = new GeoPoint(lat, lon);
 
-        // set style and options menu
+        // set style
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -90,8 +131,8 @@ public class EditPoiDialog extends DialogFragment {
         typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
         modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
 
-        buttonSave = (Button) view.findViewById(R.id.dialog_edit_poi_save_button);
-        buttonCancel = (Button) view.findViewById(R.id.dialog_edit_poi_cancel_button);
+        buttonSave = (ImageButton) view.findViewById(R.id.dialog_edit_poi_save_button);
+        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
     }
 
@@ -101,6 +142,9 @@ public class EditPoiDialog extends DialogFragment {
         initPublicationModeControls();
         initPublicationTypeControls();
         initActionControls();
+        if (!isNewPoi) {
+            fillInDataFromExistingPoi();
+        }
     }
 
     private void initPublicationModeControls() {
@@ -132,49 +176,45 @@ public class EditPoiDialog extends DialogFragment {
 
     private void initActionControls() {
         buttonSave.setOnClickListener(v -> {
-
             if (titleEditText != null && titleEditText.getText() != null) {
                 String title = titleEditText.getText().toString();
                 poi.setTitle(title);
+            }
+
+            if (poi.getTitle().isEmpty()) {
+                Toast.makeText(context, "bitte Titel hinzufügen", Toast.LENGTH_LONG).show();
+                return;
             }
             if (descriptionEditText != null && descriptionEditText.getText() != null) {
                 String description = descriptionEditText.getText().toString();
                 poi.setDescription(description);
             }
 
-            poi.setLatitude((float) lastKnownLocation.getLatitude());
-            poi.setLongitude((float) lastKnownLocation.getLongitude());
+            if(isNewPoi){
+                poi.setLatitude((float) lastKnownLocation.getLatitude());
+                poi.setLongitude((float) lastKnownLocation.getLongitude());
 
-            controller.saveNewPoi(poi, event -> {
-                switch (event.getType()) {
-                    case OK:
-                        poi = (Poi) event.getModel();
-                        //Poi image has to be uploaded after the poi is saved
-                        controller.uploadImage(new File(MapFragment.photoPath), poi, new FragmentHandler() {
-                            @Override
-                            public void onResponse(ControllerEvent controllerEvent) {
-                                switch (controllerEvent.getType()){
-                                    case OK:
-                                        poi = (Poi) controllerEvent.getModel();
-                                        DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
-                                        break;
-                                    default:
-                                        Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                        break;
-                    default:
-                        Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
-                }
-            });
-            dismiss();
+                controller.saveNewPoi(this.poi, poiHandler);
+            } else {
+                controller.updatePoi(this.poi, poiHandler);
+            }
+
+
+
         });
+
         buttonCancel.setOnClickListener(view -> dismiss());
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.map_fragment_layer_menu, menu);
+    private void fillInDataFromExistingPoi() {
+        titleEditText.setText(this.poi.getTitle());
+        descriptionEditText.setText(this.poi.getDescription());
+        typeSpinner.setSelection((int) this.poi.getType());
+        if (poi.isPublic()) {
+            modeSpinner.setSelection(0); // public
+        } else {
+            modeSpinner.setSelection(1); // private
+        }
+
     }
 }

@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@android:color/background_light"
             app:zoomage_animateOnReset="true"
             app:zoomage_autoCenter="true"
             app:zoomage_autoResetMode="NEVER"
@@ -29,77 +28,83 @@
             android:id="@+id/poi_mode_private_image"
             android:layout_width="96dp"
             android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:layout_margin="10dp"
             android:contentDescription="@null" />
+
+        <ImageButton
+            android:id="@+id/poi_close_dialog_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_arrow_back_black_24dp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/content_header"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="1dp"
         android:background="@color/white">
 
-        <ImageButton
-            android:id="@+id/poi_edit_button"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/poi_background_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_edit_black_24dp" />
+            android:background="@color/primaryColor"
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/poi_type_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/poi_close_dialog_button"
-            android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:padding="10dp" />
+            <TextView
+                android:id="@+id/poi_type_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp" />
 
-        <TextView
-            android:id="@+id/poi_title_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/poi_type_text_view"
-            android:layout_toLeftOf="@+id/poi_close_dialog_button"
-            android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:padding="10dp" />
+            <TextView
+                android:id="@+id/poi_title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/poi_type_text_view"
+                android:layout_marginBottom="16dp"
+                android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/poi_date_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/poi_title_text_view"
-            android:layout_toLeftOf="@+id/poi_close_dialog_button"
-            android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:padding="10dp" />
+            <TextView
+                android:id="@+id/poi_date_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/poi_title_text_view"
+                android:layout_marginBottom="16dp" />
+
+            <ImageButton
+                android:id="@+id/poi_edit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/poi_delete_button"
+                android:layout_toStartOf="@id/poi_delete_button"
+                android:visibility="invisible"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_edit_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/poi_delete_button"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_delete_black_24dp" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/poi_description_text_view"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/poi_date_text_view"
-            android:layout_toLeftOf="@+id/poi_close_dialog_button"
-            android:layout_toStartOf="@+id/poi_close_dialog_button"
-            android:padding="10dp" />
+            android:layout_below="@id/poi_background_container"
+            android:layout_marginTop="16dp"
+            android:padding="8dp" />
 
-        <Button
-            android:id="@+id/poi_close_dialog_button"
-            style="@style/my_click_button"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:text="@string/action_close" />
     </RelativeLayout>
 
 </LinearLayout>

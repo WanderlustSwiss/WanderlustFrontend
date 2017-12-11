@@ -151,5 +151,8 @@
     <string name="poi_fragment_privacy_private_item">Privat</string>
     <string name="poi_fragment_privacy_public_item">Öffentlich</string>
     <string name="layer_poi">POI-Layer</string>
+    <string name="poi_fragment_not_found">POI wurde nicht gefunden</string>
+    <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
+    <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
 
 </resources>

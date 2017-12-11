@@ -14,6 +14,7 @@ import android.widget.Toast;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -58,7 +59,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         this.mapView = mapView;
 
         initPoiOverlay();
-        populatePoiOverlay();
+        //populatePoiOverlay();
+        mapView.getOverlays().add(poiOverlay);
         initScaleBarOverlay();
         initMyLocationNewOverlay();
 //        initGpxTourlistOverlay();
@@ -198,11 +200,12 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      * them to the map overlay
      */
     public void populatePoiOverlay() {
+
+        poiOverlay.removeAllItems();
         List<Poi> pois = DatabaseController.poiDao.find();
         for(Poi poi : pois){
             addPoiToOverlay(poi);
         }
-        mapView.getOverlays().add(poiOverlay);
         mapView.invalidate();
     }
 
@@ -212,10 +215,12 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     void showPoiLayer(boolean setVisible) {
         if (setVisible) {
-            mapView.getOverlays().add(poiOverlay);
+            if(!mapView.getOverlays().contains(poiOverlay)) {
+                mapView.getOverlays().add(poiOverlay);
+            }
         } else {
-            mapView.getOverlays().remove(poiOverlay);
-        }
+                mapView.getOverlays().remove(poiOverlay);
+            }
         mapView.invalidate();
     }
 
@@ -227,14 +232,12 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     @Override
     public void update(DatabaseEvent event) {
 
-        if(event.getType() == DatabaseEvent.SyncType.POI) { populatePoiOverlay(); }
+        if(event.getType() == DatabaseEvent.SyncType.POIAREA) { populatePoiOverlay(); }
         else if(event.getType() == DatabaseEvent.SyncType.SINGLEPOI){
             //More efficient, Stamm approves
             Poi poi = (Poi) event.getObj();
             addPoiToOverlay(poi);
-            mapView.getOverlays().add(poiOverlay);
             mapView.invalidate();
         }
     }
-
 }
