@@ -4,27 +4,28 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-
-import static eu.wise_iot.wanderlust.R.drawable.ic_account_box_black_24dp;
+import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
+import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
+import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
+import eu.wise_iot.wanderlust.views.adapters.ProfileTripListAdapter;
 
 /**
  * ProfileFragment:
@@ -43,7 +44,11 @@ public class ProfileFragment extends Fragment {
 
     private ListView listView;
 
-    private User user;
+    private List<String> testTourList;
+    private List testFavList;
+    private List testPOIList;
+    private List testSaveList;
+
 
     private ProfileController profileController;
 
@@ -63,10 +68,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*UserDao userDao = new UserDao(MainActivity.boxStore);
-        this.user = userDao.getUser();
 
-        initializeProfileData();*/
+
     }
 
     @Override
@@ -92,21 +95,29 @@ public class ProfileFragment extends Fragment {
         //Profile picture
         profilePicture = (ImageView) view.findViewById(R.id.profilePicture);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
 
         RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
         drawable.setCircular(true);
         profilePicture.setImageDrawable(drawable);
 
-        //Infos
+        //initializing views
         birthday = (TextView) view.findViewById(R.id.profileBirthDay);
         amountPOI = (TextView) view.findViewById(R.id.profileAmountPOI);
         amountTours = (TextView) view.findViewById(R.id.profileAmountTours);
         amountScore = (TextView) view.findViewById(R.id.profileAmountScore);
 
-        //Liste
         listView = (ListView) view.findViewById(R.id.listContent);
 
+        //setting data
+        /*amountScore.setText(profileController.getScore());
+        amountTours.setText(Long.toString(profileController.getAmountTours()));
+        amountPOI.setText(Long.toString(profileController.getAmountPoi()));
+
+        birthday.setText(profileController.getBirthDate());*/
+
         //set nickname in App Bar
+        //getActivity().setTitle(profileController.getNickName());
         getActivity().setTitle("nickname");
 
     }
@@ -122,10 +133,10 @@ public class ProfileFragment extends Fragment {
 
                 switch(id){
                     case 0:
-                        setupMyTours();
+                        setupFavorites();
                         break;
                     case 1:
-                        setupFavorites();
+                        setupMyTours();
                         break;
                     case 2:
                         setupPOIs();
@@ -148,39 +159,64 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-
-    public void setupMyTours(){
-        ProfileMyToursFragment profileMyToursFragment = new ProfileMyToursFragment();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.profileTabContent, profileMyToursFragment)
-                .commit();
-
-        Toast.makeText(getActivity(), "Deine Touren", Toast.LENGTH_SHORT).show();
-    }
-
     public void setupFavorites(){
-        ProfileFavoritesFragment profileFavoritesFragment = new ProfileFavoritesFragment();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.profileTabContent, profileFavoritesFragment)
-                .commit();
+        //get list when Favorite Tours dataobject done
+        /*ProfileFavoritesListAdapter adapter =
+                new ProfileFavoritesListAdapter(getActivity(),
+                                            R.layout.fragment_profile_list_favorites,
+                                            R.id.ListFavTitle,
+                                            testFavList);
+
+        listView.setAdapter(adapter);*/
 
         Toast.makeText(getActivity(), "Deine Favoriten", Toast.LENGTH_SHORT).show();
     }
 
+    public void setupMyTours(){
+        //Test the UI with strings
+        testTourList = new ArrayList<String>();
+
+        String s1 = "Beispieltitel1";
+        String s2 = "Beispielwanderung 2";
+        String s3 = "Blablablawanderung";
+
+        testTourList.add(s1);
+        testTourList.add(s2);
+        testTourList.add(s3);
+
+        ProfileTripListAdapter adapter =
+                new ProfileTripListAdapter(getActivity(),
+                                            R.layout.fragment_profile_list_tour_poi,
+                                            R.id.ListTourTitle,
+                                            testTourList);
+
+        listView.setAdapter(adapter);
+
+        Toast.makeText(getActivity(), "Deine Touren", Toast.LENGTH_SHORT).show();
+    }
+
     public void setupPOIs(){
-        ProfilePOIFragment profilePOIFragment = new ProfilePOIFragment();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.profileTabContent, profilePOIFragment)
-                .commit();
+        //get list with controller when POI dataobject done
+        /*ProfilePoiListAdapter adapter =
+                new ProfilePoiListAdapter(getActivity(),
+                                            R.layout.fragment_profile_list_tour_poi,
+                                            R.id.ListTourTitle,
+                                            testPOIList);
+
+        listView.setAdapter(adapter);*/
 
         Toast.makeText(getActivity(), "Deine POI's", Toast.LENGTH_SHORT).show();
     }
 
     public void setupSaved(){
-        ProfileSavedFragment profileSavedFragment = new ProfileSavedFragment();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.profileTabContent, profileSavedFragment)
-                .commit();
+        //get list with controller when Saved Tours dataobject done
+        /*ProfileSavedListAdapter adapter =
+                new ProfileSavedListAdapter(getActivity(),
+                                            R.layout.fragment_profile_list_saved,
+                                            R.id.ListSavedTitle,
+                                            testSaveList);
+
+        listView.setAdapter(adapter);*/
 
         Toast.makeText(getActivity(), "Deine gespeicherten Touren", Toast.LENGTH_SHORT).show();
     }
