@@ -5,13 +5,17 @@ import org.apache.commons.lang3.NotImplementedException;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.views.LoginFragment;
 
-/**
- * Created by Joshi on 30.11.2017.
+/*
+ * Login Controller which handles the login of the user
+ * @author Joshua
+ * @license MIT
  */
-
 public class LoginController {
     private LoginFragment loginFragment;
 
+    /**
+     * Create a login contoller
+     */
     public LoginController(LoginFragment fragment){
         this.loginFragment = fragment;
     }

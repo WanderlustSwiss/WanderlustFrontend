@@ -69,6 +69,9 @@ dependencies {
 
     //Material Design
     compile 'com.android.support:design:25.4.0'
+
+    compile 'com.google.android.gms:play-services-auth:9.8.0'
+
 }
 
 //the following sets the required permissions for API 23+ devices and AVDs
@@ -121,3 +124,4 @@ android.applicationVariants.all { variant ->
         failOnError false;
     }
 }
+apply plugin: 'com.google.gms.google-services'

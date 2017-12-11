@@ -116,5 +116,6 @@
     <string name="registration_registrieren_btn">Registrieren</string>
     <string name="registration_passsword">Passwort</string>
     <string name="registration_passsword_repeat">Passwort wiederholen</string>
+    <string name="server_client_id">877872359525-t55gb7eug4cjamosphfjlq41uj2deqej.apps.googleusercontent.com</string>
 
 </resources>

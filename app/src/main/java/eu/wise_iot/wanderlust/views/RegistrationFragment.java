@@ -23,12 +23,17 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
-
+/*
+ * Registration Fragment which handles front end inputs of the user
+ * @author Joshua
+ * @license MIT
+ */
 public class RegistrationFragment extends Fragment {
 
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,5}$", Pattern.CASE_INSENSITIVE);
     private final String VALID_PASSWORTD_REGX = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+
 
     private Context context;
     private Button btnRegister;
@@ -46,8 +51,10 @@ public class RegistrationFragment extends Fragment {
 
     private RegistrationController registrationController;
 
-    private User user;
 
+    /**
+     * Create a standard registration fragment
+     */
     public RegistrationFragment() {
         this.registrationController = new RegistrationController(this);
     }
@@ -69,13 +76,11 @@ public class RegistrationFragment extends Fragment {
         passwordTextfield = (EditText) view.findViewById(R.id.input_password);
         repeatedPasswordTextfield = (EditText) view.findViewById(R.id.input_password_repeat);
         nickNameLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_nickname);
-        nickNameLayout.setErrorEnabled(true);
         emailLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_mail);
-        emailLayout.setErrorEnabled(true);
         passwordLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_password);
-        passwordLayout.setErrorEnabled(true);
         passwordRepeatLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_password_repeat);
-        passwordRepeatLayout.setErrorEnabled(true);
+        redirectToLogin = (TextView) view.findViewById(R.id.link_login);
+
         return view;
     }
 
@@ -86,17 +91,19 @@ public class RegistrationFragment extends Fragment {
 
     }
 
-
+    /**
+     * initializes the actions of all controlls of the fragment
+     */
     private void initActionControls() {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user = new User(0
+                User user = new User(0
                         , nickNameTextfield.getText().toString()
                         , eMailTextfield.getText().toString()
                         , passwordTextfield.getText().toString()
                         , 0, true, true, "", "");
-                if (validateInput()) {
+                if (validateInput(user)) {
 
 
                     registrationController.registerUser(user, new FragmentHandler() {
@@ -132,13 +139,24 @@ public class RegistrationFragment extends Fragment {
                 }
             }
         });
+
+        redirectToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginFragment loginFragment = new LoginFragment();
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, loginFragment)
+                        .commit();
+            }
+        });
     }
 
 
-    /*** Validates the input of the user. And
-     * @return true if the input is valid
+    /**
+     * checks whether the user's data is valid and can be send to the servert
+     * @return true if the user's data is Valid, else if invalid
      */
-    private boolean validateInput() {
+    private boolean validateInput(User user) {
         boolean isValid = true;
         if (user.getNickname().equals("")) {
             nickNameLayout.setError("bla");
@@ -177,11 +195,21 @@ public class RegistrationFragment extends Fragment {
         return isValid;
     }
 
+    /**
+     * checks whether the email address is valid or not
+     * @param emailStr
+     * @return true if the email address is valid, else if invalid
+     */
     private boolean validateMail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
         return matcher.find();
     }
 
+    /**
+     * checks whether the password is valid or not
+     * @param password
+     * @return true if the password is Valid, else if invalid
+     */
     private boolean validatePassword(String password){
         return password.matches(VALID_PASSWORTD_REGX);
     }
