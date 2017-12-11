@@ -29,8 +29,8 @@ import eu.wise_iot.wanderlust.models.Old.Tour;
 import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
 
 /**
- * TourOverviewFragment:
- * @author Fabian Schwander
+ * TourController:
+ * @author Alexander Weinbeck
  * @license MIT
  */
 public class TourFragment extends Fragment {
@@ -52,7 +52,8 @@ public class TourFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         TourController tc = new TourController();
-        List<String> modelData = tc.getDataView();
+        //fetch from local db
+        UserTour data = tc.getDataView(Integer.parseInt(getArguments().get("routeID").toString()));
 
         View view = inflater.inflate(R.layout.fragment_tour, container, false);
 
@@ -68,9 +69,10 @@ public class TourFragment extends Fragment {
 
 
         //set all information from local db
-        tvDistance.setText();
+        //tvDistance.setText();
 
-        TourController.getDataViewServer(Integer.parseInt(getArguments().get("routeID").toString()), new FragmentHandler() {
+        //fetch from remote db
+        tc.getDataViewServer(Integer.parseInt(getArguments().get("routeID").toString()), new FragmentHandler() {
             @Override
             public void onResponse(Event event) {
                 switch (event.getType()){

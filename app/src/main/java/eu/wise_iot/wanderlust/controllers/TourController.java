@@ -18,23 +18,10 @@ public class TourController {
      * get all tours out of db
      * @return List of tours
      */
-    public static List<String> getDataView(int tourID, FragmentHandler handler){
+    public UserTour getDataView(int tourID){
 
         UserTourDao userTourDao = new UserTourDao();
-        UserTour ut = userTourDao.find().get(tourID);
-
-        List<String> dataModel = new ArrayList<>();
-
-
-        dataModel.add(ut.getDescription());
-        dataModel.add(ut.getImagePath());
-        dataModel.add(ut.getPolyline());
-        dataModel.add(ut.getTitle());
-        dataModel.add(Long.toString(ut.getDifficulty()));
-
-
-
-        return dataModel;
+        return userTourDao.find().get(tourID);
     }
     public static void getDataViewServer(int tourID, FragmentHandler handler) {
         UserTourDao userTourDao = new UserTourDao();
