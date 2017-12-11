@@ -10,6 +10,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.controllers.Event;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
@@ -129,7 +130,7 @@ public class UserDao extends DatabaseObjectAbstract{
         });
     }
 
-    /**
+                      /**
      * Return a list with all user
      *
      * @return List<User>
