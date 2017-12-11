@@ -134,20 +134,20 @@ public class Profile extends AbstractModel{
         }
     }
 
-    public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {
+    public static class imageInfoConverter implements PropertyConverter<ImageInfo, String> {
         @Override
-        public List<ImageInfo> convertToEntityProperty(String databaseValue) {
+        public ImageInfo convertToEntityProperty(String databaseValue) {
             if (databaseValue == null) {
                 return null;
             }
             Gson gson = new Gson();
-            Type type = new TypeToken<List<ImageInfo>>() {
+            Type type = new TypeToken<ImageInfo>() {
             }.getType();
             return gson.fromJson(databaseValue, type);
         }
 
         @Override
-        public String convertToDatabaseValue(List<ImageInfo> entityProperty) {
+        public String convertToDatabaseValue(ImageInfo entityProperty) {
             if (entityProperty == null) {
                 return null;
             }
