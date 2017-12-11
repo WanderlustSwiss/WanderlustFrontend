@@ -395,14 +395,17 @@ public class MapFragment extends Fragment {
 
         poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
         showPoiOverlay(true);
-        boolean toggleLayer = !poiLayerButton.isSelected();
-        poiLayerButton.setOnClickListener(v -> showPoiOverlay(toggleLayer));
+
+        poiLayerButton.setOnClickListener(v -> {
+            boolean toggleLayer = !poiLayerButton.isSelected();
+            showPoiOverlay(toggleLayer);
+        });
     }
 
     private void showPoiOverlay(boolean showOverlay) {
         poiLayerButton.setSelected(showOverlay);
         mapOverlays.showPoiLayer(showOverlay);
-        if(!poiLayerButton.isSelected()) {
+        if(showOverlay) {
             poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
         } else {
             poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
