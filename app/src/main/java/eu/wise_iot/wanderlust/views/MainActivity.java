@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +33,12 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
+import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
 import io.objectbox.BoxStore;
 import okhttp3.Headers;
 import retrofit2.Call;
@@ -82,12 +87,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     getFragmentManager().beginTransaction()
                             .add(R.id.content_frame, registrationFragment)
                             .commit();
+
+
                     // else start the map screen
                 } else {
                     MapFragment mapFragment = MapFragment.newInstance();
                     getFragmentManager().beginTransaction()
                             .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                             .commit();
+
                 }
             }
         });
@@ -108,11 +116,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
                     handler.onResponse(new ControllerEvent(EventType.OK));
                 } else {
+                    ViewPoiDialog dialog = ViewPoiDialog.newInstance(new Poi());
+                    dialog.show(getFragmentManager(), Constants.CREATE_FEEDBACK_DIALOG);
                 }
             }
 
             @Override
             public void onFailure(Call<LoginUser> call, Throwable t) {
+
             }
         });
     }

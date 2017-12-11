@@ -218,7 +218,10 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         if (setVisible) {
             mapView.getOverlays().add(poiOverlay);
         } else {
-            mapView.getOverlays().remove(poiOverlay);
+            // quickfix to remove all poiOverlays -> todo: check that poiOverlay only gets added once
+            while (mapView.getOverlays().contains(poiOverlay)) {
+                mapView.getOverlays().remove(poiOverlay);
+            }
         }
         mapView.invalidate();
     }
@@ -232,11 +235,19 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public void update(DatabaseEvent event) {
 
         if(event.getType() == DatabaseEvent.SyncType.POIAREA) { populatePoiOverlay(); }
+        //fixme: poiOverlay gets added multiple times
+        if(event.getType() == DatabaseEvent.SyncType.POI) {
+            // quickfix to prevent from adding multiple times
+            if (mapView.getOverlays().contains(poiOverlay)) {
+                mapView.getOverlays().remove(poiOverlay);
+            }
+            populatePoiOverlay();
+        }
         else if(event.getType() == DatabaseEvent.SyncType.SINGLEPOI){
             //More efficient, Stamm approves
             Poi poi = (Poi) event.getObj();
             addPoiToOverlay(poi);
-            mapView.getOverlays().add(poiOverlay);
+//            mapView.getOverlays().add(poiOverlay); //removed: not necessary
             mapView.invalidate();
         }
     }

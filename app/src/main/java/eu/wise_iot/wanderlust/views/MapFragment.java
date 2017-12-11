@@ -388,7 +388,6 @@ public class MapFragment extends Fragment {
         layerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // FIXME: State is always STATE_EXPANDING, so view does not get collapsed or expanded
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 } else {
@@ -398,18 +397,22 @@ public class MapFragment extends Fragment {
         });
 
         poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
-        poiLayerButton.setOnClickListener(v -> {
-            if(!poiLayerButton.isSelected()) {
-                poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
-                poiLayerButton.setSelected(true);
-                mapOverlays.showPoiLayer(true);
-            } else {
-                poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
-                poiLayerButton.setSelected(false);
-                mapOverlays.showPoiLayer(false);
-            }
-        });
+        showPoiOverlay(true);
 
+        poiLayerButton.setOnClickListener(v -> {
+            boolean toggleLayer = !poiLayerButton.isSelected();
+            showPoiOverlay(toggleLayer);
+        });
+    }
+
+    private void showPoiOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        mapOverlays.showPoiLayer(showOverlay);
+        if(showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+        }
     }
 
     /**

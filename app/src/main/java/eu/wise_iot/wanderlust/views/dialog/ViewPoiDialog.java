@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.io.File;
@@ -24,9 +25,12 @@ import java.util.Locale;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 
 /**
  * ViewPoiDialog:
@@ -50,6 +54,7 @@ public class ViewPoiDialog extends DialogFragment {
     private ImageButton deletePoiButton;
 
     private long poiId;
+    private Poi currentPoi = new Poi();
 
     private PoiController controller;
 
@@ -60,6 +65,18 @@ public class ViewPoiDialog extends DialogFragment {
         Bundle args = new Bundle();
         args.putLong(Constants.POI_ID, poiId);
         dialog.setArguments(args);
+
+        return dialog;
+    }
+
+    public static ViewPoiDialog newInstance(Poi poi) {
+        ViewPoiDialog dialog = new ViewPoiDialog();
+        dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
+        long poiId = poi.getPoi_id();
+        Bundle args = new Bundle();
+        args.putLong(Constants.POI_ID, poiId);
+        dialog.setArguments(args);
+
         return dialog;
     }
 
@@ -73,6 +90,9 @@ public class ViewPoiDialog extends DialogFragment {
         poiId = args.getLong(Constants.POI_ID);
         setRetainInstance(true);
         loadPoiById(poiId);
+
+
+
     }
 
     @Override
@@ -94,6 +114,11 @@ public class ViewPoiDialog extends DialogFragment {
         closeDialogButton = (ImageButton) view.findViewById(R.id.poi_close_dialog_button);
         editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
         deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
+
+        if (controller.isOwnerOf(currentPoi)) {
+            this.showControlsForOwner();
+        }
+
         return view;
     }
 
@@ -109,14 +134,28 @@ public class ViewPoiDialog extends DialogFragment {
             dismiss();
         });
 
-        // todo: add check if user is owner of poi. only then make action controls visible
         editPoiButton.setOnClickListener(v -> {
-            // todo: add action
-            Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
+            if (controller.isOwnerOf(currentPoi)) {
+                EditPoiDialog dialog = EditPoiDialog.newInstance(this.currentPoi);
+                dialog.show(getFragmentManager(), Constants.CREATE_FEEDBACK_DIALOG);
+            }
         });
+
         deletePoiButton.setOnClickListener(v -> {
-            // todo: add action
-            Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
+            if (controller.isOwnerOf(currentPoi)) {
+                controller.deletePoi(this.currentPoi, e -> {
+                    EventType eventType = e.getType();
+                    switch (eventType) {
+                        case OK:
+                            Toast.makeText(context, R.string.poi_fragment_success_delete, Toast.LENGTH_LONG).show();
+                            dismiss();
+                            break;
+                        default: // fail
+                            Toast.makeText(context, R.string.poi_fragment_fail_delete, Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                });
+            }
         });
     }
 
@@ -124,8 +163,8 @@ public class ViewPoiDialog extends DialogFragment {
         controller.getPoiById(id, event -> {
             switch (event.getType()) {
                 case OK:
-                    Poi poi = (Poi) event.getModel();
-                    controller.getImages(poi, new FragmentHandler() {
+                    currentPoi = (Poi) event.getModel();
+                    controller.getImages(currentPoi, new FragmentHandler() {
                         @Override
                         public void onResponse(ControllerEvent controllerEvent) {
                             List<File> images = (List<File>) controllerEvent.getModel();
@@ -136,28 +175,29 @@ public class ViewPoiDialog extends DialogFragment {
                         }
                     });
 
-                    if (!poi.isPublic()) {
+                    if (!currentPoi.isPublic()) {
                         Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
                     }
 
 
                     String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
-                    typeTextView.setText(typeValues[(int) poi.getType()]);
+                    typeTextView.setText(typeValues[(int) currentPoi.getType()]);
 
-                    titleTextView.setText(poi.getTitle());
+                    titleTextView.setText(currentPoi.getTitle());
 
-                    dateTextView.setText(poi.getCreatedAt(Locale.GERMAN));
-                    descriptionTextView.setText(poi.getDescription());
+                    dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
+                    descriptionTextView.setText(currentPoi.getDescription());
 
                     break;
                 default:
                     //TODO was passiert wenn nicht gefunden..
-                    //Careful getModel() will return null!
+                    currentPoi = new Poi();
             }
         });
     }
 
     private void showControlsForOwner() {
-
+        editPoiButton.setVisibility(View.VISIBLE);
+        deletePoiButton.setVisibility(View.VISIBLE);
     }
 }
