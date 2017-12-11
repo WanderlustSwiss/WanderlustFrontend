@@ -83,14 +83,14 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      *
      * @return Equipment which match to the search pattern in the searched columns
      */
-    public Equipment findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Equipment.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public Equipment findOne(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return equipmentBox.query().equal(searchedColumn, searchPattern).build().findFirst();
+    }
 
-        columnProperty = (Property) searchedField.get(Equipment.class);
-        equipmentQueryBuilder.equal(columnProperty, searchPattern);
-        equipmentQuery = equipmentQueryBuilder.build();
-        return equipmentQuery.findFirst();
+    public Equipment findOne(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return equipmentBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
     /**
@@ -101,17 +101,21 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      *
      * @return List<Equipment> which contains the equipments, which match to the search pattern in the searched columns
      */
-    public List<Equipment> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Equipment.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(Equipment.class);
-        equipmentQueryBuilder.equal(columnProperty , searchPattern);
-        equipmentQuery = equipmentQueryBuilder.build();
-        return equipmentQuery.find();
+    public List<Equipment> find(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return equipmentBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public List<Equipment> find(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return equipmentBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public List<Equipment> find(Property searchedColumn, boolean searchPattern) {
+        return equipmentBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         equipmentBox.remove(findOne(searchedColumn, searchPattern));
     }
 

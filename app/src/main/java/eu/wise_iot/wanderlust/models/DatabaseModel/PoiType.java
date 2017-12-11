@@ -12,7 +12,7 @@ public class PoiType extends AbstractModel {
     String name;
 
     public PoiType(long id, long poit_id, String name) {
-        this.id = id;
+        this.poit_id = id;
         this.poit_id = poit_id;
         this.name = name;
     }

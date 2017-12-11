@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
@@ -8,10 +7,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
-import io.objectbox.BoxStore;
 import io.objectbox.Property;
-import io.objectbox.query.Query;
-import io.objectbox.query.QueryBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -19,8 +15,6 @@ import retrofit2.Response;
 public class PoiTypeDao extends DatabaseObjectAbstract {
     
     private Box<PoiType> poiTypeBox;
-    private Query<PoiType> poiTypeQuery;
-    private QueryBuilder<PoiType> poiTypeQueryBuilder;
     private static PoiService service;
     Property columnProperty;
 
@@ -30,7 +24,6 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
 
     public PoiTypeDao(){
         poiTypeBox = DatabaseController.boxStore.boxFor(PoiType.class);
-        poiTypeQueryBuilder = poiTypeBox.query();
         if (service == null) service = ServiceGenerator.createService(PoiService.class);
     }
 
@@ -68,8 +61,8 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * Searching for a single poi t
-     * ype with a search pattern in a column.
+     * Searching for a single poi
+     * type with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.

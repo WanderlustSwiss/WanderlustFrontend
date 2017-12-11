@@ -5,9 +5,8 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
+import eu.wise_iot.wanderlust.models.Old.Tour;
 import io.objectbox.Box;
-import io.objectbox.BoxStore;
-import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
@@ -20,9 +19,7 @@ import io.objectbox.query.QueryBuilder;
 
 public class TourKitDao extends DatabaseObjectAbstract{
 
-    private Box<TourKit> tourEquipementBox;
-    private Query<TourKit> tourEquipementQuery;
-    private QueryBuilder<TourKit> tourEquipementQueryBuilder;
+    private Box<TourKit> tourKitBox;
     Property columnProperty;
 
     /**
@@ -30,24 +27,32 @@ public class TourKitDao extends DatabaseObjectAbstract{
      */
 
     public TourKitDao(){
-        tourEquipementBox = DatabaseController.boxStore.boxFor(TourKit.class);
-        tourEquipementQueryBuilder = tourEquipementBox.query();
+        tourKitBox = DatabaseController.boxStore.boxFor(TourKit.class);
     }
 
     public long count(){
-        return tourEquipementBox.count();
+        return tourKitBox.count();
     }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = TourKit.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(TourKit.class);
-        tourEquipementQueryBuilder.equal(columnProperty , Integer.valueOf(searchPattern));
-        tourEquipementQuery = tourEquipementQueryBuilder.build();
-        return tourEquipementQuery.find().size();
+    /**
+     * count all poi which match with the search criteria
+     *
+     * @return Total number of records
+     */
+    public long count(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
     }
 
+    /**
+     * count all poi which match with the search criteria
+     *
+     * @return Total number of records
+     */
+    public long count(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
+    }
 
     public TourKit update(TourKit tourKit){
         return null;
@@ -60,7 +65,7 @@ public class TourKitDao extends DatabaseObjectAbstract{
      *
      */
     public void create(TourKit tourKit){
-        tourEquipementBox.put(tourKit);
+        tourKitBox.put(tourKit);
     }
 
     /**
@@ -69,7 +74,7 @@ public class TourKitDao extends DatabaseObjectAbstract{
      * @return List<TourKit>
      */
     public List<TourKit> find() {
-        return tourEquipementBox.getAll();
+        return tourKitBox.getAll();
     }
 
     /**
@@ -80,14 +85,14 @@ public class TourKitDao extends DatabaseObjectAbstract{
      *
      * @return CommunityTours Equipment which match to the search pattern in the searched columns
      */
-    public TourKit findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = TourKit.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public TourKit findOne(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return tourKitBox.query().equal(searchedColumn, searchPattern).build().findFirst();
+    }
 
-        columnProperty = (Property) searchedField.get(TourKit.class);
-        tourEquipementQueryBuilder.equal(columnProperty, Integer.valueOf(searchPattern));
-        tourEquipementQuery = tourEquipementQueryBuilder.build();
-        return tourEquipementQuery.findFirst();
+    public TourKit findOne(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return tourKitBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
     /**
@@ -98,22 +103,25 @@ public class TourKitDao extends DatabaseObjectAbstract{
      *
      * @return List<TourKit> which contains the tour equipements, which match to the search pattern in the searched columns
      */
-    public List<TourKit> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = TourKit.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(TourKit.class);
-        tourEquipementQueryBuilder.equal(columnProperty , Integer.valueOf(searchPattern));
-        tourEquipementQuery = tourEquipementQueryBuilder.build();
-        return tourEquipementQuery.find();
+    public List<TourKit> find(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return tourKitBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        tourEquipementBox.remove(findOne(searchedColumn, searchPattern));
+    public List<TourKit> find(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return tourKitBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public List<TourKit> find(Property searchedColumn, boolean searchPattern) {
+        return tourKitBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+        tourKitBox.remove(findOne(searchedColumn, searchPattern));
     }
 
     public void deleteAll(){
-        tourEquipementBox.removeAll();
+        tourKitBox.removeAll();
     }
 
 

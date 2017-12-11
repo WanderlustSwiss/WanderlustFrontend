@@ -405,7 +405,7 @@ public class PoiDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * delete all poi
+     * count all poi
      *
      * @return Total number of records
      */
@@ -414,7 +414,7 @@ public class PoiDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * delete all poi
+     * count all poi which match with the search criteria
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern  (required) contain the search pattern.
