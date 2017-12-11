@@ -36,16 +36,8 @@ public class ListElementTourFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ListElementTourFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ListElementTourFragment newInstance(String param1, String param2) {
+
+    public static ListElementTourFragment newInstance() {
         ListElementTourFragment fragment = new ListElementTourFragment();
         Bundle args = new Bundle();
 
@@ -75,7 +67,6 @@ public class ListElementTourFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 
 }

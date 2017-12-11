@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fakeLogin(new FragmentHandler(){
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
-
-
                 DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
                 DatabaseController.clearAllDownloadedImages();
 
@@ -172,7 +170,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = SearchFragment.newInstance();
             fragmentTag = Constants.SEARCH_FRAGMENT;
         } else if (id == R.id.nav_profile) {
-            // TODO: add ProfileFragment here
+            fragment = ProfileFragment.newInstance();
+            fragmentTag = Constants.PROFILE_FRAGMENT;
         }
 
         // OTHER FRAGMENTS

@@ -78,8 +78,6 @@ public class RegistrationFragment extends Fragment {
                         @Override
                         public void onResponse(ControllerEvent controllerEvent) {
                             //OK(user) controllerEvent.getModel();
-                            //CAREFUL NULLPOINTER!
-                            //gang zum login screen
                         }
                     });
                 }
