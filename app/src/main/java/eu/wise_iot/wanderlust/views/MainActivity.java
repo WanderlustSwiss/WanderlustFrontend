@@ -32,6 +32,11 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.BoxStore;
@@ -47,6 +52,7 @@ import retrofit2.Response;
  */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
+    public static BoxStore boxStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +61,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
-        BoxStore store = MyObjectBox.builder().androidContext(getApplicationContext()).build();
-        store.close();
-        store.deleteAllFiles();
+        boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        boxStore.close();
+        boxStore.deleteAllFiles();
         DatabaseController.initDaoModels(getApplicationContext());
 
         //TODO remove after login works

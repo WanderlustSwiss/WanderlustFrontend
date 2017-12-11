@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    tools:context="eu.wise_iot.wanderlust.views.ListElementTourFragment">
+    >
 
     <ImageView
-        android:id="@+id/ListTourImageView"
+        android:id="@+id/ListSavedImageView"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_centerVertical="true"
@@ -14,26 +14,25 @@
         android:src="@color/myPrimaryDark" />
 
     <LinearLayout
-        android:id="@+id/ListTourInfo"
+        android:id="@+id/ListSavedInfo"
         android:layout_width="150dp"
         android:layout_height="75dp"
         android:orientation="vertical"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:paddingTop="10dp"
-        android:layout_toRightOf="@id/ListTourImageView">
+        android:layout_toRightOf="@id/ListSavedImageView">
 
 
         <TextView
-            android:id="@+id/ListTourTitle"
+            android:id="@+id/ListSavedTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
-
             android:textSize="20dp"/>
 
         <TextView
-            android:id="@+id/ListTourDescription"
+            android:id="@+id/ListSavedDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />
@@ -41,26 +40,15 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/ListTourDelete"
+        android:id="@+id/ListSavedIcon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/ic_delete_black_24dp"
-        android:layout_toRightOf="@id/ListTourInfo"
-        android:layout_centerVertical="true"
-
-        />
-
-    <ImageView
-        android:id="@+id/ListTourEdit"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_edit_black_24dp"
-        android:layout_toRightOf="@id/ListTourDelete"
-        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/ListSavedInfo"
         android:layout_marginLeft="20dp"
+        android:layout_centerVertical="true"
 
         />
-
 
 
 </RelativeLayout>

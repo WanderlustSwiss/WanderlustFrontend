@@ -149,7 +149,7 @@
     },
     {
       "id": "7:4019964362743932431",
-      "lastPropertyId": "10:3518152623570474620",
+      "lastPropertyId": "12:8828616339908692733",
       "name": "Profile",
       "properties": [
         {
@@ -179,6 +179,14 @@
         {
           "id": "10:3518152623570474620",
           "name": "difficulty"
+        },
+        {
+          "id": "11:8840546770878256746",
+          "name": "internal_id"
+        },
+        {
+          "id": "12:8828616339908692733",
+          "name": "imageId"
         }
       ],
       "relations": []
@@ -253,7 +261,7 @@
     },
     {
       "id": "15:4336912031887141717",
-      "lastPropertyId": "10:4995362456641680481",
+      "lastPropertyId": "11:8934108030202665517",
       "name": "CommunityTour",
       "properties": [
         {
@@ -295,6 +303,10 @@
         {
           "id": "10:4995362456641680481",
           "name": "userTourModel"
+        },
+        {
+          "id": "11:8934108030202665517",
+          "name": "userTour_internal_id"
         }
       ],
       "relations": []
