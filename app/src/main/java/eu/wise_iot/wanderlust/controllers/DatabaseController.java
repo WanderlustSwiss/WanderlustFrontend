@@ -116,6 +116,7 @@ public final class DatabaseController {
         lastSync = new Date();
         switch (event.getType()){
             case POI:
+                //TODO no longer used?
                 if (!syncingPois) {
                     syncingPoiTypes = true;
                     poiDao.syncPois();
@@ -145,7 +146,7 @@ public final class DatabaseController {
 
     public static void syncPoisDone() {
         syncingPois = false;
-        sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POI));
+        sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA));
     }
 
     /**

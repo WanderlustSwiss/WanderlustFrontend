@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -134,8 +136,15 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadPreferences();
+        //TODO very gefährlich
+        mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
+                v.removeOnLayoutChangeListener(this);
+            }
+        });
         DatabaseController.register(mapOverlays);
-        //DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POI));
     }
 
     @Override
@@ -228,21 +237,14 @@ public class MapFragment extends Fragment {
      */
     private void initMap(View view) {
         mapView = (WanderlustMapView) view.findViewById(R.id.mapView);
-        ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
-                new String[]{"https://opentopomap.org/"});
-        mapView.setTileSource(tileSource);
+        //https://osm.rrze.fau.de/
+        ITileSource testSource = new XYTileSource("RRZE",
+                0, 19, 512, ".png",
+                new String[] { "http://osm.rrze.fau.de/osmhd/" });
+
+        mapView.setTileSource(testSource);
         mapView.setTilesScaledToDpi(true);
         mapView.setMultiTouchControls(true);
-
-        //TODO fabian fragen wie mapView initialisiert wird
-
-//        mapView.setOnDragListener(new View.OnDragListener() {
-//            @Override
-//            public boolean onDrag(View v, DragEvent event) {
-//                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
-//                return true;
-//            }
-//        });
     }
 
     /**
@@ -251,6 +253,7 @@ public class MapFragment extends Fragment {
     private void initMapController() {
         mapController = mapView.getController();
         mapController.setCenter(centerOfMap);
+        mapController.animateTo(centerOfMap);
         if (zoomLevel > 20 || zoomLevel < 1)
             mapController.setZoom(Defaults.ZOOM_STARTUP);
         else mapController.setZoom(zoomLevel);

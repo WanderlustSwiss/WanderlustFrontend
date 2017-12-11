@@ -464,6 +464,9 @@ public class PoiDao extends DatabaseObjectAbstract {
                     for(Poi poi : response.body()){
                         if(poi.isPublic()) {
                             poi.setInternal_id(0);
+                            for (Poi.ImageInfo imageInfo : poi.getImagePaths()) {
+                                poi.addImageId((byte) imageInfo.getId());
+                            }
                             poiBox.put(poi);
                         }
                     }
