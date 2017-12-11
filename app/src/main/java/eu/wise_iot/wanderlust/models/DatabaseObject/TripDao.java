@@ -50,14 +50,19 @@ public class TripDao extends DatabaseObjectAbstract {
         return routeBox.count();
     }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Trip.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public long count(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
+    }
 
-        columnProperty = (Property) searchedField.get(Trip.class);
-        routeQueryBuilder.equal(columnProperty , searchPattern);
-        routeQuery = routeQueryBuilder.build();
-        return routeQuery.find().size();
+    /**
+     * count all poi which match with the search criteria
+     *
+     * @return Total number of records
+     */
+    public long count(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
     }
 
     /**
@@ -199,15 +204,16 @@ public class TripDao extends DatabaseObjectAbstract {
      *
      * @return Trip which match to the search pattern in the searched columns
      */
-    public Trip findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Trip.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(Trip.class);
-        routeQueryBuilder.equal(columnProperty, searchPattern);
-        routeQuery = routeQueryBuilder.build();
-        return routeQuery.findFirst();
+    public Trip findOne(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
+
+    public Trip findOne(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
+    }
+
 
     /**
      * Searching for routes matching with the search pattern in a the selected column.
@@ -217,14 +223,23 @@ public class TripDao extends DatabaseObjectAbstract {
      *
      * @return List<Trip> which contains the equipements, which match to the search pattern in the searched columns
      */
-    public List<Trip> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Trip.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public List<Trip> find(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
 
-        columnProperty = (Property) searchedField.get(Trip.class);
-        routeQueryBuilder.equal(columnProperty , searchPattern);
-        routeQuery = routeQueryBuilder.build();
-        return routeQuery.find();
+    public List<Trip> find(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public List<Trip> find(Property searchedColumn, boolean searchPattern) {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public void delete(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 
     /**
@@ -236,7 +251,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void deleteByPattern(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 }

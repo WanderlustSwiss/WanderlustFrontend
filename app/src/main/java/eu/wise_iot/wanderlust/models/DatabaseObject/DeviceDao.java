@@ -109,7 +109,6 @@ public class DeviceDao extends DatabaseObjectAbstract{
     public void delete(Property searchedColumn, String searchPattern)
             throws NoSuchFieldException, IllegalAccessException {
         deviceBox.remove(findOne(searchedColumn, searchPattern));
-
     }
 
     /**

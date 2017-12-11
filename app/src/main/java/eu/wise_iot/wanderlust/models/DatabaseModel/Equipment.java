@@ -13,18 +13,28 @@ import io.objectbox.annotation.Id;
 public class Equipment extends AbstractModel{
 
     @Id
+    long internal_id;
     long equip_id;
     String imagePath;
     String name;
     String description;
     long routeKit;
 
-    public Equipment(long equip_id, String imagePath, String name, String description, long routeKit) {
+    public Equipment(long internal_id, long equip_id, String imagePath, String name, String description, long routeKit) {
+        this.internal_id = internal_id;
         this.equip_id = equip_id;
         this.imagePath = imagePath;
         this.name = name;
         this.description = description;
         this.routeKit = routeKit;
+    }
+
+    public long getInternal_id() {
+        return internal_id;
+    }
+
+    public void setInternal_id(long internal_id) {
+        this.internal_id = internal_id;
     }
 
     public String getImagePath() { return imagePath; }

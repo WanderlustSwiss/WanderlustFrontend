@@ -8,6 +8,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.UserTourService;
@@ -29,8 +30,6 @@ import retrofit2.Response;
 
 public class UserTourDao extends DatabaseObjectAbstract {
     private Box<UserTour> routeBox;
-    private Query<UserTour> routeQuery;
-    private QueryBuilder<UserTour> routeQueryBuilder;
     Property columnProperty;
 
     private static UserTourService service;
@@ -41,8 +40,6 @@ public class UserTourDao extends DatabaseObjectAbstract {
 
     public UserTourDao(){
         routeBox = DatabaseController.boxStore.boxFor(UserTour.class);
-        routeQueryBuilder = routeBox.query();
-
         if(service == null) service = ServiceGenerator.createService(UserTourService.class);
     }
 
@@ -50,14 +47,19 @@ public class UserTourDao extends DatabaseObjectAbstract {
         return routeBox.count();
     }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = UserTour.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public long count(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
+    }
 
-        columnProperty = (Property) searchedField.get(UserTour.class);
-        routeQueryBuilder.equal(columnProperty , searchPattern);
-        routeQuery = routeQueryBuilder.build();
-        return routeQuery.find().size();
+    /**
+     * count all poi which match with the search criteria
+     *
+     * @return Total number of records
+     */
+    public long count(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
     }
 
     /**
@@ -200,14 +202,14 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @return UserTour which match to the search pattern in the searched columns
      */
-    public UserTour findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = UserTour.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public UserTour findOne(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
+    }
 
-        columnProperty = (Property) searchedField.get(UserTour.class);
-        routeQueryBuilder.equal(columnProperty, searchPattern);
-        routeQuery = routeQueryBuilder.build();
-        return routeQuery.findFirst();
+    public UserTour findOne(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
     /**
@@ -218,14 +220,23 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @return List<UserTour> which contains the equipements, which match to the search pattern in the searched columns
      */
-    public List<UserTour> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = UserTour.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public List<UserTour> find(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
 
-        columnProperty = (Property) searchedField.get(UserTour.class);
-        routeQueryBuilder.equal(columnProperty , searchPattern);
-        routeQuery = routeQueryBuilder.build();
-        return routeQuery.find();
+    public List<UserTour> find(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public List<UserTour> find(Property searchedColumn, boolean searchPattern) {
+        return routeBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public void delete(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 
     /**
@@ -237,7 +248,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void deleteByPattern(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 }
