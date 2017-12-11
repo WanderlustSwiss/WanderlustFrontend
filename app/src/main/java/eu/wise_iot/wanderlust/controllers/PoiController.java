@@ -138,13 +138,23 @@ public class PoiController {
      * @return boolean:true if user is owner
      */
     public boolean isOwnerOf(Poi poi) {
-        long thisUserId = DatabaseController.userDao.find().get(0).getUser_id();
+  //      long thisUserId = DatabaseController.userDao.find().get(0).getUser_id();
         long userId = poi.getUser();
 //        DatabaseController.poiDao.findOne(Poi_.poi_id, id);
 //        return thisUserId == userId;
 
         // todo: remove and replace with return above
         return true;
+    }
+
+    /**
+     * Deletes a Poi from the database
+     *
+     * @param poi
+     * @param handler
+     */
+    public void deletePoi(Poi poi, FragmentHandler handler){
+        DatabaseController.poiDao.delete(poi,handler);
     }
 
 

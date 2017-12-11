@@ -54,7 +54,37 @@ public class EditPoiDialog extends DialogFragment {
     private ImageButton buttonCancel;
 
     private PoiController controller;
+    private boolean isNewPoi;
 
+    FragmentHandler poiPhotoUploadHandler = event -> {
+        switch (event.getType()) {
+            case OK:
+                poi = (Poi) event.getModel();
+                DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
+                break;
+            default:
+                Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
+        }
+    };
+
+    FragmentHandler poiHandler = event -> {
+        switch (event.getType()) {
+            case OK:
+                if(isNewPoi){
+                    poi = (Poi) event.getModel();
+                    //Poi image has to be uploaded after the poi is saved
+                    controller.uploadImage(new File(MapFragment.photoPath), poi, poiPhotoUploadHandler);
+                }
+                break;
+            default:
+                Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+
+
+
+    // creating of new POI
     public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
         EditPoiDialog fragment = new EditPoiDialog();
         Bundle args = new Bundle();
@@ -62,6 +92,17 @@ public class EditPoiDialog extends DialogFragment {
         args.putDouble(Constants.LAST_POS_LAT, lastKnownLocation.getLatitude());
         args.putDouble(Constants.LAST_POS_LON, lastKnownLocation.getLongitude());
         fragment.setArguments(args);
+        fragment.isNewPoi = true;
+        return fragment;
+    }
+
+    // editing existing POI
+    public static EditPoiDialog newInstance(Poi poi) {
+        EditPoiDialog fragment = new EditPoiDialog();
+        Bundle args = new Bundle();
+        fragment.poi = poi;
+        fragment.setArguments(args);
+        fragment.isNewPoi = false;
         return fragment;
     }
 
@@ -101,6 +142,9 @@ public class EditPoiDialog extends DialogFragment {
         initPublicationModeControls();
         initPublicationTypeControls();
         initActionControls();
+        if (!isNewPoi) {
+            fillInDataFromExistingPoi();
+        }
     }
 
     private void initPublicationModeControls() {
@@ -137,7 +181,6 @@ public class EditPoiDialog extends DialogFragment {
                 poi.setTitle(title);
             }
 
-            // todo: poi can't be saved when title is empty. why? quickfix. add better reaction to missing user input
             if (poi.getTitle().isEmpty()) {
                 Toast.makeText(context, "bitte Titel hinzufügen", Toast.LENGTH_LONG).show();
                 return;
@@ -147,34 +190,31 @@ public class EditPoiDialog extends DialogFragment {
                 poi.setDescription(description);
             }
 
-            poi.setLatitude((float) lastKnownLocation.getLatitude());
-            poi.setLongitude((float) lastKnownLocation.getLongitude());
+            if(isNewPoi){
+                poi.setLatitude((float) lastKnownLocation.getLatitude());
+                poi.setLongitude((float) lastKnownLocation.getLongitude());
 
-            controller.saveNewPoi(poi, event -> {
-                switch (event.getType()) {
-                    case OK:
-                        poi = (Poi) event.getModel();
-                        //Poi image has to be uploaded after the poi is saved
-                        controller.uploadImage(new File(MapFragment.photoPath), poi, new FragmentHandler() {
-                            @Override
-                            public void onResponse(ControllerEvent controllerEvent) {
-                                switch (controllerEvent.getType()) {
-                                    case OK:
-                                        poi = (Poi) controllerEvent.getModel();
-                                        DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
-                                        break;
-                                    default:
-                                        Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                        break;
-                    default:
-                        Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
-                }
-            });
-            dismiss();
+                controller.saveNewPoi(this.poi, poiHandler);
+            } else {
+                controller.updatePoi(this.poi, poiHandler);
+            }
+
+
+
         });
+
         buttonCancel.setOnClickListener(view -> dismiss());
+    }
+
+    private void fillInDataFromExistingPoi() {
+        titleEditText.setText(this.poi.getTitle());
+        descriptionEditText.setText(this.poi.getDescription());
+        typeSpinner.setSelection((int) this.poi.getType());
+        if (poi.isPublic()) {
+            modeSpinner.setSelection(0); // public
+        } else {
+            modeSpinner.setSelection(1); // private
+        }
+
     }
 }
