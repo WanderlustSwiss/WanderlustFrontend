@@ -5,7 +5,7 @@ import io.objectbox.annotation.Id;
 
 /**
  * CommunityTour
- * @author Alexander Weinbeck
+ * @author Alexander Weinbeck, Rilind Gashi
  * @license MIT
  */
 
@@ -13,6 +13,7 @@ import io.objectbox.annotation.Id;
 public class CommunityTour extends AbstractModel{
 
     @Id
+    long userTour_internal_id;
     long userTour_id;
     long userTourModel;
     long tour_id;
@@ -24,7 +25,8 @@ public class CommunityTour extends AbstractModel{
     long    tourKit;
     boolean editable;
 
-    public CommunityTour(long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+    public CommunityTour(long userTour_internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+        this.userTour_internal_id = userTour_internal_id;
         this.tour_id = tour_id;
         this.title = title;
         this.description = description;
@@ -40,7 +42,7 @@ public class CommunityTour extends AbstractModel{
     }
 
     public void setUserTour_id(long userTour_id) {
-        this.tour_id = tour_id;
+        this.tour_id = userTour_id;
     }
 
     public String getTitle() {

@@ -20,8 +20,6 @@ import retrofit2.Response;
 public class DifficultyTypeDao extends DatabaseObjectAbstract {
 
     private Box<DifficultyType> difficultyTypeBox;
-    private Query<DifficultyType> difficultyTypeQuery;
-    private QueryBuilder<DifficultyType> difficultyTypeQueryBuilder;
     private static DifficultyTypeService service;
     Property columnProperty;
 
@@ -31,7 +29,6 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
 
     public DifficultyTypeDao(){
         difficultyTypeBox = DatabaseController.boxStore.boxFor(DifficultyType.class);
-        difficultyTypeQueryBuilder = difficultyTypeBox.query();
         if (service == null) service = ServiceGenerator.createService(DifficultyTypeService.class);
     }
 
@@ -68,8 +65,7 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * Searching for a single poi t
-     * ype with a search pattern in a column.
+     * Searching for a single poi type with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern (required) contain the search pattern.

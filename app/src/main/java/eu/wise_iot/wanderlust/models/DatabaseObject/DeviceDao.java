@@ -21,8 +21,6 @@ import io.objectbox.query.QueryBuilder;
 public class DeviceDao extends DatabaseObjectAbstract{
 
     private Box<Device> deviceBox;
-    private Query<Device> deviceQuery;
-    private QueryBuilder<Device> deviceQueryBuilder;
     Property columnProperty;
 
     /**
@@ -31,21 +29,6 @@ public class DeviceDao extends DatabaseObjectAbstract{
 
     public DeviceDao(){
         deviceBox = DatabaseController.boxStore.boxFor(Device.class);
-        deviceQueryBuilder = deviceBox.query();
-    }
-
-    public long count(){
-        return deviceBox.count();
-    }
-
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(Device.class);
-        deviceQueryBuilder.equal(columnProperty , searchPattern);
-        deviceQuery = deviceQueryBuilder.build();
-        return deviceQuery.find().size();
     }
 
     /**
@@ -70,6 +53,10 @@ public class DeviceDao extends DatabaseObjectAbstract{
         deviceBox.put(device);
     }
 
+    public void deleteAll(){
+        deviceBox.removeAll();
+    }
+
     /**
      * Return a list with all devices
      *
@@ -87,14 +74,14 @@ public class DeviceDao extends DatabaseObjectAbstract{
      *
      * @return Device which match to the search pattern in the searched columns
      */
-    public Device findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public Device findOne(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return deviceBox.query().equal(searchedColumn, searchPattern).build().findFirst();
+    }
 
-        columnProperty = (Property) searchedField.get(Device.class);
-        deviceQueryBuilder.equal(columnProperty, searchPattern);
-        deviceQuery = deviceQueryBuilder.build();
-        return deviceQuery.findFirst();
+    public Device findOne(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return deviceBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
     /**
@@ -105,24 +92,53 @@ public class DeviceDao extends DatabaseObjectAbstract{
      *
      * @return List<Device> which contains the users, who match to the search pattern in the searched columns
      */
-    public List<Device> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Device.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(Device.class);
-        deviceQueryBuilder.equal(columnProperty , searchPattern);
-        deviceQuery = deviceQueryBuilder.build();
-        return deviceQuery.find();
+    public List<Device> find(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return deviceBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public List<Device> find(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return deviceBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public List<Device> find(Property searchedColumn, boolean searchPattern) {
+        return deviceBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public void delete(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
         deviceBox.remove(findOne(searchedColumn, searchPattern));
 
     }
 
-    public void deleteAll(){
-        deviceBox.removeAll();
+    /**
+     * count all poi
+     *
+     * @return Total number of records
+     */
+    public long count(){
+        return deviceBox.count();
     }
 
+    /**
+     * count all poi which match with the search criteria
+     *
+     * @return Total number of records
+     */
+    public long count(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
+    }
+
+    /**
+     * count all poi which match with the search criteria
+     *
+     * @return Total number of records
+     */
+    public long count(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
+    }
 
 }
