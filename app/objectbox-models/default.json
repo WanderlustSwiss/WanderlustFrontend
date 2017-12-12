@@ -193,7 +193,7 @@
     },
     {
       "id": "10:8672658418590055237",
-      "lastPropertyId": "6:5118436387111349517",
+      "lastPropertyId": "7:7813044431660832116",
       "name": "Equipment",
       "properties": [
         {
@@ -215,13 +215,17 @@
         {
           "id": "6:5118436387111349517",
           "name": "routeKit"
+        },
+        {
+          "id": "7:7813044431660832116",
+          "name": "internal_id"
         }
       ],
       "relations": []
     },
     {
       "id": "12:336345207281839554",
-      "lastPropertyId": "4:5641675166581841629",
+      "lastPropertyId": "5:3729149838586702188",
       "name": "PoiType",
       "properties": [
         {
@@ -233,15 +237,15 @@
           "name": "poit_id"
         },
         {
-          "id": "4:5641675166581841629",
-          "name": "id"
+          "id": "5:3729149838586702188",
+          "name": "internal_id"
         }
       ],
       "relations": []
     },
     {
       "id": "14:4268770557149040508",
-      "lastPropertyId": "4:4243483941677167141",
+      "lastPropertyId": "5:8562614479048317529",
       "name": "TourKit",
       "properties": [
         {
@@ -255,13 +259,17 @@
         {
           "id": "4:4243483941677167141",
           "name": "tour"
+        },
+        {
+          "id": "5:8562614479048317529",
+          "name": "internal_id"
         }
       ],
       "relations": []
     },
     {
       "id": "15:4336912031887141717",
-      "lastPropertyId": "11:2110627508600799215",
+      "lastPropertyId": "12:604282243021034930",
       "name": "CommunityTour",
       "properties": [
         {
@@ -305,8 +313,8 @@
           "name": "userTourModel"
         },
         {
-          "id": "11:2110627508600799215",
-          "name": "userTour_internal_id"
+          "id": "12:604282243021034930",
+          "name": "internal_id"
         }
       ],
       "relations": []
@@ -333,7 +341,7 @@
     },
     {
       "id": "17:5022859603395396041",
-      "lastPropertyId": "8:8650859131504639719",
+      "lastPropertyId": "9:8828355778317390369",
       "name": "UserTour",
       "properties": [
         {
@@ -367,13 +375,17 @@
         {
           "id": "8:8650859131504639719",
           "name": "editable"
+        },
+        {
+          "id": "9:8828355778317390369",
+          "name": "internal_id"
         }
       ],
       "relations": []
     },
     {
       "id": "18:7306295119968708176",
-      "lastPropertyId": "7:4242716574207722310",
+      "lastPropertyId": "8:8243652123067962142",
       "name": "DifficultyType",
       "properties": [
         {
@@ -403,6 +415,10 @@
         {
           "id": "7:4242716574207722310",
           "name": "routeDifficulty"
+        },
+        {
+          "id": "8:8243652123067962142",
+          "name": "internal_id"
         }
       ],
       "relations": []
@@ -481,7 +497,9 @@
     8432987498112785066,
     1142667435927735281,
     1471774940617465878,
-    8020050413172912884
+    8020050413172912884,
+    5641675166581841629,
+    2110627508600799215
   ],
   "retiredRelationUids": [],
   "version": 1

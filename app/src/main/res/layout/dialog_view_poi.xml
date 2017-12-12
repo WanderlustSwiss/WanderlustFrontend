@@ -13,7 +13,7 @@
         <com.jsibbold.zoomage.ZoomageView
             android:id="@+id/poi_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="250dp"
             android:layout_centerInParent="true"
             app:zoomage_animateOnReset="true"
             app:zoomage_autoCenter="true"
