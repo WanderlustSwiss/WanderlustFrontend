@@ -50,7 +50,7 @@ public class TourFragment extends Fragment {
 //        array.add("hello");
 //        array.add("hello");
 
-        UserTour testTour = new UserTour(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+        UserTour testTour = new UserTour(0, 0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
 
         //UserTourDao userTours = new UserTourDao();
         List<UserTour> userTours = new ArrayList<>();

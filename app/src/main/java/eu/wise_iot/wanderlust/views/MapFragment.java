@@ -244,16 +244,26 @@ public class MapFragment extends Fragment {
      */
     private void initMapController() {
         mapController = mapView.getController();
-        //TODO very gefährlich
         mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
+            //Gefährlich aber legit
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
-                v.removeOnLayoutChangeListener(this);
+                WanderlustMapView map = (WanderlustMapView) v;
+
+                if(round(map.getMapCenter().getLatitude()) == round(centerOfMap.getLatitude())
+                        && round(map.getMapCenter().getLongitude()) == round(centerOfMap.getLongitude())) {
+                    DatabaseController.sync(new DatabaseEvent<BoundingBox>(DatabaseEvent.SyncType.POIAREA, map.getProjection().getBoundingBox()));
+                    v.removeOnLayoutChangeListener(this);
+                }
+            }
+
+            private double round(double d){
+                d *= 100;
+                d = Math.round(d);
+                return d/100;
             }
         });
         mapController.setCenter(centerOfMap);
-        mapController.animateTo(centerOfMap);
         if (zoomLevel > 20 || zoomLevel < 1)
             mapController.setZoom(Defaults.ZOOM_STARTUP);
         else mapController.setZoom(zoomLevel);
