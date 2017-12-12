@@ -42,7 +42,7 @@ public interface PoiService {
     @POST("/poi")
         Call<Poi> createPoi(@Body Poi poi);
     @PUT("/poi/{id}")
-        Call<Poi> updatePoi(long id, @Body Poi poi);
+        Call<Poi> updatePoi(@Path("id") long id, @Body Poi poi);
     @DELETE("/poi/{id}")
         Call<Poi> deletePoi(@Body Poi poi);
     @Multipart

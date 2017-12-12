@@ -48,6 +48,7 @@ public interface Constants {
     String FEEDBACK_TYPE = "feedback_type";
     String DISPLAY_MODE = "feedback_display_mode";
     String FEEDBACK_DESCRIPTION = "feedback_description";
+    String POI_IS_NEW = "isNew";
 
     /* TOUR */
     String CLICKED_TOUR = "clicked_tour";

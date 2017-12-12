@@ -56,70 +56,84 @@ public class EditPoiDialog extends DialogFragment {
     private PoiController controller;
     private boolean isNewPoi;
 
-    FragmentHandler poiPhotoUploadHandler = event -> {
-        switch (event.getType()) {
-            case OK:
-                poi = (Poi) event.getModel();
-                DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
-                break;
-            default:
-                Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
-        }
-    };
+    private FragmentHandler poiPhotoUploadHandler;
 
-    FragmentHandler poiHandler = event -> {
-        switch (event.getType()) {
-            case OK:
-                if(isNewPoi){
-                    poi = (Poi) event.getModel();
-                    //Poi image has to be uploaded after the poi is saved
-                    controller.uploadImage(new File(MapFragment.photoPath), poi, poiPhotoUploadHandler);
-                }
-                break;
-            default:
-                Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
-        }
-    };
+    FragmentHandler poiHandler;
 
 
-
-
-    // creating of new POI
+    /**
+     * Create EditPoit dialog, which is used for CREATING a Poi
+     *
+     * @param imageFileName
+     * @param lastKnownLocation
+     */
     public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
         EditPoiDialog fragment = new EditPoiDialog();
         Bundle args = new Bundle();
         args.putString(Constants.IMAGE_FILE_NAME, imageFileName);
         args.putDouble(Constants.LAST_POS_LAT, lastKnownLocation.getLatitude());
         args.putDouble(Constants.LAST_POS_LON, lastKnownLocation.getLongitude());
+        args.putBoolean(Constants.POI_IS_NEW, true);
+        fragment.poi = new Poi();
         fragment.setArguments(args);
-        fragment.isNewPoi = true;
         return fragment;
     }
 
-    // editing existing POI
+    /**
+     * Create EditPoit dialog, which is used for UPDATING a Poi
+     *
+     * @param poi
+     */
     public static EditPoiDialog newInstance(Poi poi) {
         EditPoiDialog fragment = new EditPoiDialog();
         Bundle args = new Bundle();
         fragment.poi = poi;
+        args.putBoolean(Constants.POI_IS_NEW, false);
         fragment.setArguments(args);
-        fragment.isNewPoi = false;
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        poi = new Poi();
         controller = new PoiController();
         context = getActivity();
 
         Bundle args = getArguments();
         double lat = args.getDouble(Constants.LAST_POS_LAT);
         double lon = args.getDouble(Constants.LAST_POS_LON);
+        isNewPoi = args.getBoolean(Constants.POI_IS_NEW);
         lastKnownLocation = new GeoPoint(lat, lon);
 
         // set style
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+
+        poiPhotoUploadHandler = event -> {
+            switch (event.getType()) {
+                case OK:
+                    poi = (Poi) event.getModel();
+                    DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
+                    break;
+                default:
+                    Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
+            }
+        };
+
+        poiHandler = event -> {
+            switch (event.getType()) {
+                case OK:
+                    if (isNewPoi) {
+                        poi = (Poi) event.getModel();
+                        //Poi image has to be uploaded after the poi is saved
+                        controller.uploadImage(new File(MapFragment.photoPath), poi, poiPhotoUploadHandler);
+                    }
+                    Toast.makeText(getActivity(), R.string.poi_successful_saving, Toast.LENGTH_LONG).show();
+                    dismiss();
+                    break;
+                default:
+                    Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     @Override
@@ -147,6 +161,9 @@ public class EditPoiDialog extends DialogFragment {
         }
     }
 
+    /**
+     * initializes the actions of the mode (private / public) spinner, which sets the current mode of the poi in case of changing of the user
+     */
     private void initPublicationModeControls() {
         modeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -161,6 +178,10 @@ public class EditPoiDialog extends DialogFragment {
         });
     }
 
+
+    /**
+     * initializes the actions of the Type spinner, which sets the current type of the poi in case of changing of the user
+     */
     private void initPublicationTypeControls() {
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -174,6 +195,10 @@ public class EditPoiDialog extends DialogFragment {
         });
     }
 
+
+    /**
+     * initializes the actions of all the image buttons (save and cancel) of the fragment
+     */
     private void initActionControls() {
         buttonSave.setOnClickListener(v -> {
             if (titleEditText != null && titleEditText.getText() != null) {
@@ -190,7 +215,7 @@ public class EditPoiDialog extends DialogFragment {
                 poi.setDescription(description);
             }
 
-            if(isNewPoi){
+            if (isNewPoi) {
                 poi.setLatitude((float) lastKnownLocation.getLatitude());
                 poi.setLongitude((float) lastKnownLocation.getLongitude());
 
@@ -200,12 +225,14 @@ public class EditPoiDialog extends DialogFragment {
             }
 
 
-
         });
 
         buttonCancel.setOnClickListener(view -> dismiss());
     }
 
+    /**
+     * Prefills all data from a existing Poi into the form for the user
+     */
     private void fillInDataFromExistingPoi() {
         titleEditText.setText(this.poi.getTitle());
         descriptionEditText.setText(this.poi.getDescription());

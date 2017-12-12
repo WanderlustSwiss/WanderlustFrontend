@@ -14,7 +14,6 @@ import android.widget.Toast;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -142,28 +141,28 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         switch ((int)poi.getType()) {
             case Constants.TYPE_VIEW:
                 if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_sight);
                 else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive_nophoto);
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_sight_no_image);
                 break;
             case Constants.TYPE_RESTAURANT:
                 if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_negative);
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_restaurant);
                 else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_negative_nophoto);
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_restaurant_no_image);
                 break;
             case Constants.TYPE_REST_AREA:
                 if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_alert);
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_resting);
                 else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_alert_nophoto);
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_resting_no_image);
                 break;
             //TODO add new image
             case Constants.TYPE_FLORA_FAUNA:
                 if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_flora_fauna);
                 else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
+                    drawable = activity.getResources().getDrawable(R.drawable.icon_flora_fauna_no_image);
                 break;
             default:
                 drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);

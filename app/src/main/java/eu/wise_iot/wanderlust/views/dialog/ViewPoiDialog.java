@@ -58,6 +58,10 @@ public class ViewPoiDialog extends DialogFragment {
 
     private PoiController controller;
 
+    /**
+     * Create a ViewPoiDialog from an OverlayItem of the map
+     * @param overlayItem
+     */
     public static ViewPoiDialog newInstance(OverlayItem overlayItem) {
         ViewPoiDialog dialog = new ViewPoiDialog();
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
@@ -69,6 +73,10 @@ public class ViewPoiDialog extends DialogFragment {
         return dialog;
     }
 
+    /**
+     * Create a ViewPoiDialog from a Poi object
+     * @param poi
+     */
     public static ViewPoiDialog newInstance(Poi poi) {
         ViewPoiDialog dialog = new ViewPoiDialog();
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
@@ -190,8 +198,8 @@ public class ViewPoiDialog extends DialogFragment {
 
                     break;
                 default:
-                    //TODO was passiert wenn nicht gefunden..
-                    currentPoi = new Poi();
+                    Toast.makeText(context, R.string.poi_fragment_not_found, Toast.LENGTH_LONG).show();
+                    dismiss();
             }
         });
     }

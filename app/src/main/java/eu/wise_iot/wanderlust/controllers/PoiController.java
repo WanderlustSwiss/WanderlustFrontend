@@ -4,6 +4,7 @@ package eu.wise_iot.wanderlust.controllers;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
@@ -138,13 +140,15 @@ public class PoiController {
      * @return boolean:true if user is owner
      */
     public boolean isOwnerOf(Poi poi) {
-  //      long thisUserId = DatabaseController.userDao.find().get(0).getUser_id();
-        long userId = poi.getUser();
-//        DatabaseController.poiDao.findOne(Poi_.poi_id, id);
-//        return thisUserId == userId;
+        try{
+            long thisUserId = DatabaseController.userDao.find().get(0).getUser_id();
+            long userId = poi.getUser();
+            return thisUserId == userId;
 
-        // todo: remove and replace with return above
-        return true;
+        } catch (IndexOutOfBoundsException e){ // can be removed after it's sure, that there's a user who is logged in
+            return true;
+        }
+
     }
 
     /**

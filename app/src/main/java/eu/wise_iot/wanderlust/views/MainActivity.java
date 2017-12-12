@@ -35,6 +35,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                 // check if app is opened for the first time
-                if (preferences.getBoolean("firstTimeOpened", true) && false) { //TODO for testing
+                if (preferences.getBoolean("firstTimeOpened", true)) { //TODO for testing
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putBoolean("firstTimeOpened", false); // save that app has been opened
                     editor.apply();
@@ -101,15 +102,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    }
+
     private void fakeLogin(FragmentHandler handler){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
-        LoginUser testUser = new LoginUser("testuser", "HalloW3lt");
+        LoginUser testUser = new LoginUser("testuser", "Ha1loW3lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
         call.enqueue(new Callback<LoginUser>() {
             @Override
             public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
                 if (response.isSuccessful()) {
-
                     Headers headerResponse = response.headers();
                     //convert header to Map
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
@@ -123,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<LoginUser> call, Throwable t) {
-
+                int i = 3;
             }
         });
     }

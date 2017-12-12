@@ -30,7 +30,7 @@ import retrofit2.Response;
 
 public class UserDao extends DatabaseObjectAbstract{
 
-    private Box<User> userBox;
+    public Box<User> userBox;
     private Property columnProperty;// = User_.id;
 
     private static UserService service;

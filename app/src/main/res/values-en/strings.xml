@@ -120,5 +120,6 @@
     <string name="poi_fragment_not_found">POI not found</string>
     <string name="poi_fragment_success_delete">POI successfully deleted</string>
     <string name="poi_fragment_fail_delete">Delete of POI unsucessful</string>
+    <string name="poi_successful_saving">POI successfully saved</string>
 
 </resources>
