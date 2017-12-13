@@ -46,6 +46,8 @@ public class LoginController {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
+
+                    //TODO add user to database
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
