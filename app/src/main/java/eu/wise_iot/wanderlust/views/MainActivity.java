@@ -1,10 +1,13 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
+import android.accounts.NetworkErrorException;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -19,19 +22,40 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
+import javax.security.auth.login.LoginException;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.services.AddCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.LoginService;
+import eu.wise_iot.wanderlust.services.ReceivedCookiesInterceptor;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.UserService;
 import io.objectbox.BoxStore;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * MainActivity:
@@ -41,6 +65,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
 
+    public static BoxStore boxStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +74,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
-        BoxStore boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+
+
+        //TODO where to put this?
+        boxStore = MyObjectBox.builder().androidContext(getApplicationContext()).build();
 
         // check if app is opened for the first time
-        if (preferences.getBoolean("firstTimeOpened", true)) {
+        if (preferences.getBoolean("firstTimeOpened", true) || true) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
             editor.apply();
 
             // start welcome screen
-            WelcomeFragment welcomeFragment = new WelcomeFragment();
+            LoginFragment welcomeFragment = new LoginFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, welcomeFragment)
                     .commit();
@@ -68,25 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .commit();
         }
-
-        LoginService loginService =
-                ServiceGenerator.createService(LoginService.class, "user", "secretpassword");
-        Call<User> call = loginService.basicLogin();
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "success", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "good but fail", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "fail", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -190,4 +200,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             requestPermissions(params, Constants.REQUEST_FOR_MULTIPLE_PERMISSIONS);
         }
     }
+
+
 }

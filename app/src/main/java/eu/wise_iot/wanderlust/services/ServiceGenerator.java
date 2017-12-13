@@ -1,54 +1,43 @@
 package eu.wise_iot.wanderlust.services;
 
-import android.text.TextUtils;
-
-import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * ServiceGenerator handles all request for the backend database
+ * @author Tobias Rüegsegger
+ * @license MIT
+ */
+
 public class ServiceGenerator {
 
-    public static final String API_BASE_URL = "http://localhost:1337";
+    //TODO change for production
+    /*
+     * Defines the URL for the backend communication
+     */
+    public static final String API_BASE_URL = "http://10.0.2.2:1337/";
 
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-    private static Retrofit.Builder builder =
-            new Retrofit.Builder()
-                    .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create());
-
-    private static Retrofit retrofit = builder.build();
-
+    /**
+     * Create service for a new backend request
+     * @param serviceClass
+     * @return service for respective model
+     */
     public static <S> S createService(Class<S> serviceClass) {
-        return createService(serviceClass, null, null);
-    }
 
-    public static <S> S createService(
-            Class<S> serviceClass, String username, String password) {
-        if (!TextUtils.isEmpty(username)
-                && !TextUtils.isEmpty(password)) {
-            String authToken = Credentials.basic(username, password);
-            return createService(serviceClass, authToken);
-        }
+        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.addInterceptor(new AddCookiesInterceptor());
+        builder.addInterceptor(new ReceivedCookiesInterceptor());
+        client = builder.build();
 
-        return createService(serviceClass, null, null);
-    }
-
-    public static <S> S createService(
-            Class<S> serviceClass, final String authToken) {
-        if (!TextUtils.isEmpty(authToken)) {
-            AuthenticationInterceptor interceptor =
-                    new AuthenticationInterceptor(authToken);
-
-            if (!httpClient.interceptors().contains(interceptor)) {
-                httpClient.addInterceptor(interceptor);
-
-                builder.client(httpClient.build());
-                retrofit = builder.build();
-            }
-        }
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
         return retrofit.create(serviceClass);
     }
+
 }

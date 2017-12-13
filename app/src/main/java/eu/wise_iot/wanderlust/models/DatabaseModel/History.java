@@ -13,20 +13,20 @@ import io.objectbox.annotation.Id;
 public class History extends AbstractModel{
 
     @Id
-    long historyId;
+    long history_id;
     long absolvedRoute;
 
-    public History(long historyId, long absolvedRoute) {
-        this.historyId = historyId;
+    public History(long history_id, long absolvedRoute) {
+        this.history_id = history_id;
         this.absolvedRoute = absolvedRoute;
     }
 
-    public long getHistoryId() {
-        return historyId;
+    public long getHistory_id() {
+        return history_id;
     }
 
-    public void setHistoryId(long historyId) {
-        this.historyId = historyId;
+    public void setHistory_id(long history_id) {
+        this.history_id = history_id;
     }
 
     public long getAbsolvedRoute() {
