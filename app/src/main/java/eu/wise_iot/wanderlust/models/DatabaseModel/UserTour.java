@@ -4,49 +4,59 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * Route
- * @author Rilind Gashi
+ * CommunityTours
+ * @author Alexander Weinbeck
  * @license MIT
  */
 
 @Entity
-public class Route extends AbstractModel{
+public class UserTour extends AbstractModel{
 
     @Id
-    long route_id;
-    String title;
-    String description;
-    String imagePath;
-    String polyline;
-    long difficulty;
-    long routeKit;
+    long internal_id;
+    long tour_id;
+    String  title;
+    String  description;
+    String  imagePath;
+    String  polyline;
+    long    difficulty;
+    long    tourKit;
     boolean editable;
 
-    public Route(long route_id, String title, String description, String imagePath, String polyline, long difficulty, long routeKit, boolean editable) {
-        this.route_id = route_id;
+    public UserTour(long internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+        this.internal_id = internal_id;
+        this.tour_id = tour_id;
         this.title = title;
         this.description = description;
         this.imagePath = imagePath;
         this.polyline = polyline;
         this.difficulty = difficulty;
-        this.routeKit = routeKit;
+        this.tourKit = tourKit;
         this.editable = editable;
     }
 
-    public long getRouteKit() {
-        return routeKit;
+    public long getInternal_id() {
+        return internal_id;
     }
 
-    public void setRouteKit(long routeKit) {
-        this.routeKit = routeKit;
+    public void setInternal_id(long internal_id) {
+        this.internal_id = internal_id;
     }
 
-    public long getRoute_id() {
-        return route_id;
+    public long getTourKit() {
+        return tourKit;
     }
 
-    public void setRoute_id(long route_id) {
-        this.route_id = route_id;
+    public void setTourKit(long tourKit) {
+        this.tourKit = tourKit;
+    }
+
+    public long getTour_id() {
+        return tour_id;
+    }
+
+    public void setTour_id(long tour_id) {
+        this.tour_id = tour_id;
     }
 
     public String getTitle() {

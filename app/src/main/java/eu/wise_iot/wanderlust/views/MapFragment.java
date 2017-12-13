@@ -10,11 +10,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -22,7 +25,10 @@ import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
@@ -31,7 +37,9 @@ import java.io.File;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
-import eu.wise_iot.wanderlust.views.dialog.CreateFeedbackDialog;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
+import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.models.Old.StyleBehavior;
 
@@ -53,17 +61,21 @@ public class MapFragment extends Fragment {
     private GeoPoint centerOfMap;
     private GeoPoint lastKnownLocation;
 
-    private MapView mapView;
+    //private MapView mapView;
+    private WanderlustMapView mapView;
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
 
     private Camera camera;
     private static String imageFileName;
-    private static String photoPath;
+    public static String photoPath;
 
     private ImageButton locationToggler;
     private ImageButton cameraButton;
     private ImageButton layerButton;
+
+    // bottom sheet
+    private ImageButton poiLayerButton;
 
     /**
      * Static instance constructor.
@@ -124,6 +136,13 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadPreferences();
+        DatabaseController.register(mapOverlays);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DatabaseController.unregister(mapOverlays);
     }
 
     /**
@@ -136,42 +155,8 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+        menu.clear(); // makes shure that the menu was not inflated yet
         inflater.inflate(R.menu.map_fragment_layer_menu, menu);
-    }
-
-    /**
-     * Generates checkable menu items for layers in options menu
-     *
-     * @param item MenuItem: selected item by user
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.feedback_overlay:
-                if (item.isChecked()) {
-                    item.setChecked(false);
-                    mapOverlays.showOverlay(false);
-                } else {
-                    item.setChecked(true);
-                    mapOverlays.showOverlay(true);
-                }
-                break;
-//            case R.id.trails_overlay: // FIXME: UNCOMMENTED FOR RELEASE 0.1
-//                // TODO: Add actions
-//                break;
-//            case R.id.heatmap_overlay:
-//                // TODO: Add actions
-//                break;
-//            case R.id.public_transport_overlay:
-//                // TODO: Add actions
-//                break;
-//            case R.id.restaurants_overlay:
-//                // TODO: Add actions
-//                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -186,10 +171,12 @@ public class MapFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         // photo intent finished and image saved
         if (requestCode == Constants.TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+            //save / publish photo
             dispatchPostFeedbackDialogFragment();
         }
         // photo intent aborted
         if (requestCode == Constants.TAKE_PHOTO && resultCode != Activity.RESULT_OK) {
+            //discard photo
             File file = new File(photoPath);
             file.delete();
         }
@@ -234,16 +221,20 @@ public class MapFragment extends Fragment {
         editor.apply();
     }
 
+
     /**
      * Initializes map view
      *
      * @param view View: view of current fragment
      */
     private void initMap(View view) {
-        mapView = (MapView) view.findViewById(R.id.mapView);
-        ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
-                new String[]{"https://opentopomap.org/"});
-        mapView.setTileSource(tileSource);
+        mapView = (WanderlustMapView) view.findViewById(R.id.mapView);
+        //https://osm.rrze.fau.de/
+        ITileSource testSource = new XYTileSource("RRZE",
+                0, 19, 512, ".png",
+                new String[] { "http://osm.rrze.fau.de/osmhd/" });
+
+        mapView.setTileSource(testSource);
         mapView.setTilesScaledToDpi(true);
         mapView.setMultiTouchControls(true);
     }
@@ -253,6 +244,25 @@ public class MapFragment extends Fragment {
      */
     private void initMapController() {
         mapController = mapView.getController();
+        mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            //Gefährlich aber legit
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                WanderlustMapView map = (WanderlustMapView) v;
+
+                if(round(map.getMapCenter().getLatitude()) == round(centerOfMap.getLatitude())
+                        && round(map.getMapCenter().getLongitude()) == round(centerOfMap.getLongitude())) {
+                    DatabaseController.sync(new DatabaseEvent<BoundingBox>(DatabaseEvent.SyncType.POIAREA, map.getProjection().getBoundingBox()));
+                    v.removeOnLayoutChangeListener(this);
+                }
+            }
+
+            private double round(double d){
+                d *= 100;
+                d = Math.round(d);
+                return d/100;
+            }
+        });
         mapController.setCenter(centerOfMap);
         if (zoomLevel > 20 || zoomLevel < 1)
             mapController.setZoom(Defaults.ZOOM_STARTUP);
@@ -340,17 +350,12 @@ public class MapFragment extends Fragment {
                 // prevent multiple clicks on button
                 cameraButton.setEnabled(false);
 
-
                 final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                 //check if gps is activated and show corresponding toast
                 if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     // buildAlertMessageNoGps();
                     Toast.makeText(getActivity(), R.string.msg_camera_no_gps, Toast.LENGTH_SHORT).show();
-                    MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                    camera = new Camera(getActivity(), mapFragment);
-                    camera.start();
-                    imageFileName = camera.getImageName();
-                    photoPath = camera.getImagePath();
+                    takePicture();
                 } else {
                     mapOverlays.getMyLocationNewOverlay().enableMyLocation();
                     Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
@@ -358,16 +363,20 @@ public class MapFragment extends Fragment {
                         @Override
                         public void run() {
                             lastKnownLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
-                            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                            camera = new Camera(getActivity(), mapFragment);
-                            camera.start();
-                            imageFileName = camera.getImageName();
-                            photoPath = camera.getImagePath();
+                            takePicture();
                         }
                     });
                 }
             }
         });
+    }
+
+    private void takePicture(){
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+        camera = new Camera(getActivity(), mapFragment);
+        camera.start();
+        imageFileName = camera.getImageName();
+        photoPath = camera.getImagePath();
     }
 
     /**
@@ -376,17 +385,44 @@ public class MapFragment extends Fragment {
      * @param view View: view of current fragment
      */
     private void initLayerButton(View view) {
-        //get instance
         layerButton = (ImageButton) view.findViewById(R.id.layerButton);
+
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
-        //register behavior on clicked
+
+        View bottomSheet = view.findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        // register behavior on clicked
         layerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO show here layer selection
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
             }
         });
+
+        poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
+        showPoiOverlay(true);
+
+        poiLayerButton.setOnClickListener(v -> {
+            boolean toggleLayer = !poiLayerButton.isSelected();
+            showPoiOverlay(toggleLayer);
+        });
+    }
+
+    private void showPoiOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        mapOverlays.showPoiLayer(showOverlay);
+        if(showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+        }
     }
 
     /**
@@ -458,8 +494,9 @@ public class MapFragment extends Fragment {
         if (prevFragment != null) fragmentTransaction.remove(prevFragment);
         fragmentTransaction.addToBackStack(null);
 
-        CreateFeedbackDialog dialog = CreateFeedbackDialog.newInstance(imageFileName, lastKnownLocation);
+        EditPoiDialog dialog = EditPoiDialog.newInstance(imageFileName, lastKnownLocation);
         Log.d(TAG, "lastKnownLocation: " + lastKnownLocation);
         dialog.show(fragmentTransaction, Constants.CREATE_FEEDBACK_DIALOG);
     }
 }
+

@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 import okhttp3.Cookie;
 
-public class LoginUser extends AbstractModel{
+public class LoginUser {
     private String identifier;
     private String password;
     static private ArrayList<String> cookies = new ArrayList<>();

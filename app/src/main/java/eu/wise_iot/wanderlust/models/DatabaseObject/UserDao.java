@@ -1,34 +1,27 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User_;
-import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.UserService;
 import io.objectbox.Box;
-import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 /**
  * UserDao
@@ -38,94 +31,133 @@ import retrofit2.Response;
 
 public class UserDao extends DatabaseObjectAbstract{
 
-    private Box<User> userBox;
-    private Query<User> userQuery;
-    private QueryBuilder<User> userQueryBuilder;
+    public Box<User> userBox;
     private Property columnProperty;// = User_.id;
 
     private static UserService service;
 
     /**
      * Constructor.
-     *
-     * @param boxStore (required) delivers the connection to the frontend database
      */
 
-    public UserDao(BoxStore boxStore){
-        userBox = boxStore.boxFor(User.class);
-        userQueryBuilder = userBox.query();
-
-        if(service == null){
-            service = ServiceGenerator.createService(UserService.class);
-        }
+    public UserDao(){
+        userBox = DatabaseController.boxStore.boxFor(User.class);
+        if(service == null) service = ServiceGenerator.createService(UserService.class);
     }
 
     public long count(){
         return userBox.count();
     }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = User_.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        columnProperty = (Property) searchedField.get(User_.class);
-        userQueryBuilder.equal(columnProperty , searchPattern);
-        userQuery = userQueryBuilder.build();
-        return userQuery.find().size();
+    public long count(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
     }
 
     /**
-     * Update an existing user in the database.
+     * count all poi which match with the search criteria
      *
-     * @param user (required).
-     *
+     * @return Total number of records
      */
-    public User update(final User user, final Context context){
-
-        UserService service = ServiceGenerator.createService(UserService.class);
-
-        Call<ResponseBody> call = service.changeEmail(user);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(context, "Success", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(context, "Fail: " + response, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-        return user;
+    public long count(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return find(searchedColumn, searchPattern).size();
     }
+
 
     /**
      * Insert an user into the database.
      *
      * @param user (required).
-     *
+     * @param handler
      */
-    @Override
-    public void create(final AbstractModel user, final FragmentHandler handler){
-
-        Call<User> call = service.registerUser((User)user);
+    public void create(final User user, final FragmentHandler handler){
+        Call<User> call = service.createUser(user);
+        call.enqueue(new Callback<User>() {
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User newUser = response.body();
+                    newUser.setUser_id(1);
+                    newUser.setPassword(((User) user).getPassword());
+                    userBox.put(newUser);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                }
+                else{
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+    /**
+     * Retrieve a user out of the database
+     * @param handler
+     */
+    public void retrieve(final FragmentHandler handler){
+        Call<User> call = service.retrieveUser();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-
                 if(response.isSuccessful()){
-                    userBox.put((User)user);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
-                handler.onResponse(new Event(EventType.getTypeByCode(response.code()),null));
             }
-
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR,null));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+    /**
+     * Update an existing user in the database.
+     *
+     * @param user (required).
+     * @param handler
+     */
+    public void update(final User user, final FragmentHandler handler){
+
+        //UserService service = ServiceGenerator.createService(UserService.class);
+        Call<User> call = service.updateUser(user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    userBox.put(response.body());
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+    /**
+     * Delete a user out of the database
+     * @param user
+     * @param handler
+     */
+    public void delete(final AbstractModel user, final FragmentHandler handler){
+        Call<User> call = service.deleteUser((User)user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful()){
+                    userBox.remove((User)user);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -147,14 +179,14 @@ public class UserDao extends DatabaseObjectAbstract{
      *
      * @return User who match to the search pattern in the searched columns
      */
-    public User findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = User_.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public User findOne(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return userBox.query().equal(searchedColumn, searchPattern).build().findFirst();
+    }
 
-        columnProperty = (Property) searchedField.get(User_.class);
-        userQueryBuilder.equal(columnProperty, searchPattern);
-        userQuery = userQueryBuilder.build();
-        return userQuery.findFirst();
+    public User findOne(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return userBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
     /**
@@ -165,27 +197,41 @@ public class UserDao extends DatabaseObjectAbstract{
      *
      * @return List<User> which contains the users, who match to the search pattern in the searched columns
      */
-    public List<User> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = User_.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
-
-        Log.d("List<User> find()", searchedField.toString());
-
-        columnProperty = (Property) searchedField.get(User_.class);
-        userQueryBuilder.equal(columnProperty , searchPattern);
-        userQuery = userQueryBuilder.build();
-        return userQuery.find();
+    public List<User> find(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return userBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public User delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public List<User> find(Property searchedColumn, long searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return userBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public List<User> find(Property searchedColumn, boolean searchPattern) {
+        return userBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+
+    public void delete(Property searchedColumn, String searchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        userBox.remove(findOne(searchedColumn, searchPattern));
+    }
+    /**
+     * Deleting a user matching the corresponding searchpattern in given column
+     * @param searchedColumn
+     * @param searchPattern
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         User toDeleteUser = findOne(searchedColumn, searchPattern);
         userBox.remove(toDeleteUser);
-        return toDeleteUser;
+        //return toDeleteUser;
     }
 
+    /**
+     * Delete all users out of the database
+     */
     public void deleteAll(){
-        userBox.removeAll();
+
     }
-
-
 }

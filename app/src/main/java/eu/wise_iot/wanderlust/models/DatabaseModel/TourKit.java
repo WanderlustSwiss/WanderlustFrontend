@@ -4,23 +4,33 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * RouteKit
+ * TourKit
  * @author Rilind Gashi
  * @license MIT
  */
 
 @Entity
-public class RouteKit extends AbstractModel{
+public class TourKit extends AbstractModel{
 
     @Id
+    long internal_id;
     long rKit_id;
-    long route;
+    long tour;
     long equipment;
 
-    public RouteKit(long rKit_id, long route, long equipment) {
+    public TourKit(long internal_id, long rKit_id, long tour, long equipment) {
+        this.internal_id = internal_id;
         this.rKit_id = rKit_id;
-        this.route = route;
+        this.tour = tour;
         this.equipment = equipment;
+    }
+
+    public long getInternal_id() {
+        return internal_id;
+    }
+
+    public void setInternal_id(long internal_id) {
+        this.internal_id = internal_id;
     }
 
     public long getrKit_id() {
@@ -29,12 +39,12 @@ public class RouteKit extends AbstractModel{
 
     public void setrKit_id(long rKit_id) { this.rKit_id = rKit_id; }
 
-    public long getRoute() {
-        return route;
+    public long getTour() {
+        return tour;
     }
 
-    public void setRoute(long route) {
-        this.route = route;
+    public void setTour(long tour) {
+        this.tour = tour;
     }
 
     public long getEquipment() {

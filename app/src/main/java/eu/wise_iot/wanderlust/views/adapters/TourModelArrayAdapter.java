@@ -1,4 +1,4 @@
-package eu.wise_iot.wanderlust.views.adapter;
+package eu.wise_iot.wanderlust.views.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,16 +35,16 @@ public class TourModelArrayAdapter extends ArrayAdapter<Tour> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        // get the Tour we are displaying
+        // get the CommunityTours we are displaying
         Tour tour = allTours.get(position);
 
         // get the Inflater and inflate the XML layout for each item
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.list_item, parent, false);
+        View view = inflater.inflate(R.layout.list_item_vertical, parent, false);
 
-        TextView title = (TextView) view.findViewById(R.id.tour_title);
-        TextView subtitle = (TextView) view.findViewById(R.id.tour_subtitle);
-        ImageView image = (ImageView) view.findViewById(R.id.tour_teaser_image);
+        TextView  title    =   (TextView) view.findViewById(R.id.tour_title);
+        TextView  subtitle =   (TextView) view.findViewById(R.id.tour_subtitle);
+        ImageView image    =   (ImageView)view.findViewById(R.id.tour_teaser_image);
 
         // sets the text to each view in one item
         title.setText(String.valueOf(tour.getName()));

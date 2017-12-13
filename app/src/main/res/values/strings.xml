@@ -68,11 +68,17 @@
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
     <string name="dialog_feedback_title">Eindruck speichern</string>
     <string name="dialog_feedback_description">Willst du auf der Karte einen Eindruck oder Warnhinweis hinterlassen?</string>
-    <string name="dialog_feedback_description_edit_hint">Schön? Hässlich? Gefährlich? Beschreibung hier einfügen.</string>
+    <string name="dialog_feedback_description_edit_hint">Beschreibung: Schön? Hässlich? Gefährlich? Beschreibung hier einfügen.</string>
     <string name="dialog_feedback_publication_mode">Foto zeigen</string>
     <string-array name="dialog_feedback_spinner_mode">
         <item>öffentlich</item>
         <item>nur für mich</item>
+    </string-array>
+    <string-array name="dialog_feedback_spinner_type">
+        <item>Aussichtspunkt</item>
+        <item>Restaurant</item>
+        <item>Rastplatz</item>
+        <item>Flora / Fauna</item>
     </string-array>
     <string name="dialog_feedback_feedback_type">Typ (positiv/negativ/Hinweis)</string>
 
@@ -119,6 +125,15 @@
     <string name="menu_title_other">Anderes (Platzhalter)</string>
     <string name="action_search">suchen</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="profile_tab_mytours">My Tours</string>
+    <string name="profile_tab_favorites">Favorites</string>
+    <string name="profile_tab_saved">Saved</string>
+    <string name="profile_tab_pois">POI\'s</string>
+    <string name="profile_bg_descriptionpri">background</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- REGISTRATION -->
     <string name="registration_name">Nickname</string>
     <string name="registration_email">E-Mail</string>
@@ -147,5 +162,18 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+    <!-- POI -->
+    <string name="poi_fragment_textview_title">Titel</string>
+    <string name="poi_fragment_textview_description">POI Beschreibung</string>
+    <string name="poi_fragment_privacy_private_item">Privat</string>
+    <string name="poi_fragment_privacy_public_item">Öffentlich</string>
+    <string name="layer_poi">POI-Layer</string>
+    <string name="poi_fragment_not_found">POI wurde nicht gefunden</string>
+    <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
+    <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
+    <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>
 
 </resources>

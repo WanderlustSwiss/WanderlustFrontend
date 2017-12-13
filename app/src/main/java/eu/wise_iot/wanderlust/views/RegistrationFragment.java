@@ -11,13 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
@@ -56,7 +55,7 @@ public class RegistrationFragment extends Fragment {
      * Create a standard registration fragment
      */
     public RegistrationFragment() {
-        this.registrationController = new RegistrationController(this);
+        this.registrationController = new RegistrationController();
     }
 
 
@@ -104,13 +103,12 @@ public class RegistrationFragment extends Fragment {
                         , passwordTextfield.getText().toString()
                         , 0, true, true, "", "");
                 if (validateInput(user)) {
-
-
+                    //get response
                     registrationController.registerUser(user, new FragmentHandler() {
                         @Override
-                        public void onResponse(Event event) {
+                        public void onResponse(ControllerEvent controllerEvent) {
                             EventType eventType = event.getType();
-                            switch (eventType) {
+                            //CAREFUL NULLPOINTER!
                                 case OK:
                                     MapFragment tourFragment = new MapFragment();
                                     getFragmentManager().beginTransaction()
@@ -131,9 +129,6 @@ public class RegistrationFragment extends Fragment {
                                     break;
                                 case NETWORK_ERROR:
                                     Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
-                                    break;
-                            }
-
                         }
                     });
                 }

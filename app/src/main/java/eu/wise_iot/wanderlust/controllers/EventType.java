@@ -5,14 +5,15 @@ package eu.wise_iot.wanderlust.controllers;
  * @author Tobias Rüegsegger
  * @license MIT
  */
-public enum EventType {
+    public enum EventType {
 
     OK(200), NOT_FOUND(404), CONFLICT(409), BAD_REQUEST(400), SERVER_ERROR(500), NETWORK_ERROR(0);
 
-    private int code;
+    int code;
 
     /**
      * Create EventType
+     *
      * @param code
      */
     EventType(int code) {
@@ -21,6 +22,7 @@ public enum EventType {
 
     /**
      * Get the enum from a specific code
+     *
      * @param code
      */
     public static EventType getTypeByCode(int code) {

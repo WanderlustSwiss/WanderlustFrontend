@@ -19,6 +19,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+sourceSets {
+     test {
+         java {
+             srcDirs = ["androidTest/java/eu/wise_iot/wanderlust"]
+         }
+     }
 }
 
 dependencies {
@@ -78,6 +93,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:9.8.0'
 
 }
+
+
 
 //the following sets the required permissions for API 23+ devices and AVDs
 

@@ -4,7 +4,7 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 /**
  * AbstractModel
  * @author Rilind Gashi
- * @license MIT <license in our case always MIT>
+ * @license MIT
  */
 
 public abstract class AbstractModel {

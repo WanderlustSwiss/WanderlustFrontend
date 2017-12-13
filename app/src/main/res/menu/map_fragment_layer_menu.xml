@@ -7,27 +7,5 @@
             android:icon="@drawable/ic_search_black_24dp"
             app:showAsAction="always|collapseActionView"
             app:actionViewClass="android.support.v7.widget.SearchView" />
-
-        <item android:id="@+id/feedback_overlay"
-            android:title="@string/mapfragment_menu_feedbacks"
-            android:checked="true"
-            android:checkable="true"
-            app:showAsAction="never"/>
-        <!--<item android:id="@+id/trails_overlay"-->  <!-- FIXME: UNCOMMENTED FOR RELEASE 1.0 -->
-        <!--android:title="@string/mapfragment_menu_trails"-->
-        <!--android:checked="false"-->
-        <!--android:checkable="false" />-->
-        <!--<item android:id="@+id/heatmap_overlay"-->
-        <!--android:title="@string/mapfragment_menu_heatmap"-->
-        <!--android:checked="false"-->
-        <!--android:checkable="false" />-->
-        <!--<item android:id="@+id/public_transport_overlay"-->
-        <!--android:title="@string/mapfragment_menu_transport"-->
-        <!--android:checked="false"-->
-        <!--android:checkable="false" />-->
-        <!--<item android:id="@+id/restaurants_overlay"-->
-        <!--android:title="@string/mapfragment_menu_restaurants"-->
-        <!--android:checked="false"-->
-        <!--android:checkable="false" />-->
     </group>
 </menu>

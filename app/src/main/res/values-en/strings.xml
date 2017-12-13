@@ -121,6 +121,10 @@
     <string name="registration_password_no_match">Password don\'t match</string>
     <string name="registration_username_required">A nickname is required</string>
     <string name="registration_email_required">An email is required</string>
+    <string name="poi_fragment_not_found">POI not found</string>
+    <string name="poi_fragment_success_delete">POI successfully deleted</string>
+    <string name="poi_fragment_fail_delete">Delete of POI unsucessful</string>
+    <string name="poi_successful_saving">POI successfully saved</string>
     <string name="registration_nickname_mail_used">That email or nickname is already being used</string>
     <string name="registration_email_invalid">Invalid email address</string>
     <string name="registration_password_invalid">Minimum eight characters, at least one letter and one number</string>

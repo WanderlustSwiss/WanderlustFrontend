@@ -21,10 +21,8 @@ public class Device extends AbstractModel{
      *
      * @param device_id (required) device_id which is needed for saving into the database. Should be a long.
      * @param identifier (required) nickname of the user
-     * @param language (required) email of the user
-     * @param searchFilter (required) password of the user
      */
-    public Device(long device_id, String identifier, int language, int searchFilter) {
+    public Device(long device_id, String identifier) {
         this.device_id = device_id;
         this.identifier = identifier;
     }

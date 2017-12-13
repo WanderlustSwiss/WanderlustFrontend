@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="profile_tab_mytours">My Tours</string>
+    <string name="profile_tab_favorites">Favorites</string>
+    <string name="profile_tab_pois">POI\'s</string>
+    <string name="profile_tab_saved">Saved</string>
+    <string name="profile_bg_descriptionpri">background</string>
     <string name="registration_passsword_repeat">Passwort wiederholen</string>
     <string name="registration_passsword">Passwort</string>
     <string name="registration_registrieren_btn">Registrieren</string>
@@ -9,6 +14,10 @@
     <string name="registration_password_no_match">Passwort stimmt nich überein</string>
     <string name="registration_username_required">Nickname ist obligatorisch</string>
     <string name="registration_email_required">E-Mail ist obligatorisch</string>
+    <string name="poi_fragment_not_found">POI wurde nicht gefunden</string>
+    <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
+    <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
+    <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>
     <string name="registration_nickname_mail_used">E-Mail Adresse oder Nickname wird bereits benutzt</string>
     <string name="registration_email_invalid">Ungültige E-Mail</string>
     <string name="registration_password_invalid">Mindestens 8 Zeichen, 1 Buchstabe und eine Zahl</string>
