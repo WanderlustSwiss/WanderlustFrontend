@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -99,12 +100,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void fakeLogin(FragmentHandler handler){
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
-        LoginUser testUser = new LoginUser("testuser", "HalloW3lt");
+        LoginUser testUser = new LoginUser("testuser", "Ha1loW3lt");
         Call<LoginUser> call = loginService.basicLogin(testUser);
         call.enqueue(new Callback<LoginUser>() {
             @Override
             public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
                 if (response.isSuccessful()) {
+
+                    //for testing issues
+                    DatabaseController.userDao.userBox.put(new User(1,
+                            "testbaris", "baris@demirci.com", "testpass12",
+                            1, true, true,
+                            "", ""));
+
+                    //for testing issues
+                    DatabaseController.profileDao.profileBox.put(new Profile(0, 1,
+                            (byte) 1 , 0, "23.03.1969",
+                            "deutsch", 1, 3));
 
                     Headers headerResponse = response.headers();
                     //convert header to Map

@@ -10,13 +10,18 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 
 /**
- * Created by Baris Demirci on 06.12.2017.
+ * Adapter for the profile UI. Represents all saved tours in a custom list view
+ *
+ * @author Baris Demirci
+ * @license MIT
  */
-
-public class ProfileSavedListAdapter extends ArrayAdapter {
+public class ProfileSavedListAdapter extends ArrayAdapter<CommunityTour> {
 
     private TextView title;
     private TextView description;
@@ -37,30 +42,62 @@ public class ProfileSavedListAdapter extends ArrayAdapter {
         this.objects = objects;
     }
 
+    /**
+     * Gets amount of saved tours in list view
+     *
+     * @return amount of saved tours
+     */
     @Override
     public int getCount() {
         return super.getCount();
     }
 
+    /**
+     * Gets the saved tour at a specific position back
+     *
+     * @param position index of saved tour
+     * @return saved tour at position
+     */
     @Override
-    public Object getItem(int position) {
+    public CommunityTour getItem(int position) {
         return super.getItem(position);
     }
 
+    /**
+     * Gets the position of a specific saved tour
+     *
+     * @param item the saved tour to look for
+     * @return position of the saved tour
+     */
     @Override
-    public int getPosition(Object item) {
+    public int getPosition(CommunityTour item) {
         return super.getPosition(item);
     }
 
+    /**
+     * Gets the Id of a saved tour at a specific position
+     *
+     * @param position index of saved tour
+     * @return Id of saved tour
+     */
     @Override
     public long getItemId(int position) {
         return super.getItemId(position);
     }
 
+    /**
+     * Gets the custom representation of one saved tour in the list view back
+     *
+     * @param position index of saved tour
+     * @param convertView view of fragment
+     * @param parent view where list element is represented
+     * @return view of one saved tour
+     */
+    @Nonnull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
         //get the item for this row
-        Object saved = getItem(position);
+        CommunityTour communityTour = getItem(position);
 
         //inflate the row layout
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_saved, parent, false);
@@ -73,9 +110,15 @@ public class ProfileSavedListAdapter extends ArrayAdapter {
         deleteIcon = (ImageView) convertView.findViewById(R.id.ListSavedIcon);
 
         //set data
+        if(communityTour != null){
+            title.setText(communityTour.getTitle());
+            description.setText(communityTour.getDescription());
 
+            //TODO: set the image
+        }
 
         //set listeners
+        //TODO: implement listener for delete icon and click listener for element
 
         return convertView;
     }

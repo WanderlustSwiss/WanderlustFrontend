@@ -34,6 +34,7 @@ public class User extends AbstractModel{
      */
     public User(long user_id, String nickname, String email, String password, long profile,
                 boolean isActive, boolean isValid, String lastLogin, String accountType) {
+        this.internalId = 0;
         this.user_id = user_id;
         this.nickname = nickname;
         this.email = email;
@@ -43,6 +44,19 @@ public class User extends AbstractModel{
         this.isValid = isValid;
         this.lastLogin = lastLogin;
         this.accountType = accountType;
+    }
+
+    public User() {
+        this.internalId = 0;
+        this.user_id = 1;
+        this.nickname = "test nickname";
+        this.email = "muster@mustermail.com";
+        this.password = "test";
+        this.profile = 1;
+        this.isActive = true;
+        this.isValid = true;
+        this.lastLogin = "";
+        this.accountType = "";
     }
 
 

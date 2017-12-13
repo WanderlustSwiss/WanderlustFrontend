@@ -33,7 +33,7 @@ import retrofit2.Response;
  */
 
 public class ProfileDao extends DatabaseObjectAbstract {
-    private Box<Profile> profileBox;
+    public Box<Profile> profileBox;
     public static ProfileService service;
 
     Property columnProperty;
@@ -46,6 +46,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
         profileBox = DatabaseController.boxStore.boxFor(Profile.class);
         service = ServiceGenerator.createService(ProfileService.class);
     }
+
 
     public long count(){
         return profileBox.count();

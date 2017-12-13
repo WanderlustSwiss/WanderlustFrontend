@@ -11,13 +11,17 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 
 /**
- * Created by Baris Demirci on 06.12.2017.
+ * Adapter for the profile UI. Represents all favorites in a custom list view
+ *
+ * @author Baris Demirci
+ * @license MIT
  */
-
 public class ProfileFavoritesListAdapter extends ArrayAdapter{
 
     private TextView title;
@@ -39,29 +43,62 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter{
         this.objects = objects;
     }
 
+    /**
+     * Gets amount of favorites in list view
+     *
+     * @return amount of favorites
+     */
     @Override
     public int getCount() {
         return super.getCount();
     }
 
+    /**
+     * Gets the favorite at a specific position back
+     *
+     * @param position index of favorite
+     * @return favorite at position
+     */
     @Override
     public Object getItem(int position) {
         return super.getItem(position);
     }
 
+    /**
+     * Gets the position of a specific favorite
+     *
+     * @param item the favorite to look for
+     * @return position of the favorite
+     */
     @Override
     public int getPosition(Object item) {
         return super.getPosition(item);
     }
 
+    /**
+     * Gets the Id of a favorite at a specific position
+     *
+     * @param position index of favorite
+     * @return Id of favorite
+     */
     @Override
     public long getItemId(int position) {
         return super.getItemId(position);
     }
 
+    /**
+     * Gets the custom representation of one favorite in the list view back
+     *
+     * @param position index of favorite
+     * @param convertView view of fragment
+     * @param parent view where list element is represented
+     * @return view of one favorite
+     */
+    @Nonnull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
         //get the item for this row
+        //TODO: as soon favorite entity is defined, replace all "object" references with entity
         Object fav = getItem(position);
 
         //inflate the row layout
@@ -75,9 +112,10 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter{
         favIcon = (ImageView) convertView.findViewById(R.id.ListFavIcon);
 
         //set data
-
+        //TODO: set data from entity
 
         //set listeners
+        //TODO: implement listeners for favorite icon as well click listener for elements
 
         return convertView;
     }
