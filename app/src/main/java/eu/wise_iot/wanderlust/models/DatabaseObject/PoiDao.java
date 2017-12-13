@@ -212,7 +212,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                     poiBox.remove(poi);
                     DatabaseController.deletePoiImages(poi);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
-                    DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA));
+                    DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.DELETESINGLEPOI, response.body()));
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }

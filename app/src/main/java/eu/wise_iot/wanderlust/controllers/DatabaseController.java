@@ -122,7 +122,7 @@ public final class DatabaseController {
                     poiDao.syncPois();
                 }
                 break;
-            case SINGLEPOI:
+            case POITYPE:
                 if (!syncingPoiTypes) {
                     syncingPoiTypes = true;
                     poiTypeDao.syncTypes();
@@ -134,6 +134,12 @@ public final class DatabaseController {
                     BoundingBox box = (BoundingBox) event.getObj();
                     poiDao.syncPois(box);
                 }
+            case SINGLEPOI:
+                sendUpdate(event);
+                break;
+            case DELETESINGLEPOI:
+                sendUpdate(event);
+                break;
             default:
         }
     }

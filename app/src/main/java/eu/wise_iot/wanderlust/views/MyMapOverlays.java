@@ -238,5 +238,15 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             addPoiToOverlay(poi);
             mapView.invalidate();
         }
+        else if(event.getType() == DatabaseEvent.SyncType.DELETESINGLEPOI){
+            Poi poi = (Poi) event.getObj();
+            for(int i = 0; i < poiOverlay.size(); i++) {
+                if(Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()){
+                    poiOverlay.removeItem(i);
+                    break;
+                }
+            }
+            mapView.invalidate();
+        }
     }
 }
