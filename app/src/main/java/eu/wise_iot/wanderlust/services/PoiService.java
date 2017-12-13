@@ -44,7 +44,7 @@ public interface PoiService {
     @PUT("/poi/{id}")
         Call<Poi> updatePoi(@Path("id") long id, @Body Poi poi);
     @DELETE("/poi/{id}")
-        Call<Poi> deletePoi(@Body Poi poi);
+        Call<Poi> deletePoi(@Path("id") long id);
     @Multipart
     @POST("/poi/{id}/img")
         Call<Poi.ImageInfo> uploadImage(@Path("id") long id, @Part MultipartBody.Part image);

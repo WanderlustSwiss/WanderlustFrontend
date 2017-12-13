@@ -20,6 +20,7 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
@@ -202,16 +203,16 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param poi
      * @param handler
      */
-    //TODO not workking yet
     public void delete(final Poi poi, final FragmentHandler handler) {
-        Call<Poi> call = service.deletePoi(poi);
+        Call<Poi> call = service.deletePoi(poi.getPoi_id());
         call.enqueue(new Callback<Poi>() {
             @Override
             public void onResponse(Call<Poi> call, Response<Poi> response) {
                 if (response.isSuccessful()) {
                     poiBox.remove(poi);
-                    //TODO delete image
+                    DatabaseController.deletePoiImages(poi);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                    DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA));
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }

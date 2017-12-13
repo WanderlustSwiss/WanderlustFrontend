@@ -213,6 +213,16 @@ public final class DatabaseController {
         cacheSize = 0;
     }
 
+    public static void deletePoiImages(Poi poi){
+        byte[] images = poi.getImageIds();
+        for(int i = 0; i < poi.getImageCount(); i++){
+            File image = poi.getImageById(images[i]);
+            if(!image.delete()){
+                Log.e(DatabaseController.class.toString(),
+                        "image " + image.getAbsolutePath() + " could not be deleted");
+            }
+        }
+    }
 
     public static void sendUpdate(DatabaseEvent event) {
         for (DatabaseListener listener : listeners) {
