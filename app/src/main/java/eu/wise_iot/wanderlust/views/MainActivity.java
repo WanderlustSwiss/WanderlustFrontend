@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DatabaseController.initDaoModels(getApplicationContext());
         DatabaseController.clearAllDownloadedImages();
 
-        if (preferences.getBoolean("firstTimeOpened", true)) { //TODO for testing
+        if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
             editor.apply();
@@ -106,24 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 return;
             }
-            loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    switch (controllerEvent.getType()){
-                        case OK:
-                            MapFragment mapFragment = MapFragment.newInstance();
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                                    .commit();
-                            break;
-                        default:
-                            LoginFragment loginFragment = new LoginFragment();
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame, loginFragment)
-                                    .commit();
-                    }
-                }
-            });
         }
                     //for testing issues
                     DatabaseController.userDao.userBox.put(new User(1,

@@ -140,14 +140,4 @@ public class DeviceDao extends DatabaseObjectAbstract{
         return find(searchedColumn, searchPattern).size();
     }
 
-    /**
-     * count all poi which match with the search criteria
-     *
-     * @return Total number of records
-     */
-    public long count(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
-        return find(searchedColumn, searchPattern).size();
-    }
-
 }

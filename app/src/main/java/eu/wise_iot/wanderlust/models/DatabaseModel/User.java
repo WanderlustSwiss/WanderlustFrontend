@@ -24,9 +24,6 @@ public class User extends AbstractModel{
     String lastLogin;
     String accountType;
 
-
-    public User(){}
-
     /**
      * Constructor.
      *
@@ -56,8 +53,8 @@ public class User extends AbstractModel{
         this.email = "muster@mustermail.com";
         this.password = "test";
         this.profile = 1;
-        this.isActive = true;
-        this.isValid = true;
+        this.isActive = false;
+        this.isValid = false;
         this.lastLogin = "";
         this.accountType = "";
     }

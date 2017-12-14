@@ -228,69 +228,6 @@ public class ProfileDao extends DatabaseObjectAbstract {
     }
     
     
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Profile.ImageInfo> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
-            }
-        });
-    }
-
-    public void saveImageOnApp(String name, File file) throws IOException {
-
-        InputStream in = new FileInputStream(file);
-        FileOutputStream out = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
-
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        out.close();
-        in.close();
-    }
-
-    /**
-     * deletes an image from a specific profile from the database
-     * and return it in the event
-     *
-     * @param profileID
-     * @param imageID
-     * @param handler
-     */
-    public void deleteImage(final long profileID, final long imageID, final FragmentHandler handler) {
-        Call<Profile.ImageInfo> call = service.deleteImage(profileID, imageID);
-        call.enqueue(new Callback<Profile.ImageInfo>() {
-            @Override
-            public void onResponse(Call<Profile.ImageInfo> call, Response<Profile.ImageInfo> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        Profile internalProfile = findOne(Profile_.profile_id, profileID);
-                        if (!internalProfile.removeImageId((byte)response.body().getId())){
-                            //TODO image id not found
-                        }
-                        profileBox.put(internalProfile);
-                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalProfile));
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Profile.ImageInfo> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
-            }
-        });
-    }
-    
-    
     /**
      * Insert a profile into the database.
      *
