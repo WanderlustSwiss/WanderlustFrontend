@@ -11,7 +11,7 @@ import org.osmdroid.util.GeoPoint;
 public class DatabaseEvent<T> {
 
     public enum SyncType{
-        POI, SINGLEPOI, POITYPE, POIAREA, DELETESINGLEPOI;
+        POI, SINGLEPOI, POITYPE, POIAREA, DELETESINGLEPOI, EDITSINGLEPOI;
     }
 
     private SyncType type;

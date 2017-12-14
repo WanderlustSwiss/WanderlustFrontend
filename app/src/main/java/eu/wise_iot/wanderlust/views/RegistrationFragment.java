@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,8 +108,8 @@ public class RegistrationFragment extends Fragment {
                     registrationController.registerUser(user, new FragmentHandler() {
                         @Override
                         public void onResponse(ControllerEvent controllerEvent) {
-                            EventType eventType = event.getType();
-                            //CAREFUL NULLPOINTER!
+                            EventType eventType = controllerEvent.getType();
+                            switch (eventType) {
                                 case OK:
                                     MapFragment tourFragment = new MapFragment();
                                     getFragmentManager().beginTransaction()
@@ -121,14 +122,9 @@ public class RegistrationFragment extends Fragment {
                                 case BAD_REQUEST:
                                     Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
                                     break;
-                                case SERVER_ERROR:
+                                default:
                                     Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
-                                    break;
-                                case NOT_FOUND:
-                                    Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
-                                    break;
-                                case NETWORK_ERROR:
-                                    Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                 }
@@ -149,6 +145,7 @@ public class RegistrationFragment extends Fragment {
 
     /**
      * checks whether the user's data is valid and can be send to the servert
+     *
      * @return true if the user's data is Valid, else if invalid
      */
     private boolean validateInput(User user) {
@@ -167,24 +164,24 @@ public class RegistrationFragment extends Fragment {
         } else if (!validateMail(user.getEmail())) {
             emailLayout.setError(getString(R.string.registration_email_invalid));
             isValid = false;
-        }else {
+        } else {
             emailLayout.setError(null);
         }
 
         if (user.getPassword().equals("")) {
             passwordLayout.setError(getString(R.string.registration_password_required));
             isValid = false;
-        } else if(!validatePassword(user.getPassword())){
+        } else if (!validatePassword(user.getPassword())) {
             passwordLayout.setError(getString(R.string.registration_password_invalid));
             isValid = false;
-        }else {
+        } else {
             passwordLayout.setError(null);
         }
 
         if (!user.getPassword().equals(repeatedPasswordTextfield.getText().toString())) {
             passwordRepeatLayout.setError(getString(R.string.registration_password_no_match));
             isValid = false;
-        }else {
+        } else {
             passwordRepeatLayout.setError(null);
         }
         return isValid;
@@ -192,20 +189,22 @@ public class RegistrationFragment extends Fragment {
 
     /**
      * checks whether the email address is valid or not
+     *
      * @param emailStr
      * @return true if the email address is valid, else if invalid
      */
     private boolean validateMail(String emailStr) {
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.find();
     }
 
     /**
      * checks whether the password is valid or not
+     *
      * @param password
      * @return true if the password is Valid, else if invalid
      */
-    private boolean validatePassword(String password){
+    private boolean validatePassword(String password) {
         return password.matches(VALID_PASSWORTD_REGX);
     }
 

@@ -24,6 +24,9 @@ public class User extends AbstractModel{
     String lastLogin;
     String accountType;
 
+
+    public User(){}
+
     /**
      * Constructor.
      *

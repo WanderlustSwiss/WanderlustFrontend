@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
@@ -83,6 +84,7 @@ public class MapFragment extends Fragment {
      * @return Fragment: MapFragment
      */
     public static MapFragment newInstance() {
+
         Bundle args = new Bundle();
         MapFragment fragment = new MapFragment();
         fragment.setArguments(args);
@@ -102,7 +104,14 @@ public class MapFragment extends Fragment {
         initMap(view);
         initOverlays();
         initMapController();
+        DatabaseController.register(mapOverlays);
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        DatabaseController.unregister(mapOverlays);
     }
 
     @Override
@@ -136,13 +145,11 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadPreferences();
-        DatabaseController.register(mapOverlays);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        DatabaseController.unregister(mapOverlays);
     }
 
     /**

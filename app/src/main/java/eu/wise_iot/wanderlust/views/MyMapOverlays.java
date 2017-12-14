@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -10,6 +11,8 @@ import android.location.LocationManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
@@ -25,15 +28,21 @@ import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.LoginController;
+import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
 import eu.wise_iot.wanderlust.models.Old.GpxParser;
@@ -94,14 +103,27 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem poiOverlayItem) {
-                        FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
-                        // make sure that no other dialog is running
-                        Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
-                        if (prevFragment != null) fragmentTransaction.remove(prevFragment);
-                        fragmentTransaction.addToBackStack(null);
+                        long poiId = Long.valueOf(poiOverlayItem.getUid());
+                        PoiController controller = new PoiController();
+                        controller.getPoiById(poiId, event -> {
+                            switch (event.getType()) {
+                                case OK:
+                                    Poi poi = (Poi) event.getModel();
 
-                        ViewPoiDialog dialogFragment = ViewPoiDialog.newInstance(poiOverlayItem);
-                        dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
+
+                                    FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+                                    // make sure that no other dialog is running
+                                    Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
+                                    if (prevFragment != null) fragmentTransaction.remove(prevFragment);
+                                    fragmentTransaction.addToBackStack(null);
+
+                                    ViewPoiDialog dialogFragment = ViewPoiDialog.newInstance(poi);
+                                    dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
+                                    break;
+                                default:
+                                    //TODO some kind of toast?
+                            }
+                        });
                         return true;
                     }
 
@@ -157,7 +179,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 else
                     drawable = activity.getResources().getDrawable(R.drawable.icon_resting_no_image);
                 break;
-            //TODO add new image
             case Constants.TYPE_FLORA_FAUNA:
                 if (hasImage)
                     drawable = activity.getResources().getDrawable(R.drawable.icon_flora_fauna);
@@ -243,6 +264,17 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             for(int i = 0; i < poiOverlay.size(); i++) {
                 if(Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()){
                     poiOverlay.removeItem(i);
+                    break;
+                }
+            }
+            mapView.invalidate();
+        }
+        else if(event.getType() == DatabaseEvent.SyncType.EDITSINGLEPOI){
+            Poi poi = (Poi) event.getObj();
+            for(int i = 0; i < poiOverlay.size(); i++) {
+                if(Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()){
+                    poiOverlay.removeItem(i);
+                    addPoiToOverlay(poi);
                     break;
                 }
             }

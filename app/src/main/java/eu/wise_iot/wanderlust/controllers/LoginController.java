@@ -26,14 +26,11 @@ import retrofit2.Response;
  * @license MIT
  */
 public class LoginController {
-    private LoginFragment loginFragment;
 
     /**
      * Create a login contoller
      */
-    public LoginController(LoginFragment fragment){
-        this.loginFragment = fragment;
-    }
+    public LoginController(){}
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
 
@@ -46,17 +43,22 @@ public class LoginController {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
+                    DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
 
-                    //TODO add user to database
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), response.body()));
+
+                    //TODO implement method in userDao
+                    DatabaseController.userDao.userBox.removeAll();
+                    response.body().setPassword(user.getPassword());
+                    DatabaseController.userDao.userBox.put(response.body());
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
-                    handler.onResponse(new Event(EventType.getTypeByCode(response.code()), null));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR, null));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -68,13 +70,13 @@ public class LoginController {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Event event = new Event(EventType.getTypeByCode(response.code()), null);
+                ControllerEvent event = new ControllerEvent(EventType.getTypeByCode(response.code()));
                     handler.onResponse(event);
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                handler.onResponse(new Event(EventType.NETWORK_ERROR, null));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }

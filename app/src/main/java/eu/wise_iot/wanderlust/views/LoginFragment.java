@@ -27,7 +27,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.Event;
+import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
@@ -59,13 +60,14 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 
     private FragmentHandler fragmentHandler =  new FragmentHandler() {
         @Override
-        public void onResponse(Event event) {
+        public void onResponse(ControllerEvent event) {
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
-                    MapFragment tourFragment = new MapFragment();
+                    //TODO joshua / fabian fragen
+                    MapFragment tourFragment = MapFragment.newInstance();
                     getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, tourFragment)
+                            .add(R.id.content_frame, tourFragment, Constants.MAP_FRAGMENT)
                             .commit();
                     break;
                 case CONFLICT:
@@ -85,7 +87,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
      * Create a standard login fragment
      */
     public LoginFragment() {
-        this.loginController = new LoginController(this);
+        this.loginController = new LoginController();
     }
 
 

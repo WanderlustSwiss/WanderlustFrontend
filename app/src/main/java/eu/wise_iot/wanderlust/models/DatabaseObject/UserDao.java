@@ -32,7 +32,6 @@ import retrofit2.Response;
 public class UserDao extends DatabaseObjectAbstract{
 
     public Box<User> userBox;
-    private Property columnProperty;// = User_.id;
 
     private static UserService service;
 
@@ -42,7 +41,7 @@ public class UserDao extends DatabaseObjectAbstract{
 
     public UserDao(){
         userBox = DatabaseController.boxStore.boxFor(User.class);
-        if(service == null) service = ServiceGenerator.createService(UserService.class);
+        service = ServiceGenerator.createService(UserService.class);
     }
 
     public long count(){
@@ -169,6 +168,10 @@ public class UserDao extends DatabaseObjectAbstract{
      */
     public List<User> find() {
         return userBox.getAll();
+    }
+
+    public User getUser(){
+        return userBox.get(1);
     }
 
     /**

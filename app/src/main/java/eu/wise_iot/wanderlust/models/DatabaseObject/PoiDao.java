@@ -181,6 +181,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                         backendPoi.setImageIds(internalPoi.getImageIds(), internalPoi.getImageCount());
                         poiBox.put(backendPoi);
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendPoi));
+                        DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.EDITSINGLEPOI, backendPoi));
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {

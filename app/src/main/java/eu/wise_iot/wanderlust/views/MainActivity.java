@@ -38,6 +38,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
@@ -54,6 +55,7 @@ import retrofit2.Response;
 
 /**
  * MainActivity:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -67,49 +69,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
-        BoxStore store = MyObjectBox.builder().androidContext(getApplicationContext()).build();
-        store.close();
-        store.deleteAllFiles();
         DatabaseController.initDaoModels(getApplicationContext());
+        DatabaseController.clearAllDownloadedImages();
 
-        //TODO remove after login works
-        fakeLogin(new FragmentHandler(){
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
+        if (preferences.getBoolean("firstTimeOpened", true)) { //TODO for testing
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("firstTimeOpened", false); // save that app has been opened
+            editor.apply();
 
-
-                DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
-                DatabaseController.clearAllDownloadedImages();
-
-
-
-                // check if app is opened for the first time
-                if (preferences.getBoolean("firstTimeOpened", true)) { //TODO for testing
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean("firstTimeOpened", false); // save that app has been opened
-                    editor.apply();
-
-                    // start welcome screen
-                    RegistrationFragment registrationFragment = new RegistrationFragment();
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, registrationFragment)
-                            .commit();
+            // start welcome screen
+            RegistrationFragment registrationFragment = new RegistrationFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, registrationFragment)
+                    .commit();
 
 
-                    // else start the map screen
-                } else {
-                    MapFragment mapFragment = MapFragment.newInstance();
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                            .commit();
+            // else try to login
+        } else {
 
-                }
+            LoginController loginController = new LoginController();
+            User user = DatabaseController.userDao.getUser();
+            if(user == null){
+                LoginFragment loginFragment = new LoginFragment();
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, loginFragment)
+                        .commit();
+                return;
             }
-        });
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-    }
-                    dialog.show(getFragmentManager(), Constants.CREATE_FEEDBACK_DIALOG);
+            loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    switch (controllerEvent.getType()){
+                        case OK:
+                            MapFragment mapFragment = MapFragment.newInstance();
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                    .commit();
+                            break;
+                        default:
+                            LoginFragment loginFragment = new LoginFragment();
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.content_frame, loginFragment)
+                                    .commit();
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -150,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /**
      * Handles click events in the drawer menu. Contains all selectable links to fragments
+     *
      * @param item
      * @return
      */

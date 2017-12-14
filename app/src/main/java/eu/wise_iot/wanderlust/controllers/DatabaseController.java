@@ -118,7 +118,7 @@ public final class DatabaseController {
             case POI:
                 //TODO no longer used?
                 if (!syncingPois) {
-                    syncingPoiTypes = true;
+                    syncingPois = true;
                     poiDao.syncPois();
                 }
                 break;
@@ -134,13 +134,9 @@ public final class DatabaseController {
                     BoundingBox box = (BoundingBox) event.getObj();
                     poiDao.syncPois(box);
                 }
-            case SINGLEPOI:
-                sendUpdate(event);
-                break;
-            case DELETESINGLEPOI:
-                sendUpdate(event);
                 break;
             default:
+                sendUpdate(event);
         }
     }
 

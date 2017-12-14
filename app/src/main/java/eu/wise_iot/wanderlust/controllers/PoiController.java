@@ -140,15 +140,9 @@ public class PoiController {
      * @return boolean:true if user is owner
      */
     public boolean isOwnerOf(Poi poi) {
-        try{
-            long thisUserId = DatabaseController.userDao.find().get(0).getUser_id();
+            long thisUserId = DatabaseController.userDao.getUser().getUser_id();
             long userId = poi.getUser();
             return thisUserId == userId;
-
-        } catch (IndexOutOfBoundsException e){ // can be removed after it's sure, that there's a user who is logged in
-            return true;
-        }
-
     }
 
     /**
