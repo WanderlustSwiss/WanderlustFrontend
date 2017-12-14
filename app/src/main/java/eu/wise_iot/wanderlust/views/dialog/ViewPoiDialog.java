@@ -129,8 +129,6 @@ public class ViewPoiDialog extends DialogFragment {
             this.showControlsForOwner();
         }
 
-        fillOutPoiView();
-
         return view;
     }
 
@@ -138,6 +136,7 @@ public class ViewPoiDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initActionControls();
+        fillOutPoiView();
     }
 
     private void initActionControls() {
@@ -181,7 +180,7 @@ public class ViewPoiDialog extends DialogFragment {
                     // TODO 1: put them in some kind of swipe container
                     // todo 2: real portrait images get scaled properly, but emulator generated not. check for real landscape images.
                     //Picasso.with(context).load(images.get(0)).resize(poiImage.getHeight(), poiImage.getWidth()).centerCrop().into(poiImage);
-                    Picasso.with(context).load(images.get(0)).resize(20, 20).centerCrop().into(poiImage);
+                    Picasso.with(context).load(images.get(0)).resize(350, 250).centerCrop().into(poiImage);
                 }
             }
         });
