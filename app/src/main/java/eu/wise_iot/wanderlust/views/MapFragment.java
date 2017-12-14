@@ -237,11 +237,16 @@ public class MapFragment extends Fragment {
     private void initMap(View view) {
         mapView = (WanderlustMapView) view.findViewById(R.id.mapView);
         //https://osm.rrze.fau.de/
-        ITileSource testSource = new XYTileSource("RRZE",
-                0, 19, 512, ".png",
-                new String[] { "http://osm.rrze.fau.de/osmhd/" });
+//        ITileSource tileSource = new XYTileSource("RRZE",
+//                0, 19, 512, ".png",
+//                new String[] { "http://osm.rrze.fau.de/osmhd/" });
 
-        mapView.setTileSource(testSource);
+        ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
+                new String[]{"https://opentopomap.org/"});
+        mapView.setTileSource(tileSource);
+
+
+        mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
         mapView.setMultiTouchControls(true);
     }
