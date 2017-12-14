@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 import org.w3c.dom.Text;
 
@@ -19,6 +23,8 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
@@ -72,7 +78,7 @@ public class TourFragment extends Fragment {
         //fetch from remote db
         tc.getDataViewServer(Integer.parseInt(getArguments().get("routeID").toString()), new FragmentHandler() {
             @Override
-            public void onResponse(Event event) {
+            public void onResponse(ControllerEvent event) {
                 switch (event.getType()){
                     case OK:
                         UserTour ut = (UserTour)event.getModel();

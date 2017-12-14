@@ -45,7 +45,7 @@ public class TourOverviewFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_tourslist, container, false);
 
-        UserTour testTour = new UserTour(0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+        UserTour testTour = new UserTour(0,0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
 
         //UserTourDao userTours = new UserTourDao();
         List<UserTour> userTours = new ArrayList<>();

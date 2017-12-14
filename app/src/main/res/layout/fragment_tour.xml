@@ -141,7 +141,8 @@
                         <TextView
                             android:id="@+id/tourTime"
                             android:layout_width="match_parent"
-                    android:textColor="@color/highlightRed" />
+                            android:layout_height="match_parent"
+                    android:textColor="@color/highlightTwo" />
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:drawableLeft="@drawable/ic_timer_black_24dp"
@@ -167,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_brightness_1_black_24dp"
                         android:drawablePadding="5dp"
-                        android:drawableTint="@color/structureYellow"
+                        android:drawableTint="@color/myYellow"
                         android:singleLine="true"
                         android:text="@string/tour_difficulty_label" />
                 </LinearLayout>

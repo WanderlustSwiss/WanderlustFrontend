@@ -9,6 +9,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                     getFragmentManager().beginTransaction()
                             .add(R.id.content_frame, tourFragment, Constants.MAP_FRAGMENT)
                             .commit();
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     break;
                 case CONFLICT:
                     nicknameEmailLayout.setError(getString(R.string.login_failure));
@@ -94,6 +96,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         context = getActivity();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
