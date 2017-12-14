@@ -8,11 +8,11 @@
     <color name="myGreen">#4a7e0f</color>
     <color name="black">#000000</color>
     <color name="myRed">#CC3D54</color>
-    <color name="materialGreen">#126178</color>
+    <color name="materialGreen">#00a592</color>
 
-    <color name="primaryColor">#126178</color>
-    <color name="primaryOne">#126178</color>
-    <color name="primaryTwo">#05424c</color>
+    <color name="primaryColor">#00a592</color>
+    <color name="primaryOne">#00a592</color>
+    <color name="primaryTwo">#00796b</color>
     <color name="highlightOne">#cc3d54</color>
     <color name="highlightTwo">#f24e75</color>
 </resources>

@@ -40,7 +40,7 @@ public class ProfileFragment extends Fragment {
     private TextView amountPOI;
     private TextView amountScore;
     private TextView amountTours;
-    private TextView birthday;
+    //private TextView birthday;
 
     private TabLayout tabLayout;
 
@@ -87,7 +87,7 @@ public class ProfileFragment extends Fragment {
      */
     public void setupProfileInfo(View view){
         //initializing views
-        birthday = (TextView) view.findViewById(R.id.profileBirthDay);
+        //birthday = (TextView) view.findViewById(R.id.profileBirthDay);
         amountPOI = (TextView) view.findViewById(R.id.profileAmountPOI);
         amountTours = (TextView) view.findViewById(R.id.profileAmountTours);
         amountScore = (TextView) view.findViewById(R.id.profileAmountScore);
@@ -113,7 +113,7 @@ public class ProfileFragment extends Fragment {
                                 profileController.getAmountTours()));
             amountPOI.setText(String.format(Locale.GERMANY,"%2d",
                                 profileController.getAmountPoi()));
-            birthday.setText(profileController.getBirthDate());
+            //birthday.setText(profileController.getBirthDate());
 
 
             //set nickname in App Bar

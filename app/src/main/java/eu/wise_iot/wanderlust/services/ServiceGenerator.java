@@ -17,6 +17,7 @@ public class ServiceGenerator {
      * Defines the URL for the backend communication
      */
     public static final String API_BASE_URL = "http://86.119.40.34:8080/";
+    //public static final String API_BASE_URL = "http:///";
 
     /**
      * Create service for a new backend request
