@@ -10,69 +10,143 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="225dp"
         android:adjustViewBounds="false"
         android:background="@color/primaryOne"
         android:contentDescription="@string/profile_bg_descriptionpri"
         android:cropToPadding="false">
 
+
         <ImageView
             android:id="@+id/profileBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@color/primaryOne" />
+            android:src="@color/primaryOne"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingLeft="50dp">
+            android:paddingLeft="30dp"
+            android:paddingTop="50dp">
 
-            <ImageView
-                android:id="@+id/profilePicture"
-                android:layout_width="225dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:src="@color/myPrimaryDarkTransparent" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="30dp"
+                >
 
-            <LinearLayout
+                <ImageView
+                    android:id="@+id/profilePicture"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/images"/>
+                    <!--android:src="@color/myPrimaryDarkTransparent"-->
+
+
+                
+                <TextView
+                    android:id="@+id/profileBirthDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profilePicture"
+                    android:layout_marginTop="10dp"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="12dp"
+                    android:text="Birthday"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingTop="30dp">
+                android:paddingTop="50dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
 
                 <TextView
-                    android:id="@+id/profileName"
-                    android:layout_width="match_parent"
+                    android:id="@+id/profileAmountPOI"
+                    android:text="999"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:text="TextView"
-                    android:textSize="25dp" />
+                    android:layout_marginLeft="15dp"
+                    android:textSize="20dp"
+                    />
 
                 <TextView
-                    android:id="@+id/profileScore"
-                    android:layout_width="match_parent"
+                    android:id="@+id/profilePOItitle"
+                    android:text="POI"
+                    android:textSize="10dp"
+                    android:textAlignment="center"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:text="TextView"
-                    android:textSize="15dp" />
+                    android:layout_below="@+id/profileAmountPOI"
+                    android:layout_alignLeft="@id/profileAmountPOI"
+                    />
 
                 <TextView
-                    android:id="@+id/profileCreatedTours"
-                    android:layout_width="match_parent"
+                    android:id="@+id/profileAmountTours"
+                    android:text="999"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textSize="15dp" />
+                    android:textSize="20dp"
+                    android:layout_toEndOf="@id/profileAmountPOI"
+                    android:layout_marginLeft="20dp"
+                    />
+
+                <TextView
+                    android:id="@+id/profileTourTitle"
+                    android:text="Touren"
+                    android:textSize="10dp"
+                    android:textAlignment="center"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profileAmountTours"
+                    android:layout_alignLeft="@+id/profileAmountTours"
+                    />
+
+                <TextView
+                    android:id="@+id/profileAmountScore"
+                    android:text="999"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:layout_toEndOf="@+id/profileAmountTours"
+                    android:layout_marginLeft="20dp"
+                    />
+
+                <TextView
+                    android:id="@+id/profileScoreTitle"
+                    android:text="Score"
+                    android:textSize="10dp"
+                    android:textAlignment="center"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profileAmountScore"
+                    android:layout_alignLeft="@+id/profileAmountScore"
+                    />
 
                 <Button
-                    android:id="@+id/testbutton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Button" />
-            </LinearLayout>
+                    android:layout_height="25dp"
+                    android:layout_below="@+id/profilePOItitle"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_profil_bearbeiten"
+                    android:text="Profil bearbeiten"
+                    android:textAppearance="@style/TextAppearance.AppCompat" />
+            </RelativeLayout>
+
+
+
+
         </LinearLayout>
     </FrameLayout>
 
@@ -80,41 +154,44 @@
         android:id="@+id/profileTabs"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/primaryTwo"
+        android:background="@color/primaryOne"
         android:clickable="false"
-        android:contextClickable="true"
         android:focusable="true"
         android:splitMotionEvents="false"
+        app:tabTextAppearance="@style/TextAppearance.AppCompat"
         app:tabIndicatorColor="@color/highlightOne">
 
         <android.support.design.widget.TabItem
-            android:id="@+id/tab_mytours"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_directions_black_24dp"
-            android:text="@string/profile_tab_mytours"
-            android:visibility="visible" />
+            android:id="@+id/tab_favorites"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/profile_tab_favorites"
+            android:visibility="visible"
+            android:layout_gravity="fill"/>
 
         <android.support.design.widget.TabItem
-            android:id="@+id/tab_favorites"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_favorite_black_24dp"
-            android:text="@string/profile_tab_favorites" />
+            android:id="@+id/tab_mytours"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/profile_tab_mytours"
+            android:visibility="visible"
+            android:layout_gravity="fill"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_poi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_nature_people_black_24dp"
-            android:text="@string/profile_tab_pois" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/profile_tab_pois"
+            android:visibility="visible"
+            android:layout_gravity="fill" />
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_saved"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_save_black_24dp"
-            android:text="@string/profile_tab_saved" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/profile_tab_saved"
+            android:visibility="visible"
+            android:layout_gravity="fill"/>
     </android.support.design.widget.TabLayout>
 
     <FrameLayout
@@ -122,7 +199,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ListView
+            android:id="@+id/listContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
     </FrameLayout>
+
 
 
 </LinearLayout>

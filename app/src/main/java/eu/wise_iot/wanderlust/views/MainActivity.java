@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -43,6 +44,11 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
@@ -61,6 +67,7 @@ import retrofit2.Response;
  */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
+    public static BoxStore boxStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
 
+        BoxStore store = MyObjectBox.builder().androidContext(getApplicationContext()).build();
+        store.close();
+        store.deleteAllFiles();
         DatabaseController.initDaoModels(getApplicationContext());
         DatabaseController.clearAllDownloadedImages();
 
@@ -115,6 +125,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
         }
+                    //for testing issues
+                    DatabaseController.userDao.userBox.put(new User(1,
+                            "testbaris", "baris@demirci.com", "testpass12",
+                            1, true, true,
+                            "", ""));
+
+                    //for testing issues
+                    DatabaseController.profileDao.profileBox.put(new Profile(0, 1,
+                            (byte) 1 , 0, "23.03.1969",
+                            "deutsch", 1, 3));
+
     }
 
     @Override
@@ -173,7 +194,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = SearchFragment.newInstance();
             fragmentTag = Constants.SEARCH_FRAGMENT;
         } else if (id == R.id.nav_profile) {
-            // TODO: add ProfileFragment here
+            fragment = ProfileFragment.newInstance();
+            fragmentTag = Constants.PROFILE_FRAGMENT;
         }
 
         // OTHER FRAGMENTS

@@ -170,6 +170,7 @@ public class UserDao extends DatabaseObjectAbstract{
         return userBox.getAll();
     }
 
+
     public User getUser(){
         return userBox.get(1);
     }
