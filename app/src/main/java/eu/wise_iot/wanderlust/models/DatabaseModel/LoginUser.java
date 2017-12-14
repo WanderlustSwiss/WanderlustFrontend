@@ -21,6 +21,10 @@ public class LoginUser {
         return cookies;
     }
 
+    public static void clearCookies(){
+        cookies.clear();
+    }
+
     public static void setCookies(ArrayList<String> cookiesC) {
         cookies = cookiesC;
     }

@@ -65,7 +65,6 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
-                    //TODO joshua / fabian fragen
                     MapFragment tourFragment = MapFragment.newInstance();
                     getFragmentManager().beginTransaction()
                             .add(R.id.content_frame, tourFragment, Constants.MAP_FRAGMENT)
@@ -104,10 +103,10 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .build();
 
-        googleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage((FragmentActivity) getActivity(), this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+//        googleApiClient = new GoogleApiClient.Builder(getActivity())
+//                .enableAutoManage((FragmentActivity) getActivity(), this)
+//                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+//                .build();
 
 
 
@@ -153,18 +152,20 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             }
         });
 
+        /*
         signInButtonGoogle.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 signInWithGoogle();
             }
         });
+        */
 
         redirectToRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                googleApiClient.stopAutoManage((FragmentActivity) getActivity());
-                googleApiClient.disconnect();
+                //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
+                //googleApiClient.disconnect();
                 RegistrationFragment registrationFragment = new RegistrationFragment();
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, registrationFragment)

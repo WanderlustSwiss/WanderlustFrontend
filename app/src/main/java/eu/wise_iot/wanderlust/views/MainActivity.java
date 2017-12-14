@@ -68,6 +68,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     public static BoxStore boxStore;
+    private LoginController loginController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         DatabaseController.initDaoModels(getApplicationContext());
         DatabaseController.clearAllDownloadedImages();
+        DatabaseController.poiDao.poiBox.removeAll();
+        loginController = new LoginController();
 
         if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
@@ -92,10 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // else try to login
         } else {
-
-            LoginController loginController = new LoginController();
             User user = DatabaseController.userDao.getUser();
-            if(user == null){
+            if (user == null) {
                 LoginFragment loginFragment = new LoginFragment();
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, loginFragment)
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
-                    switch (controllerEvent.getType()){
+                    switch (controllerEvent.getType()) {
                         case OK:
                             MapFragment mapFragment = MapFragment.newInstance();
                             getFragmentManager().beginTransaction()
@@ -184,12 +185,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // OTHER FRAGMENTS
-        else if (id == R.id.nav_manual) {
-            fragment = new ManualFragment();
-            fragmentTag = Constants.MANUAL_FRAGMENT;
-        } else if (id == R.id.nav_about) {
-            fragment = new DisclaimerFragment();
-            fragmentTag = Constants.DISCLAIMER_FRAGMENT;
+//        else if (id == R.id.nav_manual) {
+//            fragment = new ManualFragment();
+//            fragmentTag = Constants.MANUAL_FRAGMENT;
+//        } else if (id == R.id.nav_about) {
+//            fragment = new DisclaimerFragment();
+//            fragmentTag = Constants.DISCLAIMER_FRAGMENT;
+//        }
+        else if (id == R.id.logout) {
+            loginController.logout(new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    switch (controllerEvent.getType()) {
+                        case OK:
+                            LoginUser.clearCookies();
+                            Toast.makeText(getApplicationContext(), "logout successful", Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Toast.makeText(getApplicationContext(), "logout failed", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+            fragment = new LoginFragment();
+            fragmentTag = Constants.LOGIN_FRAGMENT;
         }
 
         if (fragment != null) {

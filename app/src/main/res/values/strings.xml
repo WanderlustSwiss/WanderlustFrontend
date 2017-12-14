@@ -120,6 +120,7 @@
     <string name="menu_map">Karte</string>
     <string name="menu_tours">Touren</string>
     <string name="menu_profile">Profil</string>
+    <string name="logout"><u>Logout</u></string>
     <string name="menu_manual">Bedienungsanleitung</string>
     <string name="menu_about">Über Wanderlust</string>
     <string name="menu_title_other">Anderes (Platzhalter)</string>

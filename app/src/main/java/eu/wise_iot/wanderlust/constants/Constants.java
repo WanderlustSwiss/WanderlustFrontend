@@ -29,6 +29,7 @@ public interface Constants {
     String DISCLAIMER_FRAGMENT = "DisclaimerFragment";
     String MANUAL_FRAGMENT = "ManualFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
+    String LOGIN_FRAGMENT = "LoginFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";

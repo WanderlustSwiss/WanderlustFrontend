@@ -46,11 +46,12 @@ public class LoginController {
                     DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
 
 
-                    //TODO implement method in userDao
                     DatabaseController.userDao.userBox.removeAll();
-                    response.body().setPassword(user.getPassword());
-                    DatabaseController.userDao.userBox.put(response.body());
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                    User newUser = response.body();
+                    newUser.setPassword(user.getPassword());
+                    newUser.setInternalId(0);
+                    DatabaseController.userDao.userBox.put(newUser);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), newUser));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
@@ -58,6 +59,22 @@ public class LoginController {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+
+    public void logout(FragmentHandler handler){
+        LoginService service = ServiceGenerator.createService(LoginService.class);
+        Call<Void> call = service.logout();
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });

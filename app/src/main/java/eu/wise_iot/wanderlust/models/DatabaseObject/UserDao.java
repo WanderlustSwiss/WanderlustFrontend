@@ -172,7 +172,7 @@ public class UserDao extends DatabaseObjectAbstract{
 
 
     public User getUser(){
-        return userBox.get(1);
+        return find().get(0);
     }
 
     /**

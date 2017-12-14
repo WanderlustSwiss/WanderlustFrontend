@@ -13,6 +13,9 @@ public interface LoginService {
     @POST("/auth/login")
     Call<User> basicLogin(@Body LoginUser user);
 
+    @GET("/auth/logout")
+    Call<Void> logout();
+
     @POST("auth/forgottenpassword")
     Call<Void> resetPassword(@Body LoginController.EmailBody body);
 

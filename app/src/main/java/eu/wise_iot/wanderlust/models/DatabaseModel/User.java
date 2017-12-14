@@ -60,6 +60,9 @@ public class User extends AbstractModel{
     }
 
 
+    public void setInternalId(long id){
+        this.internalId = id;
+    }
     public long getProfile() { return profile; }
 
     public void setProfile(long profile) { this.profile = profile; }
