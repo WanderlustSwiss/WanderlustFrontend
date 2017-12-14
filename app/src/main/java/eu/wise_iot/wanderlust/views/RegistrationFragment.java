@@ -113,16 +113,13 @@ public class RegistrationFragment extends Fragment {
                             EventType eventType = controllerEvent.getType();
                             switch (eventType) {
                                 case OK:
-                                    MapFragment tourFragment = new MapFragment();
+                                    LoginFragment loginFragment = new LoginFragment();
                                     getFragmentManager().beginTransaction()
-                                            .add(R.id.content_frame, tourFragment)
+                                            .add(R.id.content_frame, loginFragment)
                                             .commit();
                                     break;
                                 case CONFLICT:
                                     Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
-                                    break;
-                                case BAD_REQUEST:
-                                    Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
                                     break;
                                 default:
                                     Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
