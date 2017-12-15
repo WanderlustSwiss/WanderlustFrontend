@@ -1,11 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.objectbox'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "eu.wise_iot.wanderlust"
-        minSdkVersion 19
+        minSdkVersion 21
+        //noinspection OldTargetApi
         targetSdkVersion 25
         versionCode 1
         versionName "1.0.0"
@@ -17,16 +19,43 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+sourceSets {
+     test {
+         java {
+             srcDirs = ["androidTest/java/eu/wise_iot/wanderlust"]
+         }
+     }
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:support-v4:25.4.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //Espresso
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    androidTestCompile 'com.android.support:support-annotations:25.4.0'             //testcompiles..
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
+    androidTestCompile 'com.android.support.test:rules:1.0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // OSM Bonus Pack
     compile 'com.github.MKergall:osmbonuspack:6.4'
@@ -45,11 +74,27 @@ dependencies {
 
     // Library to turn HTTP API into Java Interface
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0' // maybe not necessary because gson already included?
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    // maybe not necessary because gson already included?
 
+    compile "io.objectbox:objectbox-android:$objectboxVersion"
+    //JUnit 4
+    // some useful Kotlin extension functions
+    // compile "io.objectbox:objectbox-kotlin:$objectboxVersion"
 
+    annotationProcessor "io.objectbox:objectbox-processor:$objectboxVersion"
+    // When using Kotlin use kapt instead:
+    // kapt "io.objectbox:objectbox-processor:$objectboxVersion"
     testCompile 'junit:junit:4.12'
+
+    //Material Design
+    compile 'com.android.support:design:25.4.0'
+
+    compile 'com.google.android.gms:play-services-auth:9.8.0'
+
 }
+
+
 
 //the following sets the required permissions for API 23+ devices and AVDs
 
@@ -85,3 +130,20 @@ android.applicationVariants.all { variant ->
         variant.testVariant.connectedInstrumentTest.dependsOn "configDevice2${variant.name.capitalize()}"
     }
 }
+android.applicationVariants.all { variant ->
+    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+        title = 'Wanderlust API'
+        description = 'This documentation is about the Android API'
+        source = variant.javaCompile.source
+        classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
+        destinationDir = file("../javadoc/")
+        options {
+            links "http://docs.oracle.com/javase/8/docs/api/"
+            linksOffline("https://d.android.com/reference", "${android.sdkDirectory}/docs/reference")
+        }
+        exclude '**/BuildConfig.java'
+        exclude '**/R.java'
+        failOnError false;
+    }
+}
+apply plugin: 'com.google.gms.google-services'

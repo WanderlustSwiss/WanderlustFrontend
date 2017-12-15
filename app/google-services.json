@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "337449508944",
+    "firebase_url": "https://wanderlust-3df20.firebaseio.com",
+    "project_id": "wanderlust-3df20",
+    "storage_bucket": "wanderlust-3df20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337449508944:android:bc51ee6a4141f8fd",
+        "android_client_info": {
+          "package_name": "eu.wise_iot.wanderlust"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337449508944-env6u8jf2piudak6sbtk42dp8q9q24ct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eu.wise_iot.wanderlust",
+            "certificate_hash": "10a90cb702796292c6e565650c8db9d9785818c0"
+          }
+        },
+        {
+          "client_id": "337449508944-cl047mbphq22de2gtd9n2tolcq902dcn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWpcsGJSpUPnsz4fvURDhgmy-zR6AVM7w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337449508944-cl047mbphq22de2gtd9n2tolcq902dcn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

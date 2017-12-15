@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="fill_parent"
     android:layout_width="fill_parent"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical"
-    android:background="@color/myPrimaryBackground"
-    android:padding="10dp"
-    android:gravity="end"
-    tools:context="eu.wise_iot.wanderlust.MainActivity"
-    android:clickable="true">
+    tools:context="eu.wise_iot.wanderlust.views.MainActivity">
 
     <EditText
         android:id="@+id/editText"
@@ -16,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:hint="@string/tour_hint_for_options_edit"
-        android:maxLines="1"/>
+        android:maxLines="1" />
 
     <ListView
         android:id="@+id/tourTeaserList"
@@ -76,29 +74,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/tour_duration_label" />
+
         <SeekBar
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:paddingEnd="0dp"
-            android:paddingRight="0dp"/>
+            android:paddingRight="0dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/tour_difficulty_label" />
+
         <SeekBar
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:paddingEnd="0dp"
-            android:paddingRight="0dp"/>
+            android:paddingRight="0dp" />
     </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,43 @@
+<resources>
+
+    <!-- GENERAL STRINGS -->
+
+    <!-- WELCOME FRAGMENT -->
+
+    <!-- MANUAL FRAGMENT -->
+
+    <!-- DISCLAIMER FRAGMENT -->
+
+
+    <!-- MENU RELATED STRINGS -->
+    <string-array name="drawer_menu_items">
+        <item>Karte</item>
+        <!--<item>Suche</item>--> <!-- FIXME: UNCOMMENTED FOR RELEASE 1.0 -->
+        <item>Bedienungsanleitung</item>
+        <item>Über Wanderlust</item>
+        <!--<item>Wandertagebuch</item>-->
+        <!--<item>Mein Konto</item>-->
+    </string-array>
+
+
+    <!-- TOUR RELATED STRINGS -->
+
+
+    <!-- FEEDBACK DIALOG RELATED STRINGS -->
+    <string-array name="dialog_feedback_spinner_mode">
+        <item>öffentlich</item>
+        <item>nur für mich</item>
+    </string-array>
+
+
+    <!-- USER MESSAGES -->
+
+
+    <!-- ERROR MESSAGES -->
+
+
+    <!-- USER ACTIONS -->
+
+    <!-- REGISTRATION -->
+
+</resources>

@@ -2,7 +2,8 @@
 
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
-
+    <string name="app_yes">Ja</string>
+    <string name="app_no">Nein</string>
     <!-- WELCOME FRAGMENT -->
     <string name="msg_welcome_header">Willkommen und danke, dass du das Release 0.1 von Wanderlust testen willst!</string>
     <string name="msg_welcome_text1">Bei dieser Version geht es vorerst darum Eindrücke zu sammeln und so schöne und weniger schöne Orte sichtbar zu machen. Bilder hingegen werden vorerst nur lokal bei dir abgespeichert. Wenn du sie mir aber (mit dem Original-Namen) zuschickst, kann ich sie beim nächsten Release hinzufügen.</string>
@@ -27,7 +28,7 @@
     <!-- DISCLAIMER FRAGMENT -->
     <string name="disclaimer_header">Über Wanderlust</string>
     <string name="disclaimer_text1">MIT Lizenz</string>
-    <string name="disclaimer_text2">&#169; 2017 Fabian Schwander, Samuel Fricker, Rilind Gashi, Hristian Stoilov</string>
+    <string name="disclaimer_text2">© 2017 Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Müller, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov, Alexander Weinbeck &amp; Samuel Fricker</string>
     <string name="disclaimer_text3">Die Software wird ohne jede ausdrückliche oder implizierte Garantie bereitgestellt, einschliesslich der Garantie zur Benutzung für den Vorgesehenen oder einem bestimmten Zweck sowie jeglicher Rechtsverletzung, jedoch nicht darauf beschränkt. In keinem Fall sind die Autoren oder Copyrightinhaber für jeglichen Schaden oder sonstige Ansprüche haftbar zu machen, ob infolge der Erfüllung eines Vertrages, eines Deliktes oder anders im Zusammenhang mit der Software oder sonstiger Verwendung der Software entstanden.</string>
 
 
@@ -67,11 +68,17 @@
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
     <string name="dialog_feedback_title">Eindruck speichern</string>
     <string name="dialog_feedback_description">Willst du auf der Karte einen Eindruck oder Warnhinweis hinterlassen?</string>
-    <string name="dialog_feedback_description_edit_hint">Schön? Hässlich? Gefährlich? Beschreibung hier einfügen.</string>
+    <string name="dialog_feedback_description_edit_hint">Beschreibung: Schön? Hässlich? Gefährlich? Beschreibung hier einfügen.</string>
     <string name="dialog_feedback_publication_mode">Foto zeigen</string>
     <string-array name="dialog_feedback_spinner_mode">
         <item>öffentlich</item>
         <item>nur für mich</item>
+    </string-array>
+    <string-array name="dialog_feedback_spinner_type">
+        <item>Aussichtspunkt</item>
+        <item>Restaurant</item>
+        <item>Rastplatz</item>
+        <item>Flora / Fauna</item>
     </string-array>
     <string name="dialog_feedback_feedback_type">Typ (positiv/negativ/Hinweis)</string>
 
@@ -91,6 +98,7 @@
 
     <string name="msg_not_saved">nicht gespeichert</string>
     <string name="msg_camera_about_to_start">Kamera wird geöffnet</string>
+    <string name="msg_camera_no_gps">GPS deaktiviert! Eindrücke werden nicht gespeichert!</string>
     <string name="msg_photo_upload_successful">Foto Upload erfolgreich</string>
     <string name="msg_photo_upload_failed">Foto Upload fehlgeschlagen</string>
     <string name="msg_follow_mode_enabled">Verfolgunsmodus aktiv\n(erhöhter Batterieverbrauch!)</string>
@@ -102,12 +110,69 @@
 
     <!-- ERROR MESSAGES -->
     <string name="msg_e_feedback_loading_error">Keine Verbindung zum Server. «Eindrücke &amp; Bilder» konnten nicht geladen werden</string>
-
+    <string name="msg_e_server_error">Keine Verbindung zum Server.</string>
 
     <!-- USER ACTIONS -->
     <string name="action_confirm">bestätigen</string>
     <string name="action_dismiss">verwerfen</string>
     <string name="action_close">schliessen</string>
     <string name="action_foreward">weiter</string>
+    <string name="menu_map">Karte</string>
+    <string name="menu_tours">Touren</string>
+    <string name="menu_profile">Profil</string>
+    <string name="logout"><u>Logout</u></string>
+    <string name="menu_manual">Bedienungsanleitung</string>
+    <string name="menu_about">Über Wanderlust</string>
+    <string name="menu_title_other">Anderes (Platzhalter)</string>
+    <string name="action_search">suchen</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="profile_tab_mytours">Touren</string>
+    <string name="profile_tab_favorites">Favoriten</string>
+    <string name="profile_tab_saved">Gespeichert</string>
+    <string name="profile_tab_pois">POI\'s</string>
+    <string name="profile_bg_descriptionpri">background</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- REGISTRATION -->
+    <string name="registration_name">Nickname</string>
+    <string name="registration_email">E-Mail</string>
+    <string name="registration_registrieren_btn">Registrieren</string>
+    <string name="registration_passsword">Passwort</string>
+    <string name="registration_passsword_repeat">Passwort wiederholen</string>
+    <string name="registration_account_exist"><u>Bereits registriert? Login</u></string>
+    <string name="registration_create_account">Create Account</string>
+    <string name="registration_password_required">A password is required</string>
+    <string name="registration_password_no_match">Password don\'t match</string>
+    <string name="registration_username_required">A nickname is required</string>
+    <string name="registration_email_required">An email is required</string>
+    <string name="registration_nickname_mail_used">That email or nickname is already being used</string>
+    <string name="registration_email_invalid">Invalid email address</string>
+    <string name="registration_password_invalid">Minimum eight characters, at least one letter and one number</string>
+    <string name="registration_connection_error">Not possible to connect with the server</string>
+
+    <!-- LOGIN -->
+    <string name="login_nickname_email">Nickname / E-Mail</string>
+    <string name="login_password">Password</string>
+    <string name="login_login">Login</string>
+    <string name="login_failure">Kein User mit folgenden Angaben gefunden</string>
+    <string name="server_client_id">877872359525-t55gb7eug4cjamosphfjlq41uj2deqej.apps.googleusercontent.com</string>
+    <string name="login_need_registration"><u>Create new account</u></string>
+    <string name="login_forgot_password"><u>Passwort vergessen?</u></string>
+
+
+
+    <!-- POI -->
+    <string name="poi_fragment_textview_title">Titel</string>
+    <string name="poi_fragment_textview_description">POI Beschreibung</string>
+    <string name="poi_fragment_privacy_private_item">Privat</string>
+    <string name="poi_fragment_privacy_public_item">Öffentlich</string>
+    <string name="layer_poi">POI-Layer</string>
+    <string name="poi_fragment_not_found">POI wurde nicht gefunden</string>
+    <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
+    <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
+    <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>
 
 </resources>

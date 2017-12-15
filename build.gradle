@@ -1,11 +1,17 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext.objectboxVersion = '1.2.1'
     repositories {
         jcenter()
+        maven { url "http://objectbox.net/beta-repo/" }                         //required for ObjectBox
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"      //required for ObjectBox
+        classpath 'com.google.gms:google-services:3.1.0'
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -14,7 +20,9 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://jitpack.io" } // required to install OSM Bonus Pack
+        maven { url "https://jitpack.io" }          // required to install OSM Bonus Pack
+        google()
+        maven { url "http://objectbox.net/beta-repo/" }                         //required for ObjectBox #whatElse
     }
 }
 task wrapper(type: Wrapper) {
