@@ -19,12 +19,12 @@ import retrofit2.http.PUT;
  * @author Alexander Weinbeck
  */
 public interface UserService {
-    @POST("/auth/register")
+    @POST("auth/register")
         Call<User> createUser(@Body User user);
-    @GET("/user")
+    @GET("user")
         Call<User> retrieveUser();
-    @PUT("/user")
+    @PUT("user")
         Call<User> updateUser(@Body User user);
-    @DELETE("/user")
+    @DELETE("user")
         Call<User> deleteUser(@Body User user);
 }

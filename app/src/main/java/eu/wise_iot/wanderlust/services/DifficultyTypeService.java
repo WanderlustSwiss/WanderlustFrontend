@@ -14,6 +14,6 @@ import retrofit2.http.GET;
  * @author Alexander Weinbeck
  */
 public interface DifficultyTypeService {
-    @GET("/difficultytype")
+    @GET("difficultytype")
     Call<List<DifficultyType>> retrieveAllDifficultyTypes();
 }

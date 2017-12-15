@@ -172,7 +172,12 @@ public class UserDao extends DatabaseObjectAbstract{
 
 
     public User getUser(){
-        return find().get(0);
+        List<User> users = find();
+        if(users.size() != 1){
+            return null;
+        } else{
+            return users.get(0);
+        }
     }
 
     /**

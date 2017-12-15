@@ -22,9 +22,10 @@ public class AddCookiesInterceptor implements Interceptor {
 
         ArrayList<String> preferences = LoginUser.getCookies();
 
-        for (String cookie : preferences) {
-            builder.addHeader("Cookie", cookie);
-        }
+        if(preferences == null) preferences = new ArrayList<>();
+            for (String cookie : preferences) {
+                builder.addHeader("Cookie", cookie);
+            }
 
         return chain.proceed(builder.build());
     }

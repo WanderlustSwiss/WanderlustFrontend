@@ -19,14 +19,14 @@ import retrofit2.http.Path;
  * @author Alexander Weinbeck
  */
 public interface TripService {
-    @GET("/Trip/")
+    @GET("Trip/")
         Call<Trip> retrieveAllTrips();
-    @GET("/Trip/{id}")
+    @GET("Trip/{id}")
         Call<Trip> retrieveTrip(@Path("id") int id);
-    @POST("/Trip/")
+    @POST("Trip/")
         Call<Trip> createTrip(@Body Trip user);
-    @PUT("/Trip")
+    @PUT("Trip")
         Call<Trip> updateTrip(int id,@Body Trip Trip);
-    @DELETE("/Trip/{")
+    @DELETE("Trip/{")
         Call<Trip> deleteTrip(@Body Trip Trip);
 }

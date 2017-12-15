@@ -26,19 +26,19 @@ import retrofit2.http.Path;
  * @author Alexander Weinbeck
  */
 public interface UserTourService {
-    @GET("/tour/{id}")
+    @GET("tour/{id}")
         Call<UserTour> retrieveUserTour(@Path("id") int id);
-    @GET("/tour/")
+    @GET("tour/")
         Call<UserTour> retrieveAllUserTours();
-    @PUT("/tour/{id}")
+    @PUT("tour/{id}")
         Call<UserTour> updateUserTour(int id, @Body UserTour userTour);
-    @GET("/poi/{id}/img/{image_id}")
+    @GET("poi/{id}/img/{image_id}")
         Call<UserTour> downloadImage(@Path("id") int id, @Path("image_id") int image_id);
     @Multipart
-    @POST("/poi/{id}/img")
+    @POST("poi/{id}/img")
         Call<Poi> uploadImage(@Path("id") int id, @Part MultipartBody.Part image);
-    @DELETE("/tour/{")
+    @DELETE("tour/{")
         Call<UserTour> deleteUserTour(@Body UserTour userTour);
-    @DELETE("/poi/{id}/img/{image_id}")
+    @DELETE("poi/{id}/img/{image_id}")
         Call<UserTour> deleteImage(@Path("id") int id, @Path("image_id") int image_id);
 }
