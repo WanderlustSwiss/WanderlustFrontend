@@ -36,24 +36,40 @@ Latest documentation: [API JavaDoc](http://86.119.40.34/Frontend_Android_App/Doc
 ## Releases
 Released .apk packages: [Browse Packages](http://86.119.40.34/Frontend_Android_App)
 
+### Release 0.2
+The release contains frist implemention of POI's and User Registration and Login/Logout
+
+**Package**
+[wanderlust-app-0.2.0-14359.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.2.0-14359.apk)
+
+**Date**
+14.12.2017
+
+**Features**
+  - User Login and Logout
+  - Create, edit and remove POI's
+  - Locate on Map and set POI
+  - Dummy Profile
+  - User Registration and auto login
+
+
 ### Release 0.1
 The release contains first basic functionality of the android app and enables saving and retrieving data from the database with a spring framework backend.
 
 **Package**
-[wanderlust-app-1.0.0-11407.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-1.0.0-11407.apk)
+[wanderlust-app-0.1.0-11407.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.1.0-11407.apk)
 
 **Date**
 20.09.2017
 
-**Included features**
+**Features**
 - osmdroid framework as map service and functionality of framework included
 - welcome screen, manual screen and disclaimer screen
 - using camera app
 - collecting and saving feedbacks
 
-**Not included features**
+**Open**
 - uploading and downloading imageIds dynamically
-
 
 ## License
 See LICENSE.md
