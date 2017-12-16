@@ -38,7 +38,7 @@ Deploy Package:
   stage: deploy
   script:
     - chmod 755 gradlew
-    - ./gradlew assembleRelease
+    - ./gradlew assemble
     - cp app/build/outputs/apk/app-release-unsigned.apk /var/www/html/Frontend_Android_App/wanderlust-app-${Version}-${CI_PIPELINE_ID}.apk
   only:
     - master
