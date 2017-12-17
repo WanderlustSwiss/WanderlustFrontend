@@ -12,7 +12,6 @@
 
 ## Introduction
 This is project of the Wanderlust Android App.
-TODO: --> More description
 
 ## HowTo Developing
 Befor you start with developing please read these wiki articles:
