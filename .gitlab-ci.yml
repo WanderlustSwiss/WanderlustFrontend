@@ -40,6 +40,7 @@ Deploy Package:
   script:
     - chmod 755 gradlew
     - ./gradlew assembleRelease
-    - cp app/build/outputs/apk/release/app-release-unsigned.apk /var/www/html/Frontend_Android_App/wanderlust-app-${Version}-${CI_PIPELINE_ID}.apk
+    - find app/build -name "*.apk"
+    #- cp app/build/outputs/apk/release/app-release-unsigned.apk /var/www/html/Frontend_Android_App/wanderlust-app-${Version}-${CI_PIPELINE_ID}.apk
   only:
     - master
