@@ -9,6 +9,7 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -203,13 +204,17 @@ public final class DatabaseController {
             int dotIndex = name.lastIndexOf('.');
             if(dotIndex == -1) continue; //not a valid file
             String extension = name.substring(dotIndex+1);
-            long imageId = Long.parseLong(name.substring(name.indexOf('-')+1, name.indexOf('.')));
-            if(privatePoiIds.contains(imageId) && extension.equals("jpg")) {
-                if (!image.delete()) {
-                    Log.e(DatabaseController.class.toString(),
-                            "image " + image.getAbsolutePath() + " could not be deleted");
-                    break;
+            try{
+                long imageId = Long.parseLong(name.substring(name.indexOf('-')+1, name.indexOf('.')));
+                if(privatePoiIds.contains(imageId) && extension.equals("jpg")) {
+                    if (!image.delete()) {
+                        Log.e(DatabaseController.class.toString(),
+                                "image " + image.getAbsolutePath() + " could not be deleted");
+                        break;
+                    }
                 }
+            }catch (NumberFormatException e){
+                continue;
             }
         }
         cacheSize = 0;
