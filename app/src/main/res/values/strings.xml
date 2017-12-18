@@ -163,7 +163,6 @@
     <string name="login_forgot_password"><u>Passwort vergessen?</u></string>
 
 
-
     <!-- POI -->
     <string name="poi_fragment_textview_title">Titel</string>
     <string name="poi_fragment_textview_description">POI Beschreibung</string>
@@ -174,5 +173,8 @@
     <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
     <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
     <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>
+    <string name="forgot_password_btn">Passwort zurücksetzen</string>
+    <string name="forgot_password_resetmail_success">Eine Mail fürs zurücksetzen des Passwortes wurde erfolgreich versendet</string>
+    <string name="forgot_password_resetmail_fail">Fehler beim zurücksetzen des Passwortes</string>
 
 </resources>
