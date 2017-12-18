@@ -33,7 +33,7 @@ import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.models.Old.Camera;
-import eu.wise_iot.wanderlust.models.Old.StyleBehavior;
+import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
 
 /**

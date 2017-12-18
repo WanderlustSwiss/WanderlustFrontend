@@ -1,4 +1,4 @@
-package eu.wise_iot.wanderlust.models.Old;
+package eu.wise_iot.wanderlust.views.animations;
 
 import android.graphics.PorterDuff;
 import android.view.MotionEvent;
