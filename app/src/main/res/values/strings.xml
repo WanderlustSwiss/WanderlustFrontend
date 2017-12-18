@@ -35,28 +35,12 @@
     <!-- MENU RELATED STRINGS -->
     <string name="drawer_open">Menu öffnen</string>
     <string name="drawer_close">Menu schliessen</string>
-    <string name="action_settings">Menu</string>
-    <string-array name="drawer_menu_items">
-        <item>Karte</item>
-        <!--<item>Suche</item>--> <!-- FIXME: UNCOMMENTED FOR RELEASE 1.0 -->
-        <item>Bedienungsanleitung</item>
-        <item>Über Wanderlust</item>
-        <!--<item>Wandertagebuch</item>-->
-        <!--<item>Mein Konto</item>-->
-    </string-array>
-    <string name="mapfragment_menu_feedbacks">Bilder &amp; Eindrücke</string>
-    <string name="mapfragment_menu_trails">Wanderwege</string>
-    <string name="mapfragment_menu_heatmap">Heatmap</string>
-    <string name="mapfragment_menu_transport">ÖV</string>
-    <string name="mapfragment_menu_restaurants">Restaurants</string>
 
 
     <!-- TOUR RELATED STRINGS -->
     <string name="tour_difficulty_label">Schwierigkeit</string>
     <string name="tour_duration_label">Zeitbedarf</string>
-    <string name="tour_distance_up_label">Aufstieg</string>
     <string name="tour_distance_down_label">Abstieg</string>
-    <string name="tour_waypoints_label">Wegpunkte</string>
     <string name="tour_link_label">Originallink</string>
     <string name="tour_hint_for_options_edit">Region, Ort, Berg oder Pass</string>
     <string name="tour_option_circle_hike">Rundwanderung</string>
@@ -66,10 +50,7 @@
 
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
-    <string name="dialog_feedback_title">Eindruck speichern</string>
-    <string name="dialog_feedback_description">Willst du auf der Karte einen Eindruck oder Warnhinweis hinterlassen?</string>
     <string name="dialog_feedback_description_edit_hint">Beschreibung: Schön? Hässlich? Gefährlich? Beschreibung hier einfügen.</string>
-    <string name="dialog_feedback_publication_mode">Foto zeigen</string>
     <string-array name="dialog_feedback_spinner_mode">
         <item>öffentlich</item>
         <item>nur für mich</item>
@@ -80,21 +61,11 @@
         <item>Rastplatz</item>
         <item>Flora / Fauna</item>
     </string-array>
-    <string name="dialog_feedback_feedback_type">Typ (positiv/negativ/Hinweis)</string>
 
 
     <!-- USER MESSAGES -->
     <string name="msg_picture_not_saved">Foto konnte nicht gespeichert werden</string>
-    <string name="msg_page_not_existing">Seite existiert noch nicht</string>
-    <string name="msg_button_for_dev_only">Dieser Button ist nur zu Testzwecken hier und verschwindet irgendwann</string>
-    <string name="msg_searching_for_position">Bitte warten, der aktuelle Standort wird gesucht…</string>
-    <string name="msg_searching_please_wait">Bitte warten bis aktuelle Position gefunden wurde und dann erneut versuchen</string>
     <string name="msg_no_action_defined">Noch keine Aktion definiert</string>
-    <string name="msg_no_action_defined_on_go_to_map_button">Dieser Knopf bringt dich schon bald zum Startpunkt der Tour. Jetzt musst du den Ort aber noch selber auf der Karte suchen…</string>
-    <string name="msg_no_image_found">Kein Bild vorhanden oder Bild kann nicht angezeigt werden</string>
-    <string name="msg_please_choose_mode">Bitte Modus auswählen</string>
-    <string name="msg_saved">gespeichert</string>
-    <string name="msg_visible_after_refresh">Änderung wird beim nächsten Laden der Karte sichtbar</string>
 
     <string name="msg_not_saved">nicht gespeichert</string>
     <string name="msg_camera_about_to_start">Kamera wird geöffnet</string>
@@ -109,20 +80,14 @@
 
 
     <!-- ERROR MESSAGES -->
-    <string name="msg_e_feedback_loading_error">Keine Verbindung zum Server. «Eindrücke &amp; Bilder» konnten nicht geladen werden</string>
     <string name="msg_e_server_error">Keine Verbindung zum Server.</string>
 
     <!-- USER ACTIONS -->
-    <string name="action_confirm">bestätigen</string>
-    <string name="action_dismiss">verwerfen</string>
-    <string name="action_close">schliessen</string>
     <string name="action_foreward">weiter</string>
     <string name="menu_map">Karte</string>
     <string name="menu_tours">Touren</string>
     <string name="menu_profile">Profil</string>
     <string name="logout"><u>Auslogen</u></string>
-    <string name="menu_manual">Bedienungsanleitung</string>
-    <string name="menu_about">Über Wanderlust</string>
     <string name="menu_title_other">Anderes</string>
     <string name="action_search">suchen</string>
 
@@ -135,11 +100,9 @@
 
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- REGISTRATION -->
     <string name="registration_name">Nickname</string>
     <string name="registration_email">E-Mail</string>
-    <string name="registration_registrieren_btn">Registrieren</string>
     <string name="registration_passsword">Passwort</string>
     <string name="registration_passsword_repeat">Passwort wiederholen</string>
     <string name="registration_account_exist"><u>Bereits registriert? Login</u></string>
@@ -158,7 +121,6 @@
     <string name="login_password">Password</string>
     <string name="login_login">Login</string>
     <string name="login_failure">Kein User mit folgenden Angaben gefunden</string>
-    <string name="server_client_id">877872359525-t55gb7eug4cjamosphfjlq41uj2deqej.apps.googleusercontent.com</string>
     <string name="login_need_registration"><u>Neuen Account erstellen</u></string>
     <string name="login_forgot_password"><u>Passwort vergessen?</u></string>
 
@@ -170,7 +132,6 @@
     <string name="poi_fragment_privacy_private_item">Privat</string>
     <string name="poi_fragment_privacy_public_item">Öffentlich</string>
     <string name="layer_poi">POI-Layer</string>
-    <string name="poi_fragment_not_found">POI wurde nicht gefunden</string>
     <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
     <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
     <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>
