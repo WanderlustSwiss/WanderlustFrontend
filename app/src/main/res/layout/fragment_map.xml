@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_main"
     android:orientation="vertical"
     tools:context=".views.MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/myPrimaryDark"
+        android:background="@color/heading_icon_unselected"
         tools:context="eu.wise_iot.wanderlust.views.MapFragment">
 
         <eu.wise_iot.wanderlust.views.WanderlustMapView
@@ -89,7 +89,7 @@
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/background_main"
         app:behavior_hideable="true"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_main"
     android:orientation="vertical">
 
     <TextView
@@ -142,7 +142,7 @@
                             android:id="@+id/tourTime"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:textColor="@color/highlightTwo" />
+                            android:textColor="@color/highlight_second" />
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:drawableLeft="@drawable/ic_timer_black_24dp"
@@ -168,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_brightness_1_black_24dp"
                         android:drawablePadding="5dp"
-                        android:drawableTint="@color/myYellow"
+                        android:drawableTint="@color/structure_main"
                         android:singleLine="true"
                         android:text="@string/tour_difficulty_label" />
                 </LinearLayout>

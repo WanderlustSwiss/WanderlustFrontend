@@ -83,7 +83,7 @@
         android:layout_marginBottom="24dp"
         android:gravity="center"
         android:text="@string/registration_account_exist"
-        android:textColor="@color/white"
+        android:textColor="@color/background_main"
         android:textSize="20sp" />
 
 

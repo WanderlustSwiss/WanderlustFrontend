@@ -12,7 +12,7 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/myPrimaryDark" />
+        android:background="@color/heading_icon_unselected" />
 
     <include
         layout="@layout/app_bar_main"
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/white"
+        android:background="@color/background_main"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_menu_header"
         app:menu="@menu/activity_main_drawer" />

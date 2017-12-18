@@ -10,7 +10,7 @@
         android:layout_height="75dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="25dp"
-        android:src="@color/myPrimaryDark" />
+        android:src="@color/heading_icon_unselected" />
 
     <LinearLayout
         android:id="@+id/ListFavInfo"

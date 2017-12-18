@@ -47,13 +47,13 @@
         android:id="@+id/content_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/background_main">
 
         <RelativeLayout
             android:id="@+id/poi_background_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
+            android:background="@color/primary_main"
             android:padding="8dp">
 
             <TextView

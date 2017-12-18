@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="225dp"
         android:adjustViewBounds="false"
-        android:background="@color/primaryOne"
+        android:background="@color/primary_main"
         android:contentDescription="@string/profile_bg_descriptionpri"
         android:cropToPadding="false">
 
@@ -19,7 +19,7 @@
             android:id="@+id/profileBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@color/primaryOne" />
+            android:src="@color/primary_main" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -143,11 +143,11 @@
         android:id="@+id/profileTabs"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/primaryOne"
+        android:background="@color/primary_main"
         android:clickable="false"
         android:focusable="true"
         android:splitMotionEvents="false"
-        app:tabIndicatorColor="@color/highlightOne"
+        app:tabIndicatorColor="@color/highlight_main"
         app:tabTextAppearance="@style/TextAppearance.AppCompat">
 
         <android.support.design.widget.TabItem
