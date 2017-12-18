@@ -98,7 +98,7 @@
 
     <string name="msg_not_saved">nicht gespeichert</string>
     <string name="msg_camera_about_to_start">Kamera wird geöffnet</string>
-    <string name="msg_camera_no_gps">GPS deaktiviert! Eindrücke werden nicht gespeichert!</string>
+    <string name="msg_camera_no_gps">GPS deaktiviert! Eindrücke werden nicht gespeichert</string>
     <string name="msg_photo_upload_successful">Foto Upload erfolgreich</string>
     <string name="msg_photo_upload_failed">Foto Upload fehlgeschlagen</string>
     <string name="msg_follow_mode_enabled">Verfolgunsmodus aktiv\n(erhöhter Batterieverbrauch!)</string>
@@ -120,17 +120,17 @@
     <string name="menu_map">Karte</string>
     <string name="menu_tours">Touren</string>
     <string name="menu_profile">Profil</string>
-    <string name="logout"><u>Logout</u></string>
+    <string name="logout"><u>Auslogen</u></string>
     <string name="menu_manual">Bedienungsanleitung</string>
     <string name="menu_about">Über Wanderlust</string>
-    <string name="menu_title_other">Anderes (Platzhalter)</string>
+    <string name="menu_title_other">Anderes</string>
     <string name="action_search">suchen</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="profile_tab_mytours">Touren</string>
     <string name="profile_tab_favorites">Favoriten</string>
     <string name="profile_tab_saved">Gespeichert</string>
-    <string name="profile_tab_pois">POI\'s</string>
+    <string name="profile_tab_pois">POIs</string>
     <string name="profile_bg_descriptionpri">background</string>
 
 
@@ -143,15 +143,15 @@
     <string name="registration_passsword">Passwort</string>
     <string name="registration_passsword_repeat">Passwort wiederholen</string>
     <string name="registration_account_exist"><u>Bereits registriert? Login</u></string>
-    <string name="registration_create_account">Create Account</string>
-    <string name="registration_password_required">A password is required</string>
-    <string name="registration_password_no_match">Password don\'t match</string>
-    <string name="registration_username_required">A nickname is required</string>
-    <string name="registration_email_required">An email is required</string>
-    <string name="registration_nickname_mail_used">That email or nickname is already being used</string>
-    <string name="registration_email_invalid">Invalid email address</string>
-    <string name="registration_password_invalid">Minimum eight characters, at least one letter and one number</string>
-    <string name="registration_connection_error">Not possible to connect with the server</string>
+    <string name="registration_create_account">Account erstellen</string>
+    <string name="registration_password_required">Ein Passowrt wird benötigt</string>
+    <string name="registration_password_no_match">Passwort stimmt nicht überein</string>
+    <string name="registration_username_required">Ein Name wird benötigt</string>
+    <string name="registration_email_required">E-Mail-Adresse wird benötigt</string>
+    <string name="registration_nickname_mail_used">Die E-Mail-Adresse wird bereits verwendet</string>
+    <string name="registration_email_invalid">Ungültige E-Mail-Adresse</string>
+    <string name="registration_password_invalid">Minimum 8 Buchstaben und mindestens 1 Nummer</string>
+    <string name="registration_connection_error">Verbindung mit Server nicht möglich</string>
 
     <!-- LOGIN -->
     <string name="login_nickname_email">Nickname / E-Mail</string>
@@ -159,7 +159,7 @@
     <string name="login_login">Login</string>
     <string name="login_failure">Kein User mit folgenden Angaben gefunden</string>
     <string name="server_client_id">877872359525-t55gb7eug4cjamosphfjlq41uj2deqej.apps.googleusercontent.com</string>
-    <string name="login_need_registration"><u>Create new account</u></string>
+    <string name="login_need_registration"><u>Neuen Account erstellen</u></string>
     <string name="login_forgot_password"><u>Passwort vergessen?</u></string>
 
 
