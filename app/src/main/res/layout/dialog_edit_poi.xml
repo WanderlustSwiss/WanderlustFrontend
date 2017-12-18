@@ -8,8 +8,8 @@
         android:id="@+id/poi_action_control_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:background="@color/primaryColor">
+        android:background="@color/primaryColor"
+        android:padding="8dp">
 
         <ImageButton
             android:id="@+id/dialog_edit_poi_cancel_button"

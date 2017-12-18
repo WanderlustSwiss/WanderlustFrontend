@@ -4,21 +4,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Bundle;
-
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -26,12 +21,9 @@ import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
 
 import java.io.File;
 
@@ -40,9 +32,9 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
-import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.models.Old.StyleBehavior;
+import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
 
 /**
  * MapFragment: The Fragment that contains the map view, map functionality and buttons.
@@ -52,7 +44,8 @@ import eu.wise_iot.wanderlust.models.Old.StyleBehavior;
  */
 public class MapFragment extends Fragment {
     private static final String TAG = "MapFragment";
-
+    public static String photoPath;
+    private static String imageFileName;
     // preferences and default settings
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -61,16 +54,11 @@ public class MapFragment extends Fragment {
     private int zoomLevel;
     private GeoPoint centerOfMap;
     private GeoPoint lastKnownLocation;
-
     //private MapView mapView;
     private WanderlustMapView mapView;
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
-
     private Camera camera;
-    private static String imageFileName;
-    public static String photoPath;
-
     private ImageButton locationToggler;
     private ImageButton cameraButton;
     private ImageButton layerButton;
@@ -262,17 +250,17 @@ public class MapFragment extends Fragment {
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 WanderlustMapView map = (WanderlustMapView) v;
 
-                if(round(map.getMapCenter().getLatitude()) == round(centerOfMap.getLatitude())
+                if (round(map.getMapCenter().getLatitude()) == round(centerOfMap.getLatitude())
                         && round(map.getMapCenter().getLongitude()) == round(centerOfMap.getLongitude())) {
                     DatabaseController.sync(new DatabaseEvent<BoundingBox>(DatabaseEvent.SyncType.POIAREA, map.getProjection().getBoundingBox()));
                     v.removeOnLayoutChangeListener(this);
                 }
             }
 
-            private double round(double d){
+            private double round(double d) {
                 d *= 100;
                 d = Math.round(d);
-                return d/100;
+                return d / 100;
             }
         });
         mapController.setCenter(centerOfMap);
@@ -383,7 +371,7 @@ public class MapFragment extends Fragment {
         });
     }
 
-    private void takePicture(){
+    private void takePicture() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
         camera = new Camera(getActivity(), mapFragment);
         camera.start();
@@ -430,7 +418,7 @@ public class MapFragment extends Fragment {
     private void showPoiOverlay(boolean showOverlay) {
         poiLayerButton.setSelected(showOverlay);
         mapOverlays.showPoiLayer(showOverlay);
-        if(showOverlay) {
+        if (showOverlay) {
             poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
         } else {
             poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);

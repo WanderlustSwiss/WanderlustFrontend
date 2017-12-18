@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import eu.wise_iot.wanderlust.views.MapFragment;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.services.FeedbackService;
+import eu.wise_iot.wanderlust.views.MapFragment;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -31,6 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Camera:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -67,7 +68,7 @@ public class Camera {
             }
             if (photoFile != null && activity != null) {
                 // FileProvider is needed for targetSDKVersion >= 24
-                imageUri = FileProvider.getUriForFile(this.activity,"eu.wise_iot.wanderlust.models.Old.Camera", photoFile);
+                imageUri = FileProvider.getUriForFile(this.activity, "eu.wise_iot.wanderlust.models.Old.Camera", photoFile);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 mapFragment.startActivityForResult(takePictureIntent, Constants.TAKE_PHOTO);

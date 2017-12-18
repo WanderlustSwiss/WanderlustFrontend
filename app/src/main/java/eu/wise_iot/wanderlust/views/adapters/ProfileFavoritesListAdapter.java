@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 
 /**
  * Adapter for the profile UI. Represents all favorites in a custom list view
@@ -22,7 +20,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
  * @author Baris Demirci
  * @license MIT
  */
-public class ProfileFavoritesListAdapter extends ArrayAdapter{
+public class ProfileFavoritesListAdapter extends ArrayAdapter {
 
     private TextView title;
     private TextView description;
@@ -89,9 +87,9 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter{
     /**
      * Gets the custom representation of one favorite in the list view back
      *
-     * @param position index of favorite
+     * @param position    index of favorite
      * @param convertView view of fragment
-     * @param parent view where list element is represented
+     * @param parent      view where list element is represented
      * @return view of one favorite
      */
     @Nonnull

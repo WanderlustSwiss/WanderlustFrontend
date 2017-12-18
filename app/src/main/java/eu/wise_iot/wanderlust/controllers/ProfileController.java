@@ -1,8 +1,5 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.app.Fragment;
-import android.provider.ContactsContract;
-
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
@@ -15,8 +12,6 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.models.Old.Tour;
-import eu.wise_iot.wanderlust.views.MainActivity;
-import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
  * Profile controller which initializes the profile view
@@ -33,7 +28,7 @@ public class ProfileController {
     private UserTourDao tourDao;
     private PoiDao poiDao;
 
-    public ProfileController(){
+    public ProfileController() {
         userDao = new UserDao();
         profileDao = new ProfileDao();
         tourDao = new UserTourDao();
@@ -45,11 +40,11 @@ public class ProfileController {
      *
      * @return true if profile exists
      */
-    public boolean profileExists(){
+    public boolean profileExists() {
         List<Profile> list = profileDao.find();
-        if(list == null || list.isEmpty()){
+        if (list == null || list.isEmpty()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
@@ -59,9 +54,9 @@ public class ProfileController {
      *
      * @return the nickname of the user
      */
-    public String getNickName(){
+    public String getNickName() {
         List<User> list = userDao.find();
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return "no user";
         }
         return userDao.find().get(0).getNickname();
@@ -72,9 +67,9 @@ public class ProfileController {
      *
      * @return the score of the user
      */
-    public int getScore(){
+    public int getScore() {
         List<Profile> list = profileDao.find();
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return 0;
         }
         return profileDao.find().get(0).getScore();
@@ -85,9 +80,9 @@ public class ProfileController {
      *
      * @return the amount of user tours
      */
-    public long getAmountTours(){
+    public long getAmountTours() {
         List<UserTour> list = tourDao.find();
-        if(list == null){
+        if (list == null) {
             return 0;
         }
         return tourDao.count();
@@ -98,9 +93,9 @@ public class ProfileController {
      *
      * @return the amount of poi's
      */
-    public long getAmountPoi(){
+    public long getAmountPoi() {
         List<Poi> list = poiDao.find();
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return 0;
         }
         return poiDao.count();
@@ -111,7 +106,7 @@ public class ProfileController {
      *
      * @return the path to the profile picture
      */
-    public String getProfilePicture(){
+    public String getProfilePicture() {
 
         //TODO: next release
         return null;
@@ -122,20 +117,20 @@ public class ProfileController {
      *
      * @return the birthdate of the user
      */
-    public String getBirthDate(){
+    public String getBirthDate() {
         List<Profile> list = profileDao.find();
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return "";
         }
         return profileDao.find().get(0).getBirthday();
     }
 
     /**
-     *Gets the list with all user tours of logged in user
+     * Gets the list with all user tours of logged in user
      *
      * @return list with user tours
      */
-    public List<Tour> getTours(){
+    public List<Tour> getTours() {
         //TODO: for next release
         return null;
     }
@@ -145,7 +140,7 @@ public class ProfileController {
      *
      * @return list with favorites
      */
-    public List getFavorites(){
+    public List getFavorites() {
         //TODO: for next release
         return null;
     }
@@ -155,7 +150,7 @@ public class ProfileController {
      *
      * @return list with poi's
      */
-    public List<Poi> getPois(){
+    public List<Poi> getPois() {
         //TODO: for next release
         return null;
     }
@@ -165,7 +160,7 @@ public class ProfileController {
      *
      * @return list with all saved tours
      */
-    public List<CommunityTour> getSavedTours(){
+    public List<CommunityTour> getSavedTours() {
         //TODO: for next release
         return null;
     }

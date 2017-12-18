@@ -12,7 +12,6 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * ProfileService:
@@ -22,6 +21,7 @@ import retrofit2.http.Query;
  * uploadImage	    POST	/profile/:id/img            | restricted
  * deleteImage	    DELETE	/profile/:id/img/:image_id  | restricted
  * downloadImage	GET	    /profile/:id/img/:image_id  | restricted
+ *
  * @author Rilind Gashi
  */
 
@@ -29,15 +29,20 @@ import retrofit2.http.Query;
 public interface ProfileService {
     @GET("profile/{id}")
     Call<Profile> retrieveProfile(@Path("id") long id);
+
     @PUT("profile/{id}")
     Call<Profile> updateProfile(long id, @Body Profile profile);
+
     @DELETE("profile/{id}")
     Call<Profile> deleteProfile(@Body Profile profile);
+
     @Multipart
     @POST("profile/{id}/img")
     Call<Profile.ImageInfo> uploadImage(@Path("id") long id, @Part MultipartBody.Part image);
+
     @DELETE("profile/{id}/img/{image_id}")
     Call<Profile.ImageInfo> deleteImage(@Path("id") long id, @Path("image_id") long image_id);
+
     @GET("profile/{id}/img/{image_id}")
     Call<ResponseBody> downloadImage(@Path("id") long id, @Path("image_id") long image_id);
 

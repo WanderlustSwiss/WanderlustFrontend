@@ -1,21 +1,14 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.views.LoginFragment;
 import okhttp3.Headers;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okio.BufferedSink;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +23,8 @@ public class LoginController {
     /**
      * Create a login contoller
      */
-    public LoginController(){}
+    public LoginController() {
+    }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
 
@@ -64,7 +58,7 @@ public class LoginController {
         });
     }
 
-    public void logout(FragmentHandler handler){
+    public void logout(FragmentHandler handler) {
         LoginService service = ServiceGenerator.createService(LoginService.class);
         Call<Void> call = service.logout();
         call.enqueue(new Callback<Void>() {
@@ -88,7 +82,7 @@ public class LoginController {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 ControllerEvent event = new ControllerEvent(EventType.getTypeByCode(response.code()));
-                    handler.onResponse(event);
+                handler.onResponse(event);
             }
 
             @Override

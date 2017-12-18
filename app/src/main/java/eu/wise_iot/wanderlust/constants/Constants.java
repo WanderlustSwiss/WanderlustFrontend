@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.constants;
 
 /**
  * Constants:
+ *
  * @author Fabian Schwander
  * @license MIT
  */

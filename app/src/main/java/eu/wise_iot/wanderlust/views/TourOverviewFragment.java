@@ -14,13 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.Old.Tour;
-import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
 
 /**
  * TourOverviewFragment:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -45,7 +46,7 @@ public class TourOverviewFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_tourslist, container, false);
 
-        UserTour testTour = new UserTour(0,0, "Tour1", "TourDescription", "picturePath", "polyline", 1,1, true);
+        UserTour testTour = new UserTour(0, 0, "Tour1", "TourDescription", "picturePath", "polyline", 1, 1, true);
 
         //UserTourDao userTours = new UserTourDao();
         List<UserTour> userTours = new ArrayList<>();
@@ -87,6 +88,7 @@ public class TourOverviewFragment extends Fragment {
 
         //return inflater.inflate(R.layout.fragment_tour, container, false);
     }
+
     public void onItemClickImages(View view, int routeID) {
 
         Bundle bundle = new Bundle();
@@ -98,6 +100,7 @@ public class TourOverviewFragment extends Fragment {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().addToBackStack(fragment.toString()).replace(R.id.content_frame, fragment).commit();
     }
+
     public void onItemClickFavorites(View view, int favoriteID) {
         Bundle bundle = new Bundle();
         //pass id to fragment
@@ -109,6 +112,7 @@ public class TourOverviewFragment extends Fragment {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().addToBackStack(fragment.toString()).replace(R.id.content_frame, fragment).commit();
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

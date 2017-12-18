@@ -29,29 +29,39 @@ import retrofit2.http.Query;
  * uploadImage	    POST	/poi/:id/img            | restricted
  * deleteImage	    DELETE	/poi/:id/img/:image_id  | restricted
  * downloadImage	GET	    /poi/:id/img/:image_id  | restricted
+ *
  * @author Alexander Weinbeck
  */
 public interface PoiService {
     @GET("poi/{id}")
-        Call<Poi> retrievePoi(@Path("id") long id);
+    Call<Poi> retrievePoi(@Path("id") long id);
+
     @GET("poi")
-        Call<List<Poi>> retrieveAllPois();
+    Call<List<Poi>> retrieveAllPois();
+
     @GET("poi")
-        Call<List<Poi>> retrievePoisByArea(@Query("lat1") double lat1, @Query("long1") double lon1,
-                                           @Query("lat2") double lat2, @Query("long2") double lon2);
+    Call<List<Poi>> retrievePoisByArea(@Query("lat1") double lat1, @Query("long1") double lon1,
+                                       @Query("lat2") double lat2, @Query("long2") double lon2);
+
     @POST("poi")
-        Call<Poi> createPoi(@Body Poi poi);
+    Call<Poi> createPoi(@Body Poi poi);
+
     @PUT("poi/{id}")
-        Call<Poi> updatePoi(@Path("id") long id, @Body Poi poi);
+    Call<Poi> updatePoi(@Path("id") long id, @Body Poi poi);
+
     @DELETE("poi/{id}")
-        Call<Poi> deletePoi(@Path("id") long id);
+    Call<Poi> deletePoi(@Path("id") long id);
+
     @Multipart
     @POST("poi/{id}/img")
-        Call<Poi.ImageInfo> uploadImage(@Path("id") long id, @Part MultipartBody.Part image);
+    Call<Poi.ImageInfo> uploadImage(@Path("id") long id, @Part MultipartBody.Part image);
+
     @DELETE("poi/{id}/img/{image_id}")
-        Call<Poi.ImageInfo> deleteImage(@Path("id") long id, @Path("image_id") long image_id);
+    Call<Poi.ImageInfo> deleteImage(@Path("id") long id, @Path("image_id") long image_id);
+
     @GET("poi/{id}/img/{image_id}")
-        Call<ResponseBody> downloadImage(@Path("id") long id, @Path("image_id") long image_id);
+    Call<ResponseBody> downloadImage(@Path("id") long id, @Path("image_id") long image_id);
+
     @GET("poitype")
-        Call<List<PoiType>> retrieveAllPoiTypes();
+    Call<List<PoiType>> retrieveAllPoiTypes();
 }

@@ -2,13 +2,10 @@ package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -21,44 +18,18 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.osmdroid.util.GeoPoint;
-
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
-import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.services.LoginService;
-import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
-import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
 import io.objectbox.BoxStore;
-import okhttp3.Headers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * MainActivity:

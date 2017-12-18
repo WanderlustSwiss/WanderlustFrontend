@@ -13,13 +13,14 @@ import eu.wise_iot.wanderlust.models.Old.JsonParser;
 
 /**
  * FeedbackController:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
 public class FeedbackController {
     private static final String TAG = "FeedbackController";
     private FileHandler fileHandler = new FileHandler("feedbacks_json.txt");
-//    private List<Feedback> feedbackList = new ArrayList<>();
+    //    private List<Feedback> feedbackList = new ArrayList<>();
     private JsonParser parser;
 
     public FeedbackController(Activity activity) {
@@ -27,7 +28,7 @@ public class FeedbackController {
 //        feedbackList =  parser.getListFromResourceFile(R.raw.feedbacks);
     }
 
-    public void saveFeedbackInFile(GeoPoint myLocation, int displayMode, int feedbackType,  String description, String imageFileName) { // todo: move to addFeedbackToList()
+    public void saveFeedbackInFile(GeoPoint myLocation, int displayMode, int feedbackType, String description, String imageFileName) { // todo: move to addFeedbackToList()
         String message = getFeedbackString(myLocation, displayMode, feedbackType, description, imageFileName);
         fileHandler.saveDataInFile(message);
     }

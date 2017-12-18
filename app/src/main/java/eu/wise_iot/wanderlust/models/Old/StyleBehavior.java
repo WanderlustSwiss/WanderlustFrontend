@@ -6,12 +6,13 @@ import android.view.View;
 
 /**
  * StyleBehavior:
+ *
  * @author Fabian Schwander
  * @author Alexander Weinbeck
  * @license MIT
  */
 public class StyleBehavior {
-    public static void  buttonEffectOnTouched(final View button) {
+    public static void buttonEffectOnTouched(final View button) {
         button.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {

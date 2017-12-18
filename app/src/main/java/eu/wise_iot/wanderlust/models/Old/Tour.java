@@ -4,6 +4,7 @@ import android.location.Location;
 
 /**
  * CommunityTours:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -97,84 +98,80 @@ public class Tour {
         return tourId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEditor() {
-        return editor;
-    }
-
-    public String getDateTour() {
-        return dateTour;
-    }
-
-    public String getDateLastEdit() {
-        return dateLastEdit;
-    }
-
-    public String getDateFirstEdit() {
-        return dateFirstEdit;
-    }
-
-    public int getDifficulty() {
-        return difficulty;
-    }
-
-    public String getDuration() {
-        return duration;
-    }
-
-    public int getDistanceUp() {
-        return distanceUp;
-    }
-
-    public int getDistanceDown() {
-        return distanceDown;
-    }
-
     public void setTourId(int tourId) {
         this.tourId = tourId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getEditor() {
+        return editor;
+    }
+
     public void setEditor(String editor) {
         this.editor = editor;
+    }
+
+    public String getDateTour() {
+        return dateTour;
     }
 
     public void setDateTour(String dateTour) {
         this.dateTour = dateTour;
     }
 
+    public String getDateLastEdit() {
+        return dateLastEdit;
+    }
+
     public void setDateLastEdit(String dateLastEdit) {
         this.dateLastEdit = dateLastEdit;
+    }
+
+    public String getDateFirstEdit() {
+        return dateFirstEdit;
     }
 
     public void setDateFirstEdit(String dateFirstEdit) {
         this.dateFirstEdit = dateFirstEdit;
     }
 
+    public int getDifficulty() {
+        return difficulty;
+    }
+
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public String getDuration() {
+        return duration;
     }
 
     public void setDuration(String duration) {
         this.duration = duration;
     }
 
+    public int getDistanceUp() {
+        return distanceUp;
+    }
+
     public void setDistanceUp(int distanceUp) {
         this.distanceUp = distanceUp;
     }
 
-    public void setDistanceDown(int distanceDown) {
-        this.distanceDown = distanceDown;
+    public int getDistanceDown() {
+        return distanceDown;
     }
 
-    public void setTeaserImage(String teaserImage) {
-        this.teaserImage = teaserImage;
+    public void setDistanceDown(int distanceDown) {
+        this.distanceDown = distanceDown;
     }
 
     public String getDescription() {
@@ -187,6 +184,10 @@ public class Tour {
 
     public String getTeaserImage() {
         return teaserImage;
+    }
+
+    public void setTeaserImage(String teaserImage) {
+        this.teaserImage = teaserImage;
     }
 
     public String getLinkSource() {

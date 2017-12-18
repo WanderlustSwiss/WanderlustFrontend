@@ -5,12 +5,13 @@ import io.objectbox.annotation.Id;
 
 /**
  * User
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 @Entity
-public class User extends AbstractModel{
+public class User extends AbstractModel {
 
     @Id
     long internalId;
@@ -27,9 +28,9 @@ public class User extends AbstractModel{
     /**
      * Constructor.
      *
-     * @param user_id (required) userid which is needed for saving into the database. Should be a long.
+     * @param user_id  (required) userid which is needed for saving into the database. Should be a long.
      * @param nickname (required) nickname of the user
-     * @param email (required) email of the user
+     * @param email    (required) email of the user
      * @param password (required) password of the user
      */
     public User(long user_id, String nickname, String email, String password, long profile,
@@ -60,35 +61,58 @@ public class User extends AbstractModel{
     }
 
 
-    public void setInternalId(long id){
+    public void setInternalId(long id) {
         this.internalId = id;
     }
-    public long getProfile() { return profile; }
 
-    public void setProfile(long profile) { this.profile = profile; }
+    public long getProfile() {
+        return profile;
+    }
 
-    public boolean isActive() { return isActive; }
+    public void setProfile(long profile) {
+        this.profile = profile;
+    }
 
-    public void setActive(boolean active) { isActive = active; }
+    public boolean isActive() {
+        return isActive;
+    }
 
-    public boolean isValid() { return isValid; }
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
-    public void setValid(boolean valid) { isValid = valid; }
+    public boolean isValid() {
+        return isValid;
+    }
 
-    public String getLastLogin() { return lastLogin; }
+    public void setValid(boolean valid) {
+        isValid = valid;
+    }
 
-    public void setLastLogin(String lastLogin) { this.lastLogin = lastLogin; }
+    public String getLastLogin() {
+        return lastLogin;
+    }
 
-    public String getAccountType() { return accountType; }
+    public void setLastLogin(String lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 
-    public void setAccountType(String accountType) { this.accountType = accountType; }
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
 
     /**
      * Returns the poi_id.
      *
      * @return poi_id
      */
-    public long getUser_id() { return user_id; }
+    public long getUser_id() {
+        return user_id;
+    }
 
     /**
      * Sets the poi_id

@@ -17,6 +17,7 @@ import retrofit2.http.Path;
 
 /**
  * FeedbackService:
+ *
  * @author Fabian Schwander
  * @license MIT
  */

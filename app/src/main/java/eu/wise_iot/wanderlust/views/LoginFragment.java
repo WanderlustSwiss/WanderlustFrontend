@@ -1,14 +1,12 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,20 +40,16 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
  */
 public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
+    public static int REQ_CODE = 9001;
     private Context context;
-
     private Button btnLogin;
     private EditText nicknameEmailTextfield;
     private EditText passwordTextfield;
     private TextInputLayout nicknameEmailLayout;
     private SignInButton signInButtonGoogle;
     private TextView redirectToRegistration;
-
     private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
-    public static int REQ_CODE = 9001;
-
-
     private LoginController loginController;
 
     private FragmentHandler fragmentHandler = new FragmentHandler() {

@@ -5,12 +5,13 @@ import io.objectbox.annotation.Id;
 
 /**
  * Device
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 @Entity
-public class Device extends AbstractModel{
+public class Device extends AbstractModel {
 
     @Id
     long device_id;
@@ -19,7 +20,7 @@ public class Device extends AbstractModel{
     /**
      * Constructor.
      *
-     * @param device_id (required) device_id which is needed for saving into the database. Should be a long.
+     * @param device_id  (required) device_id which is needed for saving into the database. Should be a long.
      * @param identifier (required) nickname of the user
      */
     public Device(long device_id, String identifier) {

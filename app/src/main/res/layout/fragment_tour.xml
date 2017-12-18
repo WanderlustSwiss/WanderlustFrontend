@@ -25,11 +25,11 @@
             android:showDividers="middle">
 
             <ImageView
-                android:contentDescription="@null"
                 android:id="@+id/tourImage"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:adjustViewBounds="true"
+                android:contentDescription="@null"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
@@ -142,13 +142,13 @@
                             android:id="@+id/tourTime"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                    android:textColor="@color/highlightTwo" />
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_timer_black_24dp"
-                            android:drawablePadding="5dp"
-                            android:singleLine="true"
-                            android:text="@string/tour_duration_label" />
+                            android:textColor="@color/highlightTwo" />
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/ic_timer_black_24dp"
+                        android:drawablePadding="5dp"
+                        android:singleLine="true"
+                        android:text="@string/tour_duration_label" />
 
                         <TextView
                             android:id="@+id/tourDescend"

@@ -5,12 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -22,16 +19,12 @@ import java.io.File;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
-import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
-import eu.wise_iot.wanderlust.views.MyMapOverlays;
-import retrofit2.Response;
 
 /**
  * EditPoiDialog:
@@ -41,25 +34,19 @@ import retrofit2.Response;
  */
 public class EditPoiDialog extends DialogFragment {
     private static final String TAG = "EditPoiDialog";
+    FragmentHandler poiHandler;
     private Context context;
-
     private Poi poi;
     private GeoPoint lastKnownLocation;
-
     private EditText titleEditText;
     private EditText descriptionEditText;
     private Spinner typeSpinner;
     private Spinner modeSpinner;
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
-
     private PoiController controller;
     private boolean isNewPoi;
-
     private FragmentHandler poiPhotoUploadHandler;
-
-    FragmentHandler poiHandler;
-
 
     /**
      * Create EditPoit dialog, which is used for CREATING a Poi

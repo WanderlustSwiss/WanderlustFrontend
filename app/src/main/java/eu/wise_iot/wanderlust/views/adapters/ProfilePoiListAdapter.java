@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 
 /**
  * Adapter for the profile UI. Represents all poi's in a custom list view
@@ -91,9 +89,9 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
     /**
      * Gets the custom representation of one poi in the list view back
      *
-     * @param position index of poi
+     * @param position    index of poi
      * @param convertView view of fragment
-     * @param parent view where list element is represented
+     * @param parent      view where list element is represented
      * @return view of one poi
      */
     @Nonnull
@@ -114,7 +112,7 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
         deleteIcon = (ImageView) convertView.findViewById(R.id.ListTourDelete);
 
         //set data
-        if(poi != null){
+        if (poi != null) {
             title.setText(poi.getTitle());
             description.setText(poi.getDescription());
 

@@ -5,12 +5,13 @@ import io.objectbox.annotation.Id;
 
 /**
  * Equipment
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 @Entity
-public class Equipment extends AbstractModel{
+public class Equipment extends AbstractModel {
 
     @Id
     long internal_id;
@@ -37,13 +38,21 @@ public class Equipment extends AbstractModel{
         this.internal_id = internal_id;
     }
 
-    public String getImagePath() { return imagePath; }
+    public String getImagePath() {
+        return imagePath;
+    }
 
-    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
-    public long getRouteKit() { return routeKit; }
+    public long getRouteKit() {
+        return routeKit;
+    }
 
-    public void setRouteKit(long routeKit) { this.routeKit = routeKit; }
+    public void setRouteKit(long routeKit) {
+        this.routeKit = routeKit;
+    }
 
     public long getEquip_id() {
         return equip_id;
@@ -53,7 +62,9 @@ public class Equipment extends AbstractModel{
         this.equip_id = equip_id;
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
     public void setName(String name) {
         this.name = name;

@@ -88,9 +88,9 @@ public class ProfileSavedListAdapter extends ArrayAdapter<CommunityTour> {
     /**
      * Gets the custom representation of one saved tour in the list view back
      *
-     * @param position index of saved tour
+     * @param position    index of saved tour
      * @param convertView view of fragment
-     * @param parent view where list element is represented
+     * @param parent      view where list element is represented
      * @return view of one saved tour
      */
     @Nonnull
@@ -110,7 +110,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<CommunityTour> {
         deleteIcon = (ImageView) convertView.findViewById(R.id.ListSavedIcon);
 
         //set data
-        if(communityTour != null){
+        if (communityTour != null) {
             title.setText(communityTour.getTitle());
             description.setText(communityTour.getDescription());
 
