@@ -124,30 +124,29 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                     @Override
                     public boolean onItemLongPress(final int index, final OverlayItem overlayItem) {
                         // TODO: maybe add action when item is pressed long?
-                        Toast.makeText(activity, String.format("Feedback-Bild: %s ", overlayItem.getTitle()), Toast.LENGTH_LONG).show();
                         return false;
                     }
                 });
     }
 
-    private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
-        GpxParser gpxParser = new GpxParser(activity);
-        List<TrackPoint> gpxList = gpxParser.getTrackPointList(R.raw.gpx1);
-        ArrayList<GeoPoint> geoPointList = new ArrayList<>();
+//    private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
+//        GpxParser gpxParser = new GpxParser(activity);
+//        List<TrackPoint> gpxList = gpxParser.getTrackPointList(R.raw.gpx1);
+//        ArrayList<GeoPoint> geoPointList = new ArrayList<>();
+//
+//        for (TrackPoint model : gpxList) {
+//            GeoPoint newPoint = new GeoPoint(model.getLatitude(), model.getLongitude());
+//            geoPointList.add(newPoint);
+//        }
+//
+//        RoadManager roadManager = new OSRMRoadManager(activity);
+//        Road road = roadManager.getRoad(geoPointList);
+//        Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+//        mapView.getOverlays().add(roadOverlay);
+//        mapView.invalidate();
+//    }
 
-        for (TrackPoint model : gpxList) {
-            GeoPoint newPoint = new GeoPoint(model.getLatitude(), model.getLongitude());
-            geoPointList.add(newPoint);
-        }
-
-        RoadManager roadManager = new OSRMRoadManager(activity);
-        Road road = roadManager.getRoad(geoPointList);
-        Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-        mapView.getOverlays().add(roadOverlay);
-        mapView.invalidate();
-    }
-
-    /*
+    /**
      * Adds a poi on the mapview with the icon based on
      * the poi type
      */
@@ -238,11 +237,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.invalidate();
     }
 
-    public MyLocationNewOverlay getMyLocationNewOverlay() {
-        return myLocationNewOverlay;
-    }
-
-
     @Override
     public void update(DatabaseEvent event) {
 
@@ -273,5 +267,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             }
             mapView.invalidate();
         }
+    }
+
+    public MyLocationNewOverlay getMyLocationNewOverlay() {
+        return myLocationNewOverlay;
     }
 }
