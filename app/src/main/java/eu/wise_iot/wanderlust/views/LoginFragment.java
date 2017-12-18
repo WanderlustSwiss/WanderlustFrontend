@@ -35,12 +35,13 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 
-/*
+/**
  * Login Fragment which handles front end inputs of the user for login
+ *
  * @author Joshua
  * @license MIT
  */
-public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener{
+public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
     private Context context;
 
@@ -51,7 +52,6 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     private SignInButton signInButtonGoogle;
     private TextView redirectToRegistration;
 
-
     private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
     public static int REQ_CODE = 9001;
@@ -59,7 +59,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 
     private LoginController loginController;
 
-    private FragmentHandler fragmentHandler =  new FragmentHandler() {
+    private FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {
             EventType eventType = event.getType();
@@ -79,9 +79,8 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                     break;
 
             }
-        };
+        }
     };
-
 
 
     /**
@@ -107,9 +106,6 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 //                .enableAutoManage((FragmentActivity) getActivity(), this)
 //                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
 //                .build();
-
-
-
     }
 
     @Override
@@ -152,14 +148,16 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             }
         });
 
-        /*
-        signInButtonGoogle.setOnClickListener(new View.OnClickListener(){
+
+        signInButtonGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signInWithGoogle();
+//                signInWithGoogle();
+                // TODO: remove
+                Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
             }
         });
-        */
+
 
         redirectToRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +171,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             }
         });
     }
+
     /**
      * Starts the sign in process with via Google API
      */
@@ -186,27 +185,25 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE) {
 
-                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                handleGoogleSignInResult(result);
-
-
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleGoogleSignInResult(result);
         }
     }
+
     /**
      * Handles the result received from the Google API for user trying to login with a Google account
      */
-    private void handleGoogleSignInResult(GoogleSignInResult result){
-        if(result.isSuccess()){
+    private void handleGoogleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
             String token = account.getIdToken();
             Toast.makeText(context, "Hello " + account.getGivenName() + " " + account.getFamilyName(), Toast.LENGTH_LONG).show();
 
             LoginUser user = new LoginUser(account.getEmail(), token);
-         //   loginController.logIn(user, fragmentHandler);
+            //   loginController.logIn(user, fragmentHandler);
         } else {
 
-            Toast.makeText(context, "fail", Toast.LENGTH_LONG).show();
-
+            Toast.makeText(context, R.string.login_failure, Toast.LENGTH_LONG).show();
         }
     }
 
