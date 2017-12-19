@@ -120,7 +120,8 @@
     <string name="login_nickname_email">Nickname / E-Mail</string>
     <string name="login_password">Password</string>
     <string name="login_login">Login</string>
-    <string name="login_failure">Kein User mit folgenden Angaben gefunden</string>
+    <string name="login_failure">Login fehlgeschlagen</string>
+    <string name="server_client_id">877872359525-t55gb7eug4cjamosphfjlq41uj2deqej.apps.googleusercontent.com</string>
     <string name="login_need_registration"><u>Neuen Account erstellen</u></string>
     <string name="login_forgot_password"><u>Passwort vergessen?</u></string>
 

@@ -64,11 +64,8 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                             .commit();
                     ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     break;
-                case CONFLICT:
-                    nicknameEmailLayout.setError(getString(R.string.login_failure));
-                    break;
                 default:
-                    Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.login_failure, Toast.LENGTH_LONG).show();
                     break;
 
             }
