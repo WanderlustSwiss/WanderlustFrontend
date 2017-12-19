@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -28,25 +27,24 @@ import retrofit2.Response;
 
 
 public class TripDao extends DatabaseObjectAbstract {
+    private static TripService service;
+    Property columnProperty;
     private Box<Trip> routeBox;
     private Query<Trip> routeQuery;
     private QueryBuilder<Trip> routeQueryBuilder;
-    Property columnProperty;
-
-    private static TripService service;
 
     /**
      * Constructor.
      */
 
-    public TripDao(){
+    public TripDao() {
         routeBox = DatabaseController.boxStore.boxFor(Trip.class);
         routeQueryBuilder = routeBox.query();
 
-        if(service == null) service = ServiceGenerator.createService(TripService.class);
+        if (service == null) service = ServiceGenerator.createService(TripService.class);
     }
 
-    public long count(){
+    public long count() {
         return routeBox.count();
     }
 
@@ -69,52 +67,56 @@ public class TripDao extends DatabaseObjectAbstract {
      * Update an existing Trip in the database.
      *
      * @param trip (required).
-     *
      */
-    public Trip update(Trip trip){
+    public Trip update(Trip trip) {
         routeBox.put(trip);
         return trip;
     }
 
     /**
      * insert a trip local and remote
+     *
      * @param trip
      * @param handler
      */
-    public void create(int id, final AbstractModel trip, final FragmentHandler handler){
-        Call<Trip> call = service.createTrip((Trip)trip);
+    public void create(int id, final AbstractModel trip, final FragmentHandler handler) {
+        Call<Trip> call = service.createTrip((Trip) trip);
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
-                if(response.isSuccessful()){
-                    routeBox.put((Trip)trip);
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
+                if (response.isSuccessful()) {
+                    routeBox.put((Trip) trip);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
+
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
+
     /**
      * get trip out of the remote database by entity
+     *
      * @param id
      * @param handler
      */
-    public void retrieve(int id, final FragmentHandler handler){
+    public void retrieve(int id, final FragmentHandler handler) {
         Call<Trip> call = service.retrieveTrip(id);
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
-                if(response.isSuccessful()){
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
+                if (response.isSuccessful()) {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
+
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
@@ -147,49 +149,57 @@ public class TripDao extends DatabaseObjectAbstract {
         });
     }
     */
+
     /**
      * delete a trip local and remote
+     *
      * @param trip
      * @param handler
      */
-    public void delete(final AbstractModel trip, final FragmentHandler handler){
-        Call<Trip> call = service.deleteTrip((Trip)trip);
+    public void delete(final AbstractModel trip, final FragmentHandler handler) {
+        Call<Trip> call = service.deleteTrip((Trip) trip);
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
-                if(response.isSuccessful()){
-                    routeBox.remove((Trip)trip);
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
+                if (response.isSuccessful()) {
+                    routeBox.remove((Trip) trip);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
+
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
+
     /**
      * get all trips out of the remote database
+     *
      * @param handler
      */
-    public void retrieveAll(final FragmentHandler handler){
+    public void retrieveAll(final FragmentHandler handler) {
         Call<Trip> call = service.retrieveAllTrips();
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
-                if(response.isSuccessful()) handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
-                else handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                if (response.isSuccessful())
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                else
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
+
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
+
     /**
-     *
      * @return
      */
     public List<Trip> find() {
@@ -200,8 +210,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * Searching for a single route with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return Trip which match to the search pattern in the searched columns
      */
     public Trip findOne(Property searchedColumn, String searchPattern)
@@ -219,8 +228,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * Searching for routes matching with the search pattern in a the selected column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return List<Trip> which contains the equipements, which match to the search pattern in the searched columns
      */
     public List<Trip> find(Property searchedColumn, String searchPattern)
@@ -245,6 +253,7 @@ public class TripDao extends DatabaseObjectAbstract {
     /**
      * delete:
      * Deleting a Trip which matches the given pattern
+     *
      * @param searchedColumn
      * @param searchPattern
      * @return

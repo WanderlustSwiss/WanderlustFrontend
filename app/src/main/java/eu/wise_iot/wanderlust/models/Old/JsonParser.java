@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * JsonParser:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -47,7 +48,8 @@ public class JsonParser<T> {
         InputStream inputStream = context.getResources().openRawResource(resourceId);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<T>>(){}.getType();
+        Type listType = new TypeToken<List<T>>() {
+        }.getType();
         return gson.fromJson(bufferedReader, listType);
     }
 

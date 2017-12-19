@@ -5,12 +5,13 @@ import io.objectbox.annotation.Id;
 
 /**
  * DifficultType
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 @Entity
-public class DifficultyType extends AbstractModel{
+public class DifficultyType extends AbstractModel {
     @Id
     long internal_id;
     long difft_id;
@@ -40,25 +41,45 @@ public class DifficultyType extends AbstractModel{
         this.internal_id = internal_id;
     }
 
-    public String getMark() { return mark; }
+    public String getMark() {
+        return mark;
+    }
 
-    public void setMark(String mark) { this.mark = mark; }
+    public void setMark(String mark) {
+        this.mark = mark;
+    }
 
-    public int getLevel() { return level; }
+    public int getLevel() {
+        return level;
+    }
 
-    public void setLevel(int level) { this.level = level; }
+    public void setLevel(int level) {
+        this.level = level;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public long getUserDifficulty() { return userDifficulty; }
+    public long getUserDifficulty() {
+        return userDifficulty;
+    }
 
-    public void setUserDifficulty(long userDifficulty) { this.userDifficulty = userDifficulty; }
+    public void setUserDifficulty(long userDifficulty) {
+        this.userDifficulty = userDifficulty;
+    }
 
-    public long getRouteDifficulty() { return routeDifficulty; }
+    public long getRouteDifficulty() {
+        return routeDifficulty;
+    }
 
-    public void setRouteDifficulty(long routeDifficulty) { this.routeDifficulty = routeDifficulty; }
+    public void setRouteDifficulty(long routeDifficulty) {
+        this.routeDifficulty = routeDifficulty;
+    }
 
     public long getDifft_id() {
         return difft_id;

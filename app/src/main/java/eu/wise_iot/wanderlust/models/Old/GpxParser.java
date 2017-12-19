@@ -15,6 +15,7 @@ import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 
 /**
  * GpxParser:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -41,11 +42,11 @@ public class GpxParser {
             InputStream in = context.getResources().openRawResource(ressourceId);
             parsedGpx = gpxParser.parse(in);
             // todo: delete when finished with testing
-            Log.d(TAG, "parsed gpx WAYPOINTS: "+ parsedGpx.getWayPoints().size());
-            Log.d(TAG, "parsed gpx TRACKS: "+ parsedGpx.getTracks().size());
-            Log.d(TAG, "parsed gpx TRACKSSEGMENT SIZE: "+ parsedGpx.getTracks().get(0).getTrackSegments().size());
-            Log.d(TAG, "parsed gpx TRACKSSEGMENT TRACKPOINTS SIZE: "+ parsedGpx.getTracks().get(0).getTrackSegments().get(0).getTrackPoints().size());
-            Log.d(TAG, "parsed gpx ROUTES: "+ parsedGpx.getRoutes().size());
+            Log.d(TAG, "parsed gpx WAYPOINTS: " + parsedGpx.getWayPoints().size());
+            Log.d(TAG, "parsed gpx TRACKS: " + parsedGpx.getTracks().size());
+            Log.d(TAG, "parsed gpx TRACKSSEGMENT SIZE: " + parsedGpx.getTracks().get(0).getTrackSegments().size());
+            Log.d(TAG, "parsed gpx TRACKSSEGMENT TRACKPOINTS SIZE: " + parsedGpx.getTracks().get(0).getTrackSegments().get(0).getTrackPoints().size());
+            Log.d(TAG, "parsed gpx ROUTES: " + parsedGpx.getRoutes().size());
 
         } catch (IOException | XmlPullParserException e) {
             // do something with this exception
@@ -53,8 +54,7 @@ public class GpxParser {
         }
         try {
             return parsedGpx;
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
             throw new NullPointerException();
         }

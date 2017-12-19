@@ -5,12 +5,13 @@ import io.objectbox.annotation.Id;
 
 /**
  * History
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 @Entity
-public class History extends AbstractModel{
+public class History extends AbstractModel {
 
     @Id
     long history_id;

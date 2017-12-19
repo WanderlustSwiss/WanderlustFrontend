@@ -9,24 +9,25 @@ import io.objectbox.Property;
 
 /**
  * HistoryDao
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 public class HistoryDao {
 
-    private Box<History> historyBox;
     Property columnProperty;
+    private Box<History> historyBox;
 
     /**
      * Constructor.
      */
 
-    public HistoryDao(){
+    public HistoryDao() {
         historyBox = DatabaseController.boxStore.boxFor(History.class);
     }
 
-    public long count(){
+    public long count() {
         return historyBox.count();
     }
 
@@ -44,19 +45,18 @@ public class HistoryDao {
      * Update an existing user in the database.
      *
      * @param history (required).
-     *
      */
-    public History update(History history){
+    public History update(History history) {
         historyBox.put(history);
         return history;
     }
+
     /**
      * Insert an history into the database.
      *
      * @param history (required).
-     *
      */
-    public void create(History history){
+    public void create(History history) {
         historyBox.put(history);
     }
 
@@ -73,8 +73,7 @@ public class HistoryDao {
      * Searching for a single history with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return History which match to the search pattern in the searched columns
      */
     public History findOne(Property searchedColumn, String searchPattern)
@@ -91,8 +90,7 @@ public class HistoryDao {
      * Searching for history matching with the search pattern in a the selected column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return List<History> which contains the "done tours", which match to the search pattern in the searched columns
      */
     public List<History> find(Property searchedColumn, String searchPattern)
@@ -104,8 +102,7 @@ public class HistoryDao {
      * Searching for history matching with the search pattern in a the selected column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return List<History> which contains the "done tours", which match to the search pattern in the searched columns
      */
     public List<History> find(Property searchedColumn, long searchPattern)
@@ -117,8 +114,7 @@ public class HistoryDao {
      * Searching for history matching with the search pattern in a the selected column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return List<History> which contains the "done tours", which match to the search pattern in the searched columns
      */
     public List<History> find(Property searchedColumn, boolean searchPattern) {
@@ -135,7 +131,7 @@ public class HistoryDao {
         return null;
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         historyBox.removeAll();
     }
 

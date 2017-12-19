@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,9 +89,9 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
     /**
      * Gets the custom representation of one user tour in the list view back
      *
-     * @param position index of user tour
+     * @param position    index of user tour
      * @param convertView view of fragment
-     * @param parent view where list element is represented
+     * @param parent      view where list element is represented
      * @return view of one user tour
      */
     @Nonnull
@@ -113,7 +112,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
         deleteIcon = (ImageView) convertView.findViewById(R.id.ListTourDelete);
 
         //set data
-        if(userTour != null){
+        if (userTour != null) {
             title.setText(userTour.getTitle());
             description.setText(userTour.getDescription());
 

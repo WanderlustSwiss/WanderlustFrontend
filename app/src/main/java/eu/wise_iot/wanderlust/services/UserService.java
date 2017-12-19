@@ -16,15 +16,19 @@ import retrofit2.http.PUT;
  * show 	GET	    /user | restricted
  * update	PUT	    /user | restricted
  * disable	DELETE	/user | restricted
+ *
  * @author Alexander Weinbeck
  */
 public interface UserService {
     @POST("auth/register")
-        Call<User> createUser(@Body User user);
+    Call<User> createUser(@Body User user);
+
     @GET("user")
-        Call<User> retrieveUser();
+    Call<User> retrieveUser();
+
     @PUT("user")
-        Call<User> updateUser(@Body User user);
+    Call<User> updateUser(@Body User user);
+
     @DELETE("user")
-        Call<User> deleteUser(@Body User user);
+    Call<User> deleteUser(@Body User user);
 }

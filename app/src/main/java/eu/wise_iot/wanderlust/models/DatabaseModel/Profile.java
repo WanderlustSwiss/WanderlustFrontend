@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import io.objectbox.annotation.Convert;
@@ -15,16 +14,17 @@ import io.objectbox.converter.PropertyConverter;
 
 /**
  * Profile
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 @Entity
-public class Profile extends AbstractModel{
+public class Profile extends AbstractModel {
 
     @Id
     long internal_id;
-    @Convert(converter =  imageInfoConverter.class, dbType = String.class)
+    @Convert(converter = imageInfoConverter.class, dbType = String.class)
     ImageInfo imagePath;
 
     long profile_id;
@@ -66,19 +66,37 @@ public class Profile extends AbstractModel{
         this.internal_id = internal_id;
     }
 
-    public byte getImageId() { return imageId; }
+    public byte getImageId() {
+        return imageId;
+    }
 
-    public String getLanguage() { return language; }
+    public void setImageId(byte imageId) {
+        this.imageId = imageId;
+    }
 
-    public void setLanguage(String language) { this.language = language; }
+    public String getLanguage() {
+        return language;
+    }
 
-    public long getUser() { return user; }
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
-    public void setUser(long user) { this.user = user; }
+    public long getUser() {
+        return user;
+    }
 
-    public long getDifficulty() { return difficulty; }
+    public void setUser(long user) {
+        this.user = user;
+    }
 
-    public void setDifficulty(long difficulty) { this.difficulty = difficulty; }
+    public long getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(long difficulty) {
+        this.difficulty = difficulty;
+    }
 
     public long getProfile_id() {
         return profile_id;
@@ -104,17 +122,16 @@ public class Profile extends AbstractModel{
         this.score = score;
     }
 
-    public boolean removeImageId(byte id){
-        if(imageId == id)
-        {
+    public boolean removeImageId(byte id) {
+        if (imageId == id) {
             imageId = 0;
             return true;
         }
         return false;
     }
 
-    public File getImageById(byte imageId){
-        if(imageId == imageId){
+    public File getImageById(byte imageId) {
+        if (imageId == imageId) {
             String name = profile_id + "-" + imageId + ".jpg";
             return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
                     "/files/" + name);
@@ -122,28 +139,8 @@ public class Profile extends AbstractModel{
         return null;
     }
 
-    public void setImageId(byte imageId){
-        this.imageId = imageId;
-    }
-
-    public ImageInfo getImagePath(){
+    public ImageInfo getImagePath() {
         return imagePath;
-    }
-
-    public class ImageInfo{
-        long id;
-        String name;
-        String path;
-
-        public ImageInfo(long id, String name, String path) {
-            this.id = id;
-            this.name = name;
-            this.path = path;
-        }
-
-        public long getId() {
-            return id;
-        }
     }
 
     public static class imageInfoConverter implements PropertyConverter<ImageInfo, String> {
@@ -167,6 +164,22 @@ public class Profile extends AbstractModel{
             Type type = new TypeToken<ImageInfo>() {
             }.getType();
             return gson.toJson(entityProperty, type);
+        }
+    }
+
+    public class ImageInfo {
+        long id;
+        String name;
+        String path;
+
+        public ImageInfo(long id, String name, String path) {
+            this.id = id;
+            this.name = name;
+            this.path = path;
+        }
+
+        public long getId() {
+            return id;
         }
     }
 

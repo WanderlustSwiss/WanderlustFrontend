@@ -3,11 +3,8 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,16 +12,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -71,7 +62,7 @@ public class PoiController {
         DatabaseController.poiDao.create(poi, handler);
     }
 
-    public void updatePoi(Poi poi, FragmentHandler handler){
+    public void updatePoi(Poi poi, FragmentHandler handler) {
         DatabaseController.poiDao.update(poi, handler);
     }
 
@@ -115,7 +106,7 @@ public class PoiController {
             byte[] imageIds = poi.getImageIds();
             //Images should be local
             List<File> images = new ArrayList<>();
-            for(int i = 0 ; i < poi.getImageCount(); i++){
+            for (int i = 0; i < poi.getImageCount(); i++) {
                 images.add(poi.getImageById(imageIds[i]));
             }
             handler.onResponse(new ControllerEvent(EventType.OK, images));
@@ -140,9 +131,9 @@ public class PoiController {
      * @return boolean:true if user is owner
      */
     public boolean isOwnerOf(Poi poi) {
-            long thisUserId = DatabaseController.userDao.getUser().getUser_id();
-            long userId = poi.getUser();
-            return thisUserId == userId;
+        long thisUserId = DatabaseController.userDao.getUser().getUser_id();
+        long userId = poi.getUser();
+        return thisUserId == userId;
     }
 
     /**
@@ -151,8 +142,8 @@ public class PoiController {
      * @param poi
      * @param handler
      */
-    public void deletePoi(Poi poi, FragmentHandler handler){
-        DatabaseController.poiDao.delete(poi,handler);
+    public void deletePoi(Poi poi, FragmentHandler handler) {
+        DatabaseController.poiDao.delete(poi, handler);
     }
 
 
@@ -177,6 +168,7 @@ public class PoiController {
 
         private FragmentHandler handler;
         private List<DownloadedImage> downloadedImages = new LinkedList<>();
+
         /**
          * Task which iterates over all images of a specific poi
          * and checks if it was already downloaded in the frontend database.
@@ -195,7 +187,7 @@ public class PoiController {
             List<File> images = new ArrayList<>();
             for (int i = 0; i < poi.getImageCount(); i++) {
                 File image = poi.getImageById(imageIds[i]);
-                if(!image.exists()) {
+                if (!image.exists()) {
                     //Download it!
                     Call<ResponseBody> call = PoiDao.service.downloadImage(poi.getPoi_id(), imageIds[i]);
                     try {
@@ -211,7 +203,7 @@ public class PoiController {
                         //What if failed?
                         e.printStackTrace();
                     }
-                } else{
+                } else {
                     images.add(image);
                 }
             }

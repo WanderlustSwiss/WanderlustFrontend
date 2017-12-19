@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.views.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.io.File;
@@ -39,23 +37,19 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
  */
 public class ViewPoiDialog extends DialogFragment {
     private static final String TAG = "ViewPoiDialog";
+    //Assume there is only 1 ViewPoiDialog
+    private static Poi currentPoi;
     private Activity context;
-
     private ImageView poiImage;
     private ImageView displayModeImage;
     private TextView typeTextView;
     private TextView titleTextView;
     private TextView dateTextView;
     private TextView descriptionTextView;
-
     private ImageButton closeDialogButton;
     private ImageButton editPoiButton;
     private ImageButton deletePoiButton;
-
     private long poiId;
-
-    //Assume there is only 1 ViewPoiDialog
-    private static Poi currentPoi;
     private PoiController controller;
 
     /**

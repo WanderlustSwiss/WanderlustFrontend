@@ -1,9 +1,9 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -15,14 +15,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
@@ -85,7 +82,7 @@ public class ProfileFragment extends Fragment {
      *
      * @param view in which the data is set
      */
-    public void setupProfileInfo(View view){
+    public void setupProfileInfo(View view) {
         //initializing views
         //birthday = (TextView) view.findViewById(R.id.profileBirthDay);
         amountPOI = (TextView) view.findViewById(R.id.profileAmountPOI);
@@ -106,13 +103,13 @@ public class ProfileFragment extends Fragment {
         profilePicture.setImageDrawable(drawable);
 
         //setting data
-        if(profileController.profileExists()){
+        if (profileController.profileExists()) {
             amountScore.setText(String.format(Locale.GERMANY, "%2d",
-                                profileController.getScore()));
-            amountTours.setText(String.format(Locale.GERMANY,"%2d",
-                                profileController.getAmountTours()));
-            amountPOI.setText(String.format(Locale.GERMANY,"%2d",
-                                profileController.getAmountPoi()));
+                    profileController.getScore()));
+            amountTours.setText(String.format(Locale.GERMANY, "%2d",
+                    profileController.getAmountTours()));
+            amountPOI.setText(String.format(Locale.GERMANY, "%2d",
+                    profileController.getAmountPoi()));
             //birthday.setText(profileController.getBirthDate());
 
 
@@ -131,7 +128,7 @@ public class ProfileFragment extends Fragment {
      *
      * @param view in which the list will be represented
      */
-    public void setupTabs(View view){
+    public void setupTabs(View view) {
         //initializing views
         tabLayout = (TabLayout) view.findViewById(R.id.profileTabs);
 
@@ -140,7 +137,7 @@ public class ProfileFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 int id = tab.getPosition();
 
-                switch(id){
+                switch (id) {
                     case 0:
                         setupFavorites();
                         break;
@@ -161,21 +158,22 @@ public class ProfileFragment extends Fragment {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
     }
 
     /**
      * This method is invoked when the tab at position 0 is selected. Sets up model with
      * favorites and adapter to represent the users favorites in a custom list view
-     *
      */
-    public void setupFavorites(){
+    public void setupFavorites() {
         //only if there is at least one favorite
-        if(profileController.getFavorites() != null){
+        if (profileController.getFavorites() != null) {
 
             //initialize list
             list = profileController.getFavorites();
@@ -188,7 +186,7 @@ public class ProfileFragment extends Fragment {
                             list);
 
             listView.setAdapter(adapter);
-        }else{
+        } else {
             listView = null;
         }
 
@@ -198,11 +196,10 @@ public class ProfileFragment extends Fragment {
     /**
      * This method is invoked when the tab at position 1 is selected. Sets up model with
      * user tours and adapter to represent the users tours in a custom list view
-     *
      */
-    public void setupMyTours(){
+    public void setupMyTours() {
         //only if there is at least one tour
-        if(profileController.getTours() != null){
+        if (profileController.getTours() != null) {
 
             //initialize list
             list = profileController.getTours();
@@ -215,7 +212,7 @@ public class ProfileFragment extends Fragment {
                             list);
 
             listView.setAdapter(adapter);
-        }else{
+        } else {
             listView = null;
         }
 
@@ -225,11 +222,10 @@ public class ProfileFragment extends Fragment {
     /**
      * This method is invoked when the tab at position 2 is selected. Sets up the model with
      * poi's and adapter to represent the users poi's in a custom list view
-     *
      */
-    public void setupPOIs(){
+    public void setupPOIs() {
         //only if there is at least one poi
-        if(profileController.getPois() != null){
+        if (profileController.getPois() != null) {
 
             //initialize list
             list = profileController.getPois();
@@ -242,7 +238,7 @@ public class ProfileFragment extends Fragment {
                             list);
 
             listView.setAdapter(adapter);
-        }else{
+        } else {
             listView = null;
         }
 
@@ -252,11 +248,10 @@ public class ProfileFragment extends Fragment {
     /**
      * This method is invoked when the tab at position 3 is selected. Sets up the model with
      * saved tours and adapter to represent the users saved tours in a custom list view
-     *
      */
-    public void setupSaved(){
+    public void setupSaved() {
         //only if there is at least one saved tour
-        if (profileController.getSavedTours() != null){
+        if (profileController.getSavedTours() != null) {
 
             //initialize list
             list = profileController.getSavedTours();
@@ -269,7 +264,7 @@ public class ProfileFragment extends Fragment {
                             list);
 
             listView.setAdapter(adapter);
-        }else{
+        } else {
             listView = null;
         }
 
@@ -281,7 +276,7 @@ public class ProfileFragment extends Fragment {
      *
      * @return the profile controller
      */
-    public ProfileController getProfileController(){
+    public ProfileController getProfileController() {
         return this.profileController;
     }
 

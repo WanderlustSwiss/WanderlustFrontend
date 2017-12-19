@@ -5,12 +5,13 @@ import io.objectbox.annotation.Id;
 
 /**
  * TourKit
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 @Entity
-public class TourKit extends AbstractModel{
+public class TourKit extends AbstractModel {
 
     @Id
     long internal_id;
@@ -37,7 +38,9 @@ public class TourKit extends AbstractModel{
         return rKit_id;
     }
 
-    public void setrKit_id(long rKit_id) { this.rKit_id = rKit_id; }
+    public void setrKit_id(long rKit_id) {
+        this.rKit_id = rKit_id;
+    }
 
     public long getTour() {
         return tour;

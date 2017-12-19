@@ -18,6 +18,7 @@ import eu.wise_iot.wanderlust.models.Old.Tour;
 
 /**
  * TourModelArrayAdapter:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -42,9 +43,9 @@ public class TourModelArrayAdapter extends ArrayAdapter<Tour> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.list_item_vertical, parent, false);
 
-        TextView  title    =   (TextView) view.findViewById(R.id.tour_title);
-        TextView  subtitle =   (TextView) view.findViewById(R.id.tour_subtitle);
-        ImageView image    =   (ImageView)view.findViewById(R.id.tour_teaser_image);
+        TextView title = (TextView) view.findViewById(R.id.tour_title);
+        TextView subtitle = (TextView) view.findViewById(R.id.tour_subtitle);
+        ImageView image = (ImageView) view.findViewById(R.id.tour_teaser_image);
 
         // sets the text to each view in one item
         title.setText(String.valueOf(tour.getName()));

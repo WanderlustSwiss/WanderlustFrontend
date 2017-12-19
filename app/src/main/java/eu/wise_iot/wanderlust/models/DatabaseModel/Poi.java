@@ -18,13 +18,14 @@ import io.objectbox.converter.PropertyConverter;
 
 /**
  * Poi
+ *
  * @author Rilind Gashi
  * @author Tobias Rüegsegger
  * @license MIT
  */
 
 @Entity
-public class Poi extends AbstractModel{
+public class Poi extends AbstractModel {
 
     private static final int MAX_IMAGES = 32;
 
@@ -35,7 +36,7 @@ public class Poi extends AbstractModel{
     String description;
     String createdAt;
 
-    @Convert(converter =  imageInfoConverter.class, dbType = String.class)
+    @Convert(converter = imageInfoConverter.class, dbType = String.class)
     List<ImageInfo> imagePaths;
     byte[] imageIds;
     int imageCount;
@@ -61,7 +62,7 @@ public class Poi extends AbstractModel{
         this.imageCount = imageCount;
     }
 
-    public Poi(){
+    public Poi() {
         this.internal_id = 0;
         this.title = "No Title";
         this.description = "No Description";
@@ -75,30 +76,32 @@ public class Poi extends AbstractModel{
         this.isPublic = false;
     }
 
-    public byte[] getImageIds() { return imageIds; }
+    public byte[] getImageIds() {
+        return imageIds;
+    }
 
-    public void addImageId(byte id){
+    public void addImageId(byte id) {
         imageIds[imageCount++] = id;
     }
 
-    public boolean removeImageId(byte id){
+    public boolean removeImageId(byte id) {
         int index = 0;
-        while(imageIds[index] != id){
+        while (imageIds[index] != id) {
             index++;
-            if(index == imageCount){
+            if (index == imageCount) {
                 return false;
             }
         }
-        for(int i = index; i < imageCount; i++){
-            imageIds[i] = imageIds[i+1];
+        for (int i = index; i < imageCount; i++) {
+            imageIds[i] = imageIds[i + 1];
         }
         imageCount--;
         return true;
     }
 
-    public File getImageById(byte imageId){
-        for(int i = 0; i < imageCount; i++){
-            if(imageIds[i] == imageId){
+    public File getImageById(byte imageId) {
+        for (int i = 0; i < imageCount; i++) {
+            if (imageIds[i] == imageId) {
                 String name = poi_id + "-" + imageIds[i] + ".jpg";
                 return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
                         "/files/" + name);
@@ -107,37 +110,45 @@ public class Poi extends AbstractModel{
         return null;
     }
 
-    public void setImageIds(byte[] imageIds, int imageCount){
+    public void setImageIds(byte[] imageIds, int imageCount) {
         this.imageIds = imageIds;
         this.imageCount = imageCount;
     }
 
-    public int getImageCount(){
+    public int getImageCount() {
         return imageCount;
     }
 
-    public List<ImageInfo> getImagePaths(){
+    public List<ImageInfo> getImagePaths() {
         return imagePaths;
     }
 
     public String getCreatedAt(Locale language) {
         SimpleDateFormat formatterDate = new SimpleDateFormat("dd-MM-yy");
         SimpleDateFormat formatterString = new SimpleDateFormat("d. MMMM yyyy", language);
-        try{
+        try {
             Date date = formatterDate.parse(createdAt.substring(0, createdAt.indexOf('T')));
             return formatterString.format(date);
-        } catch(Exception e){
+        } catch (Exception e) {
             return "invalid Date";
         }
     }
 
-    public long getType() { return type; }
+    public long getType() {
+        return type;
+    }
 
-    public void setType(long type) { this.type = type; }
+    public void setType(long type) {
+        this.type = type;
+    }
 
-    public boolean isPublic() { return isPublic; }
+    public boolean isPublic() {
+        return isPublic;
+    }
 
-    public void setPublic(boolean isPublic) { this.isPublic = isPublic; }
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
 
     public long getPoi_id() {
         return poi_id;
@@ -203,23 +214,6 @@ public class Poi extends AbstractModel{
         this.user = user;
     }
 
-    public class ImageInfo{
-        long id;
-        String name;
-        String path;
-
-        public ImageInfo(long id, String name, String path) {
-            this.id = id;
-            this.name = name;
-            this.path = path;
-        }
-
-        public long getId() {
-            return id;
-        }
-        public String getPath(){ return this.path;}
-    }
-
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {
         @Override
         public List<ImageInfo> convertToEntityProperty(String databaseValue) {
@@ -241,6 +235,26 @@ public class Poi extends AbstractModel{
             Type type = new TypeToken<List<ImageInfo>>() {
             }.getType();
             return gson.toJson(entityProperty, type);
+        }
+    }
+
+    public class ImageInfo {
+        long id;
+        String name;
+        String path;
+
+        public ImageInfo(long id, String name, String path) {
+            this.id = id;
+            this.name = name;
+            this.path = path;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public String getPath() {
+            return this.path;
         }
     }
 }

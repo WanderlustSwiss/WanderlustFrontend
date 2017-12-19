@@ -16,17 +16,22 @@ import retrofit2.http.Path;
  * show	    GET	    /trip/:id   | restricted
  * create	POST	/trip       | restricted
  * delete	DELETE	/trip/:id   | restricted
+ *
  * @author Alexander Weinbeck
  */
 public interface TripService {
     @GET("Trip/")
-        Call<Trip> retrieveAllTrips();
+    Call<Trip> retrieveAllTrips();
+
     @GET("Trip/{id}")
-        Call<Trip> retrieveTrip(@Path("id") int id);
+    Call<Trip> retrieveTrip(@Path("id") int id);
+
     @POST("Trip/")
-        Call<Trip> createTrip(@Body Trip user);
+    Call<Trip> createTrip(@Body Trip user);
+
     @PUT("Trip")
-        Call<Trip> updateTrip(int id,@Body Trip Trip);
+    Call<Trip> updateTrip(int id, @Body Trip Trip);
+
     @DELETE("Trip/{")
-        Call<Trip> deleteTrip(@Body Trip Trip);
+    Call<Trip> deleteTrip(@Body Trip Trip);
 }

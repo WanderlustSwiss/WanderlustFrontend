@@ -2,13 +2,13 @@ package eu.wise_iot.wanderlust.models.Old;
 
 import android.os.Environment;
 
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 /**
  * FileHandler:
+ *
  * @author Fabian Schwander
  * @license MIT
  */

@@ -25,11 +25,19 @@ public class PoiType extends AbstractModel {
         this.internal_id = internal_id;
     }
 
-    public long getPoit_id() { return poit_id; }
+    public long getPoit_id() {
+        return poit_id;
+    }
 
-    public void setPoit_id(long poit_id) { this.poit_id = poit_id; }
+    public void setPoit_id(long poit_id) {
+        this.poit_id = poit_id;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 }

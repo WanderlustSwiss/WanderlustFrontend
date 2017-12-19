@@ -1,21 +1,14 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
 import android.content.Context;
-import android.os.Environment;
-import android.provider.MediaStore;
 
 import org.osmdroid.util.BoundingBox;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.nio.channels.FileChannel;
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -23,16 +16,12 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.views.MainActivity;
 import io.objectbox.Box;
 import io.objectbox.Property;
-import io.objectbox.query.Query;
-import io.objectbox.query.QueryBuilder;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -50,8 +39,8 @@ import retrofit2.Response;
  */
 
 public class PoiDao extends DatabaseObjectAbstract {
-    public Box<Poi> poiBox;
     public static PoiService service;
+    public Box<Poi> poiBox;
 
     /**
      * constructor
@@ -318,7 +307,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
                     try {
                         Poi internalPoi = findOne(Poi_.poi_id, poiID);
-                        if (!internalPoi.removeImageId((byte)response.body().getId())){
+                        if (!internalPoi.removeImageId((byte) response.body().getId())) {
                             //TODO image id not found
                         }
                         poiBox.put(internalPoi);
@@ -437,8 +426,8 @@ public class PoiDao extends DatabaseObjectAbstract {
             public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
                 if (response.isSuccessful()) {
                     poiBox.remove(find(Poi_.isPublic, true));
-                    for(Poi poi : response.body()){
-                        if(poi.isPublic()) {
+                    for (Poi poi : response.body()) {
+                        if (poi.isPublic()) {
                             poi.setInternal_id(0);
                             poiBox.put(poi);
                         }
@@ -463,8 +452,8 @@ public class PoiDao extends DatabaseObjectAbstract {
             public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
                 if (response.isSuccessful()) {
                     poiBox.remove(find(Poi_.isPublic, true));
-                    for(Poi poi : response.body()){
-                        if(poi.isPublic()) {
+                    for (Poi poi : response.body()) {
+                        if (poi.isPublic()) {
                             poi.setInternal_id(0);
                             for (Poi.ImageInfo imageInfo : poi.getImagePaths()) {
                                 poi.addImageId((byte) imageInfo.getId());
