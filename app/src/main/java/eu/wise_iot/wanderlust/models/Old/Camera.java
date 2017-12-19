@@ -14,23 +14,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import eu.wise_iot.wanderlust.views.MapFragment;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.constants.Defaults;
-import eu.wise_iot.wanderlust.services.FeedbackService;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import eu.wise_iot.wanderlust.views.MapFragment;
 
 /**
  * Camera:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -67,7 +57,7 @@ public class Camera {
             }
             if (photoFile != null && activity != null) {
                 // FileProvider is needed for targetSDKVersion >= 24
-                imageUri = FileProvider.getUriForFile(this.activity,"eu.wise_iot.wanderlust.models.Old.Camera", photoFile);
+                imageUri = FileProvider.getUriForFile(this.activity, "eu.wise_iot.wanderlust.models.Old.Camera", photoFile);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 mapFragment.startActivityForResult(takePictureIntent, Constants.TAKE_PHOTO);
@@ -101,34 +91,6 @@ public class Camera {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(Uri.fromFile(photoFile));
         activity.sendBroadcast(mediaScanIntent);
-    }
-
-    private void uploadFile() { // FIXME: does not work yet
-        RequestBody filePart = RequestBody.create(
-                MediaType.parse("image/*"),
-                photoFile);
-        MultipartBody.Part file = MultipartBody.Part.createFormData("photo", imageName, filePart);
-
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(Defaults.URL_SERVER)
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.build();
-
-        FeedbackService service = retrofit.create(FeedbackService.class);
-        Call<ResponseBody> call = service.uploadPhoto(file);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Toast.makeText(activity, R.string.msg_photo_upload_successful, Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "photo saved and response received: " + response.isSuccessful());
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(activity, R.string.msg_photo_upload_failed, Toast.LENGTH_SHORT).show();
-                Log.e(TAG, t.getMessage());
-            }
-        });
     }
 
     public String getImageName() {

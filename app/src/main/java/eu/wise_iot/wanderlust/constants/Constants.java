@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.constants;
 
 /**
  * Constants:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -23,7 +24,6 @@ public interface Constants {
 
     /* FRAGMENTS */
     String MAP_FRAGMENT = "MapFragment";
-    String SEARCH_FRAGMENT = "SearchFragment";
     String TOUR_FRAGMENT = "TourFragment";
     String WELCOME_FRAGMENT = "WelcomeFragment";
     String DISCLAIMER_FRAGMENT = "DisclaimerFragment";

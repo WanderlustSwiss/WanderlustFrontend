@@ -28,27 +28,27 @@ import retrofit2.Response;
 
 /**
  * ProfileDao
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 public class ProfileDao extends DatabaseObjectAbstract {
-    public Box<Profile> profileBox;
     public static ProfileService service;
-
+    public Box<Profile> profileBox;
     Property columnProperty;
 
     /**
      *
      */
 
-    public ProfileDao(){
+    public ProfileDao() {
         profileBox = DatabaseController.boxStore.boxFor(Profile.class);
         service = ServiceGenerator.createService(ProfileService.class);
     }
 
 
-    public long count(){
+    public long count() {
         return profileBox.count();
     }
 
@@ -76,14 +76,13 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * Update an existing user in the database.
      *
      * @param profile (required).
-     *
      */
-    public void update(Profile profile, final FragmentHandler handler){
+    public void update(Profile profile, final FragmentHandler handler) {
         Call<Profile> call = service.updateProfile(profile.getProfile_id(), profile);
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     try {
                         Profile backendProfile = response.body();
                         Profile internalProfile = findOne(Profile_.profile_id, profile.getProfile_id());
@@ -187,7 +186,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
         }
         out.close();
         in.close();
-            }
+    }
 
     /**
      * deletes an image from a specific profile from the database
@@ -205,7 +204,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
                     try {
                         Profile internalProfile = findOne(Profile_.profile_id, profileID);
-                        if (!internalProfile.removeImageId((byte)response.body().getId())){
+                        if (!internalProfile.removeImageId((byte) response.body().getId())) {
                             //TODO image id not found
                         }
                         profileBox.put(internalProfile);
@@ -226,15 +225,14 @@ public class ProfileDao extends DatabaseObjectAbstract {
             }
         });
     }
-    
-    
+
+
     /**
      * Insert a profile into the database.
      *
      * @param profile (required).
-     *
      */
-    public void create(Profile profile){
+    public void create(Profile profile) {
         profileBox.put(profile);
     }
 
@@ -251,8 +249,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * Searching for a single profile with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return Profile who match to the search pattern in the searched columns
      */
     public Profile findOne(Property searchedColumn, String searchPattern)
@@ -269,8 +266,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * Searching for profile matching with the search pattern in a the selected column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return List<Profile> which contains the users, who match to the search pattern in the searched columns
      */
     public List<Profile> find(Property searchedColumn, String searchPattern)

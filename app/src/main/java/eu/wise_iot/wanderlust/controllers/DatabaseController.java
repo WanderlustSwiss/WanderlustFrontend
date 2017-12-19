@@ -4,12 +4,9 @@ package eu.wise_iot.wanderlust.controllers;
 import android.content.Context;
 import android.util.Log;
 
-
 import org.osmdroid.util.BoundingBox;
-import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -30,7 +27,6 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
-import eu.wise_iot.wanderlust.views.MainActivity;
 import io.objectbox.BoxStore;
 
 /**
@@ -42,9 +38,10 @@ import io.objectbox.BoxStore;
  */
 public final class DatabaseController {
 
+    //in bytes
+    private static final long MAXCACHESIZE = 20_000_000;
     //true as soon intDaoModels was executed
     public static boolean initialized;
-
     public static BoxStore boxStore;
     public static CommunityTourDao communityTourDao;
     public static DeviceDao deviceDao;
@@ -58,19 +55,13 @@ public final class DatabaseController {
     public static TripDao tripDao;
     public static UserDao userDao;
     public static UserTourDao userTourDao;
-
     public static Context mainContext;
-
     private static List<DatabaseListener> listeners = new ArrayList<>();
     private static Date lastSync;
     private static boolean syncingPoiTypes;
     private static boolean syncingPois;
-
     private static LinkedList<DownloadedImage> downloadedImages = new LinkedList<>();
     private static long cacheSize;
-
-    //in bytes
-    private static final long MAXCACHESIZE = 20_000_000;
 
     public static void initDaoModels(Context context) {
 
@@ -110,12 +101,13 @@ public final class DatabaseController {
 
     /**
      * syncs models based on syncType
+     *
      * @param event
      */
     public static void sync(DatabaseEvent event) {
 
         lastSync = new Date();
-        switch (event.getType()){
+        switch (event.getType()) {
             case POI:
                 //TODO no longer used?
                 if (!syncingPois) {
@@ -160,21 +152,21 @@ public final class DatabaseController {
     }
 
 
-    public static void addDownloadedImages(List<DownloadedImage> images){
+    public static void addDownloadedImages(List<DownloadedImage> images) {
 
-        for (DownloadedImage image : images){
+        for (DownloadedImage image : images) {
             downloadedImages.add(image);
             cacheSize += image.getSize();
         }
         clearCache();
     }
 
-    public static void clearCache(){
+    public static void clearCache() {
 
         //TODO endless loop if userimages are higher than maxchachesize
-        while(cacheSize >= MAXCACHESIZE){
+        while (cacheSize >= MAXCACHESIZE) {
             DownloadedImage image = downloadedImages.getFirst();
-            if(image.isPublic()) {
+            if (image.isPublic()) {
                 if (image.getImage().delete()) {
                     cacheSize -= image.getSize();
                     downloadedImages.remove(image);
@@ -192,39 +184,39 @@ public final class DatabaseController {
     /**
      * Deletes all .jpg files in the app storage
      */
-    public static void clearAllDownloadedImages(){
+    public static void clearAllDownloadedImages() {
         List<Long> privatePoiIds = new ArrayList<>();
-        for(Poi poi : poiDao.find(Poi_.isPublic, false)){
+        for (Poi poi : poiDao.find(Poi_.isPublic, false)) {
             privatePoiIds.add(poi.getPoi_id());
         }
         File filesDir = mainContext.getApplicationContext().getFilesDir();
 
-        for(File image : filesDir.listFiles()){
+        for (File image : filesDir.listFiles()) {
             String name = image.getName();
             int dotIndex = name.lastIndexOf('.');
-            if(dotIndex == -1) continue; //not a valid file
-            String extension = name.substring(dotIndex+1);
-            try{
-                long imageId = Long.parseLong(name.substring(name.indexOf('-')+1, name.indexOf('.')));
-                if(privatePoiIds.contains(imageId) && extension.equals("jpg")) {
+            if (dotIndex == -1) continue; //not a valid file
+            String extension = name.substring(dotIndex + 1);
+            try {
+                long imageId = Long.parseLong(name.substring(name.indexOf('-') + 1, name.indexOf('.')));
+                if (privatePoiIds.contains(imageId) && extension.equals("jpg")) {
                     if (!image.delete()) {
                         Log.e(DatabaseController.class.toString(),
                                 "image " + image.getAbsolutePath() + " could not be deleted");
                         break;
                     }
                 }
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 continue;
             }
         }
         cacheSize = 0;
     }
 
-    public static void deletePoiImages(Poi poi){
+    public static void deletePoiImages(Poi poi) {
         byte[] images = poi.getImageIds();
-        for(int i = 0; i < poi.getImageCount(); i++){
+        for (int i = 0; i < poi.getImageCount(); i++) {
             File image = poi.getImageById(images[i]);
-            if(!image.delete()){
+            if (!image.delete()) {
                 Log.e(DatabaseController.class.toString(),
                         "image " + image.getAbsolutePath() + " could not be deleted");
             }

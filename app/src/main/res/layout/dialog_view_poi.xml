@@ -38,8 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:padding="8dp"
             android:background="@android:color/transparent"
+            android:padding="8dp"
             android:src="@drawable/ic_arrow_back_black_24dp" />
     </RelativeLayout>
 
@@ -47,13 +47,13 @@
         android:id="@+id/content_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/background_main">
 
         <RelativeLayout
             android:id="@+id/poi_background_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
+            android:background="@color/primary_main"
             android:padding="8dp">
 
             <TextView
@@ -83,18 +83,18 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/poi_delete_button"
                 android:layout_toStartOf="@id/poi_delete_button"
-                android:visibility="invisible"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_edit_black_24dp" />
+                android:src="@drawable/ic_edit_black_24dp"
+                android:visibility="invisible" />
 
             <ImageButton
                 android:id="@+id/poi_delete_button"
-                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_delete_black_24dp" />
+                android:src="@drawable/ic_delete_black_24dp"
+                android:visibility="invisible" />
         </RelativeLayout>
 
         <TextView

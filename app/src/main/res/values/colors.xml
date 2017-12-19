@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="myPrimaryDark">#7A7A7C</color>
-    <color name="myPrimaryDarkTransparent">#dd2b2825</color>
-    <color name="white">#FFFFFF</color>
-    <color name="myPrimaryBackgroundTransparent">#DDFFFFFF</color>
-    <color name="myYellow">#D1A928</color>
-    <color name="myGreen">#4a7e0f</color>
-    <color name="black">#000000</color>
-    <color name="myRed">#CC3D54</color>
-    <color name="materialGreen">#00a592</color>
+    <color name="primary_main">#00a592</color>
+    <color name="primary_second">#00796b</color>
+    <color name="success_easy">#48bc85</color>
 
-    <color name="primaryColor">#00a592</color>
-    <color name="primaryOne">#00a592</color>
-    <color name="primaryTwo">#00796b</color>
-    <color name="highlightOne">#cc3d54</color>
-    <color name="highlightTwo">#f24e75</color>
+    <color name="highlight_main">#cc3d54</color>
+    <color name="highlight_second">#f24e75</color>
+
+    <color name="structure_main">#D1A928</color>
+    <color name="structure_second">#F2BF30</color>
+
+    <color name="black">#000000</color>
+    <color name="heading_icon">#a7a9ac</color>
+    <color name="heading_icon_unselected">#797a7b</color>
+    <color name="background_two_and_inactive">#d1d3d4</color>
+    <color name="background_main">#FFFFFF</color>
+
 </resources>

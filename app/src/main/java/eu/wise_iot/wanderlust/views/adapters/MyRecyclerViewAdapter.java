@@ -2,7 +2,6 @@ package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import eu.wise_iot.wanderlust.R;
 /**
  * MyAdapter:
  * provides adapter for recycleview which is used by the tourslist
+ *
  * @author Alexander Weinbeck
  * @license MIT
  */
@@ -59,24 +59,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return mTitles.size();
     }
 
-    // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public View myView;
-        public TextView myTextView;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            myView = itemView.findViewById(R.id.tvImage);
-            myTextView = (TextView)itemView.findViewById(R.id.tvTitle);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-        }
-    }
-
     // convenience method for getting data at click position
     public String getItem(int id) {
         return mTitles.get(id);
@@ -90,5 +72,23 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int id);
+    }
+
+    // stores and recycles views as they are scrolled off screen
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public View myView;
+        public TextView myTextView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            myView = itemView.findViewById(R.id.tvImage);
+            myTextView = (TextView) itemView.findViewById(R.id.tvTitle);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+        }
     }
 }

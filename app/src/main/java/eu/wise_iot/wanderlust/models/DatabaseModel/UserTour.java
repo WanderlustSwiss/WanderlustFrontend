@@ -5,22 +5,23 @@ import io.objectbox.annotation.Id;
 
 /**
  * CommunityTours
+ *
  * @author Alexander Weinbeck
  * @license MIT
  */
 
 @Entity
-public class UserTour extends AbstractModel{
+public class UserTour extends AbstractModel {
 
     @Id
     long internal_id;
     long tour_id;
-    String  title;
-    String  description;
-    String  imagePath;
-    String  polyline;
-    long    difficulty;
-    long    tourKit;
+    String title;
+    String description;
+    String imagePath;
+    String polyline;
+    long difficulty;
+    long tourKit;
     boolean editable;
 
     public UserTour(long internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {

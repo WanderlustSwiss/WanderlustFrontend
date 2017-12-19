@@ -6,33 +6,33 @@ import java.util.List;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import io.objectbox.Box;
-import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
 
 /**
  * EquipmentDao
+ *
  * @author Rilind Gashi
  * @license MIT
  */
 
 public class EquipmentDao extends DatabaseObjectAbstract {
+    Property columnProperty;
     private Box<Equipment> equipmentBox;
     private Query<Equipment> equipmentQuery;
     private QueryBuilder<Equipment> equipmentQueryBuilder;
-    Property columnProperty;
 
     /**
      * Constructor.
      */
 
-    public EquipmentDao(){
+    public EquipmentDao() {
         equipmentBox = DatabaseController.boxStore.boxFor(Equipment.class);
         equipmentQueryBuilder = equipmentBox.query();
     }
 
-    public long count(){
+    public long count() {
         return equipmentBox.count();
     }
 
@@ -41,7 +41,7 @@ public class EquipmentDao extends DatabaseObjectAbstract {
         searchedField.setAccessible(true);
 
         columnProperty = (Property) searchedField.get(Equipment.class);
-        equipmentQueryBuilder.equal(columnProperty , searchPattern);
+        equipmentQueryBuilder.equal(columnProperty, searchPattern);
         equipmentQuery = equipmentQueryBuilder.build();
         return equipmentQuery.find().size();
     }
@@ -50,19 +50,18 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      * Update an existing difficulty in the database.
      *
      * @param equipment (required).
-     *
      */
-    public Equipment update(Equipment equipment){
+    public Equipment update(Equipment equipment) {
         equipmentBox.put(equipment);
         return equipment;
     }
+
     /**
      * Insert an equipment into the database.
      *
      * @param equipment (required).
-     *
      */
-    public void create(Equipment equipment){
+    public void create(Equipment equipment) {
         equipmentBox.put(equipment);
     }
 
@@ -79,8 +78,7 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      * Searching for a single equipment with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return Equipment which match to the search pattern in the searched columns
      */
     public Equipment findOne(Property searchedColumn, String searchPattern)
@@ -97,8 +95,7 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      * Searching for equipment matching with the search pattern in a the selected column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern (required) contain the search pattern.
-     *
+     * @param searchPattern  (required) contain the search pattern.
      * @return List<Equipment> which contains the equipments, which match to the search pattern in the searched columns
      */
     public List<Equipment> find(Property searchedColumn, String searchPattern)
@@ -119,7 +116,7 @@ public class EquipmentDao extends DatabaseObjectAbstract {
         equipmentBox.remove(findOne(searchedColumn, searchPattern));
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         equipmentBox.removeAll();
     }
 

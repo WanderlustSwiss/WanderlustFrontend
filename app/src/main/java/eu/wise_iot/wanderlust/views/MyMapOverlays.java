@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -11,8 +10,6 @@ import android.location.LocationManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.Road;
@@ -28,28 +25,24 @@ import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
 import eu.wise_iot.wanderlust.models.Old.GpxParser;
+import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
 import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 
 /**
  * MyMapFragment:
+ *
  * @author Fabian Schwander
  * @license MIT
  */
@@ -82,7 +75,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         scaleBarOverlay.setCentred(true);
         DisplayMetrics dm = activity.getResources().getDisplayMetrics();
         //set position of scale bar
-        scaleBarOverlay.setScaleBarOffset(dm.widthPixels/3*1, dm.heightPixels/10*9);
+        scaleBarOverlay.setScaleBarOffset(dm.widthPixels / 3 * 1, dm.heightPixels / 10 * 9);
         mapView.getOverlays().add(scaleBarOverlay);
     }
 
@@ -114,7 +107,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                                     FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
                                     // make sure that no other dialog is running
                                     Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
-                                    if (prevFragment != null) fragmentTransaction.remove(prevFragment);
+                                    if (prevFragment != null)
+                                        fragmentTransaction.remove(prevFragment);
                                     fragmentTransaction.addToBackStack(null);
 
                                     ViewPoiDialog dialogFragment = ViewPoiDialog.newInstance(poi);
@@ -130,37 +124,36 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                     @Override
                     public boolean onItemLongPress(final int index, final OverlayItem overlayItem) {
                         // TODO: maybe add action when item is pressed long?
-                        Toast.makeText(activity, String.format("Feedback-Bild: %s ", overlayItem.getTitle()), Toast.LENGTH_LONG).show();
                         return false;
                     }
                 });
     }
 
-    private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
-        GpxParser gpxParser = new GpxParser(activity);
-        List<TrackPoint> gpxList = gpxParser.getTrackPointList(R.raw.gpx1);
-        ArrayList<GeoPoint> geoPointList = new ArrayList<>();
+//    private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
+//        GpxParser gpxParser = new GpxParser(activity);
+//        List<TrackPoint> gpxList = gpxParser.getTrackPointList(R.raw.gpx1);
+//        ArrayList<GeoPoint> geoPointList = new ArrayList<>();
+//
+//        for (TrackPoint model : gpxList) {
+//            GeoPoint newPoint = new GeoPoint(model.getLatitude(), model.getLongitude());
+//            geoPointList.add(newPoint);
+//        }
+//
+//        RoadManager roadManager = new OSRMRoadManager(activity);
+//        Road road = roadManager.getRoad(geoPointList);
+//        Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+//        mapView.getOverlays().add(roadOverlay);
+//        mapView.invalidate();
+//    }
 
-        for (TrackPoint model : gpxList) {
-            GeoPoint newPoint = new GeoPoint(model.getLatitude(), model.getLongitude());
-            geoPointList.add(newPoint);
-        }
-
-        RoadManager roadManager = new OSRMRoadManager(activity);
-        Road road = roadManager.getRoad(geoPointList);
-        Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-        mapView.getOverlays().add(roadOverlay);
-        mapView.invalidate();
-    }
-
-    /*
+    /**
      * Adds a poi on the mapview with the icon based on
      * the poi type
      */
-    public void addPoiToOverlay(Poi poi){
+    public void addPoiToOverlay(Poi poi) {
         Drawable drawable;
         boolean hasImage = poi.getImageCount() > 0;
-        switch ((int)poi.getType()) {
+        switch ((int) poi.getType()) {
             case Constants.TYPE_VIEW:
                 if (hasImage)
                     drawable = activity.getResources().getDrawable(R.drawable.icon_sight);
@@ -189,14 +182,14 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
         }
 
-            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            drawable = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, 80, 80, true));
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        drawable = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, 80, 80, true));
 
-            OverlayItem overlayItem = new OverlayItem(Long.toString(poi.getPoi_id()), poi.getTitle(),
-                    poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
+        OverlayItem overlayItem = new OverlayItem(Long.toString(poi.getPoi_id()), poi.getTitle(),
+                poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
 
-            overlayItem.setMarker(drawable);
-            poiOverlay.addItem(overlayItem);
+        overlayItem.setMarker(drawable);
+        poiOverlay.addItem(overlayItem);
     }
 
     public void addPositionMarker(GeoPoint geoPoint) {
@@ -223,7 +216,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
         poiOverlay.removeAllItems();
         List<Poi> pois = DatabaseController.poiDao.find();
-        for(Poi poi : pois){
+        for (Poi poi : pois) {
             addPoiToOverlay(poi);
         }
         mapView.invalidate();
@@ -235,44 +228,38 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     void showPoiLayer(boolean setVisible) {
         if (setVisible) {
-            if(!mapView.getOverlays().contains(poiOverlay)) {
+            if (!mapView.getOverlays().contains(poiOverlay)) {
                 mapView.getOverlays().add(poiOverlay);
             }
         } else {
-                mapView.getOverlays().remove(poiOverlay);
-            }
+            mapView.getOverlays().remove(poiOverlay);
+        }
         mapView.invalidate();
     }
-
-    public MyLocationNewOverlay getMyLocationNewOverlay() {
-        return myLocationNewOverlay;
-    }
-
 
     @Override
     public void update(DatabaseEvent event) {
 
-        if(event.getType() == DatabaseEvent.SyncType.POIAREA) { populatePoiOverlay(); }
-        else if(event.getType() == DatabaseEvent.SyncType.SINGLEPOI){
+        if (event.getType() == DatabaseEvent.SyncType.POIAREA) {
+            populatePoiOverlay();
+        } else if (event.getType() == DatabaseEvent.SyncType.SINGLEPOI) {
             //More efficient, Stamm approves
             Poi poi = (Poi) event.getObj();
             addPoiToOverlay(poi);
             mapView.invalidate();
-        }
-        else if(event.getType() == DatabaseEvent.SyncType.DELETESINGLEPOI){
+        } else if (event.getType() == DatabaseEvent.SyncType.DELETESINGLEPOI) {
             Poi poi = (Poi) event.getObj();
-            for(int i = 0; i < poiOverlay.size(); i++) {
-                if(Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()){
+            for (int i = 0; i < poiOverlay.size(); i++) {
+                if (Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()) {
                     poiOverlay.removeItem(i);
                     break;
                 }
             }
             mapView.invalidate();
-        }
-        else if(event.getType() == DatabaseEvent.SyncType.EDITSINGLEPOI){
+        } else if (event.getType() == DatabaseEvent.SyncType.EDITSINGLEPOI) {
             Poi poi = (Poi) event.getObj();
-            for(int i = 0; i < poiOverlay.size(); i++) {
-                if(Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()){
+            for (int i = 0; i < poiOverlay.size(); i++) {
+                if (Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()) {
                     poiOverlay.removeItem(i);
                     addPoiToOverlay(poi);
                     break;
@@ -280,5 +267,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             }
             mapView.invalidate();
         }
+    }
+
+    public MyLocationNewOverlay getMyLocationNewOverlay() {
+        return myLocationNewOverlay;
     }
 }

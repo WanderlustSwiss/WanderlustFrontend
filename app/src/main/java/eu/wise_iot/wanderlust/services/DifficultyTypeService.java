@@ -11,6 +11,7 @@ import retrofit2.http.GET;
  * DifficultyTypeService:
  * DifficultyTypeController
  * show	            GET	    /difficultytype         | restricted
+ *
  * @author Alexander Weinbeck
  */
 public interface DifficultyTypeService {

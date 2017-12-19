@@ -1,14 +1,12 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -35,31 +32,27 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 
-/*
+/**
  * Login Fragment which handles front end inputs of the user for login
+ *
  * @author Joshua
  * @license MIT
  */
-public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener{
+public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
+    public static int REQ_CODE = 9001;
     private Context context;
-
     private Button btnLogin;
     private EditText nicknameEmailTextfield;
     private EditText passwordTextfield;
     private TextInputLayout nicknameEmailLayout;
     private SignInButton signInButtonGoogle;
     private TextView redirectToRegistration;
-
-
     private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
-    public static int REQ_CODE = 9001;
-
-
     private LoginController loginController;
 
-    private FragmentHandler fragmentHandler =  new FragmentHandler() {
+    private FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {
             EventType eventType = event.getType();
@@ -76,9 +69,8 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                     break;
 
             }
-        };
+        }
     };
-
 
 
     /**
@@ -104,9 +96,6 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 //                .enableAutoManage((FragmentActivity) getActivity(), this)
 //                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
 //                .build();
-
-
-
     }
 
     @Override
@@ -149,14 +138,16 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             }
         });
 
-        /*
-        signInButtonGoogle.setOnClickListener(new View.OnClickListener(){
+
+        signInButtonGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signInWithGoogle();
+//                signInWithGoogle();
+                // TODO: remove
+                Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
             }
         });
-        */
+
 
         redirectToRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,6 +161,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             }
         });
     }
+
     /**
      * Starts the sign in process with via Google API
      */
@@ -183,27 +175,25 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE) {
 
-                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                handleGoogleSignInResult(result);
-
-
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleGoogleSignInResult(result);
         }
     }
+
     /**
      * Handles the result received from the Google API for user trying to login with a Google account
      */
-    private void handleGoogleSignInResult(GoogleSignInResult result){
-        if(result.isSuccess()){
+    private void handleGoogleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
             String token = account.getIdToken();
             Toast.makeText(context, "Hello " + account.getGivenName() + " " + account.getFamilyName(), Toast.LENGTH_LONG).show();
 
             LoginUser user = new LoginUser(account.getEmail(), token);
-         //   loginController.logIn(user, fragmentHandler);
+            //   loginController.logIn(user, fragmentHandler);
         } else {
 
-            Toast.makeText(context, "fail", Toast.LENGTH_LONG).show();
-
+            Toast.makeText(context, R.string.login_failure, Toast.LENGTH_LONG).show();
         }
     }
 
