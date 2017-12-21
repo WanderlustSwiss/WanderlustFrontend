@@ -20,12 +20,9 @@ import static org.junit.Assert.*;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -42,8 +39,6 @@ import retrofit2.Response;
  * Test class for Profile dao
  * @author Rilind Gashi, Alexander Weinbeck
  */
-
-@RunWith(AndroidJUnit4.class)
 public class ProfileDaoTest {
 
     BoxStore boxStore;
