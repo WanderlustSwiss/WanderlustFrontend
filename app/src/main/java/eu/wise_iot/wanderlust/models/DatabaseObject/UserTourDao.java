@@ -48,7 +48,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * count all poi which match with the search criteria
+     * count all tours which match with the search criteria
      *
      * @return Total number of records
      */
