@@ -11,11 +11,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trips"
+            android:text="Touren"
             android:textSize="30dp" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvTrips"
+            android:id="@+id/rvTouren"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

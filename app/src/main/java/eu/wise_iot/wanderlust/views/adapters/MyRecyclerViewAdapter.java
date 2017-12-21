@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 
 /**
  * MyAdapter:
@@ -27,11 +28,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-    // data is passed into the constructor
-    public MyRecyclerViewAdapter(Context context, List<String> images, List<String> titles) {
+    // data is passed into the constructor, here as a CommunityTour
+    public MyRecyclerViewAdapter(Context context, CommunityTour parTour) {
         this.mInflater = LayoutInflater.from(context);
-        this.mImages = images;
-        this.mTitles = titles;
+        /*this.mImages = images;
+        this.mTitles = titles;*/
+
     }
 
     // inflates the row layout from xml when needed

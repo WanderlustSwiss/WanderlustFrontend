@@ -44,7 +44,7 @@ public class TourOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        View view = inflater.inflate(R.layout.fragment_tourslist, container, false);
+        View view = inflater.inflate(R.layout.fragment_toursoverview, container, false);
 
         UserTour testTour = new UserTour(0, 0, "Tour1", "TourDescription", "picturePath", "polyline", 1, 1, true);
 
@@ -55,29 +55,32 @@ public class TourOverviewFragment extends Fragment {
 
 
         // data to populate the RecyclerView with
-        ArrayList<String> viewImages = new ArrayList<>();
-        viewImages.add(testTour.getImagePath());
-        viewImages.add("test1");
-        viewImages.add("test2");
-        viewImages.add("test3");
-        viewImages.add("test4");
+        //testdata
+//        ArrayList<String> viewImages = new ArrayList<>();
+//        viewImages.add(testTour.getImagePath());
+//        viewImages.add("test1");
+//        viewImages.add("test2");
+//        viewImages.add("test3");
+//        viewImages.add("test4");
+//
+//        ArrayList<String> viewText = new ArrayList<>();
+//        viewText.add(testTour.getTitle());
+//        viewText.add("Cow");
+//        viewText.add("Camel");
+//        viewText.add("Sheep");
+//        viewText.add("Goat");
 
-        ArrayList<String> viewText = new ArrayList<>();
-        viewText.add(testTour.getTitle());
-        viewText.add("Cow");
-        viewText.add("Camel");
-        viewText.add("Sheep");
-        viewText.add("Goat");
 
-        // set up the RecyclerView
-        RecyclerView rvTrips = (RecyclerView) view.findViewById(R.id.rvTrips);
+
+        // set up the RecyclerView 1
+        RecyclerView rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        rvTrips.setLayoutManager(horizontalLayoutManager);
+        rvTouren.setLayoutManager(horizontalLayoutManager);
         MyRecyclerViewAdapter adapterRoutes = new MyRecyclerViewAdapter(context, viewImages, viewText);
         adapterRoutes.setClickListener(this::onItemClickImages);
-        rvTrips.setAdapter(adapterRoutes);
+        rvTouren.setAdapter(adapterRoutes);
 
-        // set up the RecyclerView
+        // set up the RecyclerView 2
         RecyclerView rvFavorites = (RecyclerView) view.findViewById(R.id.rvFavorites);
         LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvFavorites.setLayoutManager(horizontalLayoutManager2);
