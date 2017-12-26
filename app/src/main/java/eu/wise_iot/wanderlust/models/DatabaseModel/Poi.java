@@ -103,8 +103,7 @@ public class Poi extends AbstractModel {
         for (int i = 0; i < imageCount; i++) {
             if (imageIds[i] == imageId) {
                 String name = poi_id + "-" + imageIds[i] + ".jpg";
-                return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
-                        "/files/" + name);
+                return new File(DatabaseController.picturesDir + "/" + name);
             }
         }
         return null;
@@ -124,7 +123,7 @@ public class Poi extends AbstractModel {
     }
 
     public String getCreatedAt(Locale language) {
-        SimpleDateFormat formatterDate = new SimpleDateFormat("dd-MM-yy");
+        SimpleDateFormat formatterDate = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat formatterString = new SimpleDateFormat("d. MMMM yyyy", language);
         try {
             Date date = formatterDate.parse(createdAt.substring(0, createdAt.indexOf('T')));

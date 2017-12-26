@@ -19,8 +19,10 @@ import java.io.File;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -46,6 +48,7 @@ public class EditPoiDialog extends DialogFragment {
     private ImageButton buttonCancel;
     private PoiController controller;
     private boolean isNewPoi;
+    private boolean publish;
     private FragmentHandler poiPhotoUploadHandler;
 
     /**
@@ -156,6 +159,9 @@ public class EditPoiDialog extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // position 0 == public, position 1 == private
+
+                //From public to private: set publish to true
+                publish = !poi.isPublic() && position == 0;
                 poi.setPublic(position == 0);
             }
 
@@ -208,7 +214,23 @@ public class EditPoiDialog extends DialogFragment {
 
                 controller.saveNewPoi(this.poi, poiHandler);
             } else {
-                controller.updatePoi(this.poi, poiHandler);
+                if (publish) {
+                    //TODO only uploads first image
+                    controller.uploadImage(this.poi.getImageById((byte) 1), this.poi, new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            switch (controllerEvent.getType()) {
+                                case OK:
+                                    controller.updatePoi(poi, poiHandler);
+                                    break;
+                                default:
+                                    poiHandler.onResponse(new ControllerEvent(EventType.getTypeByCode(500)));
+                            }
+                        }
+                    });
+                } else {
+                    controller.updatePoi(this.poi, poiHandler);
+                }
             }
 
 

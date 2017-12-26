@@ -3,8 +3,10 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -237,7 +239,8 @@ public class PoiController {
 
                 String name = poiId + "-" + imageId + ".jpg";
                 inputStream = body.byteStream();
-                outputStream = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
+                //outputStream = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
+                outputStream = new FileOutputStream(DatabaseController.picturesDir + "/" + name);
 
 
                 while (true) {
