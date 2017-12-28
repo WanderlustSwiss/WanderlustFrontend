@@ -126,6 +126,7 @@
                     android:textSize="10dp" />
 
                 <Button
+                    android:id="@+id/editProfileButton"
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:layout_below="@+id/profilePOItitle"

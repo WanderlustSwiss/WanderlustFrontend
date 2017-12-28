@@ -126,7 +126,6 @@
     <string name="login_forgot_password"><u>Passwort vergessen?</u></string>
 
 
-
     <!-- POI -->
     <string name="poi_fragment_textview_title">Titel</string>
     <string name="poi_fragment_textview_description">POI Beschreibung</string>
@@ -136,5 +135,16 @@
     <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
     <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
     <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hikingpreference">Wander-Schwierigkeit</string>
+    <string name="changeProfilePicture">Bild ändern</string>
+    <string name="nickname">Nickname</string>
+    <string name="nickname_hint">Nickname</string>
+    <string name="email_hint">E-Mail</string>
+    <string name="checkboxTitleEasy">Einfach</string>
+    <string name="checkboxTitleHard">Schwierig</string>
+    <string name="checkboxTitleMedium">Mittel</string>
 
 </resources>

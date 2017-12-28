@@ -1,6 +1,8 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +41,7 @@ public class ProfileFragment extends Fragment {
     private TextView amountScore;
     private TextView amountTours;
     //private TextView birthday;
+    private Button editProfile;
 
     private TabLayout tabLayout;
 
@@ -91,6 +95,8 @@ public class ProfileFragment extends Fragment {
 
         profilePicture = (ImageView) view.findViewById(R.id.profilePicture);
 
+        editProfile = (Button) view.findViewById(R.id.editProfileButton);
+
         listView = (ListView) view.findViewById(R.id.listContent);
 
         //Profile picture, example
@@ -102,8 +108,19 @@ public class ProfileFragment extends Fragment {
         drawable.setCircular(true);
         profilePicture.setImageDrawable(drawable);
 
+        //edit profile button
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditProfileFragment editProfileFragment = new EditProfileFragment();
+                getFragmentManager().beginTransaction()
+                                    .add(R.id.content_frame, editProfileFragment)
+                                    .commit();
+            }
+        });
+
         //setting data
-        if (profileController.profileExists()) {
+        //if (profileController.profileExists()) {
             amountScore.setText(String.format(Locale.GERMANY, "%2d",
                     profileController.getScore()));
             amountTours.setText(String.format(Locale.GERMANY, "%2d",
@@ -115,7 +132,7 @@ public class ProfileFragment extends Fragment {
 
             //set nickname in App Bar
             getActivity().setTitle(profileController.getNickName());
-        }
+        //}
     }
 
     /**
