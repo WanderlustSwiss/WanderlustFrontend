@@ -177,5 +177,6 @@
     <string name="forgot_password_resetmail_success">Eine Mail fürs zurücksetzen des Passwortes wurde erfolgreich versendet</string>
     <string name="forgot_password_resetmail_fail">Fehler beim zurücksetzen des Passwortes</string>
     <string name="forgot_password_link_login"><u>Zurück zum Login</u></string>
+    <string name="registration_email_confirmation">Eine E-Mail wurde verschickt. Bitte bestätigen vor dem einloggen</string>
 
 </resources>
