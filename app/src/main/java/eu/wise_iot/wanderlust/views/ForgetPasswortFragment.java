@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
@@ -33,6 +34,7 @@ public class ForgetPasswortFragment extends Fragment {
     private Button btnForgotPassword;
     private EditText editTextForgotPassword;
     private TextInputLayout textInputForgotPassword;
+    private TextView redirectToLogin;
 
     private LoginController loginController;
 
@@ -82,6 +84,7 @@ public class ForgetPasswortFragment extends Fragment {
         btnForgotPassword = (Button) view.findViewById(R.id.btn_forgot_pw);
         editTextForgotPassword = (EditText) view.findViewById(R.id.input_forgot_pw);
         textInputForgotPassword = (TextInputLayout) view.findViewById(R.id.text_input_forgot_pw);
+        redirectToLogin = (TextView) view.findViewById(R.id.link_login);
         return view;
     }
 
@@ -98,6 +101,16 @@ public class ForgetPasswortFragment extends Fragment {
                 textInputForgotPassword.setError(getString(R.string.registration_email_invalid));
             } else {
                 loginController.resetPassword(inputMail, fragmentHandler);
+            }
+        });
+
+        redirectToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginFragment loginFragment = new LoginFragment();
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, loginFragment)
+                        .commit();
             }
         });
     }
