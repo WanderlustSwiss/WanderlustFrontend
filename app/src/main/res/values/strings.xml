@@ -50,7 +50,7 @@
 
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
-    <string name="dialog_feedback_description_edit_hint">Beschreibung: Schön? Hässlich? Gefährlich? Beschreibung hier einfügen.</string>
+    <string name="dialog_feedback_description_edit_hint">Beschreibung</string>
     <string-array name="dialog_feedback_spinner_mode">
         <item>öffentlich</item>
         <item>nur für mich</item>
@@ -87,7 +87,7 @@
     <string name="menu_map">Karte</string>
     <string name="menu_tours">Touren</string>
     <string name="menu_profile">Profil</string>
-    <string name="logout"><u>Auslogen</u></string>
+    <string name="logout"><u>Ausloggen</u></string>
     <string name="menu_title_other">Anderes</string>
     <string name="action_search">suchen</string>
 
@@ -118,7 +118,7 @@
 
     <!-- LOGIN -->
     <string name="login_nickname_email">Nickname / E-Mail</string>
-    <string name="login_password">Password</string>
+    <string name="login_password">Passwort</string>
     <string name="login_login">Login</string>
     <string name="login_failure">Login fehlgeschlagen</string>
     <string name="server_client_id">877872359525-t55gb7eug4cjamosphfjlq41uj2deqej.apps.googleusercontent.com</string>

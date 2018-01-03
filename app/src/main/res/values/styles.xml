@@ -124,4 +124,11 @@
         <item name="android:textColorLink">@color/highlight_main</item>
     </style>
 
+    <!-- Spinner -->
+    <style name="default_spinner" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style>
+
 </resources>
