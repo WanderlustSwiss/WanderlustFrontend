@@ -35,6 +35,7 @@ public interface Constants {
     String CAMERA_ACTIVITY = "Camera";
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
     String CREATE_FEEDBACK_DIALOG = "PoiFeedbackDialog";
+    String YES_NO_DIALOG = "YesNoDialog";
 
     /* PHOTO INTENT */
     String IMAGE_FILE_NAME = "imageFileName";

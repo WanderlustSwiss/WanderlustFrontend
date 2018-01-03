@@ -165,15 +165,11 @@ public class ViewPoiDialog extends DialogFragment {
     }
 
     private void fillOutPoiView() {
-
         controller.getImages(currentPoi, new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
                 List<File> images = (List<File>) controllerEvent.getModel();
                 if (images.size() > 0) {
-                    // TODO 1: put them in some kind of swipe container
-                    // todo 2: real portrait images get scaled properly, but emulator generated not. check for real landscape images.
-                    //Picasso.with(context).load(images.get(0)).resize(poiImage.getHeight(), poiImage.getWidth()).centerCrop().into(poiImage);
                     Picasso.with(context).load(images.get(0)).resize(350, 250).centerCrop().into(poiImage);
                 }
             }
