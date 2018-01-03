@@ -94,8 +94,6 @@ public class ViewPoiDialog extends DialogFragment {
         Bundle args = getArguments();
         poiId = args.getLong(Constants.POI_ID);
         setRetainInstance(true);
-
-
     }
 
     @Override
@@ -147,20 +145,23 @@ public class ViewPoiDialog extends DialogFragment {
         });
 
         deletePoiButton.setOnClickListener(v -> {
-            if (controller.isOwnerOf(currentPoi)) {
-                controller.deletePoi(this.currentPoi, e -> {
-                    EventType eventType = e.getType();
-                    switch (eventType) {
-                        case OK:
-                            Toast.makeText(context, R.string.poi_fragment_success_delete, Toast.LENGTH_LONG).show();
-                            dismiss();
-                            break;
-                        default: // fail
-                            Toast.makeText(context, R.string.poi_fragment_fail_delete, Toast.LENGTH_LONG).show();
-                            break;
-                    }
-                });
-            }
+            YesNoDialogFragment dialog = YesNoDialogFragment.newInstance(getString(R.string.message_confirm_delete_poi));
+            dialog.show(getFragmentManager(), Constants.YES_NO_DIALOG);
+
+//            if (controller.isOwnerOf(currentPoi)) {
+//                controller.deletePoi(this.currentPoi, e -> {
+//                    EventType eventType = e.getType();
+//                    switch (eventType) {
+//                        case OK:
+//                            Toast.makeText(context, R.string.poi_fragment_success_delete, Toast.LENGTH_LONG).show();
+//                            dismiss();
+//                            break;
+//                        default: // fail
+//                            Toast.makeText(context, R.string.poi_fragment_fail_delete, Toast.LENGTH_LONG).show();
+//                            break;
+//                    }
+//                });
+//            }
         });
     }
 
