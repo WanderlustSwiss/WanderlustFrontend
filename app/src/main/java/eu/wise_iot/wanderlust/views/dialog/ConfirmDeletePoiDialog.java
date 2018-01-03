@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.views.dialog;
 
 
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,16 +13,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 
 /**
- * YesNoDialogFragment: Fragment takes a short String message and displays a abort and confirm button
+ * ConfirmDeletePoiDialog: Fragment takes a short String message and displays a abort and confirm button
  *
  * @author Fabian Schwander
  * @license MIT
  */
-public class YesNoDialogFragment extends DialogFragment {
+public class ConfirmDeletePoiDialog extends DialogFragment {
     private static final String MESSAGE = "message";
     private String message;
+
+    private Context context;
+    private PoiController controller;
+    private Poi currentPoi;
 
     private TextView messageTextView;
     private ImageButton abortButton;
@@ -31,10 +39,13 @@ public class YesNoDialogFragment extends DialogFragment {
      * @param message String: that gets displayed on the dialog
      * @return
      */
-    public static YesNoDialogFragment newInstance(String message) {
+    public static ConfirmDeletePoiDialog newInstance(Context context, PoiController controller, Poi currentPoi, String message) {
         Bundle args = new Bundle();
         args.putString(MESSAGE, message);
-        YesNoDialogFragment fragment = new YesNoDialogFragment();
+        ConfirmDeletePoiDialog fragment = new ConfirmDeletePoiDialog();
+        fragment.context = context;
+        fragment.controller = controller;
+        fragment.currentPoi = currentPoi;
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,9 +64,11 @@ public class YesNoDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_yes_no, container, false);
+
         messageTextView = (TextView) view.findViewById(R.id.message_text_view);
         abortButton = (ImageButton) view.findViewById(R.id.abort_button);
         confirmButton = (ImageButton) view.findViewById(R.id.confirm_button);
+
         return view;
     }
 
@@ -64,11 +77,25 @@ public class YesNoDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         messageTextView.setText(message);
+
         abortButton.setOnClickListener(v -> {
             dismiss();
         });
+
         confirmButton.setOnClickListener(v -> {
-            Toast.makeText(getActivity(), "confirm", Toast.LENGTH_SHORT).show();
+            controller.deletePoi(this.currentPoi, e -> {
+                EventType eventType = e.getType();
+                switch (eventType) {
+                    case OK:
+                        Toast.makeText(context, R.string.poi_fragment_success_delete, Toast.LENGTH_LONG).show();
+                        dismiss();
+                        break;
+                    default: // fail
+                        Toast.makeText(context, R.string.poi_fragment_fail_delete, Toast.LENGTH_LONG).show();
+                        break;
+                }
+            });
+            dismiss();
         });
     }
 }

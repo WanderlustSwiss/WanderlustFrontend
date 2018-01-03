@@ -3,19 +3,18 @@ package eu.wise_iot.wanderlust.views.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-
-import org.osmdroid.views.overlay.OverlayItem;
 
 import java.io.File;
 import java.util.List;
@@ -24,7 +23,6 @@ import java.util.Locale;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -51,22 +49,6 @@ public class ViewPoiDialog extends DialogFragment {
     private ImageButton deletePoiButton;
     private long poiId;
     private PoiController controller;
-
-    /**
-     * Create a ViewPoiDialog from an OverlayItem of the map
-     *
-     * @param overlayItem
-     */
-    public static ViewPoiDialog newInstance(OverlayItem overlayItem) {
-        ViewPoiDialog dialog = new ViewPoiDialog();
-        dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
-        long poiId = Long.valueOf(overlayItem.getUid());
-        Bundle args = new Bundle();
-        args.putLong(Constants.POI_ID, poiId);
-        dialog.setArguments(args);
-
-        return dialog;
-    }
 
     /**
      * Create a ViewPoiDialog from a Poi object
@@ -125,6 +107,12 @@ public class ViewPoiDialog extends DialogFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult() called // requestCode: " + requestCode + " / resultCode: " + resultCode);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initActionControls();
@@ -145,23 +133,11 @@ public class ViewPoiDialog extends DialogFragment {
         });
 
         deletePoiButton.setOnClickListener(v -> {
-            YesNoDialogFragment dialog = YesNoDialogFragment.newInstance(getString(R.string.message_confirm_delete_poi));
-            dialog.show(getFragmentManager(), Constants.YES_NO_DIALOG);
-
-//            if (controller.isOwnerOf(currentPoi)) {
-//                controller.deletePoi(this.currentPoi, e -> {
-//                    EventType eventType = e.getType();
-//                    switch (eventType) {
-//                        case OK:
-//                            Toast.makeText(context, R.string.poi_fragment_success_delete, Toast.LENGTH_LONG).show();
-//                            dismiss();
-//                            break;
-//                        default: // fail
-//                            Toast.makeText(context, R.string.poi_fragment_fail_delete, Toast.LENGTH_LONG).show();
-//                            break;
-//                    }
-//                });
-//            }
+            if (controller.isOwnerOf(currentPoi)) {
+                ConfirmDeletePoiDialog dialog = ConfirmDeletePoiDialog.newInstance(context, controller, currentPoi, getString(R.string.message_confirm_delete_poi));
+                dialog.show(getFragmentManager(), Constants.YES_NO_DIALOG);
+                dismiss();
+            }
         });
     }
 
@@ -193,5 +169,21 @@ public class ViewPoiDialog extends DialogFragment {
     private void showControlsForOwner() {
         editPoiButton.setVisibility(View.VISIBLE);
         deletePoiButton.setVisibility(View.VISIBLE);
+    }
+
+    public static Poi getCurrentPoi() {
+        return currentPoi;
+    }
+
+    public static void setCurrentPoi(Poi currentPoi) {
+        ViewPoiDialog.currentPoi = currentPoi;
+    }
+
+    public PoiController getController() {
+        return controller;
+    }
+
+    public void setController(PoiController controller) {
+        this.controller = controller;
     }
 }
