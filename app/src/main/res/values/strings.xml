@@ -139,5 +139,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="message_confirm_delete_poi">Willst du den POI wirklich löschen?</string>
+    <string name="image_upload_failed">Upload von Bild fehlgeschlagen</string>
+    <string name="message_add_title">Bitte Titel hinzufügen</string>
 
 </resources>

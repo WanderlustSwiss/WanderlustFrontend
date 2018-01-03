@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary_main"
-        android:padding="8dp">
+        android:padding="16dp">
 
         <ImageButton
             android:id="@+id/dialog_edit_poi_cancel_button"
@@ -38,23 +38,27 @@
             android:id="@+id/poi_title"
             style="@style/default_input"
             android:hint="@string/poi_fragment_textview_title"
-            android:maxLength="120" />
+            android:maxLength="120"
+            android:paddingTop="32dp"/>
 
         <EditText
             android:id="@+id/poi_description"
             style="@style/default_input"
             android:hint="@string/dialog_feedback_description_edit_hint"
-            android:maxLength="200" />
+            android:maxLength="200"
+            android:paddingTop="16dp"/>
 
         <Spinner
             android:id="@+id/poi_type_spinner"
             style="@style/default_spinner"
-            android:entries="@array/dialog_feedback_spinner_type" />
+            android:entries="@array/dialog_feedback_spinner_type"
+            android:paddingTop="16dp"/>
 
         <Spinner
             android:id="@+id/poi_mode_spinner"
             style="@style/default_spinner"
-            android:entries="@array/dialog_feedback_spinner_mode" />
+            android:entries="@array/dialog_feedback_spinner_mode"
+            android:paddingTop="16dp"/>
     </LinearLayout>
 
 </LinearLayout>

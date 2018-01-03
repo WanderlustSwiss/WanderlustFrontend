@@ -63,7 +63,7 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_yes_no, container, false);
+        View view = inflater.inflate(R.layout.dialog_confirm_delete_poi, container, false);
 
         messageTextView = (TextView) view.findViewById(R.id.message_text_view);
         abortButton = (ImageButton) view.findViewById(R.id.abort_button);

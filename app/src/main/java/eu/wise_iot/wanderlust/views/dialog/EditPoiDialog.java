@@ -36,7 +36,7 @@ import eu.wise_iot.wanderlust.views.MapFragment;
  */
 public class EditPoiDialog extends DialogFragment {
     private static final String TAG = "EditPoiDialog";
-    FragmentHandler poiHandler;
+    private FragmentHandler poiHandler;
     private Context context;
     private Poi poi;
     private GeoPoint lastKnownLocation;
@@ -105,7 +105,7 @@ public class EditPoiDialog extends DialogFragment {
                     DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
                     break;
                 default:
-                    Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.image_upload_failed, Toast.LENGTH_LONG).show();
             }
         };
 
@@ -188,7 +188,6 @@ public class EditPoiDialog extends DialogFragment {
         });
     }
 
-
     /**
      * initializes the actions of all the image buttons (save and cancel) of the fragment
      */
@@ -200,7 +199,7 @@ public class EditPoiDialog extends DialogFragment {
             }
 
             if (poi.getTitle().isEmpty()) {
-                Toast.makeText(context, "bitte Titel hinzufügen", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.message_add_title, Toast.LENGTH_LONG).show();
                 return;
             }
             if (descriptionEditText != null && descriptionEditText.getText() != null) {
@@ -232,8 +231,6 @@ public class EditPoiDialog extends DialogFragment {
                     controller.updatePoi(this.poi, poiHandler);
                 }
             }
-
-
         });
 
         buttonCancel.setOnClickListener(view -> dismiss());
@@ -251,6 +248,5 @@ public class EditPoiDialog extends DialogFragment {
         } else {
             modeSpinner.setSelection(1); // private
         }
-
     }
 }
