@@ -94,6 +94,7 @@ public class TourOverviewFragment extends Fragment {
                         //tvDescend.setText(ut.getTitle());
                         break;
                     default:
+                        //do nothing
                 }
             }
 
