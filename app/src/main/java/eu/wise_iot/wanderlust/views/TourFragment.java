@@ -63,7 +63,7 @@ public class TourFragment extends Fragment {
         //tvDistance.setText();
 
         //fetch from remote db
-        tc.getDataViewServer(Integer.parseInt(getArguments().get("routeID").toString()), new FragmentHandler() {
+        tc.getDataViewServer(getArguments().getInt("routeID"), new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent event) {
                 switch (event.getType()) {
@@ -73,7 +73,6 @@ public class TourFragment extends Fragment {
                         tvDescend.setText(ut.getTitle());
                         break;
                     default:
-                        Toast.makeText(context, R.string.msg_e_server_error, Toast.LENGTH_LONG);
                 }
             }
         });

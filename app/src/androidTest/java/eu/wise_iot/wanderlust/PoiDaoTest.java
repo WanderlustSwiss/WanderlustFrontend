@@ -92,6 +92,7 @@ public class PoiDaoTest {
             }
         });
 
+        //poiDao = new PoiDao(boxStore, appContext);
         poiBox = boxStore.boxFor(Poi.class);
         poiQueryBuilder = poiBox.query();
         //testPoi
@@ -110,9 +111,7 @@ public class PoiDaoTest {
     public void createTest(){
         try {
             CountDownLatch doneSignal = new CountDownLatch(1);
-
             PoiDao pd = new PoiDao();
-
             pd.create(testPoi, new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {

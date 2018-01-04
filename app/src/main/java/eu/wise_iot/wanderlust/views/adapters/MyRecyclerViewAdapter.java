@@ -6,13 +6,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 
 /**
  * MyAdapter:
@@ -25,12 +29,18 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     private List<String> mImages = Collections.emptyList();
     private List<String> mTitles = Collections.emptyList();
+    private CommunityTour communityTour;
+    private UserTour userTour;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private Context context;
+
 
     // data is passed into the constructor, here as a CommunityTour
     public MyRecyclerViewAdapter(Context context, CommunityTour parTour) {
         this.mInflater = LayoutInflater.from(context);
+        this.context = context;
+        this.communityTour = parTour;
         /*this.mImages = images;
         this.mTitles = titles;*/
 
@@ -49,7 +59,20 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         String ImagePath = mImages.get(position);
         String title = mTitles.get(position);
+        //set properties for each element
         holder.myView.setBackgroundColor(Color.GRAY);
+        holder.tvTitle.setText(this.communityTour.getTitle());
+        holder.tvDifficulty.setText("T " + String.valueOf(this.communityTour.getDifficulty()));
+
+        //TODO: unknown properties so far:
+        holder.tvRating.setText("N/A");
+        holder.tvAscend.setText("N/A");
+        holder.tvDescend.setText("N/A");
+        holder.tvDistance.setText("N/A");
+        Picasso.with(this.context)
+                .load("URL")
+                .into(holder.tvImage);
+
         //TODO set as specified in path
         //holder.myView.setBackground(ImagePath);
         holder.myTextView.setText(title);
@@ -78,13 +101,34 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        //properties list for each tour
         public View myView;
         public TextView myTextView;
+        public TextView tvDistance;
+        public TextView tvAscend;
+        public TextView tvDescend;
+        public TextView tvDifficulty;
+        public TextView tvRegion;
+        public TextView tvRating;
+        public TextView tvTitle;
+        public TextView tvTime;
+        public ImageView tvImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
             myView = itemView.findViewById(R.id.tvImage);
             myTextView = (TextView) itemView.findViewById(R.id.tvTitle);
+            tvDistance = (TextView) itemView.findViewById(R.id.tourDistance);
+            tvAscend = (TextView) itemView.findViewById(R.id.tourAscend);
+            tvDescend = (TextView) itemView.findViewById(R.id.tourDescend);
+            tvDifficulty = (TextView) itemView.findViewById(R.id.tourDifficulty);
+            tvRegion = (TextView) itemView.findViewById(R.id.tourRegion);
+            tvRating = (TextView) itemView.findViewById(R.id.tourRating);
+            tvTitle = (TextView) itemView.findViewById(R.id.tourTitle);
+            tvTime = (TextView) itemView.findViewById(R.id.tourTime);
+            tvImage = (ImageView) itemView.findViewById(R.id.tourImage);
+
+
             itemView.setOnClickListener(this);
         }
 
