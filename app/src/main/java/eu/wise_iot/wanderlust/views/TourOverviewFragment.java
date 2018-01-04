@@ -71,22 +71,22 @@ public class TourOverviewFragment extends Fragment {
                 switch (event.getType()) {
                     case OK:
                         //get all needed information from server db
-                        CommunityTour ut = (CommunityTour) event.getModel();
-
+                        List<CommunityTour> listTours = (List<CommunityTour>) event.getModel();
 
                         // set up the RecyclerView 1
                         RecyclerView rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
                         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                         rvTouren.setLayoutManager(horizontalLayoutManager);
-                        MyRecyclerViewAdapter adapterRoutes = new MyRecyclerViewAdapter(context, ut);
+                        MyRecyclerViewAdapter adapterRoutes = new MyRecyclerViewAdapter(context, listTours);
                         adapterRoutes.setClickListener(this::onItemClickImages);
                         rvTouren.setAdapter(adapterRoutes);
+
 
                         // set up the RecyclerView 2
                         RecyclerView rvFavorites = (RecyclerView) view.findViewById(R.id.rvFavorites);
                         LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                         rvFavorites.setLayoutManager(horizontalLayoutManager2);
-                        MyRecyclerViewAdapter adapterTitles = new MyRecyclerViewAdapter(context, ut);
+                        MyRecyclerViewAdapter adapterTitles = new MyRecyclerViewAdapter(context, listTours);
                         adapterTitles.setClickListener(this::onItemClickFavorites);
                         rvFavorites.setAdapter(adapterTitles);
 

@@ -1,7 +1,11 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 
+
 /**
  * MyAdapter:
  * provides adapter for recycleview which is used by the tourslist
@@ -29,7 +34,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     private List<String> mImages = Collections.emptyList();
     private List<String> mTitles = Collections.emptyList();
-    private CommunityTour communityTour;
+    private List<CommunityTour> communityTours;
     private UserTour userTour;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -37,10 +42,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
 
     // data is passed into the constructor, here as a CommunityTour
-    public MyRecyclerViewAdapter(Context context, CommunityTour parTour) {
+    public MyRecyclerViewAdapter(Context context, List<CommunityTour> parTour) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.communityTour = parTour;
+        this.communityTours = parTour;
         /*this.mImages = images;
         this.mTitles = titles;*/
 
@@ -59,23 +64,30 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         String ImagePath = mImages.get(position);
         String title = mTitles.get(position);
-        //set properties for each element
-        holder.myView.setBackgroundColor(Color.GRAY);
-        holder.tvTitle.setText(this.communityTour.getTitle());
-        holder.tvDifficulty.setText("T " + String.valueOf(this.communityTour.getDifficulty()));
 
-        //TODO: unknown properties so far:
-        holder.tvRating.setText("N/A");
-        holder.tvAscend.setText("N/A");
-        holder.tvDescend.setText("N/A");
-        holder.tvDistance.setText("N/A");
-        Picasso.with(this.context)
-                .load("URL")
-                .into(holder.tvImage);
+            //set properties for each element
+            holder.myView.setBackgroundColor(Color.GRAY);
+            holder.tvTitle.setText(this.communityTours.get(position).getTitle());
+            holder.tvDifficulty.setText("T " + String.valueOf(this.communityTours.get(position).getDifficulty()));
 
-        //TODO set as specified in path
-        //holder.myView.setBackground(ImagePath);
-        holder.myTextView.setText(title);
+            //Profile picture, example
+            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            //TODO: profile picture from the database
+            //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
+
+            //RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            //TODO: unknown properties so far:
+            holder.tvRating.setText("N/A");
+            holder.tvAscend.setText("N/A");
+            holder.tvDescend.setText("N/A");
+            holder.tvDistance.setText("N/A");
+            Picasso.with(this.context)
+                    .load("URL")
+                    .into(holder.tvImage);
+
+            //TODO set as specified in path
+            //holder.myView.setBackground(ImagePath);
+            holder.myTextView.setText(title);
     }
 
     // total number of rows
