@@ -40,6 +40,7 @@ public class Poi extends AbstractModel {
     List<ImageInfo> imagePaths;
     byte[] imageIds;
     int imageCount;
+
     float longitude;
     float latitude;
     int rate;
