@@ -6,11 +6,13 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.service.quicksettings.Tile;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,22 +22,27 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
+import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
@@ -69,7 +76,9 @@ public class MapFragment extends Fragment {
     private ImageButton staliteTypeButton;
     private ImageButton defaultTypeButton;
     private ImageButton terrainTypeButton;
-    private  View bottomSheet;
+    private View bottomSheet;
+    private SearchView searchView;
+    private MapController searchMapController;
 
 
     // bottom sheet
@@ -91,6 +100,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        searchMapController = new MapController(this);
         setHasOptionsMenu(true);
         loadPreferences();
     }
@@ -118,7 +128,6 @@ public class MapFragment extends Fragment {
         initCameraButton(view);
         initLayerButton(view);
         initMapTypeButton(view);
-
     }
 
     private void initMapTypeButton(View view) {
@@ -131,7 +140,7 @@ public class MapFragment extends Fragment {
 
         staliteTypeButton.setOnClickListener(e -> {
             String[] urlArray = {"http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/"};
-            mapView.setTileSource(new OnlineTileSourceBase("ARCGisOnline", 0, 18, 256, "", urlArray) {
+            mapView.setTileSource(new XYTileSource("ARCGisOnline", 0, 18, 256, "", urlArray) {
                 @Override
                 public String getTileURLString(MapTile aTile) {
                     String mImageFilenameEnding = ".png";
@@ -165,6 +174,52 @@ public class MapFragment extends Fragment {
             defaultTypeButton.setBackground(null);
             terrainTypeButton.setBackground(getActivity().getDrawable(R.drawable.map_icon_selected_border));
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        });
+    }
+
+    public void initSearchView(Menu menu) {
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                callSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO: SEARCH SUGGETION
+                return true;
+            }
+
+            public void callSearch(String query) {
+                try {
+                    searchMapController.searchPlace(query, 1, new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            List<Address> resultList = (List<Address>) controllerEvent.getModel();
+                            if (!resultList.isEmpty()) {
+                                Address firstResult = resultList.get(0);
+                                GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
+                                mapController.setZoom(Defaults.ZOOM_SEARCH);
+                                mapController.animateTo(geoPoint);
+                                mapOverlays.addFocusedPositionMarker(geoPoint);
+                                if(!firstResult.getLocality().equals(searchView.getQuery())){
+                                    searchView.setQuery(firstResult.getLocality(), false);
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), "nüt gfunde", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    Toast.makeText(getActivity(), "nüt gfunde", Toast.LENGTH_SHORT).show();
+                }
+                searchView.clearFocus();
+            }
+
         });
     }
 
@@ -210,6 +265,9 @@ public class MapFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear(); // makes shure that the menu was not inflated yet
         inflater.inflate(R.menu.map_fragment_layer_menu, menu);
+
+        initSearchView(menu);
+
     }
 
     /**
@@ -238,6 +296,7 @@ public class MapFragment extends Fragment {
     /**
      * Loads user preferences of map settings in shared preferences
      */
+
     private void loadPreferences() {
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         double defaultMapCenterLat = Defaults.GEO_POINT_CENTER_OF_SWITZERLAND.getLatitude();

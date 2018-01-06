@@ -9,18 +9,13 @@ import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -36,9 +31,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.Old.GpxParser;
 import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
-import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 
 /**
  * MyMapFragment:
@@ -54,6 +47,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private Marker positionMarker;
+    private Marker focusedPositionMarker;
 
     public MyMapOverlays(Activity activity, MapView mapView) {
         this.activity = activity;
@@ -272,4 +266,31 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public MyLocationNewOverlay getMyLocationNewOverlay() {
         return myLocationNewOverlay;
     }
+
+    public void addFocusedPositionMarker(GeoPoint geoPoint) {
+        if (focusedPositionMarker != null) {
+            removeFocusedPositionMarker();
+        }
+
+        if (geoPoint != null) {
+            Drawable drawable = activity.getResources().getDrawable(R.drawable.icon_focused_position);
+
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            drawable = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, 120, 120, true));
+
+            focusedPositionMarker = new Marker(mapView);
+            focusedPositionMarker.setIcon(drawable);
+            focusedPositionMarker.setPosition(geoPoint);
+            focusedPositionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+
+            mapView.getOverlays().add(focusedPositionMarker);
+            mapView.invalidate();
+        }
+    }
+
+    public void removeFocusedPositionMarker() {
+        mapView.getOverlays().remove(focusedPositionMarker);
+    }
+
+
 }

@@ -12,6 +12,7 @@ public interface Defaults {
 
     /* ZOOM */
     int ZOOM_STARTUP = 7;
+    int ZOOM_SEARCH = 12;
     int ZOOM_ENLARGED = 16;
 
     /* GEO POINTS */
