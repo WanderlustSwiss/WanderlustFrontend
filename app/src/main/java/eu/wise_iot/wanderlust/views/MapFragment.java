@@ -206,9 +206,6 @@ public class MapFragment extends Fragment {
                                 mapController.setZoom(Defaults.ZOOM_SEARCH);
                                 mapController.animateTo(geoPoint);
                                 mapOverlays.addFocusedPositionMarker(geoPoint);
-                                if(!firstResult.getLocality().equals(searchView.getQuery())){
-                                    searchView.setQuery(firstResult.getLocality(), false);
-                                }
                             } else {
                                 Toast.makeText(getActivity(), "nüt gfunde", Toast.LENGTH_SHORT).show();
                             }
