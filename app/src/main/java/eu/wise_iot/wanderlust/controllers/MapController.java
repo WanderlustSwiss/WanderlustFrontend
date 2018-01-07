@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.osmdroid.bonuspack.utils.BonusPackHelper;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,17 +16,21 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 
 import android.location.Address;
-import android.util.Log;
 import android.widget.Toast;
 
+import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.views.MapFragment;
 
-
+/**
+ * MapController: The Map controller which handles requests of the map fragment
+ *
+ * @author Joshua Meier
+ * @license MIT
+ */
 public class MapController {
-    public static final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
+    private static final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
     private MapFragment fragment;
 
 
@@ -40,6 +42,13 @@ public class MapController {
     }
 
 
+    /**
+     * Initializes the search bar on the top of the application
+     *
+     * @param locationName The location name used for the query
+     * @param maxResults The number of results requested within the query
+     * @param handler The fragment handler, which deals with the response
+     */
     public void searchPlace(String locationName, int maxResults, final FragmentHandler handler)
             throws IOException {
         String url = NOMINATIM_SERVICE_URL
@@ -48,8 +57,6 @@ public class MapController {
                 + "&addressdetails=1"
                 + "&limit=" + maxResults
                 + "&q=" + URLEncoder.encode(locationName, "utf-8");
-
-        Log.d(BonusPackHelper.LOG_TAG, "GeocoderNominatim::getFromLocationName:" + url);
 
         RequestQueue queue = Volley.newRequestQueue(fragment.getActivity());
 
@@ -96,7 +103,7 @@ public class MapController {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(fragment.getActivity(), "nüt gfunde", Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragment.getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
             }
         });
 

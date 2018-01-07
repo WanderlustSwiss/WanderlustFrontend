@@ -177,6 +177,11 @@ public class MapFragment extends Fragment {
         });
     }
 
+    /**
+     * Initializes the search bar on the top of the application
+     *
+     * @param menu The menu with the searchbar, which needs to be initialized
+     */
     public void initSearchView(Menu menu) {
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -207,12 +212,12 @@ public class MapFragment extends Fragment {
                                 mapController.animateTo(geoPoint);
                                 mapOverlays.addFocusedPositionMarker(geoPoint);
                             } else {
-                                Toast.makeText(getActivity(), "nüt gfunde", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 } catch (IOException e) {
-                    Toast.makeText(getActivity(), "nüt gfunde", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
                 }
                 searchView.clearFocus();
             }

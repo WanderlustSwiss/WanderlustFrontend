@@ -146,6 +146,7 @@
 
     <!-- Map Layers -->
     <string name="map_layer_layers">Layer</string>
+    <string name="map_nothing_found">Kein Resultat gefunden</string>
 
 
 </resources>
