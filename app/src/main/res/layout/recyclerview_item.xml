@@ -120,9 +120,10 @@
 
             <ImageButton
                 android:id="@+id/saveButton"
+                android:tint="@color/common_google_signin_btn_text_dark"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_turned_in_not_black_24dp" />
+                android:src="@drawable/ic_turned_in_black_24dp" />
 
             <ImageButton
                 android:id="@+id/shareButton"
@@ -131,5 +132,4 @@
                 android:src="@drawable/ic_share_black_24dp" />
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

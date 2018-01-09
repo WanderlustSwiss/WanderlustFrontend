@@ -10,9 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +19,9 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.Old.Tour;
 import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
-
-import org.osmdroid.util.GeoPoint;
-
-import javax.xml.datatype.Duration;
 
 
 /**
@@ -81,7 +73,7 @@ public class TourOverviewFragment extends Fragment {
         Log.d("Tours","Opened");
 
         //fetch from db actual tours to feed recyclerview
-        toc.getDataViewServer(new FragmentHandler() {
+        toc.getAllTours(new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent event) {
                 switch (event.getType()) {
@@ -100,12 +92,13 @@ public class TourOverviewFragment extends Fragment {
 
 
                         // set up the RecyclerView 2
-                        RecyclerView rvFavorites = (RecyclerView) view.findViewById(R.id.rvFavorites);
-                        LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                        rvFavorites.setLayoutManager(horizontalLayoutManager2);
-                        MyRecyclerViewAdapter adapterTitles = new MyRecyclerViewAdapter(context, listTours);
-                        adapterTitles.setClickListener(this::onItemClickFavorites);
-                        rvFavorites.setAdapter(adapterTitles);
+                        //TODO: to be implemented (Favorites)
+//                        RecyclerView rvFavorites = (RecyclerView) view.findViewById(R.id.rvFavorites);
+//                        LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+//                        rvFavorites.setLayoutManager(horizontalLayoutManager2);
+//                        MyRecyclerViewAdapter adapterTitles = new MyRecyclerViewAdapter(context, listTours);
+//                        adapterTitles.setClickListener(this::onItemClickFavorites);
+//                        rvFavorites.setAdapter(adapterTitles);
 
 
                         //tvDescend.setText(ut.getTitle());
@@ -116,29 +109,26 @@ public class TourOverviewFragment extends Fragment {
                 }
             }
 
-            public void onItemClickImages(View view, int routeID) {
-
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.CLICKED_TOUR, Integer.toString(routeID));
-
-                Fragment fragment = new TourFragment();
-                fragment.setArguments(bundle);
-
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(fragment.toString()).replace(R.id.content_frame, fragment).commit();
+            public void onItemClickImages(View view, int routeID, UserTour tour) {
+                //TODO go to selected tour linkage on merge
+                //TourFragment fragment = TourFragment.newInstance(tour);
+//                String fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
+//
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().addToBackStack(fragment.toString()).replace(R.id.content_frame, fragment).commit();
             }
-
-            public void onItemClickFavorites(View view, int favoriteID) {
-                Bundle bundle = new Bundle();
-                //pass id to fragment
-                bundle.putString(Constants.CLICKED_TOUR, Integer.toString(favoriteID));
-
-                Fragment fragment = new TourFragment();
-                fragment.setArguments(bundle);
-
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(fragment.toString()).replace(R.id.content_frame, fragment).commit();
-            }
+            //TODO: favorites
+//            public void onItemClickFavorites(View view, int favoriteID) {
+//                Bundle bundle = new Bundle();
+//                //pass id to fragment
+//                bundle.putString(Constants.CLICKED_TOUR, Integer.toString(favoriteID));
+//
+//                Fragment fragment = new TourFragment();
+//                fragment.setArguments(bundle);
+//
+//                FragmentManager fragmentManager = getFragmentManager();
+//                fragmentManager.beginTransaction().addToBackStack(fragment.toString()).replace(R.id.content_frame, fragment).commit();
+//            }
         });
 
 

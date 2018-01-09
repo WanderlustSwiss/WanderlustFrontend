@@ -15,11 +15,18 @@ public class TourOverviewController {
      * get all required data for the view
      * @param handler
      */
-    public static void getDataViewServer(FragmentHandler handler) {
+    public static void getAllTours(FragmentHandler handler) {
         UserTourDao userTourDao = new UserTourDao();
         userTourDao.retrieveAll(handler);
     }
-
+    /**
+     * get all Favorites for the view
+     * @param handler
+     */
+//    public static void getAllFavorites(FragmentHandler handler) {
+//        UserTourDao userTourDao = new UserTourDao();
+//        userTourDao.retrieveAll(handler);
+//    }
     /**
      * get all tours out of db
      *

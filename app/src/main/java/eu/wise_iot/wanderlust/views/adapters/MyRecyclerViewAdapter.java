@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import android.app.Fragment;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
@@ -71,8 +73,19 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         //holder.tvTitle.setText(this.userTours.get(position).getTitle());
         holder.tvDifficulty.setText("T " + String.valueOf(this.userTours.get(position).getDifficulty()));
         holder.tvTitle.setText(this.userTours.get(position).getTitle());
+
         holder.tvTime.setText("N/A");
         Log.d("ToursRecyclerview", this.userTours.get(position).getPolyline());
+
+        Bitmap bitmap = BitmapFactory.decodeResource( getResources(), R.drawable.images);
+        //TODO: profile picture from the database
+        //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
+
+        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+        drawable.setCircular(true);
+        profilePicture.setImageDrawable(drawable);
+        holder.tvImage.set
+
         //Profile picture, example
         //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
         //TODO: profile picture from the database
@@ -113,7 +126,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onItemClick(View view, int id);
+        void onItemClick(View view, int id, UserTour tour);
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -150,7 +163,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition(), getItem(getAdapterPosition()));
         }
     }
 }
