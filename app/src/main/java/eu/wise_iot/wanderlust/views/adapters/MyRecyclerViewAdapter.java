@@ -70,8 +70,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         Log.d("ToursRecyclerview", "starting set properties");
             //set properties for each element
             holder.myView.setBackgroundColor(Color.WHITE);
-            holder.tvTitle.setText(this.userTours.get(position).getTitle());
+            //holder.tvTitle.setText(this.userTours.get(position).getTitle());
             holder.tvDifficulty.setText("T " + String.valueOf(this.userTours.get(position).getDifficulty()));
+            holder.tvTitle.setText(this.userTours.get(position).getTitle());
 
             //Profile picture, example
             //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
@@ -83,7 +84,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             //holder.tvRating.setText("N/A");
 //            holder.tvAscend.setText("N/A");
 //            holder.tvDescend.setText("N/A");
-//            holder.tvDistance.setText("N/A");
+            holder.tvDistance.setText("N/A");
 //            Picasso.with(this.context)
 //                    .load("URL")
 //                    .into(holder.tvImage);
@@ -132,7 +133,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         public ViewHolder(View itemView) {
             super(itemView);
             myView = itemView.findViewById(R.id.tvImage);
-            myTextView = (TextView) itemView.findViewById(R.id.tvTitle);
+            myTextView = (TextView) itemView.findViewById(R.id.tourTitle);
             tvDistance = (TextView) itemView.findViewById(R.id.tourDistance);
             tvAscend = (TextView) itemView.findViewById(R.id.tourAscend);
             tvDescend = (TextView) itemView.findViewById(R.id.tourDescend);
