@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 
 
@@ -68,30 +66,33 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 //        String ImagePath = mImages.get(position);
 //        String title = mTitles.get(position);
         Log.d("ToursRecyclerview", "starting set properties");
-            //set properties for each element
-            holder.myView.setBackgroundColor(Color.WHITE);
-            //holder.tvTitle.setText(this.userTours.get(position).getTitle());
-            holder.tvDifficulty.setText("T " + String.valueOf(this.userTours.get(position).getDifficulty()));
-            holder.tvTitle.setText(this.userTours.get(position).getTitle());
+        //set properties for each element
+        holder.myView.setBackgroundColor(Color.WHITE);
+        //holder.tvTitle.setText(this.userTours.get(position).getTitle());
+        holder.tvDifficulty.setText("T " + String.valueOf(this.userTours.get(position).getDifficulty()));
+        holder.tvTitle.setText(this.userTours.get(position).getTitle());
+        holder.tvTime.setText("N/A");
+        Log.d("ToursRecyclerview", this.userTours.get(position).getPolyline());
+        //Profile picture, example
+        //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        //TODO: profile picture from the database
+        //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
 
-            //Profile picture, example
-            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
-            //TODO: profile picture from the database
-            //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
-
-            //RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-            //TODO: unknown properties so far:
-            //holder.tvRating.setText("N/A");
+        //RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+        //TODO: unknown properties so far:
+        //holder.tvRating.setText("N/A");
 //            holder.tvAscend.setText("N/A");
 //            holder.tvDescend.setText("N/A");
-            holder.tvDistance.setText("N/A");
-//            Picasso.with(this.context)
-//                    .load("URL")
-//                    .into(holder.tvImage);
+        holder.tvDistance.setText("N/A");
 
+
+            /*Picasso.with(this.context)
+                    .load("URL")
+                    .into(holder.tvImage);
+*/
             //TODO set as specified in path
             //holder.myView.setBackground(ImagePath);
-            holder.myTextView.setText("N/A");
+
     }
 
     // total number of rows
