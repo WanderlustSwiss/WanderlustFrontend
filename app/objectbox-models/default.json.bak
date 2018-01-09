@@ -5,20 +5,12 @@
   "entities": [
     {
       "id": "1:1655668222078334369",
-      "lastPropertyId": "11:2761325874887935353",
+      "lastPropertyId": "14:2535572131209165577",
       "name": "CommunityTour",
       "properties": [
         {
           "id": "1:4535203235734805522",
           "name": "internal_id"
-        },
-        {
-          "id": "2:6199501210967426770",
-          "name": "userTour_id"
-        },
-        {
-          "id": "3:1549540624882110946",
-          "name": "userTourModel"
         },
         {
           "id": "4:2376162858892381979",
@@ -31,10 +23,6 @@
         {
           "id": "6:6190569095016199772",
           "name": "description"
-        },
-        {
-          "id": "7:3159802036316505362",
-          "name": "imagePath"
         },
         {
           "id": "8:5248148965958145814",
@@ -51,6 +39,18 @@
         {
           "id": "11:2761325874887935353",
           "name": "editable"
+        },
+        {
+          "id": "12:667268106423945943",
+          "name": "imagePaths"
+        },
+        {
+          "id": "13:2865481029482645252",
+          "name": "imageIds"
+        },
+        {
+          "id": "14:2535572131209165577",
+          "name": "imageCount"
         }
       ],
       "relations": []
@@ -432,7 +432,11 @@
   "modelVersionParserMinimum": 4,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    6199501210967426770,
+    1549540624882110946,
+    3159802036316505362
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

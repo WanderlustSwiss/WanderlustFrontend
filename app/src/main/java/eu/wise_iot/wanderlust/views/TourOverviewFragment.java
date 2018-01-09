@@ -49,6 +49,18 @@ public class TourOverviewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //fetch data from database here
     }
+    /**
+     * Static instance constructor.
+     *
+     * @return Fragment: TourOverviewFragment
+     */
+    public static TourOverviewFragment newInstance() {
+
+        Bundle args = new Bundle();
+        TourOverviewFragment fragment = new TourOverviewFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

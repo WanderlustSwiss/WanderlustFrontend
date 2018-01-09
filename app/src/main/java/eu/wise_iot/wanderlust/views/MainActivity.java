@@ -149,8 +149,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = MapFragment.newInstance();
             fragmentTag = Constants.MAP_FRAGMENT;
         } else if (id == R.id.nav_tours) {
-            // TODO: add TourOverviewFragment here
-            Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
+            fragment = TourOverviewFragment.newInstance();
+            fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
         } else if (id == R.id.nav_profile) {
             fragment = ProfileFragment.newInstance();
             fragmentTag = Constants.PROFILE_FRAGMENT;
