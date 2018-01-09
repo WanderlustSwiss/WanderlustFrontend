@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.services;
 
+import java.util.List;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import okhttp3.MultipartBody;
@@ -31,7 +33,7 @@ public interface UserTourService {
     Call<UserTour> retrieveUserTour(@Path("id") int id);
 
     @GET("tour/")
-    Call<UserTour> retrieveAllUserTours();
+    Call<List<UserTour>> retrieveAllUserTours();
 
     @PUT("tour/{id}")
     Call<UserTour> updateUserTour(int id, @Body UserTour userTour);

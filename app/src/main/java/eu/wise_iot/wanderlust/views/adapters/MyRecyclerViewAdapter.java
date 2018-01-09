@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 
 
@@ -32,20 +34,20 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
  */
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
-    private List<String> mImages = Collections.emptyList();
-    private List<String> mTitles = Collections.emptyList();
-    private List<CommunityTour> communityTours;
-    private UserTour userTour;
+//    private List<String> mImages = Collections.emptyList();
+//    private List<String> mTitles = Collections.emptyList();
+    private List<UserTour> userTours = Collections.emptyList();
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context context;
 
 
-    // data is passed into the constructor, here as a CommunityTour
-    public MyRecyclerViewAdapter(Context context, List<CommunityTour> parTour) {
+    // data is passed into the constructor, here as a UserTour
+    public MyRecyclerViewAdapter(Context context, List<UserTour> parTours) {
+        Log.d("ToursRecyclerview", "Copy Constructor");
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.communityTours = parTour;
+        this.userTours = parTours;
         /*this.mImages = images;
         this.mTitles = titles;*/
 
@@ -54,6 +56,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.d("ToursRecyclerview", "Creating View Holder");
         View view = mInflater.inflate(R.layout.recyclerview_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
@@ -62,13 +65,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String ImagePath = mImages.get(position);
-        String title = mTitles.get(position);
-
+//        String ImagePath = mImages.get(position);
+//        String title = mTitles.get(position);
+        Log.d("ToursRecyclerview", "starting set properties");
             //set properties for each element
-            holder.myView.setBackgroundColor(Color.GRAY);
-            holder.tvTitle.setText(this.communityTours.get(position).getTitle());
-            holder.tvDifficulty.setText("T " + String.valueOf(this.communityTours.get(position).getDifficulty()));
+            holder.myView.setBackgroundColor(Color.WHITE);
+            holder.tvTitle.setText(this.userTours.get(position).getTitle());
+            holder.tvDifficulty.setText("T " + String.valueOf(this.userTours.get(position).getDifficulty()));
 
             //Profile picture, example
             //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
@@ -77,28 +80,28 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
             //RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             //TODO: unknown properties so far:
-            holder.tvRating.setText("N/A");
-            holder.tvAscend.setText("N/A");
-            holder.tvDescend.setText("N/A");
-            holder.tvDistance.setText("N/A");
-            Picasso.with(this.context)
-                    .load("URL")
-                    .into(holder.tvImage);
+            //holder.tvRating.setText("N/A");
+//            holder.tvAscend.setText("N/A");
+//            holder.tvDescend.setText("N/A");
+//            holder.tvDistance.setText("N/A");
+//            Picasso.with(this.context)
+//                    .load("URL")
+//                    .into(holder.tvImage);
 
             //TODO set as specified in path
             //holder.myView.setBackground(ImagePath);
-            holder.myTextView.setText(title);
+            holder.myTextView.setText("N/A");
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return mTitles.size();
+        return this.userTours.size();
     }
 
     // convenience method for getting data at click position
-    public String getItem(int id) {
-        return mTitles.get(id);
+    public UserTour getItem(int id) {
+        return this.userTours.get(id);
     }
 
     // allows clicks events to be caught
@@ -139,7 +142,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             tvTitle = (TextView) itemView.findViewById(R.id.tourTitle);
             tvTime = (TextView) itemView.findViewById(R.id.tourTime);
             tvImage = (ImageView) itemView.findViewById(R.id.tourImage);
-
 
             itemView.setOnClickListener(this);
         }

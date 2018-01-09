@@ -175,10 +175,10 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param handler
      */
     public void retrieveAll(final FragmentHandler handler) {
-        Call<UserTour> call = service.retrieveAllUserTours();
-        call.enqueue(new Callback<UserTour>() {
+        Call<List<UserTour>> call = service.retrieveAllUserTours();
+        call.enqueue(new Callback<List<UserTour>>() {
             @Override
-            public void onResponse(Call<UserTour> call, Response<UserTour> response) {
+            public void onResponse(Call<List<UserTour>> call, Response<List<UserTour>> response) {
                 if (response.isSuccessful())
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 else
@@ -186,7 +186,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
 
             @Override
-            public void onFailure(Call<UserTour> call, Throwable t) {
+            public void onFailure(Call<List<UserTour>> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });

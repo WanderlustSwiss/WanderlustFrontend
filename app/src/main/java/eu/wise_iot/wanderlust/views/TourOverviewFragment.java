@@ -6,11 +6,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
 
 import org.osmdroid.util.GeoPoint;
 
+import javax.xml.datatype.Duration;
 
 
 /**
@@ -75,6 +78,7 @@ public class TourOverviewFragment extends Fragment {
         userTours.add(testTour);
         userTours.add(testTour);
 
+        Log.d("Tours","Opened");
 
         //fetch from db actual tours to feed recyclerview
         toc.getDataViewServer(new FragmentHandler() {
@@ -83,8 +87,9 @@ public class TourOverviewFragment extends Fragment {
                 switch (event.getType()) {
                     case OK:
                         //get all needed information from server db
-                        List<CommunityTour> listTours = (List<CommunityTour>) event.getModel();
-
+                        List<UserTour> listTours = (List<UserTour>) event.getModel();
+                        Log.d("Tours","Server response arrived");
+                        Log.d("Tours", listTours.toString());
                         // set up the RecyclerView 1
                         RecyclerView rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
                         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
@@ -106,6 +111,7 @@ public class TourOverviewFragment extends Fragment {
                         //tvDescend.setText(ut.getTitle());
                         break;
                     default:
+                        Log.d("Tours","Server response ERROR: " + event.getType().name());
                         //do nothing
                 }
             }
