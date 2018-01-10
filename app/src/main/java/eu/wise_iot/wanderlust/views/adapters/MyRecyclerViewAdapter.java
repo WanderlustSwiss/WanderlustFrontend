@@ -43,6 +43,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context context;
+    private int WALKING_SPEED = 5;
 
 
     // data is passed into the constructor, here as a UserTour
@@ -90,7 +91,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         holder.tvTitle.setText(userTour.getTitle());
         holder.tvDistance.setText(userTour.getPolyline().length() + " km");
-        holder.tvTime.setText("N/A");
+
+        //calc time can be way more accurate:
+        String time = "~" + (int) Math.ceil(userTour.getPolyline().length() / this.WALKING_SPEED) + " h";
+        holder.tvTime.setText(time);
         Log.d("ToursRecyclerview", userTour.getPolyline());
 
         //Bitmap bitmap = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.images);
