@@ -5,7 +5,7 @@
     android:layout_height="400dp"
     android:elevation="5dp"
     android:orientation="vertical"
-    android:backgroundTint="@color/primary_main"
+    android:background="@android:color/darker_gray"
     android:padding="10dp">
 
     <!--<View
@@ -46,41 +46,41 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tourDistance"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:textSize="15sp" />
-
                 <ImageView
                     android:id="@+id/imageDistance"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:paddingRight="10dp"
                     android:src="@drawable/ic_directions_walk_black_24dp" />
+                <TextView
+                    android:id="@+id/tourDistance"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="30dp"
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="130dp"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tourTime"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:textSize="15sp" />
 
                 <ImageView
                     android:id="@+id/imageTime"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:paddingRight="10dp"
                     android:src="@drawable/ic_timer_black_24dp" />
+
+                <TextView
+                    android:id="@+id/tourTime"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="30dp"
+                    android:textSize="15sp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -88,20 +88,20 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tourDifficulty"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:textSize="15sp" />
-
                 <ImageView
                     android:id="@+id/imageDifficulty"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:paddingRight="10dp"
                     android:src="@drawable/ic_fiber_manual_record_black_24dp" />
+
+                <TextView
+                    android:id="@+id/tourDifficulty"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="30dp"
+                    android:textSize="15sp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -117,6 +117,7 @@
                 android:id="@+id/favoriteButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:background="@null"
                 android:src="@drawable/ic_favorite_black_24dp" />
 
             <ImageButton
@@ -124,12 +125,14 @@
                 android:tint="@color/common_google_signin_btn_text_dark"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:background="@null"
                 android:src="@drawable/ic_turned_in_black_24dp" />
 
             <ImageButton
                 android:id="@+id/shareButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:background="@null"
                 android:src="@drawable/ic_share_black_24dp" />
         </LinearLayout>
     </LinearLayout>

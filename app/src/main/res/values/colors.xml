@@ -23,4 +23,6 @@
     <color name="yellowMiddle">#FFFF00</color>
     <color name="redHard">#FF0000</color>
 
+    <color name="grey">#808080</color>
+
 </resources>

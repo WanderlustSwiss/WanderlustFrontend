@@ -2,20 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="50px"
+
     xmlns:tools="http://schemas.android.com/tools"
-    android:backgroundTint="@color/background_main"
     tools:context=".views.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Touren"
+            android:layout_marginTop="70dp"
             android:textSize="30dp" />
 
         <android.support.v7.widget.RecyclerView

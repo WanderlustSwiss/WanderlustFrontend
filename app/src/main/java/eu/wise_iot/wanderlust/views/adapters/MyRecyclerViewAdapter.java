@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,19 +74,24 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         //set properties for each element
         holder.myView.setBackgroundColor(Color.WHITE);
         //holder.tvTitle.setText(this.userTours.get(position).getTitle());
-
+        UserTour userTour = this.userTours.get(position);
         //difficulty calculations
-        long difficulty = this.userTours.get(position).getDifficulty();
+        long difficulty = userTour.getDifficulty();
         if(difficulty > 4) holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.redHard));
         else if(difficulty > 2) holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.yellowMiddle));
         else holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.greenEasy));
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
 
+        //button Favorite
+        //TODO: calculate if Favorite or no
+        holder.ibShare.setColorFilter(ContextCompat.getColor(this.context, R.color.grey));
+        holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.grey));
+        holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.grey));
 
-        holder.tvTitle.setText(this.userTours.get(position).getTitle());
-        holder.tvDistance.setText(this.userTours.get(position).getPolyline().length() + " km");
+        holder.tvTitle.setText(userTour.getTitle());
+        holder.tvDistance.setText(userTour.getPolyline().length() + " km");
         holder.tvTime.setText("N/A");
-        Log.d("ToursRecyclerview", this.userTours.get(position).getPolyline());
+        Log.d("ToursRecyclerview", userTour.getPolyline());
 
         //Bitmap bitmap = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.images);
         //TODO: profile picture from the database
@@ -147,6 +153,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         public TextView tvTime;
         public ImageView tvImage;
         public ImageView tvDifficultyIcon;
+        public ImageButton ibFavorite;
+        public ImageButton ibSave;
+        public ImageButton ibShare;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -163,6 +172,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             tvImage = (ImageView) itemView.findViewById(R.id.tourImage);
 
             tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.imageDifficulty);
+
+            ibFavorite = (ImageButton)itemView.findViewById(R.id.favoriteButton);
+            ibSave = (ImageButton)itemView.findViewById(R.id.saveButton);
+            ibShare = (ImageButton)itemView.findViewById(R.id.shareButton);
 
             itemView.setOnClickListener(this);
         }

@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -90,6 +92,10 @@ public class TourOverviewFragment extends Fragment {
                         adapterRoutes.setClickListener(this::onItemClickImages);
                         rvTouren.setAdapter(adapterRoutes);
 
+                        DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+                        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
+                        rvTouren.addItemDecoration(itemDecorator);
+
 
                         // set up the RecyclerView 2
                         //TODO: to be implemented (Favorites)
@@ -110,6 +116,7 @@ public class TourOverviewFragment extends Fragment {
             }
 
             public void onItemClickImages(View view, int routeID, UserTour tour) {
+                Log.d("Tours","Tour Clicked and event triggered ");
                 //TODO go to selected tour linkage on merge
                 //TourFragment fragment = TourFragment.newInstance(tour);
 //                String fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
