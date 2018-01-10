@@ -4,6 +4,7 @@
     <color name="primary_second">#00796b</color>
     <color name="success_easy">#48bc85</color>
 
+
     <color name="highlight_main">#cc3d54</color>
     <color name="highlight_second">#f24e75</color>
 
@@ -15,5 +16,11 @@
     <color name="heading_icon_unselected">#797a7b</color>
     <color name="background_two_and_inactive">#d1d3d4</color>
     <color name="background_main">#FFFFFF</color>
+
+
+    <!-- DIFFICULTIES -->
+    <color name="greenEasy">#7CFC00</color>
+    <color name="yellowMiddle">#FFFF00</color>
+    <color name="redHard">#FF0000</color>
 
 </resources>

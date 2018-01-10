@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -71,32 +73,33 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         //set properties for each element
         holder.myView.setBackgroundColor(Color.WHITE);
         //holder.tvTitle.setText(this.userTours.get(position).getTitle());
-        holder.tvDifficulty.setText("T " + String.valueOf(this.userTours.get(position).getDifficulty()));
-        holder.tvTitle.setText(this.userTours.get(position).getTitle());
 
+        //difficulty calculations
+        long difficulty = this.userTours.get(position).getDifficulty();
+        if(difficulty > 4) holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.redHard));
+        else if(difficulty > 2) holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.yellowMiddle));
+        else holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.greenEasy));
+        holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
+
+
+        holder.tvTitle.setText(this.userTours.get(position).getTitle());
+        holder.tvDistance.setText(this.userTours.get(position).getPolyline().length() + " km");
         holder.tvTime.setText("N/A");
         Log.d("ToursRecyclerview", this.userTours.get(position).getPolyline());
 
-        Bitmap bitmap = BitmapFactory.decodeResource( getResources(), R.drawable.images);
+        //Bitmap bitmap = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.images);
         //TODO: profile picture from the database
         //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
 
-        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-        drawable.setCircular(true);
-        profilePicture.setImageDrawable(drawable);
-        holder.tvImage.set
-
-        //Profile picture, example
-        //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
-        //TODO: profile picture from the database
-        //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
+        //RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(this.context.getResources(), bitmap);
+        //drawable.setCircular(true);
+        //holder.tvImage.setImageDrawable(drawable);
 
         //RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
         //TODO: unknown properties so far:
         //holder.tvRating.setText("N/A");
 //            holder.tvAscend.setText("N/A");
 //            holder.tvDescend.setText("N/A");
-        holder.tvDistance.setText("N/A");
 
 
             /*Picasso.with(this.context)
@@ -143,6 +146,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         public TextView tvTitle;
         public TextView tvTime;
         public ImageView tvImage;
+        public ImageView tvDifficultyIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -157,6 +161,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             tvTitle = (TextView) itemView.findViewById(R.id.tourTitle);
             tvTime = (TextView) itemView.findViewById(R.id.tourTime);
             tvImage = (ImageView) itemView.findViewById(R.id.tourImage);
+
+            tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.imageDifficulty);
 
             itemView.setOnClickListener(this);
         }

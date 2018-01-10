@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="50px"
     xmlns:tools="http://schemas.android.com/tools"
+    android:backgroundTint="@color/background_main"
     tools:context=".views.MainActivity">
 
     <LinearLayout

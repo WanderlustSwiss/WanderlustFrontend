@@ -5,6 +5,7 @@
     android:layout_height="400dp"
     android:elevation="5dp"
     android:orientation="vertical"
+    android:backgroundTint="@color/primary_main"
     android:padding="10dp">
 
     <!--<View
