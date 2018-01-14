@@ -113,7 +113,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">0dp</item>
+    </style>
 
+    <style name="default_input_error" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/highlight_main</item>
     </style>
 
     <style name="text_label_white" parent="TextAppearance.AppCompat">

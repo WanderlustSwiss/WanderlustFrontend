@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -32,33 +33,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:paddingTop="32dp">
 
-        <EditText
-            android:id="@+id/poi_title"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/poi_title_layout"
             style="@style/default_input"
-            android:hint="@string/poi_fragment_textview_title"
-            android:maxLength="120"
-            android:paddingTop="32dp"/>
+            app:errorTextAppearance="@style/default_input_error">
 
-        <EditText
-            android:id="@+id/poi_description"
-            style="@style/default_input"
-            android:hint="@string/dialog_feedback_description_edit_hint"
-            android:maxLength="200"
-            android:paddingTop="16dp"/>
+            <EditText
+                android:id="@+id/poi_title"
+                style="@style/default_input"
+                android:hint="@string/poi_fragment_textview_title"
+                android:maxLength="120"
+                android:paddingTop="32dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout style="@style/default_input">
+
+            <EditText
+                android:id="@+id/poi_description"
+                style="@style/default_input"
+                android:hint="@string/dialog_feedback_description_edit_hint"
+                android:maxLength="200"
+                android:paddingTop="16dp" />
+        </android.support.design.widget.TextInputLayout>
+
 
         <Spinner
             android:id="@+id/poi_type_spinner"
             style="@style/default_spinner"
             android:entries="@array/dialog_feedback_spinner_type"
-            android:paddingTop="16dp"/>
+            android:paddingTop="16dp" />
 
         <Spinner
             android:id="@+id/poi_mode_spinner"
             style="@style/default_spinner"
             android:entries="@array/dialog_feedback_spinner_mode"
-            android:paddingTop="16dp"/>
+            android:paddingTop="16dp" />
     </LinearLayout>
 
 </LinearLayout>

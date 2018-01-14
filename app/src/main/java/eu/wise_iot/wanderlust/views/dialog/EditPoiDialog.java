@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class EditPoiDialog extends DialogFragment {
     private Poi poi;
     private GeoPoint lastKnownLocation;
     private EditText titleEditText;
+    private TextInputLayout titleTextLayout;
     private EditText descriptionEditText;
     private Spinner typeSpinner;
     private Spinner modeSpinner;
@@ -131,6 +133,7 @@ public class EditPoiDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_edit_poi, container);
 
         titleEditText = (EditText) view.findViewById(R.id.poi_title);
+        titleTextLayout = (TextInputLayout) view.findViewById(R.id.poi_title_layout);
         descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
         typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
         modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
@@ -199,7 +202,7 @@ public class EditPoiDialog extends DialogFragment {
             }
 
             if (poi.getTitle().isEmpty()) {
-                Toast.makeText(context, R.string.message_add_title, Toast.LENGTH_LONG).show();
+                titleTextLayout.setError(getString(R.string.message_add_title));
                 return;
             }
             if (descriptionEditText != null && descriptionEditText.getText() != null) {
