@@ -52,9 +52,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.userTours = parTours;
-        /*this.mImages = images;
-        this.mTitles = titles;*/
-
     }
 
     // inflates the row layout from xml when needed
@@ -69,13 +66,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the view and textview in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        String ImagePath = mImages.get(position);
-//        String title = mTitles.get(position);
         Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
-        holder.myView.setBackgroundColor(Color.WHITE);
+//        holder.myView.setBackgroundColor(Color.WHITE);
         //holder.tvTitle.setText(this.userTours.get(position).getTitle());
         UserTour userTour = this.userTours.get(position);
+        holder.tvTitle.setTextColor(Color.BLACK);
         //difficulty calculations
         long difficulty = userTour.getDifficulty();
         if(difficulty > 4) holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.redHard));
@@ -85,40 +81,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         //button Favorite
         //TODO: calculate if Favorite or no
-        holder.ibShare.setColorFilter(ContextCompat.getColor(this.context, R.color.grey));
-        holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.grey));
-        holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.grey));
+        holder.ibShare.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
+        holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
+        holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
 
         holder.tvTitle.setText(userTour.getTitle());
         holder.tvDistance.setText(userTour.getPolyline().length() + " km");
 
+        if(userTour.getImageById((byte)1) != null)
+            Picasso.with(context)
+                    .load(userTour.getImageById((byte)1))
+                    .into(holder.tvImage);
+        Log.d("Toursoverview", "Image loaded: " + userTour.getImageById((byte)1).toString());
+
         //calc time can be way more accurate:
         String time = "~" + (int) Math.ceil(userTour.getPolyline().length() / this.WALKING_SPEED) + " h";
         holder.tvTime.setText(time);
-        Log.d("ToursRecyclerview", userTour.getPolyline());
-
-        //Bitmap bitmap = BitmapFactory.decodeResource(this.context.getResources(), R.drawable.images);
-        //TODO: profile picture from the database
-        //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
-
-        //RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(this.context.getResources(), bitmap);
-        //drawable.setCircular(true);
-        //holder.tvImage.setImageDrawable(drawable);
-
-        //RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-        //TODO: unknown properties so far:
-        //holder.tvRating.setText("N/A");
-//            holder.tvAscend.setText("N/A");
-//            holder.tvDescend.setText("N/A");
-
-
-            /*Picasso.with(this.context)
-                    .load("URL")
-                    .into(holder.tvImage);
-*/
-            //TODO set as specified in path
-            //holder.myView.setBackground(ImagePath);
-
     }
 
     // total number of rows
@@ -163,8 +141,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         public ViewHolder(View itemView) {
             super(itemView);
-            myView = itemView.findViewById(R.id.tvImage);
-            myTextView = (TextView) itemView.findViewById(R.id.tourTitle);
+            //myView = itemView.findViewById(R.id.tvImage);
+            //myTextView = (TextView) itemView.findViewById(R.id.tourTitle);
             tvDistance = (TextView) itemView.findViewById(R.id.tourDistance);
             tvAscend = (TextView) itemView.findViewById(R.id.tourAscend);
             tvDescend = (TextView) itemView.findViewById(R.id.tourDescend);

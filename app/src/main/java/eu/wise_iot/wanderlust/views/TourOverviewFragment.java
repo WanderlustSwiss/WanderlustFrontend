@@ -13,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
@@ -21,9 +23,12 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.models.Old.Tour;
 import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
+import okhttp3.ResponseBody;
 
 
 /**
@@ -36,7 +41,8 @@ public class TourOverviewFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
     private Tour tour;
     private Context context;
-
+    List<UserTour> userTours = new ArrayList<>();
+    private static List<ResponseBody> userTourImages = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,33 @@ public class TourOverviewFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * retrieve all images from the database
+     * @param userTours
+     * @return
+     */
+    public static void getImages(List<UserTour> userTours){
+        TourOverviewController toc = new TourOverviewController();
+        for(UserTour ut : userTours){
+            toc.downloadThumbnail(ut.getTour_id(), 1, new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    switch (controllerEvent.getType()) {
+                        case OK:
+                            Log.d("Tours","Server response thumbnail downloading OK: " + controllerEvent.getType().name());
+
+                        default:
+                            Log.d("Tours","Server response ERROR: " + controllerEvent.getType().name());
+                    }
+
+                }
+            });
+        }
+    }
+    public static void preserveImages(ResponseBody rb){
+        userTourImages.add(rb);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         TourOverviewController toc = new TourOverviewController();
@@ -68,9 +101,10 @@ public class TourOverviewFragment extends Fragment {
         UserTour testTour = new UserTour(0, 0, "Tour1", "TourDescription", "picturePath", "polyline", 1, 1, true);
 
         //UserTourDao userTours = new UserTourDao();
-        List<UserTour> userTours = new ArrayList<>();
+
         userTours.add(testTour);
         userTours.add(testTour);
+
 
         Log.d("Tours","Opened");
 
@@ -83,7 +117,12 @@ public class TourOverviewFragment extends Fragment {
                         //get all needed information from server db
                         List<UserTour> listTours = (List<UserTour>) event.getModel();
                         Log.d("Tours","Server response arrived");
-                        Log.d("Tours", listTours.toString());
+
+                        //get all the images needed and save them on the device
+                        getImages(listTours);
+
+                        Log.d("Tours","Images preserved: " + userTourImages);
+
                         // set up the RecyclerView 1
                         RecyclerView rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
                         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);

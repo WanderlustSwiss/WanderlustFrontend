@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:1655668222078334369",
-      "lastPropertyId": "14:2535572131209165577",
+      "lastPropertyId": "16:4142781310931098028",
       "name": "CommunityTour",
       "properties": [
         {
@@ -51,6 +51,14 @@
         {
           "id": "14:2535572131209165577",
           "name": "imageCount"
+        },
+        {
+          "id": "15:4343800077192220465",
+          "name": "userTour_id"
+        },
+        {
+          "id": "16:4142781310931098028",
+          "name": "userTourModel"
         }
       ],
       "relations": []

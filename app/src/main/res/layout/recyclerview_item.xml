@@ -5,16 +5,16 @@
     android:layout_height="400dp"
     android:elevation="5dp"
     android:orientation="vertical"
-    android:background="@android:color/darker_gray"
+    android:background="@color/white"
     android:padding="10dp">
-
+    <!-- todo adapt styleguide not coherent -->
     <!--<View
         android:id="@+id/colorView"
         android:layout_width="100dp"
         android:layout_height="100dp"/>-->
 
-    <TextView
-        android:id="@+id/tvImage"
+    <ImageView
+        android:id="@+id/tourImage"
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:textSize="20sp" />

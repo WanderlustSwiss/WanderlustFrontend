@@ -37,5 +37,13 @@ public class TourOverviewController {
         UserTourDao userTourDao = new UserTourDao();
         return userTourDao.find().get(tourID);
     }
-
+    /**
+     * get thumbnail of tour
+     *
+     * @return List of tours
+     */
+    public static void downloadThumbnail(long tourID, int image_id, FragmentHandler handler) {
+        UserTourDao userTourDao = new UserTourDao();
+        userTourDao.downloadImage(tourID, image_id, handler);
+    }
 }
