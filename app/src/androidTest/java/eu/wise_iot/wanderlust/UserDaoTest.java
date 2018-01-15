@@ -93,7 +93,7 @@
 //        } catch (Exception e){
 //            fail();
 //        }
-//        assertEquals(userBox.get(1).getUser_id(),testUser.getUser_id());
+//        assertEquals(userBox.get(1).getUser(),testUser.getUser());
 //        assertEquals(userBox.get(1).getAccountType(), testUser.getAccountType());
 //        assertEquals(userBox.get(1).isActive(),testUser.isActive());
 //        assertEquals(userBox.get(1).getEmail(), testUser.getEmail());
@@ -126,7 +126,7 @@
 //        userBox.put(testUser);
 //        testUser.setNickname("UpdatedTestUser");
 //        userBox.put(testUser);
-//        assertEquals("UpdatedTestUser", userQueryBuilder.equal(User.get, testUser.getUser_id()).build().findFirst().getNickname());
+//        assertEquals("UpdatedTestUser", userQueryBuilder.equal(User.get, testUser.getUser()).build().findFirst().getNickname());
 //    }
 //
 //    @Test

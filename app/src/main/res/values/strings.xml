@@ -87,7 +87,7 @@
     <string name="menu_map">Karte</string>
     <string name="menu_tours">Touren</string>
     <string name="menu_profile">Profil</string>
-    <string name="logout"><u>Auslogen</u></string>
+    <string name="logout"><u>Ausloggen</u></string>
     <string name="menu_title_other">Anderes</string>
     <string name="action_search">suchen</string>
 

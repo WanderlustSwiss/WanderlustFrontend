@@ -29,6 +29,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import io.objectbox.BoxStore;
 
 /**
@@ -150,7 +151,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTag = Constants.MAP_FRAGMENT;
         } else if (id == R.id.nav_tours) {
             // TODO: add TourOverviewFragment here
-            Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
+            UserTour userTour = new UserTour(0,1, "Oberalppass",
+                    "Der wunderschone Oberalppass verbindet Andermatt mit Sedrun", "",
+                    "{mq{Gai`t@v@Xw@~DlBlBx@pE`DbAbLvB~Ep@jGA", 1, 1, false);
+            fragment = TourFragment.newInstance(userTour);
+            fragmentTag = Constants.TOUR_FRAGMENT;
+            //Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_profile) {
             fragment = ProfileFragment.newInstance();
             fragmentTag = Constants.PROFILE_FRAGMENT;
