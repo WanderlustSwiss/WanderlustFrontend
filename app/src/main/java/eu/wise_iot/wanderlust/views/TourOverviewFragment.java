@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -157,9 +158,12 @@ public class TourOverviewFragment extends Fragment {
             public void onItemClickImages(View view, int routeID, UserTour tour) {
                 Log.d("Tours","Tour Clicked and event triggered ");
                 //TODO go to selected tour linkage on merge
-                //TourFragment fragment = TourFragment.newInstance(tour);
-//                String fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
-//
+                TourFragment tourFragment = TourFragment.newInstance(tour);
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                        .commit();
+                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
 //                FragmentManager fragmentManager = getFragmentManager();
 //                fragmentManager.beginTransaction().addToBackStack(fragment.toString()).replace(R.id.content_frame, fragment).commit();
             }

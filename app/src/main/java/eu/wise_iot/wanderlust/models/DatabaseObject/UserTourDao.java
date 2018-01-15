@@ -116,7 +116,17 @@ public class UserTourDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<UserTour> call, Response<UserTour> response) {
                 if (response.isSuccessful()) {
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                    //try {
+                        //UserTour internalPoi = findOne(UserTour_.tour_id, id);
+                        UserTour backendTour = response.body();
+                        routeBox.put(backendTour);
+                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendTour));
+                    //}
+                    /*catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }*/
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
@@ -128,6 +138,47 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
         });
     }
+
+    /*
+    public void retrieve(long id, final FragmentHandler handler) {
+        Call<Poi> call = service.retrievePoi(id);
+        call.enqueue(new Callback<Poi>() {
+            @Override
+            public void onResponse(Call<Poi> call, Response<Poi> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        Poi internalPoi = findOne(Poi_.poi_id, id);
+                        Poi backendPoi = response.body();
+                        if (response.body().isPublic()) {
+                            for (Poi.ImageInfo imageInfo : backendPoi.getImagePaths()) {
+                                //count will be increases automatically
+                                backendPoi.addImageId((byte) imageInfo.getId());
+                            }
+                            backendPoi.setInternal_id(0);
+                        } else {
+                            //imagepaths will always be empty
+                            backendPoi.setInternal_id(internalPoi.getInternal_id());
+                            backendPoi.setImageIds(internalPoi.getImageIds(), internalPoi.getImageCount());
+                        }
+                        poiBox.put(backendPoi);
+                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendPoi));
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Poi> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+     */
 
     /**
      * update a usertour

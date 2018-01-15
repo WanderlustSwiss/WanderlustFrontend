@@ -129,7 +129,7 @@ public class UserDaoTest {
 //        userBox.put(testUser);
 //        testUser.setNickname("UpdatedTestUser");
 //        userBox.put(testUser);
-//        assertEquals("UpdatedTestUser", userQueryBuilder.equal(User.get, testUser.getUser_id()).build().findFirst().getNickname());
+//        assertEquals("UpdatedTestUser", userQueryBuilder.equal(User.get, testUser.getUser()).build().findFirst().getNickname());
 //    }
 //
 //    @Test

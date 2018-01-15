@@ -21,6 +21,7 @@ import android.app.Fragment;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -88,11 +89,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.tvTitle.setText(userTour.getTitle());
         holder.tvDistance.setText(userTour.getPolyline().length() + " km");
 
-        if(userTour.getImageById((byte)1) != null)
+        File image = userTour.getImageById((byte)1);
+
+        if(image != null)
             Picasso.with(context)
-                    .load(userTour.getImageById((byte)1))
+                    .load(image)
                     .into(holder.tvImage);
-        Log.d("Toursoverview", "Image loaded: " + userTour.getImageById((byte)1).toString());
+        Log.d("Toursoverview", "Image loaded: " + image.toString());
 
         //calc time can be way more accurate:
         String time = "~" + (int) Math.ceil(userTour.getPolyline().length() / this.WALKING_SPEED) + " h";
@@ -123,14 +126,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each tour
-        public View myView;
-        public TextView myTextView;
         public TextView tvDistance;
-        public TextView tvAscend;
-        public TextView tvDescend;
         public TextView tvDifficulty;
         public TextView tvRegion;
-        public TextView tvRating;
         public TextView tvTitle;
         public TextView tvTime;
         public ImageView tvImage;
@@ -141,20 +139,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         public ViewHolder(View itemView) {
             super(itemView);
-            //myView = itemView.findViewById(R.id.tvImage);
-            //myTextView = (TextView) itemView.findViewById(R.id.tourTitle);
             tvDistance = (TextView) itemView.findViewById(R.id.tourDistance);
-            tvAscend = (TextView) itemView.findViewById(R.id.tourAscend);
-            tvDescend = (TextView) itemView.findViewById(R.id.tourDescend);
             tvDifficulty = (TextView) itemView.findViewById(R.id.tourDifficulty);
             tvRegion = (TextView) itemView.findViewById(R.id.tourRegion);
-            tvRating = (TextView) itemView.findViewById(R.id.tourRating);
             tvTitle = (TextView) itemView.findViewById(R.id.tourTitle);
             tvTime = (TextView) itemView.findViewById(R.id.tourTime);
             tvImage = (ImageView) itemView.findViewById(R.id.tourImage);
-
             tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.imageDifficulty);
-
             ibFavorite = (ImageButton)itemView.findViewById(R.id.favoriteButton);
             ibSave = (ImageButton)itemView.findViewById(R.id.saveButton);
             ibShare = (ImageButton)itemView.findViewById(R.id.shareButton);
