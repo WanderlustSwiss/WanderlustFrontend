@@ -26,7 +26,11 @@ import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.TourController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 
 
 /**
@@ -44,7 +48,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context context;
-    private int WALKING_SPEED = 5;
+
+    private FavoriteDao favoriteDao = new FavoriteDao();
+    private TourController tourController = new TourController();
 
 
     // data is passed into the constructor, here as a UserTour
@@ -69,8 +75,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
-//        holder.myView.setBackgroundColor(Color.WHITE);
-        //holder.tvTitle.setText(this.userTours.get(position).getTitle());
         UserTour userTour = this.userTours.get(position);
         holder.tvTitle.setTextColor(Color.BLACK);
         //difficulty calculations
@@ -80,25 +84,29 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         else holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.greenEasy));
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
 
-        //button Favorite
-        //TODO: calculate if Favorite or no
+
         holder.ibShare.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
+        //button Favorite
+        for(Favorite favorite : favoriteDao.find())
+            if(favorite.getTour() == userTour.getTour_id())
+                holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.red));
 
+
+        Double distance = tourController.getDistance(userTour.getPolyline());
         holder.tvTitle.setText(userTour.getTitle());
-        holder.tvDistance.setText(userTour.getPolyline().length() + " km");
+        holder.tvDistance.setText(String.valueOf(distance) + " m");
+
 
         File image = userTour.getImageById((byte)1);
 
-        if(image != null)
-            Picasso.with(context)
-                    .load(image)
-                    .into(holder.tvImage);
+        Picasso.with(context).load(image).into(holder.tvImage);
+
         Log.d("Toursoverview", "Image loaded: " + image.toString());
 
         //calc time can be way more accurate:
-        String time = "~" + (int) Math.ceil(userTour.getPolyline().length() / this.WALKING_SPEED) + " h";
+        String time = "~" + (int) Math.ceil(distance / tourController.WALKING_SPEED) + " h";
         holder.tvTime.setText(time);
     }
 

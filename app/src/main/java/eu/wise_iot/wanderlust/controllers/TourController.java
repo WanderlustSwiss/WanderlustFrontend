@@ -34,6 +34,7 @@ public class TourController {
     private UserDao userDao;
     private ArrayList<GeoPoint> polyList;
     private Road road;
+    public int WALKING_SPEED = 5000;
 
     public TourController(){
         userTourDao = new UserTourDao();
@@ -102,12 +103,12 @@ public class TourController {
         }
         //Road road = new Road(polyList);
         //Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-        /*
+
         BigDecimal bd = new BigDecimal(distance);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
-         */
-        return distance;
+
+        //return distance;
     }
 
     public double getDuration(String polyLine){

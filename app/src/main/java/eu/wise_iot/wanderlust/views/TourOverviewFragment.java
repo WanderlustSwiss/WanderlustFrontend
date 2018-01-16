@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -14,9 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
@@ -24,9 +21,8 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.models.Old.Tour;
 import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
 import okhttp3.ResponseBody;
@@ -40,9 +36,8 @@ import okhttp3.ResponseBody;
  */
 public class TourOverviewFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
-    private Tour tour;
     private Context context;
-    List<UserTour> userTours = new ArrayList<>();
+    List<Favorite> favorites = new ArrayList<>();
     private static List<ResponseBody> userTourImages = new ArrayList<>();
 
     @Override
@@ -71,43 +66,59 @@ public class TourOverviewFragment extends Fragment {
      * @param userTours
      * @return
      */
-    public static void getImages(List<UserTour> userTours){
+    public static void getDataFromServer(List<UserTour> userTours){
         TourOverviewController toc = new TourOverviewController();
-        for(UserTour ut : userTours){
-            toc.downloadThumbnail(ut.getTour_id(), 1, new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    switch (controllerEvent.getType()) {
-                        case OK:
-                            Log.d("Tours","Server response thumbnail downloading OK: " + controllerEvent.getType().name());
 
-                        default:
-                            Log.d("Tours","Server response ERROR: " + controllerEvent.getType().name());
-                    }
-
+        toc.downloadFavorites( new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()) {
+                    case OK:
+                        Log.d("Toursoverview", "Server response getting favorites: " + controllerEvent.getType().name());
+                        break;
+                    default:
+                        //Toast.makeText("Konnte Bilder nicht laden", Toast.LENGTH_SHORT);
+                        Log.d("Toursoverview", "Download favorites: Server response ERROR: " + controllerEvent.getType().name());
                 }
-            });
+            }
+        });
+
+        for(UserTour ut : userTours){
+            try {
+                toc.downloadThumbnail(ut.getTour_id(), 1, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        switch (controllerEvent.getType()) {
+                            case OK:
+                                Log.d("Toursoverview", "Server response thumbnail downloading: " + controllerEvent.getType().name());
+                                break;
+                            default:
+                                //Toast.makeText("Konnte Bilder nicht laden", Toast.LENGTH_SHORT);
+                                Log.d("Toursoverview", "Server response thumbnail ERROR: " + controllerEvent.getType().name());
+                        }
+                    }
+                });
+            } catch (Exception e){
+                Log.d("Toursoverview", "Server response ERROR: " + e.getMessage());
+            }
         }
-    }
-    public static void preserveImages(ResponseBody rb){
-        userTourImages.add(rb);
+
     }
 
+    /**
+     * upon view creation
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         TourOverviewController toc = new TourOverviewController();
 
         View view = inflater.inflate(R.layout.fragment_toursoverview, container, false);
 
-        UserTour testTour = new UserTour(0, 0, "Tour1", "TourDescription", "picturePath", "polyline", 1, 1, true);
-
-        //UserTourDao userTours = new UserTourDao();
-
-        userTours.add(testTour);
-        userTours.add(testTour);
-
-
-        Log.d("Tours","Opened");
+        Log.d("Toursoverview","Opened");
 
         //fetch from db actual tours to feed recyclerview
         toc.getAllTours(new FragmentHandler() {
@@ -117,12 +128,15 @@ public class TourOverviewFragment extends Fragment {
                     case OK:
                         //get all needed information from server db
                         List<UserTour> listTours = (List<UserTour>) event.getModel();
-                        Log.d("Tours","Server response arrived");
+                        Log.d("Toursoverview","Getting Tours: git addServer response arrived");
 
                         //get all the images needed and save them on the device
-                        getImages(listTours);
+                        getDataFromServer(listTours);
 
-                        Log.d("Tours","Images preserved: " + userTourImages);
+                        //get all Favorites and see which are the ones that are selected
+                        //getFavorites()
+
+                        Log.d("Toursoverview","Images preserved: " + userTourImages);
 
                         // set up the RecyclerView 1
                         RecyclerView rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
@@ -150,22 +164,19 @@ public class TourOverviewFragment extends Fragment {
                         //tvDescend.setText(ut.getTitle());
                         break;
                     default:
-                        Log.d("Tours","Server response ERROR: " + event.getType().name());
+                        Log.d("Toursoverview","Server response ERROR: " + event.getType().name());
                         //do nothing
                 }
             }
 
             public void onItemClickImages(View view, int routeID, UserTour tour) {
-                Log.d("Tours","Tour Clicked and event triggered ");
-                //TODO go to selected tour linkage on merge
+                Log.d("Toursoverview","Tour Image Clicked and event triggered ");
                 TourFragment tourFragment = TourFragment.newInstance(tour);
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
                         .commit();
                 ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
-//                FragmentManager fragmentManager = getFragmentManager();
-//                fragmentManager.beginTransaction().addToBackStack(fragment.toString()).replace(R.id.content_frame, fragment).commit();
             }
             //TODO: favorites
 //            public void onItemClickFavorites(View view, int favoriteID) {

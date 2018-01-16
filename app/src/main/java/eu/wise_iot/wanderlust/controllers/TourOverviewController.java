@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
 /**
@@ -38,12 +39,20 @@ public class TourOverviewController {
         return userTourDao.find().get(tourID);
     }
     /**
-     * get thumbnail of tour
+     * get thumbnail of each tour
      *
-     * @return List of tours
      */
     public static void downloadThumbnail(long tourID, int image_id, FragmentHandler handler) {
         UserTourDao userTourDao = new UserTourDao();
         userTourDao.downloadImage(tourID, image_id, handler);
     }
+    /**
+     * get all Favorites
+     *
+     */
+    public static void downloadFavorites(FragmentHandler handler) {
+        FavoriteDao favoriteDao = new FavoriteDao();
+        favoriteDao.retrievAllFavorites(handler);
+    }
+
 }

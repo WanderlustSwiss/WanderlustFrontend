@@ -66,6 +66,30 @@ public class FavoriteDao extends DatabaseObjectAbstract{
     }
 
     /**
+     * Insert a favorite into the database
+     *
+     * @param handler
+     */
+    public void retrievAllFavorites(final FragmentHandler handler) {
+        Call<List<Favorite>> call = service.retrievAllFavorites();
+        call.enqueue(new Callback<List<Favorite>>() {
+            @Override
+            public void onResponse(Call<List<Favorite>> call, retrofit2.Response<List<Favorite>> response) {
+                if (response.isSuccessful()) {
+                    //write to local db
+                    for(Favorite favorite : (List<Favorite>)response.body())favoriteBox.put(favorite);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                } else
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+            }
+            @Override
+            public void onFailure(Call<List<Favorite>> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+
+    /**
      * delete a favorite in the database
      *
      * @param favorite
