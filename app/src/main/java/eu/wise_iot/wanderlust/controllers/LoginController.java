@@ -1,5 +1,8 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.os.Build;
+import android.util.DisplayMetrics;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +11,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.views.MainActivity;
 import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,6 +31,12 @@ public class LoginController {
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
+
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        MainActivity.activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        String resolution = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+        user.setDeviceStatistics(Integer.toString(Build.VERSION.SDK_INT),Build.MODEL, resolution, android.os.Build.SERIAL);
 
         LoginService service = ServiceGenerator.createService(LoginService.class);
         Call<User> call = service.basicLogin(user);

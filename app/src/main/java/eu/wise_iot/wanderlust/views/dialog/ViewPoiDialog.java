@@ -129,6 +129,7 @@ public class ViewPoiDialog extends DialogFragment {
             if (controller.isOwnerOf(currentPoi)) {
                 EditPoiDialog dialog = EditPoiDialog.newInstance(this.currentPoi);
                 dialog.show(getFragmentManager(), Constants.CREATE_FEEDBACK_DIALOG);
+                dismiss();
             }
         });
 
