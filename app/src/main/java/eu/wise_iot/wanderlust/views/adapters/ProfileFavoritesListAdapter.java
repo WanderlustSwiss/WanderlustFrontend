@@ -97,7 +97,7 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
         //get the item for this row
         //TODO: as soon favorite entity is defined, replace all "object" references with entity
-        Object fav = getItem(position);
+        Object fav = (String) getItem(position);
 
         //inflate the row layout
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_favorites, parent, false);
@@ -106,11 +106,15 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter {
         title = (TextView) convertView.findViewById(R.id.ListFavTitle);
         description = (TextView) convertView.findViewById(R.id.ListFavDescription);
 
-        tripImage = (ImageView) convertView.findViewById(R.id.ListTourImageView);
+        tripImage = (ImageView) convertView.findViewById(R.id.ListFavImageView);
         favIcon = (ImageView) convertView.findViewById(R.id.ListFavIcon);
 
         //set data
         //TODO: set data from entity
+        title.setText("Beispiel-Favorite");
+        description.setText("Das ist nur ein Beispiel-Favorit.");
+
+        tripImage.setImageResource(R.drawable.example_image);
 
         //set listeners
         //TODO: implement listeners for favorite icon as well click listener for elements

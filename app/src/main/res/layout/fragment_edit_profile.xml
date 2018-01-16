@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background_main"
     tools:context="eu.wise_iot.wanderlust.views.EditProfileFragment">
 
     <include
@@ -32,21 +33,6 @@
         android:layout_marginBottom="30dp"/>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/editNicknameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:contentDescription="@string/nickname"
-        android:layout_marginBottom="30dp">
-
-        <EditText
-            android:id="@+id/editNicknameField"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/nickname_hint"/>
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
         android:id="@+id/editEmailLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -70,75 +56,99 @@
         android:layout_width="match_parent"
         android:layout_height="111dp">
 
-        <TextView
-            android:id="@+id/checkboxEasyTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/checkboxTitleEasy"
-            android:layout_above="@+id/checkboxEasy"
-            android:layout_alignLeft="@+id/checkboxEasy"/>
 
         <CheckBox
-            android:id="@+id/checkboxEasy"
+            android:id="@+id/checkboxT1"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toLeftOf="@id/checkboxMedium"
-            android:layout_alignBottom="@id/checkboxMedium"/>
+            android:layout_marginLeft="20dp"
+            android:layout_centerVertical="true"/>
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="T1-T2"
-            android:layout_below="@+id/checkboxEasy"
-            android:layout_alignLeft="@+id/checkboxEasy"/>
-
-        <TextView
-            android:id="@+id/checkboxMediumTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/checkboxTitleMedium"
-            android:layout_above="@+id/checkboxMedium"
-            android:layout_alignLeft="@+id/checkboxMedium"/>
+            android:text="T1"
+            android:layout_below="@+id/checkboxT1"
+            android:layout_alignLeft="@+id/checkboxT1"/>
 
         <CheckBox
-            android:id="@+id/checkboxMedium"
+            android:id="@+id/checkboxT2"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="70dp"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/checkboxT1"
+            android:layout_alignBottom="@+id/checkboxT1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="T2"
+            android:layout_below="@id/checkboxT2"
+            android:layout_alignLeft="@+id/checkboxT2"/>
+
+
+        <CheckBox
+            android:id="@+id/checkboxT3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/checkboxT2"
+            android:layout_alignBottom="@+id/checkboxT2"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="T3-T4"
-            android:layout_below="@+id/checkboxMedium"
-            android:layout_alignLeft="@+id/checkboxMedium"/>
+            android:text="T3"
+            android:layout_below="@+id/checkboxT3"
+            android:layout_alignLeft="@+id/checkboxT3"/>
 
-        <TextView
-            android:id="@+id/checkboxHardTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/checkboxTitleHard"
-            android:layout_above="@+id/checkboxHard"
-            android:layout_alignLeft="@+id/checkboxHard"
-            />
 
         <CheckBox
-            android:id="@+id/checkboxHard"
+            android:id="@+id/checkboxT4"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toRightOf="@+id/checkboxMedium"
-            android:layout_alignBottom="@+id/checkboxMedium"/>
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/checkboxT3"
+            android:layout_alignBottom="@+id/checkboxT3"/>
 
         <TextView
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:text="T5-T6"
-            android:layout_below="@+id/checkboxHard"
-            android:layout_alignLeft="@+id/checkboxHard"/>
+            android:text="T4"
+            android:layout_below="@+id/checkboxT4"
+            android:layout_alignLeft="@+id/checkboxT4"/>
+
+        <CheckBox
+            android:id="@+id/checkboxT5"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/checkboxT4"
+            android:layout_alignBottom="@id/checkboxT4"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="T5"
+            android:layout_below="@id/checkboxT5"
+            android:layout_alignLeft="@id/checkboxT5"/>
+
+        <CheckBox
+            android:id="@+id/checkboxT6"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/checkboxT5"
+            android:layout_alignBottom="@id/checkboxT5"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="T6"
+            android:layout_below="@id/checkboxT6"
+            android:layout_alignLeft="@id/checkboxT6"/>
 
     </RelativeLayout>
 

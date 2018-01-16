@@ -37,7 +37,6 @@ public class Profile extends AbstractModel {
 
     public Profile(long internal_id, long profile_id, byte imageId, int score, String birthday, String language, long user, long difficulty) {
         this.internal_id = internal_id;
-        this.internal_id = internal_id;
         this.profile_id = profile_id;
         this.imageId = imageId;
         this.score = score;

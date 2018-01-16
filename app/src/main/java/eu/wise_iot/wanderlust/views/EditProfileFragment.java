@@ -1,44 +1,48 @@
 package eu.wise_iot.wanderlust.views;
 
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
+import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 
 
 public class EditProfileFragment extends Fragment {
 
-    private Toolbar toolbar;
-
     private ImageView profileImage;
     private TextView changeImage;
 
-    private TextInputLayout nicknameLayout;
     private TextInputLayout emailLayout;
 
-    private EditText nicknameTextfield;
     private EditText emailTextfield;
 
-    private CheckBox easyCheckbox;
-    private CheckBox mediumCheckbox;
-    private CheckBox hardCheckbox;
+    private CheckBox checkT1;
+    private CheckBox checkT2;
+    private CheckBox checkT3;
+    private CheckBox checkT4;
+    private CheckBox checkT5;
+    private CheckBox checkT6;
+    private CheckBox[] checkBoxes = new CheckBox[]{checkT1, checkT2, checkT3,
+                                                    checkT4, checkT5, checkT6};
 
     private ProfileController profileController;
 
@@ -46,7 +50,6 @@ public class EditProfileFragment extends Fragment {
         // Required empty public constructor
         profileController = new ProfileController();
     }
-
 
     public static EditProfileFragment newInstance() {
         EditProfileFragment fragment = new EditProfileFragment();
@@ -57,7 +60,9 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,36 +71,73 @@ public class EditProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
         //initialize view's
-        //toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
         profileImage = (ImageView) view.findViewById(R.id.currentImage);
 
         changeImage = (TextView) view.findViewById(R.id.changeImage);
 
-        nicknameLayout = (TextInputLayout) view.findViewById(R.id.editNicknameLayout);
         emailLayout = (TextInputLayout) view.findViewById(R.id.editEmailLayout);
-
-        nicknameTextfield = (EditText) view.findViewById(R.id.editNicknameField);
         emailTextfield = (EditText) view.findViewById(R.id.editEmailField);
 
-        easyCheckbox = (CheckBox) view.findViewById(R.id.checkboxEasy);
-        mediumCheckbox = (CheckBox) view.findViewById(R.id.checkboxMedium);
-        hardCheckbox = (CheckBox) view.findViewById(R.id.checkboxHard);
+        checkT1 = (CheckBox) view.findViewById(R.id.checkboxT1);
+        checkT2 = (CheckBox) view.findViewById(R.id.checkboxT2);
+        checkT3 = (CheckBox) view.findViewById(R.id.checkboxT3);
+        checkT4 = (CheckBox) view.findViewById(R.id.checkboxT4);
+        checkT5 = (CheckBox) view.findViewById(R.id.checkboxT5);
+        checkT6 = (CheckBox) view.findViewById(R.id.checkboxT6);
 
         //initialize current values
-        setupToolbar(view);
-        setupProfilePicture(view);
-        setupNameAndMail(view);
+        setupCurrentInfo(view);
         setupDifficulty(view);
 
         return view;
     }
 
-    private void setupToolbar(View view) {
-
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.profile_edit_menu, menu);
+        menu.removeItem(R.id.drawer_layout);
+        getActivity().setTitle("Profil bearbeiten");
     }
 
-    private void setupProfilePicture(View view) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch (item.getItemId()){
+            case R.id.checkIcon:
+                //save changings
+                String newMail = emailTextfield.getText().toString();
+
+                profileController.setEmail(newMail, getActivity(), new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        EventType type = controllerEvent.getType();
+
+                        switch(type){
+                            case OK:
+                                Toast.makeText(getActivity(), "E-Mail wurde erfolgreich geändert.",
+                                                            Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+                return true;
+
+            case R.id.cancelIcon:
+                //back to profile
+                Toast.makeText(getActivity(), "Keine Änderungen vorgenommen.",
+                                                                Toast.LENGTH_SHORT).show();
+                ProfileFragment profileFragment = new ProfileFragment();
+                getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, profileFragment)
+                                    .commit();
+                return true;
+        }
+        emailTextfield.setText(profileController.getEmail());
+        return true;
+    }
+
+    private void setupCurrentInfo(View view) {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
         //TODO: profile picture from the database
         //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
@@ -103,18 +145,25 @@ public class EditProfileFragment extends Fragment {
         RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
         drawable.setCircular(true);
 
-
         profileImage.setImageDrawable(drawable);
-    }
+        
+        changeImage.setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "Diese Funktion ist noch nicht verfügbar.",
+                                                                    Toast.LENGTH_SHORT).show();
+        });
 
-
-    private void setupNameAndMail(View view) {
-        nicknameTextfield.setText(profileController.getNickName());
         emailTextfield.setText(profileController.getEmail());
     }
 
-
     private void setupDifficulty(View view) {
+        long difficulty = profileController.getDifficulty();
+
+        Long x = difficulty;
+        int y = x.intValue();
+        //set up current level
+
+        //checkBoxes[(int) difficulty - 1].setChecked(true);
+        Toast.makeText(getActivity(), String.valueOf(y), Toast.LENGTH_SHORT).show();
     }
 
 

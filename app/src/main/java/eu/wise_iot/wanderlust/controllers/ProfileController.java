@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.provider.ContactsContract;
+import android.content.Context;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -9,10 +10,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.models.Old.Tour;
 
 /**
@@ -56,10 +53,6 @@ public class ProfileController {
         return DatabaseController.userDao.find().get(0).getNickname();
     }
 
-    public void setNickName(String name){
-
-    }
-
     public String getEmail(){
         List<User> list = DatabaseController.userDao.find();
         if(list == null || list.isEmpty()){
@@ -68,7 +61,15 @@ public class ProfileController {
         return DatabaseController.userDao.find().get(0).getEmail();
     }
 
-    public void setEmail(String email){
+    public void setEmail(String email, Context context, FragmentHandler fragmentHandler){
+        if(email == ""){
+            Toast.makeText(context, "E-Mail darf nicht leer sein.", Toast.LENGTH_SHORT).show();
+        }else{
+            User user = DatabaseController.userDao.getUser();
+            user.setEmail(email);
+
+            DatabaseController.userDao.update(user, fragmentHandler);
+        }
 
     }
 
@@ -109,6 +110,13 @@ public class ProfileController {
             return 0;
         }
         return DatabaseController.poiDao.count();
+    }
+
+    public long getDifficulty(){
+        DatabaseController.difficultyTypeDao.sync();
+        long difficulty = DatabaseController.profileDao.find().get(0).getDifficulty();
+
+        return difficulty;
     }
 
     /**

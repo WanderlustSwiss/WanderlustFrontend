@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="eu.wise_iot.wanderlust.views.EditProfileFragment">
+
+
+    <item
+        android:id="@+id/cancelIcon"
+        android:title=""
+        android:icon="@drawable/ic_clear_black_24dp"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/checkIcon"
+        android:title=""
+        android:icon="@drawable/ic_check_black_24dp"
+        app:showAsAction="always"
+        />
+
+</menu>

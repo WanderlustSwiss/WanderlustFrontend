@@ -22,6 +22,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
 /*
@@ -117,6 +118,13 @@ public class RegistrationFragment extends Fragment {
                                     getFragmentManager().beginTransaction()
                                             .add(R.id.content_frame, loginFragment)
                                             .commit();
+
+                                    // create profile for user if registration succesful
+                                    Profile profile = new Profile(0, user.getProfile(),
+                                            (byte) 1, 0, "",
+                                                        "de", user.getUser_id(), 0);
+
+
                                     break;
                                 case CONFLICT:
                                     Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();

@@ -117,12 +117,13 @@ public class UserDao extends DatabaseObjectAbstract {
      */
     public void update(final User user, final FragmentHandler handler) {
 
-        //UserService service = ServiceGenerator.createService(UserService.class);
+        UserService service = ServiceGenerator.createService(UserService.class);
         Call<User> call = service.updateUser(user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    userBox.removeAll();
                     userBox.put(response.body());
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
