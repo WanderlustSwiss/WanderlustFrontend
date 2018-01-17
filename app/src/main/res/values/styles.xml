@@ -128,8 +128,8 @@
         <item name="android:textColorHint">@color/black</item>
         <item name="android:textSize">18sp</item>
         <item name="colorControlNormal">@color/black</item>
-        <item name="android:textColorHighlight">@color/myRed</item>
-        <item name="android:textColorLink">@color/myRed</item>
+        <item name="android:textColorHighlight">@color/highlight_main</item>
+        <item name="android:textColorLink">@color/highlight_main</item>
     </style>
 
 </resources>

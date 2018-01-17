@@ -39,7 +39,7 @@
         android:layout_marginBottom="24dp"
         android:text="@string/forgot_password_link_login"
         android:gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/background_main"
         />
 
 </LinearLayout>
