@@ -42,19 +42,22 @@ public class Poi extends AbstractModel {
     int imageCount;
     float longitude;
     float latitude;
+    float elevation;
     int rate;
     long user;
     long type;
     boolean isPublic;
 
     public Poi(long poi_id, String name, String description, byte[] imageIds, float longitude,
-               float latitude, int rate, long user, int type, boolean isPublic, int imageCount) {
+               float latitude, float elevation, int rate, long user, int type, boolean isPublic,
+               int imageCount) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;
         this.imageIds = imageIds;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.elevation = elevation;
         this.rate = rate;
         this.user = user;
         this.type = type;
@@ -70,6 +73,7 @@ public class Poi extends AbstractModel {
         this.imageCount = 0;
         this.longitude = 0;
         this.latitude = 0;
+        this.elevation = 0;
         this.rate = 3;
         this.user = 1;
         this.type = 0;
@@ -211,6 +215,14 @@ public class Poi extends AbstractModel {
 
     public void setUser(long user) {
         this.user = user;
+    }
+
+    public float getElevation() {
+        return elevation;
+    }
+
+    public void setElevation(float elevation) {
+        this.elevation = elevation;
     }
 
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {

@@ -127,7 +127,7 @@ public class ViewPoiDialog extends DialogFragment {
         editPoiButton.setOnClickListener(v -> {
             if (controller.isOwnerOf(currentPoi)) {
                 EditPoiDialog dialog = EditPoiDialog.newInstance(this.currentPoi);
-                dialog.show(getFragmentManager(), Constants.CREATE_FEEDBACK_DIALOG);
+                dialog.show(getFragmentManager(), Constants.EDIT_POI_DIALOG);
             }
         });
 
@@ -157,7 +157,8 @@ public class ViewPoiDialog extends DialogFragment {
 
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
-        typeTextView.setText(typeValues[(int) currentPoi.getType()]);
+        String poiTypeAndElevation = typeValues[(int) currentPoi.getType()] + ", " + currentPoi.getElevation() + "m ü. M.";
+        typeTextView.setText(poiTypeAndElevation);
 
         titleTextView.setText(currentPoi.getTitle());
 

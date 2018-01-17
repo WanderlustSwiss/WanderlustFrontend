@@ -41,19 +41,16 @@ public class EditPoiDialogTest {
 
     private MainActivity mainActivity;
 
-    private PoiController poiController;
     private EditPoiDialog editPoiDialog;
     private View view;
 
     private Poi poi = new Poi(1, "name", "description", null, 2,
-            3, 0, 1, 0, true, 0);
+            3, 1000, 0, 1, 0, true, 0);
 
     @Before
     public void setUp() throws Exception {
         mainActivity = testActivity.getActivity();
         editPoiDialog = EditPoiDialog.newInstance(poi);
-
-        poiController = new PoiController();
 
         FrameLayout frameLayout = (FrameLayout) mainActivity.findViewById(R.id.content_frame);
         assertNotNull("FrameLayout is null", frameLayout);
