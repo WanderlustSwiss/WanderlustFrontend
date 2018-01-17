@@ -123,8 +123,11 @@ public class UserDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    User newUser = response.body();
+                    newUser.setInternalId(0);
+                    newUser.setPassword(find().get(0).getPassword());
                     userBox.removeAll();
-                    userBox.put(response.body());
+                    userBox.put(newUser);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));

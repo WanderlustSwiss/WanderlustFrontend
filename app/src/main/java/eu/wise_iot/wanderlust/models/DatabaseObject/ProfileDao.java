@@ -78,24 +78,20 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param profile (required).
      */
     public void update(Profile profile, final FragmentHandler handler) {
-        long bla = profile.getProfile_id();
+
+        //TODO remmove when birthday is implemented
+        profile.setBirthday("0");
+
         Call<Profile> call = service.updateProfile(profile);
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if (response.isSuccessful()) {
-                    try {
-                        Profile backendProfile = response.body();
-                        Profile internalProfile = findOne(Profile_.profile_id, profile.getProfile_id());
-                        backendProfile.setInternal_id(internalProfile.getInternal_id());
-                        backendProfile.setImageId(internalProfile.getImageId());
-                        profileBox.put(backendProfile);
-                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendProfile));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    }
+                    Profile backendProfile = response.body();
+                    backendProfile.setInternal_id(0);
+                    profileBox.removeAll();
+                    profileBox.put(backendProfile);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendProfile));
                 }
             }
 

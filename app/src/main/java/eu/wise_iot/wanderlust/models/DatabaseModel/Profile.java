@@ -51,7 +51,7 @@ public class Profile extends AbstractModel {
         this.profile_id = 1;
         this.imageId = 1;
         this.score = 0;
-        this.birthday = "01.01.00";
+        this.birthday = "01.01.1990";
         this.language = "Deutsch";
         this.user = 1;
         this.difficulty = 1;
