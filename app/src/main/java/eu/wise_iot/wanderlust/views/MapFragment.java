@@ -32,6 +32,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
@@ -43,6 +44,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
@@ -201,16 +203,44 @@ public class MapFragment extends Fragment {
 
             public void callSearch(String query) {
                 try {
-                    searchMapController.searchPlace(query, 1, new FragmentHandler() {
+                    searchMapController.searchPlace(query, 1, new FragmentHandler<List<MapSearchResult>>() {
                         @Override
-                        public void onResponse(ControllerEvent controllerEvent) {
-                            List<Address> resultList = (List<Address>) controllerEvent.getModel();
+                        public void onResponse(ControllerEvent<List<MapSearchResult>> controllerEvent) {
+                            List<MapSearchResult> resultList = controllerEvent.getModel();
                             if (!resultList.isEmpty()) {
-                                Address firstResult = resultList.get(0);
+                                MapSearchResult firstResult = resultList.get(0);
                                 GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
-                                mapController.setZoom(Defaults.ZOOM_SEARCH);
-                                mapController.animateTo(geoPoint);
-                                mapOverlays.addFocusedPositionMarker(geoPoint);
+                                if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
+                                    mapOverlays.clearPolylines();
+
+                                    double minLat = 9999;
+                                    double maxLat = -9999;
+                                    double minLong = 9999;
+                                    double maxLong = -9999;
+
+                                    for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
+                                        mapOverlays.addPolyline(polygon);
+
+                                        for (GeoPoint point : polygon) {
+                                            if (point.getLatitude() < minLat)
+                                                minLat = point.getLatitude();
+                                            if (point.getLatitude() > maxLat)
+                                                maxLat = point.getLatitude();
+                                            if (point.getLongitude() < minLong)
+                                                minLong = point.getLongitude();
+                                            if (point.getLongitude() > maxLong)
+                                                maxLong = point.getLongitude();
+                                        }
+                                    }
+                                    int x = 3;
+
+                                    BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
+                                    mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
+                                } else {
+                                    mapController.setZoom(Defaults.ZOOM_SEARCH);
+                                    mapController.animateTo(geoPoint);
+                                    mapOverlays.addFocusedPositionMarker(geoPoint);
+                                }
                             } else {
                                 Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
                             }

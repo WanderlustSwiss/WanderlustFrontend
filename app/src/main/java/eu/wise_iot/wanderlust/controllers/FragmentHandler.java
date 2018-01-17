@@ -5,6 +5,6 @@ package eu.wise_iot.wanderlust.controllers;
  * @author Tobias Rüegsegger
  * @license MIT
  */
-public interface FragmentHandler {
-    void onResponse(ControllerEvent controllerEvent);
+public interface FragmentHandler<T> {
+    void onResponse(ControllerEvent<T> controllerEvent);
 }

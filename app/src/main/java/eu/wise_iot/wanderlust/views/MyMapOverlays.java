@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
@@ -16,6 +17,8 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.Polygon;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -48,10 +51,13 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private Marker positionMarker;
     private Marker focusedPositionMarker;
+    private ArrayList<Polyline> lines;
+
 
     public MyMapOverlays(Activity activity, MapView mapView) {
         this.activity = activity;
         this.mapView = mapView;
+
 
         initPoiOverlay();
         //populatePoiOverlay();
@@ -271,17 +277,18 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         if (focusedPositionMarker != null) {
             removeFocusedPositionMarker();
         }
+        if (lines != null) {
+            clearPolylines();
+        }
 
         if (geoPoint != null) {
-            Drawable drawable = activity.getResources().getDrawable(R.drawable.icon_focused_position);
-
-            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            drawable = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, 120, 120, true));
+            Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
 
             focusedPositionMarker = new Marker(mapView);
             focusedPositionMarker.setIcon(drawable);
             focusedPositionMarker.setPosition(geoPoint);
             focusedPositionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+            focusedPositionMarker.setTitle(activity.getString(R.string.msg_last_known_position_marker));
 
             mapView.getOverlays().add(focusedPositionMarker);
             mapView.invalidate();
@@ -292,5 +299,29 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.getOverlays().remove(focusedPositionMarker);
     }
 
+    public void addPolyline(ArrayList<GeoPoint> geoPoints) {
+        if (focusedPositionMarker != null) {
+            removeFocusedPositionMarker();
+        }
+        if (lines == null) {
+            lines = new ArrayList<>();
+        }
+
+
+        Polyline polyline = new Polyline();
+
+        polyline.setPoints(geoPoints);
+        polyline.setColor(Color.RED);
+
+        lines.add(polyline);
+
+        mapView.getOverlays().add(polyline);
+        mapView.invalidate();
+    }
+
+    public void clearPolylines() {
+        mapView.getOverlays().clear();
+        lines = null;
+    }
 
 }
