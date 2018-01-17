@@ -3,10 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +29,6 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.Old.Tour;
@@ -162,13 +158,15 @@ public class TourFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        tourRegion.setText("nA");
+        tourRegion.setText("");
         tourTitle.setText(userTour.getTitle());
-        textViewTourDistance.setText(String.valueOf(userTour.getDistance()/1000) + " km");
+        textViewTourDistance.setText(String.valueOf(userTour.getDistance()) + " km");
         textViewAscend.setText(String.valueOf(userTour.getAscent()) + " m");
         textViewDescend.setText(String.valueOf(userTour.getDescent()) + " m");
         textViewDescription.setText(userTour.getDescription());
-        textViewDuration.setText(String.valueOf(userTour.getDuration()));
+        long minutes = userTour.getDuration() % 60;
+        long hours = (userTour.getDuration() - minutes)/60;
+        textViewDuration.setText(String.valueOf(hours) + " h " + minutes + " min");
 
         textViewDifficulty.setText("T" + String.valueOf(userTour.getDifficulty()));
         jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());

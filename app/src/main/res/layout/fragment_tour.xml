@@ -53,7 +53,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:background="@color/primary_main">
+                android:background="@color/primary_main"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp">
 
                 <TextView
                     android:id="@+id/tourRegion"
@@ -109,7 +111,7 @@
                         android:layout_toStartOf="@+id/tourShared"
                         android:background="@null"
                         android:foregroundGravity="right"
-                        android:src="@drawable/ic_turned_in_not_black_24dp"
+                        android:src="@drawable/ic_turned_in_white_24dp"
                         />
 
                     <ImageButton
@@ -120,7 +122,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginEnd="17dp"
                         android:background="@null"
-                        android:src="@drawable/ic_reply_black_24dp"
+                        android:src="@drawable/ic_reply_white_24dp"
                         android:scaleX="-1"
                         />
 
@@ -131,7 +133,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -215,7 +219,9 @@
                 android:id="@+id/tourDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Description" />
+                android:text="Description"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
 
             <Button
                 android:id="@+id/jumpToStartLocationButton"
