@@ -21,7 +21,7 @@
             android:src="@drawable/ic_arrow_back_black_24dp" />
 
         <ImageButton
-            android:id="@+id/dialog_edit_poi_save_button"
+            android:id="@+id/poi_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

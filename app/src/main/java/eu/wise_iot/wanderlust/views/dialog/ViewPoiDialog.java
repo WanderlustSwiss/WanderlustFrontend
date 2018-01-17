@@ -87,7 +87,7 @@ public class ViewPoiDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_view_poi, container);
+        View view = inflater.inflate(R.layout.dialog_view_poi, container, false);
         poiImage = (ImageView) view.findViewById(R.id.poi_image);
         displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
         typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
@@ -97,7 +97,6 @@ public class ViewPoiDialog extends DialogFragment {
         closeDialogButton = (ImageButton) view.findViewById(R.id.poi_close_dialog_button);
         editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
         deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
-
 
         if (controller.isOwnerOf(currentPoi)) {
             this.showControlsForOwner();
@@ -128,14 +127,14 @@ public class ViewPoiDialog extends DialogFragment {
         editPoiButton.setOnClickListener(v -> {
             if (controller.isOwnerOf(currentPoi)) {
                 EditPoiDialog dialog = EditPoiDialog.newInstance(this.currentPoi);
-                dialog.show(getFragmentManager(), Constants.CREATE_FEEDBACK_DIALOG);
+                dialog.show(getFragmentManager(), Constants.EDIT_POI_DIALOG);
             }
         });
 
         deletePoiButton.setOnClickListener(v -> {
             if (controller.isOwnerOf(currentPoi)) {
                 ConfirmDeletePoiDialog dialog = ConfirmDeletePoiDialog.newInstance(context, controller, currentPoi, getString(R.string.message_confirm_delete_poi));
-                dialog.show(getFragmentManager(), Constants.YES_NO_DIALOG);
+                dialog.show(getFragmentManager(), Constants.CONFIRM_DELETE_POI_DIALOG);
                 dismiss();
             }
         });

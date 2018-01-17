@@ -130,7 +130,7 @@ public class EditPoiDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_edit_poi, container);
+        View view = inflater.inflate(R.layout.dialog_edit_poi, container, false);
 
         titleEditText = (EditText) view.findViewById(R.id.poi_title);
         titleTextLayout = (TextInputLayout) view.findViewById(R.id.poi_title_layout);
@@ -138,7 +138,7 @@ public class EditPoiDialog extends DialogFragment {
         typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
         modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
 
-        buttonSave = (ImageButton) view.findViewById(R.id.dialog_edit_poi_save_button);
+        buttonSave = (ImageButton) view.findViewById(R.id.poi_save_button);
         buttonCancel = (ImageButton) view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
     }
