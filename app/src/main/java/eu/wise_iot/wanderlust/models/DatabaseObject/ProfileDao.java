@@ -84,18 +84,13 @@ public class ProfileDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if (response.isSuccessful()) {
-                    try {
                         Profile backendProfile = response.body();
-                        Profile internalProfile = findOne(Profile_.profile_id, profile.getProfile_id());
-                        backendProfile.setInternal_id(internalProfile.getInternal_id());
-                        backendProfile.setImageId(internalProfile.getImageId());
+                        backendProfile.setInternal_id(0);
+                        profileBox.removeAll();
+
                         profileBox.put(backendProfile);
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendProfile));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
 

@@ -125,7 +125,29 @@ public class ProfileController {
         }else{
             Profile profile = DatabaseController.profileDao.find().get(0);
             profile.setDifficulty(difficulty);
-            DatabaseController.profileDao.update(profile, fragmentHandler);
+            DatabaseController.profileDao.upd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            ate(profile, fragmentHandler);
         }
     }
 
