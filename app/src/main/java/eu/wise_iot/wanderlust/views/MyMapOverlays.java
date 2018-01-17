@@ -4,22 +4,20 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
@@ -36,9 +34,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.Old.GpxParser;
 import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
-import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
 
 /**
  * MyMapFragment:
@@ -54,10 +50,14 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private Marker positionMarker;
+    private Marker focusedPositionMarker;
+    private ArrayList<Polyline> lines;
+
 
     public MyMapOverlays(Activity activity, MapView mapView) {
         this.activity = activity;
         this.mapView = mapView;
+
 
         initPoiOverlay();
         //populatePoiOverlay();
@@ -272,4 +272,56 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public MyLocationNewOverlay getMyLocationNewOverlay() {
         return myLocationNewOverlay;
     }
+
+    public void addFocusedPositionMarker(GeoPoint geoPoint) {
+        if (focusedPositionMarker != null) {
+            removeFocusedPositionMarker();
+        }
+        if (lines != null) {
+            clearPolylines();
+        }
+
+        if (geoPoint != null) {
+            Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
+
+            focusedPositionMarker = new Marker(mapView);
+            focusedPositionMarker.setIcon(drawable);
+            focusedPositionMarker.setPosition(geoPoint);
+            focusedPositionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+            focusedPositionMarker.setTitle(activity.getString(R.string.msg_last_known_position_marker));
+
+            mapView.getOverlays().add(focusedPositionMarker);
+            mapView.invalidate();
+        }
+    }
+
+    public void removeFocusedPositionMarker() {
+        mapView.getOverlays().remove(focusedPositionMarker);
+    }
+
+    public void addPolyline(ArrayList<GeoPoint> geoPoints) {
+        if (focusedPositionMarker != null) {
+            removeFocusedPositionMarker();
+        }
+        if (lines == null) {
+            lines = new ArrayList<>();
+        }
+
+
+        Polyline polyline = new Polyline();
+
+        polyline.setPoints(geoPoints);
+        polyline.setColor(Color.RED);
+
+        lines.add(polyline);
+
+        mapView.getOverlays().add(polyline);
+        mapView.invalidate();
+    }
+
+    public void clearPolylines() {
+        mapView.getOverlays().clear();
+        lines = null;
+    }
+
 }

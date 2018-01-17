@@ -38,11 +38,11 @@ android {
 }
 
 sourceSets {
-     test {
-         java {
-             srcDirs = ["androidTest/java/eu/wise_iot/wanderlust"]
-         }
-     }
+    test {
+        java {
+            srcDirs = ["androidTest/java/eu/wise_iot/wanderlust"]
+        }
+    }
 }
 
 dependencies {
@@ -101,9 +101,13 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-auth:9.8.0'
 
+    // Volley
+    compile 'com.android.volley:volley:1.0.0'
+
+
+
+
 }
-
-
 
 //the following sets the required permissions for API 23+ devices and AVDs
 
