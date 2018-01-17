@@ -87,7 +87,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
 
         holder.tvTitle.setText(userTour.getTitle());
-        holder.tvDistance.setText(userTour.getPolyline().length() + " km");
+        //holder.tvDistance.setText(userTour.getPolyline().length() + " km");
 
         File image = userTour.getImageById((byte)1);
 
@@ -98,8 +98,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         Log.d("Toursoverview", "Image loaded: " + image.toString());
 
         //calc time can be way more accurate:
-        String time = "~" + (int) Math.ceil(userTour.getPolyline().length() / this.WALKING_SPEED) + " h";
-        holder.tvTime.setText(time);
+        //String time = "~" + (int) Math.ceil(userTour.getPolyline().length() / this.WALKING_SPEED) + " h";
+        //holder.tvTime.setText(time);
     }
 
     // total number of rows

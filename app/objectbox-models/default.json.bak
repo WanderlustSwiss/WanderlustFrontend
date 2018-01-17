@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:6022231744573713851",
-      "lastPropertyId": "11:2069906680522189927",
+      "lastPropertyId": "14:8200133746158576699",
       "name": "CommunityTour",
       "properties": [
         {
@@ -33,10 +33,6 @@
           "name": "description"
         },
         {
-          "id": "7:1648807286088516583",
-          "name": "imagePath"
-        },
-        {
           "id": "8:8841700674533971948",
           "name": "polyline"
         },
@@ -51,6 +47,18 @@
         {
           "id": "11:2069906680522189927",
           "name": "editable"
+        },
+        {
+          "id": "12:4381328693456433041",
+          "name": "imagePaths"
+        },
+        {
+          "id": "13:6050897141861770436",
+          "name": "imageIds"
+        },
+        {
+          "id": "14:8200133746158576699",
+          "name": "imageCount"
         }
       ],
       "relations": []
@@ -381,7 +389,7 @@
     },
     {
       "id": "12:254538808154809886",
-      "lastPropertyId": "9:2391147268884774590",
+      "lastPropertyId": "13:5664437011042703035",
       "name": "UserTour",
       "properties": [
         {
@@ -419,6 +427,22 @@
         {
           "id": "9:2391147268884774590",
           "name": "editable"
+        },
+        {
+          "id": "10:1036636026293617500",
+          "name": "imagePaths"
+        },
+        {
+          "id": "11:2872693546885598461",
+          "name": "imageIds"
+        },
+        {
+          "id": "12:4706717795158688758",
+          "name": "imageCount"
+        },
+        {
+          "id": "13:5664437011042703035",
+          "name": "elevation"
         }
       ],
       "relations": []
@@ -458,7 +482,8 @@
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     3371759564820943718,
-    4031186282854074958
+    4031186282854074958,
+    1648807286088516583
   ],
   "retiredRelationUids": [],
   "version": 1

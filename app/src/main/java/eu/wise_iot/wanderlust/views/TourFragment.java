@@ -3,7 +3,10 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import eu.wise_iot.wanderlust.R;
@@ -28,6 +32,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.Old.Tour;
@@ -44,6 +49,7 @@ public class TourFragment extends Fragment {
     private static TourController tourController;
     private Context context;
     private static UserTour userTour;
+    private static UserTour userTourWithGeoData;
     private static Polyline polyline;
 
     private ImageView imageViewTourImage;
@@ -62,6 +68,7 @@ public class TourFragment extends Fragment {
     private static MapFragment mapFragment;
 
     private Favorite favorite;
+    private int[] highProfile;
 
     public TourFragment() {
         // Required empty public constructor
@@ -79,7 +86,10 @@ public class TourFragment extends Fragment {
         mapFragment = new MapFragment();
         fragment.setArguments(args);
         userTour = paramUserTour;
-        //userTour.getPolyline()
+        //Hello, its me
+        //userTourWithGeoData = tourController.getSelectedUserTour(userTour);
+        //userTour.setPolyline(userTourWithGeoData.getPolyline());
+        //userTour.setElevation(userTourWithGeoData.getElevation());
         return fragment;
     }
 
@@ -114,9 +124,9 @@ public class TourFragment extends Fragment {
         tourSavedButton = (ImageButton) view.findViewById(R.id.tourSaved);
         tourSharedButton = (ImageButton) view.findViewById(R.id.tourShared);
         textViewTourDistance = (TextView) view.findViewById(R.id.tourDistance);
-        //textViewAscend = (TextView) view.findViewById(R.id.tourAscend);
+        textViewAscend = (TextView) view.findViewById(R.id.tourAscend);
         textViewDuration = (TextView) view.findViewById(R.id.tourDuration);
-        //textViewDescend = (TextView) view.findViewById(R.id.tourDescend);
+        textViewDescend = (TextView) view.findViewById(R.id.tourDescend);
         textViewDifficulty = (TextView) view.findViewById(R.id.tourDifficulty);
         textViewDescription = (TextView) view.findViewById(R.id.tourDescription);
         jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
@@ -126,34 +136,42 @@ public class TourFragment extends Fragment {
     }
 
     public void fillUiElements(){
-        Picasso.with(context)
-                .load(userTour.getImageById((byte)0))
-                .into(this.imageViewTourImage);
-//        if(userTour.getImagePath().isEmpty() || userTour.getImagePath().equals(""))
-//            imageViewTourImage.setImageResource(R.drawable.no_image_found);
-        //else
-            //imageViewTourImage.setImageResource(1);
+
+        File tourImage = userTour.getImageById((byte) 0);
+        long fileSize = tourImage.length();
+        if(fileSize != 0){
+            Picasso.with(context)
+                    .load(tourImage)
+                    .into(this.imageViewTourImage);
+        }else{
+            Picasso.with(context)
+                    .load(R.drawable.no_image_found)
+                    .into(this.imageViewTourImage);
+        }
 
         if(tourController.isFavorite(userTour.getTour_id())){
             favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
             favButton.setOnClickListener((View v) -> unfavoriteTour());
-        }
-        else{
+        }else{
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
             favButton.setOnClickListener((View v) -> favoriteTour());
         }
 
+        try {
+            highProfile = tourController.getHighProfile(userTour.getElevation());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         tourRegion.setText("nA");
         tourTitle.setText(userTour.getTitle());
-        textViewTourDistance.setText(String.valueOf(tourController.getDistance(userTour.getPolyline())) + " m");
-        //textViewAscend.setText("???");
-        textViewDuration.setText(String.valueOf(tourController.getDuration(userTour.getPolyline())) + " min");
-        //textViewDescend.setText("???");
-        textViewDifficulty.setText(String.valueOf(userTour.getDifficulty()));
+        textViewTourDistance.setText(String.valueOf(userTour.getDistance()/1000) + " km");
+        textViewAscend.setText(String.valueOf(userTour.getAscent()) + " m");
+        textViewDescend.setText(String.valueOf(userTour.getDescent()) + " m");
         textViewDescription.setText(userTour.getDescription());
+        textViewDuration.setText(String.valueOf(userTour.getDuration()));
 
+        textViewDifficulty.setText("T" + String.valueOf(userTour.getDifficulty()));
         jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
-
     }
 
     public void favoriteTour(){

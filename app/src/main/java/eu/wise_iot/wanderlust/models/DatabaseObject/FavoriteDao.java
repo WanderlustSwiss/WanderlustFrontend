@@ -91,6 +91,26 @@ public class FavoriteDao extends DatabaseObjectAbstract{
         });
     }
 
+    public void retrieve(long id, final FragmentHandler handler) {
+        Call<Favorite> call = service.retrieveFavorite(id);
+        call.enqueue(new Callback<Favorite>() {
+            @Override
+            public void onResponse(Call<Favorite> call, Response<Favorite> response) {
+                if (response.isSuccessful()) {
+                        Favorite backendFavorite = response.body();
+                        favoriteBox.put(backendFavorite);
+                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendFavorite));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Favorite> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
 
 
     public long count() {
