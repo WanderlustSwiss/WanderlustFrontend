@@ -119,6 +119,16 @@ public class ProfileController {
         return difficulty;
     }
 
+    public void setDifficulty(long difficulty, Context context, FragmentHandler fragmentHandler){
+        if(difficulty < 1 || difficulty > 6){
+            Toast.makeText(context, "Dieses Level gibt es nicht.", Toast.LENGTH_SHORT).show();
+        }else{
+            Profile profile = DatabaseController.profileDao.find().get(0);
+            profile.setDifficulty(difficulty);
+            DatabaseController.profileDao.update(profile, fragmentHandler);
+        }
+    }
+
     /**
      * Gets the profile picture of logged in user
      *

@@ -78,7 +78,8 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param profile (required).
      */
     public void update(Profile profile, final FragmentHandler handler) {
-        Call<Profile> call = service.updateProfile(profile.getProfile_id(), profile);
+        long bla = profile.getProfile_id();
+        Call<Profile> call = service.updateProfile(profile);
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {

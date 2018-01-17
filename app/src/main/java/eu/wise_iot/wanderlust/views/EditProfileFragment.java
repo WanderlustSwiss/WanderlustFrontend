@@ -41,8 +41,8 @@ public class EditProfileFragment extends Fragment {
     private CheckBox checkT4;
     private CheckBox checkT5;
     private CheckBox checkT6;
-    private CheckBox[] checkBoxes = new CheckBox[]{checkT1, checkT2, checkT3,
-                                                    checkT4, checkT5, checkT6};
+    private CheckBox[] checkBoxes;
+    private long difficulty;
 
     private ProfileController profileController;
 
@@ -84,6 +84,8 @@ public class EditProfileFragment extends Fragment {
         checkT4 = (CheckBox) view.findViewById(R.id.checkboxT4);
         checkT5 = (CheckBox) view.findViewById(R.id.checkboxT5);
         checkT6 = (CheckBox) view.findViewById(R.id.checkboxT6);
+        checkBoxes = new CheckBox[]{checkT1, checkT2, checkT3,
+                checkT4, checkT5, checkT6};
 
         //initialize current values
         setupCurrentInfo(view);
@@ -117,7 +119,31 @@ public class EditProfileFragment extends Fragment {
                             case OK:
                                 Toast.makeText(getActivity(), "E-Mail wurde erfolgreich geändert.",
                                                             Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                Toast.makeText(getActivity(), "Ein Fehler ist aufgetreten...",
+                                                                            Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+                });
 
+                profileController.setDifficulty(difficulty, getActivity(), new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        EventType type = controllerEvent.getType();
+
+                        switch (type){
+                            case OK:
+                                Toast.makeText(getActivity(),
+                                        "Schwierigkeits-Level auf " + difficulty + "geändert." ,
+                                        Toast.LENGTH_SHORT).show();
+                                break;
+
+                            default:
+                                Toast.makeText(getActivity(), "Ein Fehler ist aufgetreten",
+                                        Toast.LENGTH_SHORT).show();
+                                break;
                         }
                     }
                 });
@@ -156,14 +182,26 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void setupDifficulty(View view) {
-        long difficulty = profileController.getDifficulty();
+        //setup current difficulty level
+        difficulty = profileController.getDifficulty();
+        checkBoxes[(int)difficulty -1].setChecked(true);
 
-        Long x = difficulty;
-        int y = x.intValue();
-        //set up current level
+        //checkbox listener to change difficulty of profile
+        View.OnClickListener listener1 = v -> {
+            CheckBox box = (CheckBox) v;
+            for(int i = 0; i < checkBoxes.length; i++){
+                if(checkBoxes[i].equals(box)){
+                    difficulty = i+1;
+                }else{
+                    checkBoxes[i].setChecked(false);
+                }
+            }
+        };
 
-        //checkBoxes[(int) difficulty - 1].setChecked(true);
-        Toast.makeText(getActivity(), String.valueOf(y), Toast.LENGTH_SHORT).show();
+        for(CheckBox checkBox : checkBoxes){
+            checkBox.setOnClickListener(listener1);
+        }
+
     }
 
 
