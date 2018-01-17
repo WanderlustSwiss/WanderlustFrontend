@@ -59,14 +59,20 @@
                 android:id="@+id/poi_type_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/poi_elevation_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/poi_type_text_view"
+                android:layout_marginBottom="16dp"/>
 
             <TextView
                 android:id="@+id/poi_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/poi_type_text_view"
+                android:layout_below="@id/poi_elevation_text_view"
                 android:layout_marginBottom="16dp"
                 android:textSize="24sp" />
 

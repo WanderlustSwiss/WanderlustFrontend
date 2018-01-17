@@ -41,6 +41,7 @@ public class ViewPoiDialog extends DialogFragment {
     private ImageView poiImage;
     private ImageView displayModeImage;
     private TextView typeTextView;
+    private TextView elevationTextView;
     private TextView titleTextView;
     private TextView dateTextView;
     private TextView descriptionTextView;
@@ -91,6 +92,7 @@ public class ViewPoiDialog extends DialogFragment {
         poiImage = (ImageView) view.findViewById(R.id.poi_image);
         displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
         typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
+        elevationTextView = (TextView) view.findViewById(R.id.poi_elevation_text_view);
         titleTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
         dateTextView = (TextView) view.findViewById(R.id.poi_date_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
@@ -103,12 +105,6 @@ public class ViewPoiDialog extends DialogFragment {
         }
 
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult() called // requestCode: " + requestCode + " / resultCode: " + resultCode);
     }
 
     @Override
@@ -157,8 +153,9 @@ public class ViewPoiDialog extends DialogFragment {
 
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
-        String poiTypeAndElevation = typeValues[(int) currentPoi.getType()] + ", " + currentPoi.getElevation() + "m ü. M.";
-        typeTextView.setText(poiTypeAndElevation);
+        typeTextView.setText(typeValues[(int) currentPoi.getType()]);
+        String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meterAboveSealevelAbbrevation));
+        elevationTextView.setText(elevationText);
 
         titleTextView.setText(currentPoi.getTitle());
 
