@@ -1,10 +1,14 @@
 package eu.wise_iot.wanderlust.views.dialog;
 
+import android.support.design.widget.TextInputLayout;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.junit.After;
@@ -78,11 +82,33 @@ public class EditPoiDialogTest {
     public void testDeleteButton() {
         ImageButton buttonDelete = (ImageButton) view.findViewById(R.id.poi_delete_button);
 
+        // TODO: add check when user is owner of poi
 //        if (poiController.isOwnerOf(poi)) {
 //            assertNotNull("button delete is null", buttonDelete);
 //        } else {
             assertNull("button delete is accessible, even tough the user is not the owner", buttonDelete);
 //        }
+    }
+
+    @Test
+    public void testInputFields() {
+        EditText titleEditText = (EditText) view.findViewById(R.id.poi_title);
+        assertNotNull(titleEditText);
+//        assertEquals(mainActivity.getResources().getString(R.string.poi_fragment_textview_title), titleEditText.getHint());
+
+        TextInputLayout titleTextLayout = (TextInputLayout) view.findViewById(R.id.poi_title_layout);
+        assertNotNull(titleTextLayout);
+
+        EditText descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
+        assertNotNull(descriptionEditText);
+//        assertEquals(mainActivity.getResources().getString(R.string.poi_fragment_textview_description), descriptionEditText.getHint());
+
+        Spinner typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
+        assertNotNull(typeSpinner);
+
+        Spinner modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
+        assertNotNull(modeSpinner);
+
     }
 
     @After
