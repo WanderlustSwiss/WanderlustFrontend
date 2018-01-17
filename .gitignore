@@ -43,3 +43,4 @@ gradle/gradle-wrapper.properties
 !gradle/wrapper/gradle-wrapper.jar
 
 app/objectbox-models/default.json
+app/objectbox-models/default.json.bak
