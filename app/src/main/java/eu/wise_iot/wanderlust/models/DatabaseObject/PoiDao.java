@@ -235,7 +235,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                         try {
                             Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
                             Poi.ImageInfo imageInfo = response.body();
-                            String name = poi.getPoi_id() + "-" + imageInfo.getId();
+                            String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
                             saveImageOnApp(name, file);
                             internalPoi.addImageId((byte) imageInfo.getId());
                             poiBox.put(internalPoi);
@@ -280,7 +280,8 @@ public class PoiDao extends DatabaseObjectAbstract {
     public void saveImageOnApp(String name, File file) throws IOException {
 
         InputStream in = new FileInputStream(file);
-        FileOutputStream out = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
+        //FileOutputStream out = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
+        FileOutputStream out = new FileOutputStream(DatabaseController.picturesDir + "/" + name);
 
         byte[] buf = new byte[1024];
         int len;

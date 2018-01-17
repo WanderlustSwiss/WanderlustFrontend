@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,10 @@ import java.io.File;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -34,11 +37,12 @@ import eu.wise_iot.wanderlust.views.MapFragment;
  */
 public class EditPoiDialog extends DialogFragment {
     private static final String TAG = "EditPoiDialog";
-    FragmentHandler poiHandler;
+    private FragmentHandler poiHandler;
     private Context context;
     private Poi poi;
     private GeoPoint lastKnownLocation;
     private EditText titleEditText;
+    private TextInputLayout titleTextLayout;
     private EditText descriptionEditText;
     private Spinner typeSpinner;
     private Spinner modeSpinner;
@@ -46,6 +50,7 @@ public class EditPoiDialog extends DialogFragment {
     private ImageButton buttonCancel;
     private PoiController controller;
     private boolean isNewPoi;
+    private boolean publish;
     private FragmentHandler poiPhotoUploadHandler;
 
     /**
@@ -102,7 +107,7 @@ public class EditPoiDialog extends DialogFragment {
                     DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
                     break;
                 default:
-                    Toast.makeText(context, "image upload failed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.image_upload_failed, Toast.LENGTH_LONG).show();
             }
         };
 
@@ -125,14 +130,15 @@ public class EditPoiDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_edit_poi, container);
+        View view = inflater.inflate(R.layout.dialog_edit_poi, container, false);
 
         titleEditText = (EditText) view.findViewById(R.id.poi_title);
+        titleTextLayout = (TextInputLayout) view.findViewById(R.id.poi_title_layout);
         descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
         typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
         modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
 
-        buttonSave = (ImageButton) view.findViewById(R.id.dialog_edit_poi_save_button);
+        buttonSave = (ImageButton) view.findViewById(R.id.poi_save_button);
         buttonCancel = (ImageButton) view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
     }
@@ -156,6 +162,9 @@ public class EditPoiDialog extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // position 0 == public, position 1 == private
+
+                //From public to private: set publish to true
+                publish = !poi.isPublic() && position == 0;
                 poi.setPublic(position == 0);
             }
 
@@ -182,7 +191,6 @@ public class EditPoiDialog extends DialogFragment {
         });
     }
 
-
     /**
      * initializes the actions of all the image buttons (save and cancel) of the fragment
      */
@@ -194,7 +202,7 @@ public class EditPoiDialog extends DialogFragment {
             }
 
             if (poi.getTitle().isEmpty()) {
-                Toast.makeText(context, "bitte Titel hinzufügen", Toast.LENGTH_LONG).show();
+                titleTextLayout.setError(getString(R.string.message_add_title));
                 return;
             }
             if (descriptionEditText != null && descriptionEditText.getText() != null) {
@@ -208,10 +216,24 @@ public class EditPoiDialog extends DialogFragment {
 
                 controller.saveNewPoi(this.poi, poiHandler);
             } else {
-                controller.updatePoi(this.poi, poiHandler);
+                if (publish) {
+                    //TODO only uploads first image
+                    controller.uploadImage(this.poi.getImageById((byte) 1), this.poi, new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            switch (controllerEvent.getType()) {
+                                case OK:
+                                    controller.updatePoi(poi, poiHandler);
+                                    break;
+                                default:
+                                    poiHandler.onResponse(new ControllerEvent(EventType.getTypeByCode(500)));
+                            }
+                        }
+                    });
+                } else {
+                    controller.updatePoi(this.poi, poiHandler);
+                }
             }
-
-
         });
 
         buttonCancel.setOnClickListener(view -> dismiss());
@@ -229,6 +251,5 @@ public class EditPoiDialog extends DialogFragment {
         } else {
             modeSpinner.setSelection(1); // private
         }
-
     }
 }

@@ -56,6 +56,7 @@ public final class DatabaseController {
     public static UserDao userDao;
     public static UserTourDao userTourDao;
     public static Context mainContext;
+    public static String picturesDir;
     private static List<DatabaseListener> listeners = new ArrayList<>();
     private static Date lastSync;
     private static boolean syncingPoiTypes;
@@ -80,6 +81,7 @@ public final class DatabaseController {
             userDao = new UserDao();
             userTourDao = new UserTourDao();
             mainContext = context;
+            picturesDir = mainContext.getApplicationContext().getFilesDir().getAbsolutePath() + "/pictures";
             initialized = true;
         }
     }
@@ -108,13 +110,6 @@ public final class DatabaseController {
 
         lastSync = new Date();
         switch (event.getType()) {
-            case POI:
-                //TODO no longer used?
-                if (!syncingPois) {
-                    syncingPois = true;
-                    poiDao.syncPois();
-                }
-                break;
             case POITYPE:
                 if (!syncingPoiTypes) {
                     syncingPoiTypes = true;
@@ -180,7 +175,6 @@ public final class DatabaseController {
 
     }
 
-
     /**
      * Deletes all .jpg files in the app storage
      */
@@ -189,7 +183,8 @@ public final class DatabaseController {
         for (Poi poi : poiDao.find(Poi_.isPublic, false)) {
             privatePoiIds.add(poi.getPoi_id());
         }
-        File filesDir = mainContext.getApplicationContext().getFilesDir();
+        File filesDir = new File(picturesDir);
+        filesDir.mkdir();
 
         for (File image : filesDir.listFiles()) {
             String name = image.getName();

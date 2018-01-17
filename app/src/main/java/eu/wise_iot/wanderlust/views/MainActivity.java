@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -40,11 +41,13 @@ import io.objectbox.BoxStore;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     public static BoxStore boxStore;
+    public static Activity activity;
     private LoginController loginController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = this;
         setContentView(R.layout.activity_main);
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -9,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary_main"
-        android:padding="8dp">
+        android:padding="16dp">
 
         <ImageButton
             android:id="@+id/dialog_edit_poi_cancel_button"
@@ -20,7 +21,7 @@
             android:src="@drawable/ic_arrow_back_black_24dp" />
 
         <ImageButton
-            android:id="@+id/dialog_edit_poi_save_button"
+            android:id="@+id/poi_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -32,35 +33,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:paddingTop="32dp">
 
-        <EditText
-            android:id="@+id/poi_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Titel"
-            android:maxLength="120" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/poi_title_layout"
+            style="@style/default_input"
+            app:errorTextAppearance="@style/default_input_error">
 
-        <EditText
-            android:id="@+id/poi_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="@string/dialog_feedback_description_edit_hint"
-            android:maxLength="200" />
+            <EditText
+                android:id="@+id/poi_title"
+                style="@style/default_input"
+                android:hint="@string/poi_fragment_textview_title"
+                android:maxLength="120"
+                android:paddingTop="32dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout style="@style/default_input">
+
+            <EditText
+                android:id="@+id/poi_description"
+                style="@style/default_input"
+                android:hint="@string/dialog_feedback_description_edit_hint"
+                android:maxLength="200"
+                android:paddingTop="16dp" />
+        </android.support.design.widget.TextInputLayout>
+
 
         <Spinner
             android:id="@+id/poi_type_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/dialog_feedback_spinner_type" />
+            style="@style/default_spinner"
+            android:entries="@array/dialog_feedback_spinner_type"
+            android:paddingTop="16dp" />
 
         <Spinner
             android:id="@+id/poi_mode_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:entries="@array/dialog_feedback_spinner_mode" />
+            style="@style/default_spinner"
+            android:entries="@array/dialog_feedback_spinner_mode"
+            android:paddingTop="16dp" />
     </LinearLayout>
 
 </LinearLayout>

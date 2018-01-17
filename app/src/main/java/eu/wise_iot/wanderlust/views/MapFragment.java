@@ -13,7 +13,6 @@ import android.service.quicksettings.Tile;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -639,13 +638,12 @@ public class MapFragment extends Fragment {
     private void dispatchPostFeedbackDialogFragment() {
         FragmentTransaction fragmentTransaction = getActivity().getFragmentManager().beginTransaction();
         // make sure that no other dialog is running
-        Fragment prevFragment = getActivity().getFragmentManager().findFragmentByTag(Constants.CREATE_FEEDBACK_DIALOG);
+        Fragment prevFragment = getActivity().getFragmentManager().findFragmentByTag(Constants.EDIT_POI_DIALOG);
         if (prevFragment != null) fragmentTransaction.remove(prevFragment);
         fragmentTransaction.addToBackStack(null);
 
         EditPoiDialog dialog = EditPoiDialog.newInstance(imageFileName, lastKnownLocation);
-        Log.d(TAG, "lastKnownLocation: " + lastKnownLocation);
-        dialog.show(fragmentTransaction, Constants.CREATE_FEEDBACK_DIALOG);
+        dialog.show(fragmentTransaction, Constants.EDIT_POI_DIALOG);
     }
 }
 

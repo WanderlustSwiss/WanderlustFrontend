@@ -113,7 +113,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">0dp</item>
+    </style>
 
+    <style name="default_input_error" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/highlight_main</item>
     </style>
 
     <style name="text_label_white" parent="TextAppearance.AppCompat">
@@ -122,6 +125,13 @@
         <item name="colorControlNormal">@color/background_main</item>
         <item name="android:textColorHighlight">@color/highlight_main</item>
         <item name="android:textColorLink">@color/highlight_main</item>
+    </style>
+
+    <!-- Spinner -->
+    <style name="default_spinner" parent="@android:style/Widget.Holo.Light.Spinner">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
     </style>
 
     <style name="text_label_black" parent="TextAppearance.AppCompat">

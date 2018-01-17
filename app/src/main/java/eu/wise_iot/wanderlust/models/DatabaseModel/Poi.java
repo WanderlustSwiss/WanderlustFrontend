@@ -42,19 +42,22 @@ public class Poi extends AbstractModel {
     int imageCount;
     float longitude;
     float latitude;
+    float elevation;
     int rate;
     long user;
     long type;
     boolean isPublic;
 
     public Poi(long poi_id, String name, String description, byte[] imageIds, float longitude,
-               float latitude, int rate, long user, int type, boolean isPublic, int imageCount) {
+               float latitude, float elevation, int rate, long user, int type, boolean isPublic,
+               int imageCount) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;
         this.imageIds = imageIds;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.elevation = elevation;
         this.rate = rate;
         this.user = user;
         this.type = type;
@@ -70,6 +73,7 @@ public class Poi extends AbstractModel {
         this.imageCount = 0;
         this.longitude = 0;
         this.latitude = 0;
+        this.elevation = 0;
         this.rate = 3;
         this.user = 1;
         this.type = 0;
@@ -103,8 +107,7 @@ public class Poi extends AbstractModel {
         for (int i = 0; i < imageCount; i++) {
             if (imageIds[i] == imageId) {
                 String name = poi_id + "-" + imageIds[i] + ".jpg";
-                return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
-                        "/files/" + name);
+                return new File(DatabaseController.picturesDir + "/" + name);
             }
         }
         return null;
@@ -124,7 +127,7 @@ public class Poi extends AbstractModel {
     }
 
     public String getCreatedAt(Locale language) {
-        SimpleDateFormat formatterDate = new SimpleDateFormat("dd-MM-yy");
+        SimpleDateFormat formatterDate = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat formatterString = new SimpleDateFormat("d. MMMM yyyy", language);
         try {
             Date date = formatterDate.parse(createdAt.substring(0, createdAt.indexOf('T')));
@@ -212,6 +215,14 @@ public class Poi extends AbstractModel {
 
     public void setUser(long user) {
         this.user = user;
+    }
+
+    public float getElevation() {
+        return elevation;
+    }
+
+    public void setElevation(float elevation) {
+        this.elevation = elevation;
     }
 
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {
