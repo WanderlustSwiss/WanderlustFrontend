@@ -33,7 +33,7 @@ public class RegistrationFragment extends Fragment {
 
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,5}$", Pattern.CASE_INSENSITIVE);
-    private final String VALID_PASSWORTD_REGX = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
+    private final String VALID_PASSWORTD_REGX = "^((?=.*\\d)(?=.*[A-Za-z]).{8,})$";
 
 
     private Context context;
@@ -113,6 +113,7 @@ public class RegistrationFragment extends Fragment {
                             EventType eventType = controllerEvent.getType();
                             switch (eventType) {
                                 case OK:
+                                    Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
                                     LoginFragment loginFragment = new LoginFragment();
                                     getFragmentManager().beginTransaction()
                                             .add(R.id.content_frame, loginFragment)

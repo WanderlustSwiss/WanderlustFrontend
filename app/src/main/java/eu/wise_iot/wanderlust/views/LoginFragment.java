@@ -48,6 +48,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     private TextInputLayout nicknameEmailLayout;
     private SignInButton signInButtonGoogle;
     private TextView redirectToRegistration;
+    private TextView fogotPassword;
     private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
     private LoginController loginController;
@@ -108,6 +109,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         nicknameEmailLayout.setErrorEnabled(true);
         signInButtonGoogle = (SignInButton) view.findViewById(R.id.sign_in_button);
         redirectToRegistration = (TextView) view.findViewById(R.id.link_registration);
+        fogotPassword = (TextView) view.findViewById(R.id.login_forgetPassword);
 
 
         passwordTextfield = (EditText) view.findViewById(R.id.input_password);
@@ -157,6 +159,18 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                 RegistrationFragment registrationFragment = new RegistrationFragment();
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, registrationFragment)
+                        .commit();
+            }
+        });
+
+        fogotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
+                //googleApiClient.disconnect();
+                ForgetPasswortFragment forgetPasswortFragment = new ForgetPasswortFragment();
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, forgetPasswortFragment)
                         .commit();
             }
         });
