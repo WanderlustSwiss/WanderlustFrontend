@@ -287,8 +287,7 @@ public class ProfileFragment extends Fragment {
 
             listView = (ListView) view.findViewById(R.id.listContent);
             //until feature is released, will use a example tour, delete when implementing this feature
-            Poi testPoi = new Poi(0, "Beispiel-Poi", "Das ist ein Beispiel-Poi.", null, 1,
-            1, 3, 0, 1, true, 0);
+            Poi testPoi = new Poi();
 
             list = new ArrayList();
             list.add(testPoi);

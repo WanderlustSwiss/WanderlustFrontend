@@ -104,6 +104,7 @@ public class MapFragment extends Fragment {
         searchMapController = new MapController(this);
         setHasOptionsMenu(true);
         loadPreferences();
+        getActivity().setTitle("");
     }
 
     @Override
@@ -294,7 +295,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear(); // makes shure that the menu was not inflated yet
+        menu.clear(); // makes sure that the menu was not inflated yet
         inflater.inflate(R.menu.map_fragment_layer_menu, menu);
 
         initSearchView(menu);
