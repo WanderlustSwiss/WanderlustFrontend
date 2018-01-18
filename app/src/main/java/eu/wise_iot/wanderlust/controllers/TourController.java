@@ -185,14 +185,7 @@ public class TourController {
         return new BigDecimal(String.valueOf((double) dist[0])).setScale(2,RoundingMode.valueOf(2)).doubleValue();
     }
 
-    public UserTour getSelectedUserTour(UserTour userTour){
-        final UserTour[] newUserTour = {null};
-        userTourDao.retrieve(userTour.getTour_id(), new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                newUserTour[0] = (UserTour) controllerEvent.getModel();
-            }
-        });
-        return newUserTour[0];
+    public void getSelectedUserTour(UserTour userTour, FragmentHandler handler){
+        userTourDao.retrieve(userTour.getTour_id(), handler);
     }
 }

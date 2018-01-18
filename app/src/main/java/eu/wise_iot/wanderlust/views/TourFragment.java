@@ -83,9 +83,14 @@ public class TourFragment extends Fragment {
         fragment.setArguments(args);
         userTour = paramUserTour;
         //Hello, its me
-        //userTourWithGeoData = tourController.getSelectedUserTour(userTour);
-        //userTour.setPolyline(userTourWithGeoData.getPolyline());
-        //userTour.setElevation(userTourWithGeoData.getElevation());
+        tourController.getSelectedUserTour(userTour, new FragmentHandler(){
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                userTourWithGeoData = (UserTour) controllerEvent.getModel();
+                userTour.setPolyline(userTourWithGeoData.getPolyline());
+                userTour.setElevation(userTourWithGeoData.getElevation());
+            }
+        });
         return fragment;
     }
 
