@@ -25,6 +25,11 @@ public class UserTour extends AbstractModel {
     String description;
     String imagePath;
     String polyline;
+    String elevation;
+    long distance;
+    long duration;
+    long ascent;
+    long descent;
     long difficulty;
     long tourKit;
     boolean editable;
@@ -111,6 +116,46 @@ public class UserTour extends AbstractModel {
 
     public void setPolyline(String polyline) {
         this.polyline = polyline;
+    }
+
+    public String getElevation() {
+        return elevation;
+    }
+
+    public void setElevation(String elevation) {
+        this.elevation = elevation;
+    }
+
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance(long distance) {
+        this.distance = distance;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public long getAscent() {
+        return ascent;
+    }
+
+    public void setAscent(long ascent) {
+        this.ascent = ascent;
+    }
+
+    public long getDescent() {
+        return descent;
+    }
+
+    public void setDescent(long descent) {
+        this.descent = descent;
     }
 
     public long getDifficulty() {

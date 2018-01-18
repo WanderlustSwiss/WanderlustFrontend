@@ -3,6 +3,8 @@ package eu.wise_iot.wanderlust.services;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
+import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.Old.Tour;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -25,8 +27,8 @@ public interface FavoriteService {
     Call<List<Favorite>> retrievAllFavorites();
 
     @POST("favorite")
-    Call<Favorite> createFavorite(@Body Favorite favorite);
+    Call<Favorite> createFavorite(@Body UserTour tour);
 
     @DELETE("favorite/{id}")
-    Call<Favorite> deleteFavorite(@Body Favorite favorite);
+    Call<Favorite> deleteFavorite(@Path("id") long id);
 }

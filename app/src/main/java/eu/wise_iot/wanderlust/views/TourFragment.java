@@ -136,11 +136,11 @@ public class TourFragment extends Fragment {
 
         if(tourController.isFavorite(userTour.getTour_id())){
             favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
-            favButton.setOnClickListener((View v) -> unfavoriteTour());
+//            favButton.setOnClickListener((View v) -> unfavoriteTour());
         }
         else{
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
-            favButton.setOnClickListener((View v) -> favoriteTour());
+//            favButton.setOnClickListener((View v) -> favoriteTour());
         }
 
         tourRegion.setText("nA");
@@ -165,14 +165,14 @@ public class TourFragment extends Fragment {
         });
     }
 
-    public void unfavoriteTour(){
-        tourController.deleteFavorite(userTour.getTour_id(), new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
-            }
-        });
-    }
+//    public void unfavoriteTour(){
+//        tourController.deleteFavorite(userTour.getTour_id(), new FragmentHandler() {
+//            @Override
+//            public void onResponse(ControllerEvent controllerEvent) {
+//                favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+//            }
+//        });
+//    }
 
     public void showMapWithTour(){
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(userTour.getPolyline(), 10);

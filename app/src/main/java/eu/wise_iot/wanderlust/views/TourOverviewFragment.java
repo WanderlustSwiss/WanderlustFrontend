@@ -1,7 +1,9 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
-import eu.wise_iot.wanderlust.models.Old.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
 import okhttp3.ResponseBody;
 
@@ -68,7 +71,7 @@ public class TourOverviewFragment extends Fragment {
      */
     public static void getDataFromServer(List<UserTour> userTours){
         TourOverviewController toc = new TourOverviewController();
-
+        //get given favorites
         toc.downloadFavorites( new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
@@ -82,7 +85,7 @@ public class TourOverviewFragment extends Fragment {
                 }
             }
         });
-
+        //get thumbnail for each tour
         for(UserTour ut : userTours){
             try {
                 toc.downloadThumbnail(ut.getTour_id(), 1, new FragmentHandler() {
@@ -169,27 +172,63 @@ public class TourOverviewFragment extends Fragment {
                 }
             }
 
-            public void onItemClickImages(View view, int routeID, UserTour tour) {
-                Log.d("Toursoverview","Tour Image Clicked and event triggered ");
-                TourFragment tourFragment = TourFragment.newInstance(tour);
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                        .commit();
-                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-
+            /**
+             * handles click in Recyclerview
+             * @param view
+             * @param routeID
+             * @param tour
+             * @param favorizedTours
+             */
+            public void onItemClickImages(View view, int routeID, UserTour tour, List<Long> favorizedTours) {
+                switch (view.getId()) {
+                    case R.id.favoriteButton:
+                        Log.d("Toursoverview","Tour Favorite Clicked and event triggered ");
+                        ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.favoriteButton);
+                        if(favorizedTours.contains(tour.getTour_id())){
+                            Log.d("Touroverview rv", "favorite get unfavored: " + tour.getTour_id());
+                            toc.deleteFavorite(tour.getTour_id(), new FragmentHandler() {
+                                @Override
+                                public void onResponse(ControllerEvent controllerEvent) {
+                                    switch (controllerEvent.getType()){
+                                        case OK:
+                                            favorizedTours.remove(tour.getTour_id());
+                                            Log.d("Touroverview rv", "favorite succesfully deleted " + tour.getTour_id());
+                                            ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                                            break;
+                                        default:
+                                            Log.d("Touroverview rv", "favorite failure while deleting " + tour.getTour_id());
+                                    }
+                                }
+                            });
+                        } else {
+                            Log.d("Touroverview rv", "favorite gets favored: " + tour.getTour_id());
+                            toc.setFavorite(tour, new FragmentHandler() {
+                                @Override
+                                public void onResponse(ControllerEvent controllerEvent) {
+                                    switch (controllerEvent.getType()){
+                                        case OK:
+                                            favorizedTours.add(tour.getTour_id());
+                                            Log.d("Touroverview rv", "favorite succesfully added " + tour.getTour_id());
+                                            ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.red));
+                                            break;
+                                        default:
+                                            Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());
+                                    }
+                                }
+                            });
+                        }
+                        break;
+                    default:
+                        Log.d("Toursoverview","Tour Image Clicked and event triggered ");
+                        TourFragment tourFragment = TourFragment.newInstance(tour);
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                                .commit();
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                        break;
+                    //the same can be applied to other components in Row_Layout.xml
+                }
             }
-            //TODO: favorites
-//            public void onItemClickFavorites(View view, int favoriteID) {
-//                Bundle bundle = new Bundle();
-//                //pass id to fragment
-//                bundle.putString(Constants.CLICKED_TOUR, Integer.toString(favoriteID));
-//
-//                Fragment fragment = new TourFragment();
-//                fragment.setArguments(bundle);
-//
-//                FragmentManager fragmentManager = getFragmentManager();
-//                fragmentManager.beginTransaction().addToBackStack(fragment.toString()).replace(R.id.content_frame, fragment).commit();
-//            }
         });
 
 

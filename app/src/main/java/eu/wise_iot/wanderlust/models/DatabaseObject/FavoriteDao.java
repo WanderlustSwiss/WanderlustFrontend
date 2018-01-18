@@ -9,6 +9,7 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.services.FavoriteService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
@@ -44,8 +45,8 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param favorite     (required)
      * //@param handler
      */
-    public void create(final Favorite favorite, final FragmentHandler handler) {
-        Call<Favorite> call = service.createFavorite(favorite);
+    public void create(final UserTour tour, final FragmentHandler handler) {
+        Call<Favorite> call = service.createFavorite(tour);
         call.enqueue(new Callback<Favorite>() {
             @Override
             public void onResponse(Call<Favorite> call, retrofit2.Response<Favorite> response) {
@@ -92,17 +93,16 @@ public class FavoriteDao extends DatabaseObjectAbstract{
     /**
      * delete a favorite in the database
      *
-     * @param favorite
-     * //@param handler
+     * @param favorite_id
+     * @param handler
      */
-    public void delete(final Favorite favorite, final FragmentHandler handler) {
-        Call<Favorite> call = service.deleteFavorite(favorite);
-        Favorite finalFavorite = favorite;
+    public void delete(final Long favorite_id, final FragmentHandler handler) {
+        Call<Favorite> call = service.deleteFavorite(favorite_id);
         call.enqueue(new Callback<Favorite>() {
             @Override
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
                 if (response.isSuccessful()) {
-                    favoriteBox.remove(finalFavorite);
+                    favoriteBox.remove(favorite_id);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));

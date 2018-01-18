@@ -82,15 +82,15 @@ public class TourController {
         return false;
     }
 
-    public void deleteFavorite(long tourID, FragmentHandler handler){
-        try {
-            favoriteDao.delete(favoriteDao.findOne(Favorite_.tour, tourID), handler);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void deleteFavorite(long tourID, FragmentHandler handler){
+//        try {
+//            favoriteDao.delete(favoriteDao.findOne(Favorite_.tour, tourID), handler);
+//        } catch (NoSuchFieldException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public double getDistance(String polyLine){
         polyList = PolyLineEncoder.decode(polyLine, 10);

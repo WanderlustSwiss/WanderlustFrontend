@@ -22,6 +22,7 @@ import android.app.Fragment;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     private FavoriteDao favoriteDao = new FavoriteDao();
     private TourController tourController = new TourController();
+    private List<Long> favorizedTours = new ArrayList<>();
 
 
     // data is passed into the constructor, here as a UserTour
@@ -89,14 +91,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         //button Favorite
-        for(Favorite favorite : favoriteDao.find())
-            if(favorite.getTour() == userTour.getTour_id())
+        for(Favorite favorite : favoriteDao.find()) {
+            if (favorite.getTour() == userTour.getTour_id()) {
                 holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.red));
-
+                //add to favored tours
+                this.favorizedTours.add(favorite.getTour());
+            }
+        }
 
         Double distance = tourController.getDistance(userTour.getPolyline());
         holder.tvTitle.setText(userTour.getTitle());
-        holder.tvDistance.setText(String.valueOf(distance) + " m");
+        holder.tvDistance.setText(String.valueOf(userTour.getDistance()/1000) + " km");
 
 
         File image = userTour.getImageById((byte)1);
@@ -104,10 +109,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         Picasso.with(context).load(image).into(holder.tvImage);
 
         Log.d("Toursoverview", "Image loaded: " + image.toString());
-
         //calc time can be way more accurate:
         String time = "~" + (int) Math.ceil(distance / tourController.WALKING_SPEED) + " h";
-        holder.tvTime.setText(time);
+        holder.tvTime.setText(String.valueOf(userTour.getDuration()) + " mingit ");
     }
 
     // total number of rows
@@ -128,7 +132,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onItemClick(View view, int id, UserTour tour);
+        void onItemClick(View view, int id, UserTour tour, List<Long> favorites);
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -159,11 +163,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             ibShare = (ImageButton)itemView.findViewById(R.id.shareButton);
 
             itemView.setOnClickListener(this);
+            ibFavorite.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition(), getItem(getAdapterPosition()));
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition(), getItem(getAdapterPosition()), favorizedTours);
         }
     }
 }
