@@ -18,8 +18,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * PoiService:
- * POIController
+ * FavoriteService:
+ * FavoriteController
  * show	            GET	    /poi/:id                | restricted
  * show	            GET	    /poi                    | restricted
  * show             GET     /poitype                | restricted

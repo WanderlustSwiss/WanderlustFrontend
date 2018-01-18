@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
@@ -19,6 +20,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DeviceDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.EquipmentDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.HistoryDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
@@ -55,6 +57,7 @@ public final class DatabaseController {
     public static TripDao tripDao;
     public static UserDao userDao;
     public static UserTourDao userTourDao;
+    public static FavoriteDao favoriteDao;
     public static Context mainContext;
     public static String picturesDir;
     private static List<DatabaseListener> listeners = new ArrayList<>();
@@ -80,6 +83,7 @@ public final class DatabaseController {
             tripDao = new TripDao();
             userDao = new UserDao();
             userTourDao = new UserTourDao();
+            favoriteDao = new FavoriteDao();
             mainContext = context;
             picturesDir = mainContext.getApplicationContext().getFilesDir().getAbsolutePath() + "/pictures";
             initialized = true;

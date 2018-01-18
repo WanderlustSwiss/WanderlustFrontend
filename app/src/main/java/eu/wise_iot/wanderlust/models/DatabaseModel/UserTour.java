@@ -1,5 +1,10 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.io.File;
+import java.util.List;
+
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
@@ -20,9 +25,19 @@ public class UserTour extends AbstractModel {
     String description;
     String imagePath;
     String polyline;
+    String elevation;
+    long distance;
+    long duration;
+    long ascent;
+    long descent;
     long difficulty;
     long tourKit;
     boolean editable;
+
+    @Convert(converter = Poi.imageInfoConverter.class, dbType = String.class)
+    List<Poi.ImageInfo> imagePaths;
+    byte[] imageIds;
+    int imageCount;
 
     public UserTour(long internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
         this.internal_id = internal_id;
@@ -34,6 +49,17 @@ public class UserTour extends AbstractModel {
         this.difficulty = difficulty;
         this.tourKit = tourKit;
         this.editable = editable;
+    }
+
+    public File getImageById(byte imageId) {
+       // for (int i = 0; i < imageCount; i++) {
+            //if (imageIds[i] == imageId) {
+                String name = tour_id + "-" + 1 + ".jpg";
+                return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
+                        "/files/" + name);
+       //     }
+        //}
+        //return null;
     }
 
     public long getInternal_id() {
@@ -90,6 +116,46 @@ public class UserTour extends AbstractModel {
 
     public void setPolyline(String polyline) {
         this.polyline = polyline;
+    }
+
+    public String getElevation() {
+        return elevation;
+    }
+
+    public void setElevation(String elevation) {
+        this.elevation = elevation;
+    }
+
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance(long distance) {
+        this.distance = distance;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public long getAscent() {
+        return ascent;
+    }
+
+    public void setAscent(long ascent) {
+        this.ascent = ascent;
+    }
+
+    public long getDescent() {
+        return descent;
+    }
+
+    public void setDescent(long descent) {
+        this.descent = descent;
     }
 
     public long getDifficulty() {

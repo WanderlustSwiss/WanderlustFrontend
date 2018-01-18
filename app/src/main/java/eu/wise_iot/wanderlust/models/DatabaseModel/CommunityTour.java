@@ -1,5 +1,10 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.io.File;
+import java.util.List;
+
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
@@ -20,24 +25,75 @@ public class CommunityTour extends AbstractModel {
     long tour_id;
     String title;
     String description;
-    String imagePath;
+
+    @Convert(converter = Poi.imageInfoConverter.class, dbType = String.class)
+    List<Poi.ImageInfo> imagePaths;
+    byte[] imageIds;
+    int imageCount;
+
     String polyline;
     long difficulty;
     long tourKit;
     boolean editable;
 
-    public CommunityTour(long internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+    public CommunityTour(long internal_id, long tour_id, String title, String description, byte[] imageIds, String polyline, long difficulty, long tourKit, boolean editable) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
         this.description = description;
-        this.imagePath = imagePath;
+        this.imageIds = imageIds;
         this.polyline = polyline;
         this.difficulty = difficulty;
         this.tourKit = tourKit;
         this.editable = editable;
     }
 
+    public byte[] getImageIds() {
+        return imageIds;
+    }
+
+    public void addImageId(byte id) {
+        imageIds[imageCount++] = id;
+    }
+
+    public boolean removeImageId(byte id) {
+        int index = 0;
+        while (imageIds[index] != id) {
+            index++;
+            if (index == imageCount) {
+                return false;
+            }
+        }
+        for (int i = index; i < imageCount; i++) {
+            imageIds[i] = imageIds[i + 1];
+        }
+        imageCount--;
+        return true;
+    }
+
+    public File getImageById(byte imageId) {
+        for (int i = 0; i < imageCount; i++) {
+            if (imageIds[i] == imageId) {
+                String name = tour_id + "-" + imageIds[i] + ".jpg";
+                return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
+                        "/files/" + name);
+            }
+        }
+        return null;
+    }
+
+    public void setImageIds(byte[] imageIds, int imageCount) {
+        this.imageIds = imageIds;
+        this.imageCount = imageCount;
+    }
+
+    public int getImageCount() {
+        return imageCount;
+    }
+
+    public List<Poi.ImageInfo> getImagePaths() {
+        return imagePaths;
+    }
     public long getInternal_id() {
         return internal_id;
     }
@@ -68,14 +124,6 @@ public class CommunityTour extends AbstractModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
     }
 
     public String getPolyline() {

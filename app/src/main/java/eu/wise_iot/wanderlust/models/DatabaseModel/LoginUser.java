@@ -17,7 +17,6 @@ public class LoginUser {
         this.password = password;
     }
 
-
     public static ArrayList<String> getCookies() {
         return cookies;
     }
