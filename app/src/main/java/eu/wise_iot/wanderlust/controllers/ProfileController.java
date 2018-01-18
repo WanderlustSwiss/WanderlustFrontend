@@ -1,5 +1,8 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
@@ -7,10 +10,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.models.Old.Tour;
 
 /**
@@ -23,16 +22,8 @@ import eu.wise_iot.wanderlust.models.Old.Tour;
 public class ProfileController {
 
 
-    private ProfileDao profileDao;
-    private UserDao userDao;
-    private UserTourDao tourDao;
-    private PoiDao poiDao;
-
     public ProfileController() {
-        userDao = new UserDao();
-        profileDao = new ProfileDao();
-        tourDao = new UserTourDao();
-        poiDao = new PoiDao();
+
     }
 
     /**
@@ -41,7 +32,7 @@ public class ProfileController {
      * @return true if profile exists
      */
     public boolean profileExists() {
-        List<Profile> list = profileDao.find();
+        List<Profile> list = DatabaseController.profileDao.find();
         if (list == null || list.isEmpty()) {
             return false;
         } else {
@@ -55,11 +46,31 @@ public class ProfileController {
      * @return the nickname of the user
      */
     public String getNickName() {
-        List<User> list = userDao.find();
+        List<User> list = DatabaseController.userDao.find();
         if (list == null || list.size() == 0) {
             return "no user";
         }
-        return userDao.find().get(0).getNickname();
+        return DatabaseController.userDao.find().get(0).getNickname();
+    }
+
+    public String getEmail(){
+        List<User> list = DatabaseController.userDao.find();
+        if(list == null || list.isEmpty()){
+          return "";
+        }
+        return DatabaseController.userDao.find().get(0).getEmail();
+    }
+
+    public void setEmail(String email, Context context, FragmentHandler fragmentHandler){
+        if(email == ""){
+            Toast.makeText(context, "E-Mail darf nicht leer sein.", Toast.LENGTH_SHORT).show();
+        }else{
+            User user = DatabaseController.userDao.getUser();
+            user.setEmail(email);
+
+            DatabaseController.userDao.update(user, fragmentHandler);
+        }
+
     }
 
     /**
@@ -68,11 +79,11 @@ public class ProfileController {
      * @return the score of the user
      */
     public int getScore() {
-        List<Profile> list = profileDao.find();
+        List<Profile> list = DatabaseController.profileDao.find();
         if (list == null || list.size() == 0) {
             return 0;
         }
-        return profileDao.find().get(0).getScore();
+        return DatabaseController.profileDao.find().get(0).getScore();
     }
 
     /**
@@ -81,11 +92,11 @@ public class ProfileController {
      * @return the amount of user tours
      */
     public long getAmountTours() {
-        List<UserTour> list = tourDao.find();
+        List<UserTour> list = DatabaseController.userTourDao.find();
         if (list == null) {
             return 0;
         }
-        return tourDao.count();
+        return DatabaseController.userTourDao.count();
     }
 
     /**
@@ -94,11 +105,50 @@ public class ProfileController {
      * @return the amount of poi's
      */
     public long getAmountPoi() {
-        List<Poi> list = poiDao.find();
+        List<Poi> list = DatabaseController.poiDao.find();
         if (list == null || list.size() == 0) {
             return 0;
         }
-        return poiDao.count();
+        return DatabaseController.poiDao.count();
+    }
+
+    public long getDifficulty(){
+        DatabaseController.difficultyTypeDao.sync();
+        long difficulty = DatabaseController.profileDao.find().get(0).getDifficulty();
+
+        return difficulty;
+    }
+
+    public void setDifficulty(long difficulty, Context context, FragmentHandler fragmentHandler){
+        if(difficulty < 1 || difficulty > 6){
+            Toast.makeText(context, "Dieses Level gibt es nicht.", Toast.LENGTH_SHORT).show();
+        }else{
+            Profile profile = DatabaseController.profileDao.find().get(0);
+            profile.setDifficulty(difficulty);
+            DatabaseController.profileDao.upd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            ate(profile, fragmentHandler);
+        }
     }
 
     /**
@@ -112,17 +162,21 @@ public class ProfileController {
         return null;
     }
 
+    public void setProfilePicture(String path){
+
+    }
+
     /**
      * Gets the birthdate of logged in user
      *
      * @return the birthdate of the user
      */
     public String getBirthDate() {
-        List<Profile> list = profileDao.find();
+        List<Profile> list = DatabaseController.profileDao.find();
         if (list == null || list.size() == 0) {
             return "";
         }
-        return profileDao.find().get(0).getBirthday();
+        return DatabaseController.profileDao.find().get(0).getBirthday();
     }
 
     /**

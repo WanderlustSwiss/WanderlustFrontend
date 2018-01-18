@@ -27,11 +27,11 @@ import retrofit2.http.Path;
 
 
 public interface ProfileService {
-    @GET("profile/{id}")
-    Call<Profile> retrieveProfile(@Path("id") long id);
+    @GET("profile")
+    Call<Profile> retrieveProfile();
 
-    @PUT("profile/{id}")
-    Call<Profile> updateProfile(long id, @Body Profile profile);
+    @PUT("profile")
+    Call<Profile> updateProfile(@Body Profile profile);
 
     @DELETE("profile/{id}")
     Call<Profile> deleteProfile(@Body Profile profile);

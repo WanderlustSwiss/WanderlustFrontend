@@ -117,6 +117,7 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
             description.setText(poi.getDescription());
 
             //TODO: set image
+            poiImage.setImageResource(R.drawable.example_image);
         }
 
         //set listeners

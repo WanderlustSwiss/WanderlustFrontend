@@ -66,7 +66,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                     ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     break;
                 default:
-                    Toast.makeText(context, R.string.login_failure, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, eventType.toString(), Toast.LENGTH_LONG).show();
                     break;
 
             }

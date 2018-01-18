@@ -36,6 +36,7 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<List<DifficultyType>> call, Response<List<DifficultyType>> response) {
                 if (response.isSuccessful()) {
+                    difficultyTypeBox.removeAll();
                     for (DifficultyType poiType : response.body()) {
                         difficultyTypeBox.put(poiType);
                     }

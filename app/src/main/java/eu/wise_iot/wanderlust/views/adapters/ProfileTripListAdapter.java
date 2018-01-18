@@ -115,7 +115,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
         if (userTour != null) {
             title.setText(userTour.getTitle());
             description.setText(userTour.getDescription());
-
+            tripImage.setImageResource(R.drawable.example_image);
             //TODO: set the image
         }
 
