@@ -46,6 +46,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private static final String TAG = "MyMapOverlays";
     private Activity activity;
     private MapView mapView;
+    private Polyline currentTour;
 
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
@@ -58,7 +59,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         this.activity = activity;
         this.mapView = mapView;
 
-
+        this.currentTour = null;
         initPoiOverlay();
         //populatePoiOverlay();
         mapView.getOverlays().add(poiOverlay);
@@ -77,6 +78,18 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         //set position of scale bar
         scaleBarOverlay.setScaleBarOffset(dm.widthPixels / 3 * 1, dm.heightPixels / 10 * 9);
         mapView.getOverlays().add(scaleBarOverlay);
+    }
+
+    public void setTour(Polyline polyline){
+        if(this.currentTour == null){
+            this.currentTour = polyline;
+            this.currentTour.setWidth(10);
+            this.currentTour.setColor(R.color.highlight_main);
+            mapView.getOverlays().add(this.currentTour);
+        }else{
+            this.currentTour = polyline;
+        }
+        mapView.invalidate();
     }
 
     private void initMyLocationNewOverlay() {

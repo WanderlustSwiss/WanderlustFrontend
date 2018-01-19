@@ -28,6 +28,7 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Polyline;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class MapFragment extends Fragment {
     private View bottomSheet;
     private SearchView searchView;
     private MapController searchMapController;
-
+    private static Polyline polyline;
 
     // bottom sheet
     private ImageButton poiLayerButton;
@@ -95,6 +96,14 @@ public class MapFragment extends Fragment {
         Bundle args = new Bundle();
         MapFragment fragment = new MapFragment();
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static MapFragment newInstance(Polyline paramPolyline) {
+        Bundle args = new Bundle();
+        MapFragment fragment = new MapFragment();
+        fragment.setArguments(args);
+        polyline = paramPolyline;
         return fragment;
     }
 
@@ -114,6 +123,7 @@ public class MapFragment extends Fragment {
         initOverlays();
         initMapController();
         DatabaseController.register(mapOverlays);
+        if(polyline != null) setTour(polyline);
         return view;
     }
 
@@ -322,6 +332,13 @@ public class MapFragment extends Fragment {
             File file = new File(photoPath);
             file.delete();
         }
+    }
+
+    public void setTour(Polyline polyline){
+        mapOverlays.setTour(polyline);
+        List<GeoPoint> polylineList = polyline.getPoints();
+        mapController.setCenter(polylineList.get(0));
+        mapController.setZoom(15);
     }
 
     /**

@@ -25,6 +25,7 @@ public interface Constants {
     /* FRAGMENTS */
     String MAP_FRAGMENT = "MapFragment";
     String TOUR_FRAGMENT = "TourFragment";
+    String TOUROVERVIEW_FRAGMENT = "TourOverviewFragment";
     String WELCOME_FRAGMENT = "WelcomeFragment";
     String DISCLAIMER_FRAGMENT = "DisclaimerFragment";
     String MANUAL_FRAGMENT = "ManualFragment";
