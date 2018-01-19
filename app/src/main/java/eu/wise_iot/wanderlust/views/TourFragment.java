@@ -145,9 +145,9 @@ public class TourFragment extends Fragment {
 
         tourRegion.setText("nA");
         tourTitle.setText(userTour.getTitle());
-        textViewTourDistance.setText(String.valueOf(tourController.getDistance(userTour.getPolyline())) + " m");
+        textViewTourDistance.setText(tourController.convertToStringDistance(userTour.getDistance()));
         //textViewAscend.setText("???");
-        textViewDuration.setText(String.valueOf(tourController.getDuration(userTour.getPolyline())) + " min");
+        textViewDuration.setText(tourController.convertToStringDuration(userTour.getDuration()));
         //textViewDescend.setText("???");
         textViewDifficulty.setText(String.valueOf(userTour.getDifficulty()));
         textViewDescription.setText(userTour.getDescription());

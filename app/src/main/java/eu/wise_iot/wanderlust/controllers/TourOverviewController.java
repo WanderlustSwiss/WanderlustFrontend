@@ -44,8 +44,7 @@ public class TourOverviewController {
      *
      */
     public static void downloadThumbnail(long tourID, int image_id, FragmentHandler handler) {
-        UserTourDao userTourDao = new UserTourDao();
-        userTourDao.downloadImage(tourID, image_id, handler);
+        DatabaseController.userTourDao.downloadImage(tourID, image_id, handler);
     }
     /**
      * get all Favorites

@@ -325,7 +325,7 @@ public class ProfileFragment extends Fragment {
             //until feature is released, will use a example tour, delete when implementing this feature
             CommunityTour testSavedTour = new CommunityTour(0, 0,
                                                              "Beispiel-Gespeichert", "Gespeicherte Beispiel-Tour",
-                                                "", "",1,
+                                                new byte[10], "",1,
                                                     2, false);
 
             list = new ArrayList();

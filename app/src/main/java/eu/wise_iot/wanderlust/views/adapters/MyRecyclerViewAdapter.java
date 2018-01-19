@@ -43,7 +43,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
  */
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
-//    private List<String> mImages = Collections.emptyList();
+    //    private List<String> mImages = Collections.emptyList();
 //    private List<String> mTitles = Collections.emptyList();
     private List<UserTour> userTours = Collections.emptyList();
     private LayoutInflater mInflater;
@@ -81,9 +81,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.tvTitle.setTextColor(Color.BLACK);
         //difficulty calculations
         long difficulty = userTour.getDifficulty();
-        if(difficulty > 4) holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.redHard));
-        else if(difficulty > 2) holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.yellowMiddle));
-        else holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.greenEasy));
+        if (difficulty > 4)
+            holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.redHard));
+        else if (difficulty > 2)
+            holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.yellowMiddle));
+        else
+            holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.greenEasy));
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
 
 
@@ -91,27 +94,24 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         //button Favorite
-        for(Favorite favorite : favoriteDao.find()) {
+        for (Favorite favorite : favoriteDao.find()) {
             if (favorite.getTour() == userTour.getTour_id()) {
                 holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.red));
                 //add to favored tours
                 this.favorizedTours.add(favorite.getTour());
             }
         }
-
-        Double distance = tourController.getDistance(userTour.getPolyline());
         holder.tvTitle.setText(userTour.getTitle());
-        holder.tvDistance.setText(String.valueOf(userTour.getDistance()/1000) + " km");
+        holder.tvDistance.setText(tourController.convertToStringDistance(userTour.getDistance()));
 
 
-        File image = userTour.getImageById((byte)1);
+        File image = userTour.getImageById((byte) 1);
 
         Picasso.with(context).load(image).into(holder.tvImage);
 
         Log.d("Toursoverview", "Image loaded: " + image.toString());
-        //calc time can be way more accurate:
-        String time = "~" + (int) Math.ceil(distance / tourController.WALKING_SPEED) + " h";
-        holder.tvTime.setText(String.valueOf(userTour.getDuration()) + " mingit ");
+
+        holder.tvTime.setText(tourController.convertToStringDuration(userTour.getDuration()));
     }
 
     // total number of rows
@@ -158,9 +158,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             tvTime = (TextView) itemView.findViewById(R.id.tourTime);
             tvImage = (ImageView) itemView.findViewById(R.id.tourImage);
             tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.imageDifficulty);
-            ibFavorite = (ImageButton)itemView.findViewById(R.id.favoriteButton);
-            ibSave = (ImageButton)itemView.findViewById(R.id.saveButton);
-            ibShare = (ImageButton)itemView.findViewById(R.id.shareButton);
+            ibFavorite = (ImageButton) itemView.findViewById(R.id.favoriteButton);
+            ibSave = (ImageButton) itemView.findViewById(R.id.saveButton);
+            ibShare = (ImageButton) itemView.findViewById(R.id.shareButton);
 
             itemView.setOnClickListener(this);
             ibFavorite.setOnClickListener(this);
@@ -168,7 +168,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition(), getItem(getAdapterPosition()), favorizedTours);
+            if (mClickListener != null)
+                mClickListener.onItemClick(view, getAdapterPosition(), getItem(getAdapterPosition()), favorizedTours);
         }
     }
 }

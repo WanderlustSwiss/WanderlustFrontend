@@ -51,6 +51,12 @@ public class UserTour extends AbstractModel {
         this.editable = editable;
     }
 
+    public UserTour(){
+        this.internal_id = 0;
+        this.title = "Not initialized";
+        this.description = "Not initialized";
+    }
+
     public File getImageById(byte imageId) {
        // for (int i = 0; i < imageCount; i++) {
             //if (imageIds[i] == imageId) {

@@ -142,4 +142,24 @@ public class TourController {
 
         return new BigDecimal(String.valueOf((double) dist[0])).setScale(2,RoundingMode.HALF_UP).doubleValue();
     }
+
+    public String convertToStringDistance(long distance) {
+        int kilometers = (int) distance / 1000;
+        int meters = (int) distance % 1000;
+        String text = "";
+        if (kilometers != 0) text += kilometers + "km ";
+        text += meters + "m";
+        return text;
+    }
+
+    public String convertToStringDuration(long time) {
+        int hours = (int) Math.floor(time / 60);
+        int minutes = (int) time % 60;
+
+        String text = "";
+        if (hours != 0) text += hours + "h ";
+        text += minutes + "min";
+        return text;
+    }
+
 }
