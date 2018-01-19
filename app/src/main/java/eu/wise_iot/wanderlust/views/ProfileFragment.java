@@ -247,11 +247,6 @@ public class ProfileFragment extends Fragment {
 
             listView = (ListView) view.findViewById(R.id.listContent);
             //until feature is released, will use a example tour, delete when implementing this feature
-            UserTour testTour = new UserTour(0, 0, "Beispiel-Route", "Diese Wanderung ist nur ein Beispiel." +
-                    "funktionen sind noch nicht verfügbar.",
-                                            "", "", 2, 0, true);
-            list = new ArrayList();
-            list.add(testTour);
 
             listView.setAdapter(new ProfileTripListAdapter(getActivity(),
                     R.layout.fragment_profile_list_tour_poi,

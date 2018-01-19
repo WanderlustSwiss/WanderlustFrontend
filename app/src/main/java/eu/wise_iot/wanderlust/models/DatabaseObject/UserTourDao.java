@@ -110,23 +110,17 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param id
      * @param handler
      */
-    public void retrieve(int id, final FragmentHandler handler) {
+    public void retrieve(final long id, final FragmentHandler handler) {
+        final long[] newUserTourID = new long[1];
         Call<UserTour> call = service.retrieveUserTour(id);
         call.enqueue(new Callback<UserTour>() {
             @Override
             public void onResponse(Call<UserTour> call, Response<UserTour> response) {
                 if (response.isSuccessful()) {
-                    //try {
-                        //UserTour internalPoi = findOne(UserTour_.tour_id, id);
                         UserTour backendTour = response.body();
                         routeBox.put(backendTour);
+                        newUserTourID[0] = backendTour.getInternal_id();
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendTour));
-                    //}
-                    /*catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }*/
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }

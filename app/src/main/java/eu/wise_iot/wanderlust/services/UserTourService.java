@@ -31,7 +31,7 @@ import retrofit2.http.Path;
  */
 public interface UserTourService {
     @GET("tour/{id}")
-    Call<UserTour> retrieveUserTour(@Path("id") int id);
+    Call<UserTour> retrieveUserTour(@Path("id") long id);
 
     @GET("tour/")
     Call<List<UserTour>> retrieveAllUserTours();

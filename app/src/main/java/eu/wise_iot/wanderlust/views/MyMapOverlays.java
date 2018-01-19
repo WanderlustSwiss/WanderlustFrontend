@@ -84,7 +84,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         if(this.currentTour == null){
             this.currentTour = polyline;
             this.currentTour.setWidth(10);
-            this.currentTour.setColor(R.color.highlight_main);
+            this.currentTour.setColor(Color.RED);
+
             mapView.getOverlays().add(this.currentTour);
         }else{
             this.currentTour = polyline;

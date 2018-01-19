@@ -30,6 +30,7 @@ public class UserTour extends AbstractModel {
     long duration;
     long ascent;
     long descent;
+
     long difficulty;
     long tourKit;
     boolean editable;
@@ -39,13 +40,20 @@ public class UserTour extends AbstractModel {
     byte[] imageIds;
     int imageCount;
 
-    public UserTour(long internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+    public UserTour(long internal_id, long tour_id, String title, String description,
+                    String imagePath, String polyline, String elevation, long duration, long distance,
+                    long ascent, long descent, long difficulty, long tourKit, boolean editable) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
         this.description = description;
         this.imagePath = imagePath;
         this.polyline = polyline;
+        this.elevation = elevation;
+        this.duration = duration;
+        this.distance = distance;
+        this.ascent = ascent;
+        this.descent = descent;
         this.difficulty = difficulty;
         this.tourKit = tourKit;
         this.editable = editable;

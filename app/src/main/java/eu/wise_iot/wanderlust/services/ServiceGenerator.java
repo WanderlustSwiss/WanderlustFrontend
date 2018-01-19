@@ -22,7 +22,7 @@ public class ServiceGenerator {
 
     // Local Development Host (recommended)
     public static final String API_BASE_URL = "http://10.0.2.2:1337";
-    //public static final String API_BASE_URL = "http://192.168.1.143:1337";
+    //public static final String API_BASE_URL = "http://192.168.1.49:1337";
 
     //public static final String API_BASE_URL = "http://127.0.0.1:1337";
 

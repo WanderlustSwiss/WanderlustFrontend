@@ -32,6 +32,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.views.MainActivity;
 
 
 /**
@@ -81,12 +82,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.tvTitle.setTextColor(Color.BLACK);
         //difficulty calculations
         long difficulty = userTour.getDifficulty();
-        if (difficulty > 4)
-            holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.redHard));
-        else if (difficulty > 2)
-            holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.yellowMiddle));
+        if (difficulty >= 6)
+            holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t6));
+        else if (difficulty >= 4)
+            holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t4_t5));
+        else if (difficulty >= 2)
+            holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t2_t3));
         else
-            holder.tvDifficultyIcon.setColorFilter(ContextCompat.getColor(this.context, R.color.greenEasy));
+            holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t1));
+
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
 
 

@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
@@ -69,6 +70,15 @@ public class TourOverviewController {
     public static void deleteFavorite(long favorite_id, FragmentHandler handler) {
         FavoriteDao favoriteDao = new FavoriteDao();
         favoriteDao.delete(favorite_id,handler);
+    }
+
+    public long getTourFavoriteId(long id){
+        FavoriteDao favoriteDao = new FavoriteDao();
+        try {
+            Favorite fav = favoriteDao.findOne(Favorite_.tour, id);
+            if(fav != null) return fav.getFav_id();
+        } catch (Exception e){}
+        return -1;
     }
 
 }

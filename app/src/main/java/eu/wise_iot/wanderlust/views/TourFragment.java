@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import eu.wise_iot.wanderlust.R;
@@ -44,6 +46,7 @@ public class TourFragment extends Fragment {
     private static TourController tourController;
     private Context context;
     private static UserTour userTour;
+    private static UserTour userTourWithGeoData;
     private static Polyline polyline;
 
     private ImageView imageViewTourImage;
@@ -62,10 +65,12 @@ public class TourFragment extends Fragment {
     private static MapFragment mapFragment;
 
     private Favorite favorite;
+    private int[] highProfile;
 
     public TourFragment() {
         // Required empty public constructor
     }
+
 
     /**
      * Static instance constructor.
@@ -73,23 +78,30 @@ public class TourFragment extends Fragment {
      * @return Fragment: TourFragment
      */
     public static TourFragment newInstance(UserTour paramUserTour) {
+
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
         tourController = new TourController();
         mapFragment = new MapFragment();
         fragment.setArguments(args);
         userTour = paramUserTour;
-        //userTour.getPolyline()
+        //Hello, its me
+        tourController.getSelectedUserTour(userTour, new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                userTourWithGeoData = (UserTour) controllerEvent.getModel();
+                userTour.setPolyline(userTourWithGeoData.getPolyline());
+                userTour.setElevation(userTourWithGeoData.getElevation());
+            }
+        });
         return fragment;
     }
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
-
-        super.onCreate(savedInstanceState);
-        //fetch data from database here
     }
 
     @Override
@@ -106,57 +118,76 @@ public class TourFragment extends Fragment {
 
     }
 
-    public void setupTourView(View view){
+    public void setupTourView(View view) {
         imageViewTourImage = (ImageView) view.findViewById(R.id.tourImage);
         favButton = (ImageButton) view.findViewById(R.id.favButton);
+
         tourRegion = (TextView) view.findViewById(R.id.tourRegion);
         tourTitle = (TextView) view.findViewById(R.id.tourTitle);
         tourSavedButton = (ImageButton) view.findViewById(R.id.tourSaved);
         tourSharedButton = (ImageButton) view.findViewById(R.id.tourShared);
         textViewTourDistance = (TextView) view.findViewById(R.id.tourDistance);
-        //textViewAscend = (TextView) view.findViewById(R.id.tourAscend);
+        textViewAscend = (TextView) view.findViewById(R.id.tourAscend);
         textViewDuration = (TextView) view.findViewById(R.id.tourDuration);
-        //textViewDescend = (TextView) view.findViewById(R.id.tourDescend);
+        textViewDescend = (TextView) view.findViewById(R.id.tourDescend);
         textViewDifficulty = (TextView) view.findViewById(R.id.tourDifficulty);
         textViewDescription = (TextView) view.findViewById(R.id.tourDescription);
         jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
+
+        long difficulty = userTour.getDifficulty();
+        if (difficulty >= 6)
+            textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.t6), null, null, null);
+        else if (difficulty >= 4)
+            textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.t4_t5), null, null, null);
+        else if (difficulty >= 2)
+            textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.t2_t3), null, null, null);
+        else
+            textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.t1), null, null, null);
 
         fillUiElements();
 
     }
 
-    public void fillUiElements(){
-        Picasso.with(context)
-                .load(userTour.getImageById((byte)0))
-                .into(this.imageViewTourImage);
-//        if(userTour.getImagePath().isEmpty() || userTour.getImagePath().equals(""))
-//            imageViewTourImage.setImageResource(R.drawable.no_image_found);
-        //else
-            //imageViewTourImage.setImageResource(1);
+    public void fillUiElements() {
 
-        if(tourController.isFavorite(userTour.getTour_id())){
+        File tourImage = userTour.getImageById((byte) 0);
+        long fileSize = tourImage.length();
+        if (fileSize != 0) {
+            Picasso.with(context)
+                    .load(tourImage)
+                    .into(this.imageViewTourImage);
+        } else {
+            Picasso.with(context)
+                    .load(R.drawable.no_image_found)
+                    .into(this.imageViewTourImage);
+        }
+
+        if (tourController.isFavorite(userTour.getTour_id())) {
             favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
 //            favButton.setOnClickListener((View v) -> unfavoriteTour());
-        }
-        else{
+        } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
 //            favButton.setOnClickListener((View v) -> favoriteTour());
         }
 
-        tourRegion.setText("nA");
+        try {
+            highProfile = tourController.getHighProfile(userTour.getElevation());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        tourRegion.setText("");
         tourTitle.setText(userTour.getTitle());
         textViewTourDistance.setText(tourController.convertToStringDistance(userTour.getDistance()));
-        //textViewAscend.setText("???");
+        textViewAscend.setText(String.valueOf(userTour.getAscent()) + " m");
+        textViewDescend.setText(String.valueOf(userTour.getDescent()) + " m");
         textViewDuration.setText(tourController.convertToStringDuration(userTour.getDuration()));
-        //textViewDescend.setText("???");
-        textViewDifficulty.setText(String.valueOf(userTour.getDifficulty()));
         textViewDescription.setText(userTour.getDescription());
 
+        textViewDifficulty.setText("T" + String.valueOf(userTour.getDifficulty()));
         jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
-
     }
 
-    public void favoriteTour(){
+    public void favoriteTour() {
         tourController.setFavorite(userTour.getTour_id(), new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
@@ -174,7 +205,7 @@ public class TourFragment extends Fragment {
 //        });
 //    }
 
-    public void showMapWithTour(){
+    public void showMapWithTour() {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(userTour.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);

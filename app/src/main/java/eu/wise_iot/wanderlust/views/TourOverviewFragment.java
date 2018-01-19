@@ -121,7 +121,6 @@ public class TourOverviewFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_toursoverview, container, false);
 
-        Log.d("Toursoverview","Opened");
 
         //fetch from db actual tours to feed recyclerview
         toc.getAllTours(new FragmentHandler() {
@@ -186,20 +185,23 @@ public class TourOverviewFragment extends Fragment {
                         ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.favoriteButton);
                         if(favorizedTours.contains(tour.getTour_id())){
                             Log.d("Touroverview rv", "favorite get unfavored: " + tour.getTour_id());
-                            toc.deleteFavorite(tour.getTour_id(), new FragmentHandler() {
-                                @Override
-                                public void onResponse(ControllerEvent controllerEvent) {
-                                    switch (controllerEvent.getType()){
-                                        case OK:
-                                            favorizedTours.remove(tour.getTour_id());
-                                            Log.d("Touroverview rv", "favorite succesfully deleted " + tour.getTour_id());
-                                            ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
-                                            break;
-                                        default:
-                                            Log.d("Touroverview rv", "favorite failure while deleting " + tour.getTour_id());
+                            long favId = toc.getTourFavoriteId(tour.getTour_id());
+                            if(favId != -1) {
+                                toc.deleteFavorite(favId, new FragmentHandler() {
+                                    @Override
+                                    public void onResponse(ControllerEvent controllerEvent) {
+                                        switch (controllerEvent.getType()) {
+                                            case OK:
+                                                favorizedTours.remove(tour.getTour_id());
+                                                Log.d("Touroverview rv", "favorite succesfully deleted " + tour.getTour_id());
+                                                ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                                                break;
+                                            default:
+                                                Log.d("Touroverview rv", "favorite failure while deleting " + tour.getTour_id());
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         } else {
                             Log.d("Touroverview rv", "favorite gets favored: " + tour.getTour_id());
                             toc.setFavorite(tour, new FragmentHandler() {
