@@ -232,7 +232,6 @@ public class MapFragment extends Fragment {
                                                 maxLong = point.getLongitude();
                                         }
                                     }
-                                    int x = 3;
 
                                     BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
                                     mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
