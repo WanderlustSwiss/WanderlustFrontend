@@ -57,11 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DatabaseController.poiDao.poiBox.removeAll();
         loginController = new LoginController();
 
-        MapFragment mapFragment = MapFragment.newInstance();
-        getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                .commit();
-        /*
         if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
@@ -102,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });
-        } */
+        }
     }
 
     @Override
