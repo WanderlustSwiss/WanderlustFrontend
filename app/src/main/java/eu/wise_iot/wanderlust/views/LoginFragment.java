@@ -85,8 +85,12 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+
         context = getActivity();
+
+        if (((AppCompatActivity) context).getSupportActionBar() != null) {
+            ((AppCompatActivity) context).getSupportActionBar().hide();
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
