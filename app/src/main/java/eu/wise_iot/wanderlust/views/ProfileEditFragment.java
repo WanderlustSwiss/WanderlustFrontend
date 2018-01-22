@@ -102,9 +102,9 @@ public class ProfileEditFragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.checkIcon:
                 //save changings
                 String newMail = emailTextfield.getText().toString();
@@ -114,14 +114,14 @@ public class ProfileEditFragment extends Fragment {
                     public void onResponse(ControllerEvent controllerEvent) {
                         EventType type = controllerEvent.getType();
 
-                        switch(type){
+                        switch (type) {
                             case OK:
                                 Toast.makeText(getActivity(), R.string.msg_email_edit_successful,
-                                                            Toast.LENGTH_SHORT).show();
+                                        Toast.LENGTH_SHORT).show();
                                 break;
                             default:
                                 Toast.makeText(getActivity(), R.string.err_msg_error_occured,
-                                                                            Toast.LENGTH_SHORT).show();
+                                        Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }
@@ -132,10 +132,10 @@ public class ProfileEditFragment extends Fragment {
                     public void onResponse(ControllerEvent controllerEvent) {
                         EventType type = controllerEvent.getType();
 
-                        switch (type){
+                        switch (type) {
                             case OK:
                                 Toast.makeText(getActivity(),
-                                        R.string.msg_difficulty_level_changed_to_1 + " " + difficulty + " " + R.string.msg_difficulty_level_changed_to_2 ,
+                                        R.string.msg_difficulty_level_changed_to_1 + " " + difficulty + " " + R.string.msg_difficulty_level_changed_to_2,
                                         Toast.LENGTH_SHORT).show();
                                 break;
 
@@ -151,11 +151,11 @@ public class ProfileEditFragment extends Fragment {
             case R.id.cancelIcon:
                 //back to profile
                 Toast.makeText(getActivity(), R.string.msg_no_changes_done,
-                                                                Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show();
                 ProfileFragment profileFragment = new ProfileFragment();
                 getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, profileFragment)
-                                    .commit();
+                        .replace(R.id.content_frame, profileFragment)
+                        .commit();
                 return true;
         }
         emailTextfield.setText(profileController.getEmail());
@@ -171,10 +171,10 @@ public class ProfileEditFragment extends Fragment {
         drawable.setCircular(true);
 
         profileImage.setImageDrawable(drawable);
-        
+
         changeImage.setOnClickListener(v -> {
             Toast.makeText(getActivity(), R.string.msg_no_action_defined,
-                                                                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_SHORT).show();
         });
 
         emailTextfield.setText(profileController.getEmail());
@@ -183,21 +183,21 @@ public class ProfileEditFragment extends Fragment {
     private void setupDifficulty(View view) {
         //setup current difficulty level
         difficulty = profileController.getDifficulty();
-        checkBoxes[(int)difficulty -1].setChecked(true);
+        checkBoxes[(int) difficulty - 1].setChecked(true);
 
         //checkbox listener to change difficulty of profile
         View.OnClickListener listener1 = v -> {
             CheckBox box = (CheckBox) v;
-            for(int i = 0; i < checkBoxes.length; i++){
-                if(checkBoxes[i].equals(box)){
-                    difficulty = i+1;
-                }else{
+            for (int i = 0; i < checkBoxes.length; i++) {
+                if (checkBoxes[i].equals(box)) {
+                    difficulty = i + 1;
+                } else {
                     checkBoxes[i].setChecked(false);
                 }
             }
         };
 
-        for(CheckBox checkBox : checkBoxes){
+        for (CheckBox checkBox : checkBoxes) {
             checkBox.setOnClickListener(listener1);
         }
 

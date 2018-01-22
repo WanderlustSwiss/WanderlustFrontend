@@ -46,7 +46,7 @@
                 style="@style/default_input"
                 android:hint="@string/poi_fragment_textview_title"
                 android:maxLength="120"
-                android:paddingTop="32dp" />
+                android:paddingTop="16dp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout style="@style/default_input">
