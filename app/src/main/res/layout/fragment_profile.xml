@@ -190,26 +190,22 @@
             android:id="@+id/listContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="false"
-            android:alpha="0.5">
+            android:alpha="0.5"
+            android:clickable="false">
 
         </ListView>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#900f6322"
             android:layout_gravity="center"
+            android:drawableLeft="@drawable/ic_announcement_black_24dp"
             android:gravity="center"
             android:paddingLeft="10dp"
             android:text="@string/msg_available_in_next_feature"
-            android:textStyle="italic"
-            android:textColor="#FFFFFF"
-            android:drawableLeft="@drawable/ic_announcement_black_24dp"
-/>
-
+            android:textColor="@color/white"
+            android:textStyle="italic" />
 
     </FrameLayout>
-
 
 </LinearLayout>

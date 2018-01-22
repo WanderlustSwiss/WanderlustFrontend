@@ -61,8 +61,8 @@ public class UserTour extends AbstractModel {
 
     public UserTour(){
         this.internal_id = 0;
-        this.title = "Not initialized";
-        this.description = "Not initialized";
+        this.title = "No title";
+        this.description = "No description";
     }
 
     public File getImageById(byte imageId) {

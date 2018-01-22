@@ -144,7 +144,7 @@ public class ProfileFragment extends Fragment {
      * Tab positions:
      * 0 - Favoriten
      * 1 - Touren
-     * 2 - POI's
+     * 2 - POIs
      * 3 - Gespeicherte Touren
      *
      * @param view in which the list will be represented
@@ -220,8 +220,7 @@ public class ProfileFragment extends Fragment {
                     R.id.ListFavTitle,
                     list));
         }
-
-        Toast.makeText(getActivity(), R.string.profile_your_favourites, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), R.string.profile_your_favourites, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -229,10 +228,8 @@ public class ProfileFragment extends Fragment {
      * user tours and adapter to represent the users tours in a custom list view
      */
     public void setupMyTours(View view) {
-        // todo: until feature is released, will use a example tour, delete when implementing this feature
-        UserTour testSavedTour = new UserTour(0, 0, "Beispieltitel",
-                "Beispielbeschreibung","", "", "", 1,
-                1,1, 1, 1, 1, false);
+
+
 
         //only if there is at least one tour
         if (profileController.getTours() != null) {
@@ -251,7 +248,9 @@ public class ProfileFragment extends Fragment {
         } else {
 
             listView = (ListView) view.findViewById(R.id.listContent);
+
             // todo: until feature is released, will use a example tour, delete when implementing this feature
+            UserTour testSavedTour = new UserTour();
             list = new ArrayList();
             list.add(testSavedTour);
 
@@ -260,8 +259,7 @@ public class ProfileFragment extends Fragment {
                     R.id.ListTourTitle,
                     list));
         }
-
-        Toast.makeText(getActivity(), R.string.profile_your_tours, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), R.string.profile_your_tours, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -286,19 +284,17 @@ public class ProfileFragment extends Fragment {
         } else {
 
             listView = (ListView) view.findViewById(R.id.listContent);
+
             // todo: until feature is released, will use a example tour, delete when implementing this feature
             Poi testPoi = new Poi();
-
             list = new ArrayList();
             list.add(testPoi);
-
             listView.setAdapter(new ProfilePoiListAdapter(getActivity(),
                     R.layout.fragment_profile_list_tour_poi,
                     R.id.ListTourTitle,
                     list));
         }
-
-        Toast.makeText(getActivity(), R.string.profile_your_pois, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), R.string.profile_your_pois, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -322,13 +318,9 @@ public class ProfileFragment extends Fragment {
             listView.setAdapter(adapter);
         } else {
 
-            listView = (ListView) view.findViewById(R.id.listContent);
             // todo: until feature is released, will use a example tour, delete when implementing this feature
-            CommunityTour testSavedTour = new CommunityTour(0, 0,
-                    "Beispiel-Gespeichert", "Gespeicherte Beispiel-Tour",
-                    new byte[10], "", 1,
-                    2, false);
-
+            listView = (ListView) view.findViewById(R.id.listContent);
+            CommunityTour testSavedTour = new CommunityTour();
             list = new ArrayList();
             list.add(testSavedTour);
 
@@ -337,8 +329,7 @@ public class ProfileFragment extends Fragment {
                     R.id.ListSavedTitle,
                     list));
         }
-
-        Toast.makeText(getActivity(), R.string.profile_your_saved_tours, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), R.string.profile_your_saved_tours, Toast.LENGTH_SHORT).show();
     }
 
     /**

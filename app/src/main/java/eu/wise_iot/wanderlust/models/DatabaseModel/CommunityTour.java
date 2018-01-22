@@ -48,6 +48,12 @@ public class CommunityTour extends AbstractModel {
         this.editable = editable;
     }
 
+    public CommunityTour() {
+        this.internal_id = 0;
+        this.title = "No title";
+        this.description = "No description";
+    }
+
     public byte[] getImageIds() {
         return imageIds;
     }
