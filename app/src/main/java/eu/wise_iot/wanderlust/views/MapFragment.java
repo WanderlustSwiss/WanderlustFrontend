@@ -6,10 +6,8 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Address;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.service.quicksettings.Tile;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.SearchView;
@@ -21,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -41,7 +38,6 @@ import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
-import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
@@ -148,7 +144,7 @@ public class MapFragment extends Fragment {
         terrainTypeButton = (ImageButton) view.findViewById(R.id.map_terrain_type);
         bottomSheet = view.findViewById(R.id.bottom_sheet);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.map_icon_selected_border));
+        defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.border_for_selected_item));
 
         staliteTypeButton.setOnClickListener(e -> {
             String[] urlArray = {"http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/"};
@@ -163,7 +159,7 @@ public class MapFragment extends Fragment {
             });
             defaultTypeButton.setBackground(null);
             terrainTypeButton.setBackground(null);
-            staliteTypeButton.setBackground(getActivity().getDrawable(R.drawable.map_icon_selected_border));
+            staliteTypeButton.setBackground(getActivity().getDrawable(R.drawable.border_for_selected_item));
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         });
 
@@ -173,7 +169,7 @@ public class MapFragment extends Fragment {
             mapView.setTileSource(tileSource);
             staliteTypeButton.setBackground(null);
             terrainTypeButton.setBackground(null);
-            defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.map_icon_selected_border));
+            defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.border_for_selected_item));
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         });
@@ -184,7 +180,7 @@ public class MapFragment extends Fragment {
             mapView.setTileSource(tileSource);
             staliteTypeButton.setBackground(null);
             defaultTypeButton.setBackground(null);
-            terrainTypeButton.setBackground(getActivity().getDrawable(R.drawable.map_icon_selected_border));
+            terrainTypeButton.setBackground(getActivity().getDrawable(R.drawable.border_for_selected_item));
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         });
     }

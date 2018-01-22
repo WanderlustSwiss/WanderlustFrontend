@@ -79,7 +79,7 @@
         <!-- todo: maybe make background transparent? -->
         <item name="android:background">@color/background_two_and_inactive</item>
 
-        <item name="android:divider">@drawable/empty_divider</item>
+        <item name="android:divider">@drawable/divider_empty</item>
         <item name="android:showDividers">middle</item>
     </style>
 

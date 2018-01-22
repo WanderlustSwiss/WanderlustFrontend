@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primary_main"
-                android:divider="@drawable/empty_divider"
+                android:divider="@drawable/divider_empty"
                 android:orientation="vertical"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp">
@@ -180,7 +180,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_duration_black"
+                            android:drawableLeft="@drawable/ic_timer_black_24dp"
                             android:drawablePadding="5dp"
                             android:drawableTint="@color/black"
                             android:singleLine="true" />

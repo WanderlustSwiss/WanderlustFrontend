@@ -39,19 +39,19 @@ public class ManualFragment extends Fragment {
         Picasso.with(getActivity()).load(R.drawable.image_bg_welcome_screen).fit().centerCrop().into(backgroundImage);
 
         ImageView image1 = (ImageView) view.findViewById(R.id.image1);
-        Picasso.with(getActivity()).load(R.drawable.icon_map_feedback_positive).fit().centerCrop().into(image1);
+//        Picasso.with(getActivity()).load(R.drawable.icon_map_feedback_positive).fit().centerCrop().into(image1);
 
         ImageView image2 = (ImageView) view.findViewById(R.id.image2);
-        Picasso.with(getActivity()).load(R.drawable.icon_map_feedback_negative).fit().centerCrop().into(image2);
+//        Picasso.with(getActivity()).load(R.drawable.icon_map_feedback_negative).fit().centerCrop().into(image2);
 
         ImageView image3 = (ImageView) view.findViewById(R.id.image3);
-        Picasso.with(getActivity()).load(R.drawable.icon_map_feedback_alert).fit().centerCrop().into(image3);
+//        Picasso.with(getActivity()).load(R.drawable.icon_map_feedback_alert).fit().centerCrop().into(image3);
 
         ImageView image4 = (ImageView) view.findViewById(R.id.image4);
-        Picasso.with(getActivity()).load(R.drawable.button_my_location).fit().centerCrop().into(image4);
+//        Picasso.with(getActivity()).load(R.drawable.button_my_location).fit().centerCrop().into(image4);
 
         ImageView image5 = (ImageView) view.findViewById(R.id.image5);
-        Picasso.with(getActivity()).load(R.drawable.button_camera).fit().centerCrop().into(image5);
+        Picasso.with(getActivity()).load(R.drawable.ic_camera_black_24dp).fit().centerCrop().into(image5);
 
         Button goToMapButton = (Button) view.findViewById(R.id.go_to_manual_button);
         goToMapButton.setOnClickListener(new View.OnClickListener() {
