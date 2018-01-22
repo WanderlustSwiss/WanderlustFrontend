@@ -212,7 +212,7 @@ public class TourOverviewFragment extends Fragment {
                                         case OK:
                                             favorizedTours.add(tour.getTour_id());
                                             Log.d("Touroverview rv", "favorite succesfully added " + tour.getTour_id());
-                                            ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.red));
+                                            ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
                                             break;
                                         default:
                                             Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());
