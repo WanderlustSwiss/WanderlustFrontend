@@ -12,7 +12,6 @@
         android:layout_height="225dp"
         android:adjustViewBounds="false"
         android:background="@color/primary_main"
-        android:contentDescription="@string/profile_bg_descriptionpri"
         android:cropToPadding="false">
 
         <ImageView

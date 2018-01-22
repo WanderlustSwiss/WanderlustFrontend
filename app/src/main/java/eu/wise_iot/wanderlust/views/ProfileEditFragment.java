@@ -26,7 +26,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 
 
-public class EditProfileFragment extends Fragment {
+public class ProfileEditFragment extends Fragment {
 
     private ImageView profileImage;
     private TextView changeImage;
@@ -46,13 +46,13 @@ public class EditProfileFragment extends Fragment {
 
     private ProfileController profileController;
 
-    public EditProfileFragment() {
+    public ProfileEditFragment() {
         // Required empty public constructor
         profileController = new ProfileController();
     }
 
-    public static EditProfileFragment newInstance() {
-        EditProfileFragment fragment = new EditProfileFragment();
+    public static ProfileEditFragment newInstance() {
+        ProfileEditFragment fragment = new ProfileEditFragment();
         Bundle args = new Bundle();
         return fragment;
     }
@@ -68,7 +68,7 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile_edit, container, false);
 
         //initialize view's
         profileImage = (ImageView) view.findViewById(R.id.currentImage);
@@ -99,7 +99,6 @@ public class EditProfileFragment extends Fragment {
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.profile_edit_menu, menu);
         menu.removeItem(R.id.drawer_layout);
-        getActivity().setTitle(R.string.edit_profile);
     }
 
     @Override

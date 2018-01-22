@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,9 +112,9 @@ public class ProfileFragment extends Fragment {
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditProfileFragment editProfileFragment = EditProfileFragment.newInstance();
+                ProfileEditFragment profileEditFragment = ProfileEditFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, editProfileFragment)
+                        .replace(R.id.content_frame, profileEditFragment)
                         .addToBackStack(null)
                         .commit();
             }
