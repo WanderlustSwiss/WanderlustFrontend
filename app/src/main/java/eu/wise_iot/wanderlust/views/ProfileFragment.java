@@ -130,13 +130,9 @@ public class ProfileFragment extends Fragment {
                 profileController.getAmountPoi()));
         //birthday.setText(profileController.getBirthDate());
 
-
-        //set nickname in App Bar
-        getActivity().setTitle(profileController.getNickName());
-
         //set list view to tours for default
         setupMyTours(view);
-        tabLayout.getTabAt(1).select();
+        tabLayout.getTabAt(0).select();
     }
 
     /**
