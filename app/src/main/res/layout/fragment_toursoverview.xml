@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Touren"
+            android:text="@string/tours"
             android:foregroundTint="@color/black"
             android:layout_marginTop="70dp"
             android:textSize="30dp" />
@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Favoriten"
+            android:text="@string/favourites"
             android:textSize="30dp" />
 
         <android.support.v7.widget.RecyclerView

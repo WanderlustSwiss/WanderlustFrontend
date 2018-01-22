@@ -91,10 +91,10 @@
     <string name="menu_title_other">Anderes</string>
     <string name="action_search">suchen</string>
 
-    <string name="profile_tab_mytours">Touren</string>
-    <string name="profile_tab_favorites">Favoriten</string>
-    <string name="profile_tab_saved">Gespeichert</string>
-    <string name="profile_tab_pois">POIs</string>
+    <string name="tours">Touren</string>
+    <string name="favourites">Favoriten</string>
+    <string name="saved">Gespeichert</string>
+    <string name="pois">POIs</string>
     <string name="profile_bg_descriptionpri">Hintergrund</string>
 
 
