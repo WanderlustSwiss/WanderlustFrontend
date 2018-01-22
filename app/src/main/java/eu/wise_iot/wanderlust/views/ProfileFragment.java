@@ -109,7 +109,7 @@ public class ProfileFragment extends Fragment {
         drawable.setCircular(true);
         profilePicture.setImageDrawable(drawable);
 
-        //edit profile button
+        //edit profile button_white
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

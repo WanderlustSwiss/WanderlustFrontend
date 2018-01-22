@@ -75,7 +75,7 @@ public class EditPoiDialogTest {
     @Test
     public void testSaveButton() {
         ImageButton buttonSave = (ImageButton) view.findViewById(R.id.poi_save_button);
-        assertNotNull("button save is null", buttonSave);
+        assertNotNull("button_white save is null", buttonSave);
     }
 
     @Test
@@ -84,9 +84,9 @@ public class EditPoiDialogTest {
 
         // TODO: add check when user is owner of poi
 //        if (poiController.isOwnerOf(poi)) {
-//            assertNotNull("button delete is null", buttonDelete);
+//            assertNotNull("button_white delete is null", buttonDelete);
 //        } else {
-            assertNull("button delete is accessible, even tough the user is not the owner", buttonDelete);
+            assertNull("button_white delete is accessible, even tough the user is not the owner", buttonDelete);
 //        }
     }
 

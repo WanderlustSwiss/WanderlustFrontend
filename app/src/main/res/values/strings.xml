@@ -80,7 +80,7 @@
 
 
     <!-- ERROR MESSAGES -->
-    <string name="msg_e_server_error">Keine Verbindung zum Server.</string>
+    <string name="msg_e_server_error">Keine Verbindung zum Server</string>
 
     <!-- USER ACTIONS -->
     <string name="action_foreward">weiter</string>
@@ -143,7 +143,7 @@
     <!-- Map Type -->
     <string name="map_type_terrain">Terrain</string>
     <string name="map_type_default">Standard</string>
-    <string name="map_type_satelite">Satelit</string>
+    <string name="map_type_satelite">Satellit</string>
     <string name="map_type_types">Kartentypen</string>
 
     <!-- Map Layers -->
@@ -167,7 +167,7 @@
     <string name="checkboxTitleMedium">Mittel</string>
     <string name="msg_hello">Hallo</string>
     <string name="msg_welcome">Willkommen</string>
-    <string name="msg_email_edit_successful">E-Mail wurde erfolgreich geändert.</string>
+    <string name="msg_email_edit_successful">E-Mail wurde erfolgreich geändert</string>
     <string name="err_msg_error_occured">Ein Fehler ist aufgetreten…</string>
     <string name="msg_difficulty_level_changed_to_1">Schwierigkeits-Level auf</string>
     <string name="msg_difficulty_level_changed_to_2">geändert</string>
@@ -180,7 +180,7 @@
     <string name="profile_your_saved_tours">Deine gespeicherten Touren</string>
     <string name="logout_successful">Logout erfolgreich</string>
     <string name="logout_failed">Logout fehlgeschlagen</string>
-    <string name="msg_available_in_next_feature">Dieses Feature wird in kommenden Releases verfgübar sein</string>
+    <string name="msg_available_in_next_feature">Dieses Feature wird in einem späteren Release verfügbar sein</string>
     <string name="profile_edit">Profil bearbeiten</string>
     <string name="title_poi">POI</string>
     <string name="title_tours">Touren</string>
