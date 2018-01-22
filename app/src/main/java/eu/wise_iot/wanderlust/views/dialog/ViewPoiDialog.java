@@ -140,7 +140,7 @@ public class ViewPoiDialog extends DialogFragment {
             public void onResponse(ControllerEvent controllerEvent) {
                 List<File> images = (List<File>) controllerEvent.getModel();
                 if (images.size() > 0) {
-                    Picasso.with(context).load(images.get(0)).resize(350, 250).centerCrop().into(poiImage);
+                    Picasso.with(context).load(images.get(0)).into(poiImage);
                 }
             }
         });
