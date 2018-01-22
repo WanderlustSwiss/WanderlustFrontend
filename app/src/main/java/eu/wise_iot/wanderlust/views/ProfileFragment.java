@@ -24,6 +24,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
@@ -228,6 +229,11 @@ public class ProfileFragment extends Fragment {
      * user tours and adapter to represent the users tours in a custom list view
      */
     public void setupMyTours(View view) {
+        // todo: until feature is released, will use a example tour, delete when implementing this feature
+        UserTour testSavedTour = new UserTour(0, 0, "Beispieltitel",
+                "Beispielbeschreibung","", "", "", 1,
+                1,1, 1, 1, 1, false);
+
         //only if there is at least one tour
         if (profileController.getTours() != null) {
 
@@ -245,13 +251,14 @@ public class ProfileFragment extends Fragment {
         } else {
 
             listView = (ListView) view.findViewById(R.id.listContent);
-            //until feature is released, will use a example tour, delete when implementing this feature
+            // todo: until feature is released, will use a example tour, delete when implementing this feature
+            list = new ArrayList();
+            list.add(testSavedTour);
 
             listView.setAdapter(new ProfileTripListAdapter(getActivity(),
                     R.layout.fragment_profile_list_tour_poi,
                     R.id.ListTourTitle,
                     list));
-
         }
 
         Toast.makeText(getActivity(), R.string.profile_your_tours, Toast.LENGTH_SHORT).show();
@@ -279,7 +286,7 @@ public class ProfileFragment extends Fragment {
         } else {
 
             listView = (ListView) view.findViewById(R.id.listContent);
-            //until feature is released, will use a example tour, delete when implementing this feature
+            // todo: until feature is released, will use a example tour, delete when implementing this feature
             Poi testPoi = new Poi();
 
             list = new ArrayList();
