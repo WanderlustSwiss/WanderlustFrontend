@@ -8,6 +8,9 @@
     <color name="highlight_main">#cc3d54</color>
     <color name="highlight_second">#f24e75</color>
 
+    <!-- used for transparent elements like hiking path in map todo: adjust color so that she fits into other color palette -->
+    <color name="highlight_main_transparent75">#75cc3d54</color>
+
     <color name="structure_main">#D1A928</color>
 
     <color name="heading_icon">#a7a9ac</color>

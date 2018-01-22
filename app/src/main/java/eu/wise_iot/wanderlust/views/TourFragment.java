@@ -211,6 +211,7 @@ public class TourFragment extends Fragment {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(userTour.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
 
         getFragmentManager().beginTransaction()

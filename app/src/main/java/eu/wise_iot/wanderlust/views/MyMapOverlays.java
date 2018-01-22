@@ -3,9 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.DisplayMetrics;
@@ -317,11 +315,10 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             lines = new ArrayList<>();
         }
 
-
         Polyline polyline = new Polyline();
 
         polyline.setPoints(geoPoints);
-        polyline.setColor(Color.RED);
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
 
         lines.add(polyline);
 

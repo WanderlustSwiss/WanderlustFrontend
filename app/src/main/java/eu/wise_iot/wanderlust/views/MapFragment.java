@@ -334,7 +334,7 @@ public class MapFragment extends Fragment {
         mapOverlays.setTour(polyline);
         List<GeoPoint> polylineList = polyline.getPoints();
         mapController.setCenter(polylineList.get(0));
-        mapController.setZoom(15);
+        mapController.setZoom(Defaults.ZOOM_ENLARGED);
     }
 
     /**
