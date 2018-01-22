@@ -159,7 +159,6 @@ public class RegistrationFragment extends Fragment {
     private boolean validateInput(User user) {
         boolean isValid = true;
         if (user.getNickname().equals("")) {
-            nickNameLayout.setError("bla");
             nickNameLayout.setError(getString(R.string.registration_username_required));
             isValid = false;
         } else {

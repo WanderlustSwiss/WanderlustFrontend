@@ -14,14 +14,4 @@ public class WelcomeController {
 
     }
 
-    /**
-     * returns welcome string
-     *
-     * @return String
-     */
-
-    public String getGreeting() {
-        return "Welcome";
-    }
-
 }

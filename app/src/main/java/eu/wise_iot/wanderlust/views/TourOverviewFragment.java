@@ -142,6 +142,7 @@ public class TourOverviewFragment extends Fragment {
 
                         // set up the RecyclerView 1
                         RecyclerView rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
+                        rvTouren.setPadding(5,5,5,5);
                         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                         rvTouren.setLayoutManager(horizontalLayoutManager);
                         MyRecyclerViewAdapter adapterRoutes = new MyRecyclerViewAdapter(context, listTours);

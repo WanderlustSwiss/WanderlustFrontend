@@ -24,7 +24,6 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
@@ -70,7 +69,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         //inflate view from xml-file
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -115,19 +114,19 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 EditProfileFragment editProfileFragment = EditProfileFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, editProfileFragment)
-                                    .addToBackStack(null)
-                                    .commit();
+                        .replace(R.id.content_frame, editProfileFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
         //setting data
         amountScore.setText(String.format(Locale.GERMANY, "%1d",
-                    profileController.getScore()));
+                profileController.getScore()));
         amountTours.setText(String.format(Locale.GERMANY, "%1d",
-                    profileController.getAmountTours()));
+                profileController.getAmountTours()));
         amountPOI.setText(String.format(Locale.GERMANY, "%1d",
-                    profileController.getAmountPoi()));
+                profileController.getAmountPoi()));
         //birthday.setText(profileController.getBirthDate());
 
 
@@ -209,7 +208,7 @@ public class ProfileFragment extends Fragment {
         } else {
 
             listView = (ListView) view.findViewById(R.id.listContent);
-            //until feature is released, will use a example tour, delete when implementing this feature
+            // todo: until feature is released, will use a example tour, delete when implementing this feature
             String testFavorite = "blabla";
 
             list = new ArrayList();
@@ -221,7 +220,7 @@ public class ProfileFragment extends Fragment {
                     list));
         }
 
-        Toast.makeText(getActivity(), "Deine Favoriten", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.profile_your_favourites, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -253,9 +252,9 @@ public class ProfileFragment extends Fragment {
                     R.id.ListTourTitle,
                     list));
 
-            }
+        }
 
-        Toast.makeText(getActivity(), "Deine Touren", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.profile_your_tours, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -292,7 +291,7 @@ public class ProfileFragment extends Fragment {
                     list));
         }
 
-        Toast.makeText(getActivity(), "Deine POI's", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.profile_your_pois, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -317,11 +316,11 @@ public class ProfileFragment extends Fragment {
         } else {
 
             listView = (ListView) view.findViewById(R.id.listContent);
-            //until feature is released, will use a example tour, delete when implementing this feature
+            // todo: until feature is released, will use a example tour, delete when implementing this feature
             CommunityTour testSavedTour = new CommunityTour(0, 0,
-                                                             "Beispiel-Gespeichert", "Gespeicherte Beispiel-Tour",
-                                                new byte[10], "",1,
-                                                    2, false);
+                    "Beispiel-Gespeichert", "Gespeicherte Beispiel-Tour",
+                    new byte[10], "", 1,
+                    2, false);
 
             list = new ArrayList();
             list.add(testSavedTour);
@@ -332,7 +331,7 @@ public class ProfileFragment extends Fragment {
                     list));
         }
 
-        Toast.makeText(getActivity(), "Deine gespeicherten Touren", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.profile_your_saved_tours, Toast.LENGTH_SHORT).show();
     }
 
     /**

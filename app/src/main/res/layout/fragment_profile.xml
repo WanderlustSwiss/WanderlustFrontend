@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/profileAmountPOI"
                     android:layout_below="@+id/profileAmountPOI"
-                    android:text="POI"
+                    android:text="@string/title_poi"
                     android:textAlignment="center"
                     android:textSize="10dp" />
 
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/profileAmountTours"
                     android:layout_below="@+id/profileAmountTours"
-                    android:text="Touren"
+                    android:text="@string/title_tours"
                     android:textAlignment="center"
                     android:textSize="10dp" />
 
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/profileAmountScore"
                     android:layout_below="@+id/profileAmountScore"
-                    android:text="Score"
+                    android:text="@string/title_score"
                     android:textAlignment="center"
                     android:textSize="10dp" />
 
@@ -129,7 +129,7 @@
                     android:layout_below="@+id/profilePOItitle"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/button_profil_bearbeiten"
-                    android:text="Profil bearbeiten"
+                    android:text="@string/profile_edit"
                     android:textAppearance="@style/TextAppearance.AppCompat" />
             </RelativeLayout>
 
@@ -202,7 +202,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:paddingLeft="10dp"
-            android:text="Dieses Feature wird in kommenden Releases verfgübar sein."
+            android:text="@string/msg_available_in_next_feature"
             android:textStyle="italic"
             android:textColor="#FFFFFF"
             android:drawableLeft="@drawable/ic_announcement_black_24dp"

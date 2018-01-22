@@ -178,8 +178,10 @@ public class TourFragment extends Fragment {
         tourRegion.setText("");
         tourTitle.setText(userTour.getTitle());
         textViewTourDistance.setText(tourController.convertToStringDistance(userTour.getDistance()));
-        textViewAscend.setText(String.valueOf(userTour.getAscent()) + " m");
-        textViewDescend.setText(String.valueOf(userTour.getDescent()) + " m");
+        String ascentText = String.valueOf(userTour.getAscent()) + " " + getString(R.string.meter_abbreviation);
+        textViewAscend.setText(ascentText);
+        String descentText = String.valueOf(userTour.getDescent()) + " " + getString(R.string.meter_abbreviation);
+        textViewDescend.setText(descentText);
         textViewDuration.setText(tourController.convertToStringDuration(userTour.getDuration()));
         textViewDescription.setText(userTour.getDescription());
 

@@ -28,7 +28,7 @@
     <!-- DISCLAIMER FRAGMENT -->
     <string name="disclaimer_header">Über Wanderlust</string>
     <string name="disclaimer_text1">MIT Lizenz</string>
-    <string name="disclaimer_text2">© 2017 Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Meier, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov, Alexander Weinbeck &amp; Samuel Fricker</string>
+    <string name="disclaimer_text2">© 2017 Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Meier, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov &amp; Alexander Weinbeck</string>
     <string name="disclaimer_text3">Die Software wird ohne jede ausdrückliche oder implizierte Garantie bereitgestellt, einschliesslich der Garantie zur Benutzung für den Vorgesehenen oder einem bestimmten Zweck sowie jeglicher Rechtsverletzung, jedoch nicht darauf beschränkt. In keinem Fall sind die Autoren oder Copyrightinhaber für jeglichen Schaden oder sonstige Ansprüche haftbar zu machen, ob infolge der Erfüllung eines Vertrages, eines Deliktes oder anders im Zusammenhang mit der Software oder sonstiger Verwendung der Software entstanden.</string>
 
 
@@ -91,15 +91,13 @@
     <string name="menu_title_other">Anderes</string>
     <string name="action_search">suchen</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="profile_tab_mytours">Touren</string>
     <string name="profile_tab_favorites">Favoriten</string>
     <string name="profile_tab_saved">Gespeichert</string>
     <string name="profile_tab_pois">POIs</string>
-    <string name="profile_bg_descriptionpri">background</string>
+    <string name="profile_bg_descriptionpri">Hintergrund</string>
 
 
-    <!-- TODO: Remove or change this placeholder text -->
     <!-- REGISTRATION -->
     <string name="registration_name">Nickname</string>
     <string name="registration_email">E-Mail</string>
@@ -136,8 +134,8 @@
     <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
     <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>
     <string name="forgot_password_btn">Passwort zurücksetzen</string>
-    <string name="forgot_password_resetmail_success">Eine Mail fürs zurücksetzen des Passwortes wurde erfolgreich versendet</string>
-    <string name="forgot_password_resetmail_fail">Fehler beim zurücksetzen des Passwortes</string>
+    <string name="forgot_password_reset_mail_success">Eine E-Mail fürs Zurücksetzen des Passwortes wurde erfolgreich versendet</string>
+    <string name="forgot_password_reset_mail_fail">Fehler beim zurücksetzen des Passwortes</string>
     <string name="forgot_password_link_login"><u>Zurück zum Login</u></string>
     <string name="registration_email_confirmation">Eine E-Mail wurde verschickt. Bitte bestätigen vor dem einloggen</string>
 
@@ -153,13 +151,11 @@
     <string name="map_nothing_found">Kein Resultat gefunden</string>
 
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="message_confirm_delete_poi">Willst du den POI wirklich löschen?</string>
     <string name="image_upload_failed">Upload von Bild fehlgeschlagen</string>
     <string name="message_add_title">Bitte Titel hinzufügen</string>
-    <string name="meterAboveSealevelAbbrevation">m ü. M.</string>
+    <string name="meter_above_sea_level_abbreviation">m ü. M.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>
@@ -169,5 +165,25 @@
     <string name="checkboxTitleEasy">Einfach</string>
     <string name="checkboxTitleHard">Schwierig</string>
     <string name="checkboxTitleMedium">Mittel</string>
+    <string name="msg_hello">Hallo</string>
+    <string name="msg_welcome">Willkommen</string>
+    <string name="msg_email_edit_successful">E-Mail wurde erfolgreich geändert.</string>
+    <string name="err_msg_error_occured">Ein Fehler ist aufgetreten…</string>
+    <string name="msg_difficulty_level_changed_to_1">Schwierigkeits-Level auf</string>
+    <string name="msg_difficulty_level_changed_to_2">geändert</string>
+    <string name="msg_no_changes_done">Keine Änderungen vorgenommen</string>
+    <string name="edit_profile">Profil bearbeiten</string>
+    <string name="meter_abbreviation">m</string>
+    <string name="profile_your_favourites">Deine Favoriten</string>
+    <string name="profile_your_tours">Deine Touren</string>
+    <string name="profile_your_pois">Deine POIs</string>
+    <string name="profile_your_saved_tours">Deine gespeicherten Touren</string>
+    <string name="logout_successful">Logout erfolgreich</string>
+    <string name="logout_failed">Logout fehlgeschlagen</string>
+    <string name="msg_available_in_next_feature">Dieses Feature wird in kommenden Releases verfgübar sein</string>
+    <string name="profile_edit">Profil bearbeiten</string>
+    <string name="title_poi">POI</string>
+    <string name="title_tours">Touren</string>
+    <string name="title_score">Score</string>
 
 </resources>

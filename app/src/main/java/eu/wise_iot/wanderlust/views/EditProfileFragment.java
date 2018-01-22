@@ -99,7 +99,7 @@ public class EditProfileFragment extends Fragment {
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.profile_edit_menu, menu);
         menu.removeItem(R.id.drawer_layout);
-        getActivity().setTitle("Profil bearbeiten");
+        getActivity().setTitle(R.string.edit_profile);
     }
 
     @Override
@@ -117,11 +117,11 @@ public class EditProfileFragment extends Fragment {
 
                         switch(type){
                             case OK:
-                                Toast.makeText(getActivity(), "E-Mail wurde erfolgreich geändert.",
+                                Toast.makeText(getActivity(), R.string.msg_email_edit_successful,
                                                             Toast.LENGTH_SHORT).show();
                                 break;
                             default:
-                                Toast.makeText(getActivity(), "Ein Fehler ist aufgetreten...",
+                                Toast.makeText(getActivity(), R.string.err_msg_error_occured,
                                                                             Toast.LENGTH_SHORT).show();
                                 break;
                         }
@@ -136,12 +136,12 @@ public class EditProfileFragment extends Fragment {
                         switch (type){
                             case OK:
                                 Toast.makeText(getActivity(),
-                                        "Schwierigkeits-Level auf " + difficulty + "geändert." ,
+                                        R.string.msg_difficulty_level_changed_to_1 + " " + difficulty + " " + R.string.msg_difficulty_level_changed_to_2 ,
                                         Toast.LENGTH_SHORT).show();
                                 break;
 
                             default:
-                                Toast.makeText(getActivity(), "Ein Fehler ist aufgetreten",
+                                Toast.makeText(getActivity(), R.string.err_msg_error_occured,
                                         Toast.LENGTH_SHORT).show();
                                 break;
                         }
@@ -151,7 +151,7 @@ public class EditProfileFragment extends Fragment {
 
             case R.id.cancelIcon:
                 //back to profile
-                Toast.makeText(getActivity(), "Keine Änderungen vorgenommen.",
+                Toast.makeText(getActivity(), R.string.msg_no_changes_done,
                                                                 Toast.LENGTH_SHORT).show();
                 ProfileFragment profileFragment = new ProfileFragment();
                 getFragmentManager().beginTransaction()
@@ -174,7 +174,7 @@ public class EditProfileFragment extends Fragment {
         profileImage.setImageDrawable(drawable);
         
         changeImage.setOnClickListener(v -> {
-            Toast.makeText(getActivity(), "Diese Funktion ist noch nicht verfügbar.",
+            Toast.makeText(getActivity(), R.string.msg_no_action_defined,
                                                                     Toast.LENGTH_SHORT).show();
         });
 

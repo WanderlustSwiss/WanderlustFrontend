@@ -201,7 +201,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
             String token = account.getIdToken();
-            Toast.makeText(context, "Hello " + account.getGivenName() + " " + account.getFamilyName(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, getString(R.string.msg_hello) + " " + account.getGivenName() + " " + account.getFamilyName(), Toast.LENGTH_LONG).show();
 
             LoginUser user = new LoginUser(account.getEmail(), token);
             //   loginController.logIn(user, fragmentHandler);
