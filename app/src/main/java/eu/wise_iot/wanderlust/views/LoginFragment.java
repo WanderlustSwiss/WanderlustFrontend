@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -68,7 +69,6 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                 default:
                     Toast.makeText(context, eventType.toString(), Toast.LENGTH_LONG).show();
                     break;
-
             }
         }
     };
@@ -137,6 +137,10 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                 );
 
                 loginController.logIn(loginUser, fragmentHandler);
+
+                // hide soft keyboard after button was clicked
+                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(btnLogin.getApplicationWindowToken(), 0);
             }
         });
 
