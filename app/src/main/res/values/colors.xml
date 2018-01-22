@@ -15,6 +15,9 @@
     <color name="background_two_and_inactive">#d1d3d4</color>
     <color name="background_main">#FFFFFF</color>
 
+    <!-- used for hiking path todo: adjust color so that she fits into other color palette -->
+    <color name="highlight_third">#009ce1</color>
+
 
     <!-- DIFFICULTIES -->
 
