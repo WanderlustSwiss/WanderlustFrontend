@@ -51,7 +51,7 @@ public class ManualFragment extends Fragment {
 //        Picasso.with(getActivity()).load(R.drawable.button_my_location).fit().centerCrop().into(image4);
 
         ImageView image5 = (ImageView) view.findViewById(R.id.image5);
-        Picasso.with(getActivity()).load(R.drawable.ic_camera_black_24dp).fit().centerCrop().into(image5);
+        Picasso.with(getActivity()).load(R.drawable.ic_camera_white_24dp).fit().centerCrop().into(image5);
 
         Button goToMapButton = (Button) view.findViewById(R.id.go_to_manual_button);
         goToMapButton.setOnClickListener(new View.OnClickListener() {

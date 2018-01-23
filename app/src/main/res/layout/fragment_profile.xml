@@ -199,10 +199,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_margin="16dp"
             android:drawableLeft="@drawable/ic_announcement_black_24dp"
             android:gravity="center"
             android:padding="8dp"
-            android:layout_margin="16dp"
             android:text="@string/msg_available_in_next_feature"
             android:textColor="@color/white"
             android:textStyle="italic" />

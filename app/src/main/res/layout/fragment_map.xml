@@ -82,7 +82,7 @@
                 style="@style/floatingactionbutton_normal"
                 android:layout_gravity="center_horizontal|center"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_camera_black_24dp" />
+                android:src="@drawable/ic_camera_white_24dp" />
         </LinearLayout>
     </FrameLayout>
 
