@@ -53,7 +53,7 @@
 
                 <ImageButton
                     android:id="@+id/layerButton"
-                    style="@style/floatingactionbutton_mini"
+                    style="@style/floatingactionbutton_mini_light"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_layers_black_24dp" />
             </LinearLayout>
@@ -71,7 +71,7 @@
 
             <ImageButton
                 android:id="@+id/locationButton"
-                style="@style/floatingactionbutton_normal"
+                style="@style/floatingactionbutton_normal_light"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_my_location_disabled_black_24dp" />
@@ -97,8 +97,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/link_login"
@@ -118,8 +117,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="24dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="24dp">
 
                     <ImageButton
                         android:id="@+id/poi_layer_button"
@@ -139,15 +138,14 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:background="#90909090"
-                />
+                android:background="#90909090" />
 
             <TextView
                 android:id="@+id/title_map_type"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="24dp"
                 android:paddingLeft="24dp"
+                android:paddingTop="24dp"
                 android:text="@string/map_type_types"
                 android:textColor="@color/heading_icon"
                 android:textSize="15sp" />
@@ -155,8 +153,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="24dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="24dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"

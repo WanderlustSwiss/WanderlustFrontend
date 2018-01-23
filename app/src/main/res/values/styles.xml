@@ -39,6 +39,20 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
+    <style name="floatingactionbutton_normal_light" parent="Widget.Design.FloatingActionButton">
+        <!-- properties -->
+        <item name="android:elevation">5dp</item>
+        <item name="backgroundTint">@color/background_two_and_inactive</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <!-- gbutton_whitetton space for the shadow -->
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
     <style name="standard_button">
         <item name="backgroundTint">@color/primary_main</item>
         <item name="android:textColor">@color/background_main</item>
@@ -50,6 +64,20 @@
         <!-- properties (material standard) -->
         <item name="android:elevation">5dp</item>
         <item name="backgroundTint">@color/primary_main</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <!-- gbutton_whitetton space for the shadow -->
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="floatingactionbutton_mini_light" parent="Widget.Design.FloatingActionButton">
+        <!-- properties (material standard) -->
+        <item name="android:elevation">5dp</item>
+        <item name="backgroundTint">@color/background_two_and_inactive</item>
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>
         <!-- gbutton_whitetton space for the shadow -->
