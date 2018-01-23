@@ -225,7 +225,7 @@ public class PoiDao extends DatabaseObjectAbstract {
         if (poi.isPublic()) {
             //Upload image to backend
             PoiService service = ServiceGenerator.createService(PoiService.class);
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
             Call<Poi.ImageInfo> call = service.uploadImage(poi.getPoi_id(), body);
             call.enqueue(new Callback<Poi.ImageInfo>() {
