@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary_main"
-            android:padding="8dp">
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/poi_type_text_view"
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/poi_background_container"
             android:layout_marginTop="16dp"
-            android:padding="8dp"
+            android:padding="12dp"
             style="@style/p_black"/>
 
     </RelativeLayout>
