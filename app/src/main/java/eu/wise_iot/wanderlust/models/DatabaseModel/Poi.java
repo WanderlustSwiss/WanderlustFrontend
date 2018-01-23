@@ -68,8 +68,8 @@ public class Poi extends AbstractModel {
 
     public Poi() {
         this.internal_id = 0;
-        this.title = "No Title";
-        this.description = "No Description";
+        this.title = "No title";
+        this.description = "No description";
         this.imageIds = new byte[MAX_IMAGES];
         this.imageCount = 0;
         this.longitude = 0;

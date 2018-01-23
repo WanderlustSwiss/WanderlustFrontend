@@ -170,10 +170,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     switch (controllerEvent.getType()) {
                         case OK:
                             LoginUser.clearCookies();
-                            Toast.makeText(getApplicationContext(), "logout successful", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.logout_successful, Toast.LENGTH_LONG).show();
                             break;
                         default:
-                            Toast.makeText(getApplicationContext(), "logout failed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
                     }
                 }
             });

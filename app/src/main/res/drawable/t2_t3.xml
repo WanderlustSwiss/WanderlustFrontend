@@ -11,20 +11,20 @@
                 android:pathData="M91 0l24 0 0 24 -24 0z" />
             <path
                 android:pathData="M91 0l24 0 0 24 -24 0z"
-                android:fillColor="#ffffff" />
+                android:fillColor="@color/white" />
             <group
                 android:translateX="91"
                 android:translateY="8">
                 <path
                     android:pathData="M0 0L24 0 24 8 0 8Z"
-                    android:fillColor="#cc3d54" />
+                    android:fillColor="@color/highlight_main" />
             </group>
             <group
                 android:translateX="91">
                 <path
                     android:pathData="M0.1 0.1l23.799999 0 0 23.799999 -23.799999 0z"
                     android:strokeWidth="0.2"
-                    android:strokeColor="#a4a4a4" />
+                    android:strokeColor="@color/heading_icon" />
             </group>
         </group>
     </group>

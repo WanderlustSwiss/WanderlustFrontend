@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -68,7 +69,6 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                 default:
                     Toast.makeText(context, eventType.toString(), Toast.LENGTH_LONG).show();
                     break;
-
             }
         }
     };
@@ -85,8 +85,12 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+
         context = getActivity();
+
+        if (((AppCompatActivity) context).getSupportActionBar() != null) {
+            ((AppCompatActivity) context).getSupportActionBar().hide();
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -137,6 +141,10 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                 );
 
                 loginController.logIn(loginUser, fragmentHandler);
+
+                // hide soft keyboard after button was clicked
+                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(btnLogin.getApplicationWindowToken(), 0);
             }
         });
 
@@ -201,7 +209,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
             String token = account.getIdToken();
-            Toast.makeText(context, "Hello " + account.getGivenName() + " " + account.getFamilyName(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, getString(R.string.msg_hello) + " " + account.getGivenName() + " " + account.getFamilyName(), Toast.LENGTH_LONG).show();
 
             LoginUser user = new LoginUser(account.getEmail(), token);
             //   loginController.logIn(user, fragmentHandler);

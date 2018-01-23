@@ -48,7 +48,7 @@ public class ForgetPasswortFragment extends Fragment {
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
-                    Toast.makeText(context, R.string.forgot_password_resetmail_success, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
                     LoginFragment loginFragment = new LoginFragment();
                     getFragmentManager().beginTransaction()
                             .add(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
@@ -56,7 +56,7 @@ public class ForgetPasswortFragment extends Fragment {
 
                     break;
                 default:
-                    Toast.makeText(context, R.string.forgot_password_resetmail_fail, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.forgot_password_reset_mail_fail, Toast.LENGTH_LONG).show();
                     break;
             }
         }

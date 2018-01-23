@@ -7,13 +7,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="220dp">
 
         <com.jsibbold.zoomage.ZoomageView
             android:id="@+id/poi_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             app:zoomage_animateOnReset="true"
             app:zoomage_autoCenter="true"
             app:zoomage_autoResetMode="NEVER"

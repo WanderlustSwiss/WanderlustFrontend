@@ -77,11 +77,11 @@ public class TourOverviewFragment extends Fragment {
             public void onResponse(ControllerEvent controllerEvent) {
                 switch (controllerEvent.getType()) {
                     case OK:
-                        Log.d("Toursoverview", "Server response getting favorites: " + controllerEvent.getType().name());
+                        Log.d(TAG, "Server response getting favorites: " + controllerEvent.getType().name());
                         break;
                     default:
                         //Toast.makeText("Konnte Bilder nicht laden", Toast.LENGTH_SHORT);
-                        Log.d("Toursoverview", "Download favorites: Server response ERROR: " + controllerEvent.getType().name());
+                        Log.d(TAG, "Download favorites: Server response ERROR: " + controllerEvent.getType().name());
                 }
             }
         });
@@ -93,16 +93,16 @@ public class TourOverviewFragment extends Fragment {
                     public void onResponse(ControllerEvent controllerEvent) {
                         switch (controllerEvent.getType()) {
                             case OK:
-                                Log.d("Toursoverview", "Server response thumbnail downloading: " + controllerEvent.getType().name());
+                                Log.d(TAG, "Server response thumbnail downloading: " + controllerEvent.getType().name());
                                 break;
                             default:
                                 //Toast.makeText("Konnte Bilder nicht laden", Toast.LENGTH_SHORT);
-                                Log.d("Toursoverview", "Server response thumbnail ERROR: " + controllerEvent.getType().name());
+                                Log.d(TAG, "Server response thumbnail ERROR: " + controllerEvent.getType().name());
                         }
                     }
                 });
             } catch (Exception e){
-                Log.d("Toursoverview", "Server response ERROR: " + e.getMessage());
+                Log.d(TAG, "Server response ERROR: " + e.getMessage());
             }
         }
 
@@ -130,7 +130,7 @@ public class TourOverviewFragment extends Fragment {
                     case OK:
                         //get all needed information from server db
                         List<UserTour> listTours = (List<UserTour>) event.getModel();
-                        Log.d("Toursoverview","Getting Tours: git addServer response arrived");
+                        Log.d(TAG,"Getting Tours: git addServer response arrived");
 
                         //get all the images needed and save them on the device
                         getDataFromServer(listTours);
@@ -138,10 +138,11 @@ public class TourOverviewFragment extends Fragment {
                         //get all Favorites and see which are the ones that are selected
                         //getFavorites()
 
-                        Log.d("Toursoverview","Images preserved: " + userTourImages);
+                        Log.d(TAG,"Images preserved: " + userTourImages);
 
                         // set up the RecyclerView 1
                         RecyclerView rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
+                        rvTouren.setPadding(5,5,5,5);
                         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                         rvTouren.setLayoutManager(horizontalLayoutManager);
                         MyRecyclerViewAdapter adapterRoutes = new MyRecyclerViewAdapter(context, listTours);
@@ -166,7 +167,7 @@ public class TourOverviewFragment extends Fragment {
                         //tvDescend.setText(ut.getTitle());
                         break;
                     default:
-                        Log.d("Toursoverview","Server response ERROR: " + event.getType().name());
+                        Log.d(TAG,"Server response ERROR: " + event.getType().name());
                         //do nothing
                 }
             }
@@ -181,10 +182,10 @@ public class TourOverviewFragment extends Fragment {
             public void onItemClickImages(View view, int routeID, UserTour tour, List<Long> favorizedTours) {
                 switch (view.getId()) {
                     case R.id.favoriteButton:
-                        Log.d("Toursoverview","Tour Favorite Clicked and event triggered ");
+                        Log.d(TAG,"Tour Favorite Clicked and event triggered ");
                         ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.favoriteButton);
                         if(favorizedTours.contains(tour.getTour_id())){
-                            Log.d("Touroverview rv", "favorite get unfavored: " + tour.getTour_id());
+                            Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
                             long favId = toc.getTourFavoriteId(tour.getTour_id());
                             if(favId != -1) {
                                 toc.deleteFavorite(favId, new FragmentHandler() {
@@ -193,17 +194,17 @@ public class TourOverviewFragment extends Fragment {
                                         switch (controllerEvent.getType()) {
                                             case OK:
                                                 favorizedTours.remove(tour.getTour_id());
-                                                Log.d("Touroverview rv", "favorite succesfully deleted " + tour.getTour_id());
+                                                Log.d(TAG, "favorite succesfully deleted " + tour.getTour_id());
                                                 ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                                                 break;
                                             default:
-                                                Log.d("Touroverview rv", "favorite failure while deleting " + tour.getTour_id());
+                                                Log.d(TAG, "favorite failure while deleting " + tour.getTour_id());
                                         }
                                     }
                                 });
                             }
                         } else {
-                            Log.d("Touroverview rv", "favorite gets favored: " + tour.getTour_id());
+                            Log.d(TAG, "favorite gets favored: " + tour.getTour_id());
                             toc.setFavorite(tour, new FragmentHandler() {
                                 @Override
                                 public void onResponse(ControllerEvent controllerEvent) {
@@ -211,7 +212,7 @@ public class TourOverviewFragment extends Fragment {
                                         case OK:
                                             favorizedTours.add(tour.getTour_id());
                                             Log.d("Touroverview rv", "favorite succesfully added " + tour.getTour_id());
-                                            ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.red));
+                                            ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
                                             break;
                                         default:
                                             Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());
@@ -221,10 +222,11 @@ public class TourOverviewFragment extends Fragment {
                         }
                         break;
                     default:
-                        Log.d("Toursoverview","Tour Image Clicked and event triggered ");
+                        Log.d(TAG,"Tour Image Clicked and event triggered ");
                         TourFragment tourFragment = TourFragment.newInstance(tour);
                         getFragmentManager().beginTransaction()
                                 .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                                .addToBackStack(Constants.TOUR_FRAGMENT)
                                 .commit();
                         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                         break;

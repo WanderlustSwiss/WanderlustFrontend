@@ -111,8 +111,8 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter {
 
         //set data
         //TODO: set data from entity
-        title.setText("Beispiel-Favorite");
-        description.setText("Das ist nur ein Beispiel-Favorit.");
+        title.setText("No title");
+        description.setText("No description");
 
         tripImage.setImageResource(R.drawable.example_image);
 

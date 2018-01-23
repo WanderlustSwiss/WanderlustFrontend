@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/img_201"
     android:orientation="vertical"
     android:paddingLeft="16dp"
@@ -10,6 +11,7 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_layout_nickname"
         style="@style/default_input"
+        app:errorTextAppearance="@style/default_input_error"
         android:layout_marginTop="120dp"
         android:theme="@style/text_label_white">
 
@@ -27,6 +29,7 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_layout_mail"
         style="@style/default_input"
+        app:errorTextAppearance="@style/default_input_error"
         android:theme="@style/text_label_white">
 
 
@@ -41,8 +44,8 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_layout_password"
         style="@style/default_input"
+        app:errorTextAppearance="@style/default_input_error"
         android:theme="@style/text_label_white">
-
 
         <EditText
             android:id="@+id/input_password"
@@ -56,6 +59,7 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_layout_password_repeat"
         style="@style/default_input"
+        app:errorTextAppearance="@style/default_input_error"
         android:theme="@style/text_label_white">
 
         <EditText

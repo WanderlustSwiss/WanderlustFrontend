@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/background_two_and_inactive"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".views.MainActivity">
@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Touren"
+            android:text="@string/tours"
             android:foregroundTint="@color/black"
             android:layout_marginTop="70dp"
             android:textSize="30dp" />
@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Favoriten"
+            android:text="@string/favourites"
             android:textSize="30dp" />
 
         <android.support.v7.widget.RecyclerView

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -65,7 +66,9 @@ public class RegistrationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        }
         context = getActivity();
     }
 
@@ -124,8 +127,6 @@ public class RegistrationFragment extends Fragment {
                                     Profile profile = new Profile(0, user.getProfile(),
                                             (byte) 1, 0, "",
                                                         "de", user.getUser_id(), 0);
-
-
                                     break;
                                 case CONFLICT:
                                     Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
@@ -136,6 +137,9 @@ public class RegistrationFragment extends Fragment {
                         }
                     });
                 }
+                // hide soft keyboard after button was clicked
+                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(btnRegister.getApplicationWindowToken(), 0);
             }
         });
 
@@ -159,7 +163,6 @@ public class RegistrationFragment extends Fragment {
     private boolean validateInput(User user) {
         boolean isValid = true;
         if (user.getNickname().equals("")) {
-            nickNameLayout.setError("bla");
             nickNameLayout.setError(getString(R.string.registration_username_required));
             isValid = false;
         } else {

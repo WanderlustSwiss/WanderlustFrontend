@@ -2,8 +2,6 @@
 
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
-    <string name="app_yes">Ja</string>
-    <string name="app_no">Nein</string>
     <!-- WELCOME FRAGMENT -->
     <string name="msg_welcome_header">Willkommen und danke, dass du das Release 0.1 von Wanderlust testen willst!</string>
     <string name="msg_welcome_text1">Bei dieser Version geht es vorerst darum Eindrücke zu sammeln und so schöne und weniger schöne Orte sichtbar zu machen. Bilder hingegen werden vorerst nur lokal bei dir abgespeichert. Wenn du sie mir aber (mit dem Original-Namen) zuschickst, kann ich sie beim nächsten Release hinzufügen.</string>
@@ -28,7 +26,7 @@
     <!-- DISCLAIMER FRAGMENT -->
     <string name="disclaimer_header">Über Wanderlust</string>
     <string name="disclaimer_text1">MIT Lizenz</string>
-    <string name="disclaimer_text2">© 2017 Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Meier, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov, Alexander Weinbeck &amp; Samuel Fricker</string>
+    <string name="disclaimer_text2">© 2017 Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Meier, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov &amp; Alexander Weinbeck</string>
     <string name="disclaimer_text3">Die Software wird ohne jede ausdrückliche oder implizierte Garantie bereitgestellt, einschliesslich der Garantie zur Benutzung für den Vorgesehenen oder einem bestimmten Zweck sowie jeglicher Rechtsverletzung, jedoch nicht darauf beschränkt. In keinem Fall sind die Autoren oder Copyrightinhaber für jeglichen Schaden oder sonstige Ansprüche haftbar zu machen, ob infolge der Erfüllung eines Vertrages, eines Deliktes oder anders im Zusammenhang mit der Software oder sonstiger Verwendung der Software entstanden.</string>
 
 
@@ -38,14 +36,6 @@
 
 
     <!-- TOUR RELATED STRINGS -->
-    <string name="tour_difficulty_label">Schwierigkeit</string>
-    <string name="tour_duration_label">Zeitbedarf</string>
-    <string name="tour_distance_down_label">Abstieg</string>
-    <string name="tour_link_label">Originallink</string>
-    <string name="tour_hint_for_options_edit">Region, Ort, Berg oder Pass</string>
-    <string name="tour_option_circle_hike">Rundwanderung</string>
-    <string name="tour_option_view">Aussicht</string>
-    <string name="tour_option_several_days">Mehrtägig</string>
     <string name="tour_button_show_map">Karte zeigen</string>
 
 
@@ -70,8 +60,6 @@
     <string name="msg_not_saved">nicht gespeichert</string>
     <string name="msg_camera_about_to_start">Kamera wird geöffnet</string>
     <string name="msg_camera_no_gps">GPS deaktiviert! Eindrücke werden nicht gespeichert</string>
-    <string name="msg_photo_upload_successful">Foto Upload erfolgreich</string>
-    <string name="msg_photo_upload_failed">Foto Upload fehlgeschlagen</string>
     <string name="msg_follow_mode_enabled">Verfolgunsmodus aktiv\n(erhöhter Batterieverbrauch!)</string>
     <string name="msg_follow_mode_disabled">Verfolgunsmodus deaktiviert\n(Batterie-Sparmodus)</string>
     <string name="msg_map_centered_on_long_click">Karte wird zentriert</string>
@@ -80,7 +68,6 @@
 
 
     <!-- ERROR MESSAGES -->
-    <string name="msg_e_server_error">Keine Verbindung zum Server.</string>
 
     <!-- USER ACTIONS -->
     <string name="action_foreward">weiter</string>
@@ -91,15 +78,12 @@
     <string name="menu_title_other">Anderes</string>
     <string name="action_search">suchen</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="profile_tab_mytours">Touren</string>
-    <string name="profile_tab_favorites">Favoriten</string>
-    <string name="profile_tab_saved">Gespeichert</string>
-    <string name="profile_tab_pois">POIs</string>
-    <string name="profile_bg_descriptionpri">background</string>
+    <string name="tours">Touren</string>
+    <string name="favourites">Favoriten</string>
+    <string name="saved">Gespeichert</string>
+    <string name="pois">POIs</string>
 
 
-    <!-- TODO: Remove or change this placeholder text -->
     <!-- REGISTRATION -->
     <string name="registration_name">Nickname</string>
     <string name="registration_email">E-Mail</string>
@@ -121,23 +105,19 @@
     <string name="login_password">Passwort</string>
     <string name="login_login">Login</string>
     <string name="login_failure">Login fehlgeschlagen</string>
-    <string name="server_client_id">877872359525-t55gb7eug4cjamosphfjlq41uj2deqej.apps.googleusercontent.com</string>
     <string name="login_need_registration"><u>Neuen Account erstellen</u></string>
     <string name="login_forgot_password"><u>Passwort vergessen?</u></string>
 
 
     <!-- POI -->
     <string name="poi_fragment_textview_title">Titel</string>
-    <string name="poi_fragment_textview_description">POI Beschreibung</string>
-    <string name="poi_fragment_privacy_private_item">Privat</string>
-    <string name="poi_fragment_privacy_public_item">Öffentlich</string>
     <string name="layer_poi">POI-Layer</string>
     <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
     <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
     <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>
     <string name="forgot_password_btn">Passwort zurücksetzen</string>
-    <string name="forgot_password_resetmail_success">Eine Mail fürs zurücksetzen des Passwortes wurde erfolgreich versendet</string>
-    <string name="forgot_password_resetmail_fail">Fehler beim zurücksetzen des Passwortes</string>
+    <string name="forgot_password_reset_mail_success">Eine E-Mail fürs Zurücksetzen des Passwortes wurde erfolgreich versendet</string>
+    <string name="forgot_password_reset_mail_fail">Fehler beim zurücksetzen des Passwortes</string>
     <string name="forgot_password_link_login"><u>Zurück zum Login</u></string>
     <string name="registration_email_confirmation">Eine E-Mail wurde verschickt. Bitte bestätigen vor dem einloggen</string>
 
@@ -145,7 +125,7 @@
     <!-- Map Type -->
     <string name="map_type_terrain">Terrain</string>
     <string name="map_type_default">Standard</string>
-    <string name="map_type_satelite">Satelit</string>
+    <string name="map_type_satelite">Satellit</string>
     <string name="map_type_types">Kartentypen</string>
 
     <!-- Map Layers -->
@@ -153,21 +133,27 @@
     <string name="map_nothing_found">Kein Resultat gefunden</string>
 
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="message_confirm_delete_poi">Willst du den POI wirklich löschen?</string>
     <string name="image_upload_failed">Upload von Bild fehlgeschlagen</string>
     <string name="message_add_title">Bitte Titel hinzufügen</string>
-    <string name="meterAboveSealevelAbbrevation">m ü. M.</string>
+    <string name="meter_above_sea_level_abbreviation">m ü. M.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>
-    <string name="nickname">Nickname</string>
-    <string name="nickname_hint">Nickname</string>
     <string name="email_hint">E-Mail</string>
-    <string name="checkboxTitleEasy">Einfach</string>
-    <string name="checkboxTitleHard">Schwierig</string>
-    <string name="checkboxTitleMedium">Mittel</string>
+    <string name="msg_hello">Hallo</string>
+    <string name="msg_email_edit_successful">E-Mail wurde erfolgreich geändert</string>
+    <string name="err_msg_error_occured">Ein Fehler ist aufgetreten…</string>
+    <string name="msg_difficulty_level_changed_to_1">Schwierigkeits-Level auf</string>
+    <string name="msg_difficulty_level_changed_to_2">geändert</string>
+    <string name="msg_no_changes_done">Keine Änderungen vorgenommen</string>
+    <string name="meter_abbreviation">m</string>
+    <string name="logout_successful">Logout erfolgreich</string>
+    <string name="logout_failed">Logout fehlgeschlagen</string>
+    <string name="msg_available_in_next_feature">Dieses Feature wird in einem späteren Release verfügbar sein</string>
+    <string name="profile_edit">Profil bearbeiten</string>
+    <string name="title_poi">POI</string>
+    <string name="title_tours">Touren</string>
+    <string name="title_score">Score</string>
 
 </resources>

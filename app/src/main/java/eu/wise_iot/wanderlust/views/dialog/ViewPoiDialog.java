@@ -3,10 +3,8 @@ package eu.wise_iot.wanderlust.views.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,7 +140,7 @@ public class ViewPoiDialog extends DialogFragment {
             public void onResponse(ControllerEvent controllerEvent) {
                 List<File> images = (List<File>) controllerEvent.getModel();
                 if (images.size() > 0) {
-                    Picasso.with(context).load(images.get(0)).resize(350, 250).centerCrop().into(poiImage);
+                    Picasso.with(context).load(images.get(0)).into(poiImage);
                 }
             }
         });
@@ -154,7 +152,7 @@ public class ViewPoiDialog extends DialogFragment {
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
         typeTextView.setText(typeValues[(int) currentPoi.getType()]);
-        String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meterAboveSealevelAbbrevation));
+        String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
         elevationTextView.setText(elevationText);
 
         titleTextView.setText(currentPoi.getTitle());

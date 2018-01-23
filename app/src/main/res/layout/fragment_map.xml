@@ -170,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:padding="3dp"
-                        android:src="@drawable/icon_map_default" />
+                        android:src="@drawable/map_default" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -191,7 +191,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="3dp"
-                        android:src="@drawable/icon_map_satelite" />
+                        android:src="@drawable/map_satelite" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -211,7 +211,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:padding="3dp"
-                        android:src="@drawable/icon_map_terrain" />
+                        android:src="@drawable/map_terrain" />
 
                     <TextView
                         android:layout_width="wrap_content"

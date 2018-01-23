@@ -100,7 +100,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         //button Favorite
         for (Favorite favorite : favoriteDao.find()) {
             if (favorite.getTour() == userTour.getTour_id()) {
-                holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.red));
+                holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.highlight_main));
                 //add to favored tours
                 this.favorizedTours.add(favorite.getTour());
             }
