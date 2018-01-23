@@ -183,13 +183,14 @@
     <FrameLayout
         android:id="@+id/profileTabContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/primary_second">
 
         <ListView
             android:id="@+id/listContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.5"
+            android:alpha="0.75"
             android:clickable="false">
 
         </ListView>
@@ -200,7 +201,8 @@
             android:layout_gravity="center"
             android:drawableLeft="@drawable/ic_announcement_black_24dp"
             android:gravity="center"
-            android:paddingLeft="10dp"
+            android:padding="8dp"
+            android:layout_margin="16dp"
             android:text="@string/msg_available_in_next_feature"
             android:textColor="@color/white"
             android:textStyle="italic" />

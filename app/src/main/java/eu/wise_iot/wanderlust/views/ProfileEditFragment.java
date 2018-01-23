@@ -135,7 +135,7 @@ public class ProfileEditFragment extends Fragment {
                         switch (type) {
                             case OK:
                                 Toast.makeText(getActivity(),
-                                        R.string.msg_difficulty_level_changed_to_1 + " " + difficulty + " " + R.string.msg_difficulty_level_changed_to_2,
+                                        getString(R.string.msg_difficulty_level_changed_to_1) + " " + difficulty + " " + getString(R.string.msg_difficulty_level_changed_to_2),
                                         Toast.LENGTH_SHORT).show();
                                 break;
 
