@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,7 @@ import eu.wise_iot.wanderlust.controllers.ProfileController;
 
 
 public class ProfileEditFragment extends Fragment {
+    private static final String TAG = "ProfileEditFragment";
 
     private ImageView profileImage;
     private TextView changeImage;
@@ -95,8 +97,7 @@ public class ProfileEditFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.profile_edit_menu, menu);
         menu.removeItem(R.id.drawer_layout);
     }
