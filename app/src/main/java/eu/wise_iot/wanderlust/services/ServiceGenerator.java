@@ -17,9 +17,6 @@ public class ServiceGenerator {
      * Defines the URL for the backend communication
      */
     public static final String API_BASE_URL = "https://www.cs.technik.fhnw.ch/wanderlust/";
-    //public static final String API_BASE_URL = "http://192.168.1.49:1337";
-
-    //public static final String API_BASE_URL = "http://127.0.0.1:1337";
 
     /**
      * Create service for a new backend request
