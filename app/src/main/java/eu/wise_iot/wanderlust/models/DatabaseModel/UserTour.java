@@ -1,5 +1,10 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.io.File;
+import java.util.List;
+
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
@@ -20,20 +25,55 @@ public class UserTour extends AbstractModel {
     String description;
     String imagePath;
     String polyline;
+    String elevation;
+    long distance;
+    long duration;
+    long ascent;
+    long descent;
+
     long difficulty;
     long tourKit;
     boolean editable;
 
-    public UserTour(long internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+    @Convert(converter = Poi.imageInfoConverter.class, dbType = String.class)
+    List<ImageInfo> imagePaths;
+
+    public UserTour(long internal_id, long tour_id, String title, String description,
+                    String imagePath, String polyline, String elevation, long duration, long distance,
+                    long ascent, long descent, long difficulty, long tourKit, boolean editable) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
         this.description = description;
         this.imagePath = imagePath;
         this.polyline = polyline;
+        this.elevation = elevation;
+        this.duration = duration;
+        this.distance = distance;
+        this.ascent = ascent;
+        this.descent = descent;
         this.difficulty = difficulty;
         this.tourKit = tourKit;
         this.editable = editable;
+    }
+
+    public UserTour(){
+        this.internal_id = 0;
+        this.title = "No title";
+        this.description = "No description";
+    }
+
+    public List<ImageInfo> getImagePaths() {
+        return imagePaths;
+    }
+
+    public ImageInfo getImageById(long id){
+        for(ImageInfo imageInfo : imagePaths){
+            if(imageInfo.getId() == id){
+                return imageInfo;
+            }
+        }
+        return null;
     }
 
     public long getInternal_id() {
@@ -90,6 +130,46 @@ public class UserTour extends AbstractModel {
 
     public void setPolyline(String polyline) {
         this.polyline = polyline;
+    }
+
+    public String getElevation() {
+        return elevation;
+    }
+
+    public void setElevation(String elevation) {
+        this.elevation = elevation;
+    }
+
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance(long distance) {
+        this.distance = distance;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public long getAscent() {
+        return ascent;
+    }
+
+    public void setAscent(long ascent) {
+        this.ascent = ascent;
+    }
+
+    public long getDescent() {
+        return descent;
+    }
+
+    public void setDescent(long descent) {
+        this.descent = descent;
     }
 
     public long getDifficulty() {

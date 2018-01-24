@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="eu.wise_iot.wanderlust.views.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -13,7 +14,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
+            android:background="?attr/colorPrimary"
+            android:paddingEnd="16dp"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     </android.support.design.widget.AppBarLayout>
 

@@ -115,6 +115,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<CommunityTour> {
             description.setText(communityTour.getDescription());
 
             //TODO: set the image
+            tripImage.setImageResource(R.drawable.example_image);
         }
 
         //set listeners

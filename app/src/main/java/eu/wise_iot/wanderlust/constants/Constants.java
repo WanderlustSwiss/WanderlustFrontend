@@ -25,16 +25,18 @@ public interface Constants {
     /* FRAGMENTS */
     String MAP_FRAGMENT = "MapFragment";
     String TOUR_FRAGMENT = "TourFragment";
+    String TOUROVERVIEW_FRAGMENT = "TourOverviewFragment";
     String WELCOME_FRAGMENT = "WelcomeFragment";
     String DISCLAIMER_FRAGMENT = "DisclaimerFragment";
     String MANUAL_FRAGMENT = "ManualFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
-    String LOGIN_FRAGMENT = "LoginFragment";
+    String LOGIN_FRAGMENT = "SartupLoginFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
-    String CREATE_FEEDBACK_DIALOG = "PoiFeedbackDialog";
+    String EDIT_POI_DIALOG = "PoiFeedbackDialog";
+    String CONFIRM_DELETE_POI_DIALOG = "YesNoDialog";
 
     /* PHOTO INTENT */
     String IMAGE_FILE_NAME = "imageFileName";

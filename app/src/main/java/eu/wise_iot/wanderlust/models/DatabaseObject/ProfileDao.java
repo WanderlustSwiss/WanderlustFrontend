@@ -78,7 +78,11 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param profile (required).
      */
     public void update(Profile profile, final FragmentHandler handler) {
-        Call<Profile> call = service.updateProfile(profile.getProfile_id(), profile);
+
+        //TODO remmove when birthday is implemented
+        profile.setBirthday("0");
+
+        Call<Profile> call = service.updateProfile(profile);
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
@@ -106,33 +110,6 @@ public class ProfileDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * delete a profile in the database
-     *
-     * @param profile
-     * @param handler
-     */
-    //TODO: is copied from Tobis work from PoiDao and it doesn't work. Update it if Tobi has fixed the bug
-    public void delete(final Profile profile, final FragmentHandler handler) {
-        Call<Profile> call = service.deleteProfile(profile);
-        call.enqueue(new Callback<Profile>() {
-            @Override
-            public void onResponse(Call<Profile> call, Response<Profile> response) {
-                if (response.isSuccessful()) {
-                    profileBox.remove(profile);
-                    //TODO delete image
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
-                } else
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
-            }
-
-            @Override
-            public void onFailure(Call<Profile> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
-            }
-        });
-    }
-
-    /**
      * add an image to the db
      *
      * @param file
@@ -142,7 +119,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        Call<Profile.ImageInfo> call = service.uploadImage(profile.getProfile_id(), body);
+        Call<Profile.ImageInfo> call = service.uploadImage(body);
         call.enqueue(new Callback<Profile.ImageInfo>() {
             @Override
             public void onResponse(Call<Profile.ImageInfo> call, Response<Profile.ImageInfo> response) {
@@ -193,11 +170,10 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * and return it in the event
      *
      * @param profileID
-     * @param imageID
      * @param handler
      */
-    public void deleteImage(final long profileID, final long imageID, final FragmentHandler handler) {
-        Call<Profile.ImageInfo> call = service.deleteImage(profileID, imageID);
+    public void deleteImage(final long profileID, final FragmentHandler handler) {
+        Call<Profile.ImageInfo> call = service.deleteImage();
         call.enqueue(new Callback<Profile.ImageInfo>() {
             @Override
             public void onResponse(Call<Profile.ImageInfo> call, Response<Profile.ImageInfo> response) {

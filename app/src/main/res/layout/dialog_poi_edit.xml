@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/poi_action_control_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:background="@color/primary_main"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/dialog_edit_poi_cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/poi_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_check_white_24dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/poi_title_layout"
+            style="@style/TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/poi_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/poi_fragment_textview_title"
+                android:maxLength="120"
+                android:paddingTop="4dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            style="@style/TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/poi_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/dialog_feedback_description_edit_hint"
+                android:maxLength="200"
+                android:paddingTop="4dp" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <Spinner
+            android:id="@+id/poi_type_spinner"
+            style="@style/default_spinner"
+            android:layout_marginBottom="8dp"
+            android:entries="@array/dialog_feedback_spinner_type"
+            android:paddingTop="16dp" />
+
+        <Spinner
+            android:id="@+id/poi_mode_spinner"
+            style="@style/default_spinner"
+            android:entries="@array/dialog_feedback_spinner_mode"
+            android:paddingTop="16dp" />
+    </LinearLayout>
+
+</LinearLayout>

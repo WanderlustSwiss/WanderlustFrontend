@@ -6,6 +6,10 @@ public class LoginUser {
     static private ArrayList<String> cookies = new ArrayList<>();
     private String identifier;
     private String password;
+    private String osVersion;
+    private String deviceModel;
+    private String resolution;
+    private String serialNumber;
 
 
     public LoginUser(String identifier, String password) {
@@ -13,9 +17,15 @@ public class LoginUser {
         this.password = password;
     }
 
-
     public static ArrayList<String> getCookies() {
         return cookies;
+    }
+
+    public void setDeviceStatistics(String osVersion, String deviceModel, String resolution, String serialNumber){
+        this.osVersion = osVersion;
+        this.deviceModel = deviceModel;
+        this.resolution = resolution;
+        this.serialNumber = serialNumber;
     }
 
     public static void setCookies(ArrayList<String> cookiesC) {

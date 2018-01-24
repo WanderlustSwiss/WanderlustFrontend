@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,8 +28,6 @@ import io.objectbox.converter.PropertyConverter;
 @Entity
 public class Poi extends AbstractModel {
 
-    private static final int MAX_IMAGES = 32;
-
     @Id
     long internal_id;
     long poi_id;
@@ -38,93 +37,83 @@ public class Poi extends AbstractModel {
 
     @Convert(converter = imageInfoConverter.class, dbType = String.class)
     List<ImageInfo> imagePaths;
-    byte[] imageIds;
-    int imageCount;
+
     float longitude;
     float latitude;
+    float elevation;
     int rate;
     long user;
     long type;
     boolean isPublic;
 
-    public Poi(long poi_id, String name, String description, byte[] imageIds, float longitude,
-               float latitude, int rate, long user, int type, boolean isPublic, int imageCount) {
+    public Poi(long poi_id, String name, String description, float longitude,
+               float latitude, float elevation, int rate, long user, int type, boolean isPublic,
+               List<ImageInfo> imagePaths) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;
-        this.imageIds = imageIds;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.elevation = elevation;
         this.rate = rate;
         this.user = user;
         this.type = type;
         this.isPublic = isPublic;
-        this.imageCount = imageCount;
+        this.imagePaths = imagePaths;
     }
 
     public Poi() {
         this.internal_id = 0;
-        this.title = "No Title";
-        this.description = "No Description";
-        this.imageIds = new byte[MAX_IMAGES];
-        this.imageCount = 0;
+        this.title = "No title";
+        this.description = "No description";
         this.longitude = 0;
         this.latitude = 0;
+        this.elevation = 0;
         this.rate = 3;
         this.user = 1;
         this.type = 0;
         this.isPublic = false;
-    }
-
-    public byte[] getImageIds() {
-        return imageIds;
-    }
-
-    public void addImageId(byte id) {
-        imageIds[imageCount++] = id;
-    }
-
-    public boolean removeImageId(byte id) {
-        int index = 0;
-        while (imageIds[index] != id) {
-            index++;
-            if (index == imageCount) {
-                return false;
-            }
-        }
-        for (int i = index; i < imageCount; i++) {
-            imageIds[i] = imageIds[i + 1];
-        }
-        imageCount--;
-        return true;
-    }
-
-    public File getImageById(byte imageId) {
-        for (int i = 0; i < imageCount; i++) {
-            if (imageIds[i] == imageId) {
-                String name = poi_id + "-" + imageIds[i] + ".jpg";
-                return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
-                        "/files/" + name);
-            }
-        }
-        return null;
-    }
-
-    public void setImageIds(byte[] imageIds, int imageCount) {
-        this.imageIds = imageIds;
-        this.imageCount = imageCount;
+        this.imagePaths = new ArrayList<>();
     }
 
     public int getImageCount() {
-        return imageCount;
+        return imagePaths.size();
+    }
+
+    public void setImagePaths(List<ImageInfo> imagePaths){
+        this.imagePaths = imagePaths;
     }
 
     public List<ImageInfo> getImagePaths() {
         return imagePaths;
     }
 
+    public ImageInfo getImageById(long id){
+        for(ImageInfo imageInfo : imagePaths){
+            if(imageInfo.getId() == id){
+                return imageInfo;
+            }
+        }
+        return null;
+    }
+
+    public void addImagePath(ImageInfo imageInfo){
+        imagePaths.add(imageInfo);
+    }
+
+    public boolean removeImage(ImageInfo imageInfo){
+
+        for(ImageInfo info : imagePaths){
+            if(info.getId() == imageInfo.getId()){
+                imagePaths.remove(info);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getCreatedAt(Locale language) {
-        SimpleDateFormat formatterDate = new SimpleDateFormat("dd-MM-yy");
+        SimpleDateFormat formatterDate = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat formatterString = new SimpleDateFormat("d. MMMM yyyy", language);
         try {
             Date date = formatterDate.parse(createdAt.substring(0, createdAt.indexOf('T')));
@@ -214,6 +203,14 @@ public class Poi extends AbstractModel {
         this.user = user;
     }
 
+    public float getElevation() {
+        return elevation;
+    }
+
+    public void setElevation(float elevation) {
+        this.elevation = elevation;
+    }
+
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {
         @Override
         public List<ImageInfo> convertToEntityProperty(String databaseValue) {
@@ -235,26 +232,6 @@ public class Poi extends AbstractModel {
             Type type = new TypeToken<List<ImageInfo>>() {
             }.getType();
             return gson.toJson(entityProperty, type);
-        }
-    }
-
-    public class ImageInfo {
-        long id;
-        String name;
-        String path;
-
-        public ImageInfo(long id, String name, String path) {
-            this.id = id;
-            this.name = name;
-            this.path = path;
-        }
-
-        public long getId() {
-            return id;
-        }
-
-        public String getPath() {
-            return this.path;
         }
     }
 }

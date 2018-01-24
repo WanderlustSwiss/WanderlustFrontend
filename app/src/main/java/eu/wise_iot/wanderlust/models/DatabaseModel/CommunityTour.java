@@ -1,5 +1,10 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.io.File;
+import java.util.List;
+
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
@@ -20,22 +25,39 @@ public class CommunityTour extends AbstractModel {
     long tour_id;
     String title;
     String description;
-    String imagePath;
+
+    @Convert(converter = Poi.imageInfoConverter.class, dbType = String.class)
+    List<ImageInfo> imagePaths;
+
     String polyline;
     long difficulty;
     long tourKit;
     boolean editable;
 
-    public CommunityTour(long internal_id, long tour_id, String title, String description, String imagePath, String polyline, long difficulty, long tourKit, boolean editable) {
+    public CommunityTour(long internal_id, long tour_id, String title, String description,
+                         String polyline, long difficulty, long tourKit, boolean editable) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
         this.description = description;
-        this.imagePath = imagePath;
         this.polyline = polyline;
         this.difficulty = difficulty;
         this.tourKit = tourKit;
         this.editable = editable;
+    }
+
+    public CommunityTour() {
+        this.internal_id = 0;
+        this.title = "No title";
+        this.description = "No description";
+    }
+
+    public int getImageCount() {
+        return imagePaths.size();
+    }
+
+    public List<ImageInfo> getImagePaths() {
+        return imagePaths;
     }
 
     public long getInternal_id() {
@@ -68,14 +90,6 @@ public class CommunityTour extends AbstractModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
     }
 
     public String getPolyline() {

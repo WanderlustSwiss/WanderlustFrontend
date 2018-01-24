@@ -1,8 +1,11 @@
 package eu.wise_iot.wanderlust.services;
 
+import java.util.List;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -28,24 +31,24 @@ import retrofit2.http.Path;
  */
 public interface UserTourService {
     @GET("tour/{id}")
-    Call<UserTour> retrieveUserTour(@Path("id") int id);
+    Call<UserTour> retrieveUserTour(@Path("id") long id);
 
     @GET("tour/")
-    Call<UserTour> retrieveAllUserTours();
+    Call<List<UserTour>> retrieveAllUserTours();
 
     @PUT("tour/{id}")
     Call<UserTour> updateUserTour(int id, @Body UserTour userTour);
 
-    @GET("poi/{id}/img/{image_id}")
-    Call<UserTour> downloadImage(@Path("id") int id, @Path("image_id") int image_id);
+    @GET("tour/{id}/img/{image_id}")
+    Call<ResponseBody> downloadImage(@Path("id") long id, @Path("image_id") int image_id);
 
     @Multipart
-    @POST("poi/{id}/img")
+    @POST("tour/{id}/img")
     Call<Poi> uploadImage(@Path("id") int id, @Part MultipartBody.Part image);
 
     @DELETE("tour/{")
     Call<UserTour> deleteUserTour(@Body UserTour userTour);
 
-    @DELETE("poi/{id}/img/{image_id}")
+    @DELETE("tour/{id}/img/{image_id}")
     Call<UserTour> deleteImage(@Path("id") int id, @Path("image_id") int image_id);
 }

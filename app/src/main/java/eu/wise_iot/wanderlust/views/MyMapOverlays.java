@@ -3,17 +3,12 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -36,9 +31,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.Old.GpxParser;
-import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
-import io.ticofab.androidgpxparser.parser.domain.TrackPoint;
+import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
 /**
  * MyMapFragment:
@@ -50,15 +43,20 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private static final String TAG = "MyMapOverlays";
     private Activity activity;
     private MapView mapView;
+    private Polyline currentTour;
 
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private Marker positionMarker;
+    private Marker focusedPositionMarker;
+    private ArrayList<Polyline> lines;
+
 
     public MyMapOverlays(Activity activity, MapView mapView) {
         this.activity = activity;
         this.mapView = mapView;
 
+        this.currentTour = null;
         initPoiOverlay();
         //populatePoiOverlay();
         mapView.getOverlays().add(poiOverlay);
@@ -77,6 +75,19 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         //set position of scale bar
         scaleBarOverlay.setScaleBarOffset(dm.widthPixels / 3 * 1, dm.heightPixels / 10 * 9);
         mapView.getOverlays().add(scaleBarOverlay);
+    }
+
+    public void setTour(Polyline polyline){
+        if(this.currentTour == null){
+            this.currentTour = polyline;
+            this.currentTour.setWidth(10);
+            this.currentTour.setColor(Color.RED);
+
+            mapView.getOverlays().add(this.currentTour);
+        }else{
+            this.currentTour = polyline;
+        }
+        mapView.invalidate();
     }
 
     private void initMyLocationNewOverlay() {
@@ -111,7 +122,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                                         fragmentTransaction.remove(prevFragment);
                                     fragmentTransaction.addToBackStack(null);
 
-                                    ViewPoiDialog dialogFragment = ViewPoiDialog.newInstance(poi);
+                                    PoiViewDialog dialogFragment = PoiViewDialog.newInstance(poi);
                                     dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
                                     break;
                                 default:
@@ -156,34 +167,31 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         switch ((int) poi.getType()) {
             case Constants.TYPE_VIEW:
                 if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_sight);
+                    drawable = activity.getResources().getDrawable(R.drawable.poi_sight);
                 else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_sight_no_image);
+                    drawable = activity.getResources().getDrawable(R.drawable.poi_sight_no_img);
                 break;
             case Constants.TYPE_RESTAURANT:
                 if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_restaurant);
+                    drawable = activity.getResources().getDrawable(R.drawable.poi_resaurant);
                 else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_restaurant_no_image);
+                    drawable = activity.getResources().getDrawable(R.drawable.poi_resaurant_no_img);
                 break;
             case Constants.TYPE_REST_AREA:
                 if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_resting);
+                    drawable = activity.getResources().getDrawable(R.drawable.poi_resting);
                 else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_resting_no_image);
+                    drawable = activity.getResources().getDrawable(R.drawable.poi_resting_no_img);
                 break;
             case Constants.TYPE_FLORA_FAUNA:
                 if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_flora_fauna);
+                    drawable = activity.getResources().getDrawable(R.drawable.poi_fauna_flora);
                 else
-                    drawable = activity.getResources().getDrawable(R.drawable.icon_flora_fauna_no_image);
+                    drawable = activity.getResources().getDrawable(R.drawable.poi_fauna_flora_no_img);
                 break;
             default:
-                drawable = activity.getResources().getDrawable(R.drawable.icon_map_feedback_positive);
+                drawable = activity.getResources().getDrawable(R.drawable.poi_error);
         }
-
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        drawable = new BitmapDrawable(activity.getResources(), Bitmap.createScaledBitmap(bitmap, 80, 80, true));
 
         OverlayItem overlayItem = new OverlayItem(Long.toString(poi.getPoi_id()), poi.getTitle(),
                 poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
@@ -272,4 +280,55 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public MyLocationNewOverlay getMyLocationNewOverlay() {
         return myLocationNewOverlay;
     }
+
+    public void addFocusedPositionMarker(GeoPoint geoPoint) {
+        if (focusedPositionMarker != null) {
+            removeFocusedPositionMarker();
+        }
+        if (lines != null) {
+            clearPolylines();
+        }
+
+        if (geoPoint != null) {
+            Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
+
+            focusedPositionMarker = new Marker(mapView);
+            focusedPositionMarker.setIcon(drawable);
+            focusedPositionMarker.setPosition(geoPoint);
+            focusedPositionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+            focusedPositionMarker.setTitle(activity.getString(R.string.msg_last_known_position_marker));
+
+            mapView.getOverlays().add(focusedPositionMarker);
+            mapView.invalidate();
+        }
+    }
+
+    public void removeFocusedPositionMarker() {
+        mapView.getOverlays().remove(focusedPositionMarker);
+    }
+
+    public void addPolyline(ArrayList<GeoPoint> geoPoints) {
+        if (focusedPositionMarker != null) {
+            removeFocusedPositionMarker();
+        }
+        if (lines == null) {
+            lines = new ArrayList<>();
+        }
+
+        Polyline polyline = new Polyline();
+
+        polyline.setPoints(geoPoints);
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
+
+        lines.add(polyline);
+
+        mapView.getOverlays().add(polyline);
+        mapView.invalidate();
+    }
+
+    public void clearPolylines() {
+        mapView.getOverlays().clear();
+        lines = null;
+    }
+
 }

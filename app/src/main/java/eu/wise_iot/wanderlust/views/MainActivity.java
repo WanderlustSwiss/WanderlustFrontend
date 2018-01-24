@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -26,6 +27,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -40,16 +42,19 @@ import io.objectbox.BoxStore;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
     public static BoxStore boxStore;
+    public static Activity activity;
     private LoginController loginController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = this;
         setContentView(R.layout.activity_main);
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         DatabaseController.initDaoModels(getApplicationContext());
-        DatabaseController.clearAllDownloadedImages();
+        ImageController.init(getApplicationContext());
+        //DatabaseController.clearAllDownloadedImages();
         DatabaseController.poiDao.poiBox.removeAll();
         loginController = new LoginController();
 
@@ -59,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             editor.apply();
 
             // start welcome screen
-            RegistrationFragment registrationFragment = new RegistrationFragment();
+            StartupRegistrationFragment registrationFragment = new StartupRegistrationFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, registrationFragment)
                     .commit();
@@ -69,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             User user = DatabaseController.userDao.getUser();
             if (user == null) {
-                LoginFragment loginFragment = new LoginFragment();
+                SartupLoginFragment loginFragment = new SartupLoginFragment();
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, loginFragment)
                         .commit();
@@ -86,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     .commit();
                             break;
                         default:
-                            LoginFragment loginFragment = new LoginFragment();
+                            SartupLoginFragment loginFragment = new SartupLoginFragment();
                             getFragmentManager().beginTransaction()
                                     .add(R.id.content_frame, loginFragment)
                                     .commit();
@@ -117,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     /**
@@ -149,8 +156,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = MapFragment.newInstance();
             fragmentTag = Constants.MAP_FRAGMENT;
         } else if (id == R.id.nav_tours) {
-            // TODO: add TourOverviewFragment here
-            Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
+            fragment = TourOverviewFragment.newInstance();
+            fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
         } else if (id == R.id.nav_profile) {
             fragment = ProfileFragment.newInstance();
             fragmentTag = Constants.PROFILE_FRAGMENT;
@@ -164,14 +171,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     switch (controllerEvent.getType()) {
                         case OK:
                             LoginUser.clearCookies();
-                            Toast.makeText(getApplicationContext(), "logout successful", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.logout_successful, Toast.LENGTH_LONG).show();
                             break;
                         default:
-                            Toast.makeText(getApplicationContext(), "logout failed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
                     }
                 }
             });
-            fragment = new LoginFragment();
+            fragment = new SartupLoginFragment();
             fragmentTag = Constants.LOGIN_FRAGMENT;
         }
 

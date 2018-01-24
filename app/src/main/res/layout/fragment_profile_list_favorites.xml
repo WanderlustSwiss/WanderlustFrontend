@@ -2,7 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    android:background="@color/background_main">
 
     <ImageView
         android:id="@+id/ListFavImageView"
@@ -46,7 +47,6 @@
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/ListFavInfo"
         android:src="@drawable/ic_favorite_black_24dp"
-
         />
 
 

@@ -44,7 +44,7 @@
                         android:contentDescription="@null" />
 
                     <TextView
-                        style="@style/h3"
+                        style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image4"
@@ -85,7 +85,7 @@
                         android:contentDescription="@null" />
 
                     <TextView
-                        style="@style/h3"
+                        style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image5"
@@ -111,7 +111,7 @@
                         android:contentDescription="@null" />
 
                     <TextView
-                        style="@style/h3"
+                        style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image1"
@@ -136,7 +136,7 @@
                         android:contentDescription="@null" />
 
                     <TextView
-                        style="@style/h3"
+                        style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image2"
@@ -161,7 +161,7 @@
                         android:contentDescription="@null" />
 
                     <TextView
-                        style="@style/h3"
+                        style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/image3"

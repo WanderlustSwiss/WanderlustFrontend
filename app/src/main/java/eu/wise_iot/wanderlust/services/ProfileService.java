@@ -27,24 +27,21 @@ import retrofit2.http.Path;
 
 
 public interface ProfileService {
-    @GET("profile/{id}")
-    Call<Profile> retrieveProfile(@Path("id") long id);
+    @GET("profile")
+    Call<Profile> retrieveProfile();
 
-    @PUT("profile/{id}")
-    Call<Profile> updateProfile(long id, @Body Profile profile);
-
-    @DELETE("profile/{id}")
-    Call<Profile> deleteProfile(@Body Profile profile);
+    @PUT("profile")
+    Call<Profile> updateProfile(@Body Profile profile);
 
     @Multipart
-    @POST("profile/{id}/img")
-    Call<Profile.ImageInfo> uploadImage(@Path("id") long id, @Part MultipartBody.Part image);
+    @POST("profile/img")
+    Call<Profile.ImageInfo> uploadImage(@Part MultipartBody.Part image);
 
-    @DELETE("profile/{id}/img/{image_id}")
-    Call<Profile.ImageInfo> deleteImage(@Path("id") long id, @Path("image_id") long image_id);
+    @DELETE("profile/img")
+    Call<Profile.ImageInfo> deleteImage();
 
-    @GET("profile/{id}/img/{image_id}")
-    Call<ResponseBody> downloadImage(@Path("id") long id, @Path("image_id") long image_id);
+    @GET("profile/img")
+    Call<ResponseBody> downloadImage();
 
 
 }

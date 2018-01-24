@@ -39,7 +39,7 @@ Released .apk packages: [Browse Packages](http://86.119.40.34/Frontend_Android_A
 The release contains frist implemention of POI's and User Registration and Login/Logout
 
 **Package**
-[wanderlust-app-0.2.0-14389.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.2.0-14389.apk)
+[wanderlust-app-0.2.0-14425.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.2.0-14425.apk)
 
 **Date**
 14.12.2017

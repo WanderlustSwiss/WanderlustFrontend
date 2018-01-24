@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
@@ -19,6 +20,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DeviceDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.EquipmentDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.HistoryDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
@@ -55,6 +57,7 @@ public final class DatabaseController {
     public static TripDao tripDao;
     public static UserDao userDao;
     public static UserTourDao userTourDao;
+    public static FavoriteDao favoriteDao;
     public static Context mainContext;
     private static List<DatabaseListener> listeners = new ArrayList<>();
     private static Date lastSync;
@@ -79,6 +82,7 @@ public final class DatabaseController {
             tripDao = new TripDao();
             userDao = new UserDao();
             userTourDao = new UserTourDao();
+            favoriteDao = new FavoriteDao();
             mainContext = context;
             initialized = true;
         }
@@ -108,13 +112,6 @@ public final class DatabaseController {
 
         lastSync = new Date();
         switch (event.getType()) {
-            case POI:
-                //TODO no longer used?
-                if (!syncingPois) {
-                    syncingPois = true;
-                    poiDao.syncPois();
-                }
-                break;
             case POITYPE:
                 if (!syncingPoiTypes) {
                     syncingPoiTypes = true;
@@ -180,48 +177,48 @@ public final class DatabaseController {
 
     }
 
-
     /**
      * Deletes all .jpg files in the app storage
      */
-    public static void clearAllDownloadedImages() {
-        List<Long> privatePoiIds = new ArrayList<>();
-        for (Poi poi : poiDao.find(Poi_.isPublic, false)) {
-            privatePoiIds.add(poi.getPoi_id());
-        }
-        File filesDir = mainContext.getApplicationContext().getFilesDir();
-
-        for (File image : filesDir.listFiles()) {
-            String name = image.getName();
-            int dotIndex = name.lastIndexOf('.');
-            if (dotIndex == -1) continue; //not a valid file
-            String extension = name.substring(dotIndex + 1);
-            try {
-                long imageId = Long.parseLong(name.substring(name.indexOf('-') + 1, name.indexOf('.')));
-                if (privatePoiIds.contains(imageId) && extension.equals("jpg")) {
-                    if (!image.delete()) {
-                        Log.e(DatabaseController.class.toString(),
-                                "image " + image.getAbsolutePath() + " could not be deleted");
-                        break;
-                    }
-                }
-            } catch (NumberFormatException e) {
-                continue;
-            }
-        }
-        cacheSize = 0;
-    }
-
-    public static void deletePoiImages(Poi poi) {
-        byte[] images = poi.getImageIds();
-        for (int i = 0; i < poi.getImageCount(); i++) {
-            File image = poi.getImageById(images[i]);
-            if (!image.delete()) {
-                Log.e(DatabaseController.class.toString(),
-                        "image " + image.getAbsolutePath() + " could not be deleted");
-            }
-        }
-    }
+//    public static void clearAllDownloadedImages() {
+//        List<Long> privatePoiIds = new ArrayList<>();
+//        for (Poi poi : poiDao.find(Poi_.isPublic, false)) {
+//            privatePoiIds.add(poi.getPoi_id());
+//        }
+//        File filesDir = new File(picturesDir);
+//        filesDir.mkdir();
+//
+//        for (File image : filesDir.listFiles()) {
+//            String name = image.getName();
+//            int dotIndex = name.lastIndexOf('.');
+//            if (dotIndex == -1) continue; //not a valid file
+//            String extension = name.substring(dotIndex + 1);
+//            try {
+//                long imageId = Long.parseLong(name.substring(name.indexOf('-') + 1, name.indexOf('.')));
+//                if (privatePoiIds.contains(imageId) && extension.equals("jpg")) {
+//                    if (!image.delete()) {
+//                        Log.e(DatabaseController.class.toString(),
+//                                "image " + image.getAbsolutePath() + " could not be deleted");
+//                        break;
+//                    }
+//                }
+//            } catch (NumberFormatException e) {
+//                continue;
+//            }
+//        }
+//        cacheSize = 0;
+//    }
+//
+//    public static void deletePoiImages(Poi poi) {
+//        byte[] images = poi.getImageIds();
+//        for (int i = 0; i < poi.getImageCount(); i++) {
+//            File image = poi.getImageById(images[i]);
+//            if (!image.delete()) {
+//                Log.e(DatabaseController.class.toString(),
+//                        "image " + image.getAbsolutePath() + " could not be deleted");
+//            }
+//        }
+//    }
 
     public static void sendUpdate(DatabaseEvent event) {
         for (DatabaseListener listener : listeners) {

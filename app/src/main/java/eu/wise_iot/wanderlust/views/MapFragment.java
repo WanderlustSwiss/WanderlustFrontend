@@ -10,7 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.util.Log;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,21 +20,30 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Polyline;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.MapController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
-import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
+import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 
 /**
  * MapFragment: The Fragment that contains the map view, map functionality and buttons.
@@ -62,6 +71,13 @@ public class MapFragment extends Fragment {
     private ImageButton locationToggler;
     private ImageButton cameraButton;
     private ImageButton layerButton;
+    private ImageButton staliteTypeButton;
+    private ImageButton defaultTypeButton;
+    private ImageButton terrainTypeButton;
+    private View bottomSheet;
+    private SearchView searchView;
+    private MapController searchMapController;
+    private static Polyline polyline;
 
     // bottom sheet
     private ImageButton poiLayerButton;
@@ -79,11 +95,21 @@ public class MapFragment extends Fragment {
         return fragment;
     }
 
+    public static MapFragment newInstance(Polyline paramPolyline) {
+        Bundle args = new Bundle();
+        MapFragment fragment = new MapFragment();
+        fragment.setArguments(args);
+        polyline = paramPolyline;
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        searchMapController = new MapController(this);
         setHasOptionsMenu(true);
         loadPreferences();
+        getActivity().setTitle("");
     }
 
     @Override
@@ -93,6 +119,7 @@ public class MapFragment extends Fragment {
         initOverlays();
         initMapController();
         DatabaseController.register(mapOverlays);
+        if(polyline != null) setTour(polyline);
         return view;
     }
 
@@ -108,6 +135,129 @@ public class MapFragment extends Fragment {
         initLocationToggler(view);
         initCameraButton(view);
         initLayerButton(view);
+        initMapTypeButton(view);
+    }
+
+    private void initMapTypeButton(View view) {
+        staliteTypeButton = (ImageButton) view.findViewById(R.id.map_satelite_type);
+        defaultTypeButton = (ImageButton) view.findViewById(R.id.map_default_type);
+        terrainTypeButton = (ImageButton) view.findViewById(R.id.map_terrain_type);
+        bottomSheet = view.findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
+
+        staliteTypeButton.setOnClickListener(e -> {
+            String[] urlArray = {"http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/"};
+            mapView.setTileSource(new XYTileSource("ARCGisOnline", 0, 18, 256, "", urlArray) {
+                @Override
+                public String getTileURLString(MapTile aTile) {
+                    String mImageFilenameEnding = ".png";
+                    return getBaseUrl() + aTile.getZoomLevel() + "/"
+                            + aTile.getY() + "/" + aTile.getX()
+                            + mImageFilenameEnding;
+                }
+            });
+            defaultTypeButton.setBackground(null);
+            terrainTypeButton.setBackground(null);
+            staliteTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        });
+
+        defaultTypeButton.setOnClickListener(e -> {
+            ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
+                    new String[]{"https://opentopomap.org/"});
+            mapView.setTileSource(tileSource);
+            staliteTypeButton.setBackground(null);
+            terrainTypeButton.setBackground(null);
+            defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        });
+
+        terrainTypeButton.setOnClickListener(e -> {
+            ITileSource tileSource = new XYTileSource("Stamen", 0, 20, 256, ".png",
+                    new String[]{"http://c.tile.stamen.com/terrain/"});
+            mapView.setTileSource(tileSource);
+            staliteTypeButton.setBackground(null);
+            defaultTypeButton.setBackground(null);
+            terrainTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        });
+    }
+
+    /**
+     * Initializes the search bar on the top of the application
+     *
+     * @param menu The menu with the searchbar, which needs to be initialized
+     */
+    public void initSearchView(Menu menu) {
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                callSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO: SEARCH SUGGETION
+                return true;
+            }
+
+            public void callSearch(String query) {
+                try {
+                    searchMapController.searchPlace(query, 1, new FragmentHandler<List<MapSearchResult>>() {
+                        @Override
+                        public void onResponse(ControllerEvent<List<MapSearchResult>> controllerEvent) {
+                            List<MapSearchResult> resultList = controllerEvent.getModel();
+                            if (!resultList.isEmpty()) {
+                                MapSearchResult firstResult = resultList.get(0);
+                                GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
+                                if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
+                                    mapOverlays.clearPolylines();
+
+                                    double minLat = 9999;
+                                    double maxLat = -9999;
+                                    double minLong = 9999;
+                                    double maxLong = -9999;
+
+                                    for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
+                                        mapOverlays.addPolyline(polygon);
+
+                                        for (GeoPoint point : polygon) {
+                                            if (point.getLatitude() < minLat)
+                                                minLat = point.getLatitude();
+                                            if (point.getLatitude() > maxLat)
+                                                maxLat = point.getLatitude();
+                                            if (point.getLongitude() < minLong)
+                                                minLong = point.getLongitude();
+                                            if (point.getLongitude() > maxLong)
+                                                maxLong = point.getLongitude();
+                                        }
+                                    }
+
+                                    BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
+                                    mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
+                                } else {
+                                    mapController.setZoom(Defaults.ZOOM_SEARCH);
+                                    mapController.animateTo(geoPoint);
+                                    mapOverlays.addFocusedPositionMarker(geoPoint);
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                }
+                searchView.clearFocus();
+            }
+
+        });
     }
 
     @Override
@@ -150,8 +300,11 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear(); // makes shure that the menu was not inflated yet
+        menu.clear(); // makes sure that the menu was not inflated yet
         inflater.inflate(R.menu.map_fragment_layer_menu, menu);
+
+        initSearchView(menu);
+
     }
 
     /**
@@ -177,9 +330,17 @@ public class MapFragment extends Fragment {
         }
     }
 
+    public void setTour(Polyline polyline){
+        mapOverlays.setTour(polyline);
+        List<GeoPoint> polylineList = polyline.getPoints();
+        mapController.setCenter(polylineList.get(0));
+        mapController.setZoom(Defaults.ZOOM_ENLARGED);
+    }
+
     /**
      * Loads user preferences of map settings in shared preferences
      */
+
     private void loadPreferences() {
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         double defaultMapCenterLat = Defaults.GEO_POINT_CENTER_OF_SWITZERLAND.getLatitude();
@@ -490,13 +651,12 @@ public class MapFragment extends Fragment {
     private void dispatchPostFeedbackDialogFragment() {
         FragmentTransaction fragmentTransaction = getActivity().getFragmentManager().beginTransaction();
         // make sure that no other dialog is running
-        Fragment prevFragment = getActivity().getFragmentManager().findFragmentByTag(Constants.CREATE_FEEDBACK_DIALOG);
+        Fragment prevFragment = getActivity().getFragmentManager().findFragmentByTag(Constants.EDIT_POI_DIALOG);
         if (prevFragment != null) fragmentTransaction.remove(prevFragment);
         fragmentTransaction.addToBackStack(null);
 
-        EditPoiDialog dialog = EditPoiDialog.newInstance(imageFileName, lastKnownLocation);
-        Log.d(TAG, "lastKnownLocation: " + lastKnownLocation);
-        dialog.show(fragmentTransaction, Constants.CREATE_FEEDBACK_DIALOG);
+        PoiEditDialog dialog = PoiEditDialog.newInstance(imageFileName, lastKnownLocation);
+        dialog.show(fragmentTransaction, Constants.EDIT_POI_DIALOG);
     }
 }
 
