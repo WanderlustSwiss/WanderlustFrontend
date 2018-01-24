@@ -98,7 +98,7 @@ public class EditPoiDialog extends DialogFragment {
         lastKnownLocation = new GeoPoint(lat, lon);
 
         // set style
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog);
 
         poiPhotoUploadHandler = event -> {
             switch (event.getType()) {

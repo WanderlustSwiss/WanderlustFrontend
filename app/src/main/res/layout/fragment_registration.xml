@@ -13,7 +13,7 @@
         style="@style/default_input"
         app:errorTextAppearance="@style/default_input_error"
         android:layout_marginTop="120dp"
-        android:theme="@style/text_label_white">
+        android:theme="@style/TextLabel.White">
 
         <EditText
             android:id="@+id/input_nickname"
@@ -30,7 +30,7 @@
         android:id="@+id/text_input_layout_mail"
         style="@style/default_input"
         app:errorTextAppearance="@style/default_input_error"
-        android:theme="@style/text_label_white">
+        android:theme="@style/TextLabel.White">
 
 
         <EditText
@@ -45,7 +45,7 @@
         android:id="@+id/text_input_layout_password"
         style="@style/default_input"
         app:errorTextAppearance="@style/default_input_error"
-        android:theme="@style/text_label_white">
+        android:theme="@style/TextLabel.White">
 
         <EditText
             android:id="@+id/input_password"
@@ -60,7 +60,7 @@
         android:id="@+id/text_input_layout_password_repeat"
         style="@style/default_input"
         app:errorTextAppearance="@style/default_input_error"
-        android:theme="@style/text_label_white">
+        android:theme="@style/TextLabel.White">
 
         <EditText
             android:id="@+id/input_password_repeat"

@@ -53,7 +53,7 @@
 
                 <ImageButton
                     android:id="@+id/layerButton"
-                    style="@style/floatingactionbutton_mini_light"
+                    style="@style/FloatingActionButton.Mini.Light"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_layers_black_24dp" />
             </LinearLayout>
@@ -71,7 +71,7 @@
 
             <ImageButton
                 android:id="@+id/locationButton"
-                style="@style/floatingactionbutton_normal_light"
+                style="@style/FloatingActionButton.Light"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_my_location_disabled_black_24dp" />
@@ -79,7 +79,7 @@
 
             <ImageButton
                 android:id="@+id/takePictureButton"
-                style="@style/floatingactionbutton_normal"
+                style="@style/FloatingActionButton"
                 android:layout_gravity="center_horizontal|center"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_camera_white_24dp" />

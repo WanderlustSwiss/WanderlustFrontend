@@ -39,7 +39,7 @@
 
 
     <!-- BUTTONS -->
-    <style name="floatingactionbutton_normal" parent="Widget.Design.FloatingActionButton">
+    <style name="FloatingActionButton" parent="Widget.Design.FloatingActionButton">
         <!-- properties -->
         <item name="android:elevation">5dp</item>
         <item name="backgroundTint">@color/primary_main</item>
@@ -53,18 +53,19 @@
         <item name="android:layout_marginBottom">10dp</item>
     </style>
 
-    <style name="floatingactionbutton_normal_light" parent="Widget.Design.FloatingActionButton">
-        <!-- properties -->
-        <item name="android:elevation">5dp</item>
+    <style name="FloatingActionButton.Light">
         <item name="backgroundTint">@color/background_pale</item>
-        <item name="android:layout_width">56dp</item>
-        <item name="android:layout_height">56dp</item>
-        <!-- gbutton_whitetton space for the shadow -->
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="FloatingActionButton.Mini">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+
+    <style name="FloatingActionButton.Mini.Light">
+        <item name="backgroundTint">@color/background_pale</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
     </style>
 
     <style name="standard_button">
@@ -74,8 +75,6 @@
         <item name="android:layout_height">60dp</item>
     </style>
 
-    <!--<style name="ButtonBorder" parent="Widget.AppCompat.Button.Colored"/>-->
-
     <style name="ButtonBorder.Accent" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/button_outline</item>
         <item name="android:textColor">@color/white</item>
@@ -83,35 +82,6 @@
         <item name="android:layout_height">60dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:singleLine">true</item>
-    </style>
-
-
-    <style name="floatingactionbutton_mini" parent="Widget.Design.FloatingActionButton">
-        <!-- properties (material standard) -->
-        <item name="android:elevation">5dp</item>
-        <item name="backgroundTint">@color/primary_main</item>
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <!-- gbutton_whitetton space for the shadow -->
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-    </style>
-
-    <style name="floatingactionbutton_mini_light" parent="Widget.Design.FloatingActionButton">
-        <!-- properties (material standard) -->
-        <item name="android:elevation">5dp</item>
-        <item name="backgroundTint">@color/background_pale</item>
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <!-- gbutton_whitetton space for the shadow -->
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
     </style>
 
     <style name="my_click_button">
@@ -149,7 +119,7 @@
     </style>
 
     <!-- Full screen dialog -->
-    <style name="FullScreenDialogStyle">
+    <style name="FullScreenDialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsFloating">false</item>
@@ -168,12 +138,21 @@
         <item name="android:textColor">@color/highlight_main</item>
     </style>
 
-    <style name="text_label_white" parent="TextAppearance.AppCompat">
-        <item name="android:textColorHint">@color/background_main</item>
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
         <item name="android:textSize">18sp</item>
-        <item name="colorControlNormal">@color/background_main</item>
         <item name="android:textColorHighlight">@color/highlight_main</item>
         <item name="android:textColorLink">@color/highlight_main</item>
+    </style>
+
+    <style name="TextLabel.White" >
+        <item name="android:textColorHint">@color/background_main</item>
+        <item name="colorControlNormal">@color/background_main</item>
+
+    </style>
+
+    <style name="TextLabel.Black">
+        <item name="android:textColorHint">@color/black</item>
+        <item name="colorControlNormal">@color/black</item>
     </style>
 
     <!-- Spinner -->
@@ -181,14 +160,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">16dp</item>
-    </style>
-
-    <style name="text_label_black" parent="TextAppearance.AppCompat">
-        <item name="android:textColorHint">@color/black</item>
-        <item name="android:textSize">18sp</item>
-        <item name="colorControlNormal">@color/black</item>
-        <item name="android:textColorHighlight">@color/highlight_main</item>
-        <item name="android:textColorLink">@color/highlight_main</item>
     </style>
 
 </resources>
