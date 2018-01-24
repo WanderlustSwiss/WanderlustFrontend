@@ -16,6 +16,7 @@
     <color name="heading_icon">#a7a9ac</color>
     <color name="heading_icon_unselected">#797a7b</color>
     <color name="background_two_and_inactive">#d1d3d4</color>
+    <color name="background_pale">#fefffe</color>
     <color name="background_main">#FFFFFF</color>
 
     <!-- used for hiking path todo: adjust color so that she fits into other color palette -->
