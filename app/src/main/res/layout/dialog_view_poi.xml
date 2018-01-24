@@ -60,14 +60,14 @@
 
             <TextView
                 android:id="@+id/poi_type_text_view"
-                style="@style/p_white"
+                style="@style/p.Light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
 
             <TextView
                 android:id="@+id/poi_elevation_text_view"
-                style="@style/p_white"
+                style="@style/p.Light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/poi_type_text_view"
@@ -75,7 +75,7 @@
 
             <TextView
                 android:id="@+id/poi_title_text_view"
-                style="@style/h1_white"
+                style="@style/h1.White"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/poi_elevation_text_view"
@@ -83,7 +83,7 @@
 
             <TextView
                 android:id="@+id/poi_date_text_view"
-                style="@style/p_white"
+                style="@style/p.Light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/poi_title_text_view"
@@ -119,7 +119,7 @@
             android:layout_below="@id/poi_background_container"
             android:layout_marginTop="16dp"
             android:padding="12dp"
-            style="@style/p_black"/>
+            style="@style/p"/>
 
     </RelativeLayout>
 
