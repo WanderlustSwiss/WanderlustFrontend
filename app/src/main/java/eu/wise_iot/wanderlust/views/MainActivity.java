@@ -30,6 +30,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import io.objectbox.BoxStore;
 
 /**
