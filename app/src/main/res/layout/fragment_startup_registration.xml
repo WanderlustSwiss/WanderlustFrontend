@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="50dp">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout_nickname"
@@ -45,7 +46,7 @@
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/registration_passsword"
+                android:hint="@string/registration_password"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
@@ -58,7 +59,7 @@
                 android:id="@+id/input_password_repeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/registration_passsword_repeat"
+                android:hint="@string/registration_password_repeat"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 

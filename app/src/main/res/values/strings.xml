@@ -87,8 +87,8 @@
     <!-- REGISTRATION -->
     <string name="registration_name">Nickname</string>
     <string name="registration_email">E-Mail</string>
-    <string name="registration_passsword">Passwort</string>
-    <string name="registration_passsword_repeat">Passwort wiederholen</string>
+    <string name="registration_password">Passwort</string>
+    <string name="registration_password_repeat">Passwort wiederholen</string>
     <string name="registration_account_exist"><u>Bereits registriert? Login</u></string>
     <string name="registration_create_account">Account erstellen</string>
     <string name="registration_password_required">Ein Passwort wird benötigt</string>
