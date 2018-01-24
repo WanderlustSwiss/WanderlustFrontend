@@ -41,7 +41,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="@android:color/transparent"
-            android:padding="8dp"
+            android:padding="16dp"
             android:src="@drawable/ic_arrow_back_white_24dp" />
     </RelativeLayout>
 
