@@ -8,8 +8,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,14 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
-import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.views.LoginFragment;
 import eu.wise_iot.wanderlust.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -38,14 +29,14 @@ import static junit.framework.Assert.assertNull;
  * @license MIT
  */
 @RunWith(AndroidJUnit4.class)
-public class EditPoiDialogTest {
+public class PoiEditDialogTest {
 
     @Rule
     public ActivityTestRule<MainActivity> testActivity = new ActivityTestRule<>(MainActivity.class);
 
     private MainActivity mainActivity;
 
-    private EditPoiDialog editPoiDialog;
+    private PoiEditDialog poiEditDialog;
     private View view;
 
     private Poi poi = new Poi(1, "name", "description", null, 2,
@@ -54,18 +45,18 @@ public class EditPoiDialogTest {
     @Before
     public void setUp() throws Exception {
         mainActivity = testActivity.getActivity();
-        editPoiDialog = EditPoiDialog.newInstance(poi);
+        poiEditDialog = PoiEditDialog.newInstance(poi);
 
         FrameLayout frameLayout = (FrameLayout) mainActivity.findViewById(R.id.content_frame);
         assertNotNull("FrameLayout is null", frameLayout);
 
         mainActivity.getFragmentManager().beginTransaction()
-                .add(frameLayout.getId(), editPoiDialog)
+                .add(frameLayout.getId(), poiEditDialog)
                 .commit();
 
         getInstrumentation().waitForIdleSync();
 
-        view = editPoiDialog.getView();
+        view = poiEditDialog.getView();
         assertNotNull("view is null", view);
 
 //        User user = new User(1, "nickname", "email", "password", 1, true, true, "lastLogin", "addountType");

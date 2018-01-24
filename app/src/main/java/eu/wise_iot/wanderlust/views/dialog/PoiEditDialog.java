@@ -30,13 +30,13 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
 
 /**
- * EditPoiDialog:
+ * PoiEditDialog:
  *
  * @author Fabian Schwander
  * @license MIT
  */
-public class EditPoiDialog extends DialogFragment {
-    private static final String TAG = "EditPoiDialog";
+public class PoiEditDialog extends DialogFragment {
+    private static final String TAG = "PoiEditDialog";
     private FragmentHandler poiHandler;
     private Context context;
     private Poi poi;
@@ -59,8 +59,8 @@ public class EditPoiDialog extends DialogFragment {
      * @param imageFileName
      * @param lastKnownLocation
      */
-    public static EditPoiDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
-        EditPoiDialog fragment = new EditPoiDialog();
+    public static PoiEditDialog newInstance(String imageFileName, GeoPoint lastKnownLocation) {
+        PoiEditDialog fragment = new PoiEditDialog();
         Bundle args = new Bundle();
         args.putString(Constants.IMAGE_FILE_NAME, imageFileName);
         args.putDouble(Constants.LAST_POS_LAT, lastKnownLocation.getLatitude());
@@ -76,8 +76,8 @@ public class EditPoiDialog extends DialogFragment {
      *
      * @param poi
      */
-    public static EditPoiDialog newInstance(Poi poi) {
-        EditPoiDialog fragment = new EditPoiDialog();
+    public static PoiEditDialog newInstance(Poi poi) {
+        PoiEditDialog fragment = new PoiEditDialog();
         Bundle args = new Bundle();
         fragment.poi = poi;
         args.putBoolean(Constants.POI_IS_NEW, false);
@@ -130,7 +130,7 @@ public class EditPoiDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_edit_poi, container, false);
+        View view = inflater.inflate(R.layout.dialog_poi_edit, container, false);
 
         titleEditText = (EditText) view.findViewById(R.id.poi_title);
         titleTextLayout = (TextInputLayout) view.findViewById(R.id.poi_title_layout);

@@ -43,7 +43,7 @@ import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
-import eu.wise_iot.wanderlust.views.dialog.EditPoiDialog;
+import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 
 /**
  * MapFragment: The Fragment that contains the map view, map functionality and buttons.
@@ -655,7 +655,7 @@ public class MapFragment extends Fragment {
         if (prevFragment != null) fragmentTransaction.remove(prevFragment);
         fragmentTransaction.addToBackStack(null);
 
-        EditPoiDialog dialog = EditPoiDialog.newInstance(imageFileName, lastKnownLocation);
+        PoiEditDialog dialog = PoiEditDialog.newInstance(imageFileName, lastKnownLocation);
         dialog.show(fragmentTransaction, Constants.EDIT_POI_DIALOG);
     }
 }

@@ -26,14 +26,14 @@ import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 
 /**
- * ViewPoiDialog:
+ * PoiViewDialog:
  *
  * @author Fabian Schwander
  * @license MIT
  */
-public class ViewPoiDialog extends DialogFragment {
-    private static final String TAG = "ViewPoiDialog";
-    //Assume there is only 1 ViewPoiDialog
+public class PoiViewDialog extends DialogFragment {
+    private static final String TAG = "PoiViewDialog";
+    //Assume there is only 1 PoiViewDialog
     private static Poi currentPoi;
     private Activity context;
     private ImageView poiImage;
@@ -50,12 +50,12 @@ public class ViewPoiDialog extends DialogFragment {
     private PoiController controller;
 
     /**
-     * Create a ViewPoiDialog from a Poi object
+     * Create a PoiViewDialog from a Poi object
      *
      * @param poi
      */
-    public static ViewPoiDialog newInstance(Poi poi) {
-        ViewPoiDialog dialog = new ViewPoiDialog();
+    public static PoiViewDialog newInstance(Poi poi) {
+        PoiViewDialog dialog = new PoiViewDialog();
         currentPoi = poi;
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         long poiId = poi.getPoi_id();
@@ -86,7 +86,7 @@ public class ViewPoiDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_view_poi, container, false);
+        View view = inflater.inflate(R.layout.dialog_poi_view, container, false);
         poiImage = (ImageView) view.findViewById(R.id.poi_image);
         displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
         typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
@@ -120,7 +120,7 @@ public class ViewPoiDialog extends DialogFragment {
 
         editPoiButton.setOnClickListener(v -> {
             if (controller.isOwnerOf(currentPoi)) {
-                EditPoiDialog dialog = EditPoiDialog.newInstance(this.currentPoi);
+                PoiEditDialog dialog = PoiEditDialog.newInstance(this.currentPoi);
                 dialog.show(getFragmentManager(), Constants.EDIT_POI_DIALOG);
             }
         });
@@ -171,7 +171,7 @@ public class ViewPoiDialog extends DialogFragment {
     }
 
     public static void setCurrentPoi(Poi currentPoi) {
-        ViewPoiDialog.currentPoi = currentPoi;
+        PoiViewDialog.currentPoi = currentPoi;
     }
 
     public PoiController getController() {

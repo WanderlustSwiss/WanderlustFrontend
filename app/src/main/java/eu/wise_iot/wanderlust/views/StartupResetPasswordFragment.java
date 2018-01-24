@@ -27,7 +27,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 
 
-public class ForgetPasswortFragment extends Fragment {
+public class StartupResetPasswordFragment extends Fragment {
 
     private Context context;
 
@@ -49,9 +49,9 @@ public class ForgetPasswortFragment extends Fragment {
             switch (eventType) {
                 case OK:
                     Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
-                    LoginFragment loginFragment = new LoginFragment();
+                    SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
                     getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
+                            .add(R.id.content_frame, sartupLoginFragment, Constants.LOGIN_FRAGMENT)
                             .commit();
 
                     break;
@@ -62,7 +62,7 @@ public class ForgetPasswortFragment extends Fragment {
         }
     };
 
-    public ForgetPasswortFragment() {
+    public StartupResetPasswordFragment() {
         loginController = new LoginController();
     }
 
@@ -80,7 +80,7 @@ public class ForgetPasswortFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_forget_passwort, container, false);
+        View view = inflater.inflate(R.layout.fragment_startup_reset_password, container, false);
         btnForgotPassword = (Button) view.findViewById(R.id.btn_forgot_pw);
         editTextForgotPassword = (EditText) view.findViewById(R.id.input_forgot_pw);
         textInputForgotPassword = (TextInputLayout) view.findViewById(R.id.text_input_forgot_pw);
@@ -107,9 +107,9 @@ public class ForgetPasswortFragment extends Fragment {
         redirectToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginFragment loginFragment = new LoginFragment();
+                SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, loginFragment)
+                        .add(R.id.content_frame, sartupLoginFragment)
                         .commit();
             }
         });

@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
@@ -39,7 +38,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
  * @author Joshua
  * @license MIT
  */
-public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+public class SartupLoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
     public static int REQ_CODE = 9001;
     private Context context;
@@ -77,7 +76,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     /**
      * Create a standard login fragment
      */
-    public LoginFragment() {
+    public SartupLoginFragment() {
         this.loginController = new LoginController();
     }
 
@@ -106,7 +105,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_startup_login, container, false);
         btnLogin = (Button) view.findViewById(R.id.btn_signin);
         nicknameEmailTextfield = (EditText) view.findViewById(R.id.input_nickname_email);
         nicknameEmailLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_nickname_email);
@@ -164,9 +163,9 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             public void onClick(View v) {
                 //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
                 //googleApiClient.disconnect();
-                RegistrationFragment registrationFragment = new RegistrationFragment();
+                StartupRegistrationFragment startupRegistrationFragment = new StartupRegistrationFragment();
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, registrationFragment)
+                        .add(R.id.content_frame, startupRegistrationFragment)
                         .commit();
             }
         });
@@ -176,9 +175,9 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             public void onClick(View v) {
                 //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
                 //googleApiClient.disconnect();
-                ForgetPasswortFragment forgetPasswortFragment = new ForgetPasswortFragment();
+                StartupResetPasswordFragment startupResetPasswordFragment = new StartupResetPasswordFragment();
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, forgetPasswortFragment)
+                        .add(R.id.content_frame, startupResetPasswordFragment)
                         .commit();
             }
         });
