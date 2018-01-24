@@ -5,26 +5,41 @@ before_script:
 
 stages:
   - build
-  - test
+  - testAndDoc
   - deploy
 
 Build Package:
   stage: build
   script:
     - chmod 755 gradlew
+    - ./gradlew clean
     - ./gradlew assembleDebug --stacktrace
 
-Test Source:
-  stage: test
+#Test Source:
+#  stage: testAndDoc
+#  script:
+#    - sudo /etc/init.d/wanderlust-api stop
+#    - echo "truncate table user; truncate table profile" | mysql -u root --password="X2E8BH5RLqwgnQ3L" wanderlust
+#    - sudo /etc/init.d/wanderlust-api start
+#    - sleep 6
+#    - cat basic_database.sql | mysql -u root --password="X2E8BH5RLqwgnQ3L" wanderlust
+#    - chmod 755 gradlew
+#    - ./gradlew test
+#    - ./gradlew connectedAndroidTest
+
+Generate Javadoc:
+  stage: testAndDoc
   script:
     - chmod 755 gradlew
-    - ./gradlew check
+    - ./gradlew generateReleaseJavadoc
+    - rm -rf /var/www/html/Frontend_Android_App/Documentation/*
+    - cp -r javadoc/* /var/www/html/Frontend_Android_App/Documentation/
 
 Deploy Package:
   stage: deploy
   script:
     - chmod 755 gradlew
     - ./gradlew assembleRelease
-    - cp app/build/outputs/apk/app-release-unsigned.apk /var/www/html/Frontend_Android_App/wanderlust-app-${Version}-${CI_PIPELINE_ID}.apk
+    - cp app/build/outputs/apk/release/app-release.apk /var/www/html/Frontend_Android_App/wanderlust-app-${Version}-${CI_PIPELINE_ID}.apk
   only:
     - master

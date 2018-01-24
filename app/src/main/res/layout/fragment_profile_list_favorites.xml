@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <ImageView
+        android:id="@+id/ListFavImageView"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="25dp"
+        android:src="@color/heading_icon_unselected" />
+
+    <LinearLayout
+        android:id="@+id/ListFavInfo"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/ListFavImageView"
+        android:orientation="vertical"
+        android:paddingTop="10dp">
+
+
+        <TextView
+            android:id="@+id/ListFavTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/ListFavDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ListFavIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/ListFavInfo"
+        android:src="@drawable/ic_favorite_black_24dp"
+
+        />
+
+
+</RelativeLayout>

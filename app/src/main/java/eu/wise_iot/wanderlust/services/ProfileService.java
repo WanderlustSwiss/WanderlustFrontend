@@ -1,0 +1,50 @@
+package eu.wise_iot.wanderlust.services;
+
+import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
+import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
+
+/**
+ * ProfileService:
+ * ProfileController
+ * show	            GET	    /profile/:id                | restricted
+ * update	        PUT	    /profile/:id                | restricted
+ * uploadImage	    POST	/profile/:id/img            | restricted
+ * deleteImage	    DELETE	/profile/:id/img/:image_id  | restricted
+ * downloadImage	GET	    /profile/:id/img/:image_id  | restricted
+ *
+ * @author Rilind Gashi
+ */
+
+
+public interface ProfileService {
+    @GET("profile/{id}")
+    Call<Profile> retrieveProfile(@Path("id") long id);
+
+    @PUT("profile/{id}")
+    Call<Profile> updateProfile(long id, @Body Profile profile);
+
+    @DELETE("profile/{id}")
+    Call<Profile> deleteProfile(@Body Profile profile);
+
+    @Multipart
+    @POST("profile/{id}/img")
+    Call<Profile.ImageInfo> uploadImage(@Path("id") long id, @Part MultipartBody.Part image);
+
+    @DELETE("profile/{id}/img/{image_id}")
+    Call<Profile.ImageInfo> deleteImage(@Path("id") long id, @Path("image_id") long image_id);
+
+    @GET("profile/{id}/img/{image_id}")
+    Call<ResponseBody> downloadImage(@Path("id") long id, @Path("image_id") long image_id);
+
+
+}

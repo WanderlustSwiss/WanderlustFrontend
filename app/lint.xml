@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- set ignored checks -->
+    <issue id="SameParameterValue" severity="ignore" />
+    <issue id="SimpleDateFormat" severity="ignore" />
+    <issue id="RtlSymmetry" severity="ignore" />
+    <issue id="RtlHardcoded" severity="ignore" />
+    <issue id="Overdraw" severity="ignore" />
+    <issue id="UselessParent" severity="ignore" />
+    <issue id="ViewHolder" severity="ignore" />
+    <issue id="GoogleAppIndexingWarning" severity="ignore" />
+    <issue id="SameParameterValue" severity="ignore" />
+    <issue id="ClickableViewAccessibility" severity="ignore"/>
+	
+    <!-- set info checks -->
+    <issue id="GradleDependency" severity="informational" />
+    <issue id="UnusedResources" severity="informational" />
+    <issue id="IconLocation" severity="informational" />
+    <issue id="IconDuplicates" severity="informational" />
+	<issue id="MissingTranslation" severity="informational" />
+</lint>

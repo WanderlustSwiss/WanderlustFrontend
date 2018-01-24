@@ -3,9 +3,11 @@ package eu.wise_iot.wanderlust.constants;
 import org.osmdroid.util.GeoPoint;
 
 /**
- * Created by fabianschwander on 12.09.17.
+ * Defaults:
+ *
+ * @author Fabian Schwander
+ * @license MIT
  */
-
 public interface Defaults {
 
     /* ZOOM */
@@ -14,7 +16,7 @@ public interface Defaults {
 
     /* GEO POINTS */
     GeoPoint GEO_POINT_CENTER_OF_SWITZERLAND = new GeoPoint(46.484, 8.1336);
-//    GeoPoint GEO_POINT_POI = new GeoPoint(47.27010, 9.40180); // Schäffler
+    //    GeoPoint GEO_POINT_POI = new GeoPoint(47.27010, 9.40180); // Schäffler
     GeoPoint GEO_POINT_POI = new GeoPoint(46.58022299, 9.78543498); // Lai da Palpuogna
 //    GeoPoint GEO_POINT_POI = new GeoPoint(47.48073, 8.21205); // FHNW at Brugg
 

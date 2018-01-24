@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/img_201"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_layout_nickname"
+        style="@style/default_input"
+        android:layout_marginTop="120dp"
+        android:theme="@style/text_label_white">
+
+        <EditText
+            android:id="@+id/input_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/registration_name"
+            android:inputType="text"
+
+            android:nextFocusDown="@+id/input_mail" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_layout_mail"
+        style="@style/default_input"
+        android:theme="@style/text_label_white">
+
+
+        <EditText
+            android:id="@+id/input_mail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/registration_email"
+            android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_layout_password"
+        style="@style/default_input"
+        android:theme="@style/text_label_white">
+
+
+        <EditText
+            android:id="@+id/input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/registration_passsword"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+    <!-- Repeat Password Input -->
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_input_layout_password_repeat"
+        style="@style/default_input"
+        android:theme="@style/text_label_white">
+
+        <EditText
+            android:id="@+id/input_password_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/registration_passsword_repeat"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+    <!-- Signup Button -->
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_signup"
+        style="@style/standard_button"
+        android:layout_width="fill_parent"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="24dp"
+        android:padding="12dp"
+        android:text="@string/registration_create_account" />
+
+    <TextView
+        android:id="@+id/link_login"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="@string/registration_account_exist"
+        android:textColor="@color/background_main"
+        android:textSize="20sp" />
+
+
+</LinearLayout>

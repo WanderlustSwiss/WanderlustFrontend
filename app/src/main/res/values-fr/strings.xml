@@ -1,0 +1,35 @@
+<resources>
+
+    <!-- GENERAL STRINGS -->
+
+    <!-- WELCOME FRAGMENT -->
+
+    <!-- MANUAL FRAGMENT -->
+
+    <!-- DISCLAIMER FRAGMENT -->
+
+
+    <!-- MENU RELATED STRINGS -->
+
+
+    <!-- TOUR RELATED STRINGS -->
+
+
+    <!-- FEEDBACK DIALOG RELATED STRINGS -->
+    <string-array name="dialog_feedback_spinner_mode">
+        <item>öffentlich</item>
+        <item>nur für mich</item>
+    </string-array>
+
+
+    <!-- USER MESSAGES -->
+
+
+    <!-- ERROR MESSAGES -->
+
+
+    <!-- USER ACTIONS -->
+
+    <!-- REGISTRATION -->
+
+</resources>
