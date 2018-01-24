@@ -7,134 +7,99 @@
     android:orientation="vertical"
     tools:context="eu.wise_iot.wanderlust.views.ProfileFragment">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="225dp"
-        android:adjustViewBounds="false"
         android:background="@color/primary_main"
-        android:cropToPadding="false">
+        android:paddingLeft="20dp"
+        android:paddingTop="50dp">
 
         <ImageView
-            android:id="@+id/profileBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@color/primary_main" />
+            android:id="@+id/profilePicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerVertical="true"
+            android:paddingTop="20dp"
+            android:src="@drawable/images" />
 
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
+            android:layout_toRightOf="@id/profilePicture"
             android:paddingLeft="30dp"
+            android:paddingRight="30dp"
             android:paddingTop="50dp">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingTop="30dp">
+            <TextView
+                android:id="@+id/profileAmountPOI"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/profilePicture"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/images" />
-                <!--android:src="@color/myPrimaryDarkTransparent"-->
+            <TextView
+                android:id="@+id/profilePOItitle"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/profileAmountPOI"
+                android:layout_below="@+id/profileAmountPOI"
+                android:text="@string/title_poi"
+                android:textAlignment="center"
+                android:textSize="10dp" />
 
+            <TextView
+                android:id="@+id/profileAmountTours"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@id/profileAmountPOI"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-                <!--
-                <TextView
-                    android:id="@+id/profileBirthDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/profilePicture"
-                    android:layout_marginTop="10dp"
-                    android:layout_centerHorizontal="true"
-                    android:textSize="12dp"
-                    android:text="Birthday"/>
-                -->
+            <TextView
+                android:id="@+id/profileTourTitle"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/profileAmountTours"
+                android:layout_below="@+id/profileAmountTours"
+                android:text="@string/title_tours"
+                android:textAlignment="center"
+                android:textSize="10dp" />
 
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/profileAmountScore"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@+id/profileAmountTours"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/profileScoreTitle"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/profileAmountScore"
+                android:layout_below="@+id/profileAmountScore"
+                android:text="@string/title_score"
+                android:textAlignment="center"
+                android:textSize="10dp" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/editProfileButton"
+                style="@style/ButtonBorder.Accent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:paddingTop="50dp">
-
-                <TextView
-                    android:id="@+id/profileAmountPOI"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:textAlignment="center"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/profilePOItitle"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/profileAmountPOI"
-                    android:layout_below="@+id/profileAmountPOI"
-                    android:text="@string/title_poi"
-                    android:textAlignment="center"
-                    android:textSize="10dp" />
-
-                <TextView
-                    android:id="@+id/profileAmountTours"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toEndOf="@id/profileAmountPOI"
-                    android:textAlignment="center"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/profileTourTitle"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/profileAmountTours"
-                    android:layout_below="@+id/profileAmountTours"
-                    android:text="@string/title_tours"
-                    android:textAlignment="center"
-                    android:textSize="10dp" />
-
-                <TextView
-                    android:id="@+id/profileAmountScore"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toEndOf="@+id/profileAmountTours"
-                    android:textAlignment="center"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/profileScoreTitle"
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/profileAmountScore"
-                    android:layout_below="@+id/profileAmountScore"
-                    android:text="@string/title_score"
-                    android:textAlignment="center"
-                    android:textSize="10dp" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/editProfileButton"
-                    style="@style/ButtonBorder.Accent"
-                    android:layout_width="match_parent"
-                    android:layout_height="25dp"
-                    android:layout_below="@+id/profilePOItitle"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/profile_edit"
-                    />
-            </RelativeLayout>
-
-
-        </LinearLayout>
-    </FrameLayout>
+                android:layout_height="25dp"
+                android:layout_below="@+id/profilePOItitle"
+                android:layout_marginTop="10dp"
+                android:text="@string/profile_edit" />
+        </RelativeLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/profileTabs"

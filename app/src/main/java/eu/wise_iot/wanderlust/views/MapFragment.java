@@ -144,7 +144,7 @@ public class MapFragment extends Fragment {
         terrainTypeButton = (ImageButton) view.findViewById(R.id.map_terrain_type);
         bottomSheet = view.findViewById(R.id.bottom_sheet);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.border_for_selected_item));
+        defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
 
         staliteTypeButton.setOnClickListener(e -> {
             String[] urlArray = {"http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/"};
@@ -159,7 +159,7 @@ public class MapFragment extends Fragment {
             });
             defaultTypeButton.setBackground(null);
             terrainTypeButton.setBackground(null);
-            staliteTypeButton.setBackground(getActivity().getDrawable(R.drawable.border_for_selected_item));
+            staliteTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         });
 
@@ -169,7 +169,7 @@ public class MapFragment extends Fragment {
             mapView.setTileSource(tileSource);
             staliteTypeButton.setBackground(null);
             terrainTypeButton.setBackground(null);
-            defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.border_for_selected_item));
+            defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         });
@@ -180,7 +180,7 @@ public class MapFragment extends Fragment {
             mapView.setTileSource(tileSource);
             staliteTypeButton.setBackground(null);
             defaultTypeButton.setBackground(null);
-            terrainTypeButton.setBackground(getActivity().getDrawable(R.drawable.border_for_selected_item));
+            terrainTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         });
     }
