@@ -139,20 +139,17 @@
     <!-- Input Fields -->
 
     <style name="TextInputLayout" parent="Widget.Design.TextInputLayout">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:inputType">text</item>
-        <item name="android:theme">@style/TextLabel.White</item>
+        <item name="android:theme">@style/TextLabel</item>
         <item name="errorTextAppearance">@style/default_input_error</item>
     </style>
 
-
-    <style name="default_input">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="TextInputLayout.Light" parent="Widget.Design.TextInputLayout">
+        <item name="android:theme">@style/TextLabel.White</item>
     </style>
+
 
     <style name="default_input_error" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/highlight_main</item>
@@ -160,6 +157,8 @@
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">
         <item name="android:textSize">18sp</item>
+        <item name="android:textColorHint">@color/heading_icon_unselected</item>
+        <item name="colorControlNormal">@color/heading_icon_unselected</item>
         <item name="android:textColorHighlight">@color/highlight_main</item>
         <item name="android:textColorLink">@color/highlight_main</item>
     </style>
@@ -167,7 +166,6 @@
     <style name="TextLabel.White" >
         <item name="android:textColorHint">@color/background_main</item>
         <item name="colorControlNormal">@color/background_main</item>
-
     </style>
 
     <!-- Spinner -->

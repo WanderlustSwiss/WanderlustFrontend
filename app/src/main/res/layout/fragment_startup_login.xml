@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/img_201"
@@ -15,8 +14,10 @@
         android:paddingBottom="50dp">
 
         <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/text_input_layout_nickname_email"
-            style="@style/TextInputLayout">
+            style="@style/TextInputLayout.Light">
 
             <EditText
                 android:id="@+id/input_nickname_email"
@@ -29,8 +30,10 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/text_input_layout_password"
-            style="@style/TextInputLayout">
+            style="@style/TextInputLayout.Light">
 
             <EditText
                 android:id="@+id/input_password"
@@ -45,7 +48,8 @@
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_signin"
             style="@style/standard_button"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:layout_marginTop="48dp"
             android:padding="12dp"

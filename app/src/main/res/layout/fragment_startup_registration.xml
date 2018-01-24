@@ -15,7 +15,9 @@
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout_nickname"
-            style="@style/TextInputLayout">
+            style="@style/TextInputLayout.Light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/input_nickname"
@@ -28,7 +30,9 @@
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout_mail"
-            style="@style/TextInputLayout">
+            style="@style/TextInputLayout.Light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/input_mail"
@@ -40,12 +44,16 @@
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout_password"
-            style="@style/TextInputLayout">
+            style="@style/TextInputLayout.Light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
                 android:hint="@string/registration_password"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
@@ -53,7 +61,9 @@
         <!-- Repeat Password Input -->
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout_password_repeat"
-            style="@style/TextInputLayout">
+            style="@style/TextInputLayout.Light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/input_password_repeat"
