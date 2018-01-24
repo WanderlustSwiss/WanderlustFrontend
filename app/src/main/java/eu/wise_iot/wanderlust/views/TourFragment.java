@@ -23,11 +23,13 @@ import org.osmdroid.views.overlay.Polyline;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -85,7 +87,6 @@ public class TourFragment extends Fragment {
         mapFragment = new MapFragment();
         fragment.setArguments(args);
         userTour = paramUserTour;
-        //Hello, its me
         tourController.getSelectedUserTour(userTour, new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
@@ -150,7 +151,8 @@ public class TourFragment extends Fragment {
 
     public void fillUiElements() {
 
-        File tourImage = userTour.getImageById((byte) 0);
+        List<File> images = ImageController.getImages(userTour.getImagePaths());
+        File tourImage = images.get(0);
         long fileSize = tourImage.length();
         if (fileSize != 0) {
             Picasso.with(context)

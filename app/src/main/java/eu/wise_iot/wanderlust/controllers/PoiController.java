@@ -1,26 +1,14 @@
 package eu.wise_iot.wanderlust.controllers;
 
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.provider.ContactsContract;
-
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 
 /**
@@ -31,9 +19,6 @@ import retrofit2.Response;
  * @license MIT
  */
 public class PoiController {
-
-    public PoiController() {
-    }
 
     /**
      * @return List of all poi types
@@ -103,14 +88,10 @@ public class PoiController {
             //Download images if necessary
             GetImagesTask imagesTask = new GetImagesTask();
             //CAREFUL asynchron task, will fire the handler
-            imagesTask.execute(new GetImagesTaskParameters(poi, handler));
+            imagesTask.execute(new ImagesTaskParameters(poi.getPoi_id(), poi.getImagePaths(), "poi", handler));
         } else {
-            byte[] imageIds = poi.getImageIds();
             //Images should be local
-            List<File> images = new ArrayList<>();
-            for (int i = 0; i < poi.getImageCount(); i++) {
-                images.add(poi.getImageById(imageIds[i]));
-            }
+            List<File> images = ImageController.getImages(poi.getImagePaths());
             handler.onResponse(new ControllerEvent(EventType.OK, images));
         }
     }
@@ -149,130 +130,7 @@ public class PoiController {
     }
 
 
-    /**
-     * Parameters for the getImageIds method
-     * if this was c++ i could have just use a tuple
-     */
-    private class GetImagesTaskParameters {
-        Poi poi;
-        FragmentHandler handler;
 
-        GetImagesTaskParameters(Poi poi, FragmentHandler handler) {
-            this.poi = poi;
-            this.handler = handler;
-        }
-    }
-
-    /**
-     * The asynchronous task for receiving all images from a specific poi
-     */
-    class GetImagesTask extends AsyncTask<GetImagesTaskParameters, Void, List<File>> {
-
-        private FragmentHandler handler;
-        private List<DownloadedImage> downloadedImages = new LinkedList<>();
-
-        /**
-         * Task which iterates over all images of a specific poi
-         * and checks if it was already downloaded in the frontend database.
-         * if the images doesn't exists it will attempt to download it.
-         *
-         * @param parameters which are used for the task
-         * @return all images from a specific poi
-         */
-        @Override
-        protected List<File> doInBackground(GetImagesTaskParameters... parameters) {
-
-            Poi poi = parameters[0].poi;
-            handler = parameters[0].handler;
-
-            byte[] imageIds = poi.getImageIds();
-            List<File> images = new ArrayList<>();
-            for (int i = 0; i < poi.getImageCount(); i++) {
-                File image = poi.getImageById(imageIds[i]);
-                if (!image.exists()) {
-                    //Download it!
-                    Call<ResponseBody> call = PoiDao.service.downloadImage(poi.getPoi_id(), imageIds[i]);
-                    try {
-                        Response<ResponseBody> response = call.execute();
-                        if (response.isSuccessful()) {
-                            ResponseBody downloadedImg = response.body();
-                            if (writeToDisk(downloadedImg, poi.getPoi_id(), imageIds[i])) {
-                                downloadedImages.add(new DownloadedImage(image, downloadedImg.contentLength(), true));
-                                images.add(image);
-                            }
-                        }
-                    } catch (IOException e) {
-                        //What if failed?
-                        e.printStackTrace();
-                    }
-                } else {
-                    images.add(image);
-                }
-            }
-            return images;
-        }
-
-        @Override
-        protected void onPostExecute(List<File> images) {
-            DatabaseController.addDownloadedImages(downloadedImages);
-            handler.onResponse(new ControllerEvent<>(EventType.OK, images));
-        }
-
-        /**
-         * Writes a downloaded poi to the phone and names it correctly
-         *
-         * @param body    which represents the image downloaded
-         * @param poiId
-         * @param imageId
-         * @return true if everything went ok
-         */
-        private boolean writeToDisk(ResponseBody body, long poiId, long imageId) {
-
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-            try {
-                byte[] fileReader = new byte[4096]; //Giele machet ned zu krassi bilder suscht bricht das zäme
-                //if pictures get too large, need to implement a stream:
-                // https://futurestud.io/tutorials/retrofit-2-how-to-download-files-from-server
-
-                long fileSizeDownloaded = 0;
-
-                String name = poiId + "-" + imageId + ".jpg";
-                inputStream = body.byteStream();
-                //outputStream = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
-                outputStream = new FileOutputStream(DatabaseController.picturesDir + "/" + name);
-
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-
-                    if (read == -1) {
-                        break;
-                    }
-
-                    outputStream.write(fileReader, 0, read);
-
-                    fileSizeDownloaded += read;
-
-                }
-
-                outputStream.flush();
-                return true;
-            } catch (IOException e) {
-                return false;
-            } finally {
-                try {
-                    if (inputStream != null)
-                        inputStream.close();
-
-                    if (outputStream != null)
-                        outputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
 
 }

@@ -59,7 +59,6 @@ public final class DatabaseController {
     public static UserTourDao userTourDao;
     public static FavoriteDao favoriteDao;
     public static Context mainContext;
-    public static String picturesDir;
     private static List<DatabaseListener> listeners = new ArrayList<>();
     private static Date lastSync;
     private static boolean syncingPoiTypes;
@@ -85,7 +84,6 @@ public final class DatabaseController {
             userTourDao = new UserTourDao();
             favoriteDao = new FavoriteDao();
             mainContext = context;
-            picturesDir = mainContext.getApplicationContext().getFilesDir().getAbsolutePath() + "/pictures";
             initialized = true;
         }
     }
@@ -182,45 +180,45 @@ public final class DatabaseController {
     /**
      * Deletes all .jpg files in the app storage
      */
-    public static void clearAllDownloadedImages() {
-        List<Long> privatePoiIds = new ArrayList<>();
-        for (Poi poi : poiDao.find(Poi_.isPublic, false)) {
-            privatePoiIds.add(poi.getPoi_id());
-        }
-        File filesDir = new File(picturesDir);
-        filesDir.mkdir();
-
-        for (File image : filesDir.listFiles()) {
-            String name = image.getName();
-            int dotIndex = name.lastIndexOf('.');
-            if (dotIndex == -1) continue; //not a valid file
-            String extension = name.substring(dotIndex + 1);
-            try {
-                long imageId = Long.parseLong(name.substring(name.indexOf('-') + 1, name.indexOf('.')));
-                if (privatePoiIds.contains(imageId) && extension.equals("jpg")) {
-                    if (!image.delete()) {
-                        Log.e(DatabaseController.class.toString(),
-                                "image " + image.getAbsolutePath() + " could not be deleted");
-                        break;
-                    }
-                }
-            } catch (NumberFormatException e) {
-                continue;
-            }
-        }
-        cacheSize = 0;
-    }
-
-    public static void deletePoiImages(Poi poi) {
-        byte[] images = poi.getImageIds();
-        for (int i = 0; i < poi.getImageCount(); i++) {
-            File image = poi.getImageById(images[i]);
-            if (!image.delete()) {
-                Log.e(DatabaseController.class.toString(),
-                        "image " + image.getAbsolutePath() + " could not be deleted");
-            }
-        }
-    }
+//    public static void clearAllDownloadedImages() {
+//        List<Long> privatePoiIds = new ArrayList<>();
+//        for (Poi poi : poiDao.find(Poi_.isPublic, false)) {
+//            privatePoiIds.add(poi.getPoi_id());
+//        }
+//        File filesDir = new File(picturesDir);
+//        filesDir.mkdir();
+//
+//        for (File image : filesDir.listFiles()) {
+//            String name = image.getName();
+//            int dotIndex = name.lastIndexOf('.');
+//            if (dotIndex == -1) continue; //not a valid file
+//            String extension = name.substring(dotIndex + 1);
+//            try {
+//                long imageId = Long.parseLong(name.substring(name.indexOf('-') + 1, name.indexOf('.')));
+//                if (privatePoiIds.contains(imageId) && extension.equals("jpg")) {
+//                    if (!image.delete()) {
+//                        Log.e(DatabaseController.class.toString(),
+//                                "image " + image.getAbsolutePath() + " could not be deleted");
+//                        break;
+//                    }
+//                }
+//            } catch (NumberFormatException e) {
+//                continue;
+//            }
+//        }
+//        cacheSize = 0;
+//    }
+//
+//    public static void deletePoiImages(Poi poi) {
+//        byte[] images = poi.getImageIds();
+//        for (int i = 0; i < poi.getImageCount(); i++) {
+//            File image = poi.getImageById(images[i]);
+//            if (!image.delete()) {
+//                Log.e(DatabaseController.class.toString(),
+//                        "image " + image.getAbsolutePath() + " could not be deleted");
+//            }
+//        }
+//    }
 
     public static void sendUpdate(DatabaseEvent event) {
         for (DatabaseListener listener : listeners) {

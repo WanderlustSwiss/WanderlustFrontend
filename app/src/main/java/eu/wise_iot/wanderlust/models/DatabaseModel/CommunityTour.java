@@ -27,21 +27,19 @@ public class CommunityTour extends AbstractModel {
     String description;
 
     @Convert(converter = Poi.imageInfoConverter.class, dbType = String.class)
-    List<Poi.ImageInfo> imagePaths;
-    byte[] imageIds;
-    int imageCount;
+    List<ImageInfo> imagePaths;
 
     String polyline;
     long difficulty;
     long tourKit;
     boolean editable;
 
-    public CommunityTour(long internal_id, long tour_id, String title, String description, byte[] imageIds, String polyline, long difficulty, long tourKit, boolean editable) {
+    public CommunityTour(long internal_id, long tour_id, String title, String description,
+                         String polyline, long difficulty, long tourKit, boolean editable) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
         this.description = description;
-        this.imageIds = imageIds;
         this.polyline = polyline;
         this.difficulty = difficulty;
         this.tourKit = tourKit;
@@ -54,52 +52,14 @@ public class CommunityTour extends AbstractModel {
         this.description = "No description";
     }
 
-    public byte[] getImageIds() {
-        return imageIds;
-    }
-
-    public void addImageId(byte id) {
-        imageIds[imageCount++] = id;
-    }
-
-    public boolean removeImageId(byte id) {
-        int index = 0;
-        while (imageIds[index] != id) {
-            index++;
-            if (index == imageCount) {
-                return false;
-            }
-        }
-        for (int i = index; i < imageCount; i++) {
-            imageIds[i] = imageIds[i + 1];
-        }
-        imageCount--;
-        return true;
-    }
-
-    public File getImageById(byte imageId) {
-        for (int i = 0; i < imageCount; i++) {
-            if (imageIds[i] == imageId) {
-                String name = tour_id + "-" + imageIds[i] + ".jpg";
-                return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
-                        "/files/" + name);
-            }
-        }
-        return null;
-    }
-
-    public void setImageIds(byte[] imageIds, int imageCount) {
-        this.imageIds = imageIds;
-        this.imageCount = imageCount;
-    }
-
     public int getImageCount() {
-        return imageCount;
+        return imagePaths.size();
     }
 
-    public List<Poi.ImageInfo> getImagePaths() {
+    public List<ImageInfo> getImagePaths() {
         return imagePaths;
     }
+
     public long getInternal_id() {
         return internal_id;
     }

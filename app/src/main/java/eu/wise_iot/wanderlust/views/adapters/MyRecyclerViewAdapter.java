@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
@@ -108,12 +109,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.tvTitle.setText(userTour.getTitle());
         holder.tvDistance.setText(tourController.convertToStringDistance(userTour.getDistance()));
 
-
-        File image = userTour.getImageById((byte) 1);
-
+        List<File> images = ImageController.getImages(userTour.getImagePaths());
+        File image = images.get(0);
         Picasso.with(context).load(image).into(holder.tvImage);
 
-        Log.d("Toursoverview", "Image loaded: " + image.toString());
+        Log.d("Toursoverview", "ImageInfo loaded: " + image.toString());
 
         holder.tvTime.setText(tourController.convertToStringDuration(userTour.getDuration()));
     }

@@ -27,6 +27,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -53,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         DatabaseController.initDaoModels(getApplicationContext());
-        DatabaseController.clearAllDownloadedImages();
+        ImageController.init(getApplicationContext());
+        //DatabaseController.clearAllDownloadedImages();
         DatabaseController.poiDao.poiBox.removeAll();
         loginController = new LoginController();
 

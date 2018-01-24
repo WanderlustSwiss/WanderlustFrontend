@@ -222,7 +222,7 @@ public class TourOverviewFragment extends Fragment {
                         }
                         break;
                     default:
-                        Log.d(TAG,"Tour Image Clicked and event triggered ");
+                        Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
                         TourFragment tourFragment = TourFragment.newInstance(tour);
                         getFragmentManager().beginTransaction()
                                 .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)

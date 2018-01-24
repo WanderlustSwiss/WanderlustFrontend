@@ -36,9 +36,7 @@ public class UserTour extends AbstractModel {
     boolean editable;
 
     @Convert(converter = Poi.imageInfoConverter.class, dbType = String.class)
-    List<Poi.ImageInfo> imagePaths;
-    byte[] imageIds;
-    int imageCount;
+    List<ImageInfo> imagePaths;
 
     public UserTour(long internal_id, long tour_id, String title, String description,
                     String imagePath, String polyline, String elevation, long duration, long distance,
@@ -65,15 +63,17 @@ public class UserTour extends AbstractModel {
         this.description = "No description";
     }
 
-    public File getImageById(byte imageId) {
-       // for (int i = 0; i < imageCount; i++) {
-            //if (imageIds[i] == imageId) {
-                String name = tour_id + "-" + 1 + ".jpg";
-                return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
-                        "/files/" + name);
-       //     }
-        //}
-        //return null;
+    public List<ImageInfo> getImagePaths() {
+        return imagePaths;
+    }
+
+    public ImageInfo getImageById(long id){
+        for(ImageInfo imageInfo : imagePaths){
+            if(imageInfo.getId() == id){
+                return imageInfo;
+            }
+        }
+        return null;
     }
 
     public long getInternal_id() {

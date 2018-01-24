@@ -14,7 +14,9 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour_;
@@ -237,10 +239,21 @@ public class UserTourDao extends DatabaseObjectAbstract {
         call.enqueue(new Callback<List<UserTour>>() {
             @Override
             public void onResponse(Call<List<UserTour>> call, Response<List<UserTour>> response) {
-                if (response.isSuccessful())
+                if (response.isSuccessful()) {
+                    List<UserTour> userTours = response.body();
+                    for (UserTour userTour : userTours) {
+                        for (ImageInfo imageInfo : userTour.getImagePaths()) {
+                            String name = userTour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
+                            imageInfo.id = userTour.getTour_id();
+                            imageInfo.path = "tours" + "/" + name;
+
+                        }
+                    }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
-                else
+                }
+                else{
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
             }
 
             @Override
@@ -311,8 +324,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
 
             String name = userTourId + "-" + imageId + ".jpg";
             inputStream = body.byteStream();
-            outputStream = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
-
+            outputStream = new FileOutputStream(ImageController.picturesDir + "/tours/" + userTourId + "-" + imageId + ".jpg");
 
             while (true) {
                 int read = inputStream.read(fileReader);
