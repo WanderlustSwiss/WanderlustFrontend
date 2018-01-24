@@ -146,11 +146,21 @@
 
 
     <!-- Input Fields -->
-    <style name="default_input">
+
+    <style name="TextInputLayout" parent="Widget.Design.TextInputLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:inputType">text</item>
+        <item name="android:theme">@style/TextLabel.White</item>
+        <item name="errorTextAppearance">@style/default_input_error</item>
+    </style>
+
+
+    <style name="default_input">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="default_input_error" parent="@android:style/TextAppearance">
