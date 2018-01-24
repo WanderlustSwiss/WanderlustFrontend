@@ -96,8 +96,10 @@
 
                 <ImageView
                     android:id="@+id/imageDifficulty"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="4dp"
                     android:layout_weight="1"
                     android:src="@drawable/ic_fiber_manual_record_black_24dp" />
 

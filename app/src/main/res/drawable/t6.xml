@@ -4,21 +4,10 @@
     android:viewportHeight="24"
     android:width="24dp"
     android:height="24dp">
-    <group
-        android:translateX="-32">
-        <group>
-            <clip-path
-                android:pathData="M32 0l24 0 0 24 -24 0z" />
-            <path
-                android:pathData="M32 0l24 0 0 24 -24 0z"
-                android:fillColor="@color/black" />
-            <group
-                android:translateX="32">
-                <path
-                    android:pathData="M0.1 0.1l23.799999 0 0 23.799999 -23.799999 0z"
-                    android:strokeWidth="0.2"
-                    android:strokeColor="@color/heading_icon" />
-            </group>
-        </group>
-    </group>
+    <path
+        android:pathData="M24 12A12 12 0 0 1 12 24 12 12 0 0 1 0 12 12 12 0 0 1 12 0 12 12 0 0 1 24 12Z"
+        android:strokeWidth="0.2"
+        android:fillColor="#010202"
+        android:strokeMiterLimit="10"
+        android:strokeColor="#30302f" />
 </vector>

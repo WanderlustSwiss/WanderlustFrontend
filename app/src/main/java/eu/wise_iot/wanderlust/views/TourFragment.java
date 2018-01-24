@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -136,14 +137,16 @@ public class TourFragment extends Fragment {
         jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
 
         long difficulty = userTour.getDifficulty();
+        Drawable drawable;
         if (difficulty >= 6)
-            textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.t6), null, null, null);
+            drawable = context.getResources().getDrawable(R.drawable.t6);
         else if (difficulty >= 4)
-            textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.t4_t5), null, null, null);
+            drawable = context.getResources().getDrawable(R.drawable.t4_t5);
         else if (difficulty >= 2)
-            textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.t2_t3), null, null, null);
+            drawable = context.getResources().getDrawable(R.drawable.t2_t3);
         else
-            textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.t1), null, null, null);
+            drawable = context.getResources().getDrawable(R.drawable.t1);
+        textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 
         fillUiElements();
 
