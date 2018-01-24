@@ -26,14 +26,14 @@ import static org.junit.Assert.*;
  * @license MIT
  */
 @RunWith(AndroidJUnit4.class)
-public class ViewPoiDialogTest {
+public class PoiViewDialogTest {
 
     @Rule
     public ActivityTestRule<MainActivity> testActivity = new ActivityTestRule<>(MainActivity.class);
 
     private MainActivity mainActivity;
 
-    private ViewPoiDialog viewPoiDialog;
+    private PoiViewDialog poiViewDialog;
     private View view;
 
     private Poi poi = new Poi(1, "name of poi", "description of poi", null, 2,
@@ -43,18 +43,18 @@ public class ViewPoiDialogTest {
     @Before
     public void setUp() throws Exception {
         mainActivity = testActivity.getActivity();
-        viewPoiDialog = ViewPoiDialog.newInstance(poi);
+        poiViewDialog = PoiViewDialog.newInstance(poi);
 
         FrameLayout frameLayout = (FrameLayout) mainActivity.findViewById(R.id.content_frame);
         assertNotNull("FrameLayout is null", frameLayout);
 
         mainActivity.getFragmentManager().beginTransaction()
-                .add(frameLayout.getId(), viewPoiDialog)
+                .add(frameLayout.getId(), poiViewDialog)
                 .commit();
 
         getInstrumentation().waitForIdleSync();
 
-        view = viewPoiDialog.getView();
+        view = poiViewDialog.getView();
         assertNotNull("view is null", view);
     }
 

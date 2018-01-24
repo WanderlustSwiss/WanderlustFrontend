@@ -11,7 +11,7 @@
                 android:pathData="M122 0l24 0 0 24 -24 0z" />
             <path
                 android:pathData="M122 0l24 0 0 24 -24 0z"
-                android:fillColor="@color/structure_main" />
+                android:fillColor="@color/medium" />
             <group
                 android:translateX="122">
                 <path

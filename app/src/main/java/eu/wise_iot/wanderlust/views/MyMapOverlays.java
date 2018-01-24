@@ -31,7 +31,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.views.dialog.ViewPoiDialog;
+import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
 /**
  * MyMapFragment:
@@ -122,7 +122,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                                         fragmentTransaction.remove(prevFragment);
                                     fragmentTransaction.addToBackStack(null);
 
-                                    ViewPoiDialog dialogFragment = ViewPoiDialog.newInstance(poi);
+                                    PoiViewDialog dialogFragment = PoiViewDialog.newInstance(poi);
                                     dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
                                     break;
                                 default:

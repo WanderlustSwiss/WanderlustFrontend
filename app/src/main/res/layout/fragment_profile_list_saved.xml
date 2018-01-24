@@ -46,7 +46,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="40dp"
         android:layout_toRightOf="@id/ListSavedInfo"
-        android:src="@drawable/ic_delete_black_24dp"
+        android:src="@drawable/ic_delete_white_24dp"
         />
 
 

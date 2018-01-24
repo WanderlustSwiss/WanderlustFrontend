@@ -54,7 +54,7 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // set style
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog);
 
         Bundle args = getArguments();
         message = args.getString(MESSAGE);

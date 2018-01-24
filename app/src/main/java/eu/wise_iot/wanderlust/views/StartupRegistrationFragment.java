@@ -31,7 +31,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.User;
  * @author Joshua
  * @license MIT
  */
-public class RegistrationFragment extends Fragment {
+public class StartupRegistrationFragment extends Fragment {
 
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,5}$", Pattern.CASE_INSENSITIVE);
@@ -58,7 +58,7 @@ public class RegistrationFragment extends Fragment {
     /**
      * Create a standard registration fragment
      */
-    public RegistrationFragment() {
+    public StartupRegistrationFragment() {
         this.registrationController = new RegistrationController();
     }
 
@@ -75,7 +75,7 @@ public class RegistrationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_registration, container, false);
+        View view = inflater.inflate(R.layout.fragment_startup_registration, container, false);
         btnRegister = (Button) view.findViewById(R.id.btn_signup);
         nickNameTextfield = (EditText) view.findViewById(R.id.input_nickname);
         eMailTextfield = (EditText) view.findViewById(R.id.input_mail);
@@ -118,9 +118,9 @@ public class RegistrationFragment extends Fragment {
                             switch (eventType) {
                                 case OK:
                                     Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
-                                    LoginFragment loginFragment = new LoginFragment();
+                                    SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
                                     getFragmentManager().beginTransaction()
-                                            .add(R.id.content_frame, loginFragment)
+                                            .add(R.id.content_frame, sartupLoginFragment)
                                             .commit();
 
                                     // create profile for user if registration succesful
@@ -146,9 +146,9 @@ public class RegistrationFragment extends Fragment {
         redirectToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginFragment loginFragment = new LoginFragment();
+                SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, loginFragment)
+                        .add(R.id.content_frame, sartupLoginFragment)
                         .commit();
             }
         });

@@ -30,8 +30,6 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import io.objectbox.BoxStore;
 
 /**
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             editor.apply();
 
             // start welcome screen
-            RegistrationFragment registrationFragment = new RegistrationFragment();
+            StartupRegistrationFragment registrationFragment = new StartupRegistrationFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, registrationFragment)
                     .commit();
@@ -75,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             User user = DatabaseController.userDao.getUser();
             if (user == null) {
-                LoginFragment loginFragment = new LoginFragment();
+                SartupLoginFragment loginFragment = new SartupLoginFragment();
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, loginFragment)
                         .commit();
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     .commit();
                             break;
                         default:
-                            LoginFragment loginFragment = new LoginFragment();
+                            SartupLoginFragment loginFragment = new SartupLoginFragment();
                             getFragmentManager().beginTransaction()
                                     .add(R.id.content_frame, loginFragment)
                                     .commit();
@@ -179,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });
-            fragment = new LoginFragment();
+            fragment = new SartupLoginFragment();
             fragmentTag = Constants.LOGIN_FRAGMENT;
         }
 
