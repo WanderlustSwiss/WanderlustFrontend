@@ -50,7 +50,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     private SignInButton signInButtonGoogle;
     private TextView redirectToRegistration;
     private TextView fogotPassword;
-    private GoogleApiClient googleApiClient;
+//    private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
     private LoginController loginController;
 
@@ -92,11 +92,11 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             ((AppCompatActivity) context).getSupportActionBar().hide();
         }
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .build();
-
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .requestIdToken(getString(R.string.default_web_client_id))
+//                .build();
+//
 //        googleApiClient = new GoogleApiClient.Builder(getActivity())
 //                .enableAutoManage((FragmentActivity) getActivity(), this)
 //                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -111,7 +111,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         nicknameEmailTextfield = (EditText) view.findViewById(R.id.input_nickname_email);
         nicknameEmailLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_nickname_email);
         nicknameEmailLayout.setErrorEnabled(true);
-        signInButtonGoogle = (SignInButton) view.findViewById(R.id.sign_in_button);
+//        signInButtonGoogle = (SignInButton) view.findViewById(R.id.sign_in_button);
         redirectToRegistration = (TextView) view.findViewById(R.id.link_registration);
         fogotPassword = (TextView) view.findViewById(R.id.login_forgetPassword);
 
@@ -149,14 +149,14 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         });
 
 
-        signInButtonGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                signInWithGoogle();
-                // TODO: remove
-                Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
-            }
-        });
+//        signInButtonGoogle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                signInWithGoogle();
+//                // TODO: remove
+//                Toast.makeText(context, R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
+//            }
+//        });
 
 
         redirectToRegistration.setOnClickListener(new View.OnClickListener() {
@@ -184,13 +184,13 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         });
     }
 
-    /**
-     * Starts the sign in process with via Google API
-     */
-    private void signInWithGoogle() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        startActivityForResult(signInIntent, REQ_CODE);
-    }
+//    /**
+//     * Starts the sign in process with via Google API
+//     */
+//    private void signInWithGoogle() {
+//        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+//        startActivityForResult(signInIntent, REQ_CODE);
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
