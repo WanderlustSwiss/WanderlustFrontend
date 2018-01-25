@@ -327,8 +327,10 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
     public void clearPolylines() {
-        mapView.getOverlays().clear();
-        lines = null;
+        if(lines != null) {
+            mapView.getOverlays().removeAll(lines);
+            lines = null;
+        }
     }
 
 }
