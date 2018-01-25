@@ -13,18 +13,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    //TODO change for production
     /*
      * Defines the URL for the backend communication
      */
-    // Staging Host
-    //public static final String API_BASE_URL = "http://86.119.40.34:8080/";
-
-    // Local Development Host (recommended)
-    public static final String API_BASE_URL = "http://10.0.2.2:1337";
-    //public static final String API_BASE_URL = "http://192.168.1.49:1337";
-
-    //public static final String API_BASE_URL = "http://127.0.0.1:1337";
+    public static final String API_BASE_URL = "https://www.cs.technik.fhnw.ch/wanderlust/";
 
     /**
      * Create service for a new backend request

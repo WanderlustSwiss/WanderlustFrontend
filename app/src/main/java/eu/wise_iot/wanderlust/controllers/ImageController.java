@@ -26,12 +26,8 @@ public class ImageController {
         mainContext = context;
         picturesDir = mainContext.getApplicationContext().getFilesDir().getAbsolutePath() + "/pictures";
 
-//        File dirTest = new File(picturesDir + "/pois");
-//        try {
-//            delete(dirTest);
-//        } catch (Exception e){
-//
-//        }
+        File pictures = new File(picturesDir);
+        if(!pictures.exists()) pictures.mkdir();
 
         File dir = new File(picturesDir + "/pois");
         dir.mkdir();
@@ -48,15 +44,6 @@ public class ImageController {
         }
         return images;
     }
-
-//    static void delete(File f) throws IOException {
-//        if (f.isDirectory()) {
-//            for (File c : f.listFiles())
-//                delete(c);
-//        }
-//        if (!f.delete())
-//            throw new FileNotFoundException("Failed to delete file: " + f);
-//    }
 
     public static void save(File file, ImageInfo image) throws IOException {
 
