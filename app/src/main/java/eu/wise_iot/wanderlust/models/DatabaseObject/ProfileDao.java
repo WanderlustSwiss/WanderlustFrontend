@@ -18,6 +18,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -34,16 +35,26 @@ import retrofit2.Response;
  */
 
 public class ProfileDao extends DatabaseObjectAbstract {
+
+    private static class Holder {
+        private static final ProfileDao INSTANCE = new ProfileDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static ProfileDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     public static ProfileService service;
     public Box<Profile> profileBox;
-    Property columnProperty;
 
     /**
      *
      */
 
-    public ProfileDao() {
-        profileBox = DatabaseController.boxStore.boxFor(Profile.class);
+    private ProfileDao() {
+        profileBox = BOXSTORE.boxFor(Profile.class);
         service = ServiceGenerator.createService(ProfileService.class);
     }
 
@@ -73,9 +84,10 @@ public class ProfileDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * Update an existing user in the database.
+     * Update an existing user in the database and sync to backend
      *
      * @param profile (required).
+     * @param handler
      */
     public void update(Profile profile, final FragmentHandler handler) {
 
@@ -107,6 +119,23 @@ public class ProfileDao extends DatabaseObjectAbstract {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
+    }
+    /**
+     * Update an existing user in the database
+     *
+     * @param profile (required).
+     */
+    public void update(Profile profile){
+        profileBox.put(profile);
+    }
+
+    public Profile getProfile() {
+        List<Profile> profiles = find();
+        if (profiles.size() != 1) {
+            return null;
+        } else {
+            return profiles.get(0);
+        }
     }
 
     /**
@@ -154,7 +183,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
     public void saveImageOnApp(String name, File file) throws IOException {
 
         InputStream in = new FileInputStream(file);
-        FileOutputStream out = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
+        FileOutputStream out = DatabaseController.getMainContext().openFileOutput(name, Context.MODE_PRIVATE);
 
         byte[] buf = new byte[1024];
         int len;
@@ -265,4 +294,10 @@ public class ProfileDao extends DatabaseObjectAbstract {
 
     }
 
+    /**
+     * Delete all profiles out of the database
+     */
+    public void removeAll() {
+        profileBox.removeAll();
+    }
 }

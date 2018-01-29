@@ -132,7 +132,7 @@ public class Profile extends AbstractModel {
     public File getImageById(byte imageId) {
         if (imageId == imageId) {
             String name = profile_id + "-" + imageId + ".jpg";
-            return new File(DatabaseController.mainContext.getApplicationInfo().dataDir +
+            return new File(DatabaseController.getMainContext().getApplicationInfo().dataDir +
                     "/files/" + name);
         }
         return null;

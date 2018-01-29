@@ -5,6 +5,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 
 /**
@@ -16,15 +17,24 @@ import io.objectbox.Property;
 
 public class TourKitDao extends DatabaseObjectAbstract {
 
-    Property columnProperty;
+    private static class Holder {
+        private static final TourKitDao INSTANCE = new TourKitDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static TourKitDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     private Box<TourKit> tourKitBox;
 
     /**
      * Constructor.
      */
 
-    public TourKitDao() {
-        tourKitBox = DatabaseController.boxStore.boxFor(TourKit.class);
+    private TourKitDao() {
+        tourKitBox = BOXSTORE.boxFor(TourKit.class);
     }
 
     public long count() {

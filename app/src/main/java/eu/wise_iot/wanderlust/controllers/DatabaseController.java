@@ -12,94 +12,82 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
-import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.DeviceDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.EquipmentDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.HistoryDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import io.objectbox.BoxStore;
 
 /**
  * Database controller which initializes all Model Dao objects
  * Use this statically to use dao models or boxstore
  *
- * @author Tobias Rüegsegger
+ * @author Tobias Rüegsegger, Simon Kaspar
  * @license MIT
  */
 public final class DatabaseController {
+    private static class Holder {
+        private static final DatabaseController INSTANCE = new DatabaseController();
+    }
+
+    private static BoxStore BOX_STORE;
+
+    private static Context CONTEXT;
+
+    public static DatabaseController createInstance(Context context){
+
+        BOX_STORE = MyObjectBox.builder().androidContext(context).build();
+        CONTEXT = context;
+
+        return Holder.INSTANCE;
+    }
+
+    public static DatabaseController getInstance(){
+        return CONTEXT != null ? Holder.INSTANCE : null;
+    }
+
+    public static Context getMainContext() {
+        return CONTEXT;
+    }
+
+    public static BoxStore getBoxStore() {
+        return BOX_STORE;
+    }
+
 
     //in bytes
-    private static final long MAXCACHESIZE = 20_000_000;
-    //true as soon intDaoModels was executed
-    public static boolean initialized;
-    public static BoxStore boxStore;
-    public static CommunityTourDao communityTourDao;
-    public static DeviceDao deviceDao;
-    public static DifficultyTypeDao difficultyTypeDao;
-    public static EquipmentDao equipmentDao;
-    public static HistoryDao historyDao;
-    public static PoiDao poiDao;
-    public static PoiTypeDao poiTypeDao;
-    public static ProfileDao profileDao;
-    public static TourKitDao tourKitDao;
-    public static TripDao tripDao;
-    public static UserDao userDao;
-    public static UserTourDao userTourDao;
-    public static FavoriteDao favoriteDao;
-    public static Context mainContext;
-    private static List<DatabaseListener> listeners = new ArrayList<>();
-    private static Date lastSync;
-    private static boolean syncingPoiTypes;
-    private static boolean syncingPois;
-    private static LinkedList<DownloadedImage> downloadedImages = new LinkedList<>();
-    private static long cacheSize;
+    private final long MAXCACHESIZE;
+    private Context mainContext;
+    private BoxStore boxStore;
+    private List<DatabaseListener> listeners = new ArrayList<>();
+    private boolean syncingPoiTypes;
+    private boolean syncingPois;
+    private Date lastSync;
 
-    public static void initDaoModels(Context context) {
+    private LinkedList<DownloadedImage> downloadedImages;
+    private long cacheSize;
 
-        if (!initialized) {
-            boxStore = MyObjectBox.builder().androidContext(context).build();
-            communityTourDao = new CommunityTourDao();
-            deviceDao = new DeviceDao();
-            difficultyTypeDao = new DifficultyTypeDao();
-            equipmentDao = new EquipmentDao();
-            historyDao = new HistoryDao();
-            poiDao = new PoiDao();
-            poiTypeDao = new PoiTypeDao();
-            profileDao = new ProfileDao();
-            tourKitDao = new TourKitDao();
-            tripDao = new TripDao();
-            userDao = new UserDao();
-            userTourDao = new UserTourDao();
-            favoriteDao = new FavoriteDao();
-            mainContext = context;
-            initialized = true;
-        }
+    private DatabaseController(){
+        boxStore = BOX_STORE;
+        mainContext = CONTEXT;
+
+        MAXCACHESIZE = 20_000_000;
+
+        listeners = new ArrayList<>();
+        downloadedImages = new LinkedList<>();
     }
 
     /**
      * Deletes all files in the frontend database
      */
-    public static void flushDatabase() {
+    public void flushDatabase() {
         boxStore.deleteAllFiles();
     }
 
     /**
      * Deletes all pois from the frontend database
      */
-    public static void deleteAllPois() {
-        poiDao.deleteAll();
+    public void deleteAllPois() {
+        PoiDao.getInstance().deleteAll();
     }
 
 
@@ -108,21 +96,21 @@ public final class DatabaseController {
      *
      * @param event
      */
-    public static void sync(DatabaseEvent event) {
+    public void sync(DatabaseEvent event) {
 
         lastSync = new Date();
         switch (event.getType()) {
             case POITYPE:
                 if (!syncingPoiTypes) {
                     syncingPoiTypes = true;
-                    poiTypeDao.syncTypes();
+                    PoiTypeDao.getInstance().syncTypes();
                 }
                 break;
             case POIAREA:
                 if (!syncingPois) {
                     syncingPois = true;
                     BoundingBox box = (BoundingBox) event.getObj();
-                    poiDao.syncPois(box);
+                    PoiDao.getInstance().syncPois(box);
                 }
                 break;
             default:
@@ -131,12 +119,12 @@ public final class DatabaseController {
     }
 
 
-    public static void syncPoiTypesDone() {
+    public void syncPoiTypesDone() {
         syncingPoiTypes = false;
         sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
     }
 
-    public static void syncPoisDone() {
+    public void syncPoisDone() {
         syncingPois = false;
         sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA));
     }
@@ -144,12 +132,12 @@ public final class DatabaseController {
     /**
      * @return the time when the last sync !STARTED!
      */
-    public static Date lastSync() {
+    public Date lastSync() {
         return lastSync;
     }
 
 
-    public static void addDownloadedImages(List<DownloadedImage> images) {
+    public void addDownloadedImages(List<DownloadedImage> images) {
 
         for (DownloadedImage image : images) {
             downloadedImages.add(image);
@@ -158,7 +146,7 @@ public final class DatabaseController {
         clearCache();
     }
 
-    public static void clearCache() {
+    public void clearCache() {
 
         //TODO endless loop if userimages are higher than maxchachesize
         while (cacheSize >= MAXCACHESIZE) {
@@ -220,19 +208,20 @@ public final class DatabaseController {
 //        }
 //    }
 
-    public static void sendUpdate(DatabaseEvent event) {
+    public void sendUpdate(DatabaseEvent event) {
         for (DatabaseListener listener : listeners) {
             listener.update(event);
         }
     }
 
-    public static void register(DatabaseListener listener) {
+    public void register(DatabaseListener listener) {
         if (!listeners.contains(listener)) {
             listeners.add(listener);
         }
     }
 
-    public static void unregister(DatabaseListener listener) {
+    public void unregister(DatabaseListener listener) {
         listeners.remove(listener);
     }
+
 }

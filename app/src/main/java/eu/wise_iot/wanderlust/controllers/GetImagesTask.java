@@ -72,7 +72,7 @@ public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<Fi
 
     @Override
     protected void onPostExecute(List<File> images) {
-        DatabaseController.addDownloadedImages(downloadedImages);
+        DatabaseController.getInstance().addDownloadedImages(downloadedImages);
         handler.onResponse(new ControllerEvent<>(EventType.OK, images));
     }
 

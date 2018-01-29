@@ -55,6 +55,7 @@ public class MapFragment extends Fragment {
     private static final String TAG = "MapFragment";
     public static String photoPath;
     private static String imageFileName;
+    private static DatabaseController databaseController;
     // preferences and default settings
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -90,6 +91,7 @@ public class MapFragment extends Fragment {
     public static MapFragment newInstance() {
 
         Bundle args = new Bundle();
+        databaseController = DatabaseController.getInstance();
         MapFragment fragment = new MapFragment();
         fragment.setArguments(args);
         return fragment;
@@ -118,7 +120,7 @@ public class MapFragment extends Fragment {
         initMap(view);
         initOverlays();
         initMapController();
-        DatabaseController.register(mapOverlays);
+        databaseController.register(mapOverlays);
         if(polyline != null) setTour(polyline);
         return view;
     }
@@ -126,7 +128,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        DatabaseController.unregister(mapOverlays);
+        databaseController.unregister(mapOverlays);
     }
 
     @Override
@@ -413,7 +415,7 @@ public class MapFragment extends Fragment {
 
                 if (round(map.getMapCenter().getLatitude()) == round(centerOfMap.getLatitude())
                         && round(map.getMapCenter().getLongitude()) == round(centerOfMap.getLongitude())) {
-                    DatabaseController.sync(new DatabaseEvent<BoundingBox>(DatabaseEvent.SyncType.POIAREA, map.getProjection().getBoundingBox()));
+                    databaseController.sync(new DatabaseEvent<BoundingBox>(DatabaseEvent.SyncType.POIAREA, map.getProjection().getBoundingBox()));
                     v.removeOnLayoutChangeListener(this);
                 }
             }

@@ -27,7 +27,7 @@ public class WanderlustMapView extends MapView {
     public boolean dispatchTouchEvent(MotionEvent event) {
         boolean result = super.dispatchTouchEvent(event);
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, this.getProjection().getBoundingBox()));
+            DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, this.getProjection().getBoundingBox()));
         }
         return result;
     }

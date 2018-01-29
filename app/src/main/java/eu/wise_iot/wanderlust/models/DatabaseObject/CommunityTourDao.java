@@ -7,26 +7,35 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 
 /**
  * CommunityTourDao:
  *
- * @author Rilind Gashi, Alexander Weinbeck
+ * @author Rilind Gashi, Alexander Weinbeck, Simon Kaspar
  * @license MIT
  */
 
 
 public class CommunityTourDao extends DatabaseObjectAbstract {
-    Property columnProperty;
+    private static class Holder {
+        private static final CommunityTourDao INSTANCE = new CommunityTourDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static CommunityTourDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
     private Box<CommunityTour> communityTourBox;
 
     /**
      * Constructor.
      */
 
-    public CommunityTourDao() {
-        communityTourBox = DatabaseController.boxStore.boxFor(CommunityTour.class);
+    private CommunityTourDao() {
+        communityTourBox = BOXSTORE.boxFor(CommunityTour.class);
     }
 
     /**

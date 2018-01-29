@@ -52,7 +52,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private ItemClickListener mClickListener;
     private Context context;
 
-    private FavoriteDao favoriteDao = new FavoriteDao();
+    private FavoriteDao favoriteDao = FavoriteDao.getInstance();
     private TourController tourController = new TourController();
     private List<Long> favorizedTours = new ArrayList<>();
 

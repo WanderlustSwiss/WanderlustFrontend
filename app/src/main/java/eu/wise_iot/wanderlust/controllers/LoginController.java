@@ -9,7 +9,10 @@ import java.util.Map;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -26,10 +29,16 @@ import retrofit2.Response;
  */
 public class LoginController {
 
+    private UserDao userDao;
+    private ProfileDao profileDao;
+    private DatabaseController databaseController;
     /**
      * Create a login contoller
      */
     public LoginController() {
+        userDao = UserDao.getInstance();
+        profileDao = ProfileDao.getInstance();
+        databaseController = DatabaseController.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
@@ -49,16 +58,20 @@ public class LoginController {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-                    DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
 
+                    databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
 
-                    DatabaseController.userDao.userBox.removeAll();
-                    User newUser = response.body();
-                    newUser.setPassword(user.getPassword());
-                    newUser.setInternalId(0);
-                    DatabaseController.userDao.userBox.put(newUser);
-
-                    getProfile(handler, newUser);
+                    User updatedUser = response.body();
+                    User internalUser = userDao.getUser();
+                    if (internalUser == null){
+                        updatedUser.setInternalId(0);
+                        UserDao.getInstance().removeAll();
+                    }else{
+                        updatedUser.setInternalId(internalUser.getInternalId());
+                    }
+                    updatedUser.setPassword(user.getPassword());
+                    userDao.update(updatedUser);
+                    getProfile(handler, updatedUser);
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
@@ -71,17 +84,28 @@ public class LoginController {
         });
     }
 
-    private void getProfile(FragmentHandler handler, User newUser){
+    private void getProfile(FragmentHandler handler, User user){
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
         Call<Profile> call = service.retrieveProfile();
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if(response.isSuccessful()){
-                    DatabaseController.profileDao.profileBox.removeAll();
-                    response.body().setInternal_id(0);
-                    DatabaseController.profileDao.profileBox.put(response.body());
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), newUser));
+
+                    try {
+                        Profile internalProfile = profileDao.findOne(Profile_.profile_id, user.getProfile());
+                        Profile updatedProfile = response.body();
+                        if (internalProfile == null){
+                            profileDao.removeAll();
+                            updatedProfile.setInternal_id(0);
+                        }else{
+                            updatedProfile.setInternal_id(internalProfile.getInternal_id());
+                        }
+                        profileDao.update(updatedProfile);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), user));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }

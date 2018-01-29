@@ -11,6 +11,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TripService;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
@@ -27,21 +28,26 @@ import retrofit2.Response;
 
 
 public class TripDao extends DatabaseObjectAbstract {
+    private static class Holder {
+        private static final TripDao INSTANCE = new TripDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static TripDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     private static TripService service;
-    Property columnProperty;
     private Box<Trip> routeBox;
-    private Query<Trip> routeQuery;
-    private QueryBuilder<Trip> routeQueryBuilder;
 
     /**
      * Constructor.
      */
 
-    public TripDao() {
-        routeBox = DatabaseController.boxStore.boxFor(Trip.class);
-        routeQueryBuilder = routeBox.query();
-
-        if (service == null) service = ServiceGenerator.createService(TripService.class);
+    private TripDao() {
+        routeBox = BOXSTORE.boxFor(Trip.class);
+        service = ServiceGenerator.createService(TripService.class);
     }
 
     public long count() {

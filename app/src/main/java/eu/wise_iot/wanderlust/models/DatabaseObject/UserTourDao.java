@@ -23,6 +23,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour_;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.UserTourService;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -40,17 +41,27 @@ import static eu.wise_iot.wanderlust.models.DatabaseModel.Trip_.userTour;
 
 
 public class UserTourDao extends DatabaseObjectAbstract {
+
+    private static class Holder {
+        private static final UserTourDao INSTANCE = new UserTourDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static UserTourDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     private static UserTourService service;
-    Property columnProperty;
     private Box<UserTour> routeBox;
 
     /**
      * Constructor.
      */
 
-    public UserTourDao() {
-        routeBox = DatabaseController.boxStore.boxFor(UserTour.class);
-        if (service == null) service = ServiceGenerator.createService(UserTourService.class);
+    private UserTourDao() {
+        routeBox = BOXSTORE.boxFor(UserTour.class);
+        service = ServiceGenerator.createService(UserTourService.class);
     }
 
     public long count() {

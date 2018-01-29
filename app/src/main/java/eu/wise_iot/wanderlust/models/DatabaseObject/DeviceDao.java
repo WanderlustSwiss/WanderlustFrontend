@@ -6,6 +6,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Device;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 
 /**
@@ -17,15 +18,24 @@ import io.objectbox.Property;
 
 public class DeviceDao extends DatabaseObjectAbstract {
 
-    Property columnProperty;
+    private static class Holder {
+        private static final DeviceDao INSTANCE = new DeviceDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static DeviceDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     private Box<Device> deviceBox;
 
     /**
      * Constructor.
      */
 
-    public DeviceDao() {
-        deviceBox = DatabaseController.boxStore.boxFor(Device.class);
+    private DeviceDao() {
+        deviceBox = BOXSTORE.boxFor(Device.class);
     }
 
     /**

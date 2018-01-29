@@ -4,7 +4,6 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
-import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -13,9 +12,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.services.FavoriteService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
-import io.objectbox.query.Query;
-import io.objectbox.query.QueryBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,13 +27,21 @@ import retrofit2.Response;
 
 public class FavoriteDao extends DatabaseObjectAbstract{
 
+    private static class Holder {
+        private static final FavoriteDao INSTANCE = new FavoriteDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static FavoriteDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     private Box<Favorite> favoriteBox;
-    private Query<Favorite> favoriteQuery;
-    private QueryBuilder<Favorite> favoriteQueryBuilder;
     private FavoriteService service;
 
-    public FavoriteDao(){
-        this.favoriteBox = DatabaseController.boxStore.boxFor(Favorite.class);
+    private FavoriteDao(){
+        favoriteBox = BOXSTORE.boxFor(Favorite.class);
         service = ServiceGenerator.createService(FavoriteService.class);
     }
 
@@ -106,7 +112,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
                 if (response.isSuccessful()) {
                     try {
-                        Favorite favorite = DatabaseController.favoriteDao.findOne(Favorite_.fav_id, favorite_id);
+                        Favorite favorite = findOne(Favorite_.fav_id, favorite_id);
                         if (favorite != null){
                             favoriteBox.remove(favorite.getInternal_id());
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));

@@ -49,9 +49,9 @@ public class TourController {
     public int WALKING_SPEED = 5000;
 
     public TourController(){
-        userTourDao = new UserTourDao();
-        userDao = new UserDao();
-        favoriteDao = new FavoriteDao();
+        userTourDao = UserTourDao.getInstance();
+        userDao = UserDao.getInstance();
+        favoriteDao = FavoriteDao.getInstance();
 
     }
 

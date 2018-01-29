@@ -6,6 +6,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import io.objectbox.query.Query;
 import io.objectbox.query.QueryBuilder;
@@ -18,7 +19,17 @@ import io.objectbox.query.QueryBuilder;
  */
 
 public class EquipmentDao extends DatabaseObjectAbstract {
-    Property columnProperty;
+    private static class Holder {
+        private static final EquipmentDao INSTANCE = new EquipmentDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static EquipmentDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
+    private Property columnProperty;
     private Box<Equipment> equipmentBox;
     private Query<Equipment> equipmentQuery;
     private QueryBuilder<Equipment> equipmentQueryBuilder;
@@ -27,8 +38,8 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      * Constructor.
      */
 
-    public EquipmentDao() {
-        equipmentBox = DatabaseController.boxStore.boxFor(Equipment.class);
+    private EquipmentDao() {
+        equipmentBox = BOXSTORE.boxFor(Equipment.class);
         equipmentQueryBuilder = equipmentBox.query();
     }
 
