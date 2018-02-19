@@ -13,6 +13,7 @@ import org.osmdroid.views.overlay.Polyline;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -20,14 +21,18 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
+import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour_;
+import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
@@ -36,28 +41,50 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
  * TourController:
  * handles the tourfragment and its in and output
  *
- * @author Alexander Weinbeck, Rilind Gashi
+ * @author Alexander Weinbeck, Rilind Gashi, Simon Kaspar
  * @license MIT
  */
 public class TourController {
 
-    private FavoriteDao favoriteDao;
-    private UserTourDao userTourDao;
-    private UserDao userDao;
-    private ArrayList<GeoPoint> polyList;
-    private Road road;
-    public int WALKING_SPEED = 5000;
-
-    public TourController(){
-        userTourDao = UserTourDao.getInstance();
-        userDao = UserDao.getInstance();
-        favoriteDao = FavoriteDao.getInstance();
-
+    public static String convertToStringDistance(long distance) {
+        if (distance >= 1000) {
+            return Math.round((float)distance / 10.0) / 100.0 + "km ";
+        }
+        else return distance + "m";
     }
 
-    public boolean isFavorite(long tourID){
+    public static String convertToStringDuration(long time) {
+        int hours = (int) Math.floor(time / 60);
+        int minutes = (int) time % 60;
+
+        String text = "";
+        if (hours != 0) text += hours + "h ";
+        text += minutes + "min";
+        return text;
+    }
+
+    private FavoriteDao favoriteDao;
+    private UserDao userDao;
+    private UserTour userTour;
+    private UserTourDao userTourDao;
+    private DifficultyTypeDao difficultyTypeDao;
+    private ArrayList<GeoPoint> polyList;
+
+    public TourController(UserTour userTour){
+        this.userTour = userTour;
+        userDao = UserDao.getInstance();
+        userTourDao = UserTourDao.getInstance();
+        favoriteDao = FavoriteDao.getInstance();
+        difficultyTypeDao = DifficultyTypeDao.getInstance();
+        loadGeoData();
+
+    }
+    /**
+     * True if Favorite is set, otherwise false
+     */
+    public boolean isFavorite(){
         try {
-            Favorite fav = favoriteDao.findOne(Favorite_.tour, tourID);
+            Favorite fav = favoriteDao.findOne(Favorite_.tour, userTour.getTour_id());
             if(fav != null)
                 return true;
         } catch (NoSuchFieldException e) {
@@ -68,8 +95,13 @@ public class TourController {
         return false;
     }
 
-    public boolean setFavorite(long tourID, FragmentHandler handler){
-        Favorite favorite = new Favorite(0,0, tourID,  userDao.getUser().getUser_id());
+    /**
+     * set favorite
+     * @param handler Fragment handler
+     */
+    public boolean setFavorite(FragmentHandler handler){
+        Favorite favorite = new Favorite(0,0,
+                userTour.getTour_id(),  userDao.getUser().getUser_id());
         if(favorite != null) {
             favoriteDao.create(favorite, handler);
             return true;
@@ -77,31 +109,24 @@ public class TourController {
         return false;
     }
 
-//    public void deleteFavorite(long tourID, FragmentHandler handler){
-//        try {
-//            favoriteDao.delete(favoriteDao.findOne(Favorite_.tour, tourID), handler);
-//        } catch (NoSuchFieldException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    public String getDuration(int ascend, int descend, double distance){
-        StringBuilder durationBuilder = new StringBuilder();
-        double duration = ascend/300 + descend/600 + distance / 4.2;
-        BigDecimal bd = new BigDecimal(duration);
-        bd = bd.setScale(2, RoundingMode.HALF_UP);
-        duration = bd.doubleValue();
-        double minVal = duration % 1;
-        double hourVal = duration - minVal;
-
-        durationBuilder.append(hourVal + " h");
-        durationBuilder.append(minVal + " min");
-        return durationBuilder.toString();
+    /**
+     * unset favorite
+     * @param handler Fragment handler
+     */
+    public boolean unsetFavorite(FragmentHandler handler){
+        try {
+            Favorite fav = favoriteDao.findOne(Favorite_.tour, userTour.getTour_id());
+            if (fav != null){
+                favoriteDao.delete(fav.getFav_id(), handler);
+                return true;
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
-    public int[] getHighProfile(String elevaltion) throws IOException {
+    public int[] getHighProfile() throws IOException {
         int highProfile[] = new int[3];
         /*
         byte[] valueDecoded= new byte[0];
@@ -158,36 +183,71 @@ public class TourController {
         return highProfile;
     }
 
-    public double calculateDistance(GeoPoint firstGeoPoint, GeoPoint secondGeoPoint){
-        double lat1 = firstGeoPoint.getLatitude();
-        double lng1 = firstGeoPoint.getLongitude();
-        double lat2 = secondGeoPoint.getLatitude();
-        double lng2 = secondGeoPoint.getLongitude();
-        float [] dist = new float[1];
-        Location.distanceBetween(lat1, lng1, lat2, lng2, dist);
-
-        return new BigDecimal(String.valueOf((double) dist[0])).setScale(2,RoundingMode.valueOf(2)).doubleValue();
+    public void loadGeoData(){
+        userTourDao.retrieve(userTour.getTour_id(), new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                UserTour userTourWithGeoData = (UserTour) controllerEvent.getModel();
+                userTour.setPolyline(userTourWithGeoData.getPolyline());
+                userTour.setElevation(userTourWithGeoData.getElevation());
+            }
+        });
     }
 
-    public void getSelectedUserTour(UserTour userTour, FragmentHandler handler){
-        userTourDao.retrieve(userTour.getTour_id(), handler);
-    }
-
-    public String convertToStringDistance(long distance) {
-        if (distance >= 1000) {
-            return Math.round((float)distance / 10.0) / 100.0 + "km ";
+    /**
+     * Calculate duration string from absolut minute value
+     * @return string with format HH h MM min
+     */
+    public String getDurationString(){
+        if (userTour != null){
+            return convertToStringDuration(userTour.getDuration());
+        }else{
+            return convertToStringDuration(0);
         }
-        else return distance + "m";
     }
 
-    public String convertToStringDuration(long time) {
-        int hours = (int) Math.floor(time / 60);
-        int minutes = (int) time % 60;
-
-        String text = "";
-        if (hours != 0) text += hours + "h ";
-        text += minutes + "min";
-        return text;
+    /**
+     * Calculate distance string from absolut meter value
+     * @return string with format 0.9 km
+     */
+    public String getDistanceString(){
+        if (userTour != null){
+            return convertToStringDistance(userTour.getDistance());
+        }else{
+            return convertToStringDistance(0);
+        }
+    }
+    /**
+     * Difficulty mark
+     * @return mark
+     */
+    public String getDifficultyMark(){
+        try {
+            DifficultyType difficultyType =  difficultyTypeDao.findOne(DifficultyType_.difft_id, userTour.getDifficulty());
+            return difficultyType.getMark();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            return "T1";
+        }
+    }
+    /**
+     * Difficulty level
+     * @return level
+     */
+    public long getLevel(){
+        try {
+            DifficultyType difficultyType =  difficultyTypeDao.findOne(DifficultyType_.difft_id, userTour.getDifficulty());
+            return difficultyType.getLevel();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            return 0;
+        }
     }
 
+    public long getAscent(){ return userTour.getAscent(); }
+    public long getDescent() { return userTour.getDescent(); };
+    public String getDescription(){ return userTour.getDescription(); }
+    public String getTitle(){ return userTour.getTitle(); };
+    public String getPolyline(){ return userTour.getPolyline(); }
+    public List<File> getImages(){
+        return ImageController.getImages(userTour.getImagePaths());
+    }
 }

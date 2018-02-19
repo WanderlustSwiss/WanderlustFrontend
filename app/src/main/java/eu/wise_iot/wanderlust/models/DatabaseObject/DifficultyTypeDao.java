@@ -38,17 +38,17 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * Update all Poi types in the database.
+     * Update all difficulty types in the database.
      */
-    public void sync() {
+    public void retriveAll() {
         Call<List<DifficultyType>> call = service.retrieveAllDifficultyTypes();
         call.enqueue(new Callback<List<DifficultyType>>() {
             @Override
             public void onResponse(Call<List<DifficultyType>> call, Response<List<DifficultyType>> response) {
                 if (response.isSuccessful()) {
                     difficultyTypeBox.removeAll();
-                    for (DifficultyType poiType : response.body()) {
-                        difficultyTypeBox.put(poiType);
+                    for (DifficultyType difficultyType : response.body()) {
+                        difficultyTypeBox.put(difficultyType);
                     }
                 }
             }

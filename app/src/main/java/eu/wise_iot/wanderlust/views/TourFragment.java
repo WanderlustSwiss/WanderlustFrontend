@@ -48,8 +48,6 @@ public class TourFragment extends Fragment {
     private Tour tour;
     private static TourController tourController;
     private Context context;
-    private static UserTour userTour;
-    private static UserTour userTourWithGeoData;
     private static Polyline polyline;
 
     private ImageView imageViewTourImage;
@@ -68,6 +66,7 @@ public class TourFragment extends Fragment {
     private static MapFragment mapFragment;
 
     private Favorite favorite;
+    private boolean isFavoriteUpdate;
     private int[] highProfile;
 
     public TourFragment() {
@@ -80,22 +79,13 @@ public class TourFragment extends Fragment {
      *
      * @return Fragment: TourFragment
      */
-    public static TourFragment newInstance(UserTour paramUserTour) {
+    public static TourFragment newInstance(UserTour userTour) {
 
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
-        tourController = new TourController();
         mapFragment = new MapFragment();
         fragment.setArguments(args);
-        userTour = paramUserTour;
-        tourController.getSelectedUserTour(userTour, new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                userTourWithGeoData = (UserTour) controllerEvent.getModel();
-                userTour.setPolyline(userTourWithGeoData.getPolyline());
-                userTour.setElevation(userTourWithGeoData.getElevation());
-            }
-        });
+        tourController = new TourController(userTour);
         return fragment;
     }
 
@@ -110,7 +100,9 @@ public class TourFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_tour, container, false);
-        setupTourView(view);
+        initializeControls(view);
+        fillControls();
+        setupActionListeners();
         return view;
     }
 
@@ -120,7 +112,7 @@ public class TourFragment extends Fragment {
 
     }
 
-    public void setupTourView(View view) {
+    public void initializeControls(View view){
         imageViewTourImage = (ImageView) view.findViewById(R.id.tourImage);
         favButton = (ImageButton) view.findViewById(R.id.favButton);
 
@@ -136,7 +128,7 @@ public class TourFragment extends Fragment {
         textViewDescription = (TextView) view.findViewById(R.id.tourDescription);
         jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
 
-        long difficulty = userTour.getDifficulty();
+        long difficulty = tourController.getLevel();
         Drawable drawable;
         if (difficulty >= 6)
             drawable = context.getResources().getDrawable(R.drawable.t6);
@@ -147,73 +139,73 @@ public class TourFragment extends Fragment {
         else
             drawable = context.getResources().getDrawable(R.drawable.t1);
         textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-
-        fillUiElements();
-
     }
-
-    public void fillUiElements() {
-
-        List<File> images = ImageController.getImages(userTour.getImagePaths());
-        File tourImage = images.get(0);
-        long fileSize = tourImage.length();
-        if (fileSize != 0) {
+    public void fillControls() {
+        List<File> images = tourController.getImages();
+        if (!images.isEmpty() && images.get(0).length() != 0){
             Picasso.with(context)
-                    .load(tourImage)
+                    .load(images.get(0))
                     .into(this.imageViewTourImage);
-        } else {
+        }else{
             Picasso.with(context)
                     .load(R.drawable.no_image_found)
                     .into(this.imageViewTourImage);
         }
 
-        if (tourController.isFavorite(userTour.getTour_id())) {
+        if (tourController.isFavorite()) {
             favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
-//            favButton.setOnClickListener((View v) -> unfavoriteTour());
         } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
-//            favButton.setOnClickListener((View v) -> favoriteTour());
         }
 
         try {
-            highProfile = tourController.getHighProfile(userTour.getElevation());
+            highProfile = tourController.getHighProfile();
         } catch (IOException e) {
             e.printStackTrace();
         }
         tourRegion.setText("");
-        tourTitle.setText(userTour.getTitle());
-        textViewTourDistance.setText(tourController.convertToStringDistance(userTour.getDistance()));
-        String ascentText = String.valueOf(userTour.getAscent()) + " " + getString(R.string.meter_abbreviation);
-        textViewAscend.setText(ascentText);
-        String descentText = String.valueOf(userTour.getDescent()) + " " + getString(R.string.meter_abbreviation);
-        textViewDescend.setText(descentText);
-        textViewDuration.setText(tourController.convertToStringDuration(userTour.getDuration()));
-        textViewDescription.setText(userTour.getDescription());
+        tourTitle.setText(tourController.getTitle());
+        textViewDescription.setText(tourController.getDescription());
 
-        textViewDifficulty.setText("T" + String.valueOf(userTour.getDifficulty()));
+        textViewTourDistance.setText(tourController.getDistanceString());
+        textViewDuration.setText(tourController.getDurationString());
+
+        textViewAscend.setText(String.valueOf(tourController.getAscent()) + "m");
+        textViewDescend.setText(String.valueOf(tourController.getDescent()) + "m");
+
+        textViewDifficulty.setText(tourController.getDifficultyMark());
+    }
+    public void setupActionListeners(){
         jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
+        favButton.setOnClickListener((View v) -> toggleFavorite());
     }
-
-    public void favoriteTour() {
-        tourController.setFavorite(userTour.getTour_id(), new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
-            }
-        });
+    public void toggleFavorite() {
+        if (!isFavoriteUpdate){
+            return;
+        }
+        if (tourController.isFavorite() && !isFavoriteUpdate) {
+            isFavoriteUpdate = true;
+            tourController.unsetFavorite(new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                    isFavoriteUpdate = false;
+                }
+            });
+        }else{
+            isFavoriteUpdate = true;
+            tourController.setFavorite(new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+                    isFavoriteUpdate = false;
+                }
+            });
+        }
     }
-
-//    public void unfavoriteTour(){
-//        tourController.deleteFavorite(userTour.getTour_id(), new FragmentHandler() {
-//            @Override
-//            public void onResponse(ControllerEvent controllerEvent) {
-//                favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
-//            }
-//        });
-//    }
 
     public void showMapWithTour() {
-        ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(userTour.getPolyline(), 10);
+        ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
         roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));

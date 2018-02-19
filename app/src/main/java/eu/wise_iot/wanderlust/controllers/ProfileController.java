@@ -38,7 +38,7 @@ public class ProfileController {
         userTourDao = UserTourDao.getInstance();
         poiDao = PoiDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
-        difficultyTypeDao.sync();
+        difficultyTypeDao.retriveAll();
     }
 
     /**

@@ -53,7 +53,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private Context context;
 
     private FavoriteDao favoriteDao = FavoriteDao.getInstance();
-    private TourController tourController = new TourController();
     private List<Long> favorizedTours = new ArrayList<>();
 
 
@@ -107,15 +106,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             }
         }
         holder.tvTitle.setText(userTour.getTitle());
-        holder.tvDistance.setText(tourController.convertToStringDistance(userTour.getDistance()));
+        holder.tvDistance.setText(TourController.convertToStringDistance(userTour.getDistance()));
 
         List<File> images = ImageController.getImages(userTour.getImagePaths());
-        File image = images.get(0);
-        Picasso.with(context).load(image).into(holder.tvImage);
-
-        Log.d("Toursoverview", "ImageInfo loaded: " + image.toString());
-
-        holder.tvTime.setText(tourController.convertToStringDuration(userTour.getDuration()));
+        if (!images.isEmpty()){
+            File image = images.get(0);
+            Picasso.with(context).load(image).into(holder.tvImage);
+            Log.d("Toursoverview", "ImageInfo loaded: " + image.toString());
+        }
+        holder.tvTime.setText(TourController.convertToStringDuration(userTour.getDuration()));
     }
 
     // total number of rows

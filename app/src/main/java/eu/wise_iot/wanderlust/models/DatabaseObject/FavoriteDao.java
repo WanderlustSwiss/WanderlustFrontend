@@ -105,7 +105,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param favorite_id
      * @param handler
      */
-    public void delete(final Long favorite_id, final FragmentHandler handler) {
+    public void delete(long favorite_id, final FragmentHandler handler) {
         Call<Favorite> call = service.deleteFavorite(favorite_id);
         call.enqueue(new Callback<Favorite>() {
             @Override
