@@ -21,7 +21,6 @@ import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
@@ -315,7 +314,7 @@ public class ProfileFragment extends Fragment {
 
             // todo: until feature is released, will use a example tour, delete when implementing this feature
             listView = (ListView) view.findViewById(R.id.listContent);
-            CommunityTour testSavedTour = new CommunityTour();
+            Tour testSavedTour = new Tour();
             list = new ArrayList();
             list.add(testSavedTour);
 

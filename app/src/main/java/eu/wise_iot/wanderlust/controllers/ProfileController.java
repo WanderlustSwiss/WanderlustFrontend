@@ -3,13 +3,17 @@ package eu.wise_iot.wanderlust.controllers;
 import android.content.Context;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
@@ -28,6 +32,8 @@ public class ProfileController {
     private UserDao userDao;
     private UserTourDao userTourDao;
     private PoiDao poiDao;
+    private FavoriteDao favoriteDao;
+    private CommunityTourDao communityTourDao;
     private DifficultyTypeDao difficultyTypeDao;
 
     public ProfileController() {
@@ -36,6 +42,8 @@ public class ProfileController {
         userTourDao = UserTourDao.getInstance();
         poiDao = PoiDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
+        favoriteDao = FavoriteDao.getInstance();
+        communityTourDao = CommunityTourDao.getInstance();
         difficultyTypeDao.retrive();
     }
 
@@ -133,11 +141,22 @@ public class ProfileController {
     public String getProfilePicture() {
 
         //TODO: next release
+        //TODO: Ask tru for image handling.
+        //Backend: GET Request /profile/img
         return null;
     }
 
     public void setProfilePicture(String path){
+        //TODO: next release
+        //TODO: Ask tru for image handling.
+        // Backend: Delete image with DELETE Request to /profile/img then
+        // POST Reuqest /profile/img with image
+    }
 
+    public void deleteProfilePicture(){
+        //TODO: next release
+        //TODO: Ask tru for image handling.
+        //DELETE Request to /profile/img
     }
 
     /**
@@ -159,8 +178,7 @@ public class ProfileController {
      * @return list with user tours
      */
     public List<Tour> getTours() {
-        //TODO: for next release
-        return null;
+        return userTourDao.find();
     }
 
     /**
@@ -168,8 +186,8 @@ public class ProfileController {
      *
      * @return list with favorites
      */
-    public List getFavorites() {
-        //TODO: for next release
+    public List<Tour> getFavorites() {
+        //Todo: Load directly from Server. Ask: ska
         return null;
     }
 
@@ -179,8 +197,7 @@ public class ProfileController {
      * @return list with poi's
      */
     public List<Poi> getPois() {
-        //TODO: for next release
-        return null;
+        return poiDao.find();
     }
 
     /**
@@ -189,8 +206,7 @@ public class ProfileController {
      * @return list with all saved tours
      */
     public List<Tour> getSavedTours() {
-        //TODO: for next release
-        return null;
+        return communityTourDao.find();
     }
 
 
