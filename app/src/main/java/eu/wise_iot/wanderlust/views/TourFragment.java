@@ -35,8 +35,7 @@ import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
-import eu.wise_iot.wanderlust.models.Old.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 
 /**
  * TourController:
@@ -80,13 +79,13 @@ public class TourFragment extends Fragment {
      *
      * @return Fragment: TourFragment
      */
-    public static TourFragment newInstance(UserTour userTour) {
+    public static TourFragment newInstance(Tour tour) {
 
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
         mapFragment = new MapFragment();
         fragment.setArguments(args);
-        tourController = new TourController(userTour);
+        tourController = new TourController(tour);
         return fragment;
     }
 

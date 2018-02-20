@@ -40,7 +40,7 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
     /**
      * Update all difficulty types in the database.
      */
-    public void retriveAll() {
+    public void retrive() {
         Call<List<DifficultyType>> call = service.retrieveAllDifficultyTypes();
         call.enqueue(new Callback<List<DifficultyType>>() {
             @Override

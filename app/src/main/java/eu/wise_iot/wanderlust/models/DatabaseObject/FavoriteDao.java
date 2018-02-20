@@ -8,7 +8,7 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.FavoriteService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
@@ -50,7 +50,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      *
      * //@param handler
      */
-    public void create(UserTour tour, final FragmentHandler handler) {
+    public void create(Tour tour, final FragmentHandler handler) {
         Call<Favorite> call = service.createFavorite(tour);
         call.enqueue(new Callback<Favorite>() {
             @Override

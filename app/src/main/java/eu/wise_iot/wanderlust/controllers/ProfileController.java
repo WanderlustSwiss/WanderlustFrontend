@@ -9,13 +9,12 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
-import eu.wise_iot.wanderlust.models.Old.Tour;
 
 /**
  * Profile controller which initializes the profile view
@@ -38,7 +37,7 @@ public class ProfileController {
         userTourDao = UserTourDao.getInstance();
         poiDao = PoiDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
-        difficultyTypeDao.retriveAll();
+        difficultyTypeDao.retrive();
     }
 
     /**
