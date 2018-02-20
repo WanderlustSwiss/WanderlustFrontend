@@ -26,11 +26,13 @@ public class PoiController {
     private PoiTypeDao poiTypeDao;
     private PoiDao poiDao;
     private UserDao userDao;
+    private ImageController imageController;
 
     public PoiController(){
         poiTypeDao = PoiTypeDao.getInstance();
         poiDao = PoiDao.getInstance();
         userDao = UserDao.getInstance();
+        imageController = ImageController.getInstance();
     }
 
     /**
@@ -104,7 +106,7 @@ public class PoiController {
             imagesTask.execute(new ImagesTaskParameters(poi.getPoi_id(), poi.getImagePaths(), "poi", handler));
         } else {
             //Images should be local
-            List<File> images = ImageController.getImages(poi.getImagePaths());
+            List<File> images = imageController.getImages(poi.getImagePaths());
             handler.onResponse(new ControllerEvent(EventType.OK, images));
         }
     }

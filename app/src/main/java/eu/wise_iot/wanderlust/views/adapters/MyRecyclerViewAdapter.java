@@ -51,6 +51,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context context;
+    private ImageController imageController;
 
     private FavoriteDao favoriteDao = FavoriteDao.getInstance();
     private List<Long> favorizedTours = new ArrayList<>();
@@ -62,6 +63,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.userTours = parTours;
+        this.imageController = ImageController.getInstance();
     }
 
     // inflates the row layout from xml when needed
@@ -108,11 +110,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.tvTitle.setText(userTour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(userTour.getDistance()));
 
-        List<File> images = ImageController.getImages(userTour.getImagePaths());
+        List<File> images = imageController.getImages(userTour.getImagePaths());
         if (!images.isEmpty()){
             File image = images.get(0);
             Picasso.with(context).load(image).into(holder.tvImage);
             Log.d("Toursoverview", "ImageInfo loaded: " + image.toString());
+        }else{
+            Picasso.with(context).load(R.drawable.no_image_found).into(holder.tvImage);
         }
         holder.tvTime.setText(TourController.convertToStringDuration(userTour.getDuration()));
     }

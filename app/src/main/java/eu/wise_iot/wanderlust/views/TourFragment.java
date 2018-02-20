@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,6 +143,7 @@ public class TourFragment extends Fragment {
     }
     public void fillControls() {
         List<File> images = tourController.getImages();
+        Log.d("Debug", "Images size:" + images.size());
         if (!images.isEmpty() && images.get(0).length() != 0){
             Picasso.with(context)
                     .load(images.get(0))

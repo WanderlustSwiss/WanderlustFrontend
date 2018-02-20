@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.media.Image;
 import android.os.AsyncTask;
 
 import java.io.File;
@@ -25,6 +26,7 @@ import retrofit2.Response;
 public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<File>> {
 
     private FragmentHandler handler;
+    private ImageController imageController;
     private List<DownloadedImage> downloadedImages = new LinkedList<>();
 
     /**
@@ -41,13 +43,13 @@ public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<Fi
         List<ImageInfo> imageInfos = parameters[0].imageInfos;
         String route = parameters[0].route;
         handler = parameters[0].handler;
-
+        imageController = ImageController.getInstance();
 
         ImageService service = ServiceGenerator.createService(ImageService.class);
 
         List<File> images = new ArrayList<>();
         for(ImageInfo imageInfo : imageInfos){
-            File image = new File(ImageController.picturesDir + "/" + imageInfo.getPath());
+            File image = new File(imageController.getPicturesDir() + "/" + imageInfo.getPath());
             if (!image.exists()) {
                 //Download it!
                 try {

@@ -56,6 +56,7 @@ public class PoiDao extends DatabaseObjectAbstract {
 
     public static PoiService service;
     public Box<Poi> poiBox;
+    private ImageController imageController;
 
     /**
      * constructor
@@ -64,6 +65,7 @@ public class PoiDao extends DatabaseObjectAbstract {
     private PoiDao() {
         poiBox = BOXSTORE.boxFor(Poi.class);
         service = ServiceGenerator.createService(PoiService.class);
+        imageController = ImageController.getInstance();
     }
 
     /**
@@ -226,7 +228,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                             ImageInfo imageInfo = response.body();
                             String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
                             imageInfo.setPath(name, "pois");
-                            ImageController.save(file, imageInfo);
+                            imageController.save(file, imageInfo);
                             internalPoi.addImagePath(imageInfo);
                             poiBox.put(internalPoi);
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalPoi));
@@ -253,7 +255,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                 int newId = internalPoi.getImageCount() + 1;
                 String name = internalPoi.getPoi_id() + "-" + newId + ".jpg";
                 ImageInfo newImage = new ImageInfo(newId, name, "pois");
-                ImageController.save(file,newImage);
+                imageController.save(file,newImage);
                 internalPoi.addImagePath(newImage);
                 poiBox.put(internalPoi);
                 handler.onResponse(new ControllerEvent(EventType.OK, internalPoi));

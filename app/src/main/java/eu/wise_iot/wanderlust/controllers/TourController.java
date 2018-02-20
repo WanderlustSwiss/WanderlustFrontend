@@ -68,6 +68,7 @@ public class TourController {
     private UserTour userTour;
     private UserTourDao userTourDao;
     private DifficultyTypeDao difficultyTypeDao;
+    private ImageController imageController;
     private ArrayList<GeoPoint> polyList;
 
     public TourController(UserTour userTour){
@@ -76,6 +77,7 @@ public class TourController {
         userTourDao = UserTourDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
+        imageController = ImageController.getInstance();
         loadGeoData();
 
     }
@@ -248,6 +250,6 @@ public class TourController {
     public String getTitle(){ return userTour.getTitle(); };
     public String getPolyline(){ return userTour.getPolyline(); }
     public List<File> getImages(){
-        return ImageController.getImages(userTour.getImagePaths());
+        return imageController.getImages(userTour.getImagePaths());
     }
 }

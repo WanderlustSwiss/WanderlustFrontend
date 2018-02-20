@@ -20,12 +20,14 @@ public class TourOverviewController {
     private UserTourDao userTourDao;
     private FavoriteDao favoriteDao;
     private DifficultyTypeDao difficultyType;
+    private ImageController imageController;
 
     public TourOverviewController(){
         userTourDao = UserTourDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
         difficultyType = DifficultyTypeDao.getInstance();
+        imageController = ImageController.getInstance();
     }
 
     /**
@@ -94,5 +96,4 @@ public class TourOverviewController {
         } catch (Exception e){}
         return -1;
     }
-
 }

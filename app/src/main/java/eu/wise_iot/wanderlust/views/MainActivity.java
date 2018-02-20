@@ -55,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         DatabaseController.createInstance(getApplicationContext());
-        ImageController.init(getApplicationContext());
-        //DatabaseController.clearAllDownloadedImages();
+        ImageController.createInstance(getApplicationContext());
         PoiDao.getInstance().removeAll();
         loginController = new LoginController();
 

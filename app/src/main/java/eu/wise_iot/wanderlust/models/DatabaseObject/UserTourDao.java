@@ -54,6 +54,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
 
     private static UserTourService service;
     private Box<UserTour> routeBox;
+    private ImageController imageController;
 
     /**
      * Constructor.
@@ -62,6 +63,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
     private UserTourDao() {
         routeBox = BOXSTORE.boxFor(UserTour.class);
         service = ServiceGenerator.createService(UserTourService.class);
+        imageController = ImageController.getInstance();
     }
 
     public long count() {
@@ -335,7 +337,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
 
             String name = userTourId + "-" + imageId + ".jpg";
             inputStream = body.byteStream();
-            outputStream = new FileOutputStream(ImageController.picturesDir + "/tours/" + userTourId + "-" + imageId + ".jpg");
+            outputStream = new FileOutputStream(imageController.getPicturesDir() + "/tours/" + userTourId + "-" + imageId + ".jpg");
 
             while (true) {
                 int read = inputStream.read(fileReader);
