@@ -102,13 +102,8 @@ public class TourController {
      * @param handler Fragment handler
      */
     public boolean setFavorite(FragmentHandler handler){
-        Favorite favorite = new Favorite(0,0,
-                userTour.getTour_id(),  userDao.getUser().getUser_id());
-        if(favorite != null) {
-            favoriteDao.create(favorite, handler);
-            return true;
-        }
-        return false;
+        favoriteDao.create(userTour, handler);
+        return true;
     }
 
     /**
@@ -245,9 +240,9 @@ public class TourController {
     }
 
     public long getAscent(){ return userTour.getAscent(); }
-    public long getDescent() { return userTour.getDescent(); };
+    public long getDescent() { return userTour.getDescent(); }
     public String getDescription(){ return userTour.getDescription(); }
-    public String getTitle(){ return userTour.getTitle(); };
+    public String getTitle(){ return userTour.getTitle(); }
     public String getPolyline(){ return userTour.getPolyline(); }
     public List<File> getImages(){
         return imageController.getImages(userTour.getImagePaths());

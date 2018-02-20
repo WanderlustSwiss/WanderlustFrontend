@@ -50,7 +50,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      *
      * //@param handler
      */
-    public void create(final UserTour tour, final FragmentHandler handler) {
+    public void create(UserTour tour, final FragmentHandler handler) {
         Call<Favorite> call = service.createFavorite(tour);
         call.enqueue(new Callback<Favorite>() {
             @Override

@@ -182,7 +182,7 @@ public class TourFragment extends Fragment {
         favButton.setOnClickListener((View v) -> toggleFavorite());
     }
     public void toggleFavorite() {
-        if (!isFavoriteUpdate){
+        if (isFavoriteUpdate){
             return;
         }
         if (tourController.isFavorite() && !isFavoriteUpdate) {
