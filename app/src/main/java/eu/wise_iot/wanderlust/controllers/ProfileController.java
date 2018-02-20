@@ -5,7 +5,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
