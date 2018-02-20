@@ -188,7 +188,7 @@ public class ProfileController {
      *
      * @return list with all saved tours
      */
-    public List<CommunityTour> getSavedTours() {
+    public List<Tour> getSavedTours() {
         //TODO: for next release
         return null;
     }
