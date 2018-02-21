@@ -16,7 +16,7 @@ import io.objectbox.annotation.Id;
  */
 
 @Entity
-public class UserTour extends AbstractModel {
+public class Tour extends AbstractModel {
 
     @Id
     long internal_id;
@@ -38,7 +38,7 @@ public class UserTour extends AbstractModel {
     @Convert(converter = Poi.imageInfoConverter.class, dbType = String.class)
     List<ImageInfo> imagePaths;
 
-    public UserTour(long internal_id, long tour_id, String title, String description,
+    public Tour(long internal_id, long tour_id, String title, String description,
                     String imagePath, String polyline, String elevation, long duration, long distance,
                     long ascent, long descent, long difficulty, long tourKit, boolean editable) {
         this.internal_id = internal_id;
@@ -57,7 +57,7 @@ public class UserTour extends AbstractModel {
         this.editable = editable;
     }
 
-    public UserTour(){
+    public Tour(){
         this.internal_id = 0;
         this.title = "No title";
         this.description = "No description";

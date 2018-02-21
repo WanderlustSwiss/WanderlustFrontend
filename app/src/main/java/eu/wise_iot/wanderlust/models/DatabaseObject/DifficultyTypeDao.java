@@ -7,6 +7,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.services.DifficultyTypeService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -14,31 +15,40 @@ import retrofit2.Response;
 
 public class DifficultyTypeDao extends DatabaseObjectAbstract {
 
+    private static class Holder {
+        private static final DifficultyTypeDao INSTANCE = new DifficultyTypeDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static DifficultyTypeDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     private static DifficultyTypeService service;
-    Property columnProperty;
     private Box<DifficultyType> difficultyTypeBox;
 
     /**
      * Constructor.
      */
 
-    public DifficultyTypeDao() {
-        difficultyTypeBox = DatabaseController.boxStore.boxFor(DifficultyType.class);
-        if (service == null) service = ServiceGenerator.createService(DifficultyTypeService.class);
+    private DifficultyTypeDao() {
+        difficultyTypeBox = BOXSTORE.boxFor(DifficultyType.class);
+        service = ServiceGenerator.createService(DifficultyTypeService.class);
     }
 
     /**
-     * Update all Poi types in the database.
+     * Update all difficulty types in the database.
      */
-    public void sync() {
+    public void retrive() {
         Call<List<DifficultyType>> call = service.retrieveAllDifficultyTypes();
         call.enqueue(new Callback<List<DifficultyType>>() {
             @Override
             public void onResponse(Call<List<DifficultyType>> call, Response<List<DifficultyType>> response) {
                 if (response.isSuccessful()) {
                     difficultyTypeBox.removeAll();
-                    for (DifficultyType poiType : response.body()) {
-                        difficultyTypeBox.put(poiType);
+                    for (DifficultyType difficultyType : response.body()) {
+                        difficultyTypeBox.put(difficultyType);
                     }
                 }
             }

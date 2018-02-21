@@ -125,7 +125,7 @@ public class StartupRegistrationFragment extends Fragment {
 
                                     // create profile for user if registration succesful
                                     Profile profile = new Profile(0, user.getProfile(),
-                                            (byte) 1, 0, "",
+                                            (byte) 1, 0, 2, "",
                                                         "de", user.getUser_id(), 0);
                                     break;
                                 case CONFLICT:

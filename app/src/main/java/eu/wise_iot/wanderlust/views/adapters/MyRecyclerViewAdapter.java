@@ -30,7 +30,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.views.MainActivity;
@@ -47,22 +47,23 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     //    private List<String> mImages = Collections.emptyList();
 //    private List<String> mTitles = Collections.emptyList();
-    private List<UserTour> userTours = Collections.emptyList();
+    private List<Tour> tours = Collections.emptyList();
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context context;
+    private ImageController imageController;
 
-    private FavoriteDao favoriteDao = new FavoriteDao();
-    private TourController tourController = new TourController();
+    private FavoriteDao favoriteDao = FavoriteDao.getInstance();
     private List<Long> favorizedTours = new ArrayList<>();
 
 
-    // data is passed into the constructor, here as a UserTour
-    public MyRecyclerViewAdapter(Context context, List<UserTour> parTours) {
+    // data is passed into the constructor, here as a Tour
+    public MyRecyclerViewAdapter(Context context, List<Tour> parTours) {
         Log.d("ToursRecyclerview", "Copy Constructor");
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.userTours = parTours;
+        this.tours = parTours;
+        this.imageController = ImageController.getInstance();
     }
 
     // inflates the row layout from xml when needed
@@ -79,10 +80,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
-        UserTour userTour = this.userTours.get(position);
+        Tour tour = this.tours.get(position);
         holder.tvTitle.setTextColor(Color.BLACK);
         //difficulty calculations
-        long difficulty = userTour.getDifficulty();
+        long difficulty = tour.getDifficulty();
         if (difficulty >= 6)
             holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t6));
         else if (difficulty >= 4)
@@ -100,33 +101,35 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         //button Favorite
         for (Favorite favorite : favoriteDao.find()) {
-            if (favorite.getTour() == userTour.getTour_id()) {
+            if (favorite.getTour() == tour.getTour_id()) {
                 holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.highlight_main));
                 //add to favored tours
                 this.favorizedTours.add(favorite.getTour());
             }
         }
-        holder.tvTitle.setText(userTour.getTitle());
-        holder.tvDistance.setText(tourController.convertToStringDistance(userTour.getDistance()));
+        holder.tvTitle.setText(tour.getTitle());
+        holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
 
-        List<File> images = ImageController.getImages(userTour.getImagePaths());
-        File image = images.get(0);
-        Picasso.with(context).load(image).into(holder.tvImage);
-
-        Log.d("Toursoverview", "ImageInfo loaded: " + image.toString());
-
-        holder.tvTime.setText(tourController.convertToStringDuration(userTour.getDuration()));
+        List<File> images = imageController.getImages(tour.getImagePaths());
+        if (!images.isEmpty()){
+            File image = images.get(0);
+            Picasso.with(context).load(image).into(holder.tvImage);
+            Log.d("Toursoverview", "ImageInfo loaded: " + image.toString());
+        }else{
+            Picasso.with(context).load(R.drawable.no_image_found).into(holder.tvImage);
+        }
+        holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
     }
 
     // total number of rows
     @Override
     public int getItemCount() {
-        return this.userTours.size();
+        return this.tours.size();
     }
 
     // convenience method for getting data at click position
-    public UserTour getItem(int id) {
-        return this.userTours.get(id);
+    public Tour getItem(int id) {
+        return this.tours.get(id);
     }
 
     // allows clicks events to be caught
@@ -136,7 +139,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onItemClick(View view, int id, UserTour tour, List<Long> favorites);
+        void onItemClick(View view, int id, Tour tour, List<Long> favorites);
     }
 
     // stores and recycles views as they are scrolled off screen

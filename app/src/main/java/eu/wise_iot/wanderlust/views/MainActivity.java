@@ -31,6 +31,8 @@ import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import io.objectbox.BoxStore;
 
 /**
@@ -52,10 +54,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        DatabaseController.initDaoModels(getApplicationContext());
-        ImageController.init(getApplicationContext());
-        //DatabaseController.clearAllDownloadedImages();
-        DatabaseController.poiDao.poiBox.removeAll();
+        DatabaseController.createInstance(getApplicationContext());
+        ImageController.createInstance(getApplicationContext());
+        PoiDao.getInstance().removeAll();
         loginController = new LoginController();
 
 
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // else try to login
         } else {
-            User user = DatabaseController.userDao.getUser();
+            User user = UserDao.getInstance().getUser();
             if (user == null) {
                 SartupLoginFragment loginFragment = new SartupLoginFragment();
                 getFragmentManager().beginTransaction()

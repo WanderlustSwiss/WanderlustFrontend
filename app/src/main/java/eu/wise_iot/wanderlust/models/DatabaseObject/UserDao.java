@@ -11,6 +11,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.UserService;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,11 +21,21 @@ import retrofit2.Response;
 /**
  * UserDao
  *
- * @author Rilind Gashi
+ * @author Rilind Gashi, Simon Kaspar
  * @license MIT <license in our case always MIT>
  */
 
 public class UserDao extends DatabaseObjectAbstract {
+
+    private static class Holder {
+        private static final UserDao INSTANCE = new UserDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static UserDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
 
     private static UserService service;
     public Box<User> userBox;
@@ -33,8 +44,8 @@ public class UserDao extends DatabaseObjectAbstract {
      * Constructor.
      */
 
-    public UserDao() {
-        userBox = DatabaseController.boxStore.boxFor(User.class);
+    private UserDao() {
+        userBox = BOXSTORE.boxFor(User.class);
         service = ServiceGenerator.createService(UserService.class);
     }
 
@@ -110,7 +121,7 @@ public class UserDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * Update an existing user in the database.
+     * Update user in database and sync with backend
      *
      * @param user    (required).
      * @param handler
@@ -140,7 +151,14 @@ public class UserDao extends DatabaseObjectAbstract {
             }
         });
     }
-
+    /**
+     * Update user in internal database, no sync to backedn
+     *
+     * @param user    (required).
+     */
+    public void update(final User user) {
+        userBox.put(user);
+    }
     /**
      * Delete a user out of the database
      *
@@ -176,7 +194,11 @@ public class UserDao extends DatabaseObjectAbstract {
         return userBox.getAll();
     }
 
-
+    /**
+     * Return registered user
+     *
+     * @return user
+     */
     public User getUser() {
         List<User> users = find();
         if (users.size() != 1) {
@@ -246,7 +268,7 @@ public class UserDao extends DatabaseObjectAbstract {
     /**
      * Delete all users out of the database
      */
-    public void deleteAll() {
-
+    public void removeAll() {
+        userBox.removeAll();
     }
 }

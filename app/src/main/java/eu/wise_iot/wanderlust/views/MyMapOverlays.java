@@ -31,6 +31,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
 /**
@@ -223,7 +224,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public void populatePoiOverlay() {
 
         poiOverlay.removeAllItems();
-        List<Poi> pois = DatabaseController.poiDao.find();
+        List<Poi> pois = PoiDao.getInstance().find();
         for (Poi poi : pois) {
             addPoiToOverlay(poi);
         }

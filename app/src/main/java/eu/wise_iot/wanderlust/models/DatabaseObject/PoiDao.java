@@ -24,6 +24,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -37,21 +38,34 @@ import retrofit2.Response;
  * <p>
  * Represents POI controller
  *
- * @author Rilind Gashi, Alexander Weinbeck, Tobias Rüegsegger
+ * @author Rilind Gashi, Alexander Weinbeck, Tobias Rüegsegger, Simon Kaspar
  * @license MIT
  */
 
 public class PoiDao extends DatabaseObjectAbstract {
+
+    private static class Holder {
+        private static final PoiDao INSTANCE = new PoiDao();
+    }
+
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static PoiDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     public static PoiService service;
     public Box<Poi> poiBox;
+    private ImageController imageController;
 
     /**
      * constructor
      */
 
-    public PoiDao() {
-        poiBox = DatabaseController.boxStore.boxFor(Poi.class);
+    private PoiDao() {
+        poiBox = BOXSTORE.boxFor(Poi.class);
         service = ServiceGenerator.createService(PoiService.class);
+        imageController = ImageController.getInstance();
     }
 
     /**
@@ -145,7 +159,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                         backendPoi.setImagePaths(internalPoi.getImagePaths());
                         poiBox.put(backendPoi);
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendPoi));
-                        DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.EDITSINGLEPOI, backendPoi));
+                        DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.EDITSINGLEPOI, backendPoi));
                     } catch (NoSuchFieldException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -179,7 +193,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                         new File(imageInfo.getPath()).delete();
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
-                    DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.DELETESINGLEPOI, response.body()));
+                    DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.DELETESINGLEPOI, response.body()));
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
@@ -214,7 +228,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                             ImageInfo imageInfo = response.body();
                             String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
                             imageInfo.setPath(name, "pois");
-                            ImageController.save(file, imageInfo);
+                            imageController.save(file, imageInfo);
                             internalPoi.addImagePath(imageInfo);
                             poiBox.put(internalPoi);
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalPoi));
@@ -241,7 +255,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                 int newId = internalPoi.getImageCount() + 1;
                 String name = internalPoi.getPoi_id() + "-" + newId + ".jpg";
                 ImageInfo newImage = new ImageInfo(newId, name, "pois");
-                ImageController.save(file,newImage);
+                imageController.save(file,newImage);
                 internalPoi.addImagePath(newImage);
                 poiBox.put(internalPoi);
                 handler.onResponse(new ControllerEvent(EventType.OK, internalPoi));
@@ -419,15 +433,20 @@ public class PoiDao extends DatabaseObjectAbstract {
                     }
 
                 }
-                DatabaseController.syncPoisDone();
+                DatabaseController.getInstance().syncPoisDone();
             }
 
             @Override
             public void onFailure(Call<List<Poi>> call, Throwable t) {
-                DatabaseController.syncPoisDone();
+                DatabaseController.getInstance().syncPoisDone();
             }
         });
     }
-
+    /**
+     * Delete all users out of the database
+     */
+    public void removeAll() {
+        poiBox.removeAll();
+    }
 
 }

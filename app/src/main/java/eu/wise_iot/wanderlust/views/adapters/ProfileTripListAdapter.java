@@ -13,7 +13,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 
 /**
  * Adapter for the profile UI. Represents all user tours in a custom list view
@@ -21,7 +21,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
  * @author Baris Demirci
  * @license MIT
  */
-public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
+public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
     private TextView description;
@@ -60,7 +60,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
      * @return user tour at position
      */
     @Override
-    public UserTour getItem(int position) {
+    public Tour getItem(int position) {
         return super.getItem(position);
     }
 
@@ -71,7 +71,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
      * @return position of the user tour
      */
     @Override
-    public int getPosition(UserTour item) {
+    public int getPosition(Tour item) {
         return super.getPosition(item);
     }
 
@@ -98,7 +98,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
     @Override
     public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
         //get the item for this row
-        UserTour userTour = getItem(position);
+        Tour tour = getItem(position);
 
         //inflate the row layout
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_tour_poi, parent, false);
@@ -112,9 +112,9 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
         deleteIcon = (ImageView) convertView.findViewById(R.id.ListTourDelete);
 
         //set data
-        if (userTour != null) {
-            title.setText(userTour.getTitle());
-            description.setText(userTour.getDescription());
+        if (tour != null) {
+            title.setText(tour.getTitle());
+            description.setText(tour.getDescription());
             tripImage.setImageResource(R.drawable.example_image);
             //TODO: set the image
         }

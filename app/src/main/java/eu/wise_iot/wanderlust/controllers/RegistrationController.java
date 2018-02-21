@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 
 /*
  * Registration Controller which handles registrations of the user
@@ -9,10 +10,13 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.User;
  */
 public class RegistrationController {
 
+    private UserDao userDao;
+
     /**
      * Create a registration contoller
      */
     public RegistrationController() {
+        userDao = UserDao.getInstance();
     }
 
     /**
@@ -20,7 +24,7 @@ public class RegistrationController {
      * @param handler Creates a user Dao and starts the saving process of an user
      */
     public void registerUser(User user, FragmentHandler handler) {
-        DatabaseController.userDao.create(user, handler);
+        userDao.create(user, handler);
     }
 
 }

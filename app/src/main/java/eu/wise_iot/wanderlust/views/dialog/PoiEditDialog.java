@@ -104,7 +104,7 @@ public class PoiEditDialog extends DialogFragment {
             switch (event.getType()) {
                 case OK:
                     poi = (Poi) event.getModel();
-                    DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
+                    DatabaseController.getInstance().sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
                     break;
                 default:
                     Toast.makeText(context, R.string.image_upload_failed, Toast.LENGTH_LONG).show();

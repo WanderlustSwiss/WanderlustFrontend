@@ -25,7 +25,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
 import okhttp3.ResponseBody;
@@ -66,12 +66,13 @@ public class TourOverviewFragment extends Fragment {
 
     /**
      * retrieve all images from the database
-     * @param userTours
+     * @param tours
      * @return
      */
-    public static void getDataFromServer(List<UserTour> userTours){
+    public static void getDataFromServer(List<Tour> tours){
         TourOverviewController toc = new TourOverviewController();
         //get given favorites
+        toc.downloadDifficultyTypes();
         toc.downloadFavorites( new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
@@ -86,7 +87,7 @@ public class TourOverviewFragment extends Fragment {
             }
         });
         //get thumbnail for each tour
-        for(UserTour ut : userTours){
+        for(Tour ut : tours){
             try {
                 toc.downloadThumbnail(ut.getTour_id(), 1, new FragmentHandler() {
                     @Override
@@ -129,7 +130,7 @@ public class TourOverviewFragment extends Fragment {
                 switch (event.getType()) {
                     case OK:
                         //get all needed information from server db
-                        List<UserTour> listTours = (List<UserTour>) event.getModel();
+                        List<Tour> listTours = (List<Tour>) event.getModel();
                         Log.d(TAG,"Getting Tours: git addServer response arrived");
 
                         //get all the images needed and save them on the device
@@ -138,7 +139,6 @@ public class TourOverviewFragment extends Fragment {
                         //get all Favorites and see which are the ones that are selected
                         //getFavorites()
 
-                        Log.d(TAG,"Images preserved: " + userTourImages);
 
                         // set up the RecyclerView 1
                         RecyclerView rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
@@ -179,7 +179,7 @@ public class TourOverviewFragment extends Fragment {
              * @param tour
              * @param favorizedTours
              */
-            public void onItemClickImages(View view, int routeID, UserTour tour, List<Long> favorizedTours) {
+            public void onItemClickImages(View view, int routeID, Tour tour, List<Long> favorizedTours) {
                 switch (view.getId()) {
                     case R.id.favoriteButton:
                         Log.d(TAG,"Tour Favorite Clicked and event triggered ");

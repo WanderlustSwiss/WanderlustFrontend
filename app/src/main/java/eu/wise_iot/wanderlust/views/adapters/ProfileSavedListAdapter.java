@@ -13,7 +13,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 
 /**
  * Adapter for the profile UI. Represents all saved tours in a custom list view
@@ -21,7 +21,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
  * @author Baris Demirci
  * @license MIT
  */
-public class ProfileSavedListAdapter extends ArrayAdapter<CommunityTour> {
+public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
     private TextView description;
@@ -59,7 +59,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<CommunityTour> {
      * @return saved tour at position
      */
     @Override
-    public CommunityTour getItem(int position) {
+    public Tour getItem(int position) {
         return super.getItem(position);
     }
 
@@ -70,7 +70,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<CommunityTour> {
      * @return position of the saved tour
      */
     @Override
-    public int getPosition(CommunityTour item) {
+    public int getPosition(Tour item) {
         return super.getPosition(item);
     }
 
@@ -97,7 +97,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<CommunityTour> {
     @Override
     public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
         //get the item for this row
-        CommunityTour communityTour = getItem(position);
+        Tour communityTour = getItem(position);
 
         //inflate the row layout
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_saved, parent, false);
