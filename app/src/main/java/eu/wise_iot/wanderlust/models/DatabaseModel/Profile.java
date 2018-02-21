@@ -30,16 +30,18 @@ public class Profile extends AbstractModel {
     long profile_id;
     byte imageId;
     int score;
+    int sex;
     String birthday;
     String language;
     long user;
     long difficulty;
 
-    public Profile(long internal_id, long profile_id, byte imageId, int score, String birthday, String language, long user, long difficulty) {
+    public Profile(long internal_id, long profile_id, byte imageId, int score, int sex, String birthday, String language, long user, long difficulty) {
         this.internal_id = internal_id;
         this.profile_id = profile_id;
         this.imageId = imageId;
         this.score = score;
+        this.sex = sex;
         this.birthday = birthday;
         this.language = language;
         this.user = user;
@@ -119,6 +121,14 @@ public class Profile extends AbstractModel {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
     }
 
     public boolean removeImageId(byte id) {
