@@ -70,7 +70,28 @@ public class FavoriteDao extends DatabaseObjectAbstract{
             }
         });
     }
-
+    /**
+     * Retriev all favorite tours
+     *
+     * @param handler
+     */
+    public void retrievAllFavoriteTours(final FragmentHandler handler) {
+        Call<List<Tour>> call = service.retrievAllFavoriteTours();
+        call.enqueue(new Callback<List<Tour>>() {
+            @Override
+            public void onResponse(Call<List<Tour>> call, retrofit2.Response<List<Tour>> response) {
+                if (response.isSuccessful()) {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Tour>> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
     /**
      * Insert a favorite into the database
      *
