@@ -102,6 +102,19 @@ public class ProfileController {
     }
 
     /**
+     * Gets the sex of logged in user
+     *
+     * @return the sex of the user
+     */
+    public int getSex() {
+        Profile profile = profileDao.getProfile();
+        if (profile == null) {
+            return 0;
+        }
+        return profile.getSex();
+    }
+
+    /**
      * Gets amount of user tours of logged in user
      *
      * @return the amount of user tours
@@ -182,13 +195,13 @@ public class ProfileController {
     }
 
     /**
-     * Gets the list with all favorites of logged in user
+     * Gets the list with all favorite tours of logged in user
      *
-     * @return list with favorites
+     * @return list with tours
      */
-    public List<Tour> getFavorites() {
-        //Todo: Load directly from Server. Ask: ska
-        return null;
+    public void getFavorites(FragmentHandler handler) {
+        //Todo: Write handler in the adapter/fragment
+        favoriteDao.retrievAllFavoriteTours(handler);
     }
 
     /**
