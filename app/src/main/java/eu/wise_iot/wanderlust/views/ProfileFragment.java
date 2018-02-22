@@ -186,8 +186,9 @@ public class ProfileFragment extends Fragment {
      * favorites and adapter to represent the users favorites in a custom list view
      */
     public void setupFavorites(View view) {
+        //Todo: Add fragment handler and adapt code
         //only if there is at least one favorite
-        if (profileController.getFavorites() != null) {
+        /*if (profileController.getFavorites() != null) {
 
             //initialize list
             list = profileController.getFavorites();
@@ -214,6 +215,7 @@ public class ProfileFragment extends Fragment {
                     R.id.ListFavTitle,
                     list));
         }
+        */
 //        Toast.makeText(getActivity(), R.string.profile_your_favourites, Toast.LENGTH_SHORT).show();
     }
 
