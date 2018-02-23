@@ -3,8 +3,12 @@ package eu.wise_iot.wanderlust.views.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 
 /**
  * PoiViewDialog:
@@ -46,6 +51,10 @@ public class PoiViewDialog extends DialogFragment {
     private ImageButton closeDialogButton;
     private ImageButton editPoiButton;
     private ImageButton deletePoiButton;
+    private ImageButton sharePoiButton;
+    private ImageButton sharePoiInstagramButton;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private View bottomSheet;
     private long poiId;
     private PoiController controller;
 
@@ -97,7 +106,9 @@ public class PoiViewDialog extends DialogFragment {
         closeDialogButton = (ImageButton) view.findViewById(R.id.poi_close_dialog_button);
         editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
         deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
-
+        sharePoiButton = (ImageButton) view.findViewById(R.id.poi_share_button);
+        sharePoiInstagramButton = (ImageButton) view.findViewById(R.id.poi_share_instagram);
+        bottomSheet = view.findViewById(R.id.poi_bottom_sheet);
         if (controller.isOwnerOf(currentPoi)) {
             this.showControlsForOwner();
         }
@@ -113,6 +124,16 @@ public class PoiViewDialog extends DialogFragment {
     }
 
     private void initActionControls() {
+
+        //register behavior on touched
+        StyleBehavior.buttonEffectOnTouched(sharePoiButton);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        sharePoiButton.setOnClickListener(v -> {
+            toggleShareBottomSheet();
+        });
+
         closeDialogButton.setOnClickListener(v -> {
             // dismisses the current dialog view
             dismiss();
@@ -132,8 +153,17 @@ public class PoiViewDialog extends DialogFragment {
                 dismiss();
             }
         });
+        sharePoiInstagramButton.setOnClickListener(v -> {
+            shareImageOnInstagram();
+        });
     }
-
+    private void toggleShareBottomSheet(){
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
+    }
     private void fillOutPoiView() {
         controller.getImages(currentPoi, new FragmentHandler() {
             @Override
@@ -159,6 +189,8 @@ public class PoiViewDialog extends DialogFragment {
 
         dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
         descriptionTextView.setText(currentPoi.getDescription());
+
+        sharePoiInstagramButton.setClickable(isInstalled("com.instagram.android"));
     }
 
     private void showControlsForOwner() {
@@ -180,5 +212,25 @@ public class PoiViewDialog extends DialogFragment {
 
     public void setController(PoiController controller) {
         this.controller = controller;
+    }
+
+    private void shareImageOnInstagram(){
+        File image = controller.getImageToShare(currentPoi);
+        if (image != null && isInstalled("com.instagram.android")){
+            Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+            shareIntent.setType("image/*");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, image.toURI());
+            shareIntent.setPackage("com.instagram.android");
+            startActivity(shareIntent);
+        }
+    }
+    private boolean isInstalled(String packageName){
+        try {
+            ApplicationInfo info = context.getPackageManager().getApplicationInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+
+        }
+        return false;
     }
 }
