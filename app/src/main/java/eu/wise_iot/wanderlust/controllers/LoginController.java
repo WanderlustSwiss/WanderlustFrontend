@@ -54,7 +54,7 @@ public class LoginController {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && !LoginUser.getCookies().isEmpty()) {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
