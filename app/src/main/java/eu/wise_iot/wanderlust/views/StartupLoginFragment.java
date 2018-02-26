@@ -38,7 +38,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
  * @author Joshua
  * @license MIT
  */
-public class SartupLoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+public class StartupLoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
     public static int REQ_CODE = 9001;
     private Context context;
@@ -76,7 +76,7 @@ public class SartupLoginFragment extends Fragment implements GoogleApiClient.OnC
     /**
      * Create a standard login fragment
      */
-    public SartupLoginFragment() {
+    public StartupLoginFragment() {
         this.loginController = new LoginController();
     }
 
