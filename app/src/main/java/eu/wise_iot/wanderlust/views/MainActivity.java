@@ -60,8 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginController = new LoginController();
 
 
-
-
         if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
@@ -136,9 +134,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.content_frame);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+
+        //Don't do anything with back button if user is on login or registration screen
+        else if (fragment != null && fragment instanceof StartupRegistrationFragment
+                || fragment instanceof SartupLoginFragment
+                || fragment instanceof MapFragment
+                || fragment instanceof StartupResetPasswordFragment) {
+            ;//NOP
+        } else{
             super.onBackPressed();
         }
     }
