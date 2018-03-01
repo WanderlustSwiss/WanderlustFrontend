@@ -137,6 +137,7 @@
     <string name="image_upload_failed">Upload von Bild fehlgeschlagen</string>
     <string name="message_add_title">Bitte Titel hinzufügen</string>
     <string name="meter_above_sea_level_abbreviation">m ü. M.</string>
+    <string name="share_title_poi">Teilen</string>
 
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>

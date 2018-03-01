@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,9 +53,6 @@ public class PoiViewDialog extends DialogFragment {
     private ImageButton editPoiButton;
     private ImageButton deletePoiButton;
     private ImageButton sharePoiButton;
-    private ImageButton sharePoiInstagramButton;
-    private BottomSheetBehavior bottomSheetBehavior;
-    private View bottomSheet;
     private long poiId;
     private PoiController controller;
 
@@ -107,8 +105,6 @@ public class PoiViewDialog extends DialogFragment {
         editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
         deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
         sharePoiButton = (ImageButton) view.findViewById(R.id.poi_share_button);
-        sharePoiInstagramButton = (ImageButton) view.findViewById(R.id.poi_share_instagram);
-        bottomSheet = view.findViewById(R.id.poi_bottom_sheet);
         if (controller.isOwnerOf(currentPoi)) {
             this.showControlsForOwner();
         }
@@ -125,13 +121,8 @@ public class PoiViewDialog extends DialogFragment {
 
     private void initActionControls() {
 
-        //register behavior on touched
-        StyleBehavior.buttonEffectOnTouched(sharePoiButton);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-
         sharePoiButton.setOnClickListener(v -> {
-            toggleShareBottomSheet();
+            shareImage();
         });
 
         closeDialogButton.setOnClickListener(v -> {
@@ -153,16 +144,6 @@ public class PoiViewDialog extends DialogFragment {
                 dismiss();
             }
         });
-        sharePoiInstagramButton.setOnClickListener(v -> {
-            shareImageOnInstagram();
-        });
-    }
-    private void toggleShareBottomSheet(){
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        } else {
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
     }
     private void fillOutPoiView() {
         controller.getImages(currentPoi, new FragmentHandler() {
@@ -189,8 +170,6 @@ public class PoiViewDialog extends DialogFragment {
 
         dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
         descriptionTextView.setText(currentPoi.getDescription());
-
-        sharePoiInstagramButton.setClickable(isInstalled("com.instagram.android"));
     }
 
     private void showControlsForOwner() {
@@ -214,23 +193,13 @@ public class PoiViewDialog extends DialogFragment {
         this.controller = controller;
     }
 
-    private void shareImageOnInstagram(){
+    private void shareImage(){
         File image = controller.getImageToShare(currentPoi);
-        if (image != null && isInstalled("com.instagram.android")){
+        if (image != null){
             Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-            shareIntent.setType("image/*");
+            shareIntent.setType("image/jpg");
             shareIntent.putExtra(Intent.EXTRA_STREAM, image.toURI());
-            shareIntent.setPackage("com.instagram.android");
-            startActivity(shareIntent);
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_poi)));
         }
-    }
-    private boolean isInstalled(String packageName){
-        try {
-            ApplicationInfo info = context.getPackageManager().getApplicationInfo(packageName, 0);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-
-        }
-        return false;
     }
 }

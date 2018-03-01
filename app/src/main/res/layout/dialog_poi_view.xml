@@ -1,171 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_main"
-    android:orientation="vertical"
-    tools:context=".views.MainActivity">$
+    android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="220dp"
+        android:background="@color/primary_second">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:background="@color/primary_second">
-
-            <com.jsibbold.zoomage.ZoomageView
-                android:id="@+id/poi_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                app:zoomage_animateOnReset="true"
-                app:zoomage_autoCenter="true"
-                app:zoomage_autoResetMode="NEVER"
-                app:zoomage_maxScale="6"
-                app:zoomage_minScale="1"
-                app:zoomage_restrictBounds="true"
-                app:zoomage_translatable="true"
-                app:zoomage_zoomable="true" />
-
-            <ImageView
-                android:id="@+id/poi_mode_private_image"
-                android:layout_width="96dp"
-                android:layout_height="36dp"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="10dp"
-                android:contentDescription="@null" />
-
-            <ImageButton
-                android:id="@+id/poi_close_dialog_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:background="@android:color/transparent"
-                android:padding="16dp"
-                android:src="@drawable/ic_arrow_back_white_24dp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/content_header"
+        <com.jsibbold.zoomage.ZoomageView
+            android:id="@+id/poi_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/background_main">
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:zoomage_animateOnReset="true"
+            app:zoomage_autoCenter="true"
+            app:zoomage_autoResetMode="NEVER"
+            app:zoomage_maxScale="6"
+            app:zoomage_minScale="1"
+            app:zoomage_restrictBounds="true"
+            app:zoomage_translatable="true"
+            app:zoomage_zoomable="true" />
 
-            <RelativeLayout
-                android:id="@+id/poi_background_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/primary_main"
-                android:padding="12dp">
+        <ImageView
+            android:id="@+id/poi_mode_private_image"
+            android:layout_width="96dp"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp"
+            android:contentDescription="@null" />
 
-                <TextView
-                    android:id="@+id/poi_type_text_view"
-                    style="@style/p.Light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp" />
+        <ImageButton
+            android:id="@+id/poi_close_dialog_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/transparent"
+            android:padding="16dp"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
+    </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/poi_elevation_text_view"
-                    style="@style/p.Light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/poi_type_text_view"
-                    android:layout_marginBottom="16dp" />
+    <RelativeLayout
+        android:id="@+id/content_header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_main">
 
-                <TextView
-                    android:id="@+id/poi_title_text_view"
-                    style="@style/h1.White"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/poi_elevation_text_view"
-                    android:layout_marginBottom="16dp" />
-
-                <TextView
-                    android:id="@+id/poi_date_text_view"
-                    style="@style/p.Light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/poi_title_text_view"
-                    android:layout_marginBottom="16dp" />
-
-                <ImageButton
-                    android:id="@+id/poi_edit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/poi_delete_button"
-                    android:layout_toStartOf="@id/poi_delete_button"
-                    android:background="@android:color/transparent"
-                    android:padding="8dp"
-                    android:paddingEnd="16dp"
-                    android:src="@drawable/ic_edit_white_24dp"
-                    android:visibility="invisible" />
-
-                <ImageButton
-                    android:id="@+id/poi_delete_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:background="@android:color/transparent"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_delete_white_24dp"
-                    android:visibility="invisible" />
-
-                <ImageButton
-                    android:id="@+id/poi_share_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toStartOf="@+id/poi_edit_button"
-                    android:background="@android:color/transparent"
-                    android:padding="8dp"
-                    android:paddingEnd="16dp"
-                    android:src="@drawable/ic_reply_white_24dp" />
-
-            </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/poi_background_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/primary_main"
+            android:padding="12dp">
 
             <TextView
-                android:id="@+id/poi_description_text_view"
+                android:id="@+id/poi_type_text_view"
+                style="@style/p.Light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/poi_background_container"
-                android:layout_marginTop="16dp"
-                android:padding="12dp"
-                style="@style/p"/>
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/poi_elevation_text_view"
+                style="@style/p.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/poi_type_text_view"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:id="@+id/poi_title_text_view"
+                style="@style/h1.White"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/poi_elevation_text_view"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:id="@+id/poi_date_text_view"
+                style="@style/p.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/poi_title_text_view"
+                android:layout_marginBottom="16dp" />
+
+            <ImageButton
+                android:id="@+id/poi_edit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:paddingEnd="16dp"
+                android:src="@drawable/ic_edit_white_24dp"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/poi_delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/poi_share_button"
+                android:layout_marginEnd="48dp"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:src="@drawable/ic_delete_white_24dp"
+                android:visibility="invisible" />
+
+            <ImageButton
+                android:id="@+id/poi_share_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/poi_date_text_view"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:paddingEnd="16dp"
+                android:src="@drawable/ic_reply_white_24dp" />
 
         </RelativeLayout>
 
-    </LinearLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/poi_bottom_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/background_main"
-        app:behavior_hideable="true"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/poi_description_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_below="@id/poi_background_container"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"
+            style="@style/p"/>
 
-            <ImageButton
-                android:id="@+id/poi_share_instagram"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/instagram" />
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
