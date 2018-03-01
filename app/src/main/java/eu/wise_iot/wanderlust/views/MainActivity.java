@@ -168,6 +168,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // OTHER FRAGMENTS
+
+        else if (id == R.id.setup_guide) {
+            fragment = UserGuideFragment.newInstance();
+            fragmentTag = Constants.USER_GUIDE_FRAGMENT;
+        }
+
         else if (id == R.id.logout) {
             loginController.logout(new FragmentHandler() {
                 @Override

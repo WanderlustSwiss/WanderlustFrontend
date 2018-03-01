@@ -31,6 +31,7 @@ public interface Constants {
     String MANUAL_FRAGMENT = "ManualFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
     String LOGIN_FRAGMENT = "SartupLoginFragment";
+    String USER_GUIDE_FRAGMENT = "UserGuideFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";
