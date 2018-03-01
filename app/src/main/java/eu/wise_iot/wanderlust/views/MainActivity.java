@@ -59,9 +59,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         PoiDao.getInstance().removeAll();
         loginController = new LoginController();
 
-
-
-
         if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("firstTimeOpened", false); // save that app has been opened
@@ -78,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             User user = UserDao.getInstance().getUser();
             if (user == null) {
-                SartupLoginFragment loginFragment = new SartupLoginFragment();
+                StartupLoginFragment loginFragment = new StartupLoginFragment();
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, loginFragment)
                         .commit();
@@ -95,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     .commit();
                             break;
                         default:
-                            SartupLoginFragment loginFragment = new SartupLoginFragment();
+                            StartupLoginFragment loginFragment = new StartupLoginFragment();
                             getFragmentManager().beginTransaction()
                                     .add(R.id.content_frame, loginFragment)
                                     .commit();
@@ -182,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });
-            fragment = new SartupLoginFragment();
+            fragment = new StartupLoginFragment();
             fragmentTag = Constants.LOGIN_FRAGMENT;
         }
 
