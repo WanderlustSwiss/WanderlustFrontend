@@ -203,6 +203,14 @@ public class PoiViewDialog extends DialogFragment {
             //File ext = getActivity().getExternalFilesDir("pictures");
 
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(image));
+            String title = currentPoi.getTitle() + ", " +
+                   String.format("%.0f  %s",
+                           currentPoi.getElevation()
+                           , getString(R.string.meter_above_sea_level_abbreviation));
+            String description = currentPoi.getDescription() + " @wanderlust-app";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, description);
+            shareIntent.putExtra(Intent.EXTRA_TITLE, title);
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_poi)));
         }
     }
