@@ -31,7 +31,7 @@ public class ImageController {
     private String picturesDir;
 
     private ImageController(){
-        picturesDir = CONTEXT.getApplicationContext().getFilesDir().getAbsolutePath() + "/pictures";
+        picturesDir = CONTEXT.getApplicationContext().getApplicationContext().getExternalFilesDir("pictures").getAbsolutePath();
         String[] folders = {"pois", "tours", "profile"};
 
         File pictures = new File(picturesDir);
