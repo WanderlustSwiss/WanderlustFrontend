@@ -163,8 +163,11 @@ public class PoiViewDialog extends DialogFragment {
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
         typeTextView.setText(typeValues[(int) currentPoi.getType()]);
-        String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
-        elevationTextView.setText(elevationText);
+        if (currentPoi.getElevation() != Integer.MAX_VALUE) {
+            elevationTextView.setText(
+                    String.format("%.0f  %s", currentPoi.getElevation(),
+                            getString(R.string.meter_above_sea_level_abbreviation)));
+        }
 
         titleTextView.setText(currentPoi.getTitle());
 
