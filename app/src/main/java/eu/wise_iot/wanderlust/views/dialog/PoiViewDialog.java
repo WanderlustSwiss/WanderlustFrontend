@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -198,7 +199,10 @@ public class PoiViewDialog extends DialogFragment {
         if (image != null){
             Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
             shareIntent.setType("image/jpg");
-            shareIntent.putExtra(Intent.EXTRA_STREAM, image.toURI());
+            //shareIntent.putExtra(Intent.EXTRA_STREAM, image.toURI());
+            //File ext = getActivity().getExternalFilesDir("pictures");
+
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(image));
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_poi)));
         }
     }
