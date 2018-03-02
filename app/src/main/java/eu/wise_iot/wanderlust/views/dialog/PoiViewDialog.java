@@ -199,17 +199,19 @@ public class PoiViewDialog extends DialogFragment {
 
     private void shareImage(){
         File image = controller.getImageToShare(currentPoi);
+        String title;
         if (image != null){
             Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
             shareIntent.setType("image/jpg");
-            //shareIntent.putExtra(Intent.EXTRA_STREAM, image.toURI());
-            //File ext = getActivity().getExternalFilesDir("pictures");
-
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(image));
-            String title = currentPoi.getTitle() + ", " +
-                   String.format("%.0f  %s",
-                           currentPoi.getElevation()
-                           , getString(R.string.meter_above_sea_level_abbreviation));
+            if (currentPoi.getElevation() != Integer.MAX_VALUE) {
+                title = currentPoi.getTitle() + ", " +
+                        String.format("%.0f  %s",
+                                currentPoi.getElevation()
+                                , getString(R.string.meter_above_sea_level_abbreviation));
+            }else{
+                title = currentPoi.getTitle();
+            }
             String description = currentPoi.getDescription() + " @wanderlust-app";
             shareIntent.putExtra(Intent.EXTRA_TEXT, description);
             shareIntent.putExtra(Intent.EXTRA_TITLE, title);
