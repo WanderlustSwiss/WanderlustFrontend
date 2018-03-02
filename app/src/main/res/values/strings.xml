@@ -155,5 +155,6 @@
     <string name="title_poi">POI</string>
     <string name="title_tours">Touren</string>
     <string name="title_score">Score</string>
+    <string name="public_transport">ÖV</string>
 
 </resources>

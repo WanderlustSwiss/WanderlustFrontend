@@ -47,6 +47,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private Polyline currentTour;
 
     private MyLocationNewOverlay myLocationNewOverlay;
+    private ItemizedOverlayWithFocus<OverlayItem> poiHashtagOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private Marker positionMarker;
     private Marker focusedPositionMarker;
@@ -56,11 +57,12 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public MyMapOverlays(Activity activity, MapView mapView) {
         this.activity = activity;
         this.mapView = mapView;
-
         this.currentTour = null;
         initPoiOverlay();
         //populatePoiOverlay();
         mapView.getOverlays().add(poiOverlay);
+        mapView.getOverlays().add(poiHashtagOverlay);
+
         initScaleBarOverlay();
         initMyLocationNewOverlay();
 //        initGpxTourlistOverlay();
@@ -78,14 +80,14 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.getOverlays().add(scaleBarOverlay);
     }
 
-    public void setTour(Polyline polyline){
-        if(this.currentTour == null){
+    public void setTour(Polyline polyline) {
+        if (this.currentTour == null) {
             this.currentTour = polyline;
             this.currentTour.setWidth(10);
             this.currentTour.setColor(Color.RED);
 
             mapView.getOverlays().add(this.currentTour);
-        }else{
+        } else {
             this.currentTour = polyline;
         }
         mapView.invalidate();
@@ -104,41 +106,46 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private void initPoiOverlay() {
         // add items with on click listener plus define actions for clicks
         List<OverlayItem> poiList = new ArrayList<>();
-        poiOverlay = new ItemizedOverlayWithFocus<>(activity, poiList,
-                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                    @Override
-                    public boolean onItemSingleTapUp(final int index, final OverlayItem poiOverlayItem) {
-                        long poiId = Long.valueOf(poiOverlayItem.getUid());
-                        PoiController controller = new PoiController();
-                        controller.getPoiById(poiId, event -> {
-                            switch (event.getType()) {
-                                case OK:
-                                    Poi poi = (Poi) event.getModel();
+        List<OverlayItem> poiHashtagList = new ArrayList<>();
 
 
-                                    FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
-                                    // make sure that no other dialog is running
-                                    Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
-                                    if (prevFragment != null)
-                                        fragmentTransaction.remove(prevFragment);
-                                    fragmentTransaction.addToBackStack(null);
+        ItemizedIconOverlay.OnItemGestureListener<OverlayItem> listener = new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+            @Override
+            public boolean onItemSingleTapUp(final int index, final OverlayItem poiOverlayItem) {
+                long poiId = Long.valueOf(poiOverlayItem.getUid());
+                PoiController controller = new PoiController();
+                controller.getPoiById(poiId, event -> {
+                    switch (event.getType()) {
+                        case OK:
+                            Poi poi = (Poi) event.getModel();
 
-                                    PoiViewDialog dialogFragment = PoiViewDialog.newInstance(poi);
-                                    dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
-                                    break;
-                                default:
-                                    //TODO some kind of toast?
-                            }
-                        });
-                        return true;
-                    }
 
-                    @Override
-                    public boolean onItemLongPress(final int index, final OverlayItem overlayItem) {
-                        // TODO: maybe add action when item is pressed long?
-                        return false;
+                            FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+                            // make sure that no other dialog is running
+                            Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
+                            if (prevFragment != null)
+                                fragmentTransaction.remove(prevFragment);
+                            fragmentTransaction.addToBackStack(null);
+
+                            PoiViewDialog dialogFragment = PoiViewDialog.newInstance(poi);
+                            dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
+                            break;
+                        default:
+                            //TODO some kind of toast?
                     }
                 });
+                return true;
+            }
+
+            @Override
+            public boolean onItemLongPress(final int index, final OverlayItem overlayItem) {
+                // TODO: maybe add action when item is pressed long?
+                return false;
+            }
+        };
+
+        poiOverlay = new ItemizedOverlayWithFocus<>(activity, poiList,listener);
+        poiHashtagOverlay = new ItemizedOverlayWithFocus<>(activity, poiHashtagList,listener);
     }
 
 //    private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
@@ -158,11 +165,27 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 //        mapView.invalidate();
 //    }
 
+
     /**
-     * Adds a poi on the mapview with the icon based on
-     * the poi type
+     * Updates the Hashtag Poi layer
+     *
+     * @param poiList the list with poi to be added in the layer
      */
-    public void addPoiToOverlay(Poi poi) {
+    public void updateHashtagPoiLayer(List<Poi> poiList) {
+
+        poiHashtagOverlay.removeAllItems();
+        for (Poi poi : poiList) {
+            addPoiToHashtagOverlay(poi);
+        }
+        mapView.invalidate();
+        showPoiHashtagLayer(true);
+
+    }
+
+    /**
+     * Creates an OverlayItem from a poi with item considering the poi type
+     */
+    private OverlayItem poiToOverlayItem(Poi poi) {
         Drawable drawable;
         boolean hasImage = poi.getImageCount() > 0;
         switch ((int) poi.getType()) {
@@ -198,8 +221,25 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
 
         overlayItem.setMarker(drawable);
+        return overlayItem;
+    }
+
+    /**
+     * Adds a poi on the mapview regular MapOverlay
+     */
+    public void addPoiToOverlay(Poi poi) {
+        OverlayItem overlayItem = poiToOverlayItem(poi);
         poiOverlay.addItem(overlayItem);
     }
+
+    /**
+     * Adds a poi to the mapview to the hashtagPoiOverlay
+     */
+    public void addPoiToHashtagOverlay(Poi poi) {
+        OverlayItem overlayItem = poiToOverlayItem(poi);
+        poiHashtagOverlay.addItem(overlayItem);
+    }
+
 
     public void addPositionMarker(GeoPoint geoPoint) {
         if (geoPoint != null) {
@@ -236,12 +276,24 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
     void showPoiLayer(boolean setVisible) {
+        showPoiHashtagLayer(false);
         if (setVisible) {
             if (!mapView.getOverlays().contains(poiOverlay)) {
                 mapView.getOverlays().add(poiOverlay);
             }
         } else {
             mapView.getOverlays().remove(poiOverlay);
+        }
+        mapView.invalidate();
+    }
+
+    void showPoiHashtagLayer(boolean setVisible) {
+        if (setVisible) {
+            if (!mapView.getOverlays().contains(poiHashtagOverlay)) {
+                mapView.getOverlays().add(poiHashtagOverlay);
+            }
+        } else {
+            mapView.getOverlays().remove(poiHashtagOverlay);
         }
         mapView.invalidate();
     }
@@ -328,7 +380,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
     public void clearPolylines() {
-        if(lines != null) {
+        if (lines != null) {
             mapView.getOverlays().removeAll(lines);
             lines = null;
         }
