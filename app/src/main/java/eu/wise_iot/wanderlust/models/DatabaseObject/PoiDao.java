@@ -35,7 +35,6 @@ import retrofit2.Response;
 
 /**
  * PoiDao:
- * <p>
  * Represents POI controller
  *
  * @author Rilind Gashi, Alexander Weinbeck, Tobias Rüegsegger, Simon Kaspar

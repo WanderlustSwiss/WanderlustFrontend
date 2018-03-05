@@ -1,10 +1,17 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.Manifest;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
@@ -20,11 +27,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class ProfileEditFragment extends Fragment {
@@ -36,6 +48,7 @@ public class ProfileEditFragment extends Fragment {
     private TextInputLayout emailLayout;
 
     private EditText emailTextfield;
+
 
     private CheckBox checkT1;
     private CheckBox checkT2;
@@ -162,7 +175,44 @@ public class ProfileEditFragment extends Fragment {
         emailTextfield.setText(profileController.getEmail());
         return true;
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super method removed
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1000) {
+                Uri returnUri = data.getData();
+                Bitmap bitmapImage = null;
+                try {
+                    bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+                    if (bitmapImage != null){
+                        profileController.setProfilePicture(bitmapImage, new FragmentHandler() {
+                            @Override
+                            public void onResponse(ControllerEvent controllerEvent) {
+                                EventType type = controllerEvent.getType();
 
+                                switch (type) {
+                                    case OK:
+                                        Toast.makeText(getActivity(),
+                                                "Image upload successfull",
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
+
+                                    default:
+                                        Toast.makeText(getActivity(), R.string.err_msg_error_occured,
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
+                                }
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //Uri returnUri;
+        //returnUri = data.getData();
+    }
     private void setupCurrentInfo(View view) {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
         //TODO: profile picture from the database
@@ -174,8 +224,13 @@ public class ProfileEditFragment extends Fragment {
         profileImage.setImageDrawable(drawable);
 
         changeImage.setOnClickListener(v -> {
-            Toast.makeText(getActivity(), R.string.msg_no_action_defined,
-                    Toast.LENGTH_SHORT).show();
+            if (ActivityCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            }else{
+                Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
+                        Toast.LENGTH_SHORT).show();
+            }
         });
 
         emailTextfield.setText(profileController.getEmail());
@@ -204,5 +259,12 @@ public class ProfileEditFragment extends Fragment {
 
     }
 
+    private void openGallery(){
+        Intent cameraIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        cameraIntent.setType("image/*");
+        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(cameraIntent, 1000);
+        }
+    }
 
 }

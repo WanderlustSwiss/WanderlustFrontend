@@ -99,9 +99,12 @@ public class ProfileFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.listContent);
 
         //Profile picture, example
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
-        //TODO: profile picture from the database
-        //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
+        Bitmap bitmap;
+        if (profileController.getProfilePicture() == null){
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        }else{
+            bitmap = BitmapFactory.decodeFile(profileController.getProfilePicture().getAbsolutePath());
+        }
 
         RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
         drawable.setCircular(true);

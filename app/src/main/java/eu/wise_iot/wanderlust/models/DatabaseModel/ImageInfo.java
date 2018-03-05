@@ -11,6 +11,7 @@ public class ImageInfo {
     }
 
     public ImageInfo(long id, String name, String dir){
+        // Todo: Refactor id
         this.id = id;
         setPath(name, dir);
     }

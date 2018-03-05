@@ -49,6 +49,9 @@ public class ImageController {
         }
         return images;
     }
+    public File getImage(ImageInfo imageInfo){
+        return new File(picturesDir + "/" + imageInfo.getPath());
+    }
 
     public void save(File file, ImageInfo image) throws IOException {
 

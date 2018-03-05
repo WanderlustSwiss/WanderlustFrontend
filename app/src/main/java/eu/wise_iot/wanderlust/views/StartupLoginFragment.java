@@ -52,7 +52,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 //    private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
     private LoginController loginController;
-
     private FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {

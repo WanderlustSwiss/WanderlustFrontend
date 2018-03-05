@@ -35,10 +35,10 @@ public interface ProfileService {
 
     @Multipart
     @POST("profile/img")
-    Call<Profile.ImageInfo> uploadImage(@Part MultipartBody.Part image);
+    Call<String> uploadImage(@Part MultipartBody.Part image);
 
     @DELETE("profile/img")
-    Call<Profile.ImageInfo> deleteImage();
+    Call<String> deleteImage();
 
     @GET("profile/img")
     Call<ResponseBody> downloadImage();

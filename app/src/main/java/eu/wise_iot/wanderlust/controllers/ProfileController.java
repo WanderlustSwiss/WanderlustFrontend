@@ -1,8 +1,14 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.Toast;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +41,8 @@ public class ProfileController {
     private FavoriteDao favoriteDao;
     private CommunityTourDao communityTourDao;
     private DifficultyTypeDao difficultyTypeDao;
+    private ImageController imageController;
+    private Context context;
 
     public ProfileController() {
         profileDao = ProfileDao.getInstance();
@@ -44,6 +52,8 @@ public class ProfileController {
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
         communityTourDao = CommunityTourDao.getInstance();
+        imageController = ImageController.getInstance();
+        context = DatabaseController.getMainContext();
         difficultyTypeDao.retrive();
     }
 
@@ -151,25 +161,66 @@ public class ProfileController {
      *
      * @return the path to the profile picture
      */
-    public String getProfilePicture() {
-
-        //TODO: next release
-        //TODO: Ask tru for image handling.
-        //Backend: GET Request /profile/img
+    public File getProfilePicture() {
+        Profile profile = profileDao.getProfile();
+        if (profile.getImagePath() != null){
+            return imageController.getImage(profile.getImagePath());
+        }
         return null;
     }
+    /**
+     * Set profile image
+     *
+     * @param handler
+     * @param srcBmp
+     */
+    public void setProfilePicture(Bitmap srcBmp, FragmentHandler handler){
+        //Todo: Wrire Fragment hanlder
+        Profile profile = profileDao.getProfile();
+        Bitmap dstBmp;
+        if (srcBmp.getWidth() >= srcBmp.getHeight()){
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    srcBmp.getWidth()/2 - srcBmp.getHeight()/2,
+                    0,
+                    srcBmp.getHeight(),
+                    srcBmp.getHeight()
+            );
+        }else{
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    0,
+                    srcBmp.getHeight()/2 - srcBmp.getWidth()/2,
+                    srcBmp.getWidth(),
+                    srcBmp.getWidth()
+            );
+        }
+        dstBmp.setHeight(170);
+        dstBmp.setWidth(170);
 
-    public void setProfilePicture(String path){
-        //TODO: next release
-        //TODO: Ask tru for image handling.
-        // Backend: Delete image with DELETE Request to /profile/img then
-        // POST Reuqest /profile/img with image
+        File image = new File(context.getCacheDir(), "profile_image.jpg");
+        OutputStream os;
+        try {
+            os = new BufferedOutputStream(new FileOutputStream(image));
+            dstBmp.compress(Bitmap.CompressFormat.JPEG, 80, os);
+            os.close();
+            profileDao.addImage(image, profile, handler);
+            image.delete();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
     }
-
-    public void deleteProfilePicture(){
-        //TODO: next release
-        //TODO: Ask tru for image handling.
-        //DELETE Request to /profile/img
+    /**
+     * Delete profile image
+     *
+     * @param handler
+     */
+    public void deleteProfilePicture(FragmentHandler handler){
+        //Todo: Wrire Fragment hanlder
+        Profile profile = profileDao.getProfile();
+        if (profile.getImagePath() != null){
+            profileDao.deleteImage(handler);
+        }
     }
 
     /**
