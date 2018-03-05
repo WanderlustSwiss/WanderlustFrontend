@@ -175,29 +175,8 @@ public class ProfileController {
      * @param srcBmp
      */
     public void setProfilePicture(Bitmap srcBmp, FragmentHandler handler){
-        //Todo: Wrire Fragment hanlder
         Profile profile = profileDao.getProfile();
-        Bitmap dstBmp;
-        if (srcBmp.getWidth() >= srcBmp.getHeight()){
-            dstBmp = Bitmap.createBitmap(
-                    srcBmp,
-                    srcBmp.getWidth()/2 - srcBmp.getHeight()/2,
-                    0,
-                    srcBmp.getHeight(),
-                    srcBmp.getHeight()
-            );
-        }else{
-            dstBmp = Bitmap.createBitmap(
-                    srcBmp,
-                    0,
-                    srcBmp.getHeight()/2 - srcBmp.getWidth()/2,
-                    srcBmp.getWidth(),
-                    srcBmp.getWidth()
-            );
-        }
-        Bitmap mutableDstBmp = dstBmp.copy(Bitmap.Config.ARGB_8888, true);
-        mutableDstBmp.setHeight(170);
-        mutableDstBmp.setWidth(170);
+        Bitmap mutableDstBmp = srcBmp;
 
         File image = new File(context.getCacheDir(), "profile_image.jpg");
         OutputStream os;
@@ -206,7 +185,6 @@ public class ProfileController {
             mutableDstBmp.compress(Bitmap.CompressFormat.JPEG, 80, os);
             os.close();
             profileDao.addImage(image, profile, handler);
-            image.delete();
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

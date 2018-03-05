@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
@@ -177,56 +178,33 @@ public class ProfileEditFragment extends Fragment {
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super method removed
         if (resultCode == RESULT_OK) {
-            if (requestCode == 1000) {
-                Uri returnUri = data.getData();
-                Bitmap bitmapImage = null;
-                try {
-                    bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
-                    if (bitmapImage != null){
-                        profileController.setProfilePicture(bitmapImage, new FragmentHandler() {
-                            @Override
-                            public void onResponse(ControllerEvent controllerEvent) {
-                                EventType type = controllerEvent.getType();
-
-                                switch (type) {
-                                    case OK:
-                                        Toast.makeText(getActivity(),
-                                                "Image upload successfull",
-                                                Toast.LENGTH_SHORT).show();
-                                        break;
-
-                                    default:
-                                        Toast.makeText(getActivity(), R.string.err_msg_error_occured,
-                                                Toast.LENGTH_SHORT).show();
-                                        break;
-                                }
-                            }
-                        });
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            switch (requestCode){
+                case 1000:
+                    onActionResultGallery(data);
+                    break;
             }
         }
-        //Uri returnUri;
-        //returnUri = data.getData();
     }
     private void setupCurrentInfo(View view) {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
-        //TODO: profile picture from the database
-        //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
-
-        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-        drawable.setCircular(true);
-
-        profileImage.setImageDrawable(drawable);
+        setupAvatar();
 
         changeImage.setOnClickListener(v -> {
             if (ActivityCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                openGallery();
+                if (profileController.getProfilePicture() == null) {
+                    openGallery();
+                }else{
+                    profileController.deleteProfilePicture(new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            EventType type = controllerEvent.getType();
+                            if (type == EventType.OK){
+                                openGallery();
+                            }
+                        }
+                    });
+                }
             }else{
                 Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
                         Toast.LENGTH_SHORT).show();
@@ -260,11 +238,55 @@ public class ProfileEditFragment extends Fragment {
     }
 
     private void openGallery(){
-        Intent cameraIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        cameraIntent.setType("image/*");
-        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(cameraIntent, 1000);
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
+
+        galleryIntent.putExtra("crop", "true");
+        galleryIntent.putExtra("outputX", 170);
+        galleryIntent.putExtra("outputY", 170);
+        galleryIntent.putExtra("aspectX", 1);
+        galleryIntent.putExtra("aspectY", 1);
+        galleryIntent.putExtra("scale", true);
+
+        if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(galleryIntent, 1000);
         }
+    }
+    private void onActionResultGallery(Intent data){
+        Uri returnUri = data.getData();
+        Bitmap bitmapImage;
+        try {
+            bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+            if (bitmapImage != null){
+                profileController.setProfilePicture(bitmapImage, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        if (controllerEvent.getType() == EventType.OK){
+                            setupAvatar();
+                        }else{
+                            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        } catch (IOException e) {
+
+        }
+    }
+    private void setupAvatar(){
+        Bitmap bitmap;
+        File image = profileController.getProfilePicture();
+        if (image== null){
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        }else{
+            bitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
+        }
+
+        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+        drawable.setCircular(true);
+
+        profileImage.setImageDrawable(drawable);
     }
 
 }

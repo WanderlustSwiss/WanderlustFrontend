@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.services;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -35,13 +36,12 @@ public interface ProfileService {
 
     @Multipart
     @POST("profile/img")
-    Call<String> uploadImage(@Part MultipartBody.Part image);
+    Call<ImageInfo> uploadImage(@Part MultipartBody.Part image);
 
     @DELETE("profile/img")
-    Call<String> deleteImage();
+    Call<ImageInfo> deleteImage();
 
     @GET("profile/img")
     Call<ResponseBody> downloadImage();
-
 
 }

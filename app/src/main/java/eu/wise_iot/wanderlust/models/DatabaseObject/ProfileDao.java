@@ -149,17 +149,18 @@ public class ProfileDao extends DatabaseObjectAbstract {
      */
     public void addImage(final File file, final Profile profile, final FragmentHandler handler) {
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        Call<String> call = service.uploadImage(body);
-        call.enqueue(new Callback<String>() {
+        Call<ImageInfo> call = service.uploadImage(body);
+        call.enqueue(new Callback<ImageInfo>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<ImageInfo> call, Response<ImageInfo> response) {
                 if (response.isSuccessful()) {
                     try {
-                        String imagePath = response.body();
-                        ImageInfo imageInfo = new ImageInfo(0, imagePath, "profile");
+                        ImageInfo imagePath = response.body();
+                        ImageInfo imageInfo = new ImageInfo(0, imagePath.getName(), "profile");
                         imageController.save(file, imageInfo);
+                        file.delete();
                         profile.setImagePath(imageInfo);
                         profileBox.put(profile);
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), profile));
@@ -172,7 +173,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<ImageInfo> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
@@ -185,12 +186,13 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param handler
      */
     public void deleteImage(final FragmentHandler handler) {
-        Call<String> call = service.deleteImage();
-        call.enqueue(new Callback<String>() {
+        Call<ImageInfo> call = service.deleteImage();
+        call.enqueue(new Callback<ImageInfo>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<ImageInfo> call, Response<ImageInfo> response) {
                 if (response.isSuccessful()) {
                     Profile profile = getProfile();
+                    imageController.delete(profile.getImagePath());
                     profile.setImagePath(null);
                     profileBox.put(profile);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), profile));
@@ -200,7 +202,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<ImageInfo> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
