@@ -195,14 +195,15 @@ public class ProfileController {
                     srcBmp.getWidth()
             );
         }
-        dstBmp.setHeight(170);
-        dstBmp.setWidth(170);
+        Bitmap mutableDstBmp = dstBmp.copy(Bitmap.Config.ARGB_8888, true);
+        mutableDstBmp.setHeight(170);
+        mutableDstBmp.setWidth(170);
 
         File image = new File(context.getCacheDir(), "profile_image.jpg");
         OutputStream os;
         try {
             os = new BufferedOutputStream(new FileOutputStream(image));
-            dstBmp.compress(Bitmap.CompressFormat.JPEG, 80, os);
+            mutableDstBmp.compress(Bitmap.CompressFormat.JPEG, 80, os);
             os.close();
             profileDao.addImage(image, profile, handler);
             image.delete();
