@@ -1,37 +1,22 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.location.Location;
-import android.util.Base64;
-import android.util.Base64InputStream;
-import android.util.Base64OutputStream;
-import android.util.Log;
-
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.Polyline;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
@@ -69,7 +54,8 @@ public class TourController {
     private UserTourDao userTourDao;
     private DifficultyTypeDao difficultyTypeDao;
     private ImageController imageController;
-    private ArrayList<GeoPoint> polyList;
+    private WeatherController weatherController;
+    private EquipmentController equipmentController;
 
     public TourController(Tour tour){
         this.tour = tour;
@@ -78,9 +64,112 @@ public class TourController {
         favoriteDao = FavoriteDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         imageController = ImageController.getInstance();
+        weatherController = WeatherController.getInstance();
+        equipmentController = EquipmentController.getInstance();
         loadGeoData();
 
     }
+
+    public void retrieveRecommendedEquipment(FragmentHandler handler){
+
+        //Get 5 Points of tour
+        ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tour.getPolyline(), 10);
+        List<GeoPoint> weatherPoints = new ArrayList<>();
+
+        if(polyList.size() >= 5){
+            //Add 5 Points: startPoint, 25%, 50%, 75%, endPoint
+            for(int i = 0; i <= 4; i++) {
+                weatherPoints.add(polyList.get((polyList.size()/4)*i));
+            }
+
+            //get weather from points
+            GetWeatherTask getWeatherTask = new GetWeatherTask(weatherController, new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    switch (controllerEvent.getType()){
+                        case OK:
+                            List<Weather> weather = (List<Weather>) controllerEvent.getModel();
+                            List<Equipment> equipment = equipmentController.getEquipmentList();
+
+                            //TODO find out which equip should be picked
+
+                            //Calculate the score of each weather type
+                            int maxTemp = 0;
+                            int minTemp = 0;
+                            List<WeatherKeys> weatherKeys = weatherController.getWeatherKeys();
+                            int[] weatherScore = new int[weatherKeys.size()];
+                            for(Weather w  : weather){
+                                weatherScore[w.getCategory()]++;
+                                maxTemp += w.getMaxTemp();
+                                minTemp += w.getMinTemp();
+                            }
+
+                            maxTemp /= 5;
+                            minTemp /= 5;
+
+
+                            //safe equipment at array pos = type of equipment
+                            Equipment[] recommendedEquipment = new Equipment[equipmentController.getTypeCount()];
+
+                            for(Equipment e : equipment){
+
+                                //Check if type of equipment is already present
+                                if(recommendedEquipment[e.getType()] != null){
+
+                                    //Check if better than current recommended
+                                    Equipment current = recommendedEquipment[e.getType()];
+
+                                    int scoreCurrent = 0;
+                                    int scoreNew = 0;
+
+                                    //Calculate score from weather
+                                    for (int i = 0; i < current.getWeather().length; i++){
+                                        if(current.getWeather()[i] == 1){
+                                            scoreCurrent += weatherScore[i];
+                                        }
+                                    }
+
+                                    for (int i = 0; i < e.getWeather().length; i++){
+                                        if(e.getWeather()[i] == 1){
+                                            scoreNew += weatherScore[i];
+                                        }
+                                    }
+
+                                    //TODO look at other parameters aswell
+
+                                    //set Equipment e to the recommended if it is better suited
+                                    if(scoreNew > scoreCurrent){
+                                        recommendedEquipment[e.getType()] = e;
+                                    }
+                                }
+                                //Else set it recommended
+                                else{
+                                    recommendedEquipment[e.getType()] = e;
+                                }
+                            }
+
+
+
+
+
+                            break;
+                        default:
+
+                    }
+                }
+            });
+
+            getWeatherTask.execute(weatherPoints);
+
+        } else{
+            //only add startPoint
+            weatherPoints.add(polyList.get(0));
+        }
+
+
+    }
+
+
     /**
      * True if Favorite is set, otherwise false
      */
