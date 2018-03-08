@@ -1,19 +1,26 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -36,6 +43,7 @@ import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 
 /**
  * TourController:
@@ -63,6 +71,7 @@ public class TourFragment extends Fragment {
     private TextView textViewDifficulty;
     private TextView textViewDescription;
     private Button jumpToStartLocationButton;
+    private RatingBar tourRating;
     private static MapFragment mapFragment;
 
     private Favorite favorite;
@@ -127,6 +136,7 @@ public class TourFragment extends Fragment {
         textViewDifficulty = (TextView) view.findViewById(R.id.tourDifficulty);
         textViewDescription = (TextView) view.findViewById(R.id.tourDescription);
         jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
+        tourRating = (RatingBar) view.findViewById(R.id.tourRating);
 
         long difficulty = tourController.getLevel();
         Drawable drawable;
@@ -176,10 +186,21 @@ public class TourFragment extends Fragment {
 
         textViewDifficulty.setText(tourController.getDifficultyMark());
     }
+
     public void setupActionListeners(){
         jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
         favButton.setOnClickListener((View v) -> toggleFavorite());
+        tourRating.setOnTouchListener((View v, MotionEvent e) ->{
+            //setOnTouchListener creates two MotionEvents and without if-Statement, it would
+            //open the dialog twice
+            if(e.getAction() == MotionEvent.ACTION_DOWN){
+                TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController);
+                dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
+            }
+            return true;
+        });
     }
+
     public void toggleFavorite() {
         if (isFavoriteUpdate){
             return;
@@ -218,6 +239,4 @@ public class TourFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
     }
-
-
 }

@@ -76,7 +76,6 @@
                     android:orientation="horizontal"
                     android:paddingBottom="12dp">
 
-                    <!--
                     <RatingBar
                         android:id="@+id/tourRating"
                         style="?android:attr/ratingBarStyleSmall"
@@ -86,6 +85,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="13dp"
                         android:backgroundTint="@color/background_main"/>
+                    <!--
 
                     <TextView
                         android:id="@+id/tourDate"

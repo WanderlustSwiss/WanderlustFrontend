@@ -37,6 +37,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
+
 /**
  * TourController:
  * handles the tourfragment and its in and output
@@ -69,6 +70,7 @@ public class TourController {
     private UserTourDao userTourDao;
     private DifficultyTypeDao difficultyTypeDao;
     private ImageController imageController;
+    private Float ratingNumber;
     private ArrayList<GeoPoint> polyList;
 
     public TourController(Tour tour){
@@ -237,6 +239,10 @@ public class TourController {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             return 0;
         }
+    }
+
+    public void setRating(Tour tour, int starRating){
+
     }
 
     public long getAscent(){ return tour.getAscent(); }
