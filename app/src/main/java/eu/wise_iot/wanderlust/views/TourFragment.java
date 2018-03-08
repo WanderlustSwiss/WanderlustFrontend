@@ -214,6 +214,7 @@ public class TourFragment extends Fragment {
 
         getFragmentManager().beginTransaction()
                 .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                .addToBackStack(Constants.MAP_FRAGMENT)
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
