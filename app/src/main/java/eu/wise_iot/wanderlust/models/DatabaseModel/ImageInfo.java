@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 public class ImageInfo {
     public long id;
     public String path;
+    public String localDir;
     public String name;
 
     public ImageInfo(){}
@@ -11,17 +12,20 @@ public class ImageInfo {
         this.id = id;
     }
 
-    public ImageInfo(long id, String name, String dir){
+    public ImageInfo(long id, String name, String localDir){
         // Todo: Refactor id
         this.id = id;
         this.name = name;
-        setPath(name, dir);
+        this.localDir = localDir;
     }
 
-    public void setPath(String name, String dir){
-        this.path = dir + "/" + name;
-    }
+    public void setPath(String path){ this.path = path; }
+    public void setLocalDir(String localDir) {this.localDir = localDir;}
+    public void setId(long id){ this.id = id; }
+    public void setName(String name){ this.name = name; }
 
+    public String getLocalDir(){ return localDir; }
+    public String getLocalPath(){ return localDir + "/" + name; }
     public long getId() {
         return id;
     }

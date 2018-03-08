@@ -44,12 +44,12 @@ public class ProfileEditFragment extends Fragment {
     private static final String TAG = "ProfileEditFragment";
 
     private ImageView profileImage;
+
     private TextView changeImage;
 
     private TextInputLayout emailLayout;
 
     private EditText emailTextfield;
-
 
     private CheckBox checkT1;
     private CheckBox checkT2;
@@ -103,6 +103,8 @@ public class ProfileEditFragment extends Fragment {
         checkBoxes = new CheckBox[]{checkT1, checkT2, checkT3,
                 checkT4, checkT5, checkT6};
 
+
+
         //initialize current values
         setupCurrentInfo(view);
         setupDifficulty(view);
@@ -131,6 +133,7 @@ public class ProfileEditFragment extends Fragment {
 
                         switch (type) {
                             case OK:
+                                ((MainActivity) getActivity()).updateEmailAdress(newMail);
                                 Toast.makeText(getActivity(), R.string.msg_email_edit_successful,
                                         Toast.LENGTH_SHORT).show();
                                 break;
@@ -188,7 +191,6 @@ public class ProfileEditFragment extends Fragment {
     }
     private void setupCurrentInfo(View view) {
         setupAvatar();
-
         changeImage.setOnClickListener(v -> {
             if (ActivityCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -277,16 +279,20 @@ public class ProfileEditFragment extends Fragment {
     private void setupAvatar(){
         Bitmap bitmap;
         File image = profileController.getProfilePicture();
-        if (image== null){
+        if (image == null ){
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
         }else{
             bitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
+            if (bitmap == null){
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            }
         }
 
         RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
         drawable.setCircular(true);
-
         profileImage.setImageDrawable(drawable);
+        ((MainActivity) getActivity()).updateProfileImage(drawable);
+
     }
 
 }

@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -103,17 +104,16 @@ public class ProfileDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if (response.isSuccessful()) {
-                    try {
-                        Profile backendProfile = response.body();
-                        Profile internalProfile = findOne(Profile_.profile_id, profile.getProfile_id());
-                        backendProfile.setInternal_id(internalProfile.getInternal_id());
-                        profileBox.put(backendProfile);
-                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendProfile));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
+                    Profile backendProfile = response.body();
+                    Profile internalProfile = getProfile();
+                    backendProfile.setInternal_id(internalProfile.getInternal_id());
+                    if (backendProfile.getImagePath() != null) {
+                        backendProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
                     }
+                    profileBox.put(backendProfile);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendProfile));
+                }else{
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
@@ -134,10 +134,11 @@ public class ProfileDao extends DatabaseObjectAbstract {
 
     public Profile getProfile() {
         List<Profile> profiles = find();
-        if (profiles.size() != 1) {
-            return null;
-        } else {
+
+        if (!profiles.isEmpty()){
             return profiles.get(0);
+        } else {
+            return null;
         }
     }
 
@@ -157,16 +158,17 @@ public class ProfileDao extends DatabaseObjectAbstract {
             public void onResponse(Call<ImageInfo> call, Response<ImageInfo> response) {
                 if (response.isSuccessful()) {
                     try {
-                        ImageInfo imagePath = response.body();
-                        ImageInfo imageInfo = new ImageInfo(0, imagePath.getName(), "profile");
-                        imageController.save(file, imageInfo);
-                        file.delete();
-                        profile.setImagePath(imageInfo);
-                        profileBox.put(profile);
-                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), profile));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                            ImageInfo imagePath = response.body();
+                            Profile internalProfile = getProfile();
+                            internalProfile.setImagePath(imagePath);
+                            internalProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
+                            imageController.save(file, internalProfile.getImagePath());
+                            file.delete();
+                            profileBox.put(internalProfile);
+                            handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalProfile));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }

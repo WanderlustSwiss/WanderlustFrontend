@@ -255,8 +255,9 @@ public class UserTourDao extends DatabaseObjectAbstract {
                     for (Tour tour : tours) {
                         for (ImageInfo imageInfo : tour.getImagePaths()) {
                             String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
-                            imageInfo.id = tour.getTour_id();
-                            imageInfo.path = "tours" + "/" + name;
+                            imageInfo.setName(name);
+                            imageInfo.setId(tour.getTour_id());
+                            imageInfo.setLocalDir(imageController.getTourFolder());
 
                         }
                     }
@@ -289,6 +290,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
+
 
                         //String name = tour_id + "-" + image_id + ".jpg";
 

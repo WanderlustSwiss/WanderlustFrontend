@@ -5,18 +5,27 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -30,6 +39,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
@@ -45,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "MainActivity";
     public static BoxStore boxStore;
     public static Activity activity;
+    private TextView username;
+    private TextView email;
+    private ImageView userProfileImage;
     private LoginController loginController;
 
     @Override
@@ -84,8 +97,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
+                    User logtInUser = (User) controllerEvent.getModel();
                     switch (controllerEvent.getType()) {
                         case OK:
+                            setupDrawerHeader(logtInUser);
                             MapFragment mapFragment = MapFragment.newInstance();
                             getFragmentManager().beginTransaction()
                                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
@@ -107,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         if (Build.VERSION.SDK_INT >= 23) checkPermissions();
     }
+
 
     /**
      * Initializes the navigation and elements
@@ -218,5 +234,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void setupDrawerHeader(User user){
+        username = (TextView) findViewById(R.id.user_name);
+        email = (TextView) findViewById(R.id.user_mail_address);
+        userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+
+        username.setText(user.getNickname());
+        email.setText(user.getEmail());
+
+        Bitmap bitmap;
+        if (loginController.getProfileImage() == null){
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        }else{
+            bitmap = BitmapFactory.decodeFile(loginController.getProfileImage().getAbsolutePath());
+        }
+
+        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+        drawable.setCircular(true);
+
+        updateProfileImage(drawable);
+    }
+    public void updateProfileImage(RoundedBitmapDrawable drawable){
+        userProfileImage.setImageDrawable(drawable);
+    }
+    public void updateEmailAdress(String newEmail){
+        email.setText(newEmail);
+    }
 
 }

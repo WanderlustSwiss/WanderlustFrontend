@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.services;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -43,11 +44,11 @@ public interface TourService {
 
     @Multipart
     @POST("tour/{id}/img")
-    Call<Tour> uploadImage(@Path("id") int id, @Part MultipartBody.Part image);
+    Call<ImageInfo> uploadImage(@Path("id") int id, @Part MultipartBody.Part image);
 
     @DELETE("tour/{")
     Call<Tour> deleteTour(@Body Tour tour);
 
     @DELETE("tour/{id}/img/{image_id}")
-    Call<Tour> deleteImage(@Path("id") int id, @Path("image_id") int image_id);
+    Call<ImageInfo> deleteImage(@Path("id") int id, @Path("image_id") int image_id);
 }
