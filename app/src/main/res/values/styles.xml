@@ -33,6 +33,7 @@
 
     <style name="p">
         <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="p.Light" parent="TextAppearance.AppCompat">
@@ -41,6 +42,7 @@
 
     <style name="p.Small">
         <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="p.Small.Light">
