@@ -14,16 +14,14 @@
 
     <ImageView
         android:id="@+id/user_profile_image"
-        android:adjustViewBounds="true"
-        android:layout_height="80px"
-        android:layout_width="80px"
-        android:paddingTop="8dp"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <TextView
         android:id="@+id/user_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:paddingTop="8dp"
         android:text="Usernamen"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
@@ -31,7 +29,7 @@
     <TextView
         android:id="@+id/user_mail_address"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
         android:text="user@mailadresse.ch" />
 
 </LinearLayout>

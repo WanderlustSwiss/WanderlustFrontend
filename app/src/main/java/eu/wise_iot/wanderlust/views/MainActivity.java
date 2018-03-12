@@ -20,14 +20,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,10 +39,10 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import io.objectbox.BoxStore;
 
 /**
@@ -242,20 +242,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         username.setText(user.getNickname());
         email.setText(user.getEmail());
 
-        Bitmap bitmap;
-        if (loginController.getProfileImage() == null){
-            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
-        }else{
-            bitmap = BitmapFactory.decodeFile(loginController.getProfileImage().getAbsolutePath());
-        }
-
-        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-        drawable.setCircular(true);
-
-        updateProfileImage(drawable);
+        updateProfileImage(loginController.getProfileImage());
     }
-    public void updateProfileImage(RoundedBitmapDrawable drawable){
-        userProfileImage.setImageDrawable(drawable);
+    public void updateProfileImage(File image){
+        if (image != null){
+            Picasso.with(activity).load(image).transform(new CircleTransform()).fit().into(userProfileImage);
+        }else{
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            drawable.setCircular(true);
+            userProfileImage.setImageDrawable(drawable);
+        }
     }
     public void updateEmailAdress(String newEmail){
         email.setText(newEmail);

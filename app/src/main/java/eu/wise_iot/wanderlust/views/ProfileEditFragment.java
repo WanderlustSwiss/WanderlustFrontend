@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -21,11 +23,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +41,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
+import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -50,6 +56,13 @@ public class ProfileEditFragment extends Fragment {
     private TextInputLayout emailLayout;
 
     private EditText emailTextfield;
+
+    private Button buttonOpenGallery;
+    private Button buttonDeleteImage;
+
+    private View bottomSheet;
+
+    private BottomSheetBehavior bottomSheetBehavior;
 
     private CheckBox checkT1;
     private CheckBox checkT2;
@@ -94,6 +107,11 @@ public class ProfileEditFragment extends Fragment {
         emailLayout = (TextInputLayout) view.findViewById(R.id.editEmailLayout);
         emailTextfield = (EditText) view.findViewById(R.id.editEmailField);
 
+        buttonDeleteImage = (Button) view.findViewById(R.id.editProfileButtonDeleteImage);
+        buttonOpenGallery = (Button) view.findViewById(R.id.editProfileButtonOpenGallery);
+
+        bottomSheet = view.findViewById(R.id.profileEditBottomSheet);
+
         checkT1 = (CheckBox) view.findViewById(R.id.checkboxT1);
         checkT2 = (CheckBox) view.findViewById(R.id.checkboxT2);
         checkT3 = (CheckBox) view.findViewById(R.id.checkboxT3);
@@ -108,7 +126,7 @@ public class ProfileEditFragment extends Fragment {
         //initialize current values
         setupCurrentInfo(view);
         setupDifficulty(view);
-
+        setupActionListener();
         return view;
     }
 
@@ -191,11 +209,32 @@ public class ProfileEditFragment extends Fragment {
     }
     private void setupCurrentInfo(View view) {
         setupAvatar();
-        changeImage.setOnClickListener(v -> {
+        buttonOpenGallery.setText(R.string.profile_edit_open_gallery);
+        buttonDeleteImage.setText(R.string.profile_edit_delete_image);
+        buttonDeleteImage.setTextColor(Color.RED);
+        emailTextfield.setText(profileController.getEmail());
+    }
+    private void setupActionListener(){
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        changeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            }
+        });
+        buttonOpenGallery.setOnClickListener(v -> {
             if (ActivityCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 if (profileController.getProfilePicture() == null) {
                     openGallery();
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }else{
                     profileController.deleteProfilePicture(new FragmentHandler() {
                         @Override
@@ -204,18 +243,29 @@ public class ProfileEditFragment extends Fragment {
                             if (type == EventType.OK){
                                 openGallery();
                             }
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                     });
                 }
             }else{
                 Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
                         Toast.LENGTH_SHORT).show();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
-
-        emailTextfield.setText(profileController.getEmail());
+        buttonDeleteImage.setOnClickListener(v -> {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            profileController.deleteProfilePicture(new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    EventType type = controllerEvent.getType();
+                    if (type == EventType.OK){
+                        setupAvatar();
+                    }
+                }
+            });
+        });
     }
-
     private void setupDifficulty(View view) {
         //setup current difficulty level
         difficulty = profileController.getDifficulty();
@@ -277,21 +327,17 @@ public class ProfileEditFragment extends Fragment {
         }
     }
     private void setupAvatar(){
-        Bitmap bitmap;
         File image = profileController.getProfilePicture();
-        if (image == null ){
-            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        if (image != null) {
+            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().into(profileImage);
+            ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
         }else{
-            bitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
-            if (bitmap == null){
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
-            }
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            drawable.setCircular(true);
+            profileImage.setImageDrawable(drawable);
+            ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
         }
-
-        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-        drawable.setCircular(true);
-        profileImage.setImageDrawable(drawable);
-        ((MainActivity) getActivity()).updateProfileImage(drawable);
 
     }
 

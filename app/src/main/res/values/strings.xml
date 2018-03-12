@@ -153,6 +153,8 @@
     <string name="logout_failed">Logout fehlgeschlagen</string>
     <string name="msg_available_in_next_feature">Dieses Feature wird in einem späteren Release verfügbar sein</string>
     <string name="profile_edit">Profil bearbeiten</string>
+    <string name="profile_edit_delete_image">Aktuelles Foto entfernen</string>
+    <string name="profile_edit_open_gallery">Aus Bibliothek auswählen</string>
     <string name="title_poi">POI</string>
     <string name="title_tours">Touren</string>
     <string name="title_score">Score</string>
