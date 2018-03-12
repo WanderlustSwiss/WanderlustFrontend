@@ -7,6 +7,7 @@ import org.osmdroid.util.GeoPoint;
 import java.io.IOException;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SeasonsKeys;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
@@ -69,7 +70,7 @@ public class WeatherController {
         });
     }
 
-    public void initSeaonsKeys(FragmentHandler handler){
+    public void initSeasonsKeys(FragmentHandler handler){
         Call<List<SeasonsKeys>> call = service.getSeasonsKeys();
         call.enqueue(new Callback<List<SeasonsKeys>>() {
             @Override
@@ -88,6 +89,19 @@ public class WeatherController {
         });
     }
 
+    public void getWeatherFromGeoPointList(List<GeoPoint> geoPoints, FragmentHandler handler){
+        GetWeatherTask getWeatherTask = new GetWeatherTask(handler);
+        getWeatherTask.execute(geoPoints);
+    }
+
+
+    /*
+    Returns a List of 40 Weathers.
+    First weather has current time, second weather has current time + 3hours
+    the eights Weather has current time + 1 day
+    dt = seconds since unix epoch
+    https://stackoverflow.com/questions/9754600/converting-epoch-time-to-date-string
+     */
     public void getWeatherFromGeoPoint(GeoPoint geoPoint, FragmentHandler handler){
         Call<List<Weather>> call = service.getWeather(geoPoint.getLatitude(), geoPoint.getLongitude());
         call.enqueue(new Callback<List<Weather>>() {
@@ -106,6 +120,9 @@ public class WeatherController {
         });
     }
 
+    /*
+    don't use
+     */
     public List<Weather> getWeatherFromGeoPoint(GeoPoint geoPoint){
         Call<List<Weather>> call = service.getWeather(geoPoint.getLatitude(), geoPoint.getLongitude());
         try {

@@ -34,6 +34,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
+import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 
@@ -181,6 +182,31 @@ public class TourFragment extends Fragment {
         favButton.setOnClickListener((View v) -> toggleFavorite());
     }
     public void toggleFavorite() {
+
+        //tests
+        WeatherController weatherController = WeatherController.getInstance();
+        List<GeoPoint> geoPoints = new ArrayList<>();
+        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
+        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
+        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
+        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
+        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
+        weatherController.getWeatherFromGeoPointList(geoPoints, new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                controllerEvent.getModel();
+            }
+        });
+//        weatherController.getWeatherFromGeoPoint(new GeoPoint(47.3768866, 8.541694, 0), new FragmentHandler() {
+//            @Override
+//            public void onResponse(ControllerEvent controllerEvent) {
+//
+//                controllerEvent.getModel();
+//            }
+//        });
+
+
+
         if (isFavoriteUpdate){
             return;
         }

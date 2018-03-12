@@ -22,9 +22,9 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
     WeatherController controller;
     List<Weather> weather;
 
-    public GetWeatherTask(WeatherController controller, FragmentHandler handler){
+    public GetWeatherTask(FragmentHandler handler){
         this.handler = handler;
-        this.controller = controller;
+        this.controller = WeatherController.getInstance();
         this.weather = Collections.synchronizedList(new ArrayList<>());
     }
 
@@ -50,7 +50,7 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
         }
 
         handler.onResponse(new ControllerEvent<>(EventType.OK, weather));
-        return null;
+        return weather;
     }
 
 

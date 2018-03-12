@@ -83,7 +83,7 @@ public class TourController {
             }
 
             //get weather from points
-            GetWeatherTask getWeatherTask = new GetWeatherTask(weatherController, new FragmentHandler() {
+            weatherController.getWeatherFromGeoPointList(weatherPoints, new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
                     switch (controllerEvent.getType()){
@@ -94,14 +94,21 @@ public class TourController {
                             //TODO find out which equip should be picked
 
                             //Calculate the score of each weather type
-                            int maxTemp = 0;
-                            int minTemp = 0;
+                            float maxTemp = Float.NEGATIVE_INFINITY;
+                            float minTemp = Float.POSITIVE_INFINITY;
                             List<WeatherKeys> weatherKeys = weatherController.getWeatherKeys();
-                            int[] weatherScore = new int[weatherKeys.size()];
+                            boolean[] weatherFilter = new boolean[weatherKeys.size()];
                             for(Weather w  : weather){
-                                weatherScore[w.getCategory()]++;
-                                maxTemp += w.getMaxTemp();
-                                minTemp += w.getMinTemp();
+
+                                weatherFilter[w.getCategory()] = true;
+
+                                if(w.getMaxTemp() > maxTemp){
+                                    maxTemp = w.getMaxTemp();
+                                }
+                                if(w.getMinTemp() > minTemp){
+                                    minTemp = w.getMinTemp();
+                                }
+
                             }
 
                             maxTemp /= 5;
@@ -112,6 +119,13 @@ public class TourController {
                             Equipment[] recommendedEquipment = new Equipment[equipmentController.getTypeCount()];
 
                             for(Equipment e : equipment){
+
+
+                                //If Equipment is not in recommended temperature skip it
+                                if(e.getMaxTemperature() < maxTemp || e.getMinTemperature() > minTemp){
+                                    continue;
+                                }
+
 
                                 //Check if type of equipment is already present
                                 if(recommendedEquipment[e.getType()] != null){
@@ -124,18 +138,16 @@ public class TourController {
 
                                     //Calculate score from weather
                                     for (int i = 0; i < current.getWeather().length; i++){
-                                        if(current.getWeather()[i] == 1){
-                                            scoreCurrent += weatherScore[i];
+                                        if(current.getWeather()[i] == 1 && weatherFilter[i]){
+                                            scoreCurrent++;
                                         }
                                     }
 
                                     for (int i = 0; i < e.getWeather().length; i++){
-                                        if(e.getWeather()[i] == 1){
-                                            scoreNew += weatherScore[i];
+                                        if(e.getWeather()[i] == 1 && weatherFilter[i]){
+                                            scoreNew++;
                                         }
                                     }
-
-                                    //TODO look at other parameters aswell
 
                                     //set Equipment e to the recommended if it is better suited
                                     if(scoreNew > scoreCurrent){
@@ -144,22 +156,24 @@ public class TourController {
                                 }
                                 //Else set it recommended
                                 else{
-                                    recommendedEquipment[e.getType()] = e;
+
+                                    //If at least one weather type
+                                    for (int i = 0; i < e.getWeather().length; i++){
+                                        if(e.getWeather()[i] == 1 && weatherFilter[i]){
+                                            recommendedEquipment[e.getType()] = e;
+                                        }
+                                    }
+
                                 }
                             }
 
-
-
-
-
+                            handler.onResponse(new ControllerEvent(EventType.OK, recommendedEquipment));
                             break;
                         default:
 
                     }
                 }
             });
-
-            getWeatherTask.execute(weatherPoints);
 
         } else{
             //only add startPoint
