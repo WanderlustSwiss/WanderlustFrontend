@@ -9,6 +9,7 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SeasonsKeys;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -92,6 +93,12 @@ public class WeatherController {
     public void getWeatherFromGeoPointList(List<GeoPoint> geoPoints, FragmentHandler handler){
         GetWeatherTask getWeatherTask = new GetWeatherTask(handler);
         getWeatherTask.execute(geoPoints);
+    }
+
+    public void getWeatherFromTour(Tour tour, FragmentHandler handler){
+        List<GeoPoint> geoPoints = tour.getGeoPoints();
+        GetWeatherTask weatherTask = new GetWeatherTask(handler);
+        weatherTask.execute(geoPoints);
     }
 
 
