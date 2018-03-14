@@ -24,35 +24,55 @@ public class WeatherController {
     private List<WeatherKeys> weatherKeys;
     private List<SeasonsKeys> seasonsKeys;
 
+    private volatile boolean initKeys = false;
+
     private static class Holder {
         private static final WeatherController INSTANCE = new WeatherController();
     }
 
     private static Context CONTEXT;
 
-    public static WeatherController createInstance(Context context){
+    public static WeatherController createInstance(Context context) {
         CONTEXT = context;
         return WeatherController.Holder.INSTANCE;
     }
 
-    public static WeatherController getInstance(){
+    public static WeatherController getInstance() {
         return CONTEXT != null ? WeatherController.Holder.INSTANCE : null;
     }
 
-    private WeatherController(){
+    private WeatherController() {
         service = ServiceGenerator.createService(WeatherService.class);
     }
 
 
     public List<WeatherKeys> getWeatherKeys() {
-        return weatherKeys;
+        return initKeys ? weatherKeys : null;
     }
 
     public List<SeasonsKeys> getSeasonsKeys() {
-        return seasonsKeys;
+        return initKeys ? seasonsKeys : null;
     }
 
-    public void initWeatherKeys(FragmentHandler handler){
+    public void initKeys() {
+        initWeatherKeys(controllerEvent -> {
+            switch (controllerEvent.getType()) {
+                case OK:
+                    initSeasonsKeys(controllerEvent1 -> {
+                        switch (controllerEvent1.getType()) {
+                            case OK:
+                                initKeys = true;
+                                break;
+                            default:
+                        }
+                    });
+                    break;
+                default:
+            }
+        });
+    }
+
+    private void initWeatherKeys(FragmentHandler handler) {
         Call<List<WeatherKeys>> call = service.getWeatherKeys();
         call.enqueue(new Callback<List<WeatherKeys>>() {
             @Override
@@ -71,7 +91,7 @@ public class WeatherController {
         });
     }
 
-    public void initSeasonsKeys(FragmentHandler handler){
+    private void initSeasonsKeys(FragmentHandler handler) {
         Call<List<SeasonsKeys>> call = service.getSeasonsKeys();
         call.enqueue(new Callback<List<SeasonsKeys>>() {
             @Override
@@ -90,12 +110,12 @@ public class WeatherController {
         });
     }
 
-    public void getWeatherFromGeoPointList(List<GeoPoint> geoPoints, FragmentHandler handler){
+    public void getWeatherFromGeoPointList(List<GeoPoint> geoPoints, FragmentHandler handler) {
         GetWeatherTask getWeatherTask = new GetWeatherTask(handler);
         getWeatherTask.execute(geoPoints);
     }
 
-    public void getWeatherFromTour(Tour tour, FragmentHandler handler){
+    public void getWeatherFromTour(Tour tour, FragmentHandler handler) {
         List<GeoPoint> geoPoints = tour.getGeoPoints();
         GetWeatherTask weatherTask = new GetWeatherTask(handler);
         weatherTask.execute(geoPoints);
@@ -109,7 +129,7 @@ public class WeatherController {
     dt = seconds since unix epoch
     https://stackoverflow.com/questions/9754600/converting-epoch-time-to-date-string
      */
-    public void getWeatherFromGeoPoint(GeoPoint geoPoint, FragmentHandler handler){
+    public void getWeatherFromGeoPoint(GeoPoint geoPoint, FragmentHandler handler) {
         Call<List<Weather>> call = service.getWeather(geoPoint.getLatitude(), geoPoint.getLongitude());
         call.enqueue(new Callback<List<Weather>>() {
             @Override
@@ -130,7 +150,7 @@ public class WeatherController {
     /*
     don't use
      */
-    public List<Weather> getWeatherFromGeoPoint(GeoPoint geoPoint){
+    public List<Weather> getWeatherFromGeoPoint(GeoPoint geoPoint) {
         Call<List<Weather>> call = service.getWeather(geoPoint.getLatitude(), geoPoint.getLongitude());
         try {
             return call.execute().body();
