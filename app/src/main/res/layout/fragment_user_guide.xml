@@ -2,21 +2,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="eu.wise_iot.wanderlust.views.UserGuideFragment">
+    android:layout_marginTop="52dp"
+    android:background="@color/background_two_and_inactive"
+    tools:context=".views.MainActivity">
 
     <!-- fragment_screen_slide_page.xml -->
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_margin="8dp">
 
-        <TextView style="?android:textAppearanceMedium"
-            android:padding="16dp"
-            android:lineSpacingMultiplier="1.2"
+        <TextView
+            style="@style/h1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_message" />
+            android:text="@string/menu_user_guide" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_empty"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_camera_white_24dp" />
+
+                <TextView
+                    style="@style/p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/img1"
+                    android:text="lksajj sdljds kl dsfl dsj fdslsdfjsdflksdj fsd dljf dsljfds lkjdsf ljsd sfalkjsdf sl fsdlkjfsd sd" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
     </ScrollView>
-
-
 </LinearLayout>

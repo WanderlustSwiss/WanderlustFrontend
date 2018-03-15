@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 UserGuideFragment userGuideFragment = UserGuideFragment.newInstance();
                                 getFragmentManager().beginTransaction()
                                         .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
-                                        .add(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
+                                        .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
                                         .commit();
                             } else {
                                 MapFragment mapFragment = MapFragment.newInstance();
