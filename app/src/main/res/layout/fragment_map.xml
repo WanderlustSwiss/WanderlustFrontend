@@ -118,13 +118,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="16dp">
 
                     <ImageButton
                         android:id="@+id/poi_layer_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent" />
+                        style="@style/PoiButton"
+                        android:src="@drawable/ic_poi_selected_24dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -139,19 +138,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="16dp">
 
                     <ImageButton
                         android:id="@+id/public_transport_layer_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_train_black_24dp"
-                        android:background="@android:color/transparent" />
+                        style="@style/PoiButton"
+                        android:src="@drawable/ic_train_white_40dp" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
+                        android:gravity="center"
                         android:text="@string/public_transport" />
 
                 </LinearLayout>

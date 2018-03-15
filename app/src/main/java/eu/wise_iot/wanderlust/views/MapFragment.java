@@ -16,6 +16,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,11 +26,13 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
-import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
 
@@ -90,8 +93,7 @@ public class MapFragment extends Fragment {
 
     // bottom sheet
     private ImageButton poiLayerButton;
-
-    final List<String> suggestions = new ArrayList<>();
+    private ImageButton publicTransportLayerButton;
 
     // Search suggetstion
     private List<HashtagResult> hashTagSearchSuggestions = new ArrayList<>();
@@ -212,7 +214,11 @@ public class MapFragment extends Fragment {
             terrainTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         });
+
+        mapView.setBottomSheetClosingComponents(bottomSheet, bottomSheetBehavior);
+
     }
+
 
     @Override
     public void onStart() {
@@ -284,6 +290,7 @@ public class MapFragment extends Fragment {
         }
     }
 
+
     public void setTour(Polyline polyline) {
         mapOverlays.setTour(polyline);
         List<GeoPoint> polylineList = polyline.getPoints();
@@ -352,6 +359,7 @@ public class MapFragment extends Fragment {
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
         mapView.setMultiTouchControls(true);
+
     }
 
     /**
@@ -361,7 +369,7 @@ public class MapFragment extends Fragment {
         mapController = mapView.getController();
         mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            //Gefährlich aber legit
+               //Gefährlich aber legit
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 WanderlustMapView map = (WanderlustMapView) v;
 
@@ -378,6 +386,7 @@ public class MapFragment extends Fragment {
                 return d / 100;
             }
         });
+        mapView.setMapOverlays(this.mapOverlays);
         mapController.setCenter(centerOfMap);
         if (zoomLevel > 20 || zoomLevel < 1)
             mapController.setZoom(Defaults.ZOOM_STARTUP);
@@ -388,7 +397,7 @@ public class MapFragment extends Fragment {
      * Initializes map overlays
      */
     private void initOverlays() {
-        mapOverlays = new MyMapOverlays(getActivity(), mapView);
+        mapOverlays = new MyMapOverlays(getActivity(), mapView, this.searchMapController);
         // set position marker if last location is available
         if (!myLocationIsEnabled && lastKnownLocation != null
                 && lastKnownLocation.getLatitude() != 0
@@ -510,6 +519,7 @@ public class MapFragment extends Fragment {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         // register behavior on clicked
+
         layerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -524,9 +534,26 @@ public class MapFragment extends Fragment {
         poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
         showPoiOverlay(true);
 
+        publicTransportLayerButton = (ImageButton) view.findViewById(R.id.public_transport_layer_button);
+        showPublicTransportOverlay(false);
+
+
+        publicTransportLayerButton.setOnClickListener(v -> {
+            boolean toggleLayer = !publicTransportLayerButton.isSelected();
+            showPublicTransportOverlay(toggleLayer);
+        });
+
+
         poiLayerButton.setOnClickListener(v -> {
             boolean toggleLayer = !poiLayerButton.isSelected();
             showPoiOverlay(toggleLayer);
+        });
+
+
+        mapView.setOnClickListener(v -> {
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
         });
     }
 
@@ -535,8 +562,27 @@ public class MapFragment extends Fragment {
         mapOverlays.showPoiLayer(showOverlay);
         if (showOverlay) {
             poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
             poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+
+
+    /**
+     * Shows the public transport overlay and changes the icon in the dialog
+     */
+    private void showPublicTransportOverlay(boolean showPublicTransportOverlay) {
+        publicTransportLayerButton.setSelected(showPublicTransportOverlay);
+        mapView.setPublicTransportEnabled(showPublicTransportOverlay);
+        mapOverlays.showPublicTransportLayer(showPublicTransportOverlay, (GeoPoint) mapView.getMapCenter());
+        if (showPublicTransportOverlay) {
+            publicTransportLayerButton.setImageResource(R.drawable.ic_train_white_40dp);
+            publicTransportLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            publicTransportLayerButton.setImageResource(R.drawable.ic_train_black_40dp);
+            publicTransportLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
     }
 

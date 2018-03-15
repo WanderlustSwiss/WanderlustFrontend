@@ -78,6 +78,13 @@
         <item name="android:layout_height">40dp</item>
     </style>
 
+    <style name="PoiButton" parent="Widget.Design.FloatingActionButton">
+        <item name="android:elevation">0dp</item>
+        <item name="backgroundTint">@color/primary_main</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+    </style>
+
     <style name="standard_button">
         <item name="backgroundTint">@color/primary_main</item>
         <item name="android:textColor">@color/background_main</item>

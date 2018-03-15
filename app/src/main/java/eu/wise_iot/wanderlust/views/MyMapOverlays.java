@@ -14,6 +14,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
@@ -26,11 +27,15 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
+import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.PublicTransportPoint;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
@@ -45,16 +50,19 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private Activity activity;
     private MapView mapView;
     private Polyline currentTour;
+    private MapController searchMapController;
 
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiHashtagOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
+    private ItemizedOverlayWithFocus<OverlayItem> publicTransportOverlay;
     private Marker positionMarker;
     private Marker focusedPositionMarker;
-    private ArrayList<Polyline> lines;
+    private ArrayList<Polyline> borderLines;
 
 
-    public MyMapOverlays(Activity activity, MapView mapView) {
+    public MyMapOverlays(Activity activity, MapView mapView, MapController searchMapController) {
+        this.searchMapController = searchMapController;
         this.activity = activity;
         this.mapView = mapView;
         this.currentTour = null;
@@ -144,8 +152,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             }
         };
 
-        poiOverlay = new ItemizedOverlayWithFocus<>(activity, poiList,listener);
-        poiHashtagOverlay = new ItemizedOverlayWithFocus<>(activity, poiHashtagList,listener);
+        poiOverlay = new ItemizedOverlayWithFocus<>(activity, poiList, listener);
+        poiHashtagOverlay = new ItemizedOverlayWithFocus<>(activity, poiHashtagList, listener);
     }
 
 //    private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
@@ -287,7 +295,52 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.invalidate();
     }
 
+    void showPublicTransportLayer(boolean setVisible, GeoPoint geoPoint) {
+        if (publicTransportOverlay == null) {
+            publicTransportOverlay = new ItemizedOverlayWithFocus<OverlayItem>(activity, new ArrayList<>(), null);
+        }
+
+        if (setVisible) {
+
+            searchMapController.searchPublicTransportStations(geoPoint, 200, 2000, new FragmentHandler<List<PublicTransportPoint>>() {
+                @Override
+                public void onResponse(ControllerEvent<List<PublicTransportPoint>> controllerEvent) {
+                    if (controllerEvent.getType() == EventType.OK) {
+
+                        Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_train_black_24dp);
+                        publicTransportOverlay.removeAllItems();
+
+                        for (PublicTransportPoint publicTransportPoint : controllerEvent.getModel()) {
+                            OverlayItem overlayItem = new OverlayItem(Integer.toString(publicTransportPoint.getId()), publicTransportPoint.getTitle(), publicTransportPoint.getTitle(), publicTransportPoint.getGeoPoint());
+                            overlayItem.setMarker(drawable);
+                            publicTransportOverlay.addItem(overlayItem);
+                        }
+                        mapView.getOverlays().add(publicTransportOverlay);
+                    }
+                    mapView.invalidate();
+                }
+            });
+        } else {
+            publicTransportOverlay.removeAllItems();
+            mapView.getOverlays().remove(publicTransportOverlay);
+            mapView.invalidate();
+        }
+        mapView.invalidate();
+
+    }
+
     void showPoiHashtagLayer(boolean setVisible) {
+        if (setVisible) {
+            if (!mapView.getOverlays().contains(poiHashtagOverlay)) {
+                mapView.getOverlays().add(poiHashtagOverlay);
+            }
+        } else {
+            mapView.getOverlays().remove(poiHashtagOverlay);
+        }
+        mapView.invalidate();
+    }
+
+    private void showPublicTransportlayer(boolean setVisible) {
         if (setVisible) {
             if (!mapView.getOverlays().contains(poiHashtagOverlay)) {
                 mapView.getOverlays().add(poiHashtagOverlay);
@@ -338,7 +391,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         if (focusedPositionMarker != null) {
             removeFocusedPositionMarker();
         }
-        if (lines != null) {
+        if (borderLines != null) {
             clearPolylines();
         }
 
@@ -364,8 +417,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         if (focusedPositionMarker != null) {
             removeFocusedPositionMarker();
         }
-        if (lines == null) {
-            lines = new ArrayList<>();
+        if (borderLines == null) {
+            borderLines = new ArrayList<>();
         }
 
         Polyline polyline = new Polyline();
@@ -373,16 +426,16 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         polyline.setPoints(geoPoints);
         polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
 
-        lines.add(polyline);
+        borderLines.add(polyline);
 
         mapView.getOverlays().add(polyline);
         mapView.invalidate();
     }
 
     public void clearPolylines() {
-        if (lines != null) {
-            mapView.getOverlays().removeAll(lines);
-            lines = null;
+        if (borderLines != null) {
+            mapView.getOverlays().removeAll(borderLines);
+            borderLines = null;
         }
     }
 
