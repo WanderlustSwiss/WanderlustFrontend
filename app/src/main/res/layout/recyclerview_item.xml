@@ -33,7 +33,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="150dp"
+                android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:divider="@drawable/divider_empty"
                 android:orientation="vertical"
