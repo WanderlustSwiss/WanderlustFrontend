@@ -60,7 +60,7 @@ public class LoginController {
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
 
                     databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
-
+                    WeatherController.getInstance().initKeys();
                     User updatedUser = response.body();
                     User internalUser = userDao.getUser();
                     if (internalUser == null){

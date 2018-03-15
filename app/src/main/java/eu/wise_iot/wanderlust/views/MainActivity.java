@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DatabaseController.createInstance(getApplicationContext());
         ImageController.createInstance(getApplicationContext());
         WeatherController.createInstance(getApplicationContext());
-        WeatherController.getInstance().initKeys();
         PoiDao.getInstance().removeAll();
         loginController = new LoginController();
 
