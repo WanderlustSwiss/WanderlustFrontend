@@ -31,7 +31,6 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -109,7 +108,6 @@ public class TourFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     public void initializeControls(View view){
@@ -140,6 +138,7 @@ public class TourFragment extends Fragment {
             drawable = context.getResources().getDrawable(R.drawable.t1);
         textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
     }
+
     public void fillControls() {
         List<File> images = tourController.getImages();
         Log.d("Debug", "Images size:" + images.size());
@@ -159,11 +158,13 @@ public class TourFragment extends Fragment {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
 
+
         try {
             highProfile = tourController.getHighProfile();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         tourRegion.setText("");
         tourTitle.setText(tourController.getTitle());
         textViewDescription.setText(tourController.getDescription());

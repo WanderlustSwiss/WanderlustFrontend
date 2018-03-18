@@ -14,15 +14,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
@@ -37,12 +41,13 @@ import eu.wise_iot.wanderlust.views.adapters.ProfileTripListAdapter;
 public class ProfileFragment extends Fragment {
 
     private ImageView profilePicture;
+    private Button editProfile;
+
     private TextView amountPOI;
     private TextView amountScore;
     private TextView amountTours;
-    //private TextView birthday;
-    private Button editProfile;
 
+    int counter = 0;
     private TabLayout tabLayout;
 
     private ListView listView;
@@ -75,7 +80,11 @@ public class ProfileFragment extends Fragment {
 
         setupTabs(view);
         setupProfileInfo(view);
+        setProfileStats();
 
+        //load default list
+        tabLayout.getTabAt(0).select();
+        setupFavorites(view);
         return view;
     }
 
@@ -118,19 +127,16 @@ public class ProfileFragment extends Fragment {
                         .commit();
             }
         });
+    }
 
-        //setting data
+    public void setProfileStats(){
+
         amountScore.setText(String.format(Locale.GERMANY, "%1d",
                 profileController.getScore()));
         amountTours.setText(String.format(Locale.GERMANY, "%1d",
                 profileController.getAmountTours()));
         amountPOI.setText(String.format(Locale.GERMANY, "%1d",
                 profileController.getAmountPoi()));
-        //birthday.setText(profileController.getBirthDate());
-
-        //set list view to tours for default
-        setupMyTours(view);
-        tabLayout.getTabAt(0).select();
     }
 
     /**
@@ -145,6 +151,7 @@ public class ProfileFragment extends Fragment {
      */
     public void setupTabs(View view) {
         //initializing views
+        listView = (ListView) view.findViewById(R.id.listContent);
         tabLayout = (TabLayout) view.findViewById(R.id.profileTabs);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -186,37 +193,40 @@ public class ProfileFragment extends Fragment {
      * favorites and adapter to represent the users favorites in a custom list view
      */
     public void setupFavorites(View view) {
-        //Todo: Add fragment handler and adapt code
-        //only if there is at least one favorite
-        /*if (profileController.getFavorites() != null) {
 
-            //initialize list
-            list = profileController.getFavorites();
+        ProfileFragment fragment = this;
+        profileController.getFavorites(new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()){
+                    case OK:
 
-            //set adapter
-            ProfileFavoritesListAdapter adapter =
-                    new ProfileFavoritesListAdapter(getActivity(),
-                            R.layout.fragment_profile_list_favorites,
-                            R.id.ListFavTitle,
-                            list);
+                        list = (List) controllerEvent.getModel();
 
-            listView.setAdapter(adapter);
-        } else {
+                        if (list != null && list.size() > 0) {
 
-            listView = (ListView) view.findViewById(R.id.listContent);
-            // todo: until feature is released, will use a example tour, delete when implementing this feature
-            String testFavorite = "blabla";
+                            //set adapter
+                            ProfileFavoritesListAdapter adapter =
+                                    new ProfileFavoritesListAdapter(getActivity(),
+                                            R.layout.fragment_profile_list_favorites,
+                                            R.id.ListFavTitle,
+                                            list, fragment);
 
-            list = new ArrayList();
-            list.add(testFavorite);
+                            listView.setAdapter(adapter);
 
-            listView.setAdapter(new ProfileFavoritesListAdapter(getActivity(),
-                    R.layout.fragment_profile_list_favorites,
-                    R.id.ListFavTitle,
-                    list));
-        }
-        */
-//        Toast.makeText(getActivity(), R.string.profile_your_favourites, Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            list = null;
+                            listView.setAdapter(null);
+                            Toast.makeText(getActivity(), "Keine Favoriten", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    default:
+                        Toast.makeText(getActivity(), "Connection fail...", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
 
     /**
@@ -225,37 +235,47 @@ public class ProfileFragment extends Fragment {
      */
     public void setupMyTours(View view) {
 
-
-
+        List<Tour> tours = new ArrayList<>();
+        List<Trip> trips = profileController.getTrips();
+        if(trips.size() > 0 && trips != null){
+            for(Trip trip : trips){
+                profileController.getTours(trip, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        switch (controllerEvent.getType()){
+                            case OK:
+                                Tour tour = (Tour) controllerEvent.getModel();
+                                tours.add(tour);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+                Toast.makeText(getActivity(), String.valueOf(list.size()), Toast.LENGTH_SHORT).show();
+            }
+        }
         //only if there is at least one tour
-        if (profileController.getTours() != null) {
+        if (tours != null && tours.size() > 0) {
 
             //initialize list
-            list = profileController.getTours();
+            list = tours;
 
             //set adapter
             ProfileTripListAdapter adapter =
                     new ProfileTripListAdapter(getActivity(),
                             R.layout.fragment_profile_list_tour_poi,
                             R.id.ListTourTitle,
-                            list);
+                            list, this);
 
             listView.setAdapter(adapter);
+
         } else {
 
-            listView = (ListView) view.findViewById(R.id.listContent);
-
-            // todo: until feature is released, will use a example tour, delete when implementing this feature
-            Tour testSavedTour = new Tour();
-            list = new ArrayList();
-            list.add(testSavedTour);
-
-            listView.setAdapter(new ProfileTripListAdapter(getActivity(),
-                    R.layout.fragment_profile_list_tour_poi,
-                    R.id.ListTourTitle,
-                    list));
+            list = null;
+            listView.setAdapter(null);
+            Toast.makeText(getActivity(), "Keine Touren.", Toast.LENGTH_SHORT).show();
         }
-//        Toast.makeText(getActivity(), R.string.profile_your_tours, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -263,34 +283,30 @@ public class ProfileFragment extends Fragment {
      * poi's and adapter to represent the users poi's in a custom list view
      */
     public void setupPOIs(View view) {
+
+        List<Poi> poiList = profileController.getPois();
+
         //only if there is at least one poi
-        if (profileController.getPois() != null) {
+        if (poiList != null && poiList.size() > 0) {
 
             //initialize list
-            list = profileController.getPois();
+            list = poiList;
 
             //set adapter
             ProfilePoiListAdapter adapter =
                     new ProfilePoiListAdapter(getActivity(),
                             R.layout.fragment_profile_list_tour_poi,
                             R.id.ListTourTitle,
-                            list);
+                            list, this);
 
             listView.setAdapter(adapter);
+
         } else {
 
-            listView = (ListView) view.findViewById(R.id.listContent);
-
-            // todo: until feature is released, will use a example tour, delete when implementing this feature
-            Poi testPoi = new Poi();
-            list = new ArrayList();
-            list.add(testPoi);
-            listView.setAdapter(new ProfilePoiListAdapter(getActivity(),
-                    R.layout.fragment_profile_list_tour_poi,
-                    R.id.ListTourTitle,
-                    list));
+            list = null;
+            listView.setAdapter(null);
+            Toast.makeText(getActivity(), "Keine POI's", Toast.LENGTH_SHORT).show();
         }
-//        Toast.makeText(getActivity(), R.string.profile_your_pois, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -298,35 +314,36 @@ public class ProfileFragment extends Fragment {
      * saved tours and adapter to represent the users saved tours in a custom list view
      */
     public void setupSaved(View view) {
+
+        List<Tour> communityTourList = profileController.getSavedTours();
+
         //only if there is at least one saved tour
-        if (profileController.getSavedTours() != null) {
+        if (communityTourList != null && communityTourList.size() > 0) {
 
             //initialize list
-            list = profileController.getSavedTours();
+            list = communityTourList;
 
             //set adapter
             ProfileSavedListAdapter adapter =
                     new ProfileSavedListAdapter(getActivity(),
                             R.layout.fragment_profile_list_saved,
                             R.id.ListSavedTitle,
-                            list);
+                            list, this);
 
             listView.setAdapter(adapter);
+
         } else {
 
-            // todo: until feature is released, will use a example tour, delete when implementing this feature
-            listView = (ListView) view.findViewById(R.id.listContent);
-            Tour testSavedTour = new Tour();
-            list = new ArrayList();
-            list.add(testSavedTour);
-
-            listView.setAdapter(new ProfileSavedListAdapter(getActivity(),
-                    R.layout.fragment_profile_list_saved,
-                    R.id.ListSavedTitle,
-                    list));
+            list = null;
+            listView.setAdapter(null);
+            Toast.makeText(getActivity(), "Keine Touren gespeichert.", Toast.LENGTH_SHORT).show();
         }
-//        Toast.makeText(getActivity(), R.string.profile_your_saved_tours, Toast.LENGTH_SHORT).show();
     }
+
+    public void setTab(int index){
+        tabLayout.getTabAt(index).select();
+    }
+
 
     /**
      * Gets back the reference to the specific Controller of the profile UI
@@ -334,6 +351,7 @@ public class ProfileFragment extends Fragment {
      * @return the profile controller
      */
     public ProfileController getProfileController() {
+
         return this.profileController;
     }
 

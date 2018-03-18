@@ -8,12 +8,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
  * Adapter for the profile UI. Represents all saved tours in a custom list view
@@ -34,12 +40,17 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
     private int textResource;
     private List objects;
 
-    public ProfileSavedListAdapter(Context context, int resource, int textResource, List objects) {
+    private ImageController imageController;
+    private ProfileFragment profileFragment;
+
+    public ProfileSavedListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
         this.resource = resource;
         this.textResource = textResource;
         this.objects = objects;
+        this.imageController = ImageController.getInstance();
+        this.profileFragment = fragment;
     }
 
     /**
@@ -114,13 +125,22 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
             title.setText(communityTour.getTitle());
             description.setText(communityTour.getDescription());
 
-            //TODO: set the image
-            tripImage.setImageResource(R.drawable.example_image);
+            List<ImageInfo> imageinfos = communityTour.getImagePaths();
+            List<File> imagefiles = imageController.getImages(imageinfos);
+            if(!imagefiles.isEmpty() && imagefiles.get(0).length() > 0){
+                Picasso.with(context)
+                        .load(imagefiles.get(0))
+                        .into(tripImage);
+            }else{
+                tripImage.setImageResource(R.drawable.example_image);
+            }
+            
+            deleteIcon.setOnClickListener(e -> {
+                profileFragment.getProfileController().deleteCommunityTour(communityTour);
+                View v = profileFragment.getView();
+                profileFragment.setupSaved(v);
+            });
         }
-
-        //set listeners
-        //TODO: implement listener for delete icon and click listener for element
-
         return convertView;
     }
 }

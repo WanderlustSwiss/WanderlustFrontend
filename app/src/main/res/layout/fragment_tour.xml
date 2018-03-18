@@ -218,7 +218,8 @@
                 android:id="@+id/jumpToStartLocationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/tour_button_show_map" />
+                android:text="@string/tour_button_show_map"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

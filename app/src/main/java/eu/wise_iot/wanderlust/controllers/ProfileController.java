@@ -3,19 +3,20 @@ package eu.wise_iot.wanderlust.controllers;
 import android.content.Context;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
@@ -31,6 +32,7 @@ public class ProfileController {
     private ProfileDao profileDao;
     private UserDao userDao;
     private UserTourDao userTourDao;
+    private TripDao tripDao;
     private PoiDao poiDao;
     private FavoriteDao favoriteDao;
     private CommunityTourDao communityTourDao;
@@ -40,6 +42,7 @@ public class ProfileController {
         profileDao = ProfileDao.getInstance();
         userDao = UserDao.getInstance();
         userTourDao = UserTourDao.getInstance();
+        tripDao = TripDao.getInstance();
         poiDao = PoiDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
@@ -190,8 +193,13 @@ public class ProfileController {
      *
      * @return list with user tours
      */
-    public List<Tour> getTours() {
-        return userTourDao.find();
+    public void getTours(Trip trip, FragmentHandler handler) {
+        /*List<Trip> trips = tripDao.find();
+        List<Tour> tours = new ArrayList<>();
+        for(Trip trip : trips){*/
+            userTourDao.retrieve(trip.getTour(), handler);
+        /*}
+        return tours;*/
     }
 
     /**
@@ -200,8 +208,11 @@ public class ProfileController {
      * @return list with tours
      */
     public void getFavorites(FragmentHandler handler) {
-        //Todo: Write handler in the adapter/fragment
         favoriteDao.retrievAllFavoriteTours(handler);
+    }
+
+    public List<Favorite> getFavoritesLocal(){
+        return favoriteDao.find();
     }
 
     /**
@@ -222,5 +233,31 @@ public class ProfileController {
         return communityTourDao.find();
     }
 
+    public void deleteTour(Tour tour, FragmentHandler handler){
+        userTourDao.delete(tour, handler);
+    }
 
+    public void deleteCommunityTour(Tour communityTour){
+        communityTourDao.delete(communityTour);
+    }
+
+    public void tourToFavorite(Favorite fav, FragmentHandler handler){
+        userTourDao.retrieve(fav.getTour(), handler);
+    }
+
+    public void deleteUserTour(Tour tour, FragmentHandler handler){
+        userTourDao.delete(tour, handler);
+    }
+
+    public List<Trip> getTrips(){
+        return tripDao.find();
+    }
+
+    public Tour testGetTour(){
+        return userTourDao.find().get(0);
+    }
+
+    public void testAddTrip(Trip trip, FragmentHandler handler){
+        tripDao.create(trip, handler);
+    }
 }

@@ -92,6 +92,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
             }
         });
     }
+
     /**
      * Insert a favorite into the database
      *

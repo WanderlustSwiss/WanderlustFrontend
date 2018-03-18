@@ -1,9 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +24,6 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
 import okhttp3.ResponseBody;
 
