@@ -3,9 +3,9 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 
 import android.os.AsyncTask;
 
+import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +13,6 @@ import java.util.List;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.controllers.ImagesTaskParameters;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 
 public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather>> {
@@ -21,11 +20,15 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
     FragmentHandler handler;
     WeatherController controller;
     List<Weather> weather;
+    DateTime dateTime;
+    long duration;
 
-    public GetWeatherTask(FragmentHandler handler){
+    public GetWeatherTask(FragmentHandler handler, DateTime dateTime, long duration) {
         this.handler = handler;
         this.controller = WeatherController.getInstance();
-        this.weather = Collections.synchronizedList(new ArrayList<>());
+        this.weather = Collections.synchronizedList(new ArrayList<>(5));
+        this.dateTime = dateTime;
+        this.duration = duration;
     }
 
     @Override
@@ -33,15 +36,15 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
 
         List<GeoPoint> geoPoints = lists[0];
         Thread[] threads = new Thread[5];
-        for(int i = 0; i < threads.length; i++){
-            threads[i] = new Thread(new WeatherThread(geoPoints.get(i),controller, weather));
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Thread(new WeatherThread(geoPoints.get(i), controller, weather, dateTime.getMillis() + (duration / 4) * i, i));
             threads[i].setDaemon(true);
             threads[i].start();
+
         }
 
 
-
-        for(int i = 0; i < threads.length; i++){
+        for (int i = 0; i < threads.length; i++) {
             try {
                 threads[i].join();
             } catch (InterruptedException e) {
@@ -54,23 +57,36 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
     }
 
 
-    public class WeatherThread implements Runnable{
+    public class WeatherThread implements Runnable {
 
         private GeoPoint geoPoint;
         private WeatherController controller;
-        private List<Weather> weather;
+        private List<Weather> weatherList;
+        private long DTtime;
+        private Weather weather;
+        private int index;
 
-        public WeatherThread(GeoPoint geoPoint, WeatherController controller, List<Weather> weather){
+        public WeatherThread(GeoPoint geoPoint, WeatherController controller, List<Weather> weather,
+                             long DTtime, int index) {
             this.geoPoint = geoPoint;
             this.controller = controller;
-            this.weather = weather;
-
+            this.weatherList = weather;
+            this.DTtime = DTtime;
+            this.index = index;
         }
 
         @Override
         public void run() {
-            //TODO not just get first weather
-            weather.add(controller.getWeatherFromGeoPoint(geoPoint).get(0));
+            List<Weather> weatherFromGeo = controller.getWeatherFromGeoPoint(geoPoint);
+            long delta = Long.MAX_VALUE;
+            for (Weather w : weatherFromGeo) {
+                if (Math.abs(w.getDt() - DTtime) < delta) {
+                    delta = Math.abs(w.getDt() - DTtime);
+                    weather = w;
+                }
+            }
+
+            weatherList.add(index, weather);
         }
     }
 }

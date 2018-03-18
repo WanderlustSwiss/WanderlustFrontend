@@ -2,9 +2,11 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
 
+import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
@@ -110,15 +112,33 @@ public class WeatherController {
         });
     }
 
+    /*
+    TODO!!
+     */
     public void getWeatherFromGeoPointList(List<GeoPoint> geoPoints, FragmentHandler handler) {
-        GetWeatherTask getWeatherTask = new GetWeatherTask(handler);
+        GetWeatherTask getWeatherTask = new GetWeatherTask(handler, null, 0);
         getWeatherTask.execute(geoPoints);
     }
 
-    public void getWeatherFromTour(Tour tour, FragmentHandler handler) {
+    public void getWeatherFromTour(Tour tour, DateTime dateTime, FragmentHandler handler) {
         List<GeoPoint> geoPoints = tour.getGeoPoints();
-        GetWeatherTask weatherTask = new GetWeatherTask(handler);
-        weatherTask.execute(geoPoints);
+        List<GeoPoint> geoPointsWeather = new ArrayList<>();
+        for(int i = 0; i <= 4; i++) {
+            geoPointsWeather.add(geoPoints.get((geoPoints.size()/4)*i));
+        }
+        GetWeatherTask weatherTask = new GetWeatherTask(new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        List<Weather> weather = (ArrayList<Weather>) controllerEvent.getModel();
+                        break;
+                    default:
+                }
+
+            }
+        }, dateTime, tour.getDuration());
+        weatherTask.execute(geoPointsWeather);
     }
 
 
