@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
@@ -110,7 +111,6 @@ public class TourFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     public void initializeControls(View view){

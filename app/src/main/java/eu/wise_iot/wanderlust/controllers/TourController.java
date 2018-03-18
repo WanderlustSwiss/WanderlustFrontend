@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
@@ -290,6 +291,18 @@ public class TourController {
                 Tour TourWithGeoData = (Tour) controllerEvent.getModel();
                 tour.setPolyline(TourWithGeoData.getPolyline());
                 tour.setElevation(TourWithGeoData.getElevation());
+
+
+                DateTime dateTime = new DateTime();
+
+                WeatherController.getInstance().getWeatherFromTour(tour, dateTime, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+
+                        controllerEvent.getType();
+                    }
+                });
+
             }
         });
     }

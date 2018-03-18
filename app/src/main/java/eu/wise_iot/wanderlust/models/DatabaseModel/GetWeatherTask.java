@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,14 +20,14 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
 
     FragmentHandler handler;
     WeatherController controller;
-    List<Weather> weather;
+    Weather[] weather;
     DateTime dateTime;
     long duration;
 
     public GetWeatherTask(FragmentHandler handler, DateTime dateTime, long duration) {
         this.handler = handler;
         this.controller = WeatherController.getInstance();
-        this.weather = Collections.synchronizedList(new ArrayList<>(5));
+        this.weather = new Weather[5];
         this.dateTime = dateTime;
         this.duration = duration;
     }
@@ -40,7 +41,6 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
             threads[i] = new Thread(new WeatherThread(geoPoints.get(i), controller, weather, dateTime.getMillis() + (duration / 4) * i, i));
             threads[i].setDaemon(true);
             threads[i].start();
-
         }
 
 
@@ -52,8 +52,10 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
             }
         }
 
-        handler.onResponse(new ControllerEvent<>(EventType.OK, weather));
-        return weather;
+
+        ArrayList<Weather> weatherList = new ArrayList<>(Arrays.asList(weather));
+        handler.onResponse(new ControllerEvent<>(EventType.OK, weatherList));
+        return weatherList;
     }
 
 
@@ -61,12 +63,12 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
 
         private GeoPoint geoPoint;
         private WeatherController controller;
-        private List<Weather> weatherList;
+        private Weather[] weatherList;
         private long DTtime;
         private Weather weather;
         private int index;
 
-        public WeatherThread(GeoPoint geoPoint, WeatherController controller, List<Weather> weather,
+        public WeatherThread(GeoPoint geoPoint, WeatherController controller, Weather[] weather,
                              long DTtime, int index) {
             this.geoPoint = geoPoint;
             this.controller = controller;
@@ -86,7 +88,7 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
                 }
             }
 
-            weatherList.add(index, weather);
+            weatherList[index] = weather;
         }
     }
 }
