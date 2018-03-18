@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.joda.time.DateTime;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
@@ -32,7 +31,6 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
@@ -66,6 +64,20 @@ public class TourFragment extends Fragment {
     private TextView textViewDescription;
     private Button jumpToStartLocationButton;
     private static MapFragment mapFragment;
+
+    //weather related controlls
+    private WeatherController weatherController;
+    private Button selectDayButton;
+    private ImageView firstWeatherIcon;
+    private ImageView secondWeatherIcon;
+    private ImageView thirdWeatherIcon;
+    private ImageView forthWeatherIcon;
+    private ImageView fifthWeatherIcon;
+    private TextView firstWeatherDegree;
+    private TextView secondWeatherDegree;
+    private TextView thirdWeatherDegree;
+    private TextView forthWeatherDegree;
+    private TextView fifthWeatherDegree;
 
     private Favorite favorite;
     private boolean isFavoriteUpdate;
@@ -128,6 +140,11 @@ public class TourFragment extends Fragment {
         textViewDifficulty = (TextView) view.findViewById(R.id.tourDifficulty);
         textViewDescription = (TextView) view.findViewById(R.id.tourDescription);
         jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
+
+        //weather
+        selectDayButton = (Button) view.findViewById(R.id.datepickerButton);
+        
+
 
         long difficulty = tourController.getLevel();
         Drawable drawable;

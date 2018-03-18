@@ -1,6 +1,9 @@
 package eu.wise_iot.wanderlust.controllers;
 
 
+import android.content.Context;
+import android.content.Intent;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +30,14 @@ public class PoiController {
     private PoiDao poiDao;
     private UserDao userDao;
     private ImageController imageController;
+    private Context context;
 
     public PoiController(){
         poiTypeDao = PoiTypeDao.getInstance();
         poiDao = PoiDao.getInstance();
         userDao = UserDao.getInstance();
         imageController = ImageController.getInstance();
+        context = DatabaseController.getMainContext();
     }
 
     /**
@@ -145,7 +150,17 @@ public class PoiController {
     }
 
 
-
-
+    /**
+     * Shares image on instagram
+     *
+     */
+    public File getImageToShare(Poi poi) {
+        List<File> images = imageController.getImages(poi.getImagePaths());
+        if (images != null && images.size() > 0){
+            return images.get(0);
+        }else{
+            return null;
+        }
+    }
 
 }

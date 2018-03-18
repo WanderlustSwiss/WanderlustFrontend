@@ -41,7 +41,5 @@ public class Weather {
         return windSpeed;
     }
 
-    public long getDt() {
-        return dt;
-    }
+    public long getDt() {return dt; }
 }

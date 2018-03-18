@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
@@ -33,18 +32,19 @@ public class TourOverviewController {
     /**
      * get all required data for the view
      * @param handler
+     * @param page
      */
-    public void getAllTours(FragmentHandler handler) {
-        userTourDao.retrieveAll(handler);
+    public void getAllTours(FragmentHandler handler, int page) {
+        userTourDao.retrieveAll(handler, page);
     }
+
     /**
      * get all Favorites for the view
      * @param handler
      */
-//    public static void getAllFavorites(FragmentHandler handler) {
-//        UserTourDao userTourDao = new UserTourDao();
-//        userTourDao.retrieveAll(handler);
-//    }
+    public void getAllFavoriteTours(FragmentHandler handler) {
+        favoriteDao.retrieveAllFavoriteTours(handler);
+    }
     /**
      * get all tours out of db
      *
@@ -65,7 +65,7 @@ public class TourOverviewController {
      *
      */
     public void downloadFavorites(FragmentHandler handler) {
-        favoriteDao.retrievAllFavorites(handler);
+        favoriteDao.retrieveAllFavorites(handler);
     }
     /**
      * get all difficulty types

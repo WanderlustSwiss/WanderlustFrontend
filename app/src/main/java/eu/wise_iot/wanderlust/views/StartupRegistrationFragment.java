@@ -118,14 +118,14 @@ public class StartupRegistrationFragment extends Fragment {
                             switch (eventType) {
                                 case OK:
                                     Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
-                                    SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
+                                    StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                                     getFragmentManager().beginTransaction()
-                                            .add(R.id.content_frame, sartupLoginFragment)
+                                            .add(R.id.content_frame, startupLoginFragment)
                                             .commit();
 
                                     // create profile for user if registration succesful
                                     Profile profile = new Profile(0, user.getProfile(),
-                                            (byte) 1, 0, 2, "",
+                                             0, 2, "",
                                                         "de", user.getUser_id(), 0);
                                     break;
                                 case CONFLICT:
@@ -146,9 +146,9 @@ public class StartupRegistrationFragment extends Fragment {
         redirectToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
+                StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, sartupLoginFragment)
+                        .add(R.id.content_frame, startupLoginFragment)
                         .commit();
             }
         });
