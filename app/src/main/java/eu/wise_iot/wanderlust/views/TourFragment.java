@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -11,12 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
@@ -25,6 +28,7 @@ import org.osmdroid.views.overlay.Polyline;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
@@ -36,6 +40,7 @@ import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 
 /**
  * TourController:
@@ -66,18 +71,22 @@ public class TourFragment extends Fragment {
     private static MapFragment mapFragment;
 
     //weather related controlls
-    private WeatherController weatherController;
+    private static WeatherController weatherController;
     private Button selectDayButton;
+    private DateTime selectedDateTime;
+    private List<ImageView> weatherIcons;
     private ImageView firstWeatherIcon;
     private ImageView secondWeatherIcon;
     private ImageView thirdWeatherIcon;
     private ImageView forthWeatherIcon;
     private ImageView fifthWeatherIcon;
+    private List<TextView> weatherDegrees;
     private TextView firstWeatherDegree;
     private TextView secondWeatherDegree;
     private TextView thirdWeatherDegree;
     private TextView forthWeatherDegree;
     private TextView fifthWeatherDegree;
+    private List<Weather> weatherList;
 
     private Favorite favorite;
     private boolean isFavoriteUpdate;
@@ -100,6 +109,7 @@ public class TourFragment extends Fragment {
         mapFragment = new MapFragment();
         fragment.setArguments(args);
         tourController = new TourController(tour);
+        weatherController = WeatherController.getInstance();
         return fragment;
     }
 
@@ -143,7 +153,17 @@ public class TourFragment extends Fragment {
 
         //weather
         selectDayButton = (Button) view.findViewById(R.id.datepickerButton);
-        
+        firstWeatherIcon = (ImageView) view.findViewById(R.id.firstPointIcon);
+        secondWeatherIcon = (ImageView) view.findViewById(R.id.secondPointIcon);
+        thirdWeatherIcon = (ImageView) view.findViewById(R.id.thirdPointIcon);
+        forthWeatherIcon = (ImageView) view.findViewById(R.id.forthPointIcon);
+        firstWeatherIcon = (ImageView) view.findViewById(R.id.fifthPointIcon);
+        firstWeatherDegree = (TextView) view.findViewById(R.id.degreeFirstPoint);
+        secondWeatherDegree = (TextView) view.findViewById(R.id.degreeSecondPoint);
+        thirdWeatherDegree = (TextView) view.findViewById(R.id.degreeThirdPoint);
+        forthWeatherDegree = (TextView) view.findViewById(R.id.degreeForthPoint);
+        fifthWeatherDegree = (TextView) view.findViewById(R.id.degreeFifthPoint);
+
 
 
         long difficulty = tourController.getLevel();
@@ -197,6 +217,134 @@ public class TourFragment extends Fragment {
     public void setupActionListeners(){
         jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
         favButton.setOnClickListener((View v) -> toggleFavorite());
+
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                selectedDateTime.year().setCopy(year);
+                selectedDateTime.monthOfYear().setCopy(month);
+                selectedDateTime.dayOfMonth().setCopy(dayOfMonth);
+
+                weatherController.getWeatherFromTour(tour, selectedDateTime, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        switch (controllerEvent.getType()){
+                            case OK:
+                                weatherList = (List<Weather>) controllerEvent.getModel();
+                                initializeWeather();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            }
+        };
+
+        //weather and datepicker
+        selectDayButton.setOnClickListener(e -> {
+            Calendar date = Calendar.getInstance();
+            int today = date.get(Calendar.DAY_OF_MONTH);
+            int month = date.get(Calendar.MONTH);
+            int year = date.get(Calendar.YEAR);
+
+            DatePickerDialog dialog = new DatePickerDialog(context, dateSetListener,
+                                                                            year, month, today);
+            date.add(Calendar.DAY_OF_MONTH, 5);
+            long inFiveDays = date.getTimeInMillis();
+            dialog.getDatePicker().setMaxDate(inFiveDays);
+            dialog.show();
+
+        });
+    }
+
+    private void initializeWeather(){
+
+        weatherIcons = new ArrayList<>();
+        weatherIcons.add(firstWeatherIcon);
+        weatherIcons.add(secondWeatherIcon);
+        weatherIcons.add(thirdWeatherIcon);
+        weatherIcons.add(forthWeatherIcon);
+        weatherIcons.add(fifthWeatherIcon);
+
+        weatherDegrees = new ArrayList<>();
+        weatherDegrees.add(firstWeatherDegree);
+        weatherDegrees.add(secondWeatherDegree);
+        weatherDegrees.add(thirdWeatherDegree);
+        weatherDegrees.add(forthWeatherDegree);
+        weatherDegrees.add(fifthWeatherDegree);
+
+        if(weatherList.size() == 5){
+            for(int i = 0; i < weatherList.size(); i++){
+                Weather weather = weatherList.get(i);
+
+                //set temperature
+                String temp = String.valueOf(weather.getTemp());
+                weatherDegrees.get(i).setText(temp + "°C");
+
+                //set icon
+                String icon = weather.getIcon();
+                switch (icon){
+                    case "01d":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_clear_sky_day);
+                        break;
+                    case "01n":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_clear_sky_night);
+                        break;
+                    case "02d":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_few_clouds_day);
+                        break;
+                    case "02n":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_few_clouds_night);
+                        break;
+                    case "03d":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_clouds);
+                        break;
+                    case "03n":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_clouds);
+                        break;
+                    case "04d":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_clouds);
+                        break;
+                    case "04n":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_clouds);
+                        break;
+                    case "09d":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_shower_rain);
+                        break;
+                    case "09n":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_shower_rain);
+                        break;
+                    case "10d":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_rain_day);
+                        break;
+                    case "10n":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_rain_night);
+                        break;
+                    case "11d":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_storm);
+                        break;
+                    case "11n":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_storm);
+                        break;
+                    case "13d":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_snow);
+                        break;
+                    case "13n":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_snow);
+                        break;
+                    case "50d":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_mist);
+                        break;
+                    case "50n":
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_mist);
+                        break;
+                    default:
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_clear_sky_night);
+                        break;
+                }
+            }
+        }
     }
     public void toggleFavorite() {
 
