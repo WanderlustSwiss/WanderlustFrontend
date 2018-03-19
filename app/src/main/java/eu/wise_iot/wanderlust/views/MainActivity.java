@@ -258,4 +258,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email.setText(newEmail);
     }
 
+    public void updateNickname(String newNickname){
+        username.setText(newNickname);
+    }
+
 }

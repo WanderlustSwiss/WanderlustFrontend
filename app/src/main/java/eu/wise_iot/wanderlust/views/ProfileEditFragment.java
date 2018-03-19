@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -121,7 +123,20 @@ public class ProfileEditFragment extends Fragment {
         checkBoxes = new CheckBox[]{checkT1, checkT2, checkT3,
                 checkT4, checkT5, checkT6};
 
+        Rect outRect = new Rect();
+        view.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
 
+                if (event.getAction() == MotionEvent.ACTION_DOWN && bottomSheet != null && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    Rect outRect = new Rect();
+                    bottomSheet.getGlobalVisibleRect(outRect);
+
+                    if (!outRect.contains((int) event.getRawX(), (int) event.getRawY()))
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                return true;
+            }
+        });
 
         //initialize current values
         setupCurrentInfo(view);
@@ -326,19 +341,22 @@ public class ProfileEditFragment extends Fragment {
 
         }
     }
-    private void setupAvatar(){
+    private void setupAvatar() {
         File image = profileController.getProfilePicture();
         if (image != null) {
+            Picasso.with(getActivity()).invalidate(image);
             Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().into(profileImage);
-            ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
-        }else{
+            ((MainActivity) getActivity()).updateProfileImage(image);
+        } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             profileImage.setImageDrawable(drawable);
-            ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
+            ((MainActivity) getActivity()).updateProfileImage(image);
         }
 
     }
+
+
 
 }
