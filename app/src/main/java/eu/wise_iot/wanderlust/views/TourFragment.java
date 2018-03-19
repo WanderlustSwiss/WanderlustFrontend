@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -9,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -38,7 +37,6 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -53,7 +51,7 @@ import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
  */
 public class TourFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
-    private Tour tour;
+    private static Tour tour;
     private static TourController tourController;
     private Context context;
     private static Polyline polyline;
@@ -88,12 +86,13 @@ public class TourFragment extends Fragment {
      *
      * @return Fragment: TourFragment
      */
-    public static TourFragment newInstance(Tour tour) {
+    public static TourFragment newInstance(Tour paramTour) {
 
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
         mapFragment = new MapFragment();
         fragment.setArguments(args);
+        tour = paramTour;
         tourController = new TourController(tour);
         return fragment;
     }
@@ -148,7 +147,22 @@ public class TourFragment extends Fragment {
             drawable = context.getResources().getDrawable(R.drawable.t2_t3);
         else
             drawable = context.getResources().getDrawable(R.drawable.t1);
+
         textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+        Drawable tourRatingDrawable = tourRating.getProgressDrawable();
+        tourRatingDrawable.setColorFilter(Color.parseColor("#FFFFFF"),
+                PorterDuff.Mode.SRC_ATOP);
+
+
+        tourController.getRating(tour, new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        tourRating.setRating((float) controllerEvent.getModel());
+                }
+            }
+        });
     }
     public void fillControls() {
         List<File> images = tourController.getImages();
@@ -192,9 +206,12 @@ public class TourFragment extends Fragment {
         favButton.setOnClickListener((View v) -> toggleFavorite());
         tourRating.setOnTouchListener((View v, MotionEvent e) ->{
             //setOnTouchListener creates two MotionEvents and without if-Statement, it would
-            //open the dialog twice
+            //open the dialog twice even if android doc says that you cant open two dialogs at the
+            //same time .... fuck yeah android
             if(e.getAction() == MotionEvent.ACTION_DOWN){
-                TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController);
+                Log.d("TOURID", String.valueOf(tourController));
+                TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
+                        tourRating);
                 dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
             }
             return true;

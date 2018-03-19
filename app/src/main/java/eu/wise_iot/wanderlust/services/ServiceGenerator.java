@@ -18,8 +18,9 @@ public class ServiceGenerator {
      */
     //public static final String API_BASE_URL = "https://www.cs.technik.fhnw.ch/wanderlust/";
     // Local Development Host (recommended)
-    //public static final String API_BASE_URL = "http://10.0.2.2:1337";
-    public static final String API_BASE_URL = "http://192.168.1.49:1337";
+    public static final String API_BASE_URL = "http://10.0.2.2:1337";
+    //public static final String API_BASE_URL = "http:///rilinds-mbp.edu.ds.fhnw.ch:1337";
+    //public static final String API_BASE_URL = "http://192.168.1.49:1337";
 
     /**
      * Create service for a new backend request

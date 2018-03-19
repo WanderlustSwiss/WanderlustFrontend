@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
@@ -28,6 +30,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 public class TourRatingDialog extends DialogFragment {
 
     private static TourController controller;
+    private static Tour tour;
+    private static RatingBar ratingBar;
 
     private ImageButton[] starButtonCollection = new ImageButton[5];
 
@@ -37,10 +41,10 @@ public class TourRatingDialog extends DialogFragment {
     private ImageButton fourthStarButton;
     private ImageButton fifthStarButton;
 
+
     private static final String TAG = "TourRatingDialog";
     private FragmentHandler ratingHandler;
     private Context context;
-    private Tour tour;
     private Rating rating;
     private EditText titleEditText;
     private TextInputLayout titleTextLayout;
@@ -48,13 +52,15 @@ public class TourRatingDialog extends DialogFragment {
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
 
-    private int countRatedStars = 1;
+    private int countRatedStars = 0;
 
-    public static TourRatingDialog newInstance(Tour tour, TourController tourController) {
+    public static TourRatingDialog newInstance(Tour paramTour, TourController tourController,
+                                               RatingBar paramRatingBar) {
         TourRatingDialog fragment = new TourRatingDialog();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        fragment.tour = tour;
+        ratingBar = paramRatingBar;
+        tour = paramTour;
         controller = tourController;
         return fragment;
     }
@@ -69,8 +75,8 @@ public class TourRatingDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_rate_tour, container, false);
 
-        titleEditText = (EditText) view.findViewById(R.id.rate_description);
-        titleTextLayout = (TextInputLayout) view.findViewById(R.id.rate_title_layout);
+        //titleEditText = (EditText) view.findViewById(R.id.rate_description);
+        //titleTextLayout = (TextInputLayout) view.findViewById(R.id.rate_title_layout);
         firstStarButton = (ImageButton) view.findViewById(R.id.first_star_button);
         secondStarButton = (ImageButton) view.findViewById(R.id.second_star_button);
         thirdStarButton = (ImageButton) view.findViewById(R.id.third_star_button);
@@ -94,10 +100,24 @@ public class TourRatingDialog extends DialogFragment {
     }
 
     public void initListeners(){
-        buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars));
+        buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                getDialog().dismiss();
+                controller.getRating(tour, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        switch (controllerEvent.getType()){
+                            case OK:
+                                ratingBar.setRating((float) controllerEvent.getModel());
+                        }
+                    }
+                });            }
+        }));
         buttonCancel.setOnClickListener(v -> {
             // dismisses the current dialog view
             getDialog().dismiss();
+
         });
         for(int i=0; i < starButtonCollection.length; i++){
             final int x = i+1;
@@ -107,6 +127,7 @@ public class TourRatingDialog extends DialogFragment {
 
     public void changeButtonColor(int selectedStar){
         countRatedStars = selectedStar;
+        Log.d("TOURID", String.valueOf(tour.getTour_id()));
         for(int i=0; i < selectedStar; i++){
             starButtonCollection[i].setImageResource(R.drawable.ic_rate_star_yellow_32dp);
         }

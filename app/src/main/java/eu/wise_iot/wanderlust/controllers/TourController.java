@@ -30,10 +30,12 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
@@ -65,6 +67,7 @@ public class TourController {
     }
 
     private FavoriteDao favoriteDao;
+    private RatingDao ratingDao;
     private UserDao userDao;
     private Tour tour;
     private UserTourDao userTourDao;
@@ -79,6 +82,7 @@ public class TourController {
         userTourDao = UserTourDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
+        ratingDao = RatingDao.getInstance();
         imageController = ImageController.getInstance();
         loadGeoData();
 
@@ -123,6 +127,22 @@ public class TourController {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public boolean setRating(Tour tour, int starRating, FragmentHandler handler){
+        if(starRating > 0){
+            Rating tourRating = new Rating(0, 0, starRating, tour.getTour_id(),
+                    userDao.getUser().getUser_id());
+            ratingDao.create(tourRating, handler);
+            return true;
+        }
+        return false;
+    }
+
+
+
+    public void getRating(Tour tour, FragmentHandler handler){
+        ratingDao.retrieve(tour.getTour_id(), handler);
     }
 
     public int[] getHighProfile() throws IOException {
@@ -239,10 +259,6 @@ public class TourController {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             return 0;
         }
-    }
-
-    public void setRating(Tour tour, int starRating){
-
     }
 
     public long getAscent(){ return tour.getAscent(); }

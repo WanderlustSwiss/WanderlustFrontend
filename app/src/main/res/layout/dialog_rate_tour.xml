@@ -88,7 +88,7 @@
                 android:src="@drawable/ic_rate_star_transparent_32dp" />
         </LinearLayout>
 
-
+        <!--
         <android.support.design.widget.TextInputLayout
             style="@style/TextInputLayout"
             android:id="@+id/rate_title_layout"
@@ -105,7 +105,7 @@
                 android:paddingTop="4dp"
                 android:editable="false"/>
         </android.support.design.widget.TextInputLayout>
-
+        -->
     </LinearLayout>
 
 </LinearLayout>
