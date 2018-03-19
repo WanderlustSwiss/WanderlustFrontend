@@ -26,6 +26,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DatabaseController.createInstance(getApplicationContext());
         ImageController.createInstance(getApplicationContext());
         WeatherController.createInstance(getApplicationContext());
+        EquipmentController.createInstance(getApplicationContext());
         PoiDao.getInstance().removeAll();
         loginController = new LoginController();
 

@@ -112,14 +112,6 @@ public class WeatherController {
         });
     }
 
-    /*
-    TODO!!
-     */
-    public void getWeatherFromGeoPointList(List<GeoPoint> geoPoints, FragmentHandler handler) {
-        GetWeatherTask getWeatherTask = new GetWeatherTask(handler, null, 0);
-        getWeatherTask.execute(geoPoints);
-    }
-
     public void getWeatherFromTour(Tour tour, DateTime dateTime, FragmentHandler handler) {
         List<GeoPoint> geoPoints = tour.getGeoPoints();
         List<GeoPoint> geoPointsWeather = new ArrayList<>();
@@ -132,6 +124,7 @@ public class WeatherController {
                 switch (controllerEvent.getType()){
                     case OK:
                         List<Weather> weather = (ArrayList<Weather>) controllerEvent.getModel();
+                        handler.onResponse(new ControllerEvent<>(EventType.OK, weather));
                         break;
                     default:
                 }

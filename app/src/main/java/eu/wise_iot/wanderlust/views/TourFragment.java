@@ -183,28 +183,12 @@ public class TourFragment extends Fragment {
     }
     public void toggleFavorite() {
 
-        //tests
-        WeatherController weatherController = WeatherController.getInstance();
-        List<GeoPoint> geoPoints = new ArrayList<>();
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        weatherController.getWeatherFromGeoPointList(geoPoints, new FragmentHandler() {
+        tourController.retrieveRecommendedEquipment(new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
                 controllerEvent.getModel();
             }
         });
-//        weatherController.getWeatherFromGeoPoint(new GeoPoint(47.3768866, 8.541694, 0), new FragmentHandler() {
-//            @Override
-//            public void onResponse(ControllerEvent controllerEvent) {
-//
-//                controllerEvent.getModel();
-//            }
-//        });
-
 
 
         if (isFavoriteUpdate){

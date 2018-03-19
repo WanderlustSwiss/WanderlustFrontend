@@ -77,14 +77,8 @@ public class TourController {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tour.getPolyline(), 10);
         List<GeoPoint> weatherPoints = new ArrayList<>();
 
-        if(polyList.size() >= 5){
-            //Add 5 Points: startPoint, 25%, 50%, 75%, endPoint
-            for(int i = 0; i <= 4; i++) {
-                weatherPoints.add(polyList.get((polyList.size()/4)*i));
-            }
-
             //get weather from points
-            weatherController.getWeatherFromGeoPointList(weatherPoints, new FragmentHandler() {
+            weatherController.getWeatherFromTour(tour, new DateTime(), new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
                     switch (controllerEvent.getType()){
@@ -92,7 +86,6 @@ public class TourController {
                             List<Weather> weather = (List<Weather>) controllerEvent.getModel();
                             List<Equipment> equipment = equipmentController.getEquipmentList();
 
-                            //TODO find out which equip should be picked
 
                             //Calculate the score of each weather type
                             float maxTemp = Float.NEGATIVE_INFINITY;
@@ -106,7 +99,7 @@ public class TourController {
                                 if(w.getMaxTemp() > maxTemp){
                                     maxTemp = w.getMaxTemp();
                                 }
-                                if(w.getMinTemp() > minTemp){
+                                if(w.getMinTemp() < minTemp){
                                     minTemp = w.getMinTemp();
                                 }
 
@@ -120,7 +113,6 @@ public class TourController {
                             Equipment[] recommendedEquipment = new Equipment[equipmentController.getTypeCount()];
 
                             for(Equipment e : equipment){
-
 
                                 //If Equipment is not in recommended temperature skip it
                                 if(e.getMaxTemperature() < maxTemp || e.getMinTemperature() > minTemp){
@@ -175,11 +167,6 @@ public class TourController {
                     }
                 }
             });
-
-        } else{
-            //only add startPoint
-            weatherPoints.add(polyList.get(0));
-        }
 
 
     }

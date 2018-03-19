@@ -28,6 +28,7 @@ public class EquipmentController {
 
     public static EquipmentController createInstance(Context context){
         CONTEXT = context;
+
         return EquipmentController.Holder.INSTANCE;
     }
 
@@ -48,28 +49,23 @@ public class EquipmentController {
         return typeCount;
     }
 
-    public void initEquipment(FragmentHandler handler){
+    public void initEquipment(){
         Call<List<Equipment>> call = service.getEquipment();
         call.enqueue(new Callback<List<Equipment>>() {
             @Override
             public void onResponse(Call<List<Equipment>> call, Response<List<Equipment>> response) {
                 if (response.isSuccessful()) {
                     equipmentList = response.body();
-                    boolean[] types = new boolean[response.body().size()];
-                    for(Equipment equipment : response.body()){
-                        if(types[equipment.getType()]){
-                            types[equipment.getType()] = true;
-                            typeCount++;
+                    typeCount = 0;
+                    for(Equipment equipment : equipmentList){
+                            if(equipment.getType() > typeCount){
+                                typeCount = equipment.getType();
                         }
-                    }
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
-                } else
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                    }}
             }
 
             @Override
             public void onFailure(Call<List<Equipment>> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
 
