@@ -214,11 +214,148 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp" />
 
-            <Button
-                android:id="@+id/jumpToStartLocationButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/tour_button_show_map" />
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+                <Button
+                    android:id="@+id/jumpToStartLocationButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tour_button_show_map" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tourWetterTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wetter"
+                        android:layout_marginLeft="10dp"
+                        android:textStyle="bold"/>
+
+                    <Button
+                        android:id="@+id/datepickerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/wandertag_ausw_hlen"
+                        android:textAllCaps="false"
+                        android:layout_below="@+id/tourWetterTitle"
+                        android:layout_centerHorizontal="true"/>
+
+                    <LinearLayout
+                        android:id="@+id/weatherIcons"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_below="@id/datepickerButton">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/firstPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeFirstPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/firstPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/secondPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeSecondPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/secondPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/thirdPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeThirdPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/thirdPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/forthPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeForthPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/forthPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/fifthPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeFifthPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/fifthPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>

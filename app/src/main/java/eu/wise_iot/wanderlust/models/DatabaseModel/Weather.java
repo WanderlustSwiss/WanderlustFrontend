@@ -12,9 +12,9 @@ public class Weather {
     private long dt;
 
 
-    //TODO convert to celcius
+
     public float getTemp() {
-        return temp;
+        return Math.abs(temp - Float.valueOf("273.15"));
     }
 
     public float getMaxTemp() {
@@ -41,7 +41,5 @@ public class Weather {
         return windSpeed;
     }
 
-    public long getDt() {
-        return dt;
-    }
+    public long getDt() {return dt; }
 }

@@ -23,7 +23,6 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileTripListAdapter;

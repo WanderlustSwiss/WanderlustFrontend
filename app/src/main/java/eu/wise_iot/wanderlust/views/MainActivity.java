@@ -5,11 +5,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,8 +21,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +44,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import io.objectbox.BoxStore;
 
 /**
@@ -47,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "MainActivity";
     public static BoxStore boxStore;
     public static Activity activity;
+    private TextView username;
+    private TextView email;
+    private ImageView userProfileImage;
     private LoginController loginController;
 
     @Override
@@ -62,9 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EquipmentController.createInstance(getApplicationContext());
         PoiDao.getInstance().removeAll();
         loginController = new LoginController();
-
-
-
 
         if (preferences.getBoolean("firstTimeOpened", true)) {
             SharedPreferences.Editor editor = preferences.edit();
@@ -82,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             User user = UserDao.getInstance().getUser();
             if (user == null) {
-                SartupLoginFragment loginFragment = new SartupLoginFragment();
+                StartupLoginFragment loginFragment = new StartupLoginFragment();
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, loginFragment)
                         .commit();
@@ -91,15 +101,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
+                    User logtInUser = (User) controllerEvent.getModel();
                     switch (controllerEvent.getType()) {
                         case OK:
+                            setupDrawerHeader(logtInUser);
                             MapFragment mapFragment = MapFragment.newInstance();
                             getFragmentManager().beginTransaction()
                                     .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                                     .commit();
                             break;
                         default:
-                            SartupLoginFragment loginFragment = new SartupLoginFragment();
+                            StartupLoginFragment loginFragment = new StartupLoginFragment();
                             getFragmentManager().beginTransaction()
                                     .add(R.id.content_frame, loginFragment)
                                     .commit();
@@ -114,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         if (Build.VERSION.SDK_INT >= 23) checkPermissions();
     }
+
 
     /**
      * Initializes the navigation and elements
@@ -186,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });
-            fragment = new SartupLoginFragment();
+            fragment = new StartupLoginFragment();
             fragmentTag = Constants.LOGIN_FRAGMENT;
         }
 
@@ -225,5 +238,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void setupDrawerHeader(User user){
+        username = (TextView) findViewById(R.id.user_name);
+        email = (TextView) findViewById(R.id.user_mail_address);
+        userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+
+        username.setText(user.getNickname());
+        email.setText(user.getEmail());
+
+        updateProfileImage(loginController.getProfileImage());
+    }
+    public void updateProfileImage(File image){
+        if (image != null){
+            Picasso.with(activity).load(image).transform(new CircleTransform()).fit().into(userProfileImage);
+        }else{
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            drawable.setCircular(true);
+            userProfileImage.setImageDrawable(drawable);
+        }
+    }
+    public void updateEmailAdress(String newEmail){
+        email.setText(newEmail);
+    }
 
 }

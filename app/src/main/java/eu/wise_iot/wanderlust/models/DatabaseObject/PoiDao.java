@@ -35,7 +35,6 @@ import retrofit2.Response;
 
 /**
  * PoiDao:
- * <p>
  * Represents POI controller
  *
  * @author Rilind Gashi, Alexander Weinbeck, Tobias Rüegsegger, Simon Kaspar
@@ -190,7 +189,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
                     poiBox.remove(poi);
                     for(ImageInfo imageInfo : poi.getImagePaths()){
-                        new File(imageInfo.getPath()).delete();
+                        new File(imageInfo.getLocalPath()).delete();
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                     DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.DELETESINGLEPOI, response.body()));
@@ -226,8 +225,8 @@ public class PoiDao extends DatabaseObjectAbstract {
                         try {
                             Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
                             ImageInfo imageInfo = response.body();
-                            String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
-                            imageInfo.setPath(name, "pois");
+                            imageInfo.setName(poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg");
+                            imageInfo.setLocalDir(imageController.getPoiFolder());
                             imageController.save(file, imageInfo);
                             internalPoi.addImagePath(imageInfo);
                             poiBox.put(internalPoi);
@@ -254,7 +253,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                 Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
                 int newId = internalPoi.getImageCount() + 1;
                 String name = internalPoi.getPoi_id() + "-" + newId + ".jpg";
-                ImageInfo newImage = new ImageInfo(newId, name, "pois");
+                ImageInfo newImage = new ImageInfo(newId, name, imageController.getPoiFolder());
                 imageController.save(file,newImage);
                 internalPoi.addImagePath(newImage);
                 poiBox.put(internalPoi);
@@ -414,7 +413,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                                     List<ImageInfo> imageInfos = new ArrayList<>();
                                     for(ImageInfo imageInfo : poi.getImagePaths()){
                                         String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
-                                        imageInfos.add(new ImageInfo(poi.getPoi_id(), name, "pois"));
+                                        imageInfos.add(new ImageInfo(poi.getPoi_id(), name, imageController.getPoiFolder()));
                                     }
                                     poi.setImagePaths(imageInfos);
                                     poi.setInternal_id(0);

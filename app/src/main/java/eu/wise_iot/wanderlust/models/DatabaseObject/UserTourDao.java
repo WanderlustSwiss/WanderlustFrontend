@@ -245,8 +245,8 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @param handler
      */
-    public void retrieveAll(final FragmentHandler handler) {
-        Call<List<Tour>> call = service.retrieveAllTours();
+    public void retrieveAll(final FragmentHandler handler, int page) {
+        Call<List<Tour>> call = service.retrieveAllTours(page);
         call.enqueue(new Callback<List<Tour>>() {
             @Override
             public void onResponse(Call<List<Tour>> call, Response<List<Tour>> response) {
@@ -255,9 +255,9 @@ public class UserTourDao extends DatabaseObjectAbstract {
                     for (Tour tour : tours) {
                         for (ImageInfo imageInfo : tour.getImagePaths()) {
                             String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
-                            imageInfo.id = tour.getTour_id();
-                            imageInfo.path = "tours" + "/" + name;
-
+                            imageInfo.setName(name);
+                            imageInfo.setId(tour.getTour_id());
+                            imageInfo.setLocalDir(imageController.getTourFolder());
                         }
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
@@ -289,6 +289,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
+
 
                         //String name = tour_id + "-" + image_id + ".jpg";
 

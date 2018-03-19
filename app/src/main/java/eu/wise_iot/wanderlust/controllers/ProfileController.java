@@ -1,16 +1,19 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
@@ -35,6 +38,8 @@ public class ProfileController {
     private FavoriteDao favoriteDao;
     private CommunityTourDao communityTourDao;
     private DifficultyTypeDao difficultyTypeDao;
+    private ImageController imageController;
+    private Context context;
 
     public ProfileController() {
         profileDao = ProfileDao.getInstance();
@@ -44,6 +49,8 @@ public class ProfileController {
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
         communityTourDao = CommunityTourDao.getInstance();
+        imageController = ImageController.getInstance();
+        context = DatabaseController.getMainContext();
         difficultyTypeDao.retrive();
     }
 
@@ -151,25 +158,45 @@ public class ProfileController {
      *
      * @return the path to the profile picture
      */
-    public String getProfilePicture() {
-
-        //TODO: next release
-        //TODO: Ask tru for image handling.
-        //Backend: GET Request /profile/img
+    public File getProfilePicture() {
+        Profile profile = profileDao.getProfile();
+        if (profile.getImagePath() != null){
+            return imageController.getImage(profile.getImagePath());
+        }
         return null;
     }
+    /**
+     * Set profile image
+     *
+     * @param handler
+     * @param srcBmp
+     */
+    public void setProfilePicture(Bitmap srcBmp, FragmentHandler handler){
+        Profile profile = profileDao.getProfile();
+        Bitmap mutableDstBmp = srcBmp;
 
-    public void setProfilePicture(String path){
-        //TODO: next release
-        //TODO: Ask tru for image handling.
-        // Backend: Delete image with DELETE Request to /profile/img then
-        // POST Reuqest /profile/img with image
+        File image = new File(context.getCacheDir(), "profile_image.jpg");
+        OutputStream os;
+        try {
+            os = new BufferedOutputStream(new FileOutputStream(image));
+            mutableDstBmp.compress(Bitmap.CompressFormat.JPEG, 80, os);
+            os.close();
+            profileDao.addImage(image, profile, handler);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
     }
-
-    public void deleteProfilePicture(){
-        //TODO: next release
-        //TODO: Ask tru for image handling.
-        //DELETE Request to /profile/img
+    /**
+     * Delete profile image
+     *
+     * @param handler
+     */
+    public void deleteProfilePicture(FragmentHandler handler){
+        //Todo: Wrire Fragment hanlder
+        Profile profile = profileDao.getProfile();
+        if (profile.getImagePath() != null){
+            profileDao.deleteImage(handler);
+        }
     }
 
     /**
@@ -201,7 +228,7 @@ public class ProfileController {
      */
     public void getFavorites(FragmentHandler handler) {
         //Todo: Write handler in the adapter/fragment
-        favoriteDao.retrievAllFavoriteTours(handler);
+        favoriteDao.retrieveAllFavoriteTours(handler);
     }
 
     /**

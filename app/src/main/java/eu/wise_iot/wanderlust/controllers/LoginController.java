@@ -1,8 +1,11 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static eu.wise_iot.wanderlust.controllers.ImageController.getInstance;
+
 /*
  * Login Controller which handles the login of the user
  * @author Joshua
@@ -32,6 +37,7 @@ public class LoginController {
     private UserDao userDao;
     private ProfileDao profileDao;
     private DatabaseController databaseController;
+    private ImageController imageController;
     /**
      * Create a login contoller
      */
@@ -39,6 +45,7 @@ public class LoginController {
         userDao = UserDao.getInstance();
         profileDao = ProfileDao.getInstance();
         databaseController = DatabaseController.getInstance();
+        imageController = ImageController.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
@@ -71,6 +78,7 @@ public class LoginController {
                         updatedUser.setInternalId(internalUser.getInternalId());
                     }
                     updatedUser.setPassword(user.getPassword());
+
                     userDao.update(updatedUser);
                     getProfile(handler, updatedUser);
                 } else {
@@ -99,10 +107,14 @@ public class LoginController {
                         if (internalProfile == null){
                             profileDao.removeAll();
                             updatedProfile.setInternal_id(0);
+                            profileDao.create(updatedProfile);
                         }else{
+                            if (updatedProfile.getImagePath() != null){
+                                updatedProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
+                            }
                             updatedProfile.setInternal_id(internalProfile.getInternal_id());
+                            profileDao.update(updatedProfile);
                         }
-                        profileDao.update(updatedProfile);
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -152,7 +164,13 @@ public class LoginController {
             }
         });
     }
-
+    public File getProfileImage(){
+        Profile profile = profileDao.getProfile();
+        if (profile.getImagePath() != null){
+            return imageController.getImage(profile.getImagePath());
+        }
+        return null;
+    }
     public class EmailBody {
         private String email;
 
