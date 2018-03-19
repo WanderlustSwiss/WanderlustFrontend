@@ -278,18 +278,6 @@ public class TourController {
                 Tour TourWithGeoData = (Tour) controllerEvent.getModel();
                 tour.setPolyline(TourWithGeoData.getPolyline());
                 tour.setElevation(TourWithGeoData.getElevation());
-
-
-                DateTime dateTime = new DateTime();
-
-                WeatherController.getInstance().getWeatherFromTour(tour, dateTime, new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-
-                        controllerEvent.getType();
-                    }
-                });
-
             }
         });
     }

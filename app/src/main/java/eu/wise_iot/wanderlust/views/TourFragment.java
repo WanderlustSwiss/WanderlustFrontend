@@ -348,12 +348,12 @@ public class TourFragment extends Fragment {
     }
     public void toggleFavorite() {
 
-        tourController.retrieveRecommendedEquipment(new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                controllerEvent.getModel();
-            }
-        });
+//        tourController.retrieveRecommendedEquipment(new FragmentHandler() {
+//            @Override
+//            public void onResponse(ControllerEvent controllerEvent) {
+//                controllerEvent.getModel();
+//            }
+//        });
 
 
         if (isFavoriteUpdate){
