@@ -17,12 +17,10 @@ public class Weather {
         return Math.abs(temp - Float.valueOf("273.15"));
     }
 
-    public float getMaxTemp() {
-        return maxTemp;
-    }
+    public float getMaxTemp() { return Math.abs(maxTemp - Float.valueOf("273.15")); }
 
     public float getMinTemp() {
-        return minTemp;
+        return Math.abs(minTemp - Float.valueOf("273.15"));
     }
 
     public float getHumidity() {

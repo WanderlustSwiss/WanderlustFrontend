@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
@@ -73,10 +74,6 @@ public class TourController {
 
     public void retrieveRecommendedEquipment(FragmentHandler handler){
 
-        //Get 5 Points of tour
-        ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tour.getPolyline(), 10);
-        List<GeoPoint> weatherPoints = new ArrayList<>();
-
             //get weather from points
             weatherController.getWeatherFromTour(tour, new DateTime(), new FragmentHandler() {
                 @Override
@@ -105,9 +102,6 @@ public class TourController {
 
                             }
 
-                            maxTemp /= 5;
-                            minTemp /= 5;
-
 
                             //safe equipment at array pos = type of equipment
                             Equipment[] recommendedEquipment = new Equipment[equipmentController.getTypeCount()];
@@ -121,10 +115,10 @@ public class TourController {
 
 
                                 //Check if type of equipment is already present
-                                if(recommendedEquipment[e.getType()] != null){
+                                if(recommendedEquipment[e.getType()-1] != null){
 
                                     //Check if better than current recommended
-                                    Equipment current = recommendedEquipment[e.getType()];
+                                    Equipment current = recommendedEquipment[e.getType()-1];
 
                                     int scoreCurrent = 0;
                                     int scoreNew = 0;
@@ -144,7 +138,7 @@ public class TourController {
 
                                     //set Equipment e to the recommended if it is better suited
                                     if(scoreNew > scoreCurrent){
-                                        recommendedEquipment[e.getType()] = e;
+                                        recommendedEquipment[e.getType()-1] = e;
                                     }
                                 }
                                 //Else set it recommended
@@ -153,14 +147,17 @@ public class TourController {
                                     //If at least one weather type
                                     for (int i = 0; i < e.getWeather().length; i++){
                                         if(e.getWeather()[i] == 1 && weatherFilter[i]){
-                                            recommendedEquipment[e.getType()] = e;
+                                            recommendedEquipment[e.getType()-1] = e;
+                                            break;
                                         }
                                     }
 
                                 }
                             }
 
-                            handler.onResponse(new ControllerEvent(EventType.OK, recommendedEquipment));
+
+                            List<Equipment> recEquipmentList = Arrays.asList(recommendedEquipment);
+                            handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
                             break;
                         default:
 
