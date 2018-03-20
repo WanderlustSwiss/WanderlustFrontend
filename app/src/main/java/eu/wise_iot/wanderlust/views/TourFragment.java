@@ -5,7 +5,11 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -34,8 +39,10 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 
 /**
  * TourController:
@@ -68,6 +75,10 @@ public class TourFragment extends Fragment {
     private Favorite favorite;
     private boolean isFavoriteUpdate;
     private int[] highProfile;
+
+    private RecyclerView rvEquipment;
+    private EquipmentRVAdapter adapterEquip;
+    private List<Equipment> listEquipment;
 
     public TourFragment() {
         // Required empty public constructor
@@ -139,6 +150,23 @@ public class TourFragment extends Fragment {
         else
             drawable = context.getResources().getDrawable(R.drawable.t1);
         textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+        //equipment section
+        rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
+        rvEquipment.setPadding(5, 5, 5, 5);
+        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        rvEquipment.setLayoutManager(horizontalLayoutManager);
+        adapterEquip = new EquipmentRVAdapter(context, listEquipment);
+        adapterEquip.setClickListener(this::onItemClickImages);
+        rvEquipment.setAdapter(adapterEquip);
+
+        DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
+        rvEquipment.addItemDecoration(itemDecorator);
+
+        //TODO add recommended method for getting equipment
+        listEquipment = tourController.getEquipmentOfTour(this.tour);
+        adapterEquip.notifyDataSetChanged();
     }
     public void fillControls() {
         List<File> images = tourController.getImages();
@@ -219,5 +247,13 @@ public class TourFragment extends Fragment {
 
     }
 
+    /**
+     * handles click in Recyclerview of equipment
+     * @param view
+     * @param parEquipment
+     */
+    public void onItemClickImages(View view, Equipment parEquipment) {
+
+    }
 
 }

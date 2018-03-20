@@ -37,7 +37,7 @@
 
     <!-- TOUR RELATED STRINGS -->
     <string name="tour_button_show_map">Karte zeigen</string>
-
+    <string name="tour_equipment">Ausrüstung</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
     <string name="dialog_feedback_description_edit_hint">Beschreibung</string>

@@ -15,10 +15,13 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.EquipmentDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
@@ -56,6 +59,7 @@ public class TourController {
     private ImageController imageController;
     private WeatherController weatherController;
     private EquipmentController equipmentController;
+    private final TourKitDao tourKitDao;
 
     public TourController(Tour tour){
         this.tour = tour;
@@ -67,11 +71,20 @@ public class TourController {
         weatherController = WeatherController.getInstance();
         equipmentController = EquipmentController.getInstance();
         loadGeoData();
-
+        tourKitDao = TourKitDao.getInstance();
     }
 
+    /**
+     * get list of equipment for given tour
+     * @param parTour
+     * @return
+     */
+    public List<Equipment> getEquipmentOfTour(Tour parTour){
+        //TODO add implementation according to equipment structure
+        //return tourKitDao.findOne(tour,parTour);
+        return null;
+    }
     public void retrieveRecommendedEquipment(FragmentHandler handler){
-
         //Get 5 Points of tour
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tour.getPolyline(), 10);
         List<GeoPoint> weatherPoints = new ArrayList<>();
@@ -147,10 +160,6 @@ public class TourController {
                                     recommendedEquipment[e.getType()] = e;
                                 }
                             }
-
-
-
-
 
                             break;
                         default:

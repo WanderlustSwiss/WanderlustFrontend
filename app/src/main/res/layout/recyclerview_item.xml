@@ -15,6 +15,7 @@
         android:id="@+id/colorView"
         android:layout_width="100dp"
         android:layout_height="100dp"/>-->
+    <!-- TODO adapt filename of rv items -->
 
     <ImageView
         android:id="@+id/tourImage"
