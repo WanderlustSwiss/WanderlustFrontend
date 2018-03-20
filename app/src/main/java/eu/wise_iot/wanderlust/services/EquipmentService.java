@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 
 public interface EquipmentService {
 
-    @POST("equipment/set/basic")
+    @GET("equipment/set/basic")
     Call<List<Equipment>> getEquipment();
 
 }

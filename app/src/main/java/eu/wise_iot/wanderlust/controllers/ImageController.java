@@ -2,6 +2,8 @@ package eu.wise_iot.wanderlust.controllers;
 
 
 import android.content.Context;
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,6 +15,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 
 public class ImageController {
+    private static String TAG = "ImageController";
     private static class Holder {
         private static final ImageController INSTANCE = new ImageController();
     }
@@ -29,32 +32,47 @@ public class ImageController {
     }
 
     private String picturesDir;
+    private String[] FOLDERS;
 
     private ImageController(){
-        picturesDir = CONTEXT.getApplicationContext().getFilesDir().getAbsolutePath() + "/pictures";
-        String[] folders = {"pois", "tours", "profile"};
+        picturesDir = CONTEXT.getApplicationContext().getApplicationContext().getExternalFilesDir("pictures").getAbsolutePath();
+        FOLDERS = new String[3];
+        FOLDERS[0] = "pois";
+        FOLDERS[1] = "tours";
+        FOLDERS[2] = "profile";
 
         File pictures = new File(picturesDir);
         if(!pictures.exists()) pictures.mkdir();
-        for (int i = 0; i < folders.length; i++){
-            File dir = new File(picturesDir + "/" + folders[i]);
+        for (int i = 0; i < FOLDERS.length; i++){
+            File dir = new File(picturesDir + "/" + FOLDERS[i]);
             dir.mkdir();
         }
     }
-
+    public String getProfileFolder(){
+        return FOLDERS[2];
+    }
+    public String getPoiFolder(){
+        return FOLDERS[0];
+    }
+    public String getTourFolder(){
+        return FOLDERS[1];
+    }
     public List<File> getImages(List<ImageInfo> imageInfos){
         List<File> images = new ArrayList<>();
         for(ImageInfo imageInfo : imageInfos){
-            images.add(new File(picturesDir + "/" + imageInfo.getPath()));
+            images.add(new File(picturesDir + "/" + imageInfo.getLocalPath()));
         }
         return images;
+    }
+    public File getImage(ImageInfo imageInfo){
+        return new File(picturesDir + "/" + imageInfo.getLocalPath());
     }
 
     public void save(File file, ImageInfo image) throws IOException {
 
         InputStream in = new FileInputStream(file);
 
-        FileOutputStream out = new FileOutputStream(picturesDir + "/" + image.getPath());
+        FileOutputStream out = new FileOutputStream(picturesDir + "/" + image.getLocalPath());
 
 
         byte[] buf = new byte[1024];
@@ -67,7 +85,7 @@ public class ImageController {
     }
 
     public boolean delete(ImageInfo imageInfo){
-        File f = new File(imageInfo.getPath());
+        File f = new File(imageInfo.getLocalPath());
         return f.delete();
     }
 

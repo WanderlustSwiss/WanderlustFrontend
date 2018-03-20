@@ -3,8 +3,14 @@ package eu.wise_iot.wanderlust.views.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +30,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 
 /**
  * PoiViewDialog:
@@ -46,6 +53,7 @@ public class PoiViewDialog extends DialogFragment {
     private ImageButton closeDialogButton;
     private ImageButton editPoiButton;
     private ImageButton deletePoiButton;
+    private ImageButton sharePoiButton;
     private long poiId;
     private PoiController controller;
 
@@ -97,7 +105,7 @@ public class PoiViewDialog extends DialogFragment {
         closeDialogButton = (ImageButton) view.findViewById(R.id.poi_close_dialog_button);
         editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
         deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
-
+        sharePoiButton = (ImageButton) view.findViewById(R.id.poi_share_button);
         if (controller.isOwnerOf(currentPoi)) {
             this.showControlsForOwner();
         }
@@ -113,6 +121,11 @@ public class PoiViewDialog extends DialogFragment {
     }
 
     private void initActionControls() {
+
+        sharePoiButton.setOnClickListener(v -> {
+            shareImage();
+        });
+
         closeDialogButton.setOnClickListener(v -> {
             // dismisses the current dialog view
             dismiss();
@@ -133,7 +146,6 @@ public class PoiViewDialog extends DialogFragment {
             }
         });
     }
-
     private void fillOutPoiView() {
         controller.getImages(currentPoi, new FragmentHandler() {
             @Override
@@ -152,8 +164,11 @@ public class PoiViewDialog extends DialogFragment {
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
         typeTextView.setText(typeValues[(int) currentPoi.getType()]);
-        String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
-        elevationTextView.setText(elevationText);
+        if (currentPoi.getElevation() != Integer.MAX_VALUE) {
+            elevationTextView.setText(
+                    String.format("%.0f  %s", currentPoi.getElevation(),
+                            getString(R.string.meter_above_sea_level_abbreviation)));
+        }
 
         titleTextView.setText(currentPoi.getTitle());
 
@@ -180,5 +195,28 @@ public class PoiViewDialog extends DialogFragment {
 
     public void setController(PoiController controller) {
         this.controller = controller;
+    }
+
+    private void shareImage(){
+        File image = controller.getImageToShare(currentPoi);
+        String title;
+        if (image != null){
+            Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+            shareIntent.setType("image/jpg");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(image));
+            if (currentPoi.getElevation() != Integer.MAX_VALUE) {
+                title = currentPoi.getTitle() + ", " +
+                        String.format("%.0f  %s",
+                                currentPoi.getElevation()
+                                , getString(R.string.meter_above_sea_level_abbreviation));
+            }else{
+                title = currentPoi.getTitle();
+            }
+            String description = currentPoi.getDescription() + " @wanderlust-app";
+            shareIntent.putExtra(Intent.EXTRA_TEXT, description);
+            shareIntent.putExtra(Intent.EXTRA_TITLE, title);
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_poi)));
+        }
     }
 }

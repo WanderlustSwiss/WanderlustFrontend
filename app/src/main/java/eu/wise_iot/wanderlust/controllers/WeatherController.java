@@ -2,12 +2,16 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
 
+import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SeasonsKeys;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -22,35 +26,55 @@ public class WeatherController {
     private List<WeatherKeys> weatherKeys;
     private List<SeasonsKeys> seasonsKeys;
 
+    private volatile boolean initKeys = false;
+
     private static class Holder {
         private static final WeatherController INSTANCE = new WeatherController();
     }
 
     private static Context CONTEXT;
 
-    public static WeatherController createInstance(Context context){
+    public static WeatherController createInstance(Context context) {
         CONTEXT = context;
         return WeatherController.Holder.INSTANCE;
     }
 
-    public static WeatherController getInstance(){
+    public static WeatherController getInstance() {
         return CONTEXT != null ? WeatherController.Holder.INSTANCE : null;
     }
 
-    private WeatherController(){
+    private WeatherController() {
         service = ServiceGenerator.createService(WeatherService.class);
     }
 
 
     public List<WeatherKeys> getWeatherKeys() {
-        return weatherKeys;
+        return initKeys ? weatherKeys : null;
     }
 
     public List<SeasonsKeys> getSeasonsKeys() {
-        return seasonsKeys;
+        return initKeys ? seasonsKeys : null;
     }
 
-    public void initWeatherKeys(FragmentHandler handler){
+    public void initKeys() {
+        initWeatherKeys(controllerEvent -> {
+            switch (controllerEvent.getType()) {
+                case OK:
+                    initSeasonsKeys(controllerEvent1 -> {
+                        switch (controllerEvent1.getType()) {
+                            case OK:
+                                initKeys = true;
+                                break;
+                            default:
+                        }
+                    });
+                    break;
+                default:
+            }
+        });
+    }
+
+    private void initWeatherKeys(FragmentHandler handler) {
         Call<List<WeatherKeys>> call = service.getWeatherKeys();
         call.enqueue(new Callback<List<WeatherKeys>>() {
             @Override
@@ -69,7 +93,7 @@ public class WeatherController {
         });
     }
 
-    public void initSeaonsKeys(FragmentHandler handler){
+    private void initSeasonsKeys(FragmentHandler handler) {
         Call<List<SeasonsKeys>> call = service.getSeasonsKeys();
         call.enqueue(new Callback<List<SeasonsKeys>>() {
             @Override
@@ -88,7 +112,45 @@ public class WeatherController {
         });
     }
 
-    public void getWeatherFromGeoPoint(GeoPoint geoPoint, FragmentHandler handler){
+    /*
+    TODO!!
+     */
+    public void getWeatherFromGeoPointList(List<GeoPoint> geoPoints, FragmentHandler handler) {
+        GetWeatherTask getWeatherTask = new GetWeatherTask(handler, null, 0);
+        getWeatherTask.execute(geoPoints);
+    }
+
+    public void getWeatherFromTour(Tour tour, DateTime dateTime, FragmentHandler handler) {
+        List<GeoPoint> geoPoints = tour.getGeoPoints();
+        List<GeoPoint> geoPointsWeather = new ArrayList<>();
+        for(int i = 0; i <= 4; i++) {
+            geoPointsWeather.add(geoPoints.get((geoPoints.size()/4)*i));
+        }
+        GetWeatherTask weatherTask = new GetWeatherTask(new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        List<Weather> weather = (List<Weather>) controllerEvent.getModel();
+                        handler.onResponse(new ControllerEvent(EventType.OK, weather));
+                        break;
+                    default:
+                }
+
+            }
+        }, dateTime, tour.getDuration());
+        weatherTask.execute(geoPointsWeather);
+    }
+
+
+    /*
+    Returns a List of 40 Weathers.
+    First weather has current time, second weather has current time + 3hours
+    the eights Weather has current time + 1 day
+    dt = seconds since unix epoch
+    https://stackoverflow.com/questions/9754600/converting-epoch-time-to-date-string
+     */
+    public void getWeatherFromGeoPoint(GeoPoint geoPoint, FragmentHandler handler) {
         Call<List<Weather>> call = service.getWeather(geoPoint.getLatitude(), geoPoint.getLongitude());
         call.enqueue(new Callback<List<Weather>>() {
             @Override
@@ -106,7 +168,10 @@ public class WeatherController {
         });
     }
 
-    public List<Weather> getWeatherFromGeoPoint(GeoPoint geoPoint){
+    /*
+    don't use
+     */
+    public List<Weather> getWeatherFromGeoPoint(GeoPoint geoPoint) {
         Call<List<Weather>> call = service.getWeather(geoPoint.getLatitude(), geoPoint.getLongitude());
         try {
             return call.execute().body();

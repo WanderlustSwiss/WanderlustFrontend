@@ -1,11 +1,11 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
@@ -13,7 +13,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
@@ -96,7 +95,7 @@ public class TourController {
             }
 
             //get weather from points
-            GetWeatherTask getWeatherTask = new GetWeatherTask(weatherController, new FragmentHandler() {
+            weatherController.getWeatherFromGeoPointList(weatherPoints, new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
                     switch (controllerEvent.getType()){
@@ -107,14 +106,21 @@ public class TourController {
                             //TODO find out which equip should be picked
 
                             //Calculate the score of each weather type
-                            int maxTemp = 0;
-                            int minTemp = 0;
+                            float maxTemp = Float.NEGATIVE_INFINITY;
+                            float minTemp = Float.POSITIVE_INFINITY;
                             List<WeatherKeys> weatherKeys = weatherController.getWeatherKeys();
-                            int[] weatherScore = new int[weatherKeys.size()];
+                            boolean[] weatherFilter = new boolean[weatherKeys.size()];
                             for(Weather w  : weather){
-                                weatherScore[w.getCategory()]++;
-                                maxTemp += w.getMaxTemp();
-                                minTemp += w.getMinTemp();
+
+                                weatherFilter[w.getCategory()] = true;
+
+                                if(w.getMaxTemp() > maxTemp){
+                                    maxTemp = w.getMaxTemp();
+                                }
+                                if(w.getMinTemp() > minTemp){
+                                    minTemp = w.getMinTemp();
+                                }
+
                             }
 
                             maxTemp /= 5;
@@ -125,6 +131,13 @@ public class TourController {
                             Equipment[] recommendedEquipment = new Equipment[equipmentController.getTypeCount()];
 
                             for(Equipment e : equipment){
+
+
+                                //If Equipment is not in recommended temperature skip it
+                                if(e.getMaxTemperature() < maxTemp || e.getMinTemperature() > minTemp){
+                                    continue;
+                                }
+
 
                                 //Check if type of equipment is already present
                                 if(recommendedEquipment[e.getType()] != null){
@@ -137,18 +150,16 @@ public class TourController {
 
                                     //Calculate score from weather
                                     for (int i = 0; i < current.getWeather().length; i++){
-                                        if(current.getWeather()[i] == 1){
-                                            scoreCurrent += weatherScore[i];
+                                        if(current.getWeather()[i] == 1 && weatherFilter[i]){
+                                            scoreCurrent++;
                                         }
                                     }
 
                                     for (int i = 0; i < e.getWeather().length; i++){
-                                        if(e.getWeather()[i] == 1){
-                                            scoreNew += weatherScore[i];
+                                        if(e.getWeather()[i] == 1 && weatherFilter[i]){
+                                            scoreNew++;
                                         }
                                     }
-
-                                    //TODO look at other parameters aswell
 
                                     //set Equipment e to the recommended if it is better suited
                                     if(scoreNew > scoreCurrent){
@@ -157,18 +168,22 @@ public class TourController {
                                 }
                                 //Else set it recommended
                                 else{
-                                    recommendedEquipment[e.getType()] = e;
+                                    //If at least one weather type
+                                    for (int i = 0; i < e.getWeather().length; i++){
+                                        if(e.getWeather()[i] == 1 && weatherFilter[i]){
+                                            recommendedEquipment[e.getType()] = e;
+                                        }
+                                    }
+
                                 }
                             }
-
+                            handler.onResponse(new ControllerEvent(EventType.OK, recommendedEquipment));
                             break;
                         default:
 
                     }
                 }
             });
-
-            getWeatherTask.execute(weatherPoints);
 
         } else{
             //only add startPoint
@@ -285,6 +300,18 @@ public class TourController {
                 Tour TourWithGeoData = (Tour) controllerEvent.getModel();
                 tour.setPolyline(TourWithGeoData.getPolyline());
                 tour.setElevation(TourWithGeoData.getElevation());
+
+
+                DateTime dateTime = new DateTime();
+
+                WeatherController.getInstance().getWeatherFromTour(tour, dateTime, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+
+                        controllerEvent.getType();
+                    }
+                });
+
             }
         });
     }
@@ -296,6 +323,19 @@ public class TourController {
     public String getDurationString(){
         if (tour != null){
             return convertToStringDuration(tour.getDuration());
+        }else{
+            return convertToStringDuration(0);
+        }
+    }
+
+    /**
+     * Calculate the duration to a specific point on a tour which is divided by 5
+     * @param point n/5th point on a tour
+     * @return string with format HH h MM min
+     */
+    public String getDurationStringSpecificPoint(long point){
+        if(tour != null){
+            return convertToStringDuration((tour.getDuration() * point) / 5);
         }else{
             return convertToStringDuration(0);
         }
@@ -345,4 +385,6 @@ public class TourController {
     public List<File> getImages(){
         return imageController.getImages(tour.getImagePaths());
     }
-}
+    public Tour getCurrentTour(){ return tour; }
+    }
+
