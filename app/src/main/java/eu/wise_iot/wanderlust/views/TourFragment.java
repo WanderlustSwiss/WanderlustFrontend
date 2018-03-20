@@ -246,6 +246,10 @@ public class TourFragment extends Fragment {
         setupDateAndTimeDialogs();
     }
 
+    /**
+     * Method sets up listeners for TimePickerDialog and DatePickerDialog which are needed to
+     * save selected DateTime to aquire the weather objects to the specific route and date/time
+     */
     private void setupDateAndTimeDialogs(){
         //time picker listener, which triggers weather service
         TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -321,6 +325,10 @@ public class TourFragment extends Fragment {
         });
     }
 
+    /**
+     * Method fills controlls in weather-info area of tour fragment with the required data, for Example
+     * the degrees, the icon's and the time points of the routes.
+     */
     private void initializeWeather(){
 
         weatherIcons = new ArrayList<>();
@@ -426,31 +434,8 @@ public class TourFragment extends Fragment {
             }
         }
     }
+    
     public void toggleFavorite() {
-
-        //tests
- /*       WeatherController weatherController = WeatherController.getInstance();
-        List<GeoPoint> geoPoints = new ArrayList<>();
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
-        weatherController.getWeatherFromGeoPointList(geoPoints, new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                controllerEvent.getModel();
-            }
-        });*/
-//        weatherController.getWeatherFromGeoPoint(new GeoPoint(47.3768866, 8.541694, 0), new FragmentHandler() {
-//            @Override
-//            public void onResponse(ControllerEvent controllerEvent) {
-//
-//                controllerEvent.getModel();
-//            }
-//        });
-
-
 
         if (isFavoriteUpdate){
             return;

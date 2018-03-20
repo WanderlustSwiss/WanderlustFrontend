@@ -317,6 +317,11 @@ public class TourController {
         }
     }
 
+    /**
+     * Calculate the duration to a specific point on a tour which is divided by 5
+     * @param point n/5th point on a tour
+     * @return string with format HH h MM min
+     */
     public String getDurationStringSpecificPoint(long point){
         if(tour != null){
             return convertToStringDuration((tour.getDuration() * point) / 5);
