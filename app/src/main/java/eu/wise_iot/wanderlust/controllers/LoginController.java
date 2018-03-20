@@ -68,6 +68,7 @@ public class LoginController {
 
                     databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
                     WeatherController.getInstance().initKeys();
+                    EquipmentController.getInstance().initEquipment();
                     User updatedUser = response.body();
                     User internalUser = userDao.getUser();
                     if (internalUser == null){

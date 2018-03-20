@@ -136,6 +136,7 @@ public class WeatherController {
                         break;
                     default:
                 }
+
             }
         }, dateTime, tour.getDuration());
         weatherTask.execute(geoPointsWeather);
