@@ -6,7 +6,6 @@ import org.osmdroid.util.GeoPoint;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
@@ -14,7 +13,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
@@ -319,6 +317,14 @@ public class TourController {
         }
     }
 
+    public String getDurationStringSpecificPoint(long point){
+        if(tour != null){
+            return convertToStringDuration((tour.getDuration() * point) / 5);
+        }else{
+            return convertToStringDuration(0);
+        }
+    }
+
     /**
      * Calculate distance string from absolut meter value
      * @return string with format 0.9 km
@@ -363,4 +369,6 @@ public class TourController {
     public List<File> getImages(){
         return imageController.getImages(tour.getImagePaths());
     }
-}
+    public Tour getCurrentTour(){ return tour; }
+    }
+

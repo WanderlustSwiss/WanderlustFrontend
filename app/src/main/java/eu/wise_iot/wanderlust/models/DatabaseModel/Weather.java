@@ -14,7 +14,7 @@ public class Weather {
 
 
     public float getTemp() {
-        return Math.abs(temp - Float.valueOf("273.15"));
+        return Math.round(temp - 273.15);
     }
 
     public float getMaxTemp() {

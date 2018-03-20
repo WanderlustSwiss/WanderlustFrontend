@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.views;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,11 +16,16 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
@@ -30,6 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -45,7 +52,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 /**
  * TourController:
  *
- * @author Alexander Weinbeck, Rilind Gashi
+ * @author Alexander Weinbeck, Rilind Gashi, Baris Demirci
  * @license MIT
  */
 public class TourFragment extends Fragment {
@@ -72,21 +79,32 @@ public class TourFragment extends Fragment {
 
     //weather related controlls
     private static WeatherController weatherController;
+    private List<Weather> weatherList;
     private Button selectDayButton;
+    private TextView selectedDay;
     private DateTime selectedDateTime;
+    private LinearLayout weatherInfos;
+
     private List<ImageView> weatherIcons;
     private ImageView firstWeatherIcon;
     private ImageView secondWeatherIcon;
     private ImageView thirdWeatherIcon;
     private ImageView forthWeatherIcon;
     private ImageView fifthWeatherIcon;
+
     private List<TextView> weatherDegrees;
     private TextView firstWeatherDegree;
     private TextView secondWeatherDegree;
     private TextView thirdWeatherDegree;
     private TextView forthWeatherDegree;
     private TextView fifthWeatherDegree;
-    private List<Weather> weatherList;
+
+    private List<TextView> timePoints;
+    private TextView firstTimePoint;
+    private TextView secondTimePoint;
+    private TextView thirdTimePoint;
+    private TextView forthTimePoint;
+    private TextView fifthTimePoint;
 
     private Favorite favorite;
     private boolean isFavoriteUpdate;
@@ -117,7 +135,8 @@ public class TourFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity().getApplicationContext();
+        context = getActivity();
+        tour = tourController.getCurrentTour();
     }
 
     @Override
@@ -153,18 +172,24 @@ public class TourFragment extends Fragment {
 
         //weather
         selectDayButton = (Button) view.findViewById(R.id.datepickerButton);
+        selectedDay = (TextView) view.findViewById(R.id.selectedDateTime);
+        weatherInfos = (LinearLayout) view.findViewById(R.id.weatherInfo);
         firstWeatherIcon = (ImageView) view.findViewById(R.id.firstPointIcon);
         secondWeatherIcon = (ImageView) view.findViewById(R.id.secondPointIcon);
         thirdWeatherIcon = (ImageView) view.findViewById(R.id.thirdPointIcon);
         forthWeatherIcon = (ImageView) view.findViewById(R.id.forthPointIcon);
-        firstWeatherIcon = (ImageView) view.findViewById(R.id.fifthPointIcon);
+        fifthWeatherIcon = (ImageView) view.findViewById(R.id.fifthPointIcon);
         firstWeatherDegree = (TextView) view.findViewById(R.id.degreeFirstPoint);
         secondWeatherDegree = (TextView) view.findViewById(R.id.degreeSecondPoint);
         thirdWeatherDegree = (TextView) view.findViewById(R.id.degreeThirdPoint);
         forthWeatherDegree = (TextView) view.findViewById(R.id.degreeForthPoint);
         fifthWeatherDegree = (TextView) view.findViewById(R.id.degreeFifthPoint);
-
-
+        firstTimePoint = (TextView) view.findViewById(R.id.timeFirstPoint);
+        secondTimePoint = (TextView) view.findViewById(R.id.timeSecondPoint);
+        thirdTimePoint = (TextView) view.findViewById(R.id.timeThirdPoint);
+        forthTimePoint = (TextView) view.findViewById(R.id.timeForthPoint);
+        fifthTimePoint = (TextView) view.findViewById(R.id.timeFifthPoint);
+        selectedDateTime = DateTime.now();
 
         long difficulty = tourController.getLevel();
         Drawable drawable;
@@ -218,12 +243,25 @@ public class TourFragment extends Fragment {
         jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
         favButton.setOnClickListener((View v) -> toggleFavorite());
 
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        setupDateAndTimeDialogs();
+    }
+
+    private void setupDateAndTimeDialogs(){
+        //time picker listener, which triggers weather service
+        TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                selectedDateTime.year().setCopy(year);
-                selectedDateTime.monthOfYear().setCopy(month);
-                selectedDateTime.dayOfMonth().setCopy(dayOfMonth);
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                selectedDateTime = selectedDateTime.withTime(hourOfDay, minute, 0, 0);
+
+                DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMM HH:mm");
+                String dateTime = selectedDateTime.toString(formatter);
+                String preText = getString(R.string.wanderung_beginn);
+                selectedDay.setText(preText + " " + dateTime);
+
+                Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
+                Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
+
+                weatherList = null;
 
                 weatherController.getWeatherFromTour(tour, selectedDateTime, new FragmentHandler() {
                     @Override
@@ -231,17 +269,42 @@ public class TourFragment extends Fragment {
                         switch (controllerEvent.getType()){
                             case OK:
                                 weatherList = (List<Weather>) controllerEvent.getModel();
-                                initializeWeather();
+
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(weatherList != null){
+                                            weatherInfos.setVisibility(View.VISIBLE);
+                                            initializeWeather();
+                                        }else{
+                                            Toast.makeText(context, R.string.keine_wetterdaten, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                                 break;
                             default:
+                                Log.d("WETTER", "service problem");
                                 break;
                         }
                     }
                 });
+
             }
         };
 
-        //weather and datepicker
+        //date picker listener, which triggers time picker
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                selectedDateTime = selectedDateTime.withDate(year, month, dayOfMonth);
+
+                TimePickerDialog tdialog = new TimePickerDialog(context ,timeSetListener,
+                                                            0, 0, true);
+                tdialog.show();
+            }
+        };
+
+        //button click listener to select day, which triggers date picker
         selectDayButton.setOnClickListener(e -> {
             Calendar date = Calendar.getInstance();
             int today = date.get(Calendar.DAY_OF_MONTH);
@@ -249,12 +312,12 @@ public class TourFragment extends Fragment {
             int year = date.get(Calendar.YEAR);
 
             DatePickerDialog dialog = new DatePickerDialog(context, dateSetListener,
-                                                                            year, month, today);
-            date.add(Calendar.DAY_OF_MONTH, 5);
-            long inFiveDays = date.getTimeInMillis();
-            dialog.getDatePicker().setMaxDate(inFiveDays);
-            dialog.show();
+                    year, month, today);
 
+            dialog.getDatePicker().setMinDate(date.getTimeInMillis());
+            date.add(Calendar.DAY_OF_MONTH, 5);
+            dialog.getDatePicker().setMaxDate(date.getTimeInMillis());
+            dialog.show();
         });
     }
 
@@ -274,13 +337,30 @@ public class TourFragment extends Fragment {
         weatherDegrees.add(forthWeatherDegree);
         weatherDegrees.add(fifthWeatherDegree);
 
-        if(weatherList.size() == 5){
-            for(int i = 0; i < weatherList.size(); i++){
+        timePoints = new ArrayList<>();
+        timePoints.add(firstTimePoint);
+        timePoints.add(secondTimePoint);
+        timePoints.add(thirdTimePoint);
+        timePoints.add(forthTimePoint);
+        timePoints.add(fifthTimePoint);
+
+        timePoints.get(0).setText("Start");
+        timePoints.get(4).setText("Ende");
+
+        if(weatherList.size() <= 5){
+            for(int i = 0; i < weatherList.size(); ++i){
                 Weather weather = weatherList.get(i);
 
                 //set temperature
-                String temp = String.valueOf(weather.getTemp());
+                String temp = String.format(Locale.GERMAN, "%d", (int) weather.getTemp());
                 weatherDegrees.get(i).setText(temp + "°C");
+
+                //set time of tour
+                if(i > 0 && i < 4){
+                    String time = tourController.getDurationStringSpecificPoint(i+1);
+                    timePoints.get(i).setText(time);
+                }
+
 
                 //set icon
                 String icon = weather.getIcon();
@@ -349,7 +429,7 @@ public class TourFragment extends Fragment {
     public void toggleFavorite() {
 
         //tests
-        WeatherController weatherController = WeatherController.getInstance();
+ /*       WeatherController weatherController = WeatherController.getInstance();
         List<GeoPoint> geoPoints = new ArrayList<>();
         geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
         geoPoints.add(new GeoPoint(47.3768866, 8.541694, 0));
@@ -361,7 +441,7 @@ public class TourFragment extends Fragment {
             public void onResponse(ControllerEvent controllerEvent) {
                 controllerEvent.getModel();
             }
-        });
+        });*/
 //        weatherController.getWeatherFromGeoPoint(new GeoPoint(47.3768866, 8.541694, 0), new FragmentHandler() {
 //            @Override
 //            public void onResponse(ControllerEvent controllerEvent) {

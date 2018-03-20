@@ -131,11 +131,11 @@ public class WeatherController {
             public void onResponse(ControllerEvent controllerEvent) {
                 switch (controllerEvent.getType()){
                     case OK:
-                        List<Weather> weather = (ArrayList<Weather>) controllerEvent.getModel();
+                        List<Weather> weather = (List<Weather>) controllerEvent.getModel();
+                        handler.onResponse(new ControllerEvent(EventType.OK, weather));
                         break;
                     default:
                 }
-
             }
         }, dateTime, tour.getDuration());
         weatherTask.execute(geoPointsWeather);

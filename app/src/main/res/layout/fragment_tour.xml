@@ -232,31 +232,44 @@
                         android:layout_marginLeft="10dp"
                         android:textStyle="bold"/>
 
-                    <Button
-                        android:id="@+id/datepickerButton"
+                    <TextView
+                        android:id="@+id/selectedDateTime"
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:text="@string/wandertag_ausw_hlen"
-                        android:textAllCaps="false"
-                        android:layout_below="@+id/tourWetterTitle"
-                        android:layout_centerHorizontal="true"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:textStyle="bold"/>
 
                     <LinearLayout
-                        android:id="@+id/weatherIcons"
+                        android:id="@+id/weatherInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:layout_below="@id/datepickerButton">
+                        android:layout_below="@id/selectedDateTime"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/wetterNach"/>
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
+                            <TextView
+                                android:id="@+id/timeFirstPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                />
+
                             <ImageView
                                 android:id="@+id/firstPointIcon"
                                 android:layout_width="70dp"
                                 android:layout_height="70dp"
-                                android:src="@drawable/ic_few_clouds"
+                                android:layout_below="@+id/timeFirstPoint"
                                 />
 
                             <TextView
@@ -264,8 +277,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/firstPointIcon"
-                                android:layout_centerHorizontal="true"
-                                android:text="9°C"/>
+                                android:layout_centerHorizontal="true" />
 
                         </RelativeLayout>
 
@@ -273,11 +285,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
+                            <TextView
+                                android:id="@+id/timeSecondPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                />
+
                             <ImageView
                                 android:id="@+id/secondPointIcon"
                                 android:layout_width="70dp"
                                 android:layout_height="70dp"
-                                android:src="@drawable/ic_few_clouds"
+                                android:layout_below="@+id/timeSecondPoint"
                                 />
 
                             <TextView
@@ -285,8 +304,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/secondPointIcon"
-                                android:layout_centerHorizontal="true"
-                                android:text="9°C"/>
+                                android:layout_centerHorizontal="true" />
 
                         </RelativeLayout>
 
@@ -294,11 +312,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
+                            <TextView
+                                android:id="@+id/timeThirdPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"/>
+
                             <ImageView
                                 android:id="@+id/thirdPointIcon"
                                 android:layout_width="70dp"
                                 android:layout_height="70dp"
-                                android:src="@drawable/ic_few_clouds"
+                                android:layout_below="@+id/timeThirdPoint"
                                 />
 
                             <TextView
@@ -306,8 +330,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/thirdPointIcon"
-                                android:layout_centerHorizontal="true"
-                                android:text="9°C"/>
+                                android:layout_centerHorizontal="true" />
 
                         </RelativeLayout>
 
@@ -315,11 +338,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
+                            <TextView
+                                android:id="@+id/timeForthPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"/>
+
                             <ImageView
                                 android:id="@+id/forthPointIcon"
                                 android:layout_width="70dp"
                                 android:layout_height="70dp"
-                                android:src="@drawable/ic_few_clouds"
+                                android:layout_below="@+id/timeForthPoint"
                                 />
 
                             <TextView
@@ -327,8 +356,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/forthPointIcon"
-                                android:layout_centerHorizontal="true"
-                                android:text="9°C"/>
+                                android:layout_centerHorizontal="true" />
 
                         </RelativeLayout>
 
@@ -336,11 +364,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
+                            <TextView
+                                android:id="@+id/timeFifthPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"/>
+
                             <ImageView
                                 android:id="@+id/fifthPointIcon"
                                 android:layout_width="70dp"
                                 android:layout_height="70dp"
-                                android:src="@drawable/ic_few_clouds"
+                                android:layout_below="@+id/timeFifthPoint"
                                 />
 
                             <TextView
@@ -349,12 +383,21 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/fifthPointIcon"
                                 android:layout_centerHorizontal="true"
-                                android:text="9°C"/>
+                                />
 
                         </RelativeLayout>
 
                     </LinearLayout>
-
+                    <Button
+                        android:id="@+id/datepickerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/wandertag_ausw_hlen"
+                        android:textAllCaps="false"
+                        android:layout_below="@+id/weatherInfo"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_centerHorizontal="true"/>
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>
