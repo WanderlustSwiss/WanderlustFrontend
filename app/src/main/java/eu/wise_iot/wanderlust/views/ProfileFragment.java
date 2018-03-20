@@ -10,17 +10,18 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
@@ -31,6 +32,7 @@ import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileTripListAdapter;
+import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
 /**
  * Fragment which represents the UI of the profile of a user.
@@ -47,7 +49,6 @@ public class ProfileFragment extends Fragment {
     private TextView amountScore;
     private TextView amountTours;
 
-    int counter = 0;
     private TabLayout tabLayout;
 
     private ListView listView;
@@ -129,6 +130,9 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * To set the stats at the top of the profile
+     */
     public void setProfileStats(){
 
         amountScore.setText(String.format(Locale.GERMANY, "%1d",
@@ -213,16 +217,27 @@ public class ProfileFragment extends Fragment {
                                             list, fragment);
 
                             listView.setAdapter(adapter);
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    Tour tour = (Tour) listView.getItemAtPosition(position);
+                                    TourFragment tourFragment = TourFragment.newInstance(tour);
+                                    getFragmentManager().beginTransaction()
+                                                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                                                        .addToBackStack(Constants.TOUR_FRAGMENT)
+                                                        .commit();
+                                }
+                            });
 
                         } else {
 
                             list = null;
                             listView.setAdapter(null);
-                            Toast.makeText(getActivity(), "Keine Favoriten", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.no_favorites, Toast.LENGTH_SHORT).show();
                         }
                         break;
                     default:
-                        Toast.makeText(getActivity(), "Connection fail...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -235,17 +250,21 @@ public class ProfileFragment extends Fragment {
      */
     public void setupMyTours(View view) {
 
-        List<Tour> tours = new ArrayList<>();
-        List<Trip> trips = profileController.getTrips();
-        if(trips.size() > 0 && trips != null){
+        list = profileController.getTrips();
+
+        if(list.size() > 0 && list != null){
+            List<Trip> trips = list;
+            list.clear();
             for(Trip trip : trips){
-                profileController.getTours(trip, new FragmentHandler() {
+                profileController.getTourToTrip(trip, new FragmentHandler() {
                     @Override
                     public void onResponse(ControllerEvent controllerEvent) {
                         switch (controllerEvent.getType()){
                             case OK:
-                                Tour tour = (Tour) controllerEvent.getModel();
-                                tours.add(tour);
+                                if(controllerEvent.getModel() != null){
+                                    Tour tour = (Tour) controllerEvent.getModel();
+                                    list.add(tour);
+                                }
                                 break;
                             default:
                                 break;
@@ -256,10 +275,7 @@ public class ProfileFragment extends Fragment {
             }
         }
         //only if there is at least one tour
-        if (tours != null && tours.size() > 0) {
-
-            //initialize list
-            list = tours;
+        if (list != null && list.size() > 0) {
 
             //set adapter
             ProfileTripListAdapter adapter =
@@ -269,12 +285,23 @@ public class ProfileFragment extends Fragment {
                             list, this);
 
             listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Tour tour = (Tour) listView.getItemAtPosition(position);
+                    TourFragment tourFragment = TourFragment.newInstance(tour);
+                    getFragmentManager().beginTransaction()
+                                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                                        .addToBackStack(Constants.TOUR_FRAGMENT)
+                                        .commit();
+                }
+            });
 
         } else {
 
             list = null;
             listView.setAdapter(null);
-            Toast.makeText(getActivity(), "Keine Touren.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.no_tours, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -300,12 +327,20 @@ public class ProfileFragment extends Fragment {
                             list, this);
 
             listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Poi poi = (Poi) listView.getItemAtPosition(position);
+                    PoiViewDialog viewDialog = PoiViewDialog.newInstance(poi);
+                    viewDialog.show(getFragmentManager(), "POI");
+                }
+            });
 
         } else {
 
             list = null;
             listView.setAdapter(null);
-            Toast.makeText(getActivity(), "Keine POI's", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.no_pois, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -331,19 +366,25 @@ public class ProfileFragment extends Fragment {
                             list, this);
 
             listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Tour tour = (Tour) listView.getItemAtPosition(position);
+                    TourFragment tourFragment = TourFragment.newInstance(tour);
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                            .addToBackStack(Constants.TOUR_FRAGMENT)
+                            .commit();
+                }
+            });
 
         } else {
 
             list = null;
             listView.setAdapter(null);
-            Toast.makeText(getActivity(), "Keine Touren gespeichert.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.no_saved, Toast.LENGTH_SHORT).show();
         }
     }
-
-    public void setTab(int index){
-        tabLayout.getTabAt(index).select();
-    }
-
 
     /**
      * Gets back the reference to the specific Controller of the profile UI

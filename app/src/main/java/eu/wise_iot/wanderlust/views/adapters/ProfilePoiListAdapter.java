@@ -63,6 +63,8 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
         imageController = ImageController.getInstance();
     }
 
+
+
     /**
      * Gets amount of poi's in list view
      *
@@ -166,4 +168,6 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
 
         return convertView;
     }
+
+
 }

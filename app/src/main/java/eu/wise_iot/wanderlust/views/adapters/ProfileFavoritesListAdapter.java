@@ -150,12 +150,11 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
                         EventType type = controllerEvent.getType();
                         switch (type) {
                             case OK:
-                                Toast.makeText(context, "unfavorisiert.", Toast.LENGTH_SHORT).show();
                                 View v = profileFragment.getView();
                                 profileFragment.setupFavorites(v);
                                 break;
                             default:
-                                Toast.makeText(context, "nicht fav...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }

@@ -141,7 +141,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
             }
 
             deleteIcon.setOnClickListener(e -> {
-                profileFragment.getProfileController().deleteTour(tour, new FragmentHandler() {
+                profileFragment.getProfileController().deleteTrip(tour, new FragmentHandler() {
                     @Override
                     public void onResponse(ControllerEvent controllerEvent) {
                         switch (controllerEvent.getType()){

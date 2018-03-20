@@ -155,5 +155,10 @@
     <string name="title_poi">POI</string>
     <string name="title_tours">Touren</string>
     <string name="title_score">Score</string>
+    <string name="connection_fail">Verbindung fehlgeschlagen</string>
+    <string name="no_favorites">Keine Favoriten</string>
+    <string name="no_tours">Keine Touren</string>
+    <string name="no_pois">Keine POI\'s</string>
+    <string name="no_saved">Keine Touren gespeichert</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
@@ -188,31 +187,14 @@ public class ProfileController {
         return profile.getBirthday();
     }
 
-    /**
-     * Gets the list with all user tours of logged in user
-     *
-     * @return list with user tours
-     */
-    public void getTours(Trip trip, FragmentHandler handler) {
-        /*List<Trip> trips = tripDao.find();
-        List<Tour> tours = new ArrayList<>();
-        for(Trip trip : trips){*/
-            userTourDao.retrieve(trip.getTour(), handler);
-        /*}
-        return tours;*/
-    }
 
     /**
      * Gets the list with all favorite tours of logged in user
      *
-     * @return list with tours
+     * @param handler list and response given back to handler
      */
     public void getFavorites(FragmentHandler handler) {
         favoriteDao.retrievAllFavoriteTours(handler);
-    }
-
-    public List<Favorite> getFavoritesLocal(){
-        return favoriteDao.find();
     }
 
     /**
@@ -233,31 +215,43 @@ public class ProfileController {
         return communityTourDao.find();
     }
 
-    public void deleteTour(Tour tour, FragmentHandler handler){
-        userTourDao.delete(tour, handler);
-    }
-
-    public void deleteCommunityTour(Tour communityTour){
-        communityTourDao.delete(communityTour);
-    }
-
-    public void tourToFavorite(Favorite fav, FragmentHandler handler){
-        userTourDao.retrieve(fav.getTour(), handler);
-    }
-
-    public void deleteUserTour(Tour tour, FragmentHandler handler){
-        userTourDao.delete(tour, handler);
-    }
-
+    /**
+     * Gets the list with all user tours of logged in user
+     *
+     * @return list with all trips
+     */
     public List<Trip> getTrips(){
         return tripDao.find();
     }
 
-    public Tour testGetTour(){
-        return userTourDao.find().get(0);
+    /**
+     * Gives back the tour object to a trip.
+     *
+     * @param trip trip whose tour is requested
+     * @param handler tour and response given back to handler
+     */
+    public void getTourToTrip(Trip trip, FragmentHandler handler) {
+        userTourDao.retrieve(trip.getTour(), handler);
+
     }
 
-    public void testAddTrip(Trip trip, FragmentHandler handler){
-        tripDao.create(trip, handler);
+    /**
+     * Deletes a trip from the database
+     *
+     * @param tour to delete
+     * @param handler defines further action
+     */
+    public void deleteTrip(Tour tour, FragmentHandler handler){
+        tripDao.delete(tour, handler);
     }
+
+    /**
+     * Deletes a communit tour from the local database
+     *
+     * @param communityTour to delete
+     */
+    public void deleteCommunityTour(Tour communityTour){
+        communityTourDao.delete(communityTour);
+    }
+
 }
