@@ -162,5 +162,16 @@
     <string name="manual_finish_header">Wanderlust-Anleitung</string>
     <string name="manual_finish_text1">Jetzt weisst du alles, was es über die Wanderlust-App zu wissen gibt.</string>
     <string name="manual_finish_text2">Klicke auf <b>los geh\'s</b> um das Abenteuer zu starten!</string>
+    <string name="manual_poi_header">POI (Point of Interest)</string>
+    <string name="manual_poi_text">Mit dem POI-Button kannst du eindrückliche Orte fotografieren und den POI entweder nur privat für dich speichern oder ihn mit der Community teilen.</string>
+    <string name="manual_header_search">Suche</string>
+    <string name="manual_search_text">Die Suche ermöglicht dir nach Orten, Regionen oder Wanderwegen zu suchen.</string>
+    <string name="manual_filter_header">Toursuche filtern</string>
+    <string name="manual_filter_text">Filtere deine Suchresultate nach Eigenschaften wie Distanz, Schwierigkeit, Region und vielem mehr.</string>
+    <string name="manual_profile_header">Profil</string>
+    <string name="manual_profile_text">In deinem Profil kannst du deine persönlichen Daten sowie deine Favoriten, deine erstellten Touren, deine POIs und deine gesichterten Routen verwalten.</string>
+    <string name="manual_dashboard_header">Tourendashboard</string>
+    <string name="manual_dashboard_text">Inspiriere dich von den von anderen Usern erfassten Touren und stöbere durch unsere Datenbank.</string>
+    <string name="msg_lets_go">los geht\'s!</string>
 
 </resources>

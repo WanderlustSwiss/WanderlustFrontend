@@ -26,8 +26,8 @@
                 style="@style/h1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/menu_user_guide"
-                android:paddingBottom="12dp"/>
+                android:paddingBottom="12dp"
+                android:text="@string/menu_user_guide" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -44,13 +44,13 @@
                         style="@style/h2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="POI (Point of Interest)" />
+                        android:text="@string/manual_poi_header" />
 
                     <TextView
                         style="@style/p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Mit dem POI-Button kannst du eindrückliche Orte fotografieren und den POI entweder nur privat für dich speichern oder ihn mit der Community teilen." />
+                        android:text="@string/manual_poi_text" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -71,13 +71,13 @@
                         style="@style/h2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Suche" />
+                        android:text="@string/manual_header_search" />
 
                     <TextView
                         style="@style/p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Die Suche ermöglicht dir nach Orten, Regionen oder Wanderwegen zu suchen." />
+                        android:text="@string/manual_search_text" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -98,13 +98,13 @@
                         style="@style/h2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Toursuche filtern" />
+                        android:text="@string/manual_filter_header" />
 
                     <TextView
                         style="@style/p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Filtere deine Suchresultate nach Eigenschaften wie Distanz, Schwierigkeit, Region und vielem mehr." />
+                        android:text="@string/manual_filter_text" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -125,13 +125,13 @@
                         style="@style/h2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Profil" />
+                        android:text="@string/manual_profile_header" />
 
                     <TextView
                         style="@style/p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="In deinem Profil kannst du deine persönlichen Daten sowie deine Favoriten, deine erstellten Touren, deine POIs und deine gesichterten Routen verwalten." />
+                        android:text="@string/manual_profile_text" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -152,13 +152,13 @@
                         style="@style/h2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Tourendashboard" />
+                        android:text="@string/manual_dashboard_header" />
 
                     <TextView
                         style="@style/p"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Inspiriere dich von den von anderen Usern erfassten Touren und stöbere durch unsere Datenbank." />
+                        android:text="@string/manual_dashboard_text" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -201,8 +201,8 @@
                         android:textAlignment="center" />
 
                     <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="150dp"
                         android:layout_gravity="center"
                         android:padding="10dp"
                         android:src="@drawable/temp_logo" />
@@ -215,7 +215,7 @@
                 android:layout_width="fill_parent"
                 android:layout_marginBottom="48dp"
                 android:padding="12dp"
-                android:text="los geht's!" />
+                android:text="@string/msg_lets_go" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
