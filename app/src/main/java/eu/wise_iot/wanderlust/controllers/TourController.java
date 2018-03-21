@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.util.Log;
+
 import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
 
@@ -29,7 +31,6 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
  * handles the tourfragment and its in and output
  *
  * @author Alexander Weinbeck, Rilind Gashi, Simon Kaspar
- * @license MIT
  */
 public class TourController {
 
@@ -59,6 +60,9 @@ public class TourController {
     private WeatherController weatherController;
     private EquipmentController equipmentController;
     private final TourKitDao tourKitDao;
+    public final List<Equipment> listEquipment = new ArrayList<>();
+
+    private static final String TAG = "Tourcontroller";
 
     public TourController(Tour tour){
         this.tour = tour;
@@ -73,16 +77,6 @@ public class TourController {
         tourKitDao = TourKitDao.getInstance();
     }
 
-    /**
-     * get list of equipment for given tour
-     * @param parTour
-     * @return
-     */
-    public List<Equipment> getEquipmentOfTour(Tour parTour){
-        //TODO add implementation according to equipment structure
-        //return tourKitDao.findOne(tour,parTour);
-        return null;
-    }
     public void retrieveRecommendedEquipment(FragmentHandler handler){
         //Get 5 Points of tour
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tour.getPolyline(), 10);

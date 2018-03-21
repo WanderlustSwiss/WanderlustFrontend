@@ -45,12 +45,11 @@ import java.util.Locale;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -67,6 +66,7 @@ public class TourFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
     private Tour tour;
     private static TourController tourController;
+    private static EquipmentController equipmentController;
     private Context context;
     private static Polyline polyline;
 
@@ -74,8 +74,6 @@ public class TourFragment extends Fragment {
     private ImageButton favButton;
     private TextView tourRegion;
     private TextView tourTitle;
-    private ImageButton tourSavedButton;
-    private ImageButton tourSharedButton;
     private TextView textViewTourDistance;
     private TextView textViewAscend;
     private TextView textViewDuration;
@@ -83,7 +81,6 @@ public class TourFragment extends Fragment {
     private TextView textViewDifficulty;
     private TextView textViewDescription;
     private Button jumpToStartLocationButton;
-    private static MapFragment mapFragment;
 
     //weather related controlls
     private static WeatherController weatherController;
@@ -93,21 +90,18 @@ public class TourFragment extends Fragment {
     private DateTime selectedDateTime;
     private LinearLayout weatherInfos;
 
-    private List<ImageView> weatherIcons;
     private ImageView firstWeatherIcon;
     private ImageView secondWeatherIcon;
     private ImageView thirdWeatherIcon;
     private ImageView forthWeatherIcon;
     private ImageView fifthWeatherIcon;
 
-    private List<TextView> weatherDegrees;
     private TextView firstWeatherDegree;
     private TextView secondWeatherDegree;
     private TextView thirdWeatherDegree;
     private TextView forthWeatherDegree;
     private TextView fifthWeatherDegree;
 
-    private List<TextView> timePoints;
     private TextView firstTimePoint;
     private TextView secondTimePoint;
     private TextView thirdTimePoint;
@@ -116,9 +110,7 @@ public class TourFragment extends Fragment {
 
     private Favorite favorite;
     private boolean isFavoriteUpdate;
-    private int[] highProfile;
 
-    private RecyclerView rvEquipment;
     private EquipmentRVAdapter adapterEquip;
     private List<Equipment> listEquipment;
 
@@ -136,14 +128,18 @@ public class TourFragment extends Fragment {
 
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
-        mapFragment = new MapFragment();
+        MapFragment mapFragment = new MapFragment();
         fragment.setArguments(args);
         tourController = new TourController(tour);
+        equipmentController = EquipmentController.getInstance();
         weatherController = WeatherController.getInstance();
         return fragment;
     }
 
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +147,12 @@ public class TourFragment extends Fragment {
         tour = tourController.getCurrentTour();
     }
 
+    /**
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -161,19 +163,26 @@ public class TourFragment extends Fragment {
         return view;
     }
 
+    /**
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void initializeControls(View view){
+    /**
+     * @param view
+     */
+    private void initializeControls(View view){
         imageViewTourImage = (ImageView) view.findViewById(R.id.tourImage);
         favButton = (ImageButton) view.findViewById(R.id.favButton);
 
         tourRegion = (TextView) view.findViewById(R.id.tourRegion);
         tourTitle = (TextView) view.findViewById(R.id.tourTitle);
-        tourSavedButton = (ImageButton) view.findViewById(R.id.tourSaved);
-        tourSharedButton = (ImageButton) view.findViewById(R.id.tourShared);
+        ImageButton tourSavedButton = (ImageButton) view.findViewById(R.id.tourSaved);
+        ImageButton tourSharedButton = (ImageButton) view.findViewById(R.id.tourShared);
         textViewTourDistance = (TextView) view.findViewById(R.id.tourDistance);
         textViewAscend = (TextView) view.findViewById(R.id.tourAscend);
         textViewDuration = (TextView) view.findViewById(R.id.tourDuration);
@@ -216,7 +225,7 @@ public class TourFragment extends Fragment {
         textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 
         //equipment section
-        rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
+        RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
         rvEquipment.setPadding(5, 5, 5, 5);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvEquipment.setLayoutManager(horizontalLayoutManager);
@@ -229,10 +238,25 @@ public class TourFragment extends Fragment {
         rvEquipment.addItemDecoration(itemDecorator);
 
         //TODO add recommended method for getting equipment
-        listEquipment = tourController.getEquipmentOfTour(this.tour);
-        adapterEquip.notifyDataSetChanged();
+        //listEquipment = tourController.getEquipmentOfTour(this.tour);
+        equipmentController.retrieveRecommendedEquipment(this.tour, controllerEvent -> {
+            switch (controllerEvent.getType()){
+                case OK:
+                    Log.d(TAG,"got equipment for tour");
+                    TourFragment.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
+                    adapterEquip.notifyDataSetChanged();
+                    break;
+                default:
+                    Log.d(TAG,"failure getting equipment for tour");
+                    break;
+            }
+        });
     }
-    public void fillControls() {
+
+    /**
+     *
+     */
+    private void fillControls() {
         List<File> images = tourController.getImages();
         Log.d("Debug", "Images size:" + images.size());
         if (!images.isEmpty() && images.get(0).length() != 0){
@@ -252,7 +276,7 @@ public class TourFragment extends Fragment {
         }
 
         try {
-            highProfile = tourController.getHighProfile();
+            int[] highProfile = tourController.getHighProfile();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -268,7 +292,11 @@ public class TourFragment extends Fragment {
 
         textViewDifficulty.setText(tourController.getDifficultyMark());
     }
-    public void setupActionListeners(){
+
+    /**
+     *
+     */
+    private void setupActionListeners(){
         jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
         favButton.setOnClickListener((View v) -> toggleFavorite());
 
@@ -281,52 +309,49 @@ public class TourFragment extends Fragment {
      */
     private void setupDateAndTimeDialogs(){
         //time picker listener, which triggers weather service
-        TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                selectedDateTime = selectedDateTime.withTime(hourOfDay, minute, 0, 0);
+        TimePickerDialog.OnTimeSetListener timeSetListener = (view, hourOfDay, minute) -> {
+            selectedDateTime = selectedDateTime.withTime(hourOfDay, minute, 0, 0);
 
-                DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMM HH:mm");
-                String dateTime = selectedDateTime.toString(formatter);
-                String preText = getString(R.string.wanderung_beginn);
-                selectedDay.setText(preText + " " + dateTime);
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMM HH:mm");
+            String dateTime = selectedDateTime.toString(formatter);
+            String preText = getString(R.string.wanderung_beginn);
+            selectedDay.setText(preText + " " + dateTime);
 
-                Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
-                Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
+            Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
+            Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
 
-                weatherList = null;
+            weatherList = null;
 
-                weatherController.getWeatherFromTour(tour, selectedDateTime, new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        switch (controllerEvent.getType()){
-                            case OK:
-                                weatherList = (List<Weather>) controllerEvent.getModel();
+            weatherController.getWeatherFromTour(tour, selectedDateTime, controllerEvent -> {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        weatherList = (List<Weather>) controllerEvent.getModel();
 
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(weatherList != null){
-                                            weatherInfos.setVisibility(View.VISIBLE);
-                                            initializeWeather();
-                                        }else{
-                                            Toast.makeText(context, R.string.keine_wetterdaten, Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                                break;
-                            default:
-                                Log.d("WETTER", "service problem");
-                                break;
-                        }
-                    }
-                });
+                        getActivity().runOnUiThread(() -> {
+                            if(weatherList != null){
+                                weatherInfos.setVisibility(View.VISIBLE);
+                                initializeWeather();
+                            }else{
+                                Toast.makeText(context, R.string.keine_wetterdaten, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        break;
+                    default:
+                        Log.d("WETTER", "service problem");
+                        break;
+                }
+            });
 
-            }
         };
 
         //date picker listener, which triggers time picker
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            /**
+             * @param view
+             * @param year
+             * @param month
+             * @param dayOfMonth
+             */
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 selectedDateTime = selectedDateTime.withDate(year, month, dayOfMonth);
@@ -360,21 +385,21 @@ public class TourFragment extends Fragment {
      */
     private void initializeWeather(){
 
-        weatherIcons = new ArrayList<>();
+        List<ImageView> weatherIcons = new ArrayList<>();
         weatherIcons.add(firstWeatherIcon);
         weatherIcons.add(secondWeatherIcon);
         weatherIcons.add(thirdWeatherIcon);
         weatherIcons.add(forthWeatherIcon);
         weatherIcons.add(fifthWeatherIcon);
 
-        weatherDegrees = new ArrayList<>();
+        List<TextView> weatherDegrees = new ArrayList<>();
         weatherDegrees.add(firstWeatherDegree);
         weatherDegrees.add(secondWeatherDegree);
         weatherDegrees.add(thirdWeatherDegree);
         weatherDegrees.add(forthWeatherDegree);
         weatherDegrees.add(fifthWeatherDegree);
 
-        timePoints = new ArrayList<>();
+        List<TextView> timePoints = new ArrayList<>();
         timePoints.add(firstTimePoint);
         timePoints.add(secondTimePoint);
         timePoints.add(thirdTimePoint);
@@ -464,33 +489,33 @@ public class TourFragment extends Fragment {
         }
     }
 
-    public void toggleFavorite() {
+    /**
+     *
+     */
+    private void toggleFavorite() {
 
         if (isFavoriteUpdate){
             return;
         }
         if (tourController.isFavorite() && !isFavoriteUpdate) {
             isFavoriteUpdate = true;
-            tourController.unsetFavorite(new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
-                    isFavoriteUpdate = false;
-                }
+            tourController.unsetFavorite(controllerEvent -> {
+                favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                isFavoriteUpdate = false;
             });
         }else{
             isFavoriteUpdate = true;
-            tourController.setFavorite(new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
-                    isFavoriteUpdate = false;
-                }
+            tourController.setFavorite(controllerEvent -> {
+                favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+                isFavoriteUpdate = false;
             });
         }
     }
 
-    public void showMapWithTour() {
+    /**
+     *
+     */
+    private void showMapWithTour() {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
@@ -509,7 +534,7 @@ public class TourFragment extends Fragment {
      * @param view
      * @param parEquipment
      */
-    public void onItemClickImages(View view, Equipment parEquipment) {
+    private void onItemClickImages(View view, Equipment parEquipment) {
 
     }
 

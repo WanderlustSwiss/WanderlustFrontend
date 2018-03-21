@@ -76,6 +76,11 @@ public class EquipmentController {
 
     }
 
+    /**
+     *
+     * @param tour
+     * @param handler
+     */
     public void retrieveRecommendedEquipment(Tour tour, FragmentHandler handler) {
 
 

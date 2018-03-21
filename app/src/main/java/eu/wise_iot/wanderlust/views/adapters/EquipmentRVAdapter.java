@@ -77,6 +77,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
         //load image
         //TODO add data structure for image
         //Picasso.with(context).load(equipment.getImage()).into(holder.ivImage);
+        Picasso.with(context).load(R.drawable.no_image_found).into(holder.ivImage);
         //set title
         holder.tvTitle.setText(equipment.getName());
     }

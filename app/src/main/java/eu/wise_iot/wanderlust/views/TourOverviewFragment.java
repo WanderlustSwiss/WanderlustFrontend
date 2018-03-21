@@ -47,7 +47,7 @@ public class TourOverviewFragment extends Fragment {
     private final List<Tour> favTours = new ArrayList<>();
     private RecyclerView rvTouren;
     private RecyclerView rvFavorites;
-    private int currentPage = 1;
+    private int currentPage = 0;
     private ImageController imageController;
 
     @Override
