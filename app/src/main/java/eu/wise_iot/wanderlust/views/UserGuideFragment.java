@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.views;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +17,8 @@ import eu.wise_iot.wanderlust.constants.Constants;
  */
 public class UserGuideFragment extends Fragment {
 
-
-    public UserGuideFragment() {
-        // Required empty public constructor
-    }
-
     public static UserGuideFragment newInstance() {
-
         Bundle args = new Bundle();
-
         UserGuideFragment fragment = new UserGuideFragment();
         fragment.setArguments(args);
         return fragment;
@@ -46,10 +40,10 @@ public class UserGuideFragment extends Fragment {
                         .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                         .addToBackStack(null)
                         .commit();
+                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
             }
         });
 
         return rootView;
     }
-
 }

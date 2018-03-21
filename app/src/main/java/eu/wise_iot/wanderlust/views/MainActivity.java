@@ -81,25 +81,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onResponse(ControllerEvent controllerEvent) {
                     switch (controllerEvent.getType()) {
                         case OK:
-
-                            // TODO: remove condition: user guide gets opened always
-                            if(preferences.getBoolean("firstTimeOpened", true) || true) {
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putBoolean("firstTimeOpened", false); // save that app has been opened
-                                editor.apply();
-
-                                UserGuideFragment userGuideFragment = UserGuideFragment.newInstance();
-                                getFragmentManager().beginTransaction()
-                                        .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
-                                        .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
-                                        .commit();
-                            } else {
-                                MapFragment mapFragment = MapFragment.newInstance();
-                                getFragmentManager().beginTransaction()
-                                        .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                                        .commit();
-                            }
-
+                            MapFragment mapFragment = MapFragment.newInstance();
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                    .commit();
                             break;
                         default:
                             SartupLoginFragment loginFragment = new SartupLoginFragment();
@@ -133,8 +118,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
     }
 
     /**

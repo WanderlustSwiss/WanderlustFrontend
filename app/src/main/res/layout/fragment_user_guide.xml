@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="70dp"
     android:background="@color/background_two_and_inactive"
     android:orientation="vertical"
     tools:context=".views.MainActivity">
@@ -26,7 +25,8 @@
                 style="@style/h1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="12dp"
+                android:paddingBottom="24dp"
+                android:paddingTop="24dp"
                 android:text="@string/menu_user_guide" />
 
             <LinearLayout
