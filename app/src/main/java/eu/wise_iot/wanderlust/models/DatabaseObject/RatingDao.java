@@ -157,6 +157,12 @@ public class RatingDao extends DatabaseObjectAbstract{
         return RatingBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
+    public Rating findOne(Property searchedColumn, long searchPattern, long additionalSearchPattern)
+            throws NoSuchFieldException, IllegalAccessException {
+        return RatingBox.query().equal(searchedColumn, searchPattern)
+                .equal(Rating_.user, additionalSearchPattern).build().findFirst();
+    }
+
     /**
      * Searching for Rating tour matching with the search pattern in a the selected column.
      *

@@ -49,7 +49,7 @@
                 android:layout_alignParentEnd="false"
                 android:paddingRight="12dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_rate_star_yellow_32dp" />
+                android:src="@drawable/ic_rate_star_transparent_32dp" />
 
             <ImageButton
                 android:id="@+id/second_star_button"

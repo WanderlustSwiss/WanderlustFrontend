@@ -31,6 +31,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
@@ -38,6 +39,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
+import io.objectbox.Property;
 
 
 /**
@@ -139,6 +141,22 @@ public class TourController {
         return false;
     }
 
+    public long alreadyRated(long tour_id){
+        Property property = Rating_.tour;
+        Rating rating = null;
+        try {
+            rating = ratingDao.findOne(property, tour_id, userDao.getUser().getUser_id());
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if(rating != null)
+            return rating.getRate();
+        else
+            return 0;
+
+    }
 
 
     public void getRating(Tour tour, FragmentHandler handler){

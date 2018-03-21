@@ -100,20 +100,30 @@ public class TourRatingDialog extends DialogFragment {
     }
 
     public void initListeners(){
-        buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                getDialog().dismiss();
-                controller.getRating(tour, new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        switch (controllerEvent.getType()){
-                            case OK:
-                                ratingBar.setRating((float) controllerEvent.getModel());
+        long rate = controller.alreadyRated(tour.getTour_id());
+        if(rate == 0) {
+            buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    getDialog().dismiss();
+                    controller.getRating(tour, new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            switch (controllerEvent.getType()) {
+                                case OK:
+                                    ratingBar.setRating((float) controllerEvent.getModel());
+                            }
                         }
-                    }
-                });            }
-        }));
+                    });
+                }
+            }));
+        }
+        else{
+            for(int i=0; i < rate; i++){
+                starButtonCollection[i].setImageResource(R.drawable.ic_rate_star_yellow_32dp);
+            }
+            buttonSave.setImageResource(R.drawable.ic_check_disabled_24dp);
+        }
         buttonCancel.setOnClickListener(v -> {
             // dismisses the current dialog view
             getDialog().dismiss();
@@ -127,7 +137,6 @@ public class TourRatingDialog extends DialogFragment {
 
     public void changeButtonColor(int selectedStar){
         countRatedStars = selectedStar;
-        Log.d("TOURID", String.valueOf(tour.getTour_id()));
         for(int i=0; i < selectedStar; i++){
             starButtonCollection[i].setImageResource(R.drawable.ic_rate_star_yellow_32dp);
         }
