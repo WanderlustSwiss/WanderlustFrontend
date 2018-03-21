@@ -353,13 +353,6 @@ public class TourFragment extends Fragment {
             return;
         }
 
-        tourController.retrieveRecommendedEquipment(new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                controllerEvent.getModel();
-            }
-        });
-
 
         if (tourController.isFavorite() && !isFavoriteUpdate) {
             isFavoriteUpdate = true;

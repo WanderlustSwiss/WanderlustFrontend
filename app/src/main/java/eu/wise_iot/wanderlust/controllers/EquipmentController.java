@@ -5,6 +5,12 @@ import android.content.Context;
 
 import org.joda.time.DateTime;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +22,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.services.EquipmentService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.WeatherService;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +31,10 @@ public class EquipmentController {
     private EquipmentService service;
     private List<Equipment> equipmentList;
     private int typeCount;
+    private volatile boolean equipmentInitiated;
+    private volatile boolean imagesDownloaded;
+    private ImageController imageController;
+
 
     private static class Holder {
         private static final EquipmentController INSTANCE = new EquipmentController();
@@ -31,30 +42,29 @@ public class EquipmentController {
 
     private static Context CONTEXT;
 
-    public static EquipmentController createInstance(Context context){
+    public static EquipmentController createInstance(Context context) {
         CONTEXT = context;
-
         return EquipmentController.Holder.INSTANCE;
     }
 
-    public static EquipmentController getInstance(){
+    public static EquipmentController getInstance() {
         return CONTEXT != null ? EquipmentController.Holder.INSTANCE : null;
     }
 
-    private EquipmentController(){
+    private EquipmentController() {
         service = ServiceGenerator.createService(EquipmentService.class);
+        imageController = ImageController.getInstance();
     }
 
-    //TODO safety -> boolean is initiatet
-    public List<Equipment> getEquipmentList(){
-        return equipmentList;
+    public List<Equipment> getEquipmentList() {
+        return equipmentInitiated ? equipmentList : new ArrayList<>();
     }
 
     public int getTypeCount() {
         return typeCount;
     }
 
-    public void initEquipment(){
+    public void initEquipment() {
         Call<List<Equipment>> call = service.getEquipment();
         call.enqueue(new Callback<List<Equipment>>() {
             @Override
@@ -62,11 +72,36 @@ public class EquipmentController {
                 if (response.isSuccessful()) {
                     equipmentList = response.body();
                     typeCount = 0;
-                    for(Equipment equipment : equipmentList){
-                            if(equipment.getType() > typeCount){
-                                typeCount = equipment.getType();
+
+                    for (Equipment equipment : equipmentList) {
+                        if (equipment.getType() > typeCount) {
+                            typeCount = equipment.getType();
                         }
-                    }}
+                        if(equipment.getImagePath() == null) continue;
+                        equipment.getImagePath().setLocalDir(imageController.getEquipmentFolder());
+                        Call<ResponseBody> imageCall = service.downloadImage(equipment.getEquip_id());
+                        imageCall.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if(response.isSuccessful()) {
+                                    try {
+                                        imageController.save(response.body().byteStream(), equipment.getImagePath());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+
+
+                    }
+                    equipmentInitiated = true;
+                }
             }
 
             @Override
@@ -76,7 +111,9 @@ public class EquipmentController {
 
     }
 
-    public void retrieveRecommendedEquipment(Tour tour, FragmentHandler handler) {
+
+    //TODO dateTime seasons
+    public void retrieveRecommendedEquipment(Tour tour, DateTime dateTime, FragmentHandler handler) {
 
 
         WeatherController weatherController = WeatherController.getInstance();
@@ -171,5 +208,47 @@ public class EquipmentController {
                 }
             }
         });
+    }
+
+    private boolean writeToDisk(ResponseBody body, String path) {
+
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            byte[] fileReader = new byte[4096];
+
+            long fileSizeDownloaded = 0;
+            inputStream = body.byteStream();
+            outputStream = new FileOutputStream(path);
+
+
+            while (true) {
+                int read = inputStream.read(fileReader);
+
+                if (read == -1) {
+                    break;
+                }
+
+                outputStream.write(fileReader, 0, read);
+
+                fileSizeDownloaded += read;
+
+            }
+
+            outputStream.flush();
+            return true;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            try {
+                if (inputStream != null)
+                    inputStream.close();
+
+                if (outputStream != null)
+                    outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
