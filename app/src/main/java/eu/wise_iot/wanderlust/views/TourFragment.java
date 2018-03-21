@@ -2,6 +2,8 @@ package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +17,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.androidplot.util.PixelUtils;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.CatmullRomInterpolator;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.PanZoom;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.StepMode;
+import com.androidplot.xy.XYGraphWidget;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
 import com.squareup.picasso.Picasso;
 
 import org.osmdroid.bonuspack.routing.Road;
@@ -24,12 +36,17 @@ import org.osmdroid.views.overlay.Polyline;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
@@ -40,7 +57,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 /**
  * TourController:
  *
- * @author Alexander Weinbeck, Rilind Gashi
+ * @author Alexander Weinbeck, Rilind Gashi, Simon Kaspar
  * @license MIT
  */
 public class TourFragment extends Fragment {
@@ -68,6 +85,8 @@ public class TourFragment extends Fragment {
     private Favorite favorite;
     private boolean isFavoriteUpdate;
     private int[] highProfile;
+
+    private XYPlot plot;
 
     public TourFragment() {
         // Required empty public constructor
@@ -98,11 +117,18 @@ public class TourFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_tour, container, false);
         initializeControls(view);
         fillControls();
         setupActionListeners();
+        tourController.loadGeoData(new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                if (controllerEvent.getType() == EventType.OK){
+                    drawChart();
+                }
+            }
+        });
         return view;
     }
 
@@ -127,6 +153,8 @@ public class TourFragment extends Fragment {
         textViewDifficulty = (TextView) view.findViewById(R.id.tourDifficulty);
         textViewDescription = (TextView) view.findViewById(R.id.tourDescription);
         jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
+
+        plot = (XYPlot) view.findViewById(R.id.plot);
 
         long difficulty = tourController.getLevel();
         Drawable drawable;
@@ -159,11 +187,6 @@ public class TourFragment extends Fragment {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
 
-        try {
-            highProfile = tourController.getHighProfile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         tourRegion.setText("");
         tourTitle.setText(tourController.getTitle());
         textViewDescription.setText(tourController.getDescription());
@@ -204,8 +227,67 @@ public class TourFragment extends Fragment {
             });
         }
     }
+    public void drawChart(){
+        Number[] domainLabels = tourController.getElevationProfileXAxis();
+        Number[] series1Numbers = tourController.getElevationProfileYAxis();
 
+        float minElevation = Float.MAX_VALUE;
+        float maxElevation = Float.MIN_VALUE;
+
+        for (Number elev : series1Numbers){
+            if (elev.floatValue() < minElevation){
+                minElevation = elev.floatValue();
+            }
+            if (elev.floatValue() > maxElevation){
+                maxElevation = elev.floatValue();
+            }
+        }
+
+        // turn the above arrays into XYSeries':
+        // (Y_VALS_ONLY means use the element index as the x value)
+        XYSeries series1 = new SimpleXYSeries(
+                Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
+
+        // create formatters to use for drawing a series using LineAndPointRenderer
+        // and configure them from xml:
+        LineAndPointFormatter series1Format =
+                new LineAndPointFormatter(Color.DKGRAY, null, Color.LTGRAY, null);
+
+
+        // just for fun, add some smoothing to the lines:
+        // see: http://androidplot.com/smooth-curves-and-androidplot/
+        series1Format.setInterpolationParams(
+                new CatmullRomInterpolator.Params(5, CatmullRomInterpolator.Type.Centripetal));
+
+
+        // add a new series' to the xyplot:
+        plot.clear();
+        plot.addSeries(series1, series1Format);
+
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
+            @Override
+            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+                int i = Math.round(((Number) obj).floatValue());
+                return toAppendTo.append(domainLabels[i]);
+            }
+            @Override
+            public Object parseObject(String source, ParsePosition pos) {
+                return null;
+            }
+        });
+
+        plot.getLegend().setVisible(false);
+        float baseLine = ((minElevation - (minElevation % 100)) - 200.0f) < 0.0f ? 0.0f : minElevation - (minElevation % 100) - 200.0f;
+        plot.setRangeLowerBoundary(baseLine, BoundaryMode.FIXED);
+        plot.setRangeUpperBoundary((maxElevation - (maxElevation % 100)) + 100.0f, BoundaryMode.FIXED);
+        plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 100);
+        //PanZoom.attach(plot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.STRETCH_HORIZONTAL);
+        plot.redraw();
+    }
     public void showMapWithTour() {
+        if (tourController.getPolyline() == null){
+            return;
+        }
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
