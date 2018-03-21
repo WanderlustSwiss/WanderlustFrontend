@@ -159,5 +159,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_user_guide">Gebrauchsanleitung</string>
+    <string name="manual_finish_header">Wanderlust-Anleitung</string>
+    <string name="manual_finish_text1">Jetzt weisst du alles, was es über die Wanderlust-App zu wissen gibt.</string>
+    <string name="manual_finish_text2">Klicke auf <b>los geh\'s</b> um das Abenteuer zu starten!</string>
 
 </resources>
