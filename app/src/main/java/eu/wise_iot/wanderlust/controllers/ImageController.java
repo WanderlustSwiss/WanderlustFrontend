@@ -36,10 +36,11 @@ public class ImageController {
 
     private ImageController(){
         picturesDir = CONTEXT.getApplicationContext().getApplicationContext().getExternalFilesDir("pictures").getAbsolutePath();
-        FOLDERS = new String[3];
+        FOLDERS = new String[4];
         FOLDERS[0] = "pois";
         FOLDERS[1] = "tours";
         FOLDERS[2] = "profile";
+        FOLDERS[3] = "equipment";
 
         File pictures = new File(picturesDir);
         if(!pictures.exists()) pictures.mkdir();
@@ -48,15 +49,18 @@ public class ImageController {
             dir.mkdir();
         }
     }
-    public String getProfileFolder(){
-        return FOLDERS[2];
-    }
+
     public String getPoiFolder(){
         return FOLDERS[0];
     }
     public String getTourFolder(){
         return FOLDERS[1];
     }
+    public String getProfileFolder(){
+        return FOLDERS[2];
+    }
+    public String getEquipmentFolder() { return FOLDERS [3]; }
+
     public List<File> getImages(List<ImageInfo> imageInfos){
         List<File> images = new ArrayList<>();
         for(ImageInfo imageInfo : imageInfos){
@@ -71,6 +75,20 @@ public class ImageController {
     public void save(File file, ImageInfo image) throws IOException {
 
         InputStream in = new FileInputStream(file);
+
+        FileOutputStream out = new FileOutputStream(picturesDir + "/" + image.getLocalPath());
+
+
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        out.close();
+        in.close();
+    }
+
+    public void save(InputStream in, ImageInfo image) throws IOException {
 
         FileOutputStream out = new FileOutputStream(picturesDir + "/" + image.getLocalPath());
 
