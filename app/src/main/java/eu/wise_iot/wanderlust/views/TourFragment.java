@@ -98,7 +98,6 @@ public class TourFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_tour, container, false);
         initializeControls(view);
         fillControls();
@@ -109,7 +108,6 @@ public class TourFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     public void initializeControls(View view){
@@ -214,6 +212,7 @@ public class TourFragment extends Fragment {
 
         getFragmentManager().beginTransaction()
                 .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                .addToBackStack(Constants.MAP_FRAGMENT)
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 

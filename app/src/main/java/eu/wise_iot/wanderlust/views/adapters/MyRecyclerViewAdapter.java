@@ -81,7 +81,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
         Tour tour = this.tours.get(position);
-        holder.tvTitle.setTextColor(Color.BLACK);
+//        holder.tvTitle.setTextColor(Color.BLACK);
         //difficulty calculations
         long difficulty = tour.getDifficulty();
         if (difficulty >= 6)
@@ -113,7 +113,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
             File image = images.get(0);
-            Picasso.with(context).load(image).into(holder.tvImage);
+            Picasso.with(context).load(image).centerCrop().fit().into(holder.tvImage);
             Log.d("Toursoverview", "ImageInfo loaded: " + image.toString());
         }else{
             Picasso.with(context).load(R.drawable.no_image_found).into(holder.tvImage);
