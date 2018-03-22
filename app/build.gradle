@@ -81,6 +81,9 @@ dependencies {
     // Library for image gestures
     compile 'com.jsibbold:zoomage:1.1.0'
 
+    // Library for charting
+    compile "com.androidplot:androidplot-core:1.5.4"
+
     // Library to turn HTTP API into Java Interface
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="52dp"
-        android:background="@color/background_main"
-        android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:ap="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="52dp"
+    android:background="@color/background_main"
+    android:orientation="vertical">
 
         <TextView
             android:id="@+id/description_view"
@@ -220,6 +221,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/tour_button_show_map" />
 
+                <com.androidplot.xy.XYPlot
+                    style="@style/APDefacto.Light"
+                    android:id="@+id/plot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="300dp"
+                    android:background="@color/ap_transparent"
+                    ap:backgroundColor="@color/ap_transparent"
+                    ap:graphBackgroundColor="@color/ap_transparent"
+                    ap:gridBackgroundColor="@color/ap_transparent"
+                    ap:domainLineColor="@color/ap_transparent"
+                    ap:lineLabelInsetLeft="21dp"
+                    ap:lineLabelTextSizeLeft="12sp"
+                    ap:lineLabelTextSizeBottom="15sp"
+                    ap:lineLabels="left|bottom"
+                    ap:lineLabelRotationBottom="-45"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
