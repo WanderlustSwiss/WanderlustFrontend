@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:background="@color/background_two_and_inactive"
     android:orientation="vertical"
-    tools:context=".views.MainActivity">
+    tools:context=".views.MainActivity"
+    android:paddingTop="40dp">
 
     <!-- fragment_screen_slide_page.xml -->
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
