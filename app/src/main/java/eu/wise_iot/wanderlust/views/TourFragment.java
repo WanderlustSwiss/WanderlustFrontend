@@ -239,7 +239,7 @@ public class TourFragment extends Fragment {
 
         //TODO add recommended method for getting equipment
         //listEquipment = tourController.getEquipmentOfTour(this.tour);
-        equipmentController.retrieveRecommendedEquipment(this.tour, controllerEvent -> {
+        equipmentController.retrieveRecommendedEquipment(this.tour,DateTime.now(), controllerEvent -> {
             switch (controllerEvent.getType()){
                 case OK:
                     Log.d(TAG,"got equipment for tour");
