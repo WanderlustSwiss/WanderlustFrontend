@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,6 +24,8 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 
 /**
@@ -59,6 +62,26 @@ public class PoiViewDialog extends DialogFragment {
         currentPoi = poi;
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         long poiId = poi.getPoi_id();
+        Bundle args = new Bundle();
+        args.putLong(Constants.POI_ID, poiId);
+        dialog.setArguments(args);
+        return dialog;
+    }
+
+    /**
+     * Create a PoiViewDialog from a GeoObject
+     *
+     * @param geoObject The GeoObject which is shown in the Poi dialog
+     */
+    public static PoiViewDialog newInstance(GeoObject geoObject) {
+        PoiViewDialog dialog = new PoiViewDialog();
+        ArrayList<ImageInfo> list = new ArrayList<>();
+        list.add(new ImageInfo(1, geoObject.getImageLink()));
+    //    list.add(new ImageInfo(1, "http://binaryoptionexpert.com/wp-content/uploads/2015/01/not_available.jpg"));
+
+        currentPoi = new Poi((long) -1, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, -1, true, list);
+        dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
+        long poiId = -1;
         Bundle args = new Bundle();
         args.putLong(Constants.POI_ID, poiId);
         dialog.setArguments(args);
@@ -135,15 +158,22 @@ public class PoiViewDialog extends DialogFragment {
     }
 
     private void fillOutPoiView() {
-        controller.getImages(currentPoi, new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                List<File> images = (List<File>) controllerEvent.getModel();
-                if (images.size() > 0) {
-                    Picasso.with(context).load(images.get(0)).fit().into(poiImage);
+        if (poiId != -1) {
+            controller.getImages(currentPoi, new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    List<File> images = (List<File>) controllerEvent.getModel();
+                    if (images.size() > 0) {
+                        Picasso.with(context).load(images.get(0)).fit().into(poiImage);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            List<File> images = new ArrayList<>();
+            images.add(new File(currentPoi.getImagePaths().get(0).getPath()));
+            Picasso.with(context).load(images.get(0).getPath()).into(poiImage);
+        }
+
 
         if (!currentPoi.isPublic()) {
             Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
@@ -151,13 +181,18 @@ public class PoiViewDialog extends DialogFragment {
 
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
-        typeTextView.setText(typeValues[(int) currentPoi.getType()]);
+        if(poiId != -1){
+            typeTextView.setText(typeValues[(int) currentPoi.getType()]);
+        } else {
+            typeTextView.setText("SAC");
+        }
         String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
         elevationTextView.setText(elevationText);
 
         titleTextView.setText(currentPoi.getTitle());
-
-        dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
+        if(poiId != -1){
+            dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
+        }
         descriptionTextView.setText(currentPoi.getDescription());
     }
 

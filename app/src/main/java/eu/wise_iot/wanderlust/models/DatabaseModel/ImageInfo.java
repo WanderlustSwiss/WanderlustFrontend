@@ -15,6 +15,11 @@ public class ImageInfo {
         setPath(name, dir);
     }
 
+    public ImageInfo(long id, String path){
+        this.id = id;
+        this.path = path;
+    }
+
     public void setPath(String name, String dir){
         this.path = dir + "/" + name;
     }

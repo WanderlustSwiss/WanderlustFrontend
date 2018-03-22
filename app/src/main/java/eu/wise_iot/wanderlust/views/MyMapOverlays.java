@@ -34,6 +34,7 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PublicTransportPoint;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
@@ -56,12 +57,16 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private ItemizedOverlayWithFocus<OverlayItem> poiHashtagOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> publicTransportOverlay;
+    private ItemizedOverlayWithFocus<OverlayItem> sacHutOverlay;
     private Marker positionMarker;
     private Marker focusedPositionMarker;
     private ArrayList<Polyline> borderLines;
+    private List<GeoObject> sacList;
+    private MapFragment mapFragment;
 
 
-    public MyMapOverlays(Activity activity, MapView mapView, MapController searchMapController) {
+    public MyMapOverlays(Activity activity, MapView mapView, MapController searchMapController, MapFragment fragment) {
+        this.mapFragment = fragment;
         this.searchMapController = searchMapController;
         this.activity = activity;
         this.mapView = mapView;
@@ -283,6 +288,12 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.getOverlays().remove(positionMarker);
     }
 
+
+    /**
+     * Triggers the loading of Poi layer
+     *
+     * @param setVisible display or hide layer
+     */
     void showPoiLayer(boolean setVisible) {
         showPoiHashtagLayer(false);
         if (setVisible) {
@@ -295,9 +306,27 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.invalidate();
     }
 
+    /**
+     * Triggers the loading of public transport layer arround the current location and displays it
+     *
+     * @param geoPoint Current location of the user
+     * @param setVisible display or hide layer
+     */
     void showPublicTransportLayer(boolean setVisible, GeoPoint geoPoint) {
         if (publicTransportOverlay == null) {
-            publicTransportOverlay = new ItemizedOverlayWithFocus<OverlayItem>(activity, new ArrayList<>(), null);
+            ItemizedIconOverlay.OnItemGestureListener<OverlayItem> listener = new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                @Override
+                public boolean onItemSingleTapUp(int index, OverlayItem item) {
+                    mapFragment.showInformationBottomSheet(true, item.getTitle());
+                    return true;
+                }
+
+                @Override
+                public boolean onItemLongPress(int index, OverlayItem item) {
+                    return false;
+                }
+            };
+            publicTransportOverlay = new ItemizedOverlayWithFocus<OverlayItem>(activity, new ArrayList<>(), listener);
         }
 
         if (setVisible) {
@@ -329,6 +358,11 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     }
 
+    /**
+     * Triggers the loading of Hashtag Search layer
+     *
+     * @param setVisible display or hide layer
+     */
     void showPoiHashtagLayer(boolean setVisible) {
         if (setVisible) {
             if (!mapView.getOverlays().contains(poiHashtagOverlay)) {
@@ -340,16 +374,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.invalidate();
     }
 
-    private void showPublicTransportlayer(boolean setVisible) {
-        if (setVisible) {
-            if (!mapView.getOverlays().contains(poiHashtagOverlay)) {
-                mapView.getOverlays().add(poiHashtagOverlay);
-            }
-        } else {
-            mapView.getOverlays().remove(poiHashtagOverlay);
-        }
-        mapView.invalidate();
-    }
+
 
     @Override
     public void update(DatabaseEvent event) {
@@ -383,10 +408,21 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         }
     }
 
+    /**
+     * Adds boarder lines of Search to the map view and deactivates position marker
+     *
+     * @return geoPoints A List of Geopoint to be displayed
+     */
     public MyLocationNewOverlay getMyLocationNewOverlay() {
         return myLocationNewOverlay;
     }
 
+
+    /**
+     * Adds the current position marker
+     *
+     * @param geoPoint location of position
+     */
     public void addFocusedPositionMarker(GeoPoint geoPoint) {
         if (focusedPositionMarker != null) {
             removeFocusedPositionMarker();
@@ -409,10 +445,19 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         }
     }
 
+    /**
+     * Deletes the focused position marker
+     */
     public void removeFocusedPositionMarker() {
         mapView.getOverlays().remove(focusedPositionMarker);
     }
 
+
+    /**
+     * Adds boarder lines of Search to the map view and deactivates position marker
+     *
+     * @param geoPoints A List of Geopoint to be displayed
+     */
     public void addPolyline(ArrayList<GeoPoint> geoPoints) {
         if (focusedPositionMarker != null) {
             removeFocusedPositionMarker();
@@ -432,11 +477,87 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.invalidate();
     }
 
+
+    /**
+     * Deletes the boarder lines of search results (villages etc.)
+     */
     public void clearPolylines() {
         if (borderLines != null) {
             mapView.getOverlays().removeAll(borderLines);
             borderLines = null;
         }
+    }
+
+
+    // *********************** SAC LAYER ************************************************** //
+    /**
+     * Triggers the loading of sac hut layer arround the current location and displays it
+     *
+     * @param geoPoint1 Current location of the user
+     * @param geoPoint2 Current location of the user
+     * @param setVisible display or hide layer
+     */
+    void showSacHutLayer(boolean setVisible, GeoPoint geoPoint1, GeoPoint geoPoint2) {
+        if (sacHutOverlay == null) {
+            ItemizedIconOverlay.OnItemGestureListener<OverlayItem> listener = new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                @Override
+                public boolean onItemSingleTapUp(final int index, final OverlayItem poiOverlayItem) {
+                    long poiId = Long.valueOf(poiOverlayItem.getUid());
+
+                    GeoObject currentObject = sacList.get((int) poiId);
+
+                    FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+                    // make sure that no other dialog is running
+                    Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
+                    if (prevFragment != null)
+                        fragmentTransaction.remove(prevFragment);
+                    fragmentTransaction.addToBackStack(null);
+
+                    PoiViewDialog dialogFragment = PoiViewDialog.newInstance(currentObject);
+                    dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
+                    return true;
+                }
+
+                @Override
+                public boolean onItemLongPress(final int index, final OverlayItem overlayItem) {
+                    // TODO: maybe add action when item is pressed long?
+                    return false;
+                }
+            };
+
+            sacHutOverlay = new ItemizedOverlayWithFocus<OverlayItem>(activity, new ArrayList<>(), listener);
+        }
+
+        if (setVisible) {
+
+            searchMapController.searchSac(geoPoint1, geoPoint2, new FragmentHandler<List<GeoObject>>() {
+                @Override
+                public void onResponse(ControllerEvent<List<GeoObject>> controllerEvent) {
+                    if (controllerEvent.getType() == EventType.OK) {
+                        sacList = controllerEvent.getModel();
+
+                        Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_home_black_24dp_white);
+                        sacHutOverlay.removeAllItems();
+
+                        for (GeoObject sacHut : controllerEvent.getModel()) {
+                            GeoPoint sacLocation = new GeoPoint(sacHut.getLatitude(), sacHut.getLongitude());
+                            int id = sacHutOverlay.size();
+                            OverlayItem overlayItem = new OverlayItem(Integer.toString(id), sacHut.getTitle(), sacHut.getTitle(), sacLocation);
+                            overlayItem.setMarker(drawable);
+                            sacHutOverlay.addItem(overlayItem);
+                        }
+                        mapView.getOverlays().add(sacHutOverlay);
+                    }
+                    mapView.invalidate();
+                }
+            });
+        } else {
+            sacHutOverlay.removeAllItems();
+            mapView.getOverlays().remove(sacHutOverlay);
+            mapView.invalidate();
+        }
+        mapView.invalidate();
+
     }
 
 }

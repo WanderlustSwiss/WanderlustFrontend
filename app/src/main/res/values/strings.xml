@@ -156,5 +156,7 @@
     <string name="title_tours">Touren</string>
     <string name="title_score">Score</string>
     <string name="public_transport">ÖV</string>
+    <string name="hashtag_search_nothing_found">Im aktuellen Kartenausschnitt wurden keine Resultate gefunden</string>
+    <string name="sac_house">SAC</string>
 
 </resources>

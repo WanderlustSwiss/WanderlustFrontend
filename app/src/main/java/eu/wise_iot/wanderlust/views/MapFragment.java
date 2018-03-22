@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.MatrixCursor;
+import android.graphics.Rect;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -20,9 +21,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
@@ -35,6 +39,7 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +54,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
+import eu.wise_iot.wanderlust.controllers.MotionEventListener;
 import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -94,11 +100,16 @@ public class MapFragment extends Fragment {
     // bottom sheet
     private ImageButton poiLayerButton;
     private ImageButton publicTransportLayerButton;
+    private ImageButton sacHutLayerButton;
 
     // Search suggetstion
     private List<HashtagResult> hashTagSearchSuggestions = new ArrayList<>();
     private SimpleCursorAdapter mAdapter;
     private MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "hashTag"});
+
+    // Bottom Sheet with information String
+    private BottomSheetBehavior informationBottomSheet;
+    private TextView informationBottomSheetString;
 
 
     /**
@@ -167,6 +178,25 @@ public class MapFragment extends Fragment {
         initCameraButton(view);
         initLayerButton(view);
         initMapTypeButton(view);
+        initInformationBottomSheet(view);
+    }
+
+    private void initInformationBottomSheet(View view) {
+        View bottomSheet = view.findViewById(R.id.bottom_sheet_public_transport);
+        informationBottomSheet = BottomSheetBehavior.from(bottomSheet);
+        informationBottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        informationBottomSheetString = (TextView) view.findViewById(R.id.public_transport_station_name);
+
+        this.mapView.addObserver((arg, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN && informationBottomSheet.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                Rect outRect = new Rect();
+                bottomSheet.getGlobalVisibleRect(outRect);
+
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY()))
+                    informationBottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
     }
 
     private void initMapTypeButton(View view) {
@@ -369,7 +399,7 @@ public class MapFragment extends Fragment {
         mapController = mapView.getController();
         mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-               //Gefährlich aber legit
+            //Gefährlich aber legit
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 WanderlustMapView map = (WanderlustMapView) v;
 
@@ -397,7 +427,7 @@ public class MapFragment extends Fragment {
      * Initializes map overlays
      */
     private void initOverlays() {
-        mapOverlays = new MyMapOverlays(getActivity(), mapView, this.searchMapController);
+        mapOverlays = new MyMapOverlays(getActivity(), mapView, this.searchMapController, this);
         // set position marker if last location is available
         if (!myLocationIsEnabled && lastKnownLocation != null
                 && lastKnownLocation.getLatitude() != 0
@@ -519,7 +549,6 @@ public class MapFragment extends Fragment {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         // register behavior on clicked
-
         layerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -537,6 +566,10 @@ public class MapFragment extends Fragment {
         publicTransportLayerButton = (ImageButton) view.findViewById(R.id.public_transport_layer_button);
         showPublicTransportOverlay(false);
 
+        sacHutLayerButton = (ImageButton) view.findViewById(R.id.public_sac_layer_button);
+        showSacHutOverlay(false);
+
+
 
         publicTransportLayerButton.setOnClickListener(v -> {
             boolean toggleLayer = !publicTransportLayerButton.isSelected();
@@ -548,6 +581,12 @@ public class MapFragment extends Fragment {
             boolean toggleLayer = !poiLayerButton.isSelected();
             showPoiOverlay(toggleLayer);
         });
+
+        sacHutLayerButton.setOnClickListener(v -> {
+            boolean toggleLayer = !sacHutLayerButton.isSelected();
+            showSacHutOverlay(toggleLayer);
+        });
+
 
 
         mapView.setOnClickListener(v -> {
@@ -566,6 +605,27 @@ public class MapFragment extends Fragment {
         } else {
             poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
             poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+
+    private void showSacHutOverlay(boolean showOverlay) {
+        sacHutLayerButton.setSelected(showOverlay);
+
+        BoundingBox boundingBox = mapView.getProjection().getBoundingBox();
+        GeoPoint point1 = new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonWest());
+        GeoPoint point2 = new GeoPoint(boundingBox.getLatSouth(), boundingBox.getLonEast());
+
+        if(mapView.getZoomLevel() > 10){
+            mapOverlays.showSacHutLayer(showOverlay, point1, point2);
+        }
+        mapView.setSacHutEnabledEnabled(showOverlay);
+
+        if (showOverlay) {
+            sacHutLayerButton.setImageResource(R.drawable.ic_home_black_40dp_white);
+            sacHutLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            sacHutLayerButton.setImageResource(R.drawable.ic_home_black_40dp_black);
+            sacHutLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
     }
 
@@ -670,57 +730,24 @@ public class MapFragment extends Fragment {
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionClick(int position) {
-                Toast.makeText(getActivity(), "clicked: " + position, Toast.LENGTH_SHORT).show();
-
-                String element = c.getString(1);
-                BoundingBox boundingBox = mapView.getProjection().getBoundingBox();
-                GeoPoint point1 = new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonWest());
-                GeoPoint point2 = new GeoPoint(boundingBox.getLatSouth(), boundingBox.getLonEast());
-
-                for (HashtagResult hashtagResult : hashTagSearchSuggestions) {
-                    if (hashtagResult.getTag().equals(element)) {
-                        searchMapController.serachHashtag(hashtagResult.getHashId(), point1, point2, new FragmentHandler<List<Poi>>() {
-                            @Override
-                            public void onResponse(ControllerEvent<List<Poi>> controllerEvent) {
-                                List<Poi> hashtagPoiList = controllerEvent.getModel();
-                                showPoiOverlay(false);
-                                mapOverlays.updateHashtagPoiLayer(hashtagPoiList);
-                            }
-                        });
-                        break;
-                    }
-                }
+                triggerHashtagSearch(position, null);
                 return true;
             }
 
             @Override
             public boolean onSuggestionSelect(int position) {
-                Toast.makeText(getActivity(), "selected: " + position, Toast.LENGTH_SHORT).show();
-
-                String element = c.getString(position);
-                BoundingBox boundingBox = mapView.getProjection().getBoundingBox();
-                GeoPoint point1 = new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonWest());
-                GeoPoint point2 = new GeoPoint(boundingBox.getLatSouth(), boundingBox.getLonEast());
-
-                for (HashtagResult hashtagResult : hashTagSearchSuggestions) {
-                    if (hashtagResult.getTag().equals(element)) {
-                        searchMapController.serachHashtag(hashtagResult.getHashId(), point1, point2, new FragmentHandler<List<Poi>>() {
-                            @Override
-                            public void onResponse(ControllerEvent<List<Poi>> controllerEvent) {
-                                List<Poi> hashtagPoiList = controllerEvent.getModel();
-                                showPoiOverlay(false);
-                                mapOverlays.updateHashtagPoiLayer(hashtagPoiList);
-                            }
-                        });
-                    }
-                }
+                triggerHashtagSearch(position, null);
                 return true;
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                callSearch(s);
+                if (s.startsWith("#")) {
+                    triggerHashtagSearch(-1, s.substring(1));
+                } else {
+                    callSearch(s);
+                }
                 return true;
             }
 
@@ -735,14 +762,11 @@ public class MapFragment extends Fragment {
                             } else {
                                 hashTagSearchSuggestions.clear();
                             }
-
-                            if (hashTagSearchSuggestions != null && !hashTagSearchSuggestions.isEmpty()) {
-                                populateAdapter(s.substring(1));
-                            }
+                            populateAdapter(s.substring(1));
 
                         }
                     });
-                } else if (s.trim().startsWith("#")) {
+                } else {
                     if (hashTagSearchSuggestions != null) {
                         hashTagSearchSuggestions.clear();
                     }
@@ -803,15 +827,67 @@ public class MapFragment extends Fragment {
         });
     }
 
-    // You must implements your logic to get data using OrmLite
+
     private void populateAdapter(String query) {
         c = new MatrixCursor(new String[]{BaseColumns._ID, "hashTag"});
         int length = this.hashTagSearchSuggestions.size() > 6 ? 6 : this.hashTagSearchSuggestions.size();
         for (int i = 0; i < length; i++) {
-            if (this.hashTagSearchSuggestions.get(i).getTag().toLowerCase().startsWith(query.toLowerCase()))
+            if (this.hashTagSearchSuggestions.get(i).getTag().toLowerCase().startsWith(query.toLowerCase())) {
                 c.addRow(new Object[]{i, this.hashTagSearchSuggestions.get(i).getTag()});
+            }
         }
+
         mAdapter.changeCursor(c);
+    }
+
+    private void triggerHashtagSearch(int position, String query) {
+        String element;
+        if (query != null) { // use the input (search directly)
+            element = query;
+        } else { // take input from suggestions (search via searching suggestion)
+            element = c.getString(1);
+        }
+
+        BoundingBox boundingBox = mapView.getProjection().getBoundingBox();
+        GeoPoint point1 = new GeoPoint(boundingBox.getLatSouth(), boundingBox.getLonWest());
+        GeoPoint point2 = new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonEast());
+
+        for (HashtagResult hashtagResult : hashTagSearchSuggestions) {
+            if (hashtagResult.getTag().equals(element)) {
+                searchMapController.serachHashtag(hashtagResult.getHashId(), point2, point1, new FragmentHandler<List<Poi>>() {
+                    @Override
+                    public void onResponse(ControllerEvent<List<Poi>> controllerEvent) {
+                        List<Poi> hashtagPoiList = controllerEvent.getModel();
+
+                        // hide poi layer so that hashtagsearch results can be displayed
+                        showPoiOverlay(false);
+
+                        // hide poi layer so that hashtagsearch results can be displayed
+                        mapOverlays.updateHashtagPoiLayer(hashtagPoiList);
+                        if (hashtagPoiList.size() == 0) {
+                            Toast.makeText(getActivity(), R.string.hashtag_search_nothing_found, Toast.LENGTH_LONG).show();
+                        } else {
+                            // close keyboard
+                            View view = getActivity().getCurrentFocus();
+                            if (view != null) {
+                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            }
+                        }
+                    }
+                });
+                break;
+            }
+        }
+    }
+
+    public void showInformationBottomSheet(boolean toggleBottomsheet, String text){
+        if (toggleBottomsheet) {
+            informationBottomSheetString.setText(text);
+            informationBottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            informationBottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
     }
 }
 

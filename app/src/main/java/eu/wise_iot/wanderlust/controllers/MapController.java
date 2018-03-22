@@ -25,11 +25,14 @@ import android.widget.Toast;
 import org.osmdroid.util.GeoPoint;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PublicTransportPoint;
 import eu.wise_iot.wanderlust.services.HashtagService;
+
+import eu.wise_iot.wanderlust.services.SacService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.MapFragment;
 import retrofit2.Call;
@@ -238,5 +241,25 @@ public class MapController {
 
         queue.add(stringRequest);
 
+    }
+
+    public void searchSac(GeoPoint point1, GeoPoint point2, FragmentHandler<List<GeoObject>> fragmentHandler) {
+        SacService service = ServiceGenerator.createService(SacService.class);
+        Call<List<GeoObject>> call = service.retrieveSacPoisByArea(point1.getLatitude(), point1.getLongitude(), point2.getLatitude(), point2.getLongitude());
+        call.enqueue(new Callback<List<GeoObject>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<GeoObject>> call, @NonNull retrofit2.Response<List<GeoObject>> response) {
+                if (response.isSuccessful()) {
+                    fragmentHandler.onResponse(new ControllerEvent<List<GeoObject>>(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    fragmentHandler.onResponse(new ControllerEvent<List<GeoObject>>(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<GeoObject>> call, @NonNull Throwable t) {
+                fragmentHandler.onResponse(new ControllerEvent<List<GeoObject>>(EventType.NETWORK_ERROR));
+            }
+        });
     }
 }
