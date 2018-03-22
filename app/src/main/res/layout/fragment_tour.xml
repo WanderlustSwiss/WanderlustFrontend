@@ -2,223 +2,376 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ap="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="52dp"
     android:background="@color/background_main"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/description_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/description_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:showDividers="middle">
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/tourImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop" />
-
-                <ImageButton
-                    android:id="@+id/favButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@null"
-                    android:src="@drawable/ic_favorite_white_24dp" />
-            </RelativeLayout>
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/primary_main"
-                android:divider="@drawable/divider_empty"
                 android:orientation="vertical"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp">
-
-                <TextView
-                    android:id="@+id/tourRegion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="12dp"
-                    android:textColor="@color/background_main"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/tourTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/background_main"
-                    android:textSize="24sp" />
+                android:showDividers="middle">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="12dp">
+                    android:layout_height="match_parent">
 
-                    <!--
-                    <RatingBar
-                        android:id="@+id/tourRating"
-                        style="?android:attr/ratingBarStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="13dp"
-                        android:backgroundTint="@color/background_main"/>
-
-                    <TextView
-                        android:id="@+id/tourDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="53dp"
-                        android:layout_toEndOf="@+id/tourRating"
-                        android:text="dd.MM.yyyy"
-                        android:textColor="@color/background_main"/>
-                    -->
+                    <ImageView
+                        android:id="@+id/tourImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:scaleType="centerCrop" />
 
                     <ImageButton
-                        android:id="@+id/tourSaved"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginEnd="19dp"
-                        android:layout_toStartOf="@+id/tourShared"
-                        android:background="@null"
-                        android:foregroundGravity="right"
-                        android:src="@drawable/ic_turned_in_white_24dp" />
-
-                    <ImageButton
-                        android:id="@+id/tourShared"
+                        android:id="@+id/favButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginEnd="17dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="12dp"
                         android:background="@null"
-                        android:scaleX="-1"
-                        android:src="@drawable/ic_reply_white_24dp" />
-
+                        android:src="@drawable/ic_favorite_white_24dp" />
                 </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="@color/primary_main"
+                    android:divider="@drawable/divider_empty"
+                    android:orientation="vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp">
+
+                    <TextView
+                        android:id="@+id/tourRegion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="12dp"
+                        android:textColor="@color/background_main"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tourTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/background_main"
+                        android:textSize="24sp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="12dp">
+
+                        <!--
+                        <RatingBar
+                            android:id="@+id/tourRating"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="13dp"
+                            android:backgroundTint="@color/background_main"/>
+
+                        <TextView
+                            android:id="@+id/tourDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="53dp"
+                            android:layout_toEndOf="@+id/tourRating"
+                            android:text="dd.MM.yyyy"
+                            android:textColor="@color/background_main"/>
+                        -->
+
+                        <ImageButton
+                            android:id="@+id/tourSaved"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="19dp"
+                            android:layout_toStartOf="@+id/tourShared"
+                            android:background="@null"
+                            android:foregroundGravity="right"
+                            android:src="@drawable/ic_turned_in_white_24dp" />
+
+                        <ImageButton
+                            android:id="@+id/tourShared"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginEnd="17dp"
+                            android:background="@null"
+                            android:scaleX="-1"
+                            android:src="@drawable/ic_reply_white_24dp" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="12dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tourDistance"
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:drawableLeft="@drawable/ic_directions_walk_black_24dp"
-                                android:drawablePadding="5dp"
-                                android:drawableTint="@color/black"
-                                android:singleLine="true" />
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tourAscend"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:drawableLeft="@drawable/ic_arrow_upward_black_24dp"
-                                android:drawablePadding="5dp"
-                                android:drawableTint="@color/black"
-                                android:singleLine="true" />
+                                <TextView
+                                    android:id="@+id/tourDistance"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:drawableLeft="@drawable/ic_directions_walk_black_24dp"
+                                    android:drawablePadding="5dp"
+                                    android:drawableTint="@color/black"
+                                    android:singleLine="true" />
+
+                                <TextView
+                                    android:id="@+id/tourAscend"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:drawableLeft="@drawable/ic_arrow_upward_black_24dp"
+                                    android:drawablePadding="5dp"
+                                    android:drawableTint="@color/black"
+                                    android:singleLine="true" />
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="7dp"
-                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="7dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tourDuration"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_timer_black_24dp"
+                                android:drawablePadding="5dp"
+                                android:drawableTint="@color/black"
+                                android:singleLine="true" />
+
+                            <TextView
+                                android:id="@+id/tourDescend"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_arrow_downward_black_24dp"
+                                android:drawablePadding="5dp"
+                                android:drawableTint="@color/black"
+                                android:singleLine="true" />
+
+                        </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tourDuration"
-                            android:layout_width="match_parent"
+                            android:id="@+id/tourDifficulty"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_timer_black_24dp"
+                            android:layout_marginTop="7dp"
                             android:drawablePadding="5dp"
-                            android:drawableTint="@color/black"
                             android:singleLine="true" />
-
-                        <TextView
-                            android:id="@+id/tourDescend"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_arrow_downward_black_24dp"
-                            android:drawablePadding="5dp"
-                            android:drawableTint="@color/black"
-                            android:singleLine="true" />
-
                     </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tourDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp" />
+
+                <Button
+                    android:id="@+id/jumpToStartLocationButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tour_button_show_map" />
+
+                <com.androidplot.xy.XYPlot
+                    style="@style/APDefacto.Light"
+                    android:id="@+id/plot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="300dp"
+                    android:background="@color/ap_transparent"
+                    ap:backgroundColor="@color/ap_transparent"
+                    ap:graphBackgroundColor="@color/ap_transparent"
+                    ap:gridBackgroundColor="@color/ap_transparent"
+                    ap:domainLineColor="@color/ap_transparent"
+                    ap:lineLabelInsetLeft="21dp"
+                    ap:lineLabelTextSizeLeft="12sp"
+                    ap:lineLabelTextSizeBottom="15sp"
+                    ap:lineLabels="left|bottom"
+                    ap:lineLabelRotationBottom="-45"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/tourDifficulty"
+                        android:id="@+id/tourWetterTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp"
-                        android:drawablePadding="5dp"
-                        android:singleLine="true" />
-                </LinearLayout>
+                        android:text="@string/wetter"
+                        android:layout_marginLeft="10dp"
+                        android:textStyle="bold"/>
+
+                    <Button
+                        android:id="@+id/datepickerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/wandertag_ausw_hlen"
+                        android:textAllCaps="false"
+                        android:layout_below="@+id/tourWetterTitle"
+                        android:layout_centerHorizontal="true"/>
+
+                    <LinearLayout
+                        android:id="@+id/weatherIcons"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_below="@id/datepickerButton">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/firstPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeFirstPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/firstPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/secondPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeSecondPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/secondPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/thirdPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeThirdPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/thirdPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/forthPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeForthPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/forthPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/fifthPointIcon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/ic_few_clouds"
+                                />
+
+                            <TextView
+                                android:id="@+id/degreeFifthPoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/fifthPointIcon"
+                                android:layout_centerHorizontal="true"
+                                android:text="9°C"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tourDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp" />
-
-            <Button
-                android:id="@+id/jumpToStartLocationButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/tour_button_show_map" />
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+        </ScrollView>
+    </LinearLayout>

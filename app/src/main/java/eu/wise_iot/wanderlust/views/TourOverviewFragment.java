@@ -1,9 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,39 +15,46 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
-import eu.wise_iot.wanderlust.views.adapters.MyRecyclerViewAdapter;
+import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 import okhttp3.ResponseBody;
 
 
 /**
  * TourOverviewFragment:
  *
- * @author Fabian Schwander
+ * shows favorized tours as well as all other tours which are available from the database
+ * @author Fabian Schwander, Alexander Weinbeck
  * @license MIT
  */
 public class TourOverviewFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
     private Context context;
-    List<Favorite> favorites = new ArrayList<>();
     private static List<ResponseBody> userTourImages = new ArrayList<>();
+    private ToursOverviewRVAdapter adapterRoutes;
+    private ToursOverviewRVAdapter adapterFavs;
+    private List<Tour> listTours;
+    private final List<Tour> favTours = new ArrayList<>();
+    private RecyclerView rvTouren;
+    private RecyclerView rvFavorites;
+    private int currentPage = 1;
+    private ImageController imageController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
-
-        super.onCreate(savedInstanceState);
-        //fetch data from database here
+        imageController = ImageController.getInstance();
     }
     /**
      * Static instance constructor.
@@ -57,7 +62,6 @@ public class TourOverviewFragment extends Fragment {
      * @return Fragment: TourOverviewFragment
      */
     public static TourOverviewFragment newInstance() {
-
         Bundle args = new Bundle();
         TourOverviewFragment fragment = new TourOverviewFragment();
         fragment.setArguments(args);
@@ -67,39 +71,30 @@ public class TourOverviewFragment extends Fragment {
     /**
      * retrieve all images from the database
      * @param tours
-     * @return
      */
-    public static void getDataFromServer(List<Tour> tours){
+    private static void getDataFromServer(List<Tour> tours){
         TourOverviewController toc = new TourOverviewController();
         //get given favorites
         toc.downloadDifficultyTypes();
-        toc.downloadFavorites( new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        Log.d(TAG, "Server response getting favorites: " + controllerEvent.getType().name());
-                        break;
-                    default:
-                        //Toast.makeText("Konnte Bilder nicht laden", Toast.LENGTH_SHORT);
-                        Log.d(TAG, "Download favorites: Server response ERROR: " + controllerEvent.getType().name());
-                }
+        toc.downloadFavorites(controllerEvent -> {
+            switch (controllerEvent.getType()) {
+                case OK:
+                    Log.d(TAG, "Server response getting favorites: " + controllerEvent.getType().name());
+                    break;
+                default:
+                    Log.d(TAG, "Download favorites: Server response ERROR: " + controllerEvent.getType().name());
             }
         });
         //get thumbnail for each tour
         for(Tour ut : tours){
             try {
-                toc.downloadThumbnail(ut.getTour_id(), 1, new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        switch (controllerEvent.getType()) {
-                            case OK:
-                                Log.d(TAG, "Server response thumbnail downloading: " + controllerEvent.getType().name());
-                                break;
-                            default:
-                                //Toast.makeText("Konnte Bilder nicht laden", Toast.LENGTH_SHORT);
-                                Log.d(TAG, "Server response thumbnail ERROR: " + controllerEvent.getType().name());
-                        }
+                toc.downloadThumbnail(ut.getTour_id(), 1, controllerEvent -> {
+                    switch (controllerEvent.getType()) {
+                        case OK:
+                            Log.d(TAG, "Server response thumbnail downloading: " + controllerEvent.getType().name());
+                            break;
+                        default:
+                            Log.d(TAG, "Server response thumbnail ERROR: " + controllerEvent.getType().name());
                     }
                 });
             } catch (Exception e){
@@ -119,10 +114,7 @@ public class TourOverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         TourOverviewController toc = new TourOverviewController();
-
         View view = inflater.inflate(R.layout.fragment_toursoverview, container, false);
-
-
         //fetch from db actual tours to feed recyclerview
         toc.getAllTours(new FragmentHandler() {
             @Override
@@ -130,22 +122,18 @@ public class TourOverviewFragment extends Fragment {
                 switch (event.getType()) {
                     case OK:
                         //get all needed information from server db
-                        List<Tour> listTours = (List<Tour>) event.getModel();
-                        Log.d(TAG,"Getting Tours: git addServer response arrived");
+                        listTours = (List<Tour>) event.getModel();
 
+                        Log.d(TAG,"Getting Tours: Server response arrived");
                         //get all the images needed and save them on the device
                         getDataFromServer(listTours);
 
-                        //get all Favorites and see which are the ones that are selected
-                        //getFavorites()
-
-
                         // set up the RecyclerView 1
-                        RecyclerView rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
+                        rvTouren = (RecyclerView) view.findViewById(R.id.rvTouren);
                         rvTouren.setPadding(5,5,5,5);
                         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                         rvTouren.setLayoutManager(horizontalLayoutManager);
-                        MyRecyclerViewAdapter adapterRoutes = new MyRecyclerViewAdapter(context, listTours);
+                        adapterRoutes = new ToursOverviewRVAdapter(context, listTours);
                         adapterRoutes.setClickListener(this::onItemClickImages);
                         rvTouren.setAdapter(adapterRoutes);
 
@@ -153,18 +141,74 @@ public class TourOverviewFragment extends Fragment {
                         itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
                         rvTouren.addItemDecoration(itemDecorator);
 
+                        //get favorited tours
+                        toc.getAllFavoriteTours(controllerEvent -> {
+                            switch (controllerEvent.getType()) {
+                                case OK:
+                                    Log.d("INFO","refresh Favorites");
+                                    List<Tour> list = (List<Tour>) controllerEvent.getModel();
 
-                        // set up the RecyclerView 2
-                        //TODO: to be implemented (Favorites)
-//                        RecyclerView rvFavorites = (RecyclerView) view.findViewById(R.id.rvFavorites);
-//                        LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-//                        rvFavorites.setLayoutManager(horizontalLayoutManager2);
-//                        MyRecyclerViewAdapter adapterTitles = new MyRecyclerViewAdapter(context, listTours);
-//                        adapterTitles.setClickListener(this::onItemClickFavorites);
-//                        rvFavorites.setAdapter(adapterTitles);
+                                    for (Tour tour : list)
+                                        for (ImageInfo imageInfo : tour.getImagePaths())
+                                            imageInfo.setLocalDir(imageController.getTourFolder());
 
+                                    TourOverviewFragment.this.favTours.addAll(list);
+                                    getDataFromServer(favTours);
+                                    Log.d("INFO",favTours.toString());
+                                    TourOverviewFragment.this.adapterFavs.notifyDataSetChanged();
+                                default:
+                                    Log.d("ERROR","failed to get Favorites");
+                                    break;
+                            }
+                        });
 
-                        //tvDescend.setText(ut.getTitle());
+                        // set up the RecyclerView favorites
+                        rvFavorites = (RecyclerView) view.findViewById(R.id.rvFavorites);
+                        LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+                        rvFavorites.setLayoutManager(horizontalLayoutManager2);
+                        adapterFavs = new ToursOverviewRVAdapter(context, favTours);
+                        adapterFavs.setClickListener(this::onItemClickImages);
+                        rvFavorites.setAdapter(adapterFavs);
+
+                        RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                                switch (newState) {
+                                    case RecyclerView.SCROLL_STATE_IDLE:
+                                        Log.d(TAG,"The RecyclerView is not scrolling");
+                                        int myCellWidth = rvTouren.getChildAt(0).getMeasuredWidth();
+                                        final int offset = rvTouren.computeHorizontalScrollOffset();
+                                        int position = 0;
+                                        if (offset % myCellWidth == 0) position = offset / myCellWidth ;
+                                        if (15 < (position % 25)) {
+                                            toc.getAllTours(controllerEvent -> {
+                                                switch (event.getType()) {
+                                                    case OK:
+                                                        //get all needed information from server db
+                                                        List<Tour> newList = (List<Tour>) event.getModel();
+                                                        if (Collections.disjoint(newList, listTours)) {
+                                                            currentPage++;
+                                                            listTours.addAll(newList);
+                                                            getDataFromServer(listTours);
+                                                            adapterRoutes.notifyDataSetChanged();
+                                                            Log.d(TAG,"added new page " + currentPage);
+                                                        }
+                                                        break;
+                                                    default:
+                                                        Log.d(TAG,"Server response ERROR: " + event.getType().name());
+                                                        break;
+                                                }
+                                            },currentPage);
+                                        }
+                                        Log.d(TAG,"Scroll idle");
+                                        break;
+                                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                                        Log.d(TAG,"Scrolling now");
+                                        break;
+                                }
+                            }
+                        };
+                        rvTouren.addOnScrollListener(mScrollListener);
                         break;
                     default:
                         Log.d(TAG,"Server response ERROR: " + event.getType().name());
@@ -175,48 +219,49 @@ public class TourOverviewFragment extends Fragment {
             /**
              * handles click in Recyclerview
              * @param view
-             * @param routeID
+             * @param position
              * @param tour
              * @param favorizedTours
              */
-            public void onItemClickImages(View view, int routeID, Tour tour, List<Long> favorizedTours) {
+            public void onItemClickImages(View view, int position, Tour tour, List<Long> favorizedTours) {
                 switch (view.getId()) {
                     case R.id.favoriteButton:
                         Log.d(TAG,"Tour Favorite Clicked and event triggered ");
                         ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.favoriteButton);
-                        if(favorizedTours.contains(tour.getTour_id())){
-                            Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
-                            long favId = toc.getTourFavoriteId(tour.getTour_id());
-                            if(favId != -1) {
-                                toc.deleteFavorite(favId, new FragmentHandler() {
-                                    @Override
-                                    public void onResponse(ControllerEvent controllerEvent) {
-                                        switch (controllerEvent.getType()) {
-                                            case OK:
-                                                favorizedTours.remove(tour.getTour_id());
-                                                Log.d(TAG, "favorite succesfully deleted " + tour.getTour_id());
-                                                ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
-                                                break;
-                                            default:
-                                                Log.d(TAG, "favorite failure while deleting " + tour.getTour_id());
-                                        }
-                                    }
-                                });
-                            }
+                        Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
+                        long favId = toc.getTourFavoriteId(tour.getTour_id());
+                        if(favId != -1) {
+                            toc.deleteFavorite(favId, controllerEvent -> {
+                                switch (controllerEvent.getType()) {
+                                    case OK:
+                                        //favorizedTours.remove(tour.getTour_id());
+                                        Log.d(TAG, "favorite successfully deleted " + tour.getTour_id());
+                                        ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                                        //remove tour from adapter dataset
+                                        for(Tour tmpTour : favTours)
+                                            if(tmpTour.getTour_id() == tour.getTour_id())
+                                                favTours.remove(tmpTour);
+                                        //notify observer of adapter
+                                        adapterFavs.notifyDataSetChanged();
+                                        break;
+                                    default:
+                                        Log.d(TAG, "favorite failure while deleting " + tour.getTour_id());
+                                }
+                            });
                         } else {
                             Log.d(TAG, "favorite gets favored: " + tour.getTour_id());
-                            toc.setFavorite(tour, new FragmentHandler() {
-                                @Override
-                                public void onResponse(ControllerEvent controllerEvent) {
-                                    switch (controllerEvent.getType()){
-                                        case OK:
-                                            favorizedTours.add(tour.getTour_id());
-                                            Log.d("Touroverview rv", "favorite succesfully added " + tour.getTour_id());
-                                            ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
-                                            break;
-                                        default:
-                                            Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());
-                                    }
+                            toc.setFavorite(tour, controllerEvent -> {
+                                switch (controllerEvent.getType()){
+                                    case OK:
+                                        Log.d("Touroverview rv", "favorite succesfully added " + tour.getTour_id());
+                                        ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
+                                        //add tour to adapter dataset
+                                        favTours.add(tour);
+                                        //notify adapter of dataset change
+                                        adapterFavs.notifyDataSetChanged();
+                                        break;
+                                    default:
+                                        Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());
                                 }
                             });
                         }
@@ -233,31 +278,9 @@ public class TourOverviewFragment extends Fragment {
                     //the same can be applied to other components in Row_Layout.xml
                 }
             }
-        });
-
-
-        // data to populate the RecyclerView with
-        //testdata
-//        ArrayList<String> viewImages = new ArrayList<>();
-//        viewImages.add(testTour.getImagePath());
-//        viewImages.add("test1");
-//        viewImages.add("test2");
-//        viewImages.add("test3");
-//        viewImages.add("test4");
-//
-//        ArrayList<String> viewText = new ArrayList<>();
-//        viewText.add(testTour.getTitle());
-//        viewText.add("Cow");
-//        viewText.add("Camel");
-//        viewText.add("Sheep");
-//        viewText.add("Goat");
-
-
-
-
+        }, currentPage);
 
         return view;
-        //return inflater.inflate(R.layout.fragment_tour, container, false);
     }
 
     @Override

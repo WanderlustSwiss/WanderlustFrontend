@@ -49,9 +49,9 @@ public class StartupResetPasswordFragment extends Fragment {
             switch (eventType) {
                 case OK:
                     Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
-                    SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
+                    StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                     getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, sartupLoginFragment, Constants.LOGIN_FRAGMENT)
+                            .add(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                             .commit();
 
                     break;
@@ -107,9 +107,9 @@ public class StartupResetPasswordFragment extends Fragment {
         redirectToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
+                StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, sartupLoginFragment)
+                        .add(R.id.content_frame, startupLoginFragment)
                         .commit();
             }
         });

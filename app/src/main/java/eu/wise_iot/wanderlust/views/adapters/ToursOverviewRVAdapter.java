@@ -1,13 +1,8 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import android.app.Fragment;
 
 import com.squareup.picasso.Picasso;
 
@@ -32,50 +25,62 @@ import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
-import eu.wise_iot.wanderlust.views.MainActivity;
 
 
 /**
  * MyAdapter:
- * provides adapter for recycleview which is used by the tourslist
+ * provides adapter for recyclerview which is used by the tourslist
  *
  * @author Alexander Weinbeck
  * @license MIT
  */
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+@SuppressWarnings("JavaDoc")
+public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRVAdapter.ViewHolder> {
 
-    //    private List<String> mImages = Collections.emptyList();
-//    private List<String> mTitles = Collections.emptyList();
     private List<Tour> tours = Collections.emptyList();
-    private LayoutInflater mInflater;
+    private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private Context context;
-    private ImageController imageController;
+    private final Context context;
+    private final ImageController imageController;
 
-    private FavoriteDao favoriteDao = FavoriteDao.getInstance();
-    private List<Long> favorizedTours = new ArrayList<>();
+    private final FavoriteDao favoriteDao = FavoriteDao.getInstance();
+    private final List<Long> favorizedTours = new ArrayList<>();
 
 
-    // data is passed into the constructor, here as a Tour
-    public MyRecyclerViewAdapter(Context context, List<Tour> parTours) {
+    /**
+     * data is passed into the constructor, here as a Tour
+     * @param context
+     * @param parTours
+     */
+    public ToursOverviewRVAdapter(Context context, List<Tour> parTours) {
         Log.d("ToursRecyclerview", "Copy Constructor");
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
+        if(parTours == null) parTours = new ArrayList<>();
         this.tours = parTours;
+        //get which tour is favored
+        //for(Tour tour : this.tours) this.favorizedTours.add(tour.getTour_id());
         this.imageController = ImageController.getInstance();
     }
 
-    // inflates the row layout from xml when needed
+    /**
+     * inflates the row layout from xml when needed
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("ToursRecyclerview", "Creating View Holder");
         View view = mInflater.inflate(R.layout.recyclerview_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
-    // binds the data to the view and textview in each row
+    /**
+     * binds the data to the view and textview in each row
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Log.d("ToursRecyclerview", "starting set properties");
@@ -95,7 +100,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
 
-
         holder.ibShare.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
@@ -113,49 +117,70 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
             File image = images.get(0);
-            Picasso.with(context).load(image).centerCrop().fit().into(holder.tvImage);
-            Log.d("Toursoverview", "ImageInfo loaded: " + image.toString());
-        }else{
+            Picasso.with(context).load(image).into(holder.tvImage);
+            Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
+        } else {
             Picasso.with(context).load(R.drawable.no_image_found).into(holder.tvImage);
+            Log.d("ToursoverviewAdapters", "Images not found");
         }
         holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
     }
 
-    // total number of rows
+    /**
+     * return total number of rows
+      * @return
+     */
     @Override
     public int getItemCount() {
         return this.tours.size();
     }
 
-    // convenience method for getting data at click position
-    public Tour getItem(int id) {
+    /**
+     * convenience method for getting data at click position
+     * @param id
+     * @return
+     */
+    private Tour getItem(int id) {
         return this.tours.get(id);
     }
 
-    // allows clicks events to be caught
+    /**
+     * allows clicks events to be caught
+     * @param itemClickListener
+     */
     public void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 
-    // parent activity will implement this method to respond to click events
+    /**
+     * parent activity will implement this interface to respond to click events
+     */
     public interface ItemClickListener {
         void onItemClick(View view, int id, Tour tour, List<Long> favorites);
     }
 
-    // stores and recycles views as they are scrolled off screen
+    /**
+     * stores and recycles views as they are scrolled off screen
+     * @author Alexander Weinbeck
+     * @license MIT
+     */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each tour
-        public TextView tvDistance;
-        public TextView tvDifficulty;
-        public TextView tvRegion;
-        public TextView tvTitle;
-        public TextView tvTime;
-        public ImageView tvImage;
-        public ImageView tvDifficultyIcon;
-        public ImageButton ibFavorite;
-        public ImageButton ibSave;
-        public ImageButton ibShare;
+        public final TextView tvDistance;
+        public final TextView tvDifficulty;
+        public final TextView tvRegion;
+        public final TextView tvTitle;
+        public final TextView tvTime;
+        public final ImageView tvImage;
+        public final ImageView tvDifficultyIcon;
+        public final ImageButton ibFavorite;
+        public final ImageButton ibSave;
+        public final ImageButton ibShare;
 
+        /**
+         * copy constructor for each element which holds the view
+         * @param itemView
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             tvDistance = (TextView) itemView.findViewById(R.id.tourDistance);
@@ -173,6 +198,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             ibFavorite.setOnClickListener(this);
         }
 
+        /**
+         * click event handler
+         * @param view
+         */
         @Override
         public void onClick(View view) {
             if (mClickListener != null)

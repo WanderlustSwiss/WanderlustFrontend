@@ -1,10 +1,20 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.Manifest;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
@@ -12,30 +22,49 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.IOException;
+
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
+import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class ProfileEditFragment extends Fragment {
     private static final String TAG = "ProfileEditFragment";
 
     private ImageView profileImage;
+
     private TextView changeImage;
 
     private TextInputLayout emailLayout;
 
     private EditText emailTextfield;
+
+    private Button buttonOpenGallery;
+    private Button buttonDeleteImage;
+
+    private View bottomSheet;
+
+    private BottomSheetBehavior bottomSheetBehavior;
 
     private CheckBox checkT1;
     private CheckBox checkT2;
@@ -80,6 +109,11 @@ public class ProfileEditFragment extends Fragment {
         emailLayout = (TextInputLayout) view.findViewById(R.id.editEmailLayout);
         emailTextfield = (EditText) view.findViewById(R.id.editEmailField);
 
+        buttonDeleteImage = (Button) view.findViewById(R.id.editProfileButtonDeleteImage);
+        buttonOpenGallery = (Button) view.findViewById(R.id.editProfileButtonOpenGallery);
+
+        bottomSheet = view.findViewById(R.id.profileEditBottomSheet);
+
         checkT1 = (CheckBox) view.findViewById(R.id.checkboxT1);
         checkT2 = (CheckBox) view.findViewById(R.id.checkboxT2);
         checkT3 = (CheckBox) view.findViewById(R.id.checkboxT3);
@@ -89,10 +123,25 @@ public class ProfileEditFragment extends Fragment {
         checkBoxes = new CheckBox[]{checkT1, checkT2, checkT3,
                 checkT4, checkT5, checkT6};
 
+        Rect outRect = new Rect();
+        view.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN && bottomSheet != null && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    Rect outRect = new Rect();
+                    bottomSheet.getGlobalVisibleRect(outRect);
+
+                    if (!outRect.contains((int) event.getRawX(), (int) event.getRawY()))
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                return true;
+            }
+        });
+
         //initialize current values
         setupCurrentInfo(view);
         setupDifficulty(view);
-
+        setupActionListener();
         return view;
     }
 
@@ -117,6 +166,7 @@ public class ProfileEditFragment extends Fragment {
 
                         switch (type) {
                             case OK:
+                                ((MainActivity) getActivity()).updateEmailAdress(newMail);
                                 Toast.makeText(getActivity(), R.string.msg_email_edit_successful,
                                         Toast.LENGTH_SHORT).show();
                                 break;
@@ -162,25 +212,75 @@ public class ProfileEditFragment extends Fragment {
         emailTextfield.setText(profileController.getEmail());
         return true;
     }
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode){
+                case 1000:
+                    onActionResultGallery(data);
+                    break;
+            }
+        }
+    }
     private void setupCurrentInfo(View view) {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
-        //TODO: profile picture from the database
-        //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
-
-        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-        drawable.setCircular(true);
-
-        profileImage.setImageDrawable(drawable);
-
-        changeImage.setOnClickListener(v -> {
-            Toast.makeText(getActivity(), R.string.msg_no_action_defined,
-                    Toast.LENGTH_SHORT).show();
-        });
-
+        setupAvatar();
+        buttonOpenGallery.setText(R.string.profile_edit_open_gallery);
+        buttonDeleteImage.setText(R.string.profile_edit_delete_image);
+        buttonDeleteImage.setTextColor(Color.RED);
         emailTextfield.setText(profileController.getEmail());
     }
+    private void setupActionListener(){
 
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        changeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            }
+        });
+        buttonOpenGallery.setOnClickListener(v -> {
+            if (ActivityCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                if (profileController.getProfilePicture() == null) {
+                    openGallery();
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }else{
+                    profileController.deleteProfilePicture(new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            EventType type = controllerEvent.getType();
+                            if (type == EventType.OK){
+                                openGallery();
+                            }
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                        }
+                    });
+                }
+            }else{
+                Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
+                        Toast.LENGTH_SHORT).show();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+        buttonDeleteImage.setOnClickListener(v -> {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            profileController.deleteProfilePicture(new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    EventType type = controllerEvent.getType();
+                    if (type == EventType.OK){
+                        setupAvatar();
+                    }
+                }
+            });
+        });
+    }
     private void setupDifficulty(View view) {
         //setup current difficulty level
         difficulty = profileController.getDifficulty();
@@ -204,5 +304,56 @@ public class ProfileEditFragment extends Fragment {
 
     }
 
+    private void openGallery(){
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
 
+        galleryIntent.putExtra("crop", "true");
+        galleryIntent.putExtra("outputX", 170);
+        galleryIntent.putExtra("outputY", 170);
+        galleryIntent.putExtra("aspectX", 1);
+        galleryIntent.putExtra("aspectY", 1);
+        galleryIntent.putExtra("scale", true);
+
+        if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(galleryIntent, 1000);
+        }
+    }
+    private void onActionResultGallery(Intent data){
+        Uri returnUri = data.getData();
+        Bitmap bitmapImage;
+        try {
+            bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+            if (bitmapImage != null){
+                profileController.setProfilePicture(bitmapImage, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        if (controllerEvent.getType() == EventType.OK){
+                            setupAvatar();
+                        }else{
+                            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        } catch (IOException e) {
+
+        }
+    }
+    private void setupAvatar() {
+        File image = profileController.getProfilePicture();
+        if (image != null) {
+            Picasso.with(getActivity()).invalidate(image);
+            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().into(profileImage);
+            ((MainActivity) getActivity()).updateProfileImage(image);
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            drawable.setCircular(true);
+            profileImage.setImageDrawable(drawable);
+            ((MainActivity) getActivity()).updateProfileImage(image);
+        }
+
+    }
 }

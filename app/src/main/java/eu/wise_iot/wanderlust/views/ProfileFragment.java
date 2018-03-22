@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -23,10 +26,10 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileTripListAdapter;
+import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 
 /**
  * Fragment which represents the UI of the profile of a user.
@@ -98,14 +101,17 @@ public class ProfileFragment extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.listContent);
 
-        //Profile picture, example
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
-        //TODO: profile picture from the database
-        //Bitmap bitmap1 = BitmapFactory.decodeFile(profileController.getProfilePicture());
-
-        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-        drawable.setCircular(true);
-        profilePicture.setImageDrawable(drawable);
+        File image = profileController.getProfilePicture();
+        if (image != null) {
+            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().into(profilePicture);
+            ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
+        }else{
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            drawable.setCircular(true);
+            profilePicture.setImageDrawable(drawable);
+            ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
+        }
 
         //edit profile button_white
         editProfile.setOnClickListener(new View.OnClickListener() {

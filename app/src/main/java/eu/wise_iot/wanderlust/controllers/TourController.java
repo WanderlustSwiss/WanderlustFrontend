@@ -1,15 +1,12 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.location.Location;
 import android.util.Base64;
-import android.util.Base64InputStream;
-import android.util.Base64OutputStream;
-import android.util.Log;
 
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.routing.RoadManager;
+import org.joda.time.DateTime;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.Polyline;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -17,21 +14,24 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
@@ -69,7 +69,9 @@ public class TourController {
     private UserTourDao userTourDao;
     private DifficultyTypeDao difficultyTypeDao;
     private ImageController imageController;
+    private WeatherController weatherController;
     private ArrayList<GeoPoint> polyList;
+    private EquipmentController equipmentController;
 
     public TourController(Tour tour){
         this.tour = tour;
@@ -78,9 +80,11 @@ public class TourController {
         favoriteDao = FavoriteDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         imageController = ImageController.getInstance();
-        loadGeoData();
-
+        weatherController = WeatherController.getInstance();
+        equipmentController = EquipmentController.getInstance();
     }
+
+
     /**
      * True if Favorite is set, otherwise false
      */
@@ -123,70 +127,41 @@ public class TourController {
         return false;
     }
 
-    public int[] getHighProfile() throws IOException {
-        int highProfile[] = new int[3];
-        /*
-        byte[] valueDecoded= new byte[0];
-        try {
-            valueDecoded = Base64.decode(elevaltion.getBytes("UTF-8"), Base64.DEFAULT);
-        } catch (UnsupportedEncodingException e) {
+    public Number[] getElevationProfileXAxis(){
+        ArrayList<GeoPoint> polyList  = PolyLineEncoder.decode(tour.getPolyline(),10);
+        Number[] xAxis = new Number[polyList.size()];
+        Iterator<GeoPoint> iter = polyList.iterator();
+        GeoPoint first = iter.next();
+        double totalDistance = 0.0D;
+        xAxis[0] = totalDistance;
+        int ct = 1;
+        while (iter.hasNext()) {
+            GeoPoint next = iter.next();
+            double distance = first.distanceTo(next);
+            xAxis[ct++] = Math.round(100.0 * ((totalDistance + distance) / 1000.0)) / 100.0;
+            totalDistance += distance;
+            first = next;
         }
-        ByteArrayInputStream bis = new ByteArrayInputStream(valueDecoded);
-        GZIPInputStream gis = null;
-        gis = new GZIPInputStream(bis);
-        BufferedReader br = null;
-        br = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while((line = br.readLine()) != null) {
-            line = line.replace("[", "");
-            line = line.replace("]", "");
-            line = line.replace("\"", "");
-            sb.append(line);
+        xAxis[ct - 1] = Math.round(100.0 * (tour.getDistance() / 1000.0)) / 100.0;
+        return xAxis;
+    }
+    public Number[] getElevationProfileYAxis(){
+        float[] elevations = elevationDecode(tour.getElevation());
+        Number[] elevationObj = new Number[elevations.length];
+        for (int i = 0; i < elevations.length; i++){
+            elevationObj[i] = Math.round(elevations[i]);
         }
-        br.close();
-        gis.close();
-        bis.close();
-
-        String s[] = sb.toString().split(",");
-        int lowestPointBefore = 0;
-        int highestPoint = 0;
-        int lowestPointAfter = 0;
-        int indexOfHighestPoint = 0;
-
-        for(int i = 0; i < s.length; i++){
-            if(highestPoint < Integer.parseInt(s[i])) {
-                highestPoint = Integer.parseInt(s[i]);
-                indexOfHighestPoint = i;
-            }
-        }
-
-        lowestPointAfter = highestPoint;
-        lowestPointBefore = highestPoint;
-
-        for(int j = 0; j < indexOfHighestPoint; j++){
-            if(lowestPointBefore > Integer.parseInt(s[j]))
-                lowestPointBefore = Integer.parseInt(s[j]);
-        }
-
-        for(int k = indexOfHighestPoint; k < s.length; k++){
-            if(lowestPointAfter > Integer.parseInt(s[k]))
-                lowestPointAfter = Integer.parseInt(s[k]);
-        }
-
-        highProfile[0] = lowestPointBefore;
-        highProfile[1] = lowestPointAfter;
-        highProfile[2] = highestPoint;*/
-        return highProfile;
+        return elevationObj;
     }
 
-    public void loadGeoData(){
+    public void loadGeoData(FragmentHandler handler){
         userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
                 Tour TourWithGeoData = (Tour) controllerEvent.getModel();
                 tour.setPolyline(TourWithGeoData.getPolyline());
                 tour.setElevation(TourWithGeoData.getElevation());
+                handler.onResponse(new ControllerEvent(EventType.OK, tour));
             }
         });
     }
@@ -215,6 +190,17 @@ public class TourController {
         }
     }
     /**
+     * Get distance in meter
+     * @return long value in meter
+     */
+    public long getDistance(){
+        if (tour != null){
+            return tour.getDistance();
+        }else{
+            return 0;
+        }
+    }
+    /**
      * Difficulty mark
      * @return mark
      */
@@ -238,7 +224,31 @@ public class TourController {
             return 0;
         }
     }
+    public float[] elevationDecode(String elevation){
+        byte[] decodedByteArray;
+        // Base64 decode of string
+        try {
+            decodedByteArray = Base64.decode(elevation.getBytes("UTF-8"), Base64.DEFAULT);
+        } catch (UnsupportedEncodingException e) {
+            return new float[0];
 
+        }
+        try (GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(decodedByteArray))) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            Gson gson = new Gson();
+            Type type = new TypeToken<float[]>() {}.getType();
+            br.close();
+            return gson.fromJson(sb.toString(), type);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new float[0];
+    }
     public long getAscent(){ return tour.getAscent(); }
     public long getDescent() { return tour.getDescent(); }
     public String getDescription(){ return tour.getDescription(); }

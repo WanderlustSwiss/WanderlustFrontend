@@ -218,7 +218,7 @@ public class PoiEditDialog extends DialogFragment {
             } else {
                 if (publish) {
                     //TODO only uploads first image
-                    controller.uploadImage(new File(this.poi.getImageById(1).getPath()), this.poi, new FragmentHandler() {
+                    controller.uploadImage(new File(this.poi.getImageById(1).getLocalPath()), this.poi, new FragmentHandler() {
                         @Override
                         public void onResponse(ControllerEvent controllerEvent) {
                             switch (controllerEvent.getType()) {

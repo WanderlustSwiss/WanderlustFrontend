@@ -1,9 +1,12 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.io.File;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -61,6 +64,10 @@ public class Tour extends AbstractModel {
         this.internal_id = 0;
         this.title = "No title";
         this.description = "No description";
+    }
+
+    public List<GeoPoint> getGeoPoints(){
+        return PolyLineEncoder.decode(this.getPolyline(), 10);
     }
 
     public List<ImageInfo> getImagePaths() {

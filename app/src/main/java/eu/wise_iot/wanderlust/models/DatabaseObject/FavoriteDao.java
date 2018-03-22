@@ -75,8 +75,8 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      *
      * @param handler
      */
-    public void retrievAllFavoriteTours(final FragmentHandler handler) {
-        Call<List<Tour>> call = service.retrievAllFavoriteTours();
+    public void retrieveAllFavoriteTours(final FragmentHandler handler) {
+        Call<List<Tour>> call = service.retrieveAllFavoriteTours();
         call.enqueue(new Callback<List<Tour>>() {
             @Override
             public void onResponse(Call<List<Tour>> call, retrofit2.Response<List<Tour>> response) {
@@ -97,7 +97,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      *
      * @param handler
      */
-    public void retrievAllFavorites(final FragmentHandler handler) {
+    public void retrieveAllFavorites(final FragmentHandler handler) {
         Call<List<Favorite>> call = service.retrievAllFavorites();
         call.enqueue(new Callback<List<Favorite>>() {
             @Override
