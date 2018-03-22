@@ -237,9 +237,16 @@ public class TourFragment extends Fragment {
         itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
         rvEquipment.addItemDecoration(itemDecorator);
 
+
+    }
+
+    /**
+     * @param tour
+     */
+    private void setupEquipment(Tour tour){
         //TODO add recommended method for getting equipment
         //listEquipment = tourController.getEquipmentOfTour(this.tour);
-        equipmentController.retrieveRecommendedEquipment(this.tour,DateTime.now(), controllerEvent -> {
+        equipmentController.retrieveRecommendedEquipment(tour, selectedDateTime, controllerEvent -> {
             switch (controllerEvent.getType()){
                 case OK:
                     Log.d(TAG,"got equipment for tour");
@@ -252,7 +259,6 @@ public class TourFragment extends Fragment {
             }
         });
     }
-
     /**
      *
      */
