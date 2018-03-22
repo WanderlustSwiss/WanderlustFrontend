@@ -67,7 +67,6 @@ public class Tour extends AbstractModel {
     }
 
     public List<GeoPoint> getGeoPoints(){
-        if(this.getPolyline() == null) this.polyline = "eeeeeeeeeeeeeeeeee";
         return PolyLineEncoder.decode(this.getPolyline(), 10);
     }
 

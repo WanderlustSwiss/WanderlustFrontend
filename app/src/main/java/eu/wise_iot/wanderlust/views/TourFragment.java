@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,6 +27,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.androidplot.util.PixelUtils;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.CatmullRomInterpolator;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.PanZoom;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.StepMode;
+import com.androidplot.xy.XYGraphWidget;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
@@ -37,8 +49,12 @@ import org.osmdroid.views.overlay.Polyline;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.FieldPosition;
+import java.text.Format;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,6 +62,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
@@ -59,7 +76,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 /**
  * TourController:
  *
- * @author Alexander Weinbeck, Rilind Gashi, Baris Demirci
+ * @author Alexander Weinbeck, Rilind Gashi, Baris Demirci, Simon Kaspar
  * @license MIT
  */
 public class TourFragment extends Fragment {
@@ -114,6 +131,8 @@ public class TourFragment extends Fragment {
     private EquipmentRVAdapter adapterEquip;
     private List<Equipment> listEquipment;
 
+    private XYPlot plot;
+
     public TourFragment() {
         // Required empty public constructor
     }
@@ -145,6 +164,7 @@ public class TourFragment extends Fragment {
         super.onCreate(savedInstanceState);
         context = getActivity();
         tour = tourController.getCurrentTour();
+        listEquipment = new ArrayList<>();
     }
 
     /**
@@ -155,11 +175,22 @@ public class TourFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_tour, container, false);
+        selectedDateTime = DateTime.now();
         initializeControls(view);
         fillControls();
         setupActionListeners();
+        tourController.loadGeoData(new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                if (controllerEvent.getType() == EventType.OK){
+                    tour = (Tour) controllerEvent.getModel();
+                    setupEquipment(tour);
+                    setupWeather();
+                    drawChart();
+                }
+            }
+        });
         return view;
     }
 
@@ -191,6 +222,8 @@ public class TourFragment extends Fragment {
         textViewDescription = (TextView) view.findViewById(R.id.tourDescription);
         jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
 
+        plot = (XYPlot) view.findViewById(R.id.plot);
+
         //weather
         selectDayButton = (Button) view.findViewById(R.id.datepickerButton);
         selectedDay = (TextView) view.findViewById(R.id.selectedDateTime);
@@ -210,7 +243,8 @@ public class TourFragment extends Fragment {
         thirdTimePoint = (TextView) view.findViewById(R.id.timeThirdPoint);
         forthTimePoint = (TextView) view.findViewById(R.id.timeForthPoint);
         fifthTimePoint = (TextView) view.findViewById(R.id.timeFifthPoint);
-        selectedDateTime = DateTime.now();
+
+
 
         long difficulty = tourController.getLevel();
         Drawable drawable;
@@ -251,7 +285,7 @@ public class TourFragment extends Fragment {
                 case OK:
                     Log.d(TAG,"got equipment for tour");
                     TourFragment.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
-                    adapterEquip.notifyDataSetChanged();
+                    getActivity().runOnUiThread(() -> adapterEquip.notifyDataSetChanged());
                     break;
                 default:
                     Log.d(TAG,"failure getting equipment for tour");
@@ -281,11 +315,6 @@ public class TourFragment extends Fragment {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
 
-        try {
-            int[] highProfile = tourController.getHighProfile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         tourRegion.setText("");
         tourTitle.setText(tourController.getTitle());
         textViewDescription.setText(tourController.getDescription());
@@ -328,25 +357,8 @@ public class TourFragment extends Fragment {
 
             weatherList = null;
 
-            weatherController.getWeatherFromTour(tour, selectedDateTime, controllerEvent -> {
-                switch (controllerEvent.getType()){
-                    case OK:
-                        weatherList = (List<Weather>) controllerEvent.getModel();
-
-                        getActivity().runOnUiThread(() -> {
-                            if(weatherList != null){
-                                weatherInfos.setVisibility(View.VISIBLE);
-                                initializeWeather();
-                            }else{
-                                Toast.makeText(context, R.string.keine_wetterdaten, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        break;
-                    default:
-                        Log.d("WETTER", "service problem");
-                        break;
-                }
-            });
+            setupEquipment(tour);
+            setupWeather();
 
         };
 
@@ -385,6 +397,29 @@ public class TourFragment extends Fragment {
         });
     }
 
+    private void setupWeather(){
+
+        weatherController.getWeatherFromTour(tour, selectedDateTime, controllerEvent -> {
+            switch (controllerEvent.getType()){
+                case OK:
+                    weatherList = (List<Weather>) controllerEvent.getModel();
+
+                    getActivity().runOnUiThread(() -> {
+                        if(weatherList != null){
+                            weatherInfos.setVisibility(View.VISIBLE);
+                            initializeWeather();
+                        }else{
+                            Toast.makeText(context, R.string.keine_wetterdaten, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    break;
+                default:
+                    Log.d("WETTER", "service problem");
+                    break;
+            }
+        });
+
+    }
     /**
      * Method fills controlls in weather-info area of tour fragment with the required data, for Example
      * the degrees, the icon's and the time points of the routes.
@@ -517,11 +552,68 @@ public class TourFragment extends Fragment {
             });
         }
     }
+    public void drawChart(){
+        Number[] domainLabels = tourController.getElevationProfileXAxis();
+        Number[] series1Numbers = tourController.getElevationProfileYAxis();
 
-    /**
-     *
-     */
-    private void showMapWithTour() {
+        float minElevation = Float.MAX_VALUE;
+        float maxElevation = Float.MIN_VALUE;
+
+        for (Number elev : series1Numbers){
+            if (elev.floatValue() < minElevation){
+                minElevation = elev.floatValue();
+            }
+            if (elev.floatValue() > maxElevation){
+                maxElevation = elev.floatValue();
+            }
+        }
+
+        // turn the above arrays into XYSeries':
+        // (Y_VALS_ONLY means use the element index as the x value)
+        XYSeries series1 = new SimpleXYSeries(
+                Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
+
+        // create formatters to use for drawing a series using LineAndPointRenderer
+        // and configure them from xml:
+        LineAndPointFormatter series1Format =
+                new LineAndPointFormatter(Color.DKGRAY, null, Color.LTGRAY, null);
+
+
+        // just for fun, add some smoothing to the lines:
+        // see: http://androidplot.com/smooth-curves-and-androidplot/
+        series1Format.setInterpolationParams(
+                new CatmullRomInterpolator.Params(5, CatmullRomInterpolator.Type.Centripetal));
+
+
+        // add a new series' to the xyplot:
+        plot.clear();
+        plot.addSeries(series1, series1Format);
+
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
+            @Override
+            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+                int i = Math.round(((Number) obj).floatValue());
+                return toAppendTo.append(domainLabels[i]);
+            }
+            @Override
+            public Object parseObject(String source, ParsePosition pos) {
+                return null;
+            }
+        });
+
+        plot.getLegend().setVisible(false);
+        float baseLine = ((minElevation - (minElevation % 100)) - 200.0f) < 0.0f ? 0.0f : minElevation - (minElevation % 100) - 200.0f;
+        plot.setRangeLowerBoundary(baseLine, BoundaryMode.FIXED);
+        plot.setRangeUpperBoundary((maxElevation - (maxElevation % 100)) + 100.0f, BoundaryMode.FIXED);
+        plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 100);
+        //PanZoom.attach(plot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.STRETCH_HORIZONTAL);
+        plot.redraw();
+    }
+    public void showMapWithTour() {
+        if (tourController.getPolyline() == null){
+            return;
+        }
+        Log.d(TAG, tourController.getPolyline());
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);

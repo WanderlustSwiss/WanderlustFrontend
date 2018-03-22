@@ -132,6 +132,10 @@
     <string name="map_layer_layers">Layer</string>
     <string name="map_nothing_found">Kein Resultat gefunden</string>
 
+    <!-- Tour Fragment -->
+    <string name="tour_elevation_chart_title">Höhenprofil</string>
+    <string name="tour_elevation_chart_range">Höhenmeter</string>
+    <string name="tour_elevation_chart_domain">Distanz</string>
 
     <string name="message_confirm_delete_poi">Willst du den POI wirklich löschen?</string>
     <string name="image_upload_failed">Upload von Bild fehlgeschlagen</string>

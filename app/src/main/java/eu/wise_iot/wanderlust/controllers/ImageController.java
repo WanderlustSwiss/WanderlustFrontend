@@ -54,7 +54,6 @@ public class ImageController {
             dir.mkdir();
         }
     }
-    public String getProfileFolder(){
     public String getPoiFolder(){
         return FOLDERS[0];
     }

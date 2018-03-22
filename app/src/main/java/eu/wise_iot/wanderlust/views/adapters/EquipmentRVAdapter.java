@@ -31,7 +31,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.ViewHolder> {
 
     private static final String TAG = "EquipmentRVAdapter";
-    private List<Equipment> equipment = Collections.emptyList();
+    private List<Equipment> equipment;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private final Context context;
@@ -60,7 +60,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "Creating Viewholder");
-        View view = mInflater.inflate(R.layout.recyclerview_item, parent, false);
+        View view = mInflater.inflate(R.layout.equipment_recyclerview_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -75,11 +75,12 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
         //set properties for each element
         Equipment equipment = this.equipment.get(position);
         //load image
+        holder.tvTitle.setText(equipment.getName());
         //TODO add data structure for image
         //Picasso.with(context).load(equipment.getImage()).into(holder.ivImage);
         Picasso.with(context).load(R.drawable.no_image_found).into(holder.ivImage);
         //set title
-        holder.tvTitle.setText(equipment.getName());
+
     }
 
     /**
@@ -133,7 +134,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.equipmentTitle);
             ivImage = (ImageView) itemView.findViewById(R.id.equipmentImage);
-
+            Log.d("DEBUG", "ViewHolder broken");
             itemView.setOnClickListener(this);
         }
 

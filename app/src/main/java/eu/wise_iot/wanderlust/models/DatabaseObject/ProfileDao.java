@@ -163,8 +163,8 @@ public class ProfileDao extends DatabaseObjectAbstract {
                             internalProfile.setImagePath(imagePath);
                             internalProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
                             imageController.save(file, internalProfile.getImagePath());
-                            file.delete();
                             profileBox.put(internalProfile);
+                            file.delete();
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalProfile));
                         } catch (IOException e) {
                             e.printStackTrace();

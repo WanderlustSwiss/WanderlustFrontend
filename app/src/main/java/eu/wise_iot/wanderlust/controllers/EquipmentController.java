@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
@@ -199,8 +200,12 @@ public class EquipmentController {
                             }
                         }
 
-
-                        List<Equipment> recEquipmentList = Arrays.asList(recommendedEquipment);
+                        List<Equipment> recEquipmentList = new ArrayList<>();
+                        for(int i = 0; i<recommendedEquipment.length; i++){
+                            if(recommendedEquipment[i] != null) {
+                                recEquipmentList.add(recommendedEquipment[i]);
+                            }
+                        }
                         handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
                         break;
                     default:
