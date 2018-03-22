@@ -2,8 +2,11 @@ package eu.wise_iot.wanderlust.controllers;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -33,6 +36,7 @@ public class ImageController {
 
     private String picturesDir;
     private String[] FOLDERS;
+    private final int standardWidth;
 
     private ImageController(){
         picturesDir = CONTEXT.getApplicationContext().getApplicationContext().getExternalFilesDir("pictures").getAbsolutePath();
@@ -41,6 +45,7 @@ public class ImageController {
         FOLDERS[1] = "tours";
         FOLDERS[2] = "profile";
         FOLDERS[3] = "equipment";
+        standardWidth = 1024;
 
         File pictures = new File(picturesDir);
         if(!pictures.exists()) pictures.mkdir();
@@ -49,7 +54,7 @@ public class ImageController {
             dir.mkdir();
         }
     }
-
+    public String getProfileFolder(){
     public String getPoiFolder(){
         return FOLDERS[0];
     }
@@ -71,11 +76,9 @@ public class ImageController {
     public File getImage(ImageInfo imageInfo){
         return new File(picturesDir + "/" + imageInfo.getLocalPath());
     }
-
     public void save(File file, ImageInfo image) throws IOException {
 
         InputStream in = new FileInputStream(file);
-
         FileOutputStream out = new FileOutputStream(picturesDir + "/" + image.getLocalPath());
 
 
@@ -91,7 +94,6 @@ public class ImageController {
     public void save(InputStream in, ImageInfo image) throws IOException {
 
         FileOutputStream out = new FileOutputStream(picturesDir + "/" + image.getLocalPath());
-
 
         byte[] buf = new byte[1024];
         int len;
@@ -109,5 +111,29 @@ public class ImageController {
 
     public String getPicturesDir() {
         return picturesDir;
+    }
+
+    public File resize(File imgFileOrig) throws IOException {
+        return resize(imgFileOrig, standardWidth);
+    }
+
+    public File resize(File imgFileOrig, int destWidth) throws IOException {
+        Bitmap b = BitmapFactory.decodeFile(imgFileOrig.getAbsolutePath());
+        int origWidth = b.getWidth();
+        int origHeight = b.getHeight();
+
+        if(origWidth > destWidth){
+            int destHeight = origHeight/( origWidth / destWidth ) ;
+            Bitmap b2 = Bitmap.createScaledBitmap(b, destWidth, destHeight, false);
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            b2.compress(Bitmap.CompressFormat.JPEG,80 , outStream);
+            File f = new File(imgFileOrig.getAbsolutePath());
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(outStream.toByteArray());
+            fo.close();
+            return f;
+        }
+        return null;
     }
 }

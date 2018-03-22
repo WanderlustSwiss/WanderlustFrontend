@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -121,7 +123,20 @@ public class ProfileEditFragment extends Fragment {
         checkBoxes = new CheckBox[]{checkT1, checkT2, checkT3,
                 checkT4, checkT5, checkT6};
 
+        Rect outRect = new Rect();
+        view.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
 
+                if (event.getAction() == MotionEvent.ACTION_DOWN && bottomSheet != null && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    Rect outRect = new Rect();
+                    bottomSheet.getGlobalVisibleRect(outRect);
+
+                    if (!outRect.contains((int) event.getRawX(), (int) event.getRawY()))
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                return true;
+            }
+        });
 
         //initialize current values
         setupCurrentInfo(view);
@@ -288,6 +303,60 @@ public class ProfileEditFragment extends Fragment {
         }
 
     }
+
+    private void openGallery(){
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
+
+        galleryIntent.putExtra("crop", "true");
+        galleryIntent.putExtra("outputX", 170);
+        galleryIntent.putExtra("outputY", 170);
+        galleryIntent.putExtra("aspectX", 1);
+        galleryIntent.putExtra("aspectY", 1);
+        galleryIntent.putExtra("scale", true);
+
+        if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(galleryIntent, 1000);
+        }
+    }
+    private void onActionResultGallery(Intent data){
+        Uri returnUri = data.getData();
+        Bitmap bitmapImage;
+        try {
+            bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+            if (bitmapImage != null){
+                profileController.setProfilePicture(bitmapImage, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        if (controllerEvent.getType() == EventType.OK){
+                            setupAvatar();
+                        }else{
+                            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        } catch (IOException e) {
+
+        }
+    }
+    private void setupAvatar() {
+        File image = profileController.getProfilePicture();
+        if (image != null) {
+            Picasso.with(getActivity()).invalidate(image);
+            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().into(profileImage);
+            ((MainActivity) getActivity()).updateProfileImage(image);
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
+            drawable.setCircular(true);
+            profileImage.setImageDrawable(drawable);
+            ((MainActivity) getActivity()).updateProfileImage(image);
+        }
+
+    }
+
 
     private void openGallery(){
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
