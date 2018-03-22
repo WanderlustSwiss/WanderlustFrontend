@@ -129,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/poi_description_text_view"
             android:padding="12dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:text="@string/sac_occupation_bewartet">
         </TextView>
 
