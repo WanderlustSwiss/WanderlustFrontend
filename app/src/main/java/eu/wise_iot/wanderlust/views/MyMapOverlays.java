@@ -513,7 +513,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                         fragmentTransaction.remove(prevFragment);
                     fragmentTransaction.addToBackStack(null);
 
-                    PoiViewDialog dialogFragment = PoiViewDialog.newInstance(currentObject);
+                    PoiViewDialog dialogFragment = PoiViewDialog.newInstance(currentObject, Constants.TYPE_SAC);
                     dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
                     return true;
                 }

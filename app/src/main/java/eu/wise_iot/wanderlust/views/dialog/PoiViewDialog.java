@@ -3,6 +3,8 @@ package eu.wise_iot.wanderlust.views.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,14 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -51,6 +56,10 @@ public class PoiViewDialog extends DialogFragment {
     private ImageButton deletePoiButton;
     private long poiId;
     private PoiController controller;
+    private TextView occupationTitleSac;
+    private TableLayout sacOccupation;
+    private Map<String, Integer> monthIds = new HashMap<>();
+
 
     /**
      * Create a PoiViewDialog from a Poi object
@@ -73,17 +82,16 @@ public class PoiViewDialog extends DialogFragment {
      *
      * @param geoObject The GeoObject which is shown in the Poi dialog
      */
-    public static PoiViewDialog newInstance(GeoObject geoObject) {
+    public static PoiViewDialog newInstance(GeoObject geoObject, long geoObjectTypeId) {
         PoiViewDialog dialog = new PoiViewDialog();
         ArrayList<ImageInfo> list = new ArrayList<>();
         list.add(new ImageInfo(1, geoObject.getImageLink()));
     //    list.add(new ImageInfo(1, "http://binaryoptionexpert.com/wp-content/uploads/2015/01/not_available.jpg"));
 
-        currentPoi = new Poi((long) -1, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, -1, true, list);
+        currentPoi = new Poi((long) geoObjectTypeId, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, -1, true, list);
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
-        long poiId = -1;
         Bundle args = new Bundle();
-        args.putLong(Constants.POI_ID, poiId);
+        args.putLong(Constants.POI_ID, geoObjectTypeId);
         dialog.setArguments(args);
         return dialog;
     }
@@ -120,6 +128,11 @@ public class PoiViewDialog extends DialogFragment {
         closeDialogButton = (ImageButton) view.findViewById(R.id.poi_close_dialog_button);
         editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
         deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
+        sacOccupation = (TableLayout) view.findViewById(R.id.tableLayout_occupation_sac);
+        occupationTitleSac = (TextView) view.findViewById(R.id.title_occupation);
+        // default not visible
+        sacOccupation.setVisibility(View.GONE);
+        occupationTitleSac.setVisibility(View.GONE);
 
         if (controller.isOwnerOf(currentPoi)) {
             this.showControlsForOwner();
@@ -132,7 +145,7 @@ public class PoiViewDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initActionControls();
-        fillOutPoiView();
+        fillOutPoiView(view);
     }
 
     private void initActionControls() {
@@ -157,8 +170,8 @@ public class PoiViewDialog extends DialogFragment {
         });
     }
 
-    private void fillOutPoiView() {
-        if (poiId != -1) {
+    private void fillOutPoiView(View view) {
+        if (poiId >= 0) {
             controller.getImages(currentPoi, new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
@@ -181,7 +194,7 @@ public class PoiViewDialog extends DialogFragment {
 
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
-        if(poiId != -1){
+        if(poiId >= 0){
             typeTextView.setText(typeValues[(int) currentPoi.getType()]);
         } else {
             typeTextView.setText("SAC");
@@ -190,10 +203,17 @@ public class PoiViewDialog extends DialogFragment {
         elevationTextView.setText(elevationText);
 
         titleTextView.setText(currentPoi.getTitle());
-        if(poiId != -1){
+        if(poiId >= 0){
             dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
         }
+
+        if (poiId == Constants.TYPE_SAC) {
+            String description = showSacOccupation(currentPoi.getDescription(), view);
+            currentPoi.setDescription(description);
+        }
+
         descriptionTextView.setText(currentPoi.getDescription());
+
     }
 
     private void showControlsForOwner() {
@@ -216,4 +236,68 @@ public class PoiViewDialog extends DialogFragment {
     public void setController(PoiController controller) {
         this.controller = controller;
     }
+
+
+    /**
+     * Displays to occupation table for SAC Pois
+     *
+     * @param text the description containing the occupation information
+     *
+     */
+    public String showSacOccupation(String text, View view){
+        initMonthTableString();
+
+        sacOccupation.setVisibility(View.VISIBLE);
+        occupationTitleSac.setVisibility(View.VISIBLE);
+
+
+        StringBuilder editedDescription = new StringBuilder();
+        Resources res = getResources();
+
+        String[] textSplit = text.split("\n");
+        for (String aTextSplit : textSplit) {
+            if (aTextSplit.contains("Teilweise bewartet: ")) {
+                String occupiedMonthString = aTextSplit.substring(20);
+                String[] occupiedMonth = occupiedMonthString.split(",");
+                for (String anOccupiedMonth : occupiedMonth) {
+                    String month = anOccupiedMonth.toLowerCase();
+                    int id = monthIds.get(month);
+                    TextView currentMonthRow = (TextView) view.findViewById(id);
+                    currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.medium));
+                }
+            } else if (aTextSplit.contains("Bewartet: ")) {
+
+                String occupiedMonthString = aTextSplit.substring(10);
+                String[] occupiedMonth = occupiedMonthString.split(",");
+                for (String anOccupiedMonth : occupiedMonth) {
+                    String month = anOccupiedMonth.toLowerCase();
+                    int id = monthIds.get(month);
+                    TextView currentMonthRow = (TextView) view.findViewById(id);
+                    currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.success_easy));
+                }
+            } else {
+                editedDescription.append(aTextSplit).append("\n");
+            }
+        }
+        int x = 3;
+        return editedDescription.toString();
+    }
+
+
+
+    private void initMonthTableString() {
+        monthIds.put("jan", R.id.occupation_jan);
+        monthIds.put("feb", R.id.occupation_feb);
+        monthIds.put("mär", R.id.occupation_mär);
+        monthIds.put("apr", R.id.occupation_apr);
+        monthIds.put("mai", R.id.occupation_mai);
+        monthIds.put("jun", R.id.occupation_jun);
+        monthIds.put("jul", R.id.occupation_jul);
+        monthIds.put("aug", R.id.occupation_aug);
+        monthIds.put("sep", R.id.occupation_sep);
+        monthIds.put("okt", R.id.occupation_okt);
+        monthIds.put("nov", R.id.occupation_nov);
+        monthIds.put("dez", R.id.occupation_dez);
+    }
+
 }

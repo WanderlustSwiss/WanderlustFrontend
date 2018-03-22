@@ -158,5 +158,6 @@
     <string name="public_transport">ÖV</string>
     <string name="hashtag_search_nothing_found">Im aktuellen Kartenausschnitt wurden keine Resultate gefunden</string>
     <string name="sac_house">SAC</string>
+    <string name="sac_occupation_bewartet">Bewartet:</string>
 
 </resources>

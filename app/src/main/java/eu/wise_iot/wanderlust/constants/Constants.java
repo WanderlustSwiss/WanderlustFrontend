@@ -18,6 +18,9 @@ public interface Constants {
     int TYPE_REST_AREA = 2;
     int TYPE_FLORA_FAUNA = 3;
 
+    // GeoObjectTypes
+    long TYPE_SAC = -1;
+
 
     /* ACTIVITIES */
     String MAIN_ACTIVITY = "MainActivity";
