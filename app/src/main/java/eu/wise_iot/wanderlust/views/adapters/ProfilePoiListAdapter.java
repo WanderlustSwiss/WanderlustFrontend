@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.List;
 
@@ -36,7 +38,6 @@ import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
 
     private TextView title;
-    private TextView description;
 
     private ImageView poiImage;
     private ImageView editIcon;
@@ -127,7 +128,6 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListTourTitle);
-        description = (TextView) convertView.findViewById(R.id.ListTourDescription);
 
         poiImage = (ImageView) convertView.findViewById(R.id.ListTourImageView);
         editIcon = (ImageView) convertView.findViewById(R.id.ListTourEdit);
@@ -135,8 +135,8 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
 
         //set data
         if (poi != null) {
-            title.setText(poi.getTitle());
-            description.setText(poi.getDescription());
+            String t = StringUtils.abbreviate(poi.getTitle(), 30);
+            title.setText(t);
 
             List<ImageInfo> imagepaths = poi.getImagePaths();
             List<File> imagefiles = imageController.getImages(imagepaths);

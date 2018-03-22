@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.List;
 
@@ -33,7 +35,6 @@ import eu.wise_iot.wanderlust.views.ProfileFragment;
 public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
-    private TextView description;
 
     private ImageView tripImage;
     private ImageView editIcon;
@@ -119,7 +120,6 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListTourTitle);
-        description = (TextView) convertView.findViewById(R.id.ListTourDescription);
 
         tripImage = (ImageView) convertView.findViewById(R.id.ListTourImageView);
         editIcon = (ImageView) convertView.findViewById(R.id.ListTourEdit);
@@ -127,8 +127,8 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
         //set data
         if (tour != null) {
-            title.setText(tour.getTitle());
-            description.setText(tour.getDescription());
+            String t = StringUtils.abbreviate(tour.getTitle(), 30);
+            title.setText(t);
 
             List<ImageInfo> imageinfos = tour.getImagePaths();
             List<File> imagefiles = imageController.getImages(imageinfos);
@@ -146,12 +146,11 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
                     public void onResponse(ControllerEvent controllerEvent) {
                         switch (controllerEvent.getType()){
                             case OK:
-                                Toast.makeText(context, "Tour gelöscht.", Toast.LENGTH_SHORT).show();
+                                profileFragment.setProfileStats();
+                                profileFragment.setupMyTours(profileFragment.getView());
                                 break;
                             default:
-                                String id = String.valueOf(tour.getTour_id());
-                                String mess = controllerEvent.getType().toString();
-                                Toast.makeText(context, id + " Fehlgeschlagen.." + mess, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }
@@ -159,7 +158,6 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
             });
 
         }
-
 
         return convertView;
     }

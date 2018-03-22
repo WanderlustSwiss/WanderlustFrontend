@@ -122,7 +122,7 @@ public class ProfileController {
      * @return the amount of user tours
      */
     public long getAmountTours() {
-        return userTourDao.count();
+        return tripDao.count();
     }
 
     /**

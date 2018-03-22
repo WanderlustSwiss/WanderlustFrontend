@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.List;
 
@@ -30,7 +32,6 @@ import eu.wise_iot.wanderlust.views.ProfileFragment;
 public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
-    private TextView description;
 
     private ImageView tripImage;
     private ImageView deleteIcon;
@@ -115,15 +116,14 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListSavedTitle);
-        description = (TextView) convertView.findViewById(R.id.ListSavedDescription);
 
         tripImage = (ImageView) convertView.findViewById(R.id.ListSavedImageView);
         deleteIcon = (ImageView) convertView.findViewById(R.id.ListSavedIcon);
 
         //set data
         if (communityTour != null) {
-            title.setText(communityTour.getTitle());
-            description.setText(communityTour.getDescription());
+            String t = StringUtils.abbreviate(communityTour.getTitle(), 30);
+            title.setText(t);
 
             List<ImageInfo> imageinfos = communityTour.getImagePaths();
             List<File> imagefiles = imageController.getImages(imageinfos);

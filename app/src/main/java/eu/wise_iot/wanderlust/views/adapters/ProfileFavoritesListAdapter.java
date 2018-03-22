@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
 import java.util.List;
 
@@ -35,7 +37,6 @@ import eu.wise_iot.wanderlust.views.ProfileFragment;
 public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
-    private TextView description;
 
     private ImageView tripImage;
     private ImageView favIcon;
@@ -121,16 +122,13 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListFavTitle);
-        description = (TextView) convertView.findViewById(R.id.ListFavDescription);
         tripImage = (ImageView) convertView.findViewById(R.id.ListFavImageView);
         favIcon = (ImageView) convertView.findViewById(R.id.ListFavIcon);
 
         //set data
         if (fav != null) {
-            title.setText(fav.getTitle());
-            description.setText(fav.getDescription());
-
-            //tourController = new TourController(fav);
+            String t = StringUtils.abbreviate(fav.getTitle(), 30);
+            title.setText(t);
 
             List<ImageInfo> imagepaths = fav.getImagePaths();
             List<File> imagefiles = imageController.getImages(imagepaths);
