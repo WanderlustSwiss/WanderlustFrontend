@@ -263,7 +263,9 @@ public class PoiViewDialog extends DialogFragment {
                     String month = anOccupiedMonth.toLowerCase();
                     int id = monthIds.get(month);
                     TextView currentMonthRow = (TextView) view.findViewById(id);
-                    currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.medium));
+                    if (currentMonthRow != null) {
+                        currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.medium));
+                    }
                 }
             } else if (aTextSplit.contains("Bewartet: ")) {
 
@@ -273,7 +275,9 @@ public class PoiViewDialog extends DialogFragment {
                     String month = anOccupiedMonth.toLowerCase();
                     int id = monthIds.get(month);
                     TextView currentMonthRow = (TextView) view.findViewById(id);
-                    currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.success_easy));
+                    if (currentMonthRow != null) {
+                        currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.success_easy));
+                    }
                 }
             } else {
                 editedDescription.append(aTextSplit).append("\n");
