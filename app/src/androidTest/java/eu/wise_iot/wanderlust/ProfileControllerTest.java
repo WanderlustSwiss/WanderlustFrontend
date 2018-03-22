@@ -43,11 +43,16 @@ public class ProfileControllerTest {
     public ActivityTestRule<MainActivity> main = new ActivityTestRule<>(MainActivity.class);
 
     ProfileController profileController;
+    UserDao userDao;
+    ProfileDao profileDao;
 
     @Before
     public void setUp(){
 
         profileController = new ProfileController();
+        userDao = UserDao.getInstance();
+        profileDao = ProfileDao.getInstance();
+
     }
 
     @Test
@@ -59,7 +64,7 @@ public class ProfileControllerTest {
     public void getNickName(){
         assertEquals("testbaris", profileController.getNickName());
 
-        DatabaseController.userDao.userBox.removeAll();
+        userDao.removeAll();
         assertEquals("no user", profileController.getNickName());
     }
 
@@ -67,7 +72,7 @@ public class ProfileControllerTest {
     public void getScore(){
         assertEquals(0, profileController.getScore());
 
-        DatabaseController.profileDao.profileBox.removeAll();
+        profileDao.removeAll();
         assertEquals(0, profileController.getScore());
     }
 
@@ -85,7 +90,7 @@ public class ProfileControllerTest {
     public void getBirthDate(){
         assertEquals("", profileController.getBirthDate());
 
-        DatabaseController.profileDao.profileBox.removeAll();
+        profileDao.removeAll();
         assertEquals("", profileController.getBirthDate());
     }
 
