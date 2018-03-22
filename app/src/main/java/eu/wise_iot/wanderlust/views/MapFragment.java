@@ -768,7 +768,9 @@ public class MapFragment extends Fragment {
                     if (hashTagSearchSuggestions != null) {
                         hashTagSearchSuggestions.clear();
                     }
-                    populateAdapter(s.substring(1));
+                    if(s.length() >= 1){
+                        populateAdapter(s.substring(1));
+                    }
                 }
                 return true;
             }
