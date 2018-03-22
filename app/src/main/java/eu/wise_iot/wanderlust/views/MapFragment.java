@@ -570,7 +570,6 @@ public class MapFragment extends Fragment {
         showSacHutOverlay(false);
 
 
-
         publicTransportLayerButton.setOnClickListener(v -> {
             boolean toggleLayer = !publicTransportLayerButton.isSelected();
             showPublicTransportOverlay(toggleLayer);
@@ -586,7 +585,6 @@ public class MapFragment extends Fragment {
             boolean toggleLayer = !sacHutLayerButton.isSelected();
             showSacHutOverlay(toggleLayer);
         });
-
 
 
         mapView.setOnClickListener(v -> {
@@ -615,7 +613,7 @@ public class MapFragment extends Fragment {
         GeoPoint point1 = new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonWest());
         GeoPoint point2 = new GeoPoint(boundingBox.getLatSouth(), boundingBox.getLonEast());
 
-        if(mapView.getZoomLevel() > 10){
+        if (mapView.getZoomLevel() > 10) {
             mapOverlays.showSacHutLayer(showOverlay, point1, point2);
         }
         mapView.setSacHutEnabledEnabled(showOverlay);
@@ -881,7 +879,7 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public void showInformationBottomSheet(boolean toggleBottomsheet, String text){
+    public void showInformationBottomSheet(boolean toggleBottomsheet, String text) {
         if (toggleBottomsheet) {
             informationBottomSheetString.setText(text);
             informationBottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
