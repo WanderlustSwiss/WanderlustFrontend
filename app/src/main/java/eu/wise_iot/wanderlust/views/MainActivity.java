@@ -77,16 +77,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginController = new LoginController();
 
         if (preferences.getBoolean("firstTimeOpened", true)) {
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean("firstTimeOpened", false); // save that app has been opened
-            editor.apply();
-
             // start welcome screen
             StartupRegistrationFragment registrationFragment = new StartupRegistrationFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, registrationFragment)
                     .commit();
-
 
             // else try to login
         } else {
@@ -143,8 +138,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
     }
 
     /**
@@ -195,6 +188,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // OTHER FRAGMENTS
+
+        else if (id == R.id.setup_guide) {
+            fragment = UserGuideFragment.newInstance();
+            fragmentTag = Constants.USER_GUIDE_FRAGMENT;
+        }
+
         else if (id == R.id.logout) {
             loginController.logout(new FragmentHandler() {
                 @Override

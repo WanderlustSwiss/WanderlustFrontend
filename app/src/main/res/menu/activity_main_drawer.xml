@@ -27,6 +27,10 @@
             android:title="@string/menu_about" />
             -->
             <item
+                android:id="@+id/setup_guide"
+                android:title="@string/menu_user_guide" />
+
+            <item
                 android:id="@+id/logout"
                 android:title="@string/logout" />
         </menu>
