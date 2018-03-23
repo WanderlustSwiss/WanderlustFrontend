@@ -172,5 +172,9 @@
     <string name="no_tours">Keine Touren</string>
     <string name="no_pois">Keine POI\'s</string>
     <string name="no_saved">Keine Touren gespeichert</string>
+    <string name="public_transport">ÖV</string>
+    <string name="hashtag_search_nothing_found">Im aktuellen Kartenausschnitt wurden keine Resultate gefunden</string>
+    <string name="sac_house">SAC</string>
+    <string name="sac_occupation_bewartet">Bewartet:</string>
 
 </resources>

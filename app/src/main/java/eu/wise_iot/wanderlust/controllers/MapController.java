@@ -12,28 +12,40 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import android.location.Address;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
+import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.PublicTransportPoint;
+import eu.wise_iot.wanderlust.services.HashtagService;
+
+import eu.wise_iot.wanderlust.services.SacService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.MapFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * MapController: The Map controller which handles requests of the map fragment
  *
  * @author Joshua Meier
- * @license MIT
  */
 public class MapController {
-    private static final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
+    private final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
+    private final String SBB_SERVICE_URL = "https://data.sbb.ch/api/records/1.0/search/";
     private MapFragment fragment;
 
 
@@ -150,4 +162,104 @@ public class MapController {
 
     }
 
+
+    public void serachHashtag(int hashtagId, GeoPoint point1, GeoPoint point2, FragmentHandler<List<Poi>> fragmentHandler) {
+        HashtagService service = ServiceGenerator.createService(HashtagService.class);
+        Call<List<Poi>> call = service.retrievePoisByArea(point1.getLatitude(), point1.getLongitude(), point2.getLatitude(), point2.getLongitude(), hashtagId);
+        call.enqueue(new Callback<List<Poi>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Poi>> call, @NonNull retrofit2.Response<List<Poi>> response) {
+                if (response.isSuccessful()) {
+                    fragmentHandler.onResponse(new ControllerEvent<List<Poi>>(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    fragmentHandler.onResponse(new ControllerEvent<List<Poi>>(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Poi>> call, @NonNull Throwable t) {
+                fragmentHandler.onResponse(new ControllerEvent<List<Poi>>(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+
+    public void suggestHashtags(String query, FragmentHandler<List<HashtagResult>> fragmentHandler) {
+        HashtagService service = ServiceGenerator.createService(HashtagService.class);
+        Call<List<HashtagResult>> call = service.retrievePoisByTag(query.substring(1));
+        call.enqueue(new Callback<List<HashtagResult>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<HashtagResult>> call, @NonNull retrofit2.Response<List<HashtagResult>> response) {
+                int x = 3;
+                fragmentHandler.onResponse(new ControllerEvent<List<HashtagResult>>(EventType.getTypeByCode(response.code()), response.body()));
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<HashtagResult>> call, @NonNull Throwable t) {
+                fragmentHandler.onResponse(new ControllerEvent<List<HashtagResult>>(EventType.NETWORK_ERROR));
+            }
+        });
+
+    }
+
+    public void searchPublicTransportStations(GeoPoint centerGeoPoint, int rows, int radius, final FragmentHandler handler) {
+        String url = SBB_SERVICE_URL
+                + "?dataset=didok-liste"
+                + "&geofilter.distance=" + centerGeoPoint.getLatitude() + "," + centerGeoPoint.getLongitude() + "," + radius + ""
+                + "&rows=" + rows;
+
+        RequestQueue queue = Volley.newRequestQueue(fragment.getActivity());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
+                JsonArray jRecords = jsonObject.get("records").getAsJsonArray();
+
+                List<PublicTransportPoint> publicTransportPoints = new ArrayList<>(jRecords.size());
+
+                for (int i = 0; i < jRecords.size(); i++) {
+                    JsonObject jField = jRecords.get(i).getAsJsonObject().get("fields").getAsJsonObject();
+                    String busStopDescription = jField.get("name").getAsString();
+                    JsonArray jGeoPoints = jField.get("geopos").getAsJsonArray();
+                    GeoPoint geoPoint = new GeoPoint(jGeoPoints.get(0).getAsDouble(), jGeoPoints.get(1).getAsDouble());
+                    int id = jField.get("nummer").getAsInt();
+                    PublicTransportPoint gPublicTransportPoint = new PublicTransportPoint(geoPoint, busStopDescription, id);
+
+                    publicTransportPoints.add(gPublicTransportPoint);
+                }
+                handler.onResponse(new ControllerEvent<List<PublicTransportPoint>>(EventType.OK, publicTransportPoints));
+
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                handler.onResponse(new ControllerEvent<List<PublicTransportPoint>>(EventType.NETWORK_ERROR));
+            }
+        });
+
+        queue.add(stringRequest);
+
+    }
+
+    public void searchSac(GeoPoint point1, GeoPoint point2, FragmentHandler<List<GeoObject>> fragmentHandler) {
+        SacService service = ServiceGenerator.createService(SacService.class);
+        Call<List<GeoObject>> call = service.retrieveSacPoisByArea(point1.getLatitude(), point1.getLongitude(), point2.getLatitude(), point2.getLongitude());
+        call.enqueue(new Callback<List<GeoObject>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<GeoObject>> call, @NonNull retrofit2.Response<List<GeoObject>> response) {
+                if (response.isSuccessful()) {
+                    fragmentHandler.onResponse(new ControllerEvent<List<GeoObject>>(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    fragmentHandler.onResponse(new ControllerEvent<List<GeoObject>>(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<GeoObject>> call, @NonNull Throwable t) {
+                fragmentHandler.onResponse(new ControllerEvent<List<GeoObject>>(EventType.NETWORK_ERROR));
+            }
+        });
+    }
 }

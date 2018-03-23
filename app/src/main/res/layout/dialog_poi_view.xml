@@ -130,12 +130,113 @@
 
         <TextView
             android:id="@+id/poi_description_text_view"
+            style="@style/p"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/poi_background_container"
             android:layout_marginTop="16dp"
+            android:padding="12dp" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/title_occupation"
+            style="@style/p"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/poi_description_text_view"
             android:padding="12dp"
-            style="@style/p"/>
+            android:layout_marginTop="4dp"
+            android:text="@string/sac_occupation_bewartet">
+        </TextView>
+
+        <TableLayout
+            android:id="@+id/tableLayout_occupation_sac"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_below="@id/title_occupation"
+            android:layout_marginTop="12dp">
+
+            <TableRow
+                android:id="@+id/table_row_3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/occupation_jan"
+                    style="@style/sac_occupation_table"
+                    android:text="Jan">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_feb"
+                    style="@style/sac_occupation_table"
+                    android:text="Feb">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_mär"
+                    style="@style/sac_occupation_table"
+                    android:text="Mar">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_apr"
+                    style="@style/sac_occupation_table"
+                    android:text="Apr">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_mai"
+                    style="@style/sac_occupation_table"
+                    android:text="Mai">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_jun"
+                    style="@style/sac_occupation_table"
+                    android:text="Jun">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_jul"
+                    style="@style/sac_occupation_table"
+                    android:text="Jul">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_aug"
+                    style="@style/sac_occupation_table"
+                    android:text="Aug">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_sep"
+                    style="@style/sac_occupation_table"
+                    android:text="Sep">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_okt"
+                    style="@style/sac_occupation_table"
+                    android:text="Okt">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_nov"
+                    style="@style/sac_occupation_table"
+                    android:text="Nov">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/occupation_dez"
+                    style="@style/sac_occupation_table"
+                    android:text="Dez">
+
+                </TextView>
+            </TableRow>
+        </TableLayout>
 
     </RelativeLayout>
 

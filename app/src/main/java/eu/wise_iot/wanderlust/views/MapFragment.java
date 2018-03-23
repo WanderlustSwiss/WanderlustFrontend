@@ -6,26 +6,40 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.MatrixCursor;
+import android.graphics.Rect;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +54,10 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
+import eu.wise_iot.wanderlust.controllers.MotionEventListener;
+import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
@@ -82,6 +99,18 @@ public class MapFragment extends Fragment {
 
     // bottom sheet
     private ImageButton poiLayerButton;
+    private ImageButton publicTransportLayerButton;
+    private ImageButton sacHutLayerButton;
+
+    // Search suggetstion
+    private List<HashtagResult> hashTagSearchSuggestions = new ArrayList<>();
+    private SimpleCursorAdapter mAdapter;
+    private MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID, "hashTag"});
+
+    // Bottom Sheet with information String
+    private BottomSheetBehavior informationBottomSheet;
+    private TextView informationBottomSheetString;
+
 
     /**
      * Static instance constructor.
@@ -112,6 +141,17 @@ public class MapFragment extends Fragment {
         setHasOptionsMenu(true);
         loadPreferences();
         getActivity().setTitle("");
+
+
+        // For search View
+        final String[] from = new String[]{"hashTag"};
+        final int[] to = new int[]{android.R.id.text1};
+        mAdapter = new SimpleCursorAdapter(getActivity(),
+                R.layout.li_query_suggestion,
+                null,
+                from,
+                to,
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
 
     @Override
@@ -121,7 +161,7 @@ public class MapFragment extends Fragment {
         initOverlays();
         initMapController();
         databaseController.register(mapOverlays);
-        if(polyline != null) setTour(polyline);
+        if (polyline != null) setTour(polyline);
         return view;
     }
 
@@ -138,6 +178,25 @@ public class MapFragment extends Fragment {
         initCameraButton(view);
         initLayerButton(view);
         initMapTypeButton(view);
+        initInformationBottomSheet(view);
+    }
+
+    private void initInformationBottomSheet(View view) {
+        View bottomSheet = view.findViewById(R.id.bottom_sheet_public_transport);
+        informationBottomSheet = BottomSheetBehavior.from(bottomSheet);
+        informationBottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        informationBottomSheetString = (TextView) view.findViewById(R.id.public_transport_station_name);
+
+        this.mapView.addObserver((arg, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN && informationBottomSheet.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                Rect outRect = new Rect();
+                bottomSheet.getGlobalVisibleRect(outRect);
+
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY()))
+                    informationBottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
     }
 
     private void initMapTypeButton(View view) {
@@ -185,82 +244,11 @@ public class MapFragment extends Fragment {
             terrainTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         });
+
+        mapView.setBottomSheetClosingComponents(bottomSheet, bottomSheetBehavior);
+
     }
 
-    /**
-     * Initializes the search bar on the top of the application
-     *
-     * @param menu The menu with the searchbar, which needs to be initialized
-     */
-    public void initSearchView(Menu menu) {
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.action_search).getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                callSearch(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // TODO: SEARCH SUGGETION
-                return true;
-            }
-
-            public void callSearch(String query) {
-                try {
-                    searchMapController.searchPlace(query, 1, new FragmentHandler<List<MapSearchResult>>() {
-                        @Override
-                        public void onResponse(ControllerEvent<List<MapSearchResult>> controllerEvent) {
-                            List<MapSearchResult> resultList = controllerEvent.getModel();
-                            if (!resultList.isEmpty()) {
-                                MapSearchResult firstResult = resultList.get(0);
-                                GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
-                                if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
-                                    mapOverlays.clearPolylines();
-
-                                    double minLat = 9999;
-                                    double maxLat = -9999;
-                                    double minLong = 9999;
-                                    double maxLong = -9999;
-
-                                    for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
-                                        mapOverlays.addPolyline(polygon);
-
-                                        for (GeoPoint point : polygon) {
-                                            if (point.getLatitude() < minLat)
-                                                minLat = point.getLatitude();
-                                            if (point.getLatitude() > maxLat)
-                                                maxLat = point.getLatitude();
-                                            if (point.getLongitude() < minLong)
-                                                minLong = point.getLongitude();
-                                            if (point.getLongitude() > maxLong)
-                                                maxLong = point.getLongitude();
-                                        }
-                                    }
-
-                                    BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
-                                    mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
-                                } else {
-                                    mapController.setZoom(Defaults.ZOOM_SEARCH);
-                                    mapController.animateTo(geoPoint);
-                                    mapOverlays.addFocusedPositionMarker(geoPoint);
-                                }
-                            } else {
-                                Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } catch (IOException e) {
-                    Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
-                }
-                searchView.clearFocus();
-            }
-
-        });
-    }
 
     @Override
     public void onStart() {
@@ -305,7 +293,7 @@ public class MapFragment extends Fragment {
         menu.clear(); // makes sure that the menu was not inflated yet
         inflater.inflate(R.menu.map_fragment_layer_menu, menu);
 
-        initSearchView(menu);
+        // initSearchView(menu);
 
     }
 
@@ -332,7 +320,8 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public void setTour(Polyline polyline){
+
+    public void setTour(Polyline polyline) {
         mapOverlays.setTour(polyline);
         List<GeoPoint> polylineList = polyline.getPoints();
         mapController.setCenter(polylineList.get(0));
@@ -400,6 +389,7 @@ public class MapFragment extends Fragment {
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
         mapView.setMultiTouchControls(true);
+
     }
 
     /**
@@ -426,6 +416,7 @@ public class MapFragment extends Fragment {
                 return d / 100;
             }
         });
+        mapView.setMapOverlays(this.mapOverlays);
         mapController.setCenter(centerOfMap);
         if (zoomLevel > 20 || zoomLevel < 1)
             mapController.setZoom(Defaults.ZOOM_STARTUP);
@@ -436,7 +427,7 @@ public class MapFragment extends Fragment {
      * Initializes map overlays
      */
     private void initOverlays() {
-        mapOverlays = new MyMapOverlays(getActivity(), mapView);
+        mapOverlays = new MyMapOverlays(getActivity(), mapView, this.searchMapController, this);
         // set position marker if last location is available
         if (!myLocationIsEnabled && lastKnownLocation != null
                 && lastKnownLocation.getLatitude() != 0
@@ -572,9 +563,34 @@ public class MapFragment extends Fragment {
         poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
         showPoiOverlay(true);
 
+        publicTransportLayerButton = (ImageButton) view.findViewById(R.id.public_transport_layer_button);
+        showPublicTransportOverlay(false);
+
+        sacHutLayerButton = (ImageButton) view.findViewById(R.id.public_sac_layer_button);
+        showSacHutOverlay(false);
+
+
+        publicTransportLayerButton.setOnClickListener(v -> {
+            boolean toggleLayer = !publicTransportLayerButton.isSelected();
+            showPublicTransportOverlay(toggleLayer);
+        });
+
+
         poiLayerButton.setOnClickListener(v -> {
             boolean toggleLayer = !poiLayerButton.isSelected();
             showPoiOverlay(toggleLayer);
+        });
+
+        sacHutLayerButton.setOnClickListener(v -> {
+            boolean toggleLayer = !sacHutLayerButton.isSelected();
+            showSacHutOverlay(toggleLayer);
+        });
+
+
+        mapView.setOnClickListener(v -> {
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
         });
     }
 
@@ -583,8 +599,48 @@ public class MapFragment extends Fragment {
         mapOverlays.showPoiLayer(showOverlay);
         if (showOverlay) {
             poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
             poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+
+    private void showSacHutOverlay(boolean showOverlay) {
+        sacHutLayerButton.setSelected(showOverlay);
+
+        BoundingBox boundingBox = mapView.getProjection().getBoundingBox();
+        GeoPoint point1 = new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonWest());
+        GeoPoint point2 = new GeoPoint(boundingBox.getLatSouth(), boundingBox.getLonEast());
+
+        if (mapView.getZoomLevel() > 10) {
+            mapOverlays.showSacHutLayer(showOverlay, point1, point2);
+        }
+        mapView.setSacHutEnabledEnabled(showOverlay);
+
+        if (showOverlay) {
+            sacHutLayerButton.setImageResource(R.drawable.ic_home_black_40dp_white);
+            sacHutLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            sacHutLayerButton.setImageResource(R.drawable.ic_home_black_40dp_black);
+            sacHutLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+
+
+    /**
+     * Shows the public transport overlay and changes the icon in the dialog
+     */
+    private void showPublicTransportOverlay(boolean showPublicTransportOverlay) {
+        publicTransportLayerButton.setSelected(showPublicTransportOverlay);
+        mapView.setPublicTransportEnabled(showPublicTransportOverlay);
+        mapOverlays.showPublicTransportLayer(showPublicTransportOverlay, (GeoPoint) mapView.getMapCenter());
+        if (showPublicTransportOverlay) {
+            publicTransportLayerButton.setImageResource(R.drawable.ic_train_white_40dp);
+            publicTransportLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            publicTransportLayerButton.setImageResource(R.drawable.ic_train_black_40dp);
+            publicTransportLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
     }
 
@@ -659,6 +715,179 @@ public class MapFragment extends Fragment {
 
         PoiEditDialog dialog = PoiEditDialog.newInstance(imageFileName, lastKnownLocation);
         dialog.show(fragmentTransaction, Constants.EDIT_POI_DIALOG);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        SearchView searchView = (SearchView) MenuItemCompat
+                .getActionView(menu.findItem(R.id.action_search));
+        searchView.setSuggestionsAdapter(mAdapter);
+        searchView.setIconifiedByDefault(false);
+        // Getting selected (clicked) item suggestion
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionClick(int position) {
+                triggerHashtagSearch(position, null);
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                triggerHashtagSearch(position, null);
+                return true;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                if (s.startsWith("#")) {
+                    triggerHashtagSearch(-1, s.substring(1));
+                } else {
+                    callSearch(s);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.trim().startsWith("#") && s.length() >= 2) {
+                    searchMapController.suggestHashtags(s.substring(1), new FragmentHandler<List<HashtagResult>>() {
+                        @Override
+                        public void onResponse(ControllerEvent<List<HashtagResult>> controllerEvent) {
+                            if (controllerEvent.getModel() != null && controllerEvent.getModel().size() != 0) {
+                                hashTagSearchSuggestions = controllerEvent.getModel();
+                            } else {
+                                hashTagSearchSuggestions.clear();
+                            }
+                            populateAdapter(s.substring(1));
+
+                        }
+                    });
+                } else {
+                    if (hashTagSearchSuggestions != null) {
+                        hashTagSearchSuggestions.clear();
+                    }
+                    if(s.length() >= 1){
+                        populateAdapter(s.substring(1));
+                    }
+                }
+                return true;
+            }
+
+            public void callSearch(String query) {
+                try {
+                    searchMapController.searchPlace(query, 1, new FragmentHandler<List<MapSearchResult>>() {
+                        @Override
+                        public void onResponse(ControllerEvent<List<MapSearchResult>> controllerEvent) {
+                            List<MapSearchResult> resultList = controllerEvent.getModel();
+                            if (!resultList.isEmpty()) {
+                                MapSearchResult firstResult = resultList.get(0);
+                                GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
+                                if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
+                                    mapOverlays.clearPolylines();
+
+                                    double minLat = 9999;
+                                    double maxLat = -9999;
+                                    double minLong = 9999;
+                                    double maxLong = -9999;
+
+                                    for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
+                                        mapOverlays.addPolyline(polygon);
+
+                                        for (GeoPoint point : polygon) {
+                                            if (point.getLatitude() < minLat)
+                                                minLat = point.getLatitude();
+                                            if (point.getLatitude() > maxLat)
+                                                maxLat = point.getLatitude();
+                                            if (point.getLongitude() < minLong)
+                                                minLong = point.getLongitude();
+                                            if (point.getLongitude() > maxLong)
+                                                maxLong = point.getLongitude();
+                                        }
+                                    }
+
+                                    BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
+                                    mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
+                                } else {
+                                    mapController.setZoom(Defaults.ZOOM_SEARCH);
+                                    mapController.animateTo(geoPoint);
+                                    mapOverlays.addFocusedPositionMarker(geoPoint);
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                }
+                searchView.clearFocus();
+            }
+        });
+    }
+
+
+    private void populateAdapter(String query) {
+        c = new MatrixCursor(new String[]{BaseColumns._ID, "hashTag"});
+        int length = this.hashTagSearchSuggestions.size() > 6 ? 6 : this.hashTagSearchSuggestions.size();
+        for (int i = 0; i < length; i++) {
+            if (this.hashTagSearchSuggestions.get(i).getTag().toLowerCase().startsWith(query.toLowerCase())) {
+                c.addRow(new Object[]{i, this.hashTagSearchSuggestions.get(i).getTag()});
+            }
+        }
+
+        mAdapter.changeCursor(c);
+    }
+
+    private void triggerHashtagSearch(int position, String query) {
+        String element;
+        if (query != null) { // use the input (search directly)
+            element = query;
+        } else { // take input from suggestions (search via searching suggestion)
+            element = c.getString(1);
+        }
+
+        BoundingBox boundingBox = mapView.getProjection().getBoundingBox();
+        GeoPoint point1 = new GeoPoint(boundingBox.getLatSouth(), boundingBox.getLonWest());
+        GeoPoint point2 = new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonEast());
+
+        for (HashtagResult hashtagResult : hashTagSearchSuggestions) {
+            if (hashtagResult.getTag().equals(element)) {
+                searchMapController.serachHashtag(hashtagResult.getHashId(), point2, point1, new FragmentHandler<List<Poi>>() {
+                    @Override
+                    public void onResponse(ControllerEvent<List<Poi>> controllerEvent) {
+                        List<Poi> hashtagPoiList = controllerEvent.getModel();
+
+                        // hide poi layer so that hashtagsearch results can be displayed
+                        showPoiOverlay(false);
+
+                        // hide poi layer so that hashtagsearch results can be displayed
+                        mapOverlays.updateHashtagPoiLayer(hashtagPoiList);
+                        if (hashtagPoiList.size() == 0) {
+                            Toast.makeText(getActivity(), R.string.hashtag_search_nothing_found, Toast.LENGTH_LONG).show();
+                        } else {
+                            // close keyboard
+                            View view = getActivity().getCurrentFocus();
+                            if (view != null) {
+                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            }
+                        }
+                    }
+                });
+                break;
+            }
+        }
+    }
+
+    public void showInformationBottomSheet(boolean toggleBottomsheet, String text) {
+        if (toggleBottomsheet) {
+            informationBottomSheetString.setText(text);
+            informationBottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
+        } else {
+            informationBottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
+        }
     }
 }
 

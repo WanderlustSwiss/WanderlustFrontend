@@ -18,7 +18,6 @@ public class ImageInfo {
         this.name = name;
         this.localDir = localDir;
     }
-
     public void setPath(String path){ this.path = path; }
     public void setLocalDir(String localDir) {this.localDir = localDir;}
     public void setId(long id){ this.id = id; }
