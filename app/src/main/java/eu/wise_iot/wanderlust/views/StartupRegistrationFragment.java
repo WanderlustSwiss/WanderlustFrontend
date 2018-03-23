@@ -110,10 +110,14 @@ public class StartupRegistrationFragment extends Fragment {
                         , passwordTextfield.getText().toString()
                         , 0, true, true, "", "");
                 if (validateInput(user)) {
+
+                    btnRegister.setEnabled(false);
+
                     //get response
                     registrationController.registerUser(user, new FragmentHandler() {
                         @Override
                         public void onResponse(ControllerEvent controllerEvent) {
+                            btnRegister.setEnabled(true);
                             EventType eventType = controllerEvent.getType();
                             switch (eventType) {
                                 case OK:
@@ -215,5 +219,6 @@ public class StartupRegistrationFragment extends Fragment {
     private boolean validatePassword(String password) {
         return password.matches(VALID_PASSWORTD_REGX);
     }
+
 
 }

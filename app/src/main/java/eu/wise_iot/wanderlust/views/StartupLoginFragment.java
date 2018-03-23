@@ -49,12 +49,16 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     private SignInButton signInButtonGoogle;
     private TextView redirectToRegistration;
     private TextView fogotPassword;
-//    private GoogleApiClient googleApiClient;
+    //    private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
     private LoginController loginController;
     private FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {
+
+            //Enable LoginButton after request is complete
+            btnLogin.setEnabled(true);
+
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
@@ -133,6 +137,10 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Disable LoginButton until request is complete
+                btnLogin.setEnabled(false);
+
                 loginUser = new LoginUser(
                         nicknameEmailTextfield.getText().toString(),
                         passwordTextfield.getText().toString()
