@@ -80,15 +80,17 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
         @Override
         public void run() {
             List<Weather> weatherFromGeo = controller.getWeatherFromGeoPoint(geoPoint);
-            long delta = Long.MAX_VALUE;
-            for (Weather w : weatherFromGeo) {
-                if (Math.abs(w.getDt() - DTtime) < delta) {
-                    delta = Math.abs(w.getDt() - DTtime);
-                    weather = w;
+            //TODO: Better handling if server is not responding
+            if (weatherFromGeo != null) {
+                long delta = Long.MAX_VALUE;
+                for (Weather w : weatherFromGeo) {
+                    if (Math.abs(w.getDt() - DTtime) < delta) {
+                        delta = Math.abs(w.getDt() - DTtime);
+                        weather = w;
+                    }
                 }
+                weatherList[index] = weather;
             }
-
-            weatherList[index] = weather;
         }
     }
 }

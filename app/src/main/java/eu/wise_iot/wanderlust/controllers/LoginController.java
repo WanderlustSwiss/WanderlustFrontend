@@ -38,6 +38,8 @@ public class LoginController {
     private ProfileDao profileDao;
     private DatabaseController databaseController;
     private ImageController imageController;
+    private WeatherController weatherController;
+    private EquipmentController equipmentController;
     /**
      * Create a login contoller
      */
@@ -46,6 +48,8 @@ public class LoginController {
         profileDao = ProfileDao.getInstance();
         databaseController = DatabaseController.getInstance();
         imageController = ImageController.getInstance();
+        weatherController = WeatherController.getInstance();
+        equipmentController = EquipmentController.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
@@ -67,8 +71,8 @@ public class LoginController {
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
 
                     databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
-                    WeatherController.getInstance().initKeys();
-                    EquipmentController.getInstance().initEquipment();
+                    weatherController.initKeys();
+                    equipmentController.initEquipment();
                     User updatedUser = response.body();
                     User internalUser = userDao.getUser();
                     if (internalUser == null){

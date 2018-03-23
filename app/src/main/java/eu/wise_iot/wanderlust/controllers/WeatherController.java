@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
@@ -112,19 +113,27 @@ public class WeatherController {
         });
     }
 
+
+    /**
+     * Get weather from tour
+     * @param tour
+     * @param dateTime
+     * @param handler
+     */
     public void getWeatherFromTour(Tour tour, DateTime dateTime, FragmentHandler handler) {
-        List<GeoPoint> geoPoints = tour.getGeoPoints();
+        List<GeoPoint> geoPoints = PolyLineEncoder.decode(tour.getPolyline(), 10);
         List<GeoPoint> geoPointsWeather = new ArrayList<>();
         for(int i = 0; i <= 4; i++) {
-            geoPointsWeather.add(geoPoints.get((geoPoints.size()/4)*i));
+            int index = ((geoPoints.size() - 1 )/4)*i;
+            geoPointsWeather.add(geoPoints.get(index));
         }
         GetWeatherTask weatherTask = new GetWeatherTask(new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
                 switch (controllerEvent.getType()){
                     case OK:
-                        List<Weather> weather = (ArrayList<Weather>) controllerEvent.getModel();
-                        handler.onResponse(new ControllerEvent<>(EventType.OK, weather));
+                        List<Weather> weather = (List<Weather>) controllerEvent.getModel();
+                        handler.onResponse(new ControllerEvent(EventType.OK, weather));
                         break;
                     default:
                 }

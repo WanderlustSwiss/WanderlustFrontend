@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
@@ -34,6 +35,7 @@ public class EquipmentController {
     private volatile boolean equipmentInitiated;
     private volatile boolean imagesDownloaded;
     private ImageController imageController;
+    private WeatherController weatherController;
 
 
     private static class Holder {
@@ -54,6 +56,7 @@ public class EquipmentController {
     private EquipmentController() {
         service = ServiceGenerator.createService(EquipmentService.class);
         imageController = ImageController.getInstance();
+        weatherController = WeatherController.getInstance();
     }
 
     public List<Equipment> getEquipmentList() {
@@ -114,12 +117,8 @@ public class EquipmentController {
 
     //TODO dateTime seasons
     public void retrieveRecommendedEquipment(Tour tour, DateTime dateTime, FragmentHandler handler) {
-
-
-        WeatherController weatherController = WeatherController.getInstance();
-
         //get weather from points
-        weatherController.getWeatherFromTour(tour, new DateTime(), new FragmentHandler() {
+        weatherController.getWeatherFromTour(tour, dateTime, new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
                 switch (controllerEvent.getType()) {
@@ -134,7 +133,10 @@ public class EquipmentController {
                         List<WeatherKeys> weatherKeys = weatherController.getWeatherKeys();
                         boolean[] weatherFilter = new boolean[weatherKeys.size()];
                         for (Weather w : weather) {
-
+                            //TODO: Besseres error handling
+                            if (w == null){
+                                continue;
+                            }
                             weatherFilter[w.getCategory()] = true;
 
                             if (w.getMaxTemp() > maxTemp) {
@@ -199,8 +201,12 @@ public class EquipmentController {
                             }
                         }
 
-
-                        List<Equipment> recEquipmentList = Arrays.asList(recommendedEquipment);
+                        List<Equipment> recEquipmentList = new ArrayList<>();
+                        for(int i = 0; i<recommendedEquipment.length; i++){
+                            if(recommendedEquipment[i] != null) {
+                                recEquipmentList.add(recommendedEquipment[i]);
+                            }
+                        }
                         handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
                         break;
                     default:
@@ -208,47 +214,5 @@ public class EquipmentController {
                 }
             }
         });
-    }
-
-    private boolean writeToDisk(ResponseBody body, String path) {
-
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-        try {
-            byte[] fileReader = new byte[4096];
-
-            long fileSizeDownloaded = 0;
-            inputStream = body.byteStream();
-            outputStream = new FileOutputStream(path);
-
-
-            while (true) {
-                int read = inputStream.read(fileReader);
-
-                if (read == -1) {
-                    break;
-                }
-
-                outputStream.write(fileReader, 0, read);
-
-                fileSizeDownloaded += read;
-
-            }
-
-            outputStream.flush();
-            return true;
-        } catch (IOException e) {
-            return false;
-        } finally {
-            try {
-                if (inputStream != null)
-                    inputStream.close();
-
-                if (outputStream != null)
-                    outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import android.util.Base64;
+import android.util.Log;
 
 import org.joda.time.DateTime;
 import com.google.gson.Gson;
@@ -27,13 +28,14 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.EquipmentDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
@@ -42,7 +44,6 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
  * handles the tourfragment and its in and output
  *
  * @author Alexander Weinbeck, Rilind Gashi, Simon Kaspar
- * @license MIT
  */
 public class TourController {
 
@@ -72,6 +73,10 @@ public class TourController {
     private WeatherController weatherController;
     private ArrayList<GeoPoint> polyList;
     private EquipmentController equipmentController;
+    private final TourKitDao tourKitDao;
+    public final List<Equipment> listEquipment = new ArrayList<>();
+
+    private static final String TAG = "Tourcontroller";
 
     public TourController(Tour tour){
         this.tour = tour;
@@ -82,6 +87,7 @@ public class TourController {
         imageController = ImageController.getInstance();
         weatherController = WeatherController.getInstance();
         equipmentController = EquipmentController.getInstance();
+        tourKitDao = TourKitDao.getInstance();
     }
 
 
@@ -179,6 +185,19 @@ public class TourController {
     }
 
     /**
+     * Calculate the duration to a specific point on a tour which is divided by 5
+     * @param point n/5th point on a tour
+     * @return string with format HH h MM min
+     */
+    public String getDurationStringSpecificPoint(long point){
+        if(tour != null){
+            return convertToStringDuration((tour.getDuration() * point) / 5);
+        }else{
+            return convertToStringDuration(0);
+        }
+    }
+
+    /**
      * Calculate distance string from absolut meter value
      * @return string with format 0.9 km
      */
@@ -257,4 +276,6 @@ public class TourController {
     public List<File> getImages(){
         return imageController.getImages(tour.getImagePaths());
     }
-}
+    public Tour getCurrentTour(){ return tour; }
+    }
+
