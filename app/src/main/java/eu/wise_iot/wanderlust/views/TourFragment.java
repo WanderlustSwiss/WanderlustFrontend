@@ -5,7 +5,8 @@ import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
+
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,15 +25,13 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.CatmullRomInterpolator;
 import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.PanZoom;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.StepMode;
 import com.androidplot.xy.XYGraphWidget;
@@ -48,7 +48,6 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
@@ -72,6 +71,7 @@ import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 
 /**
  * TourController:
@@ -81,7 +81,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
  */
 public class TourFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
-    private Tour tour;
+    private static Tour tour;
     private static TourController tourController;
     private static EquipmentController equipmentController;
     private Context context;
@@ -124,6 +124,8 @@ public class TourFragment extends Fragment {
     private TextView thirdTimePoint;
     private TextView forthTimePoint;
     private TextView fifthTimePoint;
+    private RatingBar tourRating;
+    private static MapFragment mapFragment;
 
     private Favorite favorite;
     private boolean isFavoriteUpdate;
@@ -143,12 +145,13 @@ public class TourFragment extends Fragment {
      *
      * @return Fragment: TourFragment
      */
-    public static TourFragment newInstance(Tour tour) {
+    public static TourFragment newInstance(Tour paramTour) {
 
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
         MapFragment mapFragment = new MapFragment();
         fragment.setArguments(args);
+        tour = paramTour;
         tourController = new TourController(tour);
         equipmentController = EquipmentController.getInstance();
         weatherController = WeatherController.getInstance();
@@ -221,6 +224,7 @@ public class TourFragment extends Fragment {
         textViewDifficulty = (TextView) view.findViewById(R.id.tourDifficulty);
         textViewDescription = (TextView) view.findViewById(R.id.tourDescription);
         jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
+        tourRating = (RatingBar) view.findViewById(R.id.tourRating);
 
         plot = (XYPlot) view.findViewById(R.id.plot);
 
@@ -256,7 +260,23 @@ public class TourFragment extends Fragment {
             drawable = context.getResources().getDrawable(R.drawable.t2_t3);
         else
             drawable = context.getResources().getDrawable(R.drawable.t1);
+
         textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+        Drawable tourRatingDrawable = tourRating.getProgressDrawable();
+        tourRatingDrawable.setColorFilter(Color.parseColor("#FFFFFF"),
+                PorterDuff.Mode.SRC_ATOP);
+
+
+        tourController.getRating(tour, new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()) {
+                    case OK:
+                        tourRating.setRating((float) controllerEvent.getModel());
+                }
+            }
+        });
 
         //equipment section
         RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
@@ -342,7 +362,18 @@ public class TourFragment extends Fragment {
     private void setupActionListeners(){
         jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
         favButton.setOnClickListener((View v) -> toggleFavorite());
-
+        tourRating.setOnTouchListener((View v, MotionEvent e) ->{
+            //setOnTouchListener creates two MotionEvents and without if-Statement, it would
+            //open the dialog twice even if android doc says that you cant open two dialogs at the
+            //same time .... fuck yeah android
+            if(e.getAction() == MotionEvent.ACTION_DOWN){
+                Log.d("TOURID", String.valueOf(tourController));
+                TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
+                        tourRating);
+                dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
+            }
+            return true;
+        });
         setupDateAndTimeDialogs();
     }
 
@@ -527,12 +558,10 @@ public class TourFragment extends Fragment {
             }
         }
     }
-
     /**
      *
      */
     private void toggleFavorite() {
-
         if (isFavoriteUpdate){
             return;
         }
@@ -634,5 +663,4 @@ public class TourFragment extends Fragment {
     private void onItemClickImages(View view, Equipment parEquipment) {
 
     }
-
 }

@@ -28,6 +28,9 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
@@ -36,8 +39,11 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.EquipmentDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
+import io.objectbox.Property;
+
 
 /**
  * TourController:
@@ -65,12 +71,14 @@ public class TourController {
     }
 
     private FavoriteDao favoriteDao;
+    private RatingDao ratingDao;
     private UserDao userDao;
     private Tour tour;
     private UserTourDao userTourDao;
     private DifficultyTypeDao difficultyTypeDao;
     private ImageController imageController;
     private WeatherController weatherController;
+    private Float ratingNumber;
     private ArrayList<GeoPoint> polyList;
     private EquipmentController equipmentController;
     private final TourKitDao tourKitDao;
@@ -84,6 +92,7 @@ public class TourController {
         userTourDao = UserTourDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
+        ratingDao = RatingDao.getInstance();
         imageController = ImageController.getInstance();
         weatherController = WeatherController.getInstance();
         equipmentController = EquipmentController.getInstance();
@@ -131,6 +140,38 @@ public class TourController {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public boolean setRating(Tour tour, int starRating, FragmentHandler handler){
+        if(starRating > 0){
+            Rating tourRating = new Rating(0, 0, starRating, tour.getTour_id(),
+                    userDao.getUser().getUser_id());
+            ratingDao.create(tourRating, handler);
+            return true;
+        }
+        return false;
+    }
+
+    public long alreadyRated(long tour_id){
+        Property property = Rating_.tour;
+        Rating rating = null;
+        try {
+            rating = ratingDao.findOne(property, tour_id, userDao.getUser().getUser_id());
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        if(rating != null)
+            return rating.getRate();
+        else
+            return 0;
+
+    }
+
+
+    public void getRating(Tour tour, FragmentHandler handler){
+        ratingDao.retrieve(tour.getTour_id(), handler);
     }
 
     public Number[] getElevationProfileXAxis(){
