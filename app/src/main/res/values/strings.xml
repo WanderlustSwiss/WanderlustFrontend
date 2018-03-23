@@ -167,5 +167,10 @@
     <string name="keine_wetterdaten">Keine Wetterdaten zu diesem Tag</string>
     <string name="wanderung_beginn">Wanderung am:</string>
     <string name="wetterNach">Nach:</string>
+    <string name="connection_fail">Verbindung fehlgeschlagen</string>
+    <string name="no_favorites">Keine Favoriten</string>
+    <string name="no_tours">Keine Touren</string>
+    <string name="no_pois">Keine POI\'s</string>
+    <string name="no_saved">Keine Touren gespeichert</string>
 
 </resources>

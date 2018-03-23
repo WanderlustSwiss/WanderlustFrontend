@@ -162,4 +162,8 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
             throws NoSuchFieldException, IllegalAccessException {
         communityTourBox.remove(findOne(searchedColumn, searchPattern));
     }
+
+    public void delete(Tour communityTour){
+        communityTourBox.remove(communityTour);
+    }
 }

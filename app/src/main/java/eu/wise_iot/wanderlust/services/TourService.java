@@ -47,8 +47,8 @@ public interface TourService {
     @POST("tour/{id}/img")
     Call<ImageInfo> uploadImage(@Path("id") int id, @Part MultipartBody.Part image);
 
-    @DELETE("tour/{")
-    Call<Tour> deleteTour(@Body Tour tour);
+    @DELETE("tour/{id}")
+    Call<Tour> deleteTour(@Path("id") long id);
 
     @DELETE("tour/{id}/img/{image_id}")
     Call<ImageInfo> deleteImage(@Path("id") int id, @Path("image_id") int image_id);

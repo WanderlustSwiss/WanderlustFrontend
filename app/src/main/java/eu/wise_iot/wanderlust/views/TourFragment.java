@@ -342,7 +342,6 @@ public class TourFragment extends Fragment {
         } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
-
         tourRegion.setText("");
         tourTitle.setText(tourController.getTitle());
         textViewDescription.setText(tourController.getDescription());

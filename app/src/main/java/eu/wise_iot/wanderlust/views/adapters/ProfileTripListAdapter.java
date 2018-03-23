@@ -7,13 +7,24 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
  * Adapter for the profile UI. Represents all user tours in a custom list view
@@ -24,7 +35,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
-    private TextView description;
 
     private ImageView tripImage;
     private ImageView editIcon;
@@ -35,12 +45,17 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
     private int textResource;
     private List objects;
 
-    public ProfileTripListAdapter(Context context, int resource, int textResource, List objects) {
+    private ProfileFragment profileFragment;
+    private ImageController imageController;
+
+    public ProfileTripListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
         this.resource = resource;
         this.textResource = textResource;
         this.objects = objects;
+        this.imageController = ImageController.getInstance();
+        this.profileFragment = fragment;
     }
 
     /**
@@ -105,7 +120,6 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListTourTitle);
-        description = (TextView) convertView.findViewById(R.id.ListTourDescription);
 
         tripImage = (ImageView) convertView.findViewById(R.id.ListTourImageView);
         editIcon = (ImageView) convertView.findViewById(R.id.ListTourEdit);
@@ -113,14 +127,37 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
         //set data
         if (tour != null) {
-            title.setText(tour.getTitle());
-            description.setText(tour.getDescription());
-            tripImage.setImageResource(R.drawable.example_image);
-            //TODO: set the image
-        }
+            String t = StringUtils.abbreviate(tour.getTitle(), 30);
+            title.setText(t);
 
-        //set listeners
-        //TODO: implement listeners for delete and edit icon, as well click listener for elements
+            List<ImageInfo> imageinfos = tour.getImagePaths();
+            List<File> imagefiles = imageController.getImages(imageinfos);
+            if(!imagefiles.isEmpty() && imagefiles.get(0).length() != 0){
+                Picasso.with(context)
+                        .load(imagefiles.get(0))
+                        .into(tripImage);
+            }else{
+                tripImage.setImageResource(R.drawable.example_image);
+            }
+
+            deleteIcon.setOnClickListener(e -> {
+                profileFragment.getProfileController().deleteTrip(tour, new FragmentHandler() {
+                    @Override
+                    public void onResponse(ControllerEvent controllerEvent) {
+                        switch (controllerEvent.getType()){
+                            case OK:
+                                profileFragment.setProfileStats();
+                                profileFragment.setupMyTours(profileFragment.getView());
+                                break;
+                            default:
+                                Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+                });
+            });
+
+        }
 
         return convertView;
     }
