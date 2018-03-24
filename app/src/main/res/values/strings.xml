@@ -52,6 +52,10 @@
         <item>Flora / Fauna</item>
     </string-array>
 
+    <string-array name="dialog_feedback_spinner_geoobject_type">
+        <item>SAC</item>
+    </string-array>
+
 
     <!-- USER MESSAGES -->
     <string name="msg_picture_not_saved">Foto konnte nicht gespeichert werden</string>

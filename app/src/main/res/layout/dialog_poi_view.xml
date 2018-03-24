@@ -155,7 +155,8 @@
             android:layout_height="match_parent"
             android:visibility="gone"
             android:layout_below="@id/title_occupation"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="-8dp"
+            >
 
             <TableRow
                 android:id="@+id/table_row_3"
