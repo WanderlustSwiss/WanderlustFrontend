@@ -117,7 +117,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
             File image = images.get(0);
-            Picasso.with(context).load(image).centerCrop().fit().into(holder.tvImage);
+            Picasso.with(context).load(image).fit().centerCrop().into(holder.tvImage);
             Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
         } else {
             Picasso.with(context).load(R.drawable.no_image_found).into(holder.tvImage);
