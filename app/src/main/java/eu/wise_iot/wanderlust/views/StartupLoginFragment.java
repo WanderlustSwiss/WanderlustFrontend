@@ -33,6 +33,7 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
 /**
  * Login Fragment which handles front end inputs of the user for login
@@ -66,6 +67,8 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             switch (eventType) {
                 case OK:
                     SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    User user = (User) event.getModel();
+                    ((MainActivity) getActivity()).setupDrawerHeader(user);
                     if(preferences.getBoolean("firstTimeOpened", true)) {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putBoolean("firstTimeOpened", false); // save that app has been opened

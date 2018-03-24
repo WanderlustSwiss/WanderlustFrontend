@@ -121,8 +121,7 @@ public class StartupRegistrationFragment extends Fragment {
                             EventType eventType = controllerEvent.getType();
                             switch (eventType) {
                                 case OK:
-                                    ((MainActivity) getActivity()).updateNickname(user.getNickname());
-                                    ((MainActivity) getActivity()).updateEmailAdress(user.getEmail());
+                                    ((MainActivity) getActivity()).setupDrawerHeader(user);
                                     Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
                                     StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                                     getFragmentManager().beginTransaction()

@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "MainActivity";
     public static BoxStore boxStore;
     public static Activity activity;
+
     private TextView username;
     private TextView email;
     private ImageView userProfileImage;
@@ -249,17 +250,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void setupDrawerHeader(User user){
+    public void setupDrawerHeader(User user){
+
         username = (TextView) findViewById(R.id.user_name);
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
-
+        
         username.setText(user.getNickname());
         email.setText(user.getEmail());
 
         updateProfileImage(loginController.getProfileImage());
     }
     public void updateProfileImage(File image){
+        if (userProfileImage == null){
+            userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+        }
         if (image != null){
             Picasso.with(activity).load(image).transform(new CircleTransform()).fit().into(userProfileImage);
         }else{
