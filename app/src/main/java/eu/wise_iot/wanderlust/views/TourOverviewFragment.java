@@ -241,8 +241,9 @@ public class TourOverviewFragment extends Fragment {
                                         for(Tour tmpTour : favTours)
                                             if(tmpTour.getTour_id() == tour.getTour_id())
                                                 favTours.remove(tmpTour);
-                                        //notify observer of adapter
+                                        //notify observer of adapters
                                         adapterFavs.notifyDataSetChanged();
+                                        adapterRoutes.notifyDataSetChanged();
                                         break;
                                     default:
                                         Log.d(TAG, "favorite failure while deleting " + tour.getTour_id());
