@@ -35,7 +35,6 @@ import retrofit2.Response;
 
 /**
  * PoiDao:
- * <p>
  * Represents POI controller
  *
  * @author Rilind Gashi, Alexander Weinbeck, Tobias Rüegsegger, Simon Kaspar
@@ -190,7 +189,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
                     poiBox.remove(poi);
                     for(ImageInfo imageInfo : poi.getImagePaths()){
-                        new File(imageInfo.getPath()).delete();
+                        new File(imageInfo.getLocalPath()).delete();
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                     DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.DELETESINGLEPOI, response.body()));
@@ -208,65 +207,64 @@ public class PoiDao extends DatabaseObjectAbstract {
     /**
      * add an image to the db
      *
-     * @param file
+     * @param origFile
      * @param poi
      */
-    public void addImage(final File file, final Poi poi, final FragmentHandler handler) {
-
-        if (poi.isPublic()) {
-            //Upload image to backend
-            PoiService service = ServiceGenerator.createService(PoiService.class);
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-            Call<ImageInfo> call = service.uploadImage(poi.getPoi_id(), body);
-            call.enqueue(new Callback<ImageInfo>() {
-                @Override
-                public void onResponse(Call<ImageInfo> call, Response<ImageInfo> response) {
-                    if (response.isSuccessful()) {
-                        try {
-                            Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
-                            ImageInfo imageInfo = response.body();
-                            String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
-                            imageInfo.setPath(name, "pois");
-                            imageController.save(file, imageInfo);
-                            internalPoi.addImagePath(imageInfo);
-                            poiBox.put(internalPoi);
-                            handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalPoi));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (NoSuchFieldException e) {
-                            e.printStackTrace();
+    public void addImage(final File origFile, final Poi poi, final FragmentHandler handler) {
+        try {
+            File file = imageController.resize(origFile);
+            if (poi.isPublic()) {
+                //Upload image to backend
+                PoiService service = ServiceGenerator.createService(PoiService.class);
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+                Call<ImageInfo> call = service.uploadImage(poi.getPoi_id(), body);
+                call.enqueue(new Callback<ImageInfo>() {
+                    @Override
+                    public void onResponse(Call<ImageInfo> call, Response<ImageInfo> response) {
+                        if (response.isSuccessful()) {
+                            try {
+                                Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
+                                ImageInfo imageInfo = response.body();
+                                imageInfo.setName(poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg");
+                                imageInfo.setLocalDir(imageController.getPoiFolder());
+                                imageController.save(file, imageInfo);
+                                internalPoi.addImagePath(imageInfo);
+                                poiBox.put(internalPoi);
+                                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalPoi));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            } catch (NoSuchFieldException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                         }
-                    } else {
-                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                     }
-                }
 
-                @Override
-                public void onFailure(Call<ImageInfo> call, Throwable t) {
-                    handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+                    @Override
+                    public void onFailure(Call<ImageInfo> call, Throwable t) {
+                        handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+                    }
+                });
+            } else {
+                try {
+                    Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
+                    int newId = internalPoi.getImageCount() + 1;
+                    String name = internalPoi.getPoi_id() + "-" + newId + ".jpg";
+                    ImageInfo newImage = new ImageInfo(newId, name, imageController.getPoiFolder());
+                    imageController.save(file, newImage);
+                    internalPoi.addImagePath(newImage);
+                    poiBox.put(internalPoi);
+                    handler.onResponse(new ControllerEvent(EventType.OK, internalPoi));
+                } catch (IOException | IllegalAccessException | NoSuchFieldException e) {
+                    e.printStackTrace();
                 }
-            });
-        } else {
-            try {
-                Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
-                int newId = internalPoi.getImageCount() + 1;
-                String name = internalPoi.getPoi_id() + "-" + newId + ".jpg";
-                ImageInfo newImage = new ImageInfo(newId, name, "pois");
-                imageController.save(file,newImage);
-                internalPoi.addImagePath(newImage);
-                poiBox.put(internalPoi);
-                handler.onResponse(new ControllerEvent(EventType.OK, internalPoi));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
             }
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -414,7 +412,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                                     List<ImageInfo> imageInfos = new ArrayList<>();
                                     for(ImageInfo imageInfo : poi.getImagePaths()){
                                         String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
-                                        imageInfos.add(new ImageInfo(poi.getPoi_id(), name, "pois"));
+                                        imageInfos.add(new ImageInfo(poi.getPoi_id(), name, imageController.getPoiFolder()));
                                     }
                                     poi.setImagePaths(imageInfos);
                                     poi.setInternal_id(0);

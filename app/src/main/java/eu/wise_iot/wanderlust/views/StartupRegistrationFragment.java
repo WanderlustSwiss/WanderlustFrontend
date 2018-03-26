@@ -110,23 +110,23 @@ public class StartupRegistrationFragment extends Fragment {
                         , passwordTextfield.getText().toString()
                         , 0, true, true, "", "");
                 if (validateInput(user)) {
+
+                    btnRegister.setEnabled(false);
+
                     //get response
                     registrationController.registerUser(user, new FragmentHandler() {
                         @Override
                         public void onResponse(ControllerEvent controllerEvent) {
+                            btnRegister.setEnabled(true);
                             EventType eventType = controllerEvent.getType();
                             switch (eventType) {
                                 case OK:
+                                    ((MainActivity) getActivity()).setupDrawerHeader(user);
                                     Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
-                                    SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
+                                    StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                                     getFragmentManager().beginTransaction()
-                                            .add(R.id.content_frame, sartupLoginFragment)
+                                            .add(R.id.content_frame, startupLoginFragment)
                                             .commit();
-
-                                    // create profile for user if registration succesful
-                                    Profile profile = new Profile(0, user.getProfile(),
-                                            (byte) 1, 0, 2, "",
-                                                        "de", user.getUser_id(), 0);
                                     break;
                                 case CONFLICT:
                                     Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
@@ -146,9 +146,9 @@ public class StartupRegistrationFragment extends Fragment {
         redirectToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
+                StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, sartupLoginFragment)
+                        .add(R.id.content_frame, startupLoginFragment)
                         .commit();
             }
         });
@@ -218,5 +218,6 @@ public class StartupRegistrationFragment extends Fragment {
     private boolean validatePassword(String password) {
         return password.matches(VALID_PASSWORTD_REGX);
     }
+
 
 }

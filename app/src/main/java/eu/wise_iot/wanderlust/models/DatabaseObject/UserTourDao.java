@@ -1,9 +1,5 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import android.content.Context;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,9 +13,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TourService;
 import io.objectbox.Box;
@@ -131,7 +125,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
             public void onResponse(Call<Tour> call, Response<Tour> response) {
                 if (response.isSuccessful()) {
                         Tour backendTour = response.body();
-                        routeBox.put(backendTour);
+                        //routeBox.put(backendTour); wieso in die lokale db einfügen ??
                         newUserTourID[0] = backendTour.getInternal_id();
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendTour));
                 } else {
@@ -221,7 +215,9 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param handler
      */
     public void delete(final AbstractModel usertour, final FragmentHandler handler) {
-        Call<Tour> call = service.deleteTour((Tour) usertour);
+        Tour tour = (Tour) usertour;
+        long id = tour.getTour_id();
+        Call<Tour> call = service.deleteTour(id);
         call.enqueue(new Callback<Tour>() {
             @Override
             public void onResponse(Call<Tour> call, Response<Tour> response) {
@@ -232,7 +228,6 @@ public class UserTourDao extends DatabaseObjectAbstract {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
-
             @Override
             public void onFailure(Call<Tour> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
@@ -245,8 +240,8 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @param handler
      */
-    public void retrieveAll(final FragmentHandler handler) {
-        Call<List<Tour>> call = service.retrieveAllTours();
+    public void retrieveAll(final FragmentHandler handler, int page) {
+        Call<List<Tour>> call = service.retrieveAllTours(page);
         call.enqueue(new Callback<List<Tour>>() {
             @Override
             public void onResponse(Call<List<Tour>> call, Response<List<Tour>> response) {
@@ -255,9 +250,9 @@ public class UserTourDao extends DatabaseObjectAbstract {
                     for (Tour tour : tours) {
                         for (ImageInfo imageInfo : tour.getImagePaths()) {
                             String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
-                            imageInfo.id = tour.getTour_id();
-                            imageInfo.path = "tours" + "/" + name;
-
+                            imageInfo.setName(name);
+                            imageInfo.setId(tour.getTour_id());
+                            imageInfo.setLocalDir(imageController.getTourFolder());
                         }
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
@@ -289,6 +284,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
+
 
                         //String name = tour_id + "-" + image_id + ".jpg";
 

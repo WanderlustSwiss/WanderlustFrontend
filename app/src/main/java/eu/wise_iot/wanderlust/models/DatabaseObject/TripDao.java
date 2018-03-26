@@ -13,8 +13,6 @@ import eu.wise_iot.wanderlust.services.TripService;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
-import io.objectbox.query.Query;
-import io.objectbox.query.QueryBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -85,7 +83,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param trip
      * @param handler
      */
-    public void create(int id, final AbstractModel trip, final FragmentHandler handler) {
+    public void create(final AbstractModel trip, final FragmentHandler handler) {
         Call<Trip> call = service.createTrip((Trip) trip);
         call.enqueue(new Callback<Trip>() {
             @Override

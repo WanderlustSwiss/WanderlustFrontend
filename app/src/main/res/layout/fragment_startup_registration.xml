@@ -5,7 +5,8 @@
     android:background="@drawable/img_201"
     android:gravity="center"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingRight="16dp"
+    android:id="@+id/registration_layout">
 
     <LinearLayout
         android:layout_width="match_parent"

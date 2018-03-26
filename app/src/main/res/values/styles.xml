@@ -7,11 +7,11 @@
         <item name="colorAccent">@color/primary_main</item>
     </style>
 
-
     <!-- TEXT STYLES: HEADER -->
 
     <style name="h1">
         <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="h1.White">
@@ -22,6 +22,7 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="h2.White">
@@ -33,6 +34,7 @@
 
     <style name="p">
         <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="p.Light" parent="TextAppearance.AppCompat">
@@ -41,6 +43,7 @@
 
     <style name="p.Small">
         <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="p.Small.Light">
@@ -77,6 +80,23 @@
         <item name="backgroundTint">@color/background_pale</item>
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>
+    </style>
+
+    <style name="PoiButton" parent="Widget.Design.FloatingActionButton">
+        <item name="android:elevation">0dp</item>
+        <item name="backgroundTint">@color/primary_main</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+    </style>
+
+    <style name="sac_occupation_table">
+        <item name="android:textColor">#FFF</item>
+        <item name="android:background">#F00</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name=" android:gravity">center</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="standard_button">
@@ -163,7 +183,7 @@
         <item name="android:textColorLink">@color/highlight_main</item>
     </style>
 
-    <style name="TextLabel.White" >
+    <style name="TextLabel.White">
         <item name="android:textColorHint">@color/background_main</item>
         <item name="colorControlNormal">@color/background_main</item>
     </style>
@@ -174,5 +194,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">16dp</item>
     </style>
+
+
 
 </resources>

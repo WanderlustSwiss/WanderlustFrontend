@@ -18,6 +18,9 @@ public interface Constants {
     int TYPE_REST_AREA = 2;
     int TYPE_FLORA_FAUNA = 3;
 
+    // GeoObjectTypes
+    long TYPE_SAC = -1;
+
 
     /* ACTIVITIES */
     String MAIN_ACTIVITY = "MainActivity";
@@ -31,11 +34,13 @@ public interface Constants {
     String MANUAL_FRAGMENT = "ManualFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
     String LOGIN_FRAGMENT = "SartupLoginFragment";
+    String USER_GUIDE_FRAGMENT = "UserGuideFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
     String EDIT_POI_DIALOG = "PoiFeedbackDialog";
+    String RATE_TOUR_DIALOG = "TourRatingDialog";
     String CONFIRM_DELETE_POI_DIALOG = "YesNoDialog";
 
     /* PHOTO INTENT */

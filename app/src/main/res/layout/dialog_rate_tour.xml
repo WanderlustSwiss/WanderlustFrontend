@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rate_action_control_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:background="@color/primary_main"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/dialog_canel_rate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/rate_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_check_white_24dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="12dp">
+
+            <ImageButton
+                android:id="@+id/first_star_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:paddingRight="12dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_rate_star_transparent_32dp" />
+
+            <ImageButton
+                android:id="@+id/second_star_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:paddingRight="12dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_rate_star_transparent_32dp" />
+
+            <ImageButton
+                android:id="@+id/third_star_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:paddingRight="12dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_rate_star_transparent_32dp" />
+
+            <ImageButton
+                android:id="@+id/fourth_star_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:paddingRight="12dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_rate_star_transparent_32dp" />
+
+            <ImageButton
+                android:id="@+id/fifth_star_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:paddingRight="12dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_rate_star_transparent_32dp" />
+        </LinearLayout>
+
+        <!--
+        <android.support.design.widget.TextInputLayout
+            style="@style/TextInputLayout"
+            android:id="@+id/rate_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/rate_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/dialog_feedback_description_edit_hint"
+                android:maxLength="200"
+                android:paddingTop="4dp"
+                android:editable="false"/>
+        </android.support.design.widget.TextInputLayout>
+        -->
+    </LinearLayout>
+
+</LinearLayout>

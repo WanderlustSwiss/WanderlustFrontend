@@ -20,7 +20,7 @@ import retrofit2.http.Path;
  * @author Alexander Weinbeck
  */
 public interface TripService {
-    @GET("Trip/")
+    @GET("trip/")
     Call<Trip> retrieveAllTrips();
 
     @GET("Trip/{id}")

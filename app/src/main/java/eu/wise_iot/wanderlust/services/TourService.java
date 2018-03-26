@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.services;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -14,6 +15,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * TourService:
@@ -33,7 +35,7 @@ public interface TourService {
     Call<Tour> retrieveTour(@Path("id") long id);
 
     @GET("tour/")
-    Call<List<Tour>> retrieveAllTours();
+    Call<List<Tour>> retrieveAllTours(@Query("page") int page);
 
     @PUT("tour/{id}")
     Call<Tour> updateTour(int id, @Body Tour tour);
@@ -43,11 +45,11 @@ public interface TourService {
 
     @Multipart
     @POST("tour/{id}/img")
-    Call<Tour> uploadImage(@Path("id") int id, @Part MultipartBody.Part image);
+    Call<ImageInfo> uploadImage(@Path("id") int id, @Part MultipartBody.Part image);
 
-    @DELETE("tour/{")
-    Call<Tour> deleteTour(@Body Tour tour);
+    @DELETE("tour/{id}")
+    Call<Tour> deleteTour(@Path("id") long id);
 
     @DELETE("tour/{id}/img/{image_id}")
-    Call<Tour> deleteImage(@Path("id") int id, @Path("image_id") int image_id);
+    Call<ImageInfo> deleteImage(@Path("id") int id, @Path("image_id") int image_id);
 }

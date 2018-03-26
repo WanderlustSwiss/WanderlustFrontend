@@ -3,11 +3,13 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
 /**
  * Login Fragment which handles front end inputs of the user for login
@@ -38,7 +41,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
  * @author Joshua
  * @license MIT
  */
-public class SartupLoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+public class StartupLoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+    private static final String TAG = "StartupLoginFragment";
 
     public static int REQ_CODE = 9001;
     private Context context;
@@ -49,21 +53,38 @@ public class SartupLoginFragment extends Fragment implements GoogleApiClient.OnC
     private SignInButton signInButtonGoogle;
     private TextView redirectToRegistration;
     private TextView fogotPassword;
-//    private GoogleApiClient googleApiClient;
+    //    private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
     private LoginController loginController;
-
     private FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {
+
+            //Enable LoginButton after request is complete
+            btnLogin.setEnabled(true);
+
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
-                    MapFragment tourFragment = MapFragment.newInstance();
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, tourFragment, Constants.MAP_FRAGMENT)
-                            .commit();
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    User user = (User) event.getModel();
+                    ((MainActivity) getActivity()).setupDrawerHeader(user);
+                    if(preferences.getBoolean("firstTimeOpened", true)) {
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putBoolean("firstTimeOpened", false); // save that app has been opened
+                        editor.apply();
+
+                        getFragmentManager().beginTransaction()
+                                .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
+                                .add(R.id.content_frame, UserGuideFragment.newInstance(), Constants.USER_GUIDE_FRAGMENT)
+                                .commit();
+                    } else {
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                .commit();
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    }
+
                     break;
                 default:
                     Toast.makeText(context, eventType.toString(), Toast.LENGTH_LONG).show();
@@ -76,7 +97,7 @@ public class SartupLoginFragment extends Fragment implements GoogleApiClient.OnC
     /**
      * Create a standard login fragment
      */
-    public SartupLoginFragment() {
+    public StartupLoginFragment() {
         this.loginController = new LoginController();
     }
 
@@ -134,6 +155,10 @@ public class SartupLoginFragment extends Fragment implements GoogleApiClient.OnC
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Disable LoginButton until request is complete
+                btnLogin.setEnabled(false);
+
                 loginUser = new LoginUser(
                         nicknameEmailTextfield.getText().toString(),
                         passwordTextfield.getText().toString()
