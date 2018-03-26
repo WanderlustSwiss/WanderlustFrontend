@@ -47,7 +47,6 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
     private List objects;
 
     private ProfileFragment profileFragment;
-    private TourController tourController;
     private ImageController imageController;
 
     public ProfileFavoritesListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
@@ -116,7 +115,7 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
     public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
         //get the item for this row
         Tour fav = getItem(position);
-        tourController = new TourController(fav);
+        TourController tourController = new TourController(fav);
         //inflate the row layout
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_favorites, parent, false);
 
