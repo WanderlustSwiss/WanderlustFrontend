@@ -15,8 +15,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -123,7 +126,7 @@ public class TourOverviewFragment extends Fragment {
                     case OK:
                         //get all needed information from server db
                         listTours = (List<Tour>) event.getModel();
-
+                        currentPage++;
                         Log.d(TAG,"Getting Tours: Server response arrived");
                         //get all the images needed and save them on the device
                         getDataFromServer(listTours);
@@ -178,21 +181,19 @@ public class TourOverviewFragment extends Fragment {
                                         Log.d(TAG,"The RecyclerView is not scrolling");
                                         int myCellWidth = rvTouren.getChildAt(0).getMeasuredWidth();
                                         final int offset = rvTouren.computeHorizontalScrollOffset();
-                                        int position = 0;
-                                        if (offset % myCellWidth == 0) position = offset / myCellWidth ;
-                                        if (15 < (position % 25)) {
+                                        int position = offset / myCellWidth;
+                                        Log.d(TAG, "pos: "+position);
+                                        if (5 < (position - (10*currentPage))) {
                                             toc.getAllTours(controllerEvent -> {
                                                 switch (event.getType()) {
                                                     case OK:
                                                         //get all needed information from server db
-                                                        List<Tour> newList = (List<Tour>) event.getModel();
-                                                        if (Collections.disjoint(newList, listTours)) {
-                                                            currentPage++;
-                                                            listTours.addAll(newList);
-                                                            getDataFromServer(listTours);
-                                                            adapterRoutes.notifyDataSetChanged();
-                                                            Log.d(TAG,"added new page " + currentPage);
-                                                        }
+                                                        Log.d(TAG,"added new page " + currentPage);
+                                                        List<Tour> newList = (List<Tour>)event.getModel();
+                                                        currentPage++;
+                                                        listTours.addAll(newList);
+                                                        getDataFromServer(listTours);
+                                                        adapterRoutes.notifyDataSetChanged();
                                                         break;
                                                     default:
                                                         Log.d(TAG,"Server response ERROR: " + event.getType().name());
