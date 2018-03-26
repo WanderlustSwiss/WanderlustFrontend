@@ -8,6 +8,7 @@ import android.graphics.Color;
 
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -98,7 +99,7 @@ public class TourFragment extends Fragment {
     private TextView textViewDescend;
     private TextView textViewDifficulty;
     private TextView textViewDescription;
-    private Button jumpToStartLocationButton;
+    private Button goToMapButton;
 
     //weather related controlls
     private static WeatherController weatherController;
@@ -227,7 +228,7 @@ public class TourFragment extends Fragment {
         textViewDescend = (TextView) view.findViewById(R.id.tour_descend);
         textViewDifficulty = (TextView) view.findViewById(R.id.tour_difficulty);
         textViewDescription = (TextView) view.findViewById(R.id.tour_description);
-        jumpToStartLocationButton = (Button) view.findViewById(R.id.go_to_map_button);
+        goToMapButton = (Button) view.findViewById(R.id.go_to_map_button);
 
         tourRatingInNumbers = (TextView) view.findViewById(R.id.tour_rating_in_numbers);
         tourRating = (RatingBar) view.findViewById(R.id.tour_rating);
@@ -372,7 +373,7 @@ public class TourFragment extends Fragment {
      *
      */
     private void setupActionListeners(){
-        jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
+        goToMapButton.setOnClickListener((View v) -> showMapWithTour());
         favButton.setOnClickListener((View v) -> toggleFavorite());
         tourRating.setOnTouchListener((View v, MotionEvent e) ->{
             //setOnTouchListener creates two MotionEvents and without if-Statement, it would
@@ -656,7 +657,7 @@ public class TourFragment extends Fragment {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
+        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75)); // fixme: color does not get adjusted (only #f00)
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
 
         getFragmentManager().beginTransaction()
