@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/tourImage"
+        android:id="@+id/tour_image"
         android:layout_width="match_parent"
         android:layout_height="150dp" />
 
@@ -40,7 +40,7 @@
                 android:showDividers="middle">
 
                 <TextView
-                    android:id="@+id/tourTitle"
+                    android:id="@+id/tour_title"
                     style="@style/p"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                         android:src="@drawable/ic_directions_walk_black_24dp" />
 
                     <TextView
-                        android:id="@+id/tourDistance"
+                        android:id="@+id/tour_distance"
                         style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                         android:src="@drawable/ic_fiber_manual_record_black_24dp" />
 
                     <TextView
-                        android:id="@+id/tourDifficulty"
+                        android:id="@+id/tour_difficulty"
                         style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

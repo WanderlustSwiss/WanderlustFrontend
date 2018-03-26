@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -183,12 +182,12 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            tvDistance = (TextView) itemView.findViewById(R.id.tourDistance);
-            tvDifficulty = (TextView) itemView.findViewById(R.id.tourDifficulty);
-            tvRegion = (TextView) itemView.findViewById(R.id.tourRegion);
-            tvTitle = (TextView) itemView.findViewById(R.id.tourTitle);
+            tvDistance = (TextView) itemView.findViewById(R.id.tour_distance);
+            tvDifficulty = (TextView) itemView.findViewById(R.id.tour_difficulty);
+            tvRegion = (TextView) itemView.findViewById(R.id.tour_region);
+            tvTitle = (TextView) itemView.findViewById(R.id.tour_title);
             tvTime = (TextView) itemView.findViewById(R.id.tourTime);
-            tvImage = (ImageView) itemView.findViewById(R.id.tourImage);
+            tvImage = (ImageView) itemView.findViewById(R.id.tour_image);
             tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.imageDifficulty);
             ibFavorite = (ImageButton) itemView.findViewById(R.id.favoriteButton);
             ibSave = (ImageButton) itemView.findViewById(R.id.saveButton);
