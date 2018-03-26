@@ -43,7 +43,7 @@
 
                     <TextView
                         android:id="@+id/profileAmountPOI"
-                        style="@style/h2.White"
+                        style="@style/h2.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true" />
@@ -68,7 +68,7 @@
 
                     <TextView
                         android:id="@+id/profileAmountTours"
-                        style="@style/h2.White"
+                        style="@style/h2.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -95,7 +95,7 @@
 
                     <TextView
                         android:id="@+id/profileAmountScore"
-                        style="@style/h2.White"
+                        style="@style/h2.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true" />

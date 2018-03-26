@@ -14,18 +14,17 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="h1.White">
+    <style name="h1.Light">
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="h2">
         <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="h2.White">
+    <style name="h2.Light">
         <item name="android:textColor">@color/white</item>
     </style>
 
