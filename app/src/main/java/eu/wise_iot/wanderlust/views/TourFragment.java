@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
-
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -52,8 +51,9 @@ import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -65,12 +65,12 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
-import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 
 /**
@@ -179,6 +179,8 @@ public class TourFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tour, container, false);
+        Calendar currentCalendar = GregorianCalendar.getInstance();
+        selectedDateTime = new DateTime(currentCalendar);
         selectedDateTime = DateTime.now();
         initializeControls(view);
         fillControls();
@@ -400,7 +402,7 @@ public class TourFragment extends Fragment {
              */
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                selectedDateTime = selectedDateTime.withDate(year, month, dayOfMonth);
+                selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
 
                 TimePickerDialog tdialog = new TimePickerDialog(context ,timeSetListener,
                                                             0, 0, true);
@@ -415,9 +417,14 @@ public class TourFragment extends Fragment {
             int month = date.get(Calendar.MONTH);
             int year = date.get(Calendar.YEAR);
 
+            //select calendar language as local language
+            Locale locale = getResources().getConfiguration().locale;
+            Locale.setDefault(locale);
+
             DatePickerDialog dialog = new DatePickerDialog(context, dateSetListener,
                     year, month, today);
 
+            dialog.getDatePicker().setFirstDayOfWeek(1);
             dialog.getDatePicker().setMinDate(date.getTimeInMillis());
             date.add(Calendar.DAY_OF_MONTH, 5);
             dialog.getDatePicker().setMaxDate(date.getTimeInMillis());
@@ -551,7 +558,7 @@ public class TourFragment extends Fragment {
                         weatherIcons.get(i).setImageResource(R.drawable.ic_mist);
                         break;
                     default:
-                        weatherIcons.get(i).setImageResource(R.drawable.ic_clear_sky_night);
+                        weatherIcons.get(i).setImageResource(R.drawable.ic_clouds);
                         break;
                 }
             }

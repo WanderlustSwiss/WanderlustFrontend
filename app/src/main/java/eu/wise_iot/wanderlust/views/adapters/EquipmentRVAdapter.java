@@ -1,8 +1,6 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,12 +13,12 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 
 
@@ -78,13 +76,17 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
         Equipment equipment = this.equipment.get(position);
         //load image
         holder.tvTitle.setText(equipment.getName());
-        File image = imageController.getImage(equipment.getImagePath());
-        if (image == null){
+        ImageInfo imagepath = equipment.getImagePath();
+        if(imagepath == null){
             Picasso.with(context).load(R.drawable.no_image_found).transform(new CircleTransform()).fit().into(holder.ivImage);
         }else{
-            Picasso.with(context).load(image).placeholder(R.drawable.loader).transform(new CircleTransform()).fit().into(holder.ivImage);
+            File image = imageController.getImage(equipment.getImagePath());
+            if (image == null){
+                Picasso.with(context).load(R.drawable.no_image_found).transform(new CircleTransform()).fit().into(holder.ivImage);
+            }else{
+                Picasso.with(context).load(image).placeholder(R.drawable.loader).transform(new CircleTransform()).fit().into(holder.ivImage);
+            }
         }
-
     }
 
     /**
