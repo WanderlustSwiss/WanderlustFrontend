@@ -185,18 +185,18 @@ public class TourOverviewFragment extends Fragment {
                                         Log.d(TAG, "pos: "+position);
                                         if (5 < (position - (10*currentPage))) {
                                             toc.getAllTours(controllerEvent -> {
-                                                switch (event.getType()) {
+                                                switch (controllerEvent.getType()) {
                                                     case OK:
                                                         //get all needed information from server db
                                                         Log.d(TAG,"added new page " + currentPage);
-                                                        List<Tour> newList = (List<Tour>)event.getModel();
+                                                        List<Tour> newList = (List<Tour>)controllerEvent.getModel();
                                                         currentPage++;
                                                         listTours.addAll(newList);
                                                         getDataFromServer(listTours);
                                                         adapterRoutes.notifyDataSetChanged();
                                                         break;
                                                     default:
-                                                        Log.d(TAG,"Server response ERROR: " + event.getType().name());
+                                                        Log.d(TAG,"Server response ERROR: " + controllerEvent.getType().name());
                                                         break;
                                                 }
                                             },currentPage);
