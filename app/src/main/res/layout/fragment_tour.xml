@@ -31,21 +31,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="220dp" />
 
-            <Button
-                android:id="@+id/go_to_map_button"
-                style="@style/FloatingActionButton.Light"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="16dp"
-                android:drawableTint="@color/primary_main"
-                android:drawableTop="@drawable/ic_directions_walk_black_24dp"
-                android:paddingTop="12dp"
-                android:text="@string/tour_button_show_map"
-                android:textAllCaps="true"
-                android:textAppearance="@style/p.Small"
-                android:textColor="@color/primary_main" />
+                android:layout_marginBottom="12dp"
+                android:layout_marginEnd="16dp">
+
+                <Button
+                    android:id="@+id/go_to_map_button"
+                    style="@style/FloatingActionButton.Light"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:drawableTint="@color/primary_main"
+                    android:drawableTop="@drawable/ic_directions_walk_black_24dp"
+                    android:paddingTop="12dp"
+                    android:text="@string/tour_button_show_map"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/p.Small"
+                    android:textColor="@color/primary_main" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <LinearLayout
@@ -200,23 +206,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="12dp">
-
-            <Button
-                android:id="@+id/weather_date_picker_button"
-                style="@style/p"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/wandertag_ausw_hlen"
-                android:textAllCaps="false" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="12dp">
 
@@ -226,12 +215,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/wetter" />
-
-            <TextView
-                android:id="@+id/weather_date_and_time"
-                style="@style/p"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/weather_info"
@@ -376,6 +359,31 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center" />
                 </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/weather_date_and_time"
+                style="@style/p"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="12dp"
+                android:paddingTop="12dp">
+
+                <Button
+                    android:id="@+id/weather_date_picker_button"
+                    style="@style/standard_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/choose_hiking_day_button"
+                    android:textAllCaps="false" />
             </LinearLayout>
         </LinearLayout>
 

@@ -163,7 +163,7 @@
     <string name="title_tours">Touren</string>
     <string name="title_score">Score</string>
     <string name="wetter">Wetter</string>
-    <string name="wandertag_ausw_hlen">Wandertag auswählen</string>
+    <string name="choose_hiking_day_button">Wandertag auswählen</string>
     <string name="keine_wetterdaten">Keine Wetterdaten zu diesem Tag</string>
     <string name="wanderung_beginn">Wanderung am:</string>
     <string name="wetterNach">Nach:</string>
