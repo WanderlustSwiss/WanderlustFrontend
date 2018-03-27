@@ -302,7 +302,7 @@ public class TourFragment extends Fragment {
      * @param tour
      */
     private void setupEquipment(Tour tour){
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMM HH:mm");
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
         String preText = getString(R.string.wanderung_beginn);
         selectedDay.setText(preText + " " + dateTime);
@@ -354,9 +354,8 @@ public class TourFragment extends Fragment {
 
         tourTitle.setText(tourController.getTitle());
 
-        // FIXME: Better way to do this? Very ugly...
-        String ratingInNumbers = "" + tourController.getRatingDao().getRatingInNumbers();
-        tourRatingInNumbers.setText(ratingInNumbers);
+        // TODO: Add real rating in numbers here
+//        tourRatingInNumbers.setText("4.3");
         textViewDescription.setText(tourController.getDescription());
 
         // TODO: add real date when tour was created

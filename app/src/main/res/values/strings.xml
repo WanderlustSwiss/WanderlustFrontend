@@ -179,8 +179,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="user_guide_welcome">Willkommen bei Wanderlust! Hier eine kurze Anleitung über die Funktionen, die dich erwarten.</string>
-    <string name="manual_finish_header">Wanderlust-Anleitung</string>
+    <string name="manual_welcome">Willkommen bei Wanderlust! Hier eine kurze Anleitung über die Funktionen, die dich erwarten.</string>
+    <string name="manual_header">Wanderlust-Anleitung</string>
     <string name="manual_finish_text1">Jetzt weisst du alles, was es über die Wanderlust-App zu wissen gibt.</string>
     <string name="manual_finish_text2">Klicke auf <b>los geh\'s</b> um das Abenteuer zu starten!</string>
     <string name="manual_poi_header">POI (Point of Interest)</string>
@@ -194,5 +194,6 @@
     <string name="manual_dashboard_header">Tourendashboard</string>
     <string name="manual_dashboard_text">Inspiriere dich von den von anderen Usern erfassten Touren und stöbere durch unsere Datenbank.</string>
     <string name="msg_lets_go">los geht\'s!</string>
+    <string name="menu_manual">Handbuch</string>
 
 </resources>
