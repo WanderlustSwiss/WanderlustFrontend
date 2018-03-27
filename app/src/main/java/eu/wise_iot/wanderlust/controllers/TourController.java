@@ -298,6 +298,7 @@ public class TourController {
             StringBuilder sb = new StringBuilder();
             String line;
             while((line = br.readLine()) != null) {
+                line = line.replaceAll("\"", "");
                 sb.append(line);
             }
             Gson gson = new Gson();
