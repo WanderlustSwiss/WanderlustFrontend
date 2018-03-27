@@ -15,12 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -44,7 +40,6 @@ import okhttp3.ResponseBody;
 public class TourOverviewFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
     private Context context;
-    private static List<ResponseBody> userTourImages = new ArrayList<>();
     private ToursOverviewRVAdapter adapterRoutes;
     private ToursOverviewRVAdapter adapterFavs;
     private LinkedList<Tour> listTours;
@@ -54,6 +49,10 @@ public class TourOverviewFragment extends Fragment {
     private int currentPage = 0;
     private ImageController imageController;
 
+    /**
+     * Constructor of view
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +112,7 @@ public class TourOverviewFragment extends Fragment {
      * @param inflater
      * @param container
      * @param savedInstanceState
-     * @return
+     * @return View of holder
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -221,11 +220,9 @@ public class TourOverviewFragment extends Fragment {
             /**
              * handles click in Recyclerview
              * @param view
-             * @param position
              * @param tour
-             * @param favorizedTours
              */
-            public void onItemClickImages(View view, int position, Tour tour, List<Long> favorizedTours) {
+            public void onItemClickImages(View view, Tour tour) {
                 switch (view.getId()) {
                     case R.id.favoriteButton:
                         Log.d(TAG,"Tour Favorite Clicked and event triggered ");
@@ -286,10 +283,15 @@ public class TourOverviewFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Executed if view is completely created
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+// TODO: add code accordingly
 //        TextView nameView = (TextView) view.findViewById(R.id.tour_title);
 //        nameView.setText(tour.getName());
 //

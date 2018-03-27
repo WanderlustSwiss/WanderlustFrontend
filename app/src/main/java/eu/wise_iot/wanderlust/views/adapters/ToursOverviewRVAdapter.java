@@ -156,7 +156,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      * parent activity will implement this interface to respond to click events
      */
     public interface ItemClickListener {
-        void onItemClick(View view, int id, Tour tour, List<Long> favorites);
+        void onItemClick(View view, Tour tour);
     }
 
     /**
@@ -205,7 +205,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         @Override
         public void onClick(View view) {
             if (mClickListener != null)
-                mClickListener.onItemClick(view, getAdapterPosition(), getItem(getAdapterPosition()), favorizedTours);
+                mClickListener.onItemClick(view, getItem(getAdapterPosition()));
         }
     }
 }
