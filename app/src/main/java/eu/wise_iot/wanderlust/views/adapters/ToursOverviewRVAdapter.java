@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -59,7 +58,6 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         if(parTours == null) parTours = new ArrayList<>();
         this.tours = parTours;
         //get which tour is favored
-        //for(Tour tour : this.tours) this.favorizedTours.add(tour.getTour_id());
         this.imageController = ImageController.getInstance();
     }
 

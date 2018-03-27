@@ -1,8 +1,6 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +13,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
@@ -33,7 +30,7 @@ import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.ViewHolder> {
 
     private static final String TAG = "EquipmentRVAdapter";
-    private List<Equipment> equipment;
+    private final List<Equipment> equipment;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private final Context context;
