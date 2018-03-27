@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,7 +46,7 @@ public class TourOverviewFragment extends Fragment {
     private static List<ResponseBody> userTourImages = new ArrayList<>();
     private ToursOverviewRVAdapter adapterRoutes;
     private ToursOverviewRVAdapter adapterFavs;
-    private LinkedList<Tour> listTours;
+    private List<Tour> listTours;
     private final List<Tour> favTours = new ArrayList<>();
     private RecyclerView rvTouren;
     private RecyclerView rvFavorites;
@@ -126,7 +125,7 @@ public class TourOverviewFragment extends Fragment {
                 switch (event.getType()) {
                     case OK:
                         //get all needed information from server db
-                        listTours = (LinkedList<Tour>) event.getModel();
+                        listTours = (List<Tour>) event.getModel();
                         currentPage++;
                         Log.d(TAG,"Getting Tours: Server response arrived");
                         //get all the images needed and save them on the device
