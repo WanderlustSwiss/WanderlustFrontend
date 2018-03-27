@@ -283,18 +283,19 @@ public class TourFragment extends Fragment {
             }
         });
 
+        // TODO: uncomment when equipment is ready
         //equipment section
-        RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
-        rvEquipment.setPadding(5, 5, 5, 5);
-        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        rvEquipment.setLayoutManager(horizontalLayoutManager);
-        adapterEquip = new EquipmentRVAdapter(context, listEquipment);
-        adapterEquip.setClickListener(this::onItemClickImages);
-        rvEquipment.setAdapter(adapterEquip);
+//        RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
+//        rvEquipment.setPadding(5, 5, 5, 5);
+//        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+//        rvEquipment.setLayoutManager(horizontalLayoutManager);
+//        adapterEquip = new EquipmentRVAdapter(context, listEquipment);
+//        adapterEquip.setClickListener(this::onItemClickImages);
+//        rvEquipment.setAdapter(adapterEquip);
 
-        DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
-        rvEquipment.addItemDecoration(itemDecorator);
+//        DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+//        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
+//        rvEquipment.addItemDecoration(itemDecorator);
     }
 
     /**
@@ -349,16 +350,17 @@ public class TourFragment extends Fragment {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
         // TODO: add tour region here
-        tourRegion.setText("Region <Namen>");
+//        tourRegion.setText("Region <Namen>");
 
         tourTitle.setText(tourController.getTitle());
 
-        // TODO: add tour rating in numbers here
-        tourRatingInNumbers.setText("4.2");
+        // FIXME: Better way to do this? Very ugly...
+        String ratingInNumbers = "" + tourController.getRatingDao().getRatingInNumbers();
+        tourRatingInNumbers.setText(ratingInNumbers);
         textViewDescription.setText(tourController.getDescription());
 
         // TODO: add real date when tour was created
-        tourExecutionDate.setText("10. Oktober 2015");
+//        tourExecutionDate.setText("10. Oktober 2015");
 
         textViewTourDistance.setText(tourController.getDistanceString());
         textViewDuration.setText(tourController.getDurationString());
