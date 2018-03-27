@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,7 +47,7 @@ public class TourOverviewFragment extends Fragment {
     private static List<ResponseBody> userTourImages = new ArrayList<>();
     private ToursOverviewRVAdapter adapterRoutes;
     private ToursOverviewRVAdapter adapterFavs;
-    private List<Tour> listTours;
+    private LinkedList<Tour> listTours;
     private final List<Tour> favTours = new ArrayList<>();
     private RecyclerView rvTouren;
     private RecyclerView rvFavorites;
@@ -125,7 +126,7 @@ public class TourOverviewFragment extends Fragment {
                 switch (event.getType()) {
                     case OK:
                         //get all needed information from server db
-                        listTours = (List<Tour>) event.getModel();
+                        listTours  = new LinkedList<>((List<Tour>)event.getModel());
                         currentPage++;
                         Log.d(TAG,"Getting Tours: Server response arrived");
                         //get all the images needed and save them on the device
@@ -182,14 +183,14 @@ public class TourOverviewFragment extends Fragment {
                                         int myCellWidth = rvTouren.getChildAt(0).getMeasuredWidth();
                                         final int offset = rvTouren.computeHorizontalScrollOffset();
                                         int position = offset / myCellWidth;
-                                        Log.d(TAG, "pos: "+position);
+                                        //Log.d(TAG, "pos: "+position);
                                         if (5 < (position - (10*currentPage))) {
                                             toc.getAllTours(controllerEvent -> {
                                                 switch (controllerEvent.getType()) {
                                                     case OK:
                                                         //get all needed information from server db
-                                                        Log.d(TAG,"added new page " + currentPage);
-                                                        List<Tour> newList = (List<Tour>)controllerEvent.getModel();
+                                                        //Log.d(TAG,"added new page " + currentPage);
+                                                        LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                                         currentPage++;
                                                         listTours.addAll(newList);
                                                         getDataFromServer(listTours);
