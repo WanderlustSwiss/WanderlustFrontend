@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
@@ -27,7 +27,6 @@ import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
-import okhttp3.ResponseBody;
 
 
 /**
@@ -40,16 +39,19 @@ import okhttp3.ResponseBody;
 public class TourOverviewFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
     private Context context;
-    private static List<ResponseBody> userTourImages = new ArrayList<>();
     private ToursOverviewRVAdapter adapterRoutes;
     private ToursOverviewRVAdapter adapterFavs;
-    private List<Tour> listTours;
+    private LinkedList<Tour> listTours;
     private final List<Tour> favTours = new ArrayList<>();
     private RecyclerView rvTouren;
     private RecyclerView rvFavorites;
     private int currentPage = 0;
     private ImageController imageController;
 
+    /**
+     * Constructor of view
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +111,7 @@ public class TourOverviewFragment extends Fragment {
      * @param inflater
      * @param container
      * @param savedInstanceState
-     * @return
+     * @return View of holder
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -122,8 +124,8 @@ public class TourOverviewFragment extends Fragment {
                 switch (event.getType()) {
                     case OK:
                         //get all needed information from server db
-                        listTours = (List<Tour>) event.getModel();
-
+                        listTours  = new LinkedList<>((List<Tour>)event.getModel());
+                        currentPage++;
                         Log.d(TAG,"Getting Tours: Server response arrived");
                         //get all the images needed and save them on the device
                         getDataFromServer(listTours);
@@ -178,24 +180,22 @@ public class TourOverviewFragment extends Fragment {
                                         Log.d(TAG,"The RecyclerView is not scrolling");
                                         int myCellWidth = rvTouren.getChildAt(0).getMeasuredWidth();
                                         final int offset = rvTouren.computeHorizontalScrollOffset();
-                                        int position = 0;
-                                        if (offset % myCellWidth == 0) position = offset / myCellWidth ;
-                                        if (15 < (position % 25)) {
+                                        int position = offset / myCellWidth;
+                                        //Log.d(TAG, "pos: "+position);
+                                        if (5 < (position - (10*currentPage))) {
                                             toc.getAllTours(controllerEvent -> {
-                                                switch (event.getType()) {
+                                                switch (controllerEvent.getType()) {
                                                     case OK:
                                                         //get all needed information from server db
-                                                        List<Tour> newList = (List<Tour>) event.getModel();
-                                                        if (Collections.disjoint(newList, listTours)) {
-                                                            currentPage++;
-                                                            listTours.addAll(newList);
-                                                            getDataFromServer(listTours);
-                                                            adapterRoutes.notifyDataSetChanged();
-                                                            Log.d(TAG,"added new page " + currentPage);
-                                                        }
+                                                        //Log.d(TAG,"added new page " + currentPage);
+                                                        LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
+                                                        currentPage++;
+                                                        listTours.addAll(newList);
+                                                        getDataFromServer(listTours);
+                                                        adapterRoutes.notifyDataSetChanged();
                                                         break;
                                                     default:
-                                                        Log.d(TAG,"Server response ERROR: " + event.getType().name());
+                                                        Log.d(TAG,"Server response ERROR: " + controllerEvent.getType().name());
                                                         break;
                                                 }
                                             },currentPage);
@@ -219,11 +219,9 @@ public class TourOverviewFragment extends Fragment {
             /**
              * handles click in Recyclerview
              * @param view
-             * @param position
              * @param tour
-             * @param favorizedTours
              */
-            public void onItemClickImages(View view, int position, Tour tour, List<Long> favorizedTours) {
+            public void onItemClickImages(View view, Tour tour) {
                 switch (view.getId()) {
                     case R.id.favoriteButton:
                         Log.d(TAG,"Tour Favorite Clicked and event triggered ");
@@ -241,8 +239,9 @@ public class TourOverviewFragment extends Fragment {
                                         for(Tour tmpTour : favTours)
                                             if(tmpTour.getTour_id() == tour.getTour_id())
                                                 favTours.remove(tmpTour);
-                                        //notify observer of adapter
+                                        //notify observer of adapters
                                         adapterFavs.notifyDataSetChanged();
+                                        adapterRoutes.notifyDataSetChanged();
                                         break;
                                     default:
                                         Log.d(TAG, "favorite failure while deleting " + tour.getTour_id());
@@ -283,10 +282,15 @@ public class TourOverviewFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Executed if view is completely created
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+// TODO: add code accordingly
 //        TextView nameView = (TextView) view.findViewById(R.id.tour_title);
 //        nameView.setText(tour.getName());
 //

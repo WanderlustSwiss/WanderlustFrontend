@@ -176,6 +176,7 @@
     <string name="hashtag_search_nothing_found">Im aktuellen Kartenausschnitt wurden keine Resultate gefunden</string>
     <string name="sac_house">SAC</string>
     <string name="sac_occupation_bewartet">Bewartet:</string>
+    <string name="already_rated">Du hast die Tour bereits bewerted</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="manual_welcome">Willkommen bei Wanderlust! Hier eine kurze Anleitung über die Funktionen, die dich erwarten.</string>

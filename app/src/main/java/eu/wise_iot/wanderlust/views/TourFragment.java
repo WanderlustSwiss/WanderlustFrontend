@@ -385,10 +385,13 @@ public class TourFragment extends Fragment {
             //open the dialog twice even if android doc says that you cant open two dialogs at the
             //same time .... fuck yeah android
             if(e.getAction() == MotionEvent.ACTION_DOWN){
-                Log.d("TOURID", String.valueOf(tourController));
-                TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
-                        tourRating);
-                dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
+                if (tourController.alreadyRated(tour.getTour_id()) == 0L){
+                    TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
+                            tourRating);
+                    dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
+                }else{
+                    Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
+                }
             }
             return true;
         });

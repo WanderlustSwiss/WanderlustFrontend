@@ -205,10 +205,14 @@ public class TourController {
         userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
-                Tour TourWithGeoData = (Tour) controllerEvent.getModel();
-                tour.setPolyline(TourWithGeoData.getPolyline());
-                tour.setElevation(TourWithGeoData.getElevation());
-                handler.onResponse(new ControllerEvent(EventType.OK, tour));
+                if (controllerEvent.getType() ==  EventType.OK){
+                    Tour TourWithGeoData = (Tour) controllerEvent.getModel();
+                    tour.setPolyline(TourWithGeoData.getPolyline());
+                    tour.setElevation(TourWithGeoData.getElevation());
+                    handler.onResponse(new ControllerEvent(EventType.OK, tour));
+                }else{
+                    handler.onResponse(new ControllerEvent(controllerEvent.getType(), tour));
+                }
             }
         });
     }

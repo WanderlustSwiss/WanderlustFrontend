@@ -31,7 +31,7 @@ import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.ViewHolder> {
 
     private static final String TAG = "EquipmentRVAdapter";
-    private List<Equipment> equipment;
+    private final List<Equipment> equipment;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private final Context context;
