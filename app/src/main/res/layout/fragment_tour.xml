@@ -53,7 +53,7 @@
                 android:text="@string/tour_button_show_map"
                 android:textAllCaps="true"
                 android:textAppearance="@style/p.Small"
-                android:textColor="@color/primary_main"
+                android:textColor="@color/primary_second"
                 app:layout_constraintBottom_toBottomOf="@id/imageContainer"
                 app:layout_constraintRight_toRightOf="@id/imageContainer"
                 app:layout_constraintTop_toBottomOf="@id/imageContainer" />
