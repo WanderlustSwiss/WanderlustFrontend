@@ -55,6 +55,7 @@ public class ProfileFragment extends Fragment {
     private TextView amountPOI;
     private TextView amountScore;
     private TextView amountTours;
+    private TextView nickname;
 
     private TabLayout tabLayout;
 
@@ -109,6 +110,8 @@ public class ProfileFragment extends Fragment {
         amountTours = (TextView) view.findViewById(R.id.profileAmountTours);
         amountScore = (TextView) view.findViewById(R.id.profileAmountScore);
 
+        nickname = (TextView) view.findViewById(R.id.profileNickname);
+
         profilePicture = (ImageView) view.findViewById(R.id.profilePicture);
 
         editProfile = (Button) view.findViewById(R.id.editProfileButton);
@@ -144,7 +147,7 @@ public class ProfileFragment extends Fragment {
      * To set the stats at the top of the profile
      */
     public void setProfileStats(){
-
+        nickname.setText(profileController.getNickName());
         amountScore.setText(String.format(Locale.GERMANY, "%1d",
                 profileController.getScore()));
         amountTours.setText(String.format(Locale.GERMANY, "%1d",

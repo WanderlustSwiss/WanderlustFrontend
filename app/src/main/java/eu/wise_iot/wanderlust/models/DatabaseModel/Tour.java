@@ -29,6 +29,8 @@ public class Tour extends AbstractModel {
     String imagePath;
     String polyline;
     String elevation;
+    String createdAt;
+    String updatedAt;
     long distance;
     long duration;
     long ascent;
@@ -43,7 +45,8 @@ public class Tour extends AbstractModel {
 
     public Tour(long internal_id, long tour_id, String title, String description,
                     String imagePath, String polyline, String elevation, long duration, long distance,
-                    long ascent, long descent, long difficulty, long tourKit, boolean editable) {
+                    long ascent, long descent, long difficulty, long tourKit, boolean editable,
+                    String updatedAt, String createdAt) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
@@ -58,6 +61,8 @@ public class Tour extends AbstractModel {
         this.difficulty = difficulty;
         this.tourKit = tourKit;
         this.editable = editable;
+        this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
     }
 
     public Tour(){
@@ -185,6 +190,22 @@ public class Tour extends AbstractModel {
 
     public void setDifficulty(long difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public boolean isEditable() {

@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -547,6 +548,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                             sacHutOverlay.addItem(overlayItem);
                         }
                         mapView.getOverlays().add(sacHutOverlay);
+                    } else {
+                        Toast.makeText(activity, R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
                     }
                     mapView.invalidate();
                 }

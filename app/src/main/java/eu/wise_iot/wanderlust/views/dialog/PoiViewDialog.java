@@ -91,9 +91,8 @@ public class PoiViewDialog extends DialogFragment {
         ImageInfo imageInfo = new ImageInfo();
         imageInfo.setPath(geoObject.getImageLink());
         list.add(imageInfo);
-    //    list.add(new ImageInfo(1, "http://binaryoptionexpert.com/wp-content/uploads/2015/01/not_available.jpg"));
 
-        currentPoi = new Poi((long) geoObjectTypeId, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, -1, true, list);
+        currentPoi = new Poi((long) geoObjectTypeId, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, (int) geoObjectTypeId, true, list, "", "");
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         Bundle args = new Bundle();
         args.putLong(Constants.POI_ID, geoObjectTypeId);
@@ -182,7 +181,7 @@ public class PoiViewDialog extends DialogFragment {
     }
 
     private void fillOutPoiView(View view) {
-        if (poiId >= 0) {
+        if (currentPoi.getType() >= 0) {
             controller.getImages(currentPoi, new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
@@ -205,21 +204,24 @@ public class PoiViewDialog extends DialogFragment {
 
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
+        String[] geoObjectTypeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_geoobject_type);
 
-        if(poiId >= 0){
+
+        if(currentPoi.getType() >= 0){
             typeTextView.setText(typeValues[(int) currentPoi.getType()]);
         } else {
-            typeTextView.setText("SAC");
+            typeTextView.setText(geoObjectTypeValues[(-1 * (int) currentPoi.getType()) -1]);
+            sharePoiButton.setVisibility(View.GONE);
         }
         String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
         elevationTextView.setText(elevationText);
 
         titleTextView.setText(currentPoi.getTitle());
-        if(poiId >= 0){
+        if(currentPoi.getType() >= 0){
             dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
         }
 
-        if (poiId == Constants.TYPE_SAC) {
+        if (currentPoi.getType() == Constants.TYPE_SAC) {
             String description = showSacOccupation(currentPoi.getDescription(), view);
             currentPoi.setDescription(description);
         }
@@ -317,8 +319,8 @@ public class PoiViewDialog extends DialogFragment {
                 editedDescription.append(aTextSplit).append("\n");
             }
         }
-        int x = 3;
-        return editedDescription.toString();
+        int lasIndex = editedDescription.lastIndexOf("\n");
+        return editedDescription.substring(0, lasIndex);
     }
 
 

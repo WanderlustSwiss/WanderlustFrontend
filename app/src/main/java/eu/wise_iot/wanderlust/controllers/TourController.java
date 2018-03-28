@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.BufferedReader;
@@ -169,11 +171,13 @@ public class TourController {
 
     }
 
-
+    //Todo: Tour should be a parameter
     public void getRating(Tour tour, FragmentHandler handler){
         ratingDao.retrieve(tour.getTour_id(), handler);
     }
-
+    public void getRating(FragmentHandler handler){
+        ratingDao.retrieve(tour.getTour_id(), handler);
+    }
     public Number[] getElevationProfileXAxis(){
         ArrayList<GeoPoint> polyList  = PolyLineEncoder.decode(tour.getPolyline(),10);
         Number[] xAxis = new Number[polyList.size()];
@@ -313,6 +317,12 @@ public class TourController {
             e.printStackTrace();
         }
         return new float[0];
+    }
+    public String getCreatedAtString(){
+        DateTimeFormatter encodef = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        DateTime dt = encodef.parseDateTime(tour.getCreatedAt());
+        DateTimeFormatter decodef = DateTimeFormat.forPattern("dd. MMMMM yyyy");
+        return dt.toString(decodef);
     }
     public long getAscent(){ return tour.getAscent(); }
     public long getDescent() { return tour.getDescent(); }

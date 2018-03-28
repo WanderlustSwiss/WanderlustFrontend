@@ -367,13 +367,19 @@ public class TourFragment extends Fragment {
 
         tourTitle.setText(tourController.getTitle());
 
-        // TODO: Add real rating in numbers here
-//        tourRatingInNumbers.setText("4.3");
+        tourController.getRating(controllerEvent -> {
+           if (controllerEvent.getType() == EventType.OK){
+               float rateAvg = (float) controllerEvent.getModel();
+               float rateAvgRound = Float.parseFloat(String.format("%.1f", rateAvg));
+               tourRatingInNumbers.setText(rateAvgRound + "");
+           }else{
+               tourRatingInNumbers.setText(0);
+           }
+        });
 
         tourDescriptionTextView.setText(tourController.getDescription());
 
-        // TODO: add real date when tour was created
-//        tourExecutionDate.setText("10. Oktober 2015");
+        tourExecutionDate.setText(tourController.getCreatedAtString());
 
         textViewTourDistance.setText(tourController.getDistanceString());
         textViewDuration.setText(tourController.getDurationString());
