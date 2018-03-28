@@ -222,21 +222,21 @@
                 <at.blogc.android.views.ExpandableTextView
                     android:id="@+id/tour_description"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:maxLines="3"
-                    android:ellipsize="end"
-                    app:animation_duration="500"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"/>
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    app:animation_duration="500" />
 
                 <ImageButton
                     android:id="@+id/tour_descrition_toggler"
                     style="@style/standard_button"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
-                    android:padding="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+                    android:padding="0dp" />
             </LinearLayout>
 
 
@@ -258,8 +258,7 @@
                     android:id="@+id/weather_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="horizontal">
 
                     <!--<TextView-->
                     <!--style="@style/p"-->
@@ -282,8 +281,8 @@
 
                         <ImageView
                             android:id="@+id/firstPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
 
                         <TextView
                             android:id="@+id/degreeFirstPoint"
@@ -308,8 +307,8 @@
 
                         <ImageView
                             android:id="@+id/secondPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
 
                         <TextView
                             android:id="@+id/degreeSecondPoint"
@@ -335,8 +334,8 @@
 
                         <ImageView
                             android:id="@+id/thirdPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
 
                         <TextView
                             android:id="@+id/degreeThirdPoint"
@@ -361,8 +360,8 @@
 
                         <ImageView
                             android:id="@+id/forthPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
 
                         <TextView
                             android:id="@+id/degreeForthPoint"
@@ -387,8 +386,8 @@
 
                         <ImageView
                             android:id="@+id/fifthPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
 
                         <TextView
                             android:id="@+id/degreeFifthPoint"

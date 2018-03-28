@@ -78,13 +78,13 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
         holder.tvTitle.setText(equipment.getName());
         ImageInfo imagepath = equipment.getImagePath();
         if(imagepath == null){
-            Picasso.with(context).load(R.drawable.no_image_found).transform(new CircleTransform()).fit().into(holder.ivImage);
+            Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
         }else{
             File image = imageController.getImage(equipment.getImagePath());
             if (image == null){
-                Picasso.with(context).load(R.drawable.no_image_found).transform(new CircleTransform()).fit().into(holder.ivImage);
+                Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
             }else{
-                Picasso.with(context).load(image).placeholder(R.drawable.loader).transform(new CircleTransform()).fit().into(holder.ivImage);
+                Picasso.with(context).load(image).placeholder(R.drawable.loader).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
             }
         }
     }
