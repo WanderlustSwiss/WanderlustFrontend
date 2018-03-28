@@ -77,7 +77,7 @@
 
             <TextView
                 android:id="@+id/poi_title_text_view"
-                style="@style/h1.White"
+                style="@style/h1.Light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/poi_elevation_text_view"

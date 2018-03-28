@@ -36,7 +36,7 @@
 
 
     <!-- TOUR RELATED STRINGS -->
-    <string name="tour_button_show_map">Karte zeigen</string>
+    <string name="tour_button_show_map">Start</string>
     <string name="tour_equipment">Ausrüstung</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
@@ -163,7 +163,7 @@
     <string name="title_tours">Touren</string>
     <string name="title_score">Score</string>
     <string name="wetter">Wetter</string>
-    <string name="wandertag_ausw_hlen">Wandertag auswählen</string>
+    <string name="choose_hiking_day_button">anderen Wandertag auswählen</string>
     <string name="keine_wetterdaten">Keine Wetterdaten zu diesem Tag</string>
     <string name="wanderung_beginn">Wanderung am:</string>
     <string name="wetterNach">Nach:</string>
@@ -177,10 +177,9 @@
     <string name="sac_house">SAC</string>
     <string name="sac_occupation_bewartet">Bewartet:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="menu_user_guide">Handbuch</string>
-    <string name="manual_finish_header">Wanderlust-Anleitung</string>
+    <string name="manual_welcome">Willkommen bei Wanderlust! Hier eine kurze Anleitung über die Funktionen, die dich erwarten.</string>
+    <string name="manual_header">Wanderlust-Anleitung</string>
     <string name="manual_finish_text1">Jetzt weisst du alles, was es über die Wanderlust-App zu wissen gibt.</string>
     <string name="manual_finish_text2">Klicke auf <b>los geh\'s</b> um das Abenteuer zu starten!</string>
     <string name="manual_poi_header">POI (Point of Interest)</string>
@@ -194,5 +193,10 @@
     <string name="manual_dashboard_header">Tourendashboard</string>
     <string name="manual_dashboard_text">Inspiriere dich von den von anderen Usern erfassten Touren und stöbere durch unsere Datenbank.</string>
     <string name="msg_lets_go">los geht\'s!</string>
+    <string name="menu_manual">Handbuch</string>
+    <string name="o_clock">Uhr</string>
+    <string name="start">Start</string>
+    <string name="end">Ende</string>
+    <string name="temperature_abbrevation">°C</string>
 
 </resources>

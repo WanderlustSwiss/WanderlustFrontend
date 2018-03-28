@@ -73,6 +73,9 @@ public class ImageController {
         return images;
     }
     public File getImage(ImageInfo imageInfo){
+        if (imageInfo == null){
+            return null;
+        }
         return new File(picturesDir + "/" + imageInfo.getLocalPath());
     }
     public void save(File file, ImageInfo image) throws IOException {

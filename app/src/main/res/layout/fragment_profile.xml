@@ -25,8 +25,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/profilePicture"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/profilePicture"
             android:paddingLeft="30dp"
             android:paddingRight="30dp">
 
@@ -43,18 +43,18 @@
 
                     <TextView
                         android:id="@+id/profileAmountPOI"
-                        style="@style/h2.White"
+                        style="@style/h2.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true" />
 
                     <TextView
                         android:id="@+id/profilePOItitle"
+                        style="@style/p.Small.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/profileAmountPOI"
-                        android:text="@string/title_poi"
-                        style="@style/p.Small.Light"/>
+                        android:text="@string/title_poi" />
                 </RelativeLayout>
 
                 <Space
@@ -68,20 +68,19 @@
 
                     <TextView
                         android:id="@+id/profileAmountTours"
-                        style="@style/h2.White"
+                        style="@style/h2.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:textAlignment="center"
-                        />
+                        android:textAlignment="center" />
 
                     <TextView
                         android:id="@+id/profileTourTitle"
+                        style="@style/p.Small.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/profileAmountTours"
-                        android:text="@string/title_tours"
-                        style="@style/p.Small.Light"/>
+                        android:text="@string/title_tours" />
                 </RelativeLayout>
 
                 <Space
@@ -95,18 +94,18 @@
 
                     <TextView
                         android:id="@+id/profileAmountScore"
-                        style="@style/h2.White"
+                        style="@style/h2.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true" />
 
                     <TextView
                         android:id="@+id/profileScoreTitle"
+                        style="@style/p.Small.Light"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/profileAmountScore"
-                        android:text="@string/title_score"
-                        style="@style/p.Small.Light" />
+                        android:text="@string/title_score" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -130,8 +129,8 @@
         android:focusable="true"
         android:splitMotionEvents="false"
         app:tabIndicatorColor="@color/highlight_main"
-        app:tabTextAppearance="@style/p.Light"
-        app:tabSelectedTextColor="@color/white">
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextAppearance="@style/p.Light">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_favorites"

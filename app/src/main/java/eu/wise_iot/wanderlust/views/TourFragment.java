@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -91,13 +92,14 @@ public class TourFragment extends Fragment {
     private ImageButton favButton;
     private TextView tourRegion;
     private TextView tourTitle;
+    private TextView tourExecutionDate;
     private TextView textViewTourDistance;
     private TextView textViewAscend;
     private TextView textViewDuration;
     private TextView textViewDescend;
     private TextView textViewDifficulty;
     private TextView textViewDescription;
-    private Button jumpToStartLocationButton;
+    private Button goToMapButton;
 
     //weather related controlls
     private static WeatherController weatherController;
@@ -124,6 +126,8 @@ public class TourFragment extends Fragment {
     private TextView thirdTimePoint;
     private TextView forthTimePoint;
     private TextView fifthTimePoint;
+
+    private TextView tourRatingInNumbers;
     private RatingBar tourRating;
     private static MapFragment mapFragment;
 
@@ -212,28 +216,31 @@ public class TourFragment extends Fragment {
      * @param view
      */
     private void initializeControls(View view){
-        imageViewTourImage = (ImageView) view.findViewById(R.id.tourImage);
-        favButton = (ImageButton) view.findViewById(R.id.favButton);
+        imageViewTourImage = (ImageView) view.findViewById(R.id.tour_image);
+        favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
 
-        tourRegion = (TextView) view.findViewById(R.id.tourRegion);
-        tourTitle = (TextView) view.findViewById(R.id.tourTitle);
-        ImageButton tourSavedButton = (ImageButton) view.findViewById(R.id.tourSaved);
-        ImageButton tourSharedButton = (ImageButton) view.findViewById(R.id.tourShared);
-        textViewTourDistance = (TextView) view.findViewById(R.id.tourDistance);
-        textViewAscend = (TextView) view.findViewById(R.id.tourAscend);
-        textViewDuration = (TextView) view.findViewById(R.id.tourDuration);
-        textViewDescend = (TextView) view.findViewById(R.id.tourDescend);
-        textViewDifficulty = (TextView) view.findViewById(R.id.tourDifficulty);
-        textViewDescription = (TextView) view.findViewById(R.id.tourDescription);
-        jumpToStartLocationButton = (Button) view.findViewById(R.id.jumpToStartLocationButton);
-        tourRating = (RatingBar) view.findViewById(R.id.tourRating);
+        tourRegion = (TextView) view.findViewById(R.id.tour_region);
+        tourTitle = (TextView) view.findViewById(R.id.tour_title);
+        tourExecutionDate = (TextView) view.findViewById(R.id.tour_execution_date);
+        ImageButton tourSavedButton = (ImageButton) view.findViewById(R.id.save_tour_button);
+        ImageButton tourSharedButton = (ImageButton) view.findViewById(R.id.share_tour_button);
+        textViewTourDistance = (TextView) view.findViewById(R.id.tour_distance);
+        textViewAscend = (TextView) view.findViewById(R.id.tour_ascend);
+        textViewDuration = (TextView) view.findViewById(R.id.tour_duration);
+        textViewDescend = (TextView) view.findViewById(R.id.tour_descend);
+        textViewDifficulty = (TextView) view.findViewById(R.id.tour_difficulty);
+        textViewDescription = (TextView) view.findViewById(R.id.tour_description);
+        goToMapButton = (Button) view.findViewById(R.id.go_to_map_button);
+
+        tourRatingInNumbers = (TextView) view.findViewById(R.id.tour_rating_in_numbers);
+        tourRating = (RatingBar) view.findViewById(R.id.tour_rating);
 
         plot = (XYPlot) view.findViewById(R.id.plot);
 
         //weather
-        selectDayButton = (Button) view.findViewById(R.id.datepickerButton);
-        selectedDay = (TextView) view.findViewById(R.id.selectedDateTime);
-        weatherInfos = (LinearLayout) view.findViewById(R.id.weatherInfo);
+        selectDayButton = (Button) view.findViewById(R.id.weather_date_picker_button);
+        selectedDay = (TextView) view.findViewById(R.id.weather_date_and_time);
+        weatherInfos = (LinearLayout) view.findViewById(R.id.weather_info);
         firstWeatherIcon = (ImageView) view.findViewById(R.id.firstPointIcon);
         secondWeatherIcon = (ImageView) view.findViewById(R.id.secondPointIcon);
         thirdWeatherIcon = (ImageView) view.findViewById(R.id.thirdPointIcon);
@@ -249,8 +256,6 @@ public class TourFragment extends Fragment {
         thirdTimePoint = (TextView) view.findViewById(R.id.timeThirdPoint);
         forthTimePoint = (TextView) view.findViewById(R.id.timeForthPoint);
         fifthTimePoint = (TextView) view.findViewById(R.id.timeFifthPoint);
-
-
 
         long difficulty = tourController.getLevel();
         Drawable drawable;
@@ -300,10 +305,11 @@ public class TourFragment extends Fragment {
      * @param tour
      */
     private void setupEquipment(Tour tour){
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMM HH:mm");
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
         String preText = getString(R.string.wanderung_beginn);
-        selectedDay.setText(preText + " " + dateTime);
+        String completeString = preText + " " + dateTime + " " + getString(R.string.o_clock);
+        selectedDay.setText(completeString);
 
         Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
         Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
@@ -332,10 +338,13 @@ public class TourFragment extends Fragment {
         if (!images.isEmpty() && images.get(0).length() != 0){
             Picasso.with(context)
                     .load(images.get(0))
+                    .fit()
+                    .centerCrop()
                     .into(this.imageViewTourImage);
         }else{
             Picasso.with(context)
                     .load(R.drawable.no_image_found)
+                    .fit()
                     .into(this.imageViewTourImage);
         }
 
@@ -344,9 +353,17 @@ public class TourFragment extends Fragment {
         } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
-        tourRegion.setText("");
+        // TODO: add tour region here
+//        tourRegion.setText("Region <Namen>");
+
         tourTitle.setText(tourController.getTitle());
+
+        // TODO: Add real rating in numbers here
+//        tourRatingInNumbers.setText("4.3");
         textViewDescription.setText(tourController.getDescription());
+
+        // TODO: add real date when tour was created
+//        tourExecutionDate.setText("10. Oktober 2015");
 
         textViewTourDistance.setText(tourController.getDistanceString());
         textViewDuration.setText(tourController.getDurationString());
@@ -361,7 +378,7 @@ public class TourFragment extends Fragment {
      *
      */
     private void setupActionListeners(){
-        jumpToStartLocationButton.setOnClickListener((View v) -> showMapWithTour());
+        goToMapButton.setOnClickListener((View v) -> showMapWithTour());
         favButton.setOnClickListener((View v) -> toggleFavorite());
         tourRating.setOnTouchListener((View v, MotionEvent e) ->{
             //setOnTouchListener creates two MotionEvents and without if-Statement, it would
@@ -482,8 +499,8 @@ public class TourFragment extends Fragment {
         timePoints.add(forthTimePoint);
         timePoints.add(fifthTimePoint);
 
-        timePoints.get(0).setText("Start");
-        timePoints.get(4).setText("Ende");
+        timePoints.get(0).setText(R.string.start);
+        timePoints.get(4).setText(R.string.end);
 
         if(weatherList.size() <= 5){
             for(int i = 0; i < weatherList.size(); ++i){
@@ -491,7 +508,8 @@ public class TourFragment extends Fragment {
 
                 //set temperature
                 String temp = String.format(Locale.GERMAN, "%d", (int) weather.getTemp());
-                weatherDegrees.get(i).setText(temp + "°C");
+                String degreeString = temp + getString(R.string.temperature_abbrevation);
+                weatherDegrees.get(i).setText(degreeString);
 
                 //set time of tour
                 if(i > 0 && i < 4){
@@ -650,7 +668,7 @@ public class TourFragment extends Fragment {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
+        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75)); // fixme: color does not get adjusted (only #f00)
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
 
         getFragmentManager().beginTransaction()

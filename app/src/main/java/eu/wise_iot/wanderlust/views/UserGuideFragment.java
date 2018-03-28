@@ -1,8 +1,9 @@
 package eu.wise_iot.wanderlust.views;
 
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,14 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment that contains a manual / user guide. Explains the most important features of the app.
+ *
+ * @author Fabian Schwander
+ * @license MIT
  */
 public class UserGuideFragment extends Fragment {
+
+    private Button goToMapButton;
 
     public static UserGuideFragment newInstance() {
         Bundle args = new Bundle();
@@ -31,19 +37,21 @@ public class UserGuideFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_user_guide, container, false);
 
-        Button goToMapButton = (Button) rootView.findViewById(R.id.btn_go_to_map);
-        goToMapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MapFragment mapFragment = MapFragment.newInstance();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                        .addToBackStack(null)
-                        .commit();
-                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-            }
-        });
-
+        goToMapButton = (Button) rootView.findViewById(R.id.btn_go_to_map);
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        goToMapButton.setOnClickListener(v -> {
+            MapFragment mapFragment = MapFragment.newInstance();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                    .addToBackStack(null)
+                    .commit();
+            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        });
     }
 }
