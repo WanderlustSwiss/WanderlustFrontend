@@ -90,6 +90,7 @@ public class TourFragment extends Fragment {
 
     private ImageView imageViewTourImage;
     private ImageButton favButton;
+    private ImageButton backbutton;
     private TextView tourRegion;
     private TextView tourTitle;
     private TextView tourExecutionDate;
@@ -130,6 +131,7 @@ public class TourFragment extends Fragment {
     private TextView tourRatingInNumbers;
     private RatingBar tourRating;
     private static MapFragment mapFragment;
+    private static TourOverviewFragment tourOverviewFragment;
 
     private Favorite favorite;
     private boolean isFavoriteUpdate;
@@ -153,7 +155,8 @@ public class TourFragment extends Fragment {
 
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
-        MapFragment mapFragment = new MapFragment();
+        mapFragment = new MapFragment();
+        tourOverviewFragment = new TourOverviewFragment();
         fragment.setArguments(args);
         tour = paramTour;
         tourController = new TourController(tour);
@@ -224,6 +227,7 @@ public class TourFragment extends Fragment {
         tourExecutionDate = (TextView) view.findViewById(R.id.tour_execution_date);
         ImageButton tourSavedButton = (ImageButton) view.findViewById(R.id.save_tour_button);
         ImageButton tourSharedButton = (ImageButton) view.findViewById(R.id.share_tour_button);
+        backbutton = (ImageButton) view.findViewById(R.id.tour_back_button);
         textViewTourDistance = (TextView) view.findViewById(R.id.tour_distance);
         textViewAscend = (TextView) view.findViewById(R.id.tour_ascend);
         textViewDuration = (TextView) view.findViewById(R.id.tour_duration);
@@ -379,6 +383,7 @@ public class TourFragment extends Fragment {
      */
     private void setupActionListeners(){
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
+        backbutton.setOnClickListener((View v) -> showTourView());
         favButton.setOnClickListener((View v) -> toggleFavorite());
         tourRating.setOnTouchListener((View v, MotionEvent e) ->{
             //setOnTouchListener creates two MotionEvents and without if-Statement, it would
@@ -680,6 +685,13 @@ public class TourFragment extends Fragment {
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
+    }
+    private void showTourView(){
+        getFragmentManager().beginTransaction()
+                .add(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
+                .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
+                .commit();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
     /**
