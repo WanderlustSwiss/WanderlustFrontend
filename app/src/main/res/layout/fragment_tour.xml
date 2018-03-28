@@ -21,6 +21,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+                <ImageView
+                    android:id="@+id/tour_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageButton
                     android:id="@+id/favourite_tour_button"
                     android:layout_width="wrap_content"
@@ -30,14 +38,6 @@
                     android:layout_margin="24dp"
                     android:background="@null"
                     android:src="@drawable/ic_favorite_white_24dp" />
-
-                <ImageView
-                    android:id="@+id/tour_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </RelativeLayout>
 
             <Button

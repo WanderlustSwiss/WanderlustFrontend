@@ -366,8 +366,7 @@ public class TourFragment extends Fragment {
         // TODO: Add real rating in numbers here
 //        tourRatingInNumbers.setText("4.3");
 
-//        tourDescriptionTextView.setText(tourController.getDescription());
-        tourDescriptionTextView.setText("xsdlkjf sf dlkj duwe weiurwe iz weiwez wiwei uzwe zweiuewriuwe weuewuw iweizw eweizwe iweweiwesfk lsdjsdfkjsdflklsdjf sdfklsouewu oi uewruweou we owe  uwe iew  hwe kjhs   dljsfd sdljsdfljsdf sdfljfys lsdfsdl sdfjdsfljf slsdfljsdfo  oue ouew rouwer o  weihzwehk  wekhfwe s dkh ww oiwef oiwe w ehoi wfh fw");
+        tourDescriptionTextView.setText(tourController.getDescription());
 
         // TODO: add real date when tour was created
 //        tourExecutionDate.setText("10. Oktober 2015");
