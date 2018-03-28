@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primary_main"
-                android:divider="@drawable/divider_empty"
+                android:divider="@drawable/divider_vertical"
                 android:orientation="vertical"
                 android:padding="12dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -144,7 +144,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/divider_empty"
+                android:divider="@drawable/divider_vertical"
                 android:orientation="vertical"
                 android:showDividers="middle">
 
@@ -209,7 +209,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@drawable/divider_empty"
+            android:divider="@drawable/divider_vertical"
             android:orientation="vertical"
             android:padding="12dp"
             android:showDividers="middle">
@@ -243,7 +243,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/divider_empty"
+                android:divider="@drawable/divider_vertical"
                 android:orientation="vertical"
                 android:showDividers="middle">
 

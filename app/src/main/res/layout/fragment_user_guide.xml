@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@drawable/divider_empty"
+            android:divider="@drawable/divider_vertical"
             android:orientation="vertical"
             android:showDividers="middle"
             android:paddingTop="52dp"
@@ -177,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:divider="@drawable/divider_empty"
+                    android:divider="@drawable/divider_vertical"
                     android:orientation="vertical"
                     android:padding="36dp"
                     android:showDividers="middle">

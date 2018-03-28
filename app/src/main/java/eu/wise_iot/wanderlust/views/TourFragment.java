@@ -301,7 +301,7 @@ public class TourFragment extends Fragment {
         rvEquipment.setAdapter(adapterEquip);
 
         DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
+        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
         rvEquipment.addItemDecoration(itemDecorator);
     }
 
