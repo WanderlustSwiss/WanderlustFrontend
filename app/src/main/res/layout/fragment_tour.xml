@@ -270,131 +270,125 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeFirstPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/firstPointIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeFirstPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeSecondPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/secondPointIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeSecondPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
-
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeThirdPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/thirdPointIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeThirdPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeForthPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/forthPointIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeForthPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeFifthPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/fifthPointIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeFifthPoint"
                             style="@style/p.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
                 </LinearLayout>
 
