@@ -38,7 +38,7 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
         List<GeoPoint> geoPoints = lists[0];
         Thread[] threads = new Thread[5];
         for (int i = 0; i < threads.length; i++) {
-            threads[i] = new Thread(new WeatherThread(geoPoints.get(i), controller, weather, dateTime.getMillis() + (duration / 4) * i, i));
+            threads[i] = new Thread(new WeatherThread(geoPoints.get(i), controller, weather, dateTime.getMillis()/1000 + (duration / 4) * i, i));
             threads[i].setDaemon(true);
             threads[i].start();
         }
