@@ -275,7 +275,7 @@
 
                         <TextView
                             android:id="@+id/timeFirstPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
@@ -286,7 +286,7 @@
 
                         <TextView
                             android:id="@+id/degreeFirstPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
@@ -300,7 +300,7 @@
 
                         <TextView
                             android:id="@+id/timeSecondPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
@@ -311,7 +311,7 @@
 
                         <TextView
                             android:id="@+id/degreeSecondPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
@@ -325,7 +325,7 @@
 
                         <TextView
                             android:id="@+id/timeThirdPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
@@ -336,7 +336,7 @@
 
                         <TextView
                             android:id="@+id/degreeThirdPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
@@ -350,7 +350,7 @@
 
                         <TextView
                             android:id="@+id/timeForthPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
@@ -361,7 +361,7 @@
 
                         <TextView
                             android:id="@+id/degreeForthPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
@@ -375,7 +375,7 @@
 
                         <TextView
                             android:id="@+id/timeFifthPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
@@ -386,7 +386,7 @@
 
                         <TextView
                             android:id="@+id/degreeFifthPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>

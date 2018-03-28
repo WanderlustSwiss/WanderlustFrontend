@@ -66,8 +66,6 @@
     </style>
 
 
-
-
     <!-- BUTTONS -->
 
     <style name="FloatingActionButton" parent="Widget.Design.FloatingActionButton">
@@ -230,8 +228,8 @@
         <item name="domainLineColor">@android:color/transparent</item>
         <item name="rangeLineColor">@color/heading_icon</item>
         <item name="lineLabelTextColorTop">@color/black</item>
-        <item name="lineLabelTextColorBottom">@color/black</item>
-        <item name="lineLabelTextColorLeft">@color/black</item>
+        <item name="lineLabelTextColorBottom">@color/heading_icon_unselected</item>
+        <item name="lineLabelTextColorLeft">@color/heading_icon_unselected</item>
         <item name="lineLabelTextColorRight">@color/black</item>
         <item name="domainOriginLineColor">@color/black</item>
         <item name="rangeOriginLineColor">@color/black</item>
