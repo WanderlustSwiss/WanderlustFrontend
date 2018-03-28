@@ -223,7 +223,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:divider="@drawable/divider_empty"
+                android:showDividers="middle">
 
                 <TextView
                     android:id="@+id/weather_title"
@@ -400,7 +402,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/equipmentDescription"
@@ -432,12 +435,8 @@
                     android:id="@+id/plot"
                     style="@style/Plot"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    ap:lineLabelInsetLeft="21dp"
-                    ap:lineLabelRotationBottom="-45"
-                    ap:lineLabelTextSizeBottom="12sp"
-                    ap:lineLabelTextSizeLeft="12sp"
-                    ap:lineLabels="left|bottom" />
+                    android:layout_height="300dp" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
