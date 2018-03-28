@@ -283,7 +283,6 @@ public class TourFragment extends Fragment {
             }
         });
 
-        // TODO: uncomment when equipment is ready
         //equipment section
         RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
         rvEquipment.setPadding(5, 5, 5, 5);
@@ -296,6 +295,8 @@ public class TourFragment extends Fragment {
         DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
         rvEquipment.addItemDecoration(itemDecorator);
+
+
     }
 
     /**
