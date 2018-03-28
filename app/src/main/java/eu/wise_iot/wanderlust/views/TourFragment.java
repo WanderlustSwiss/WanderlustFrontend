@@ -306,7 +306,8 @@ public class TourFragment extends Fragment {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
         String preText = getString(R.string.wanderung_beginn);
-        selectedDay.setText(preText + " " + dateTime);
+        String completeString = preText + " " + dateTime + " " + getString(R.string.o_clock);
+        selectedDay.setText(completeString);
 
         Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
         Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
@@ -491,8 +492,8 @@ public class TourFragment extends Fragment {
         timePoints.add(forthTimePoint);
         timePoints.add(fifthTimePoint);
 
-        timePoints.get(0).setText("Start");
-        timePoints.get(4).setText("Ende");
+        timePoints.get(0).setText(R.string.start);
+        timePoints.get(4).setText(R.string.end);
 
         if(weatherList.size() <= 5){
             for(int i = 0; i < weatherList.size(); ++i){
@@ -500,7 +501,8 @@ public class TourFragment extends Fragment {
 
                 //set temperature
                 String temp = String.format(Locale.GERMAN, "%d", (int) weather.getTemp());
-                weatherDegrees.get(i).setText(temp + "°C");
+                String degreeString = temp + getString(R.string.temperature_abbrevation);
+                weatherDegrees.get(i).setText(degreeString);
 
                 //set time of tour
                 if(i > 0 && i < 4){
