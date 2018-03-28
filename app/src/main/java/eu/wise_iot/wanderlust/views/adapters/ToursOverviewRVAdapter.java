@@ -70,7 +70,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("ToursRecyclerview", "Creating View Holder");
-        View view = mInflater.inflate(R.layout.recyclerview_item, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_tour_overview, parent, false);
         return new ViewHolder(view);
     }
 

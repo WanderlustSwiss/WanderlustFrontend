@@ -60,7 +60,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "Creating Viewholder");
-        View view = mInflater.inflate(R.layout.equipment_recyclerview_item, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_equipment, parent, false);
         return new ViewHolder(view);
     }
 
