@@ -194,6 +194,26 @@
         <item name="android:layout_marginTop">16dp</item>
     </style>
 
+    <!-- Plot -->
+    <style name="Plot">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="backgroundColor">@android:color/transparent</item>
+        <item name="graphBackgroundColor">@android:color/transparent</item>
+        <item name="gridBackgroundColor">@android:color/transparent</item>
+        <item name="domainLineColor">@android:color/transparent</item>
+        <item name="rangeLineColor">@color/heading_icon</item>
+        <item name="lineLabelTextColorTop">@color/black</item>
+        <item name="lineLabelTextColorBottom">@color/black</item>
+        <item name="lineLabelTextColorLeft">@color/black</item>
+        <item name="lineLabelTextColorRight">@color/black</item>
+        <item name="domainOriginLineColor">@color/black</item>
+        <item name="rangeOriginLineColor">@color/black</item>
+        <item name="titleTextColor">@color/ap_black</item>
+        <item name="domainTitleTextColor">@color/black</item>
+        <item name="rangeTitleTextColor">@color/black</item>
+        <item name="legendTextColor">@color/black</item>
+    </style>
+
 
 
 </resources>

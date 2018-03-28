@@ -48,11 +48,11 @@
                 android:layout_height="70dp"
                 android:layout_margin="24dp"
                 android:drawableTop="@drawable/ic_directions_walk_color_24dp"
+                android:gravity="center_horizontal"
                 android:paddingTop="12dp"
                 android:text="@string/tour_button_show_map"
                 android:textAllCaps="true"
                 android:textAppearance="@style/p.Small"
-                android:gravity="center_horizontal"
                 android:textColor="@color/primary_main"
                 app:layout_constraintBottom_toBottomOf="@id/imageContainer"
                 app:layout_constraintRight_toRightOf="@id/imageContainer"
@@ -206,233 +206,229 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tour_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="12dp"
+            android:divider="@drawable/divider_empty"
+            android:showDividers="middle">
 
             <TextView
-                android:id="@+id/weather_title"
+                android:id="@+id/tour_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/weather_title"
+                    style="@style/h2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wetter" />
+
+                <LinearLayout
+                    android:id="@+id/weather_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <!--<TextView-->
+                    <!--style="@style/p"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/wetterNach" />-->
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/timeFirstPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/firstPointIcon"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp" />
+
+                        <TextView
+                            android:id="@+id/degreeFirstPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/timeSecondPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/secondPointIcon"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp" />
+
+                        <TextView
+                            android:id="@+id/degreeSecondPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/timeThirdPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/thirdPointIcon"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp" />
+
+                        <TextView
+                            android:id="@+id/degreeThirdPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/timeForthPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/forthPointIcon"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp" />
+
+                        <TextView
+                            android:id="@+id/degreeForthPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/timeFifthPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/fifthPointIcon"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp" />
+
+                        <TextView
+                            android:id="@+id/degreeFifthPoint"
+                            style="@style/p.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/weather_date_and_time"
+                    style="@style/p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/weather_date_picker_button"
+                        style="@style/standard_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/choose_hiking_day_button"
+                        android:textAllCaps="false" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/equipmentDescription"
                 style="@style/h2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/wetter" />
+                android:text="@string/tour_equipment" />
 
-            <LinearLayout
-                android:id="@+id/weather_info"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvEquipment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <!--<TextView-->
-                <!--style="@style/p"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/wetterNach" />-->
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/timeFirstPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                    <ImageView
-                        android:id="@+id/firstPointIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp" />
-
-                    <TextView
-                        android:id="@+id/degreeFirstPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/timeSecondPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                    <ImageView
-                        android:id="@+id/secondPointIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp" />
-
-                    <TextView
-                        android:id="@+id/degreeSecondPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/timeThirdPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                    <ImageView
-                        android:id="@+id/thirdPointIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp" />
-
-                    <TextView
-                        android:id="@+id/degreeThirdPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/timeForthPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                    <ImageView
-                        android:id="@+id/forthPointIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp" />
-
-                    <TextView
-                        android:id="@+id/degreeForthPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/timeFifthPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                    <ImageView
-                        android:id="@+id/fifthPointIcon"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp" />
-
-                    <TextView
-                        android:id="@+id/degreeFifthPoint"
-                        style="@style/p.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/weather_date_and_time"
-                style="@style/p"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="12dp" />
-
-            <LinearLayout
+                android:id="@+id/tourElevationTitle"
+                style="@style/h2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingBottom="12dp"
-                android:paddingTop="12dp">
+                android:text="@string/tour_elevation_chart_title" />
 
-                <Button
-                    android:id="@+id/weather_date_picker_button"
-                    style="@style/standard_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/choose_hiking_day_button"
-                    android:textAllCaps="false" />
-            </LinearLayout>
+            <com.androidplot.xy.XYPlot
+                android:id="@+id/plot"
+                style="@style/Plot"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                ap:lineLabelInsetLeft="21dp"
+                ap:lineLabelRotationBottom="-45"
+                ap:lineLabelTextSizeBottom="12sp"
+                ap:lineLabelTextSizeLeft="12sp"
+                ap:lineLabels="left|bottom" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/equipmentDescription"
-            style="@style/h2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:text="@string/tour_equipment" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvEquipment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/tourElevationTitle"
-            style="@style/h2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:text="@string/tour_elevation_chart_title" />
-
-        <com.androidplot.xy.XYPlot
-            android:id="@+id/plot"
-            style="@style/APDefacto.Light"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@color/ap_transparent"
-            ap:backgroundColor="@color/ap_transparent"
-            ap:domainLineColor="@color/ap_transparent"
-            ap:graphBackgroundColor="@color/ap_transparent"
-            ap:gridBackgroundColor="@color/ap_transparent"
-            ap:lineLabelInsetLeft="21dp"
-            ap:lineLabelRotationBottom="-45"
-            ap:lineLabelTextSizeBottom="12sp"
-            ap:lineLabelTextSizeLeft="12sp"
-            ap:lineLabels="left|bottom" />
     </LinearLayout>
 </ScrollView>
