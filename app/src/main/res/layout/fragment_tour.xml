@@ -210,9 +210,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@drawable/divider_empty"
             android:orientation="vertical"
             android:padding="12dp"
-            android:divider="@drawable/divider_empty"
             android:showDividers="middle">
 
             <TextView
@@ -392,43 +392,53 @@
                     <Button
                         android:id="@+id/weather_date_picker_button"
                         style="@style/standard_button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/choose_hiking_day_button"
-                        android:textAllCaps="false" />
+                        android:text="@string/choose_hiking_day_button" />
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/equipmentDescription"
-                style="@style/h2"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/tour_equipment" />
+                android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvEquipment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/equipmentDescription"
+                    style="@style/h2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tour_equipment" />
 
-            <TextView
-                android:id="@+id/tourElevationTitle"
-                style="@style/h2"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvEquipment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/tour_elevation_chart_title" />
+                android:orientation="vertical">
 
-            <com.androidplot.xy.XYPlot
-                android:id="@+id/plot"
-                style="@style/Plot"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                ap:lineLabelInsetLeft="21dp"
-                ap:lineLabelRotationBottom="-45"
-                ap:lineLabelTextSizeBottom="12sp"
-                ap:lineLabelTextSizeLeft="12sp"
-                ap:lineLabels="left|bottom" />
+                <TextView
+                    android:id="@+id/tourElevationTitle"
+                    style="@style/h2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tour_elevation_chart_title" />
+
+                <com.androidplot.xy.XYPlot
+                    android:id="@+id/plot"
+                    style="@style/Plot"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    ap:lineLabelInsetLeft="21dp"
+                    ap:lineLabelRotationBottom="-45"
+                    ap:lineLabelTextSizeBottom="12sp"
+                    ap:lineLabelTextSizeLeft="12sp"
+                    ap:lineLabels="left|bottom" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
