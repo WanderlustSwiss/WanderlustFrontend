@@ -100,7 +100,7 @@ public class TourFragment extends Fragment {
     private TextView textViewDescend;
     private TextView textViewDifficulty;
     private ExpandableTextView tourDescriptionTextView;
-    private Button tourDescriptionToggler;
+    private ImageButton tourDescriptionToggler;
 
     private Button goToMapButton;
 
@@ -190,8 +190,6 @@ public class TourFragment extends Fragment {
         selectedDateTime = new DateTime(currentCalendar);
         selectedDateTime = DateTime.now();
         initializeControls(view);
-        fillControls();
-        setupActionListeners();
         tourController.loadGeoData(new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
@@ -213,7 +211,8 @@ public class TourFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupExpandableTextview(tourDescriptionTextView, tourDescriptionToggler);
+        fillControls();
+        setupActionListeners();
     }
 
     /**
@@ -235,7 +234,7 @@ public class TourFragment extends Fragment {
         textViewDifficulty = (TextView) view.findViewById(R.id.tour_difficulty);
 
         tourDescriptionTextView = (ExpandableTextView) view.findViewById(R.id.tour_description);
-        tourDescriptionToggler = (Button) view.findViewById(R.id.tour_descrition_toggler);
+        tourDescriptionToggler = (ImageButton) view.findViewById(R.id.tour_descrition_toggler);
 
         goToMapButton = (Button) view.findViewById(R.id.go_to_map_button);
 
@@ -304,8 +303,6 @@ public class TourFragment extends Fragment {
         DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
         rvEquipment.addItemDecoration(itemDecorator);
-
-
     }
 
     /**
@@ -368,7 +365,8 @@ public class TourFragment extends Fragment {
         // TODO: Add real rating in numbers here
 //        tourRatingInNumbers.setText("4.3");
 
-        tourDescriptionTextView.setText(tourController.getDescription());
+//        tourDescriptionTextView.setText(tourController.getDescription());
+        tourDescriptionTextView.setText("xsdlkjf sf dlkj duwe weiurwe iz weiwez wiwei uzwe zweiuewriuwe weuewuw iweizw eweizwe iweweiwesfk lsdjsdfkjsdflklsdjf sdfklsouewu oi uewruweou we owe  uwe iew  hwe kjhs   dljsfd sdljsdfljsdf sdfljfys lsdfsdl sdfjdsfljf slsdfljsdfo  oue ouew rouwer o  weihzwehk  wekhfwe s dkh ww oiwef oiwe w ehoi wfh fw");
 
         // TODO: add real date when tour was created
 //        tourExecutionDate.setText("10. Oktober 2015");
@@ -404,27 +402,32 @@ public class TourFragment extends Fragment {
             return true;
         });
         setupDateAndTimeDialogs();
+        setupExpandableTextView(tourDescriptionTextView, tourDescriptionToggler);
     }
 
-    private void setupExpandableTextview(ExpandableTextView textView, Button toggler) {
+    /**
+     * Takes an ExpandableTextView and a ImageButton and handles creates the behaviour.
+     *
+     * @param textView  ExpandableTextView
+     * @param toggler   ImageButton
+     */
+    private void setupExpandableTextView(ExpandableTextView textView, ImageButton toggler) {
         textView.setInterpolator(new OvershootInterpolator());
 
+        // TODO: add method to check if text if line count <= 3 -> then hide toggler. Problem: lineCount() is always 0
+        Log.d(TAG, "text count: " + textView.getLineCount());
+
         toggler.setOnClickListener(v -> {
-            toggler.setText(textView.isExpanded() ? "O" : "Z");
+            Drawable arrowDown = getActivity().getDrawable(R.drawable.ic_keyboard_arrow_down_black_24dp);
+            Drawable arrowUp = getActivity().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+
+            if (textView.isExpanded()) {
+                toggler.setBackground(arrowDown);
+            } else {
+                toggler.setBackground(arrowUp);
+            }
             textView.toggle();
         });
-
-//        textView.setOnExpandListener(new ExpandableTextView.OnExpandListener() {
-//            @Override
-//            public void onExpand(final ExpandableTextView view) {
-//                Log.d(TAG, "ExpandableTextView expanded");
-//            }
-//
-//            @Override
-//            public void onCollapse(final ExpandableTextView view) {
-//                Log.d(TAG, "ExpandableTextView collapsed");
-//            }
-//        });
     }
 
     /**
@@ -438,17 +441,10 @@ public class TourFragment extends Fragment {
             weatherList = null;
             setupEquipment(tour);
             setupWeather();
-
         };
 
         //date picker listener, which triggers time picker
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            /**
-             * @param view
-             * @param year
-             * @param month
-             * @param dayOfMonth
-             */
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);

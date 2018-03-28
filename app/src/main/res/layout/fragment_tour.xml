@@ -229,13 +229,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/tour_descrition_toggler"
                     style="@style/standard_button"
-                    android:layout_width="25dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="8dp"
-                    android:text="v" />
+                    android:layout_width="wrap_content"
+                    android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+                    android:padding="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp" />
             </LinearLayout>
 
 
