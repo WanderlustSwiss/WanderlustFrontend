@@ -140,7 +140,7 @@ public class TourOverviewFragment extends Fragment {
                         rvTouren.setAdapter(adapterRoutes);
 
                         DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-                        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
+                        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
                         rvTouren.addItemDecoration(itemDecorator);
 
                         //get favorited tours

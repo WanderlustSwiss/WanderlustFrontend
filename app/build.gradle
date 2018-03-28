@@ -106,6 +106,9 @@ dependencies {
 
     // Volley
     compile 'com.android.volley:volley:1.0.0'
+
+    // Expandable Textview
+    compile 'at.blogc:expandabletextview:1.0.5'
 }
 
 //the following sets the required permissions for API 23+ devices and AVDs

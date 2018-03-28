@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ap="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,6 +21,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+                <ImageView
+                    android:id="@+id/tour_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageButton
                     android:id="@+id/tour_back_button"
                     android:layout_width="wrap_content"
@@ -41,14 +48,6 @@
                     android:layout_margin="24dp"
                     android:background="@null"
                     android:src="@drawable/ic_favorite_white_24dp" />
-
-                <ImageView
-                    android:id="@+id/tour_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </RelativeLayout>
 
             <Button
@@ -72,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primary_main"
-                android:divider="@drawable/divider_empty"
+                android:divider="@drawable/divider_vertical"
                 android:orientation="vertical"
                 android:padding="12dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -155,7 +154,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/divider_empty"
+                android:divider="@drawable/divider_vertical"
                 android:orientation="vertical"
                 android:showDividers="middle">
 
@@ -220,21 +219,42 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@drawable/divider_empty"
+            android:divider="@drawable/divider_vertical"
             android:orientation="vertical"
             android:padding="12dp"
             android:showDividers="middle">
 
-            <TextView
-                android:id="@+id/tour_description"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <at.blogc.android.views.ExpandableTextView
+                    android:id="@+id/tour_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    app:animation_duration="500" />
+
+                <ImageButton
+                    android:id="@+id/tour_descrition_toggler"
+                    style="@style/standard_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+                    android:padding="0dp" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:divider="@drawable/divider_vertical"
                 android:orientation="vertical"
-                android:divider="@drawable/divider_empty"
                 android:showDividers="middle">
 
                 <TextView
@@ -248,8 +268,7 @@
                     android:id="@+id/weather_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="horizontal">
 
                     <!--<TextView-->
                     <!--style="@style/p"-->
@@ -261,140 +280,134 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeFirstPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/firstPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeFirstPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeSecondPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/secondPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeSecondPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
-
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeThirdPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/thirdPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeThirdPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeForthPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/forthPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeForthPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/timeFifthPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
 
                         <ImageView
                             android:id="@+id/fifthPointIcon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:id="@+id/degreeFifthPoint"
-                            style="@style/p.Small"
+                            style="@style/p.Small.Grey"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/weather_date_and_time"
                     style="@style/p"
-                    android:textAlignment="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

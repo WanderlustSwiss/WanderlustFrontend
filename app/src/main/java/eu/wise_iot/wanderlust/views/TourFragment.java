@@ -7,7 +7,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -58,6 +58,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import at.blogc.android.views.ExpandableTextView;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -99,7 +100,9 @@ public class TourFragment extends Fragment {
     private TextView textViewDuration;
     private TextView textViewDescend;
     private TextView textViewDifficulty;
-    private TextView textViewDescription;
+    private ExpandableTextView tourDescriptionTextView;
+    private ImageButton tourDescriptionToggler;
+
     private Button goToMapButton;
 
     //weather related controlls
@@ -190,12 +193,10 @@ public class TourFragment extends Fragment {
         selectedDateTime = new DateTime(currentCalendar);
         selectedDateTime = DateTime.now();
         initializeControls(view);
-        fillControls();
-        setupActionListeners();
         tourController.loadGeoData(new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
-                if (controllerEvent.getType() == EventType.OK){
+                if (controllerEvent.getType() == EventType.OK) {
                     tour = (Tour) controllerEvent.getModel();
                     setupEquipment(tour);
                     setupWeather();
@@ -213,12 +214,14 @@ public class TourFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fillControls();
+        setupActionListeners();
     }
 
     /**
      * @param view
      */
-    private void initializeControls(View view){
+    private void initializeControls(View view) {
         imageViewTourImage = (ImageView) view.findViewById(R.id.tour_image);
         favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
 
@@ -233,7 +236,10 @@ public class TourFragment extends Fragment {
         textViewDuration = (TextView) view.findViewById(R.id.tour_duration);
         textViewDescend = (TextView) view.findViewById(R.id.tour_descend);
         textViewDifficulty = (TextView) view.findViewById(R.id.tour_difficulty);
-        textViewDescription = (TextView) view.findViewById(R.id.tour_description);
+
+        tourDescriptionTextView = (ExpandableTextView) view.findViewById(R.id.tour_description);
+        tourDescriptionToggler = (ImageButton) view.findViewById(R.id.tour_descrition_toggler);
+
         goToMapButton = (Button) view.findViewById(R.id.go_to_map_button);
 
         tourRatingInNumbers = (TextView) view.findViewById(R.id.tour_rating_in_numbers);
@@ -299,16 +305,14 @@ public class TourFragment extends Fragment {
         rvEquipment.setAdapter(adapterEquip);
 
         DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider));
+        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
         rvEquipment.addItemDecoration(itemDecorator);
-
-
     }
 
     /**
      * @param tour
      */
-    private void setupEquipment(Tour tour){
+    private void setupEquipment(Tour tour) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
         String preText = getString(R.string.wanderung_beginn);
@@ -320,32 +324,33 @@ public class TourFragment extends Fragment {
         //TODO add recommended method for getting equipment
         //listEquipment = tourController.getEquipmentOfTour(this.tour);
         equipmentController.retrieveRecommendedEquipment(tour, selectedDateTime, controllerEvent -> {
-            switch (controllerEvent.getType()){
+            switch (controllerEvent.getType()) {
                 case OK:
-                    Log.d(TAG,"got equipment for tour");
+                    Log.d(TAG, "got equipment for tour");
                     TourFragment.this.listEquipment.clear();
                     TourFragment.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
                     getActivity().runOnUiThread(() -> adapterEquip.notifyDataSetChanged());
                     break;
                 default:
-                    Log.d(TAG,"failure getting equipment for tour");
+                    Log.d(TAG, "failure getting equipment for tour");
                     break;
             }
         });
     }
+
     /**
      *
      */
     private void fillControls() {
         List<File> images = tourController.getImages();
         Log.d("Debug", "Images size:" + images.size());
-        if (!images.isEmpty() && images.get(0).length() != 0){
+        if (!images.isEmpty() && images.get(0).length() != 0) {
             Picasso.with(context)
                     .load(images.get(0))
                     .fit()
                     .centerCrop()
                     .into(this.imageViewTourImage);
-        }else{
+        } else {
             Picasso.with(context)
                     .load(R.drawable.no_image_found)
                     .fit()
@@ -364,7 +369,8 @@ public class TourFragment extends Fragment {
 
         // TODO: Add real rating in numbers here
 //        tourRatingInNumbers.setText("4.3");
-        textViewDescription.setText(tourController.getDescription());
+
+        tourDescriptionTextView.setText(tourController.getDescription());
 
         // TODO: add real date when tour was created
 //        tourExecutionDate.setText("10. Oktober 2015");
@@ -381,56 +387,75 @@ public class TourFragment extends Fragment {
     /**
      *
      */
-    private void setupActionListeners(){
+    private void setupActionListeners() {
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
         backbutton.setOnClickListener((View v) -> showTourView());
         favButton.setOnClickListener((View v) -> toggleFavorite());
-        tourRating.setOnTouchListener((View v, MotionEvent e) ->{
+        tourRating.setOnTouchListener((View v, MotionEvent e) -> {
             //setOnTouchListener creates two MotionEvents and without if-Statement, it would
             //open the dialog twice even if android doc says that you cant open two dialogs at the
             //same time .... fuck yeah android
-            if(e.getAction() == MotionEvent.ACTION_DOWN){
-                if (tourController.alreadyRated(tour.getTour_id()) == 0L){
+            if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
                     TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
                             tourRating);
                     dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
-                }else{
+                } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
                 }
             }
             return true;
         });
         setupDateAndTimeDialogs();
+        setupExpandableTextView(tourDescriptionTextView, tourDescriptionToggler);
+    }
+
+    /**
+     * Takes an ExpandableTextView and a ImageButton and handles creates the behaviour.
+     *
+     * @param textView ExpandableTextView
+     * @param toggler  ImageButton
+     */
+    private void setupExpandableTextView(ExpandableTextView textView, ImageButton toggler) {
+        textView.setInterpolator(new OvershootInterpolator());
+
+        // TODO: add method to check if text if line count <= 3 -> then hide toggler. Problem: lineCount() is always 0
+        Log.d(TAG, "text count: " + textView.getLineCount());
+
+        toggler.setOnClickListener(v -> {
+            Drawable arrowDown = getActivity().getDrawable(R.drawable.ic_keyboard_arrow_down_black_24dp);
+            Drawable arrowUp = getActivity().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+
+            if (textView.isExpanded()) {
+                toggler.setBackground(arrowDown);
+            } else {
+                toggler.setBackground(arrowUp);
+            }
+            textView.toggle();
+        });
     }
 
     /**
      * Method sets up listeners for TimePickerDialog and DatePickerDialog which are needed to
      * save selected DateTime to aquire the weather objects to the specific route and date/time
      */
-    private void setupDateAndTimeDialogs(){
+    private void setupDateAndTimeDialogs() {
         //time picker listener, which triggers weather service
         TimePickerDialog.OnTimeSetListener timeSetListener = (view, hourOfDay, minute) -> {
             selectedDateTime = selectedDateTime.withTime(hourOfDay, minute, 0, 0);
             weatherList = null;
             setupEquipment(tour);
             setupWeather();
-
         };
 
         //date picker listener, which triggers time picker
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            /**
-             * @param view
-             * @param year
-             * @param month
-             * @param dayOfMonth
-             */
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
 
-                TimePickerDialog tdialog = new TimePickerDialog(context ,timeSetListener,
-                                                            0, 0, true);
+                TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
+                        0, 0, true);
                 tdialog.show();
             }
         };
@@ -457,18 +482,18 @@ public class TourFragment extends Fragment {
         });
     }
 
-    private void setupWeather(){
+    private void setupWeather() {
 
         weatherController.getWeatherFromTour(tour, selectedDateTime, controllerEvent -> {
-            switch (controllerEvent.getType()){
+            switch (controllerEvent.getType()) {
                 case OK:
                     weatherList = (List<Weather>) controllerEvent.getModel();
 
                     getActivity().runOnUiThread(() -> {
-                        if(weatherList != null){
+                        if (weatherList != null) {
                             weatherInfos.setVisibility(View.VISIBLE);
                             initializeWeather();
-                        }else{
+                        } else {
                             Toast.makeText(context, R.string.keine_wetterdaten, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -480,12 +505,12 @@ public class TourFragment extends Fragment {
         });
 
     }
+
     /**
      * Method fills controlls in weather-info area of tour fragment with the required data, for Example
      * the degrees, the icon's and the time points of the routes.
      */
-    private void initializeWeather(){
-
+    private void initializeWeather() {
         List<ImageView> weatherIcons = new ArrayList<>();
         weatherIcons.add(firstWeatherIcon);
         weatherIcons.add(secondWeatherIcon);
@@ -510,8 +535,8 @@ public class TourFragment extends Fragment {
         timePoints.get(0).setText(R.string.start);
         timePoints.get(4).setText(R.string.end);
 
-        if(weatherList.size() <= 5){
-            for(int i = 0; i < weatherList.size(); ++i){
+        if (weatherList.size() <= 5) {
+            for (int i = 0; i < weatherList.size(); ++i) {
                 Weather weather = weatherList.get(i);
 
                 //set temperature
@@ -520,15 +545,14 @@ public class TourFragment extends Fragment {
                 weatherDegrees.get(i).setText(degreeString);
 
                 //set time of tour
-                if(i > 0 && i < 4){
-                    String time = tourController.getDurationStringSpecificPoint(i+1);
+                if (i > 0 && i < 4) {
+                    String time = tourController.getDurationStringSpecificPoint(i + 1);
                     timePoints.get(i).setText(time);
                 }
 
-
                 //set icon
                 String icon = weather.getIcon();
-                switch (icon){
+                switch (icon) {
                     case "01d":
                         weatherIcons.get(i).setImageResource(R.drawable.ic_clear_sky_day);
                         break;
@@ -590,11 +614,12 @@ public class TourFragment extends Fragment {
             }
         }
     }
+
     /**
      *
      */
     private void toggleFavorite() {
-        if (isFavoriteUpdate){
+        if (isFavoriteUpdate) {
             return;
         }
         if (tourController.isFavorite() && !isFavoriteUpdate) {
@@ -603,7 +628,7 @@ public class TourFragment extends Fragment {
                 favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
                 isFavoriteUpdate = false;
             });
-        }else{
+        } else {
             isFavoriteUpdate = true;
             tourController.setFavorite(controllerEvent -> {
                 favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
@@ -611,18 +636,19 @@ public class TourFragment extends Fragment {
             });
         }
     }
-    public void drawChart(){
+
+    public void drawChart() {
         Number[] domainLabels = tourController.getElevationProfileXAxis();
         Number[] series1Numbers = tourController.getElevationProfileYAxis();
 
         float minElevation = Float.MAX_VALUE;
         float maxElevation = Float.MIN_VALUE;
 
-        for (Number elev : series1Numbers){
-            if (elev.floatValue() < minElevation){
+        for (Number elev : series1Numbers) {
+            if (elev.floatValue() < minElevation) {
                 minElevation = elev.floatValue();
             }
-            if (elev.floatValue() > maxElevation){
+            if (elev.floatValue() > maxElevation) {
                 maxElevation = elev.floatValue();
             }
         }
@@ -654,6 +680,7 @@ public class TourFragment extends Fragment {
                 int i = Math.round(((Number) obj).floatValue());
                 return toAppendTo.append(domainLabels[i]);
             }
+
             @Override
             public Object parseObject(String source, ParsePosition pos) {
                 return null;
@@ -668,15 +695,17 @@ public class TourFragment extends Fragment {
         //PanZoom.attach(plot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.STRETCH_HORIZONTAL);
         plot.redraw();
     }
+
     public void showMapWithTour() {
-        if (tourController.getPolyline() == null){
+        if (tourController.getPolyline() == null) {
             return;
         }
         Log.d(TAG, tourController.getPolyline());
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75)); // fixme: color does not get adjusted (only #f00)
+        // fixme: color does not get adjusted (only #f00)
+        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
 
         getFragmentManager().beginTransaction()
@@ -696,6 +725,7 @@ public class TourFragment extends Fragment {
 
     /**
      * handles click in Recyclerview of equipment
+     *
      * @param view
      * @param parEquipment
      */
