@@ -7,7 +7,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -58,6 +58,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import at.blogc.android.views.ExpandableTextView;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -98,7 +99,9 @@ public class TourFragment extends Fragment {
     private TextView textViewDuration;
     private TextView textViewDescend;
     private TextView textViewDifficulty;
-    private TextView textViewDescription;
+    private ExpandableTextView tourDescriptionTextView;
+    private Button tourDescriptionToggler;
+
     private Button goToMapButton;
 
     //weather related controlls
@@ -210,6 +213,7 @@ public class TourFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setupExpandableTextview(tourDescriptionTextView, tourDescriptionToggler);
     }
 
     /**
@@ -229,7 +233,10 @@ public class TourFragment extends Fragment {
         textViewDuration = (TextView) view.findViewById(R.id.tour_duration);
         textViewDescend = (TextView) view.findViewById(R.id.tour_descend);
         textViewDifficulty = (TextView) view.findViewById(R.id.tour_difficulty);
-        textViewDescription = (TextView) view.findViewById(R.id.tour_description);
+
+        tourDescriptionTextView = (ExpandableTextView) view.findViewById(R.id.tour_description);
+        tourDescriptionToggler = (Button) view.findViewById(R.id.tour_descrition_toggler);
+
         goToMapButton = (Button) view.findViewById(R.id.go_to_map_button);
 
         tourRatingInNumbers = (TextView) view.findViewById(R.id.tour_rating_in_numbers);
@@ -360,7 +367,8 @@ public class TourFragment extends Fragment {
 
         // TODO: Add real rating in numbers here
 //        tourRatingInNumbers.setText("4.3");
-        textViewDescription.setText(tourController.getDescription());
+
+        tourDescriptionTextView.setText(tourController.getDescription());
 
         // TODO: add real date when tour was created
 //        tourExecutionDate.setText("10. Oktober 2015");
@@ -396,6 +404,27 @@ public class TourFragment extends Fragment {
             return true;
         });
         setupDateAndTimeDialogs();
+    }
+
+    private void setupExpandableTextview(ExpandableTextView textView, Button toggler) {
+        textView.setInterpolator(new OvershootInterpolator());
+
+        toggler.setOnClickListener(v -> {
+            toggler.setText(textView.isExpanded() ? "O" : "Z");
+            textView.toggle();
+        });
+
+//        textView.setOnExpandListener(new ExpandableTextView.OnExpandListener() {
+//            @Override
+//            public void onExpand(final ExpandableTextView view) {
+//                Log.d(TAG, "ExpandableTextView expanded");
+//            }
+//
+//            @Override
+//            public void onCollapse(final ExpandableTextView view) {
+//                Log.d(TAG, "ExpandableTextView collapsed");
+//            }
+//        });
     }
 
     /**

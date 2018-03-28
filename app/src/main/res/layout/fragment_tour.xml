@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ap="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -215,16 +214,36 @@
             android:padding="12dp"
             android:showDividers="middle">
 
-            <TextView
-                android:id="@+id/tour_description"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <at.blogc.android.views.ExpandableTextView
+                    android:id="@+id/tour_description"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    app:animation_duration="500"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"/>
+
+                <Button
+                    android:id="@+id/tour_descrition_toggler"
+                    style="@style/standard_button"
+                    android:layout_width="25dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:text="v" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:divider="@drawable/divider_empty"
+                android:orientation="vertical"
                 android:showDividers="middle">
 
                 <TextView
@@ -382,9 +401,9 @@
                 <TextView
                     android:id="@+id/weather_date_and_time"
                     style="@style/p"
-                    android:textAlignment="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
