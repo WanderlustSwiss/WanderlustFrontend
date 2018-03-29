@@ -7,6 +7,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -14,17 +15,26 @@ import retrofit2.Response;
 
 public class PoiTypeDao extends DatabaseObjectAbstract {
 
+    private static class Holder {
+        private static final PoiTypeDao INSTANCE = new PoiTypeDao();
+    }
+
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static PoiTypeDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     private static PoiService service;
-    Property columnProperty;
-    private Box<PoiType> poiTypeBox;
+    private final Box<PoiType> poiTypeBox;
 
     /**
      * Constructor.
      */
 
-    public PoiTypeDao() {
-        poiTypeBox = DatabaseController.boxStore.boxFor(PoiType.class);
-        if (service == null) service = ServiceGenerator.createService(PoiService.class);
+    private PoiTypeDao() {
+        poiTypeBox = BOXSTORE.boxFor(PoiType.class);
+        service = ServiceGenerator.createService(PoiService.class);
     }
 
     /**
@@ -40,12 +50,12 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
                     poiTypeBox.put(response.body());
                 }
 
-                DatabaseController.syncPoiTypesDone();
+                DatabaseController.getInstance().syncPoiTypesDone();
             }
 
             @Override
             public void onFailure(Call<List<PoiType>> call, Throwable t) {
-                DatabaseController.syncPoiTypesDone();
+                DatabaseController.getInstance().syncPoiTypesDone();
             }
         });
     }
@@ -67,11 +77,11 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return PoiType which match to the search pattern in the searched columns
      */
-    public PoiType findOne(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public PoiType findOne(Property searchedColumn, String searchPattern) {
         return poiTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public PoiType findOne(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public PoiType findOne(Property searchedColumn, long searchPattern) {
         return poiTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 }

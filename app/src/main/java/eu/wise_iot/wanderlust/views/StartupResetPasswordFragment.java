@@ -36,22 +36,22 @@ public class StartupResetPasswordFragment extends Fragment {
     private TextInputLayout textInputForgotPassword;
     private TextView redirectToLogin;
 
-    private LoginController loginController;
+    private final LoginController loginController;
 
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,5}$", Pattern.CASE_INSENSITIVE);
 
 
-    private FragmentHandler fragmentHandler = new FragmentHandler() {
+    private final FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
                     Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
-                    SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
+                    StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                     getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, sartupLoginFragment, Constants.LOGIN_FRAGMENT)
+                            .add(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                             .commit();
 
                     break;
@@ -104,14 +104,11 @@ public class StartupResetPasswordFragment extends Fragment {
             }
         });
 
-        redirectToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, sartupLoginFragment)
-                        .commit();
-            }
+        redirectToLogin.setOnClickListener(v -> {
+            StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, startupLoginFragment)
+                    .commit();
         });
     }
 

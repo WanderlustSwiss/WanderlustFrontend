@@ -1,16 +1,28 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.Toast;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.CommunityTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
-import eu.wise_iot.wanderlust.models.Old.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
 /**
  * Profile controller which initializes the profile view
@@ -21,9 +33,29 @@ import eu.wise_iot.wanderlust.models.Old.Tour;
  */
 public class ProfileController {
 
+    private final ProfileDao profileDao;
+    private final UserDao userDao;
+    private final UserTourDao userTourDao;
+    private final TripDao tripDao;
+    private final PoiDao poiDao;
+    private final FavoriteDao favoriteDao;
+    private final CommunityTourDao communityTourDao;
+    private final DifficultyTypeDao difficultyTypeDao;
+    private final ImageController imageController;
+    private final Context context;
 
     public ProfileController() {
-
+        profileDao = ProfileDao.getInstance();
+        userDao = UserDao.getInstance();
+        userTourDao = UserTourDao.getInstance();
+        tripDao = TripDao.getInstance();
+        poiDao = PoiDao.getInstance();
+        difficultyTypeDao = DifficultyTypeDao.getInstance();
+        favoriteDao = FavoriteDao.getInstance();
+        communityTourDao = CommunityTourDao.getInstance();
+        imageController = ImageController.getInstance();
+        context = DatabaseController.getMainContext();
+        difficultyTypeDao.retrive();
     }
 
     /**
@@ -32,12 +64,7 @@ public class ProfileController {
      * @return true if profile exists
      */
     public boolean profileExists() {
-        List<Profile> list = DatabaseController.profileDao.find();
-        if (list == null || list.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return profileDao.getProfile() != null;
     }
 
     /**
@@ -46,29 +73,28 @@ public class ProfileController {
      * @return the nickname of the user
      */
     public String getNickName() {
-        List<User> list = DatabaseController.userDao.find();
-        if (list == null || list.size() == 0) {
+        User user = userDao.getUser();
+        if (user == null || user.getNickname() == "") {
             return "no user";
         }
-        return DatabaseController.userDao.find().get(0).getNickname();
+        return user.getNickname();
     }
 
     public String getEmail(){
-        List<User> list = DatabaseController.userDao.find();
-        if(list == null || list.isEmpty()){
+        User user = userDao.getUser();
+        if(user == null || user.getEmail() == ""){
           return "";
         }
-        return DatabaseController.userDao.find().get(0).getEmail();
+        return user.getEmail();
     }
 
     public void setEmail(String email, Context context, FragmentHandler fragmentHandler){
         if(email == ""){
             Toast.makeText(context, "E-Mail darf nicht leer sein.", Toast.LENGTH_SHORT).show();
         }else{
-            User user = DatabaseController.userDao.getUser();
+            User user = userDao.getUser();
             user.setEmail(email);
-
-            DatabaseController.userDao.update(user, fragmentHandler);
+            userDao.update(user, fragmentHandler);
         }
 
     }
@@ -79,11 +105,24 @@ public class ProfileController {
      * @return the score of the user
      */
     public int getScore() {
-        List<Profile> list = DatabaseController.profileDao.find();
-        if (list == null || list.size() == 0) {
+        Profile profile = profileDao.getProfile();
+        if (profile == null) {
             return 0;
         }
-        return DatabaseController.profileDao.find().get(0).getScore();
+        return profile.getScore();
+    }
+
+    /**
+     * Gets the sex of logged in user
+     *
+     * @return the sex of the user
+     */
+    public int getSex() {
+        Profile profile = profileDao.getProfile();
+        if (profile == null) {
+            return 0;
+        }
+        return profile.getSex();
     }
 
     /**
@@ -92,11 +131,7 @@ public class ProfileController {
      * @return the amount of user tours
      */
     public long getAmountTours() {
-        List<UserTour> list = DatabaseController.userTourDao.find();
-        if (list == null) {
-            return 0;
-        }
-        return DatabaseController.userTourDao.count();
+        return tripDao.count();
     }
 
     /**
@@ -105,27 +140,20 @@ public class ProfileController {
      * @return the amount of poi's
      */
     public long getAmountPoi() {
-        List<Poi> list = DatabaseController.poiDao.find();
-        if (list == null || list.size() == 0) {
-            return 0;
-        }
-        return DatabaseController.poiDao.count();
+        return poiDao.count();
     }
 
     public long getDifficulty(){
-        DatabaseController.difficultyTypeDao.sync();
-        long difficulty = DatabaseController.profileDao.find().get(0).getDifficulty();
-
-        return difficulty;
+        return profileDao.getProfile().getDifficulty();
     }
 
     public void setDifficulty(long difficulty, Context context, FragmentHandler fragmentHandler){
         if(difficulty < 1 || difficulty > 6){
             Toast.makeText(context, "Dieses Level gibt es nicht.", Toast.LENGTH_SHORT).show();
         }else{
-            Profile profile = DatabaseController.profileDao.find().get(0);
+            Profile profile = profileDao.getProfile();
             profile.setDifficulty(difficulty);
-            DatabaseController.profileDao.update(profile, fragmentHandler);
+            profileDao.update(profile, fragmentHandler);
         }
     }
 
@@ -134,14 +162,43 @@ public class ProfileController {
      *
      * @return the path to the profile picture
      */
-    public String getProfilePicture() {
-
-        //TODO: next release
+    public File getProfilePicture() {
+        Profile profile = profileDao.getProfile();
+        if (profile.getImagePath() != null){
+            return imageController.getImage(profile.getImagePath());
+        }
         return null;
     }
+    /**
+     * Set profile image
+     *
+     * @param handler
+     * @param srcBmp
+     */
+    public void setProfilePicture(Bitmap srcBmp, FragmentHandler handler){
+        Profile profile = profileDao.getProfile();
 
-    public void setProfilePicture(String path){
-
+        File image = new File(context.getCacheDir(), "profile_image.jpg");
+        OutputStream os;
+        try {
+            os = new BufferedOutputStream(new FileOutputStream(image));
+            srcBmp.compress(Bitmap.CompressFormat.JPEG, 80, os);
+            os.close();
+            profileDao.addImage(image, profile, handler);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Delete profile image
+     *
+     * @param handler
+     */
+    public void deleteProfilePicture(FragmentHandler handler){
+        Profile profile = profileDao.getProfile();
+        if (profile.getImagePath() != null){
+            profileDao.deleteImage(handler);
+        }
     }
 
     /**
@@ -150,31 +207,21 @@ public class ProfileController {
      * @return the birthdate of the user
      */
     public String getBirthDate() {
-        List<Profile> list = DatabaseController.profileDao.find();
-        if (list == null || list.size() == 0) {
+        Profile profile = profileDao.getProfile();
+        if (profile == null) {
             return "";
         }
-        return DatabaseController.profileDao.find().get(0).getBirthday();
+        return profile.getBirthday();
     }
 
-    /**
-     * Gets the list with all user tours of logged in user
-     *
-     * @return list with user tours
-     */
-    public List<Tour> getTours() {
-        //TODO: for next release
-        return null;
-    }
 
     /**
-     * Gets the list with all favorites of logged in user
+     * Gets the list with all favorite tours of logged in user
      *
-     * @return list with favorites
+     * @param handler list and response given back to handler
      */
-    public List getFavorites() {
-        //TODO: for next release
-        return null;
+    public void getFavorites(FragmentHandler handler) {
+        favoriteDao.retrieveAllFavoriteTours(handler);
     }
 
     /**
@@ -183,8 +230,7 @@ public class ProfileController {
      * @return list with poi's
      */
     public List<Poi> getPois() {
-        //TODO: for next release
-        return null;
+        return poiDao.find();
     }
 
     /**
@@ -192,10 +238,47 @@ public class ProfileController {
      *
      * @return list with all saved tours
      */
-    public List<CommunityTour> getSavedTours() {
-        //TODO: for next release
-        return null;
+    public List<Tour> getSavedTours() {
+        return communityTourDao.find();
     }
 
+    /**
+     * Gets the list with all user tours of logged in user
+     *
+     * @return list with all trips
+     */
+    public List<Trip> getTrips(){
+        return tripDao.find();
+    }
+
+    /**
+     * Gives back the tour object to a trip.
+     *
+     * @param trip trip whose tour is requested
+     * @param handler tour and response given back to handler
+     */
+    public void getTourToTrip(Trip trip, FragmentHandler handler) {
+        userTourDao.retrieve(trip.getTour(), handler);
+
+    }
+
+    /**
+     * Deletes a trip from the database
+     *
+     * @param tour to delete
+     * @param handler defines further action
+     */
+    public void deleteTrip(Tour tour, FragmentHandler handler){
+        tripDao.delete(tour, handler);
+    }
+
+    /**
+     * Deletes a communit tour from the local database
+     *
+     * @param communityTour to delete
+     */
+    public void deleteCommunityTour(Tour communityTour){
+        communityTourDao.delete(communityTour);
+    }
 
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class LoginUser {
     static private ArrayList<String> cookies = new ArrayList<>();
-    private String identifier;
-    private String password;
+    private final String identifier;
+    private final String password;
     private String osVersion;
     private String deviceModel;
     private String resolution;

@@ -1,14 +1,17 @@
 package eu.wise_iot.wanderlust.controllers;
 
 
+import android.content.Context;
+
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 
 
 /**
@@ -20,22 +23,32 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
  */
 public class PoiController {
 
+    private final PoiTypeDao poiTypeDao;
+    private final PoiDao poiDao;
+    private final UserDao userDao;
+    private final ImageController imageController;
+    private final Context context;
+
+    public PoiController(){
+        poiTypeDao = PoiTypeDao.getInstance();
+        poiDao = PoiDao.getInstance();
+        userDao = UserDao.getInstance();
+        imageController = ImageController.getInstance();
+        context = DatabaseController.getMainContext();
+    }
+
     /**
      * @return List of all poi types
      */
     public List<PoiType> getAllPoiTypes() {
-        return DatabaseController.poiTypeDao.find();
+        return poiTypeDao.find();
     }
 
     /**
      * @return a specific poi type
      */
     public PoiType getType(long poit_id) {
-        try {
-            return DatabaseController.poiTypeDao.findOne(PoiType_.poit_id, poit_id);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            return null;
-        }
+        return poiTypeDao.findOne(PoiType_.poit_id, poit_id);
     }
 
 
@@ -46,11 +59,11 @@ public class PoiController {
      * @param handler
      */
     public void saveNewPoi(Poi poi, FragmentHandler handler) {
-        DatabaseController.poiDao.create(poi, handler);
+        poiDao.create(poi, handler);
     }
 
     public void updatePoi(Poi poi, FragmentHandler handler) {
-        DatabaseController.poiDao.update(poi, handler);
+        poiDao.update(poi, handler);
     }
 
     /**
@@ -60,7 +73,7 @@ public class PoiController {
      * @param handler
      */
     public void getPoiById(long id, FragmentHandler handler) {
-        DatabaseController.poiDao.retrieve(id, handler);
+        poiDao.retrieve(id, handler);
     }
 
     /**
@@ -71,7 +84,7 @@ public class PoiController {
      * @param handler
      */
     public void uploadImage(File image, Poi poi, FragmentHandler handler) {
-        DatabaseController.poiDao.addImage(image, poi, handler);
+        poiDao.addImage(image, poi, handler);
     }
 
 
@@ -88,10 +101,10 @@ public class PoiController {
             //Download images if necessary
             GetImagesTask imagesTask = new GetImagesTask();
             //CAREFUL asynchron task, will fire the handler
-            imagesTask.execute(new ImagesTaskParameters(poi.getPoi_id(), poi.getImagePaths(), "poi", handler));
+            imagesTask.execute(new ImagesTaskParameters(poi.getPoi_id(), poi.getImagePaths(), imageController.getPoiFolder(), handler));
         } else {
             //Images should be local
-            List<File> images = ImageController.getImages(poi.getImagePaths());
+            List<File> images = imageController.getImages(poi.getImagePaths());
             handler.onResponse(new ControllerEvent(EventType.OK, images));
         }
     }
@@ -104,7 +117,7 @@ public class PoiController {
      * @param handler
      */
     public void deleteImage(long poiID, long imageID, FragmentHandler handler) {
-        DatabaseController.poiDao.deleteImage(poiID, imageID, handler);
+        poiDao.deleteImage(poiID, imageID, handler);
     }
 
     /**
@@ -114,7 +127,7 @@ public class PoiController {
      * @return boolean:true if user is owner
      */
     public boolean isOwnerOf(Poi poi) {
-        long thisUserId = DatabaseController.userDao.getUser().getUser_id();
+        long thisUserId = userDao.getUser().getUser_id();
         long userId = poi.getUser();
         return thisUserId == userId;
     }
@@ -126,11 +139,21 @@ public class PoiController {
      * @param handler
      */
     public void deletePoi(Poi poi, FragmentHandler handler) {
-        DatabaseController.poiDao.delete(poi, handler);
+        poiDao.delete(poi, handler);
     }
 
 
-
-
+    /**
+     * Shares image on instagram
+     *
+     */
+    public File getImageToShare(Poi poi) {
+        List<File> images = imageController.getImages(poi.getImagePaths());
+        if (images != null && images.size() > 0){
+            return images.get(0);
+        }else{
+            return null;
+        }
+    }
 
 }

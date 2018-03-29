@@ -16,6 +16,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
  * ConfirmDeletePoiDialog: Fragment takes a short String message and displays a abort and confirm button
@@ -34,6 +35,9 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
     private TextView messageTextView;
     private ImageButton abortButton;
     private ImageButton confirmButton;
+
+    //for profile list poi's, is set external by profile fragment
+    private ProfileFragment profileFragment;
 
     /**
      * @param message String: that gets displayed on the dialog
@@ -78,9 +82,7 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
 
         messageTextView.setText(message);
 
-        abortButton.setOnClickListener(v -> {
-            dismiss();
-        });
+        abortButton.setOnClickListener(v -> dismiss());
 
         confirmButton.setOnClickListener(v -> {
             controller.deletePoi(this.currentPoi, e -> {
@@ -88,6 +90,12 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
                 switch (eventType) {
                     case OK:
                         Toast.makeText(context, R.string.poi_fragment_success_delete, Toast.LENGTH_LONG).show();
+                        //for profile list view
+                        if(profileFragment != null){
+                            View vw = profileFragment.getView();
+                            profileFragment.setupPOIs(vw);
+                            profileFragment.setProfileStats();
+                        }
                         dismiss();
                         break;
                     default: // fail
@@ -97,5 +105,9 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
             });
             dismiss();
         });
+    }
+
+    public void setupForProfileList(ProfileFragment profileFragment){
+        this.profileFragment = profileFragment;
     }
 }

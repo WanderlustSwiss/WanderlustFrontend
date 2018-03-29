@@ -11,9 +11,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TripService;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
-import io.objectbox.query.Query;
-import io.objectbox.query.QueryBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,21 +26,26 @@ import retrofit2.Response;
 
 
 public class TripDao extends DatabaseObjectAbstract {
+    private static class Holder {
+        private static final TripDao INSTANCE = new TripDao();
+    }
+
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static TripDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
     private static TripService service;
-    Property columnProperty;
-    private Box<Trip> routeBox;
-    private Query<Trip> routeQuery;
-    private QueryBuilder<Trip> routeQueryBuilder;
+    private final Box<Trip> routeBox;
 
     /**
      * Constructor.
      */
 
-    public TripDao() {
-        routeBox = DatabaseController.boxStore.boxFor(Trip.class);
-        routeQueryBuilder = routeBox.query();
-
-        if (service == null) service = ServiceGenerator.createService(TripService.class);
+    private TripDao() {
+        routeBox = BOXSTORE.boxFor(Trip.class);
+        service = ServiceGenerator.createService(TripService.class);
     }
 
     public long count() {
@@ -79,7 +83,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param trip
      * @param handler
      */
-    public void create(int id, final AbstractModel trip, final FragmentHandler handler) {
+    public void create(final AbstractModel trip, final FragmentHandler handler) {
         Call<Trip> call = service.createTrip((Trip) trip);
         call.enqueue(new Callback<Trip>() {
             @Override
@@ -213,13 +217,11 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Trip which match to the search pattern in the searched columns
      */
-    public Trip findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Trip findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Trip findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Trip findOne(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -231,13 +233,11 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Trip> which contains the equipements, which match to the search pattern in the searched columns
      */
-    public List<Trip> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Trip> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Trip> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Trip> find(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

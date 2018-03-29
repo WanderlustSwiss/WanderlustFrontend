@@ -118,13 +118,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="16dp">
 
                     <ImageButton
                         android:id="@+id/poi_layer_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent" />
+                        style="@style/PoiButton"
+                        android:src="@drawable/ic_poi_selected_24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -133,6 +132,49 @@
                         android:text="@string/layer_poi" />
 
                 </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageButton
+                        android:id="@+id/public_transport_layer_button"
+                        style="@style/PoiButton"
+                        android:src="@drawable/ic_train_white_40dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="@string/public_transport" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageButton
+                        android:id="@+id/public_sac_layer_button"
+                        style="@style/PoiButton"
+                        android:src="@drawable/ic_home_black_40dp_white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="@string/sac_house" />
+
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <View
@@ -232,4 +274,26 @@
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet_public_transport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_main"
+        app:behavior_hideable="true"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <TextView
+            android:id="@+id/public_transport_station_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+            android:text="@string/map_layer_layers"
+            android:textColor="@color/black"
+            android:textSize="21sp"/>
+
+    </android.support.v4.widget.NestedScrollView>
+
 </android.support.design.widget.CoordinatorLayout>

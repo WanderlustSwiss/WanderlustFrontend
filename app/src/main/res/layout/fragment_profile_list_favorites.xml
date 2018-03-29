@@ -1,6 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:background="@color/background_main">
@@ -26,16 +24,17 @@
 
         <TextView
             android:id="@+id/ListFavTitle"
+            android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/ListFavDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="TextView" />-->
 
     </LinearLayout>
 

@@ -7,13 +7,24 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
  * Adapter for the profile UI. Represents all user tours in a custom list view
@@ -21,26 +32,24 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
  * @author Baris Demirci
  * @license MIT
  */
-public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
+public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
-    private TextView description;
 
     private ImageView tripImage;
     private ImageView editIcon;
     private ImageView deleteIcon;
 
     private Context context;
-    private int resource;
-    private int textResource;
-    private List objects;
 
-    public ProfileTripListAdapter(Context context, int resource, int textResource, List objects) {
+    private final ProfileFragment profileFragment;
+    private final ImageController imageController;
+
+    public ProfileTripListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
-        this.resource = resource;
-        this.textResource = textResource;
-        this.objects = objects;
+        this.imageController = ImageController.getInstance();
+        this.profileFragment = fragment;
     }
 
     /**
@@ -60,7 +69,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
      * @return user tour at position
      */
     @Override
-    public UserTour getItem(int position) {
+    public Tour getItem(int position) {
         return super.getItem(position);
     }
 
@@ -71,7 +80,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
      * @return position of the user tour
      */
     @Override
-    public int getPosition(UserTour item) {
+    public int getPosition(Tour item) {
         return super.getPosition(item);
     }
 
@@ -98,29 +107,46 @@ public class ProfileTripListAdapter extends ArrayAdapter<UserTour> {
     @Override
     public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
         //get the item for this row
-        UserTour userTour = getItem(position);
+        Tour tour = getItem(position);
 
         //inflate the row layout
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_tour_poi, parent, false);
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListTourTitle);
-        description = (TextView) convertView.findViewById(R.id.ListTourDescription);
 
         tripImage = (ImageView) convertView.findViewById(R.id.ListTourImageView);
         editIcon = (ImageView) convertView.findViewById(R.id.ListTourEdit);
         deleteIcon = (ImageView) convertView.findViewById(R.id.ListTourDelete);
 
         //set data
-        if (userTour != null) {
-            title.setText(userTour.getTitle());
-            description.setText(userTour.getDescription());
-            tripImage.setImageResource(R.drawable.example_image);
-            //TODO: set the image
-        }
+        if (tour != null) {
+            String t = StringUtils.abbreviate(tour.getTitle(), 30);
+            title.setText(t);
 
-        //set listeners
-        //TODO: implement listeners for delete and edit icon, as well click listener for elements
+            List<ImageInfo> imageinfos = tour.getImagePaths();
+            List<File> imagefiles = imageController.getImages(imageinfos);
+            if(!imagefiles.isEmpty() && imagefiles.get(0).length() != 0){
+                Picasso.with(context)
+                        .load(imagefiles.get(0))
+                        .into(tripImage);
+            }else{
+                tripImage.setImageResource(R.drawable.example_image);
+            }
+
+            deleteIcon.setOnClickListener(e -> profileFragment.getProfileController().deleteTrip(tour, controllerEvent -> {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        profileFragment.setProfileStats();
+                        profileFragment.setupMyTours(profileFragment.getView());
+                        break;
+                    default:
+                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }));
+
+        }
 
         return convertView;
     }

@@ -1,23 +1,20 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import android.content.Context;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -34,17 +31,29 @@ import retrofit2.Response;
  */
 
 public class ProfileDao extends DatabaseObjectAbstract {
-    public static ProfileService service;
-    public Box<Profile> profileBox;
-    Property columnProperty;
+
+    private static class Holder {
+        private static final ProfileDao INSTANCE = new ProfileDao();
+    }
+
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static ProfileDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
+    private static ProfileService service;
+    private final Box<Profile> profileBox;
+    private final ImageController imageController;
 
     /**
      *
      */
 
-    public ProfileDao() {
-        profileBox = DatabaseController.boxStore.boxFor(Profile.class);
+    private ProfileDao() {
+        profileBox = BOXSTORE.boxFor(Profile.class);
         service = ServiceGenerator.createService(ProfileService.class);
+        imageController = ImageController.getInstance();
     }
 
 
@@ -73,9 +82,10 @@ public class ProfileDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * Update an existing user in the database.
+     * Update an existing user in the database and sync to backend
      *
      * @param profile (required).
+     * @param handler
      */
     public void update(Profile profile, final FragmentHandler handler) {
 
@@ -87,18 +97,16 @@ public class ProfileDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if (response.isSuccessful()) {
-                    try {
-                        Profile backendProfile = response.body();
-                        Profile internalProfile = findOne(Profile_.profile_id, profile.getProfile_id());
-                        backendProfile.setInternal_id(internalProfile.getInternal_id());
-                        backendProfile.setImageId(internalProfile.getImageId());
-                        profileBox.put(backendProfile);
-                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendProfile));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
+                    Profile backendProfile = response.body();
+                    Profile internalProfile = getProfile();
+                    backendProfile.setInternal_id(internalProfile.getInternal_id());
+                    if (backendProfile.getImagePath() != null) {
+                        backendProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
                     }
+                    profileBox.put(backendProfile);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendProfile));
+                }else{
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
@@ -107,6 +115,24 @@ public class ProfileDao extends DatabaseObjectAbstract {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
+    }
+    /**
+     * Update an existing user in the database
+     *
+     * @param profile (required).
+     */
+    public void update(Profile profile){
+        profileBox.put(profile);
+    }
+
+    public Profile getProfile() {
+        List<Profile> profiles = find();
+
+        if (!profiles.isEmpty()){
+            return profiles.get(0);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -117,86 +143,61 @@ public class ProfileDao extends DatabaseObjectAbstract {
      */
     public void addImage(final File file, final Profile profile, final FragmentHandler handler) {
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-        Call<Profile.ImageInfo> call = service.uploadImage(body);
-        call.enqueue(new Callback<Profile.ImageInfo>() {
+        Call<ImageInfo> call = service.uploadImage(body);
+        call.enqueue(new Callback<ImageInfo>() {
             @Override
-            public void onResponse(Call<Profile.ImageInfo> call, Response<Profile.ImageInfo> response) {
+            public void onResponse(Call<ImageInfo> call, Response<ImageInfo> response) {
                 if (response.isSuccessful()) {
                     try {
-                        Profile internalProfile = findOne(Profile_.profile_id, profile.getProfile_id());
-                        Profile.ImageInfo imageInfo = response.body();
-                        String name = profile.getProfile_id() + "-" + imageInfo.getId();
-                        saveImageOnApp(name, file);
-                        internalProfile.setImageId((byte) imageInfo.getId());
-                        profileBox.put(internalProfile);
-                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalProfile));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    }
+                            ImageInfo imagePath = response.body();
+                            Profile internalProfile = getProfile();
+                            internalProfile.setImagePath(imagePath);
+                            internalProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
+                            imageController.save(file, internalProfile.getImagePath());
+                            profileBox.put(internalProfile);
+                            file.delete();
+                            handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalProfile));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
-            public void onFailure(Call<Profile.ImageInfo> call, Throwable t) {
+            public void onFailure(Call<ImageInfo> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
-    }
-
-    public void saveImageOnApp(String name, File file) throws IOException {
-
-        InputStream in = new FileInputStream(file);
-        FileOutputStream out = DatabaseController.mainContext.openFileOutput(name, Context.MODE_PRIVATE);
-
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        out.close();
-        in.close();
     }
 
     /**
      * deletes an image from a specific profile from the database
      * and return it in the event
      *
-     * @param profileID
      * @param handler
      */
-    public void deleteImage(final long profileID, final FragmentHandler handler) {
-        Call<Profile.ImageInfo> call = service.deleteImage();
-        call.enqueue(new Callback<Profile.ImageInfo>() {
+    public void deleteImage(final FragmentHandler handler) {
+        Call<ImageInfo> call = service.deleteImage();
+        call.enqueue(new Callback<ImageInfo>() {
             @Override
-            public void onResponse(Call<Profile.ImageInfo> call, Response<Profile.ImageInfo> response) {
+            public void onResponse(Call<ImageInfo> call, Response<ImageInfo> response) {
                 if (response.isSuccessful()) {
-                    try {
-                        Profile internalProfile = findOne(Profile_.profile_id, profileID);
-                        if (!internalProfile.removeImageId((byte) response.body().getId())) {
-                            //TODO image id not found
-                        }
-                        profileBox.put(internalProfile);
-                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalProfile));
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
+                    Profile profile = getProfile();
+                    imageController.delete(profile.getImagePath());
+                    profile.setImagePath(null);
+                    profileBox.put(profile);
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), profile));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
-            public void onFailure(Call<Profile.ImageInfo> call, Throwable t) {
+            public void onFailure(Call<ImageInfo> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
@@ -228,13 +229,11 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Profile who match to the search pattern in the searched columns
      */
-    public Profile findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Profile findOne(Property searchedColumn, String searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Profile findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Profile findOne(Property searchedColumn, long searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -245,13 +244,11 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Profile> which contains the users, who match to the search pattern in the searched columns
      */
-    public List<Profile> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Profile> find(Property searchedColumn, String searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Profile> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Profile> find(Property searchedColumn, long searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
@@ -265,4 +262,10 @@ public class ProfileDao extends DatabaseObjectAbstract {
 
     }
 
+    /**
+     * Delete all profiles out of the database
+     */
+    public void removeAll() {
+        profileBox.removeAll();
+    }
 }

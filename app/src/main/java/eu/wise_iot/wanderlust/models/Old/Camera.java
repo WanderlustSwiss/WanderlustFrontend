@@ -32,7 +32,6 @@ public class Camera {
     private String imagePath;
     private String imageName;
     private File photoFile;
-    private Uri imageUri;
 
     public Camera(Activity activity, MapFragment fragment) {
         this.activity = activity;
@@ -57,7 +56,7 @@ public class Camera {
             }
             if (photoFile != null && activity != null) {
                 // FileProvider is needed for targetSDKVersion >= 24
-                imageUri = FileProvider.getUriForFile(this.activity, "eu.wise_iot.wanderlust.models.Old.Camera", photoFile);
+                Uri imageUri = FileProvider.getUriForFile(this.activity, "eu.wise_iot.wanderlust.models.Old.Camera", photoFile);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 mapFragment.startActivityForResult(takePictureIntent, Constants.TAKE_PHOTO);

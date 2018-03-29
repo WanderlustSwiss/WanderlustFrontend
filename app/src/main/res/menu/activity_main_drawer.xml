@@ -15,22 +15,15 @@
             android:title="@string/menu_profile" />
     </group>
 
-
     <item android:title="@string/menu_title_other">
         <menu>
-            <!--
-        <item
-            android:id="@+id/nav_manual"
-            android:title="@string/menu_manual" />
-        <item
-            android:id="@+id/nav_about"
-            android:title="@string/menu_about" />
-            -->
+            <item
+                android:id="@+id/setup_guide"
+                android:title="@string/menu_manual" />
+
             <item
                 android:id="@+id/logout"
                 android:title="@string/logout" />
         </menu>
     </item>
-
-
 </menu>

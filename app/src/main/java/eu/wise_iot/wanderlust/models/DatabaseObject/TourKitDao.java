@@ -5,6 +5,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 
 /**
@@ -16,15 +17,24 @@ import io.objectbox.Property;
 
 public class TourKitDao extends DatabaseObjectAbstract {
 
-    Property columnProperty;
-    private Box<TourKit> tourKitBox;
+    private static class Holder {
+        private static final TourKitDao INSTANCE = new TourKitDao();
+    }
+
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static TourKitDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
+    private final Box<TourKit> tourKitBox;
 
     /**
      * Constructor.
      */
 
-    public TourKitDao() {
-        tourKitBox = DatabaseController.boxStore.boxFor(TourKit.class);
+    private TourKitDao() {
+        tourKitBox = BOXSTORE.boxFor(TourKit.class);
     }
 
     public long count() {
@@ -80,13 +90,11 @@ public class TourKitDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return CommunityTours Equipment which match to the search pattern in the searched columns
      */
-    public TourKit findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public TourKit findOne(Property searchedColumn, String searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public TourKit findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public TourKit findOne(Property searchedColumn, long searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -97,13 +105,11 @@ public class TourKitDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<TourKit> which contains the tour equipements, which match to the search pattern in the searched columns
      */
-    public List<TourKit> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<TourKit> find(Property searchedColumn, String searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<TourKit> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<TourKit> find(Property searchedColumn, long searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

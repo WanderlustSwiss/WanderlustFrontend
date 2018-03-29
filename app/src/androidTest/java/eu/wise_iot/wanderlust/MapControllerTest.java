@@ -2,13 +2,11 @@ package eu.wise_iot.wanderlust;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.LinearLayout;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,7 +17,6 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
-import eu.wise_iot.wanderlust.views.MainActivity;
 import eu.wise_iot.wanderlust.views.MapFragment;
 
 
@@ -36,28 +33,22 @@ public class MapControllerTest {
 
     @Test
     public void searchExistingPlace() throws Exception {
-        controller.searchPlace("Brugg", 1, new FragmentHandler<ArrayList<MapSearchResult>>() {
-            @Override
-            public void onResponse(ControllerEvent<ArrayList<MapSearchResult>> controllerEvent) {
-                Assert.assertEquals(EventType.OK, controllerEvent.getType());
-                ArrayList<MapSearchResult> result = controllerEvent.getModel();
-                Assert.assertEquals(result.size(), 1);
-                Assert.assertNotNull(result.get(0).getLatitude());
-                Assert.assertNotNull(result.get(0).getLongitude());
-            }
+        controller.searchPlace("Brugg", 1, controllerEvent -> {
+            Assert.assertEquals(EventType.OK, controllerEvent.getType());
+            ArrayList<MapSearchResult> result = (ArrayList<MapSearchResult>) controllerEvent.getModel();
+            Assert.assertEquals(result.size(), 1);
+            Assert.assertNotNull(result.get(0).getLatitude());
+            Assert.assertNotNull(result.get(0).getLongitude());
         });
     }
 
     @Test
     public void searchNotExistingPlace() throws Exception {
-        controller.searchPlace("jasiodöfj", 1, new FragmentHandler<ArrayList<MapSearchResult>>() {
-            @Override
-            public void onResponse(ControllerEvent<ArrayList<MapSearchResult>> controllerEvent) {
-                Assert.assertEquals(EventType.OK, controllerEvent.getType());
-                ArrayList<MapSearchResult> result = controllerEvent.getModel();
-                Assert.assertNotNull(result);
-                Assert.assertTrue(result.isEmpty());
-            }
+        controller.searchPlace("jasiodöfj", 1, controllerEvent -> {
+            Assert.assertEquals(EventType.OK, controllerEvent.getType());
+            ArrayList<MapSearchResult> result = (ArrayList<MapSearchResult>) controllerEvent.getModel();
+            Assert.assertNotNull(result);
+            Assert.assertTrue(result.isEmpty());
         });
     }
 

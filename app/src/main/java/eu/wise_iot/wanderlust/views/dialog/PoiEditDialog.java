@@ -104,7 +104,7 @@ public class PoiEditDialog extends DialogFragment {
             switch (event.getType()) {
                 case OK:
                     poi = (Poi) event.getModel();
-                    DatabaseController.sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
+                    DatabaseController.getInstance().sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI, poi));
                     break;
                 default:
                     Toast.makeText(context, R.string.image_upload_failed, Toast.LENGTH_LONG).show();
@@ -218,16 +218,13 @@ public class PoiEditDialog extends DialogFragment {
             } else {
                 if (publish) {
                     //TODO only uploads first image
-                    controller.uploadImage(new File(this.poi.getImageById(1).getPath()), this.poi, new FragmentHandler() {
-                        @Override
-                        public void onResponse(ControllerEvent controllerEvent) {
-                            switch (controllerEvent.getType()) {
-                                case OK:
-                                    controller.updatePoi(poi, poiHandler);
-                                    break;
-                                default:
-                                    poiHandler.onResponse(new ControllerEvent(EventType.getTypeByCode(500)));
-                            }
+                    controller.uploadImage(new File(this.poi.getImageById(1).getLocalPath()), this.poi, controllerEvent -> {
+                        switch (controllerEvent.getType()) {
+                            case OK:
+                                controller.updatePoi(poi, poiHandler);
+                                break;
+                            default:
+                                poiHandler.onResponse(new ControllerEvent(EventType.getTypeByCode(500)));
                         }
                     });
                 } else {

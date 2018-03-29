@@ -3,13 +3,17 @@ package eu.wise_iot.wanderlust.controllers;
 import android.os.Build;
 import android.util.DisplayMetrics;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -26,10 +30,22 @@ import retrofit2.Response;
  */
 public class LoginController {
 
+    private final UserDao userDao;
+    private final ProfileDao profileDao;
+    private final DatabaseController databaseController;
+    private final ImageController imageController;
+    private final WeatherController weatherController;
+    private final EquipmentController equipmentController;
     /**
      * Create a login contoller
      */
     public LoginController() {
+        userDao = UserDao.getInstance();
+        profileDao = ProfileDao.getInstance();
+        databaseController = DatabaseController.getInstance();
+        imageController = ImageController.getInstance();
+        weatherController = WeatherController.getInstance();
+        equipmentController = EquipmentController.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
@@ -45,20 +61,26 @@ public class LoginController {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && !LoginUser.getCookies().isEmpty()) {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-                    DatabaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
 
+                    databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
+                    weatherController.initKeys();
+                    equipmentController.initEquipment();
+                    User updatedUser = response.body();
+                    User internalUser = userDao.getUser();
+                    if (internalUser == null){
+                        updatedUser.setInternalId(0);
+                        UserDao.getInstance().removeAll();
+                    }else{
+                        updatedUser.setInternalId(internalUser.getInternalId());
+                    }
+                    updatedUser.setPassword(user.getPassword());
 
-                    DatabaseController.userDao.userBox.removeAll();
-                    User newUser = response.body();
-                    newUser.setPassword(user.getPassword());
-                    newUser.setInternalId(0);
-                    DatabaseController.userDao.userBox.put(newUser);
-
-                    getProfile(handler, newUser);
+                    userDao.update(updatedUser);
+                    getProfile(handler, updatedUser);
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
@@ -71,17 +93,27 @@ public class LoginController {
         });
     }
 
-    private void getProfile(FragmentHandler handler, User newUser){
+    private void getProfile(FragmentHandler handler, User user){
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
         Call<Profile> call = service.retrieveProfile();
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if(response.isSuccessful()){
-                    DatabaseController.profileDao.profileBox.removeAll();
-                    response.body().setInternal_id(0);
-                    DatabaseController.profileDao.profileBox.put(response.body());
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), newUser));
+                    Profile internalProfile = profileDao.findOne(Profile_.profile_id, user.getProfile());
+                    Profile updatedProfile = response.body();
+                    if (internalProfile == null){
+                        profileDao.removeAll();
+                        updatedProfile.setInternal_id(0);
+                        profileDao.create(updatedProfile);
+                    }else{
+                        if (updatedProfile.getImagePath() != null){
+                            updatedProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
+                        }
+                        updatedProfile.setInternal_id(internalProfile.getInternal_id());
+                        profileDao.update(updatedProfile);
+                    }
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), user));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
@@ -127,7 +159,13 @@ public class LoginController {
             }
         });
     }
-
+    public File getProfileImage(){
+        Profile profile = profileDao.getProfile();
+        if (profile.getImagePath() != null){
+            return imageController.getImage(profile.getImagePath());
+        }
+        return null;
+    }
     public class EmailBody {
         private String email;
 

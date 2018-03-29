@@ -20,14 +20,11 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
-/**
- * Created by Baris Demirci on 16.01.2018.
- */
 @RunWith(AndroidJUnit4.class)
 public class ProfileFragmentTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> testActivity = new ActivityTestRule<MainActivity>(MainActivity.class);
+    public ActivityTestRule<MainActivity> testActivity = new ActivityTestRule<>(MainActivity.class);
 
     private MainActivity main;
 

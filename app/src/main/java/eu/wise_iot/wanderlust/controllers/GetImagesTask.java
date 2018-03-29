@@ -13,7 +13,6 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.services.ImageService;
-import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -25,6 +24,8 @@ import retrofit2.Response;
 public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<File>> {
 
     private FragmentHandler handler;
+    @SuppressWarnings("FieldCanBeLocal")
+    private ImageController imageController;
     private List<DownloadedImage> downloadedImages = new LinkedList<>();
 
     /**
@@ -41,13 +42,14 @@ public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<Fi
         List<ImageInfo> imageInfos = parameters[0].imageInfos;
         String route = parameters[0].route;
         handler = parameters[0].handler;
-
+        imageController = ImageController.getInstance();
 
         ImageService service = ServiceGenerator.createService(ImageService.class);
 
         List<File> images = new ArrayList<>();
         for(ImageInfo imageInfo : imageInfos){
-            File image = new File(ImageController.picturesDir + "/" + imageInfo.getPath());
+            imageInfo.setLocalDir(route);
+            File image = new File(imageController.getPicturesDir() + "/" + imageInfo.getLocalPath());
             if (!image.exists()) {
                 //Download it!
                 try {
@@ -55,7 +57,7 @@ public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<Fi
                     Response<ResponseBody> response = call.execute();
                     if (response.isSuccessful()) {
                         ResponseBody downloadedImg = response.body();
-                        writeToDisk(downloadedImg, image.getAbsolutePath());
+                        imageController.save(downloadedImg.byteStream(), imageInfo);
                         downloadedImages.add(new DownloadedImage(image, downloadedImg.contentLength(), true));
                         images.add(image);
                     }
@@ -72,56 +74,8 @@ public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<Fi
 
     @Override
     protected void onPostExecute(List<File> images) {
-        DatabaseController.addDownloadedImages(downloadedImages);
+        DatabaseController.getInstance().addDownloadedImages(downloadedImages);
         handler.onResponse(new ControllerEvent<>(EventType.OK, images));
-    }
-
-    /**
-     * Writes a downloaded poi to the phone and names it correctly
-     *
-     * @param body    which represents the image downloaded
-     * @return true if everything went ok
-     */
-    private boolean writeToDisk(ResponseBody body, String path) {
-
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-        try {
-            byte[] fileReader = new byte[4096];
-
-            long fileSizeDownloaded = 0;
-            inputStream = body.byteStream();
-            outputStream = new FileOutputStream(path);
-
-
-            while (true) {
-                int read = inputStream.read(fileReader);
-
-                if (read == -1) {
-                    break;
-                }
-
-                outputStream.write(fileReader, 0, read);
-
-                fileSizeDownloaded += read;
-
-            }
-
-            outputStream.flush();
-            return true;
-        } catch (IOException e) {
-            return false;
-        } finally {
-            try {
-                if (inputStream != null)
-                    inputStream.close();
-
-                if (outputStream != null)
-                    outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
 

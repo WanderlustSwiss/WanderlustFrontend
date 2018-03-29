@@ -1,9 +1,5 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import android.content.Context;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,19 +13,16 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.services.UserTourService;
+import eu.wise_iot.wanderlust.services.TourService;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static eu.wise_iot.wanderlust.models.DatabaseModel.Trip_.userTour;
 
 /**
  * TripDao:
@@ -40,17 +33,29 @@ import static eu.wise_iot.wanderlust.models.DatabaseModel.Trip_.userTour;
 
 
 public class UserTourDao extends DatabaseObjectAbstract {
-    private static UserTourService service;
-    Property columnProperty;
-    private Box<UserTour> routeBox;
+
+    private static class Holder {
+        private static final UserTourDao INSTANCE = new UserTourDao();
+    }
+
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static UserTourDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
+    private static TourService service;
+    private final Box<Tour> routeBox;
+    private final ImageController imageController;
 
     /**
      * Constructor.
      */
 
-    public UserTourDao() {
-        routeBox = DatabaseController.boxStore.boxFor(UserTour.class);
-        if (service == null) service = ServiceGenerator.createService(UserTourService.class);
+    private UserTourDao() {
+        routeBox = BOXSTORE.boxFor(Tour.class);
+        service = ServiceGenerator.createService(TourService.class);
+        imageController = ImageController.getInstance();
     }
 
     public long count() {
@@ -77,7 +82,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @param usertour (required).
      */
-    public UserTour update(UserTour usertour) {
+    public Tour update(Tour usertour) {
         routeBox.put(usertour);
         return usertour;
     }
@@ -88,7 +93,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param handler
      */
 //    public void create(final AbstractModel usertour, final FragmentHandler handler){
-//        Call<UserTour> call = service.createUserTour((UserTour)usertour);
+//        Call<Tour> call = service.createUserTour((UserTour)usertour);
 //        call.enqueue(new Callback<UserTour>() {
 //            @Override
 //            public void onResponse(Call<UserTour> call, Response<UserTour> response) {
@@ -114,13 +119,13 @@ public class UserTourDao extends DatabaseObjectAbstract {
      */
     public void retrieve(final long id, final FragmentHandler handler) {
         final long[] newUserTourID = new long[1];
-        Call<UserTour> call = service.retrieveUserTour(id);
-        call.enqueue(new Callback<UserTour>() {
+        Call<Tour> call = service.retrieveTour(id);
+        call.enqueue(new Callback<Tour>() {
             @Override
-            public void onResponse(Call<UserTour> call, Response<UserTour> response) {
+            public void onResponse(Call<Tour> call, Response<Tour> response) {
                 if (response.isSuccessful()) {
-                        UserTour backendTour = response.body();
-                        routeBox.put(backendTour);
+                        Tour backendTour = response.body();
+                        //routeBox.put(backendTour); wieso in die lokale db einfügen ??
                         newUserTourID[0] = backendTour.getInternal_id();
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendTour));
                 } else {
@@ -129,7 +134,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
 
             @Override
-            public void onFailure(Call<UserTour> call, Throwable t) {
+            public void onFailure(Call<Tour> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
@@ -184,12 +189,12 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param handler
      */
     public void update(int id, final AbstractModel usertour, final FragmentHandler handler) {
-        Call<UserTour> call = service.updateUserTour(id, (UserTour) usertour);
-        call.enqueue(new Callback<UserTour>() {
+        Call<Tour> call = service.updateTour(id, (Tour) usertour);
+        call.enqueue(new Callback<Tour>() {
             @Override
-            public void onResponse(Call<UserTour> call, Response<UserTour> response) {
+            public void onResponse(Call<Tour> call, Response<Tour> response) {
                 if (response.isSuccessful()) {
-                    routeBox.put((UserTour) usertour);
+                    routeBox.put((Tour) usertour);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
@@ -197,7 +202,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
 
             @Override
-            public void onFailure(Call<UserTour> call, Throwable t) {
+            public void onFailure(Call<Tour> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
@@ -210,20 +215,21 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param handler
      */
     public void delete(final AbstractModel usertour, final FragmentHandler handler) {
-        Call<UserTour> call = service.deleteUserTour((UserTour) usertour);
-        call.enqueue(new Callback<UserTour>() {
+        Tour tour = (Tour) usertour;
+        long id = tour.getTour_id();
+        Call<Tour> call = service.deleteTour(id);
+        call.enqueue(new Callback<Tour>() {
             @Override
-            public void onResponse(Call<UserTour> call, Response<UserTour> response) {
+            public void onResponse(Call<Tour> call, Response<Tour> response) {
                 if (response.isSuccessful()) {
-                    routeBox.remove((UserTour) usertour);
+                    routeBox.remove((Tour) usertour);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
-
             @Override
-            public void onFailure(Call<UserTour> call, Throwable t) {
+            public void onFailure(Call<Tour> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
@@ -234,19 +240,19 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @param handler
      */
-    public void retrieveAll(final FragmentHandler handler) {
-        Call<List<UserTour>> call = service.retrieveAllUserTours();
-        call.enqueue(new Callback<List<UserTour>>() {
+    public void retrieveAll(final FragmentHandler handler, int page) {
+        Call<List<Tour>> call = service.retrieveAllTours(page);
+        call.enqueue(new Callback<List<Tour>>() {
             @Override
-            public void onResponse(Call<List<UserTour>> call, Response<List<UserTour>> response) {
+            public void onResponse(Call<List<Tour>> call, Response<List<Tour>> response) {
                 if (response.isSuccessful()) {
-                    List<UserTour> userTours = response.body();
-                    for (UserTour userTour : userTours) {
-                        for (ImageInfo imageInfo : userTour.getImagePaths()) {
-                            String name = userTour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
-                            imageInfo.id = userTour.getTour_id();
-                            imageInfo.path = "tours" + "/" + name;
-
+                    List<Tour> tours = response.body();
+                    for (Tour tour : tours) {
+                        for (ImageInfo imageInfo : tour.getImagePaths()) {
+                            String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
+                            imageInfo.setName(name);
+                            imageInfo.setId(tour.getTour_id());
+                            imageInfo.setLocalDir(imageController.getTourFolder());
                         }
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
@@ -257,7 +263,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
 
             @Override
-            public void onFailure(Call<List<UserTour>> call, Throwable t) {
+            public void onFailure(Call<List<Tour>> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
@@ -272,12 +278,13 @@ public class UserTourDao extends DatabaseObjectAbstract {
     public void downloadImage(final long tour_id, final int image_id, final FragmentHandler handler) {
 
             //Upload image to backend
-            UserTourService service = ServiceGenerator.createService(UserTourService.class);
+            TourService service = ServiceGenerator.createService(TourService.class);
             Call<ResponseBody> call = service.downloadImage(tour_id,image_id);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
+
 
                         //String name = tour_id + "-" + image_id + ".jpg";
 
@@ -307,11 +314,11 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * Writes a downloaded image tour to the disk and names it correctly
      *
      * @param body    which represents the image downloaded
-     * @param userTourId
+     * @param tourId
      * @param imageId
      * @return true if everything went ok
      */
-    private boolean writeToDisk(ResponseBody body, long userTourId, long imageId) {
+    private boolean writeToDisk(ResponseBody body, long tourId, long imageId) {
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
@@ -322,9 +329,9 @@ public class UserTourDao extends DatabaseObjectAbstract {
 
             long fileSizeDownloaded = 0;
 
-            String name = userTourId + "-" + imageId + ".jpg";
+            String name = tourId + "-" + imageId + ".jpg";
             inputStream = body.byteStream();
-            outputStream = new FileOutputStream(ImageController.picturesDir + "/tours/" + userTourId + "-" + imageId + ".jpg");
+            outputStream = new FileOutputStream(imageController.getPicturesDir() + "/tours/" + tourId + "-" + imageId + ".jpg");
 
             while (true) {
                 int read = inputStream.read(fileReader);
@@ -359,7 +366,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
     /**
      * @return
      */
-    public List<UserTour> find() {
+    public List<Tour> find() {
         if (routeBox != null)
             return routeBox.getAll();
         else
@@ -371,15 +378,13 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern  (required) contain the search pattern.
-     * @return UserTour which match to the search pattern in the searched columns
+     * @return Tour which match to the search pattern in the searched columns
      */
-    public UserTour findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Tour findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public UserTour findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Tour findOne(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -388,19 +393,17 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern  (required) contain the search pattern.
-     * @return List<UserTour> which contains the equipements, which match to the search pattern in the searched columns
+     * @return List<Tour> which contains the equipements, which match to the search pattern in the searched columns
      */
-    public List<UserTour> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Tour> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<UserTour> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Tour> find(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<UserTour> find(Property searchedColumn, boolean searchPattern) {
+    public List<Tour> find(Property searchedColumn, boolean searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
@@ -411,7 +414,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
 
     /**
      * delete:
-     * Deleting a UserTour which matches the given pattern
+     * Deleting a Tour which matches the given pattern
      *
      * @param searchedColumn
      * @param searchPattern

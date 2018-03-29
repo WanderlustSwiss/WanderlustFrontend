@@ -26,11 +26,7 @@ public class FileHandler {
     public static boolean canWriteOnExternalStorage() {
         // get the state of your external storage
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            // if storage is mounted return true
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     private void createFileInExternalStorage() {

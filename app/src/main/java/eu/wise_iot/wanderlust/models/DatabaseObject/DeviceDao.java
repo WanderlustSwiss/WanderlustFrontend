@@ -6,6 +6,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Device;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 
 /**
@@ -17,15 +18,24 @@ import io.objectbox.Property;
 
 public class DeviceDao extends DatabaseObjectAbstract {
 
-    Property columnProperty;
-    private Box<Device> deviceBox;
+    private static class Holder {
+        private static final DeviceDao INSTANCE = new DeviceDao();
+    }
+
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static DeviceDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
+    private final Box<Device> deviceBox;
 
     /**
      * Constructor.
      */
 
-    public DeviceDao() {
-        deviceBox = DatabaseController.boxStore.boxFor(Device.class);
+    private DeviceDao() {
+        deviceBox = BOXSTORE.boxFor(Device.class);
     }
 
     /**
@@ -68,13 +78,11 @@ public class DeviceDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Device which match to the search pattern in the searched columns
      */
-    public Device findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Device findOne(Property searchedColumn, String searchPattern) {
         return deviceBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Device findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Device findOne(Property searchedColumn, long searchPattern) {
         return deviceBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -85,13 +93,11 @@ public class DeviceDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Device> which contains the users, who match to the search pattern in the searched columns
      */
-    public List<Device> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Device> find(Property searchedColumn, String searchPattern) {
         return deviceBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Device> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Device> find(Property searchedColumn, long searchPattern) {
         return deviceBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

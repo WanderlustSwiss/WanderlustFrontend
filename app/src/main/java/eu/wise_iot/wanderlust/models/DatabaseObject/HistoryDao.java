@@ -5,6 +5,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.History;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
 
 /**
@@ -15,16 +16,23 @@ import io.objectbox.Property;
  */
 
 public class HistoryDao {
+    private static class Holder {
+        private static final HistoryDao INSTANCE = new HistoryDao();
+    }
 
-    Property columnProperty;
+    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
+    public static HistoryDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
     private Box<History> historyBox;
 
     /**
      * Constructor.
      */
 
-    public HistoryDao() {
-        historyBox = DatabaseController.boxStore.boxFor(History.class);
+    private HistoryDao() {
+        historyBox = BOXSTORE.boxFor(History.class);
     }
 
     public long count() {

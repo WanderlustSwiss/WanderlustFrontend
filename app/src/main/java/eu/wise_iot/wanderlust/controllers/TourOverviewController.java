@@ -1,8 +1,11 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.util.Log;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
@@ -14,71 +17,88 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
  * @license MIT
  */
 public class TourOverviewController {
+
+    private static final String TAG = "TourOverviewController";
+    private final UserTourDao userTourDao;
+    private FavoriteDao favoriteDao;
+    private final DifficultyTypeDao difficultyType;
+    private final ImageController imageController;
+
+    public TourOverviewController(){
+        userTourDao = UserTourDao.getInstance();
+        favoriteDao = FavoriteDao.getInstance();
+        favoriteDao = FavoriteDao.getInstance();
+        difficultyType = DifficultyTypeDao.getInstance();
+        imageController = ImageController.getInstance();
+    }
+
     /**
      * get all required data for the view
      * @param handler
+     * @param page
      */
-    public static void getAllTours(FragmentHandler handler) {
-        UserTourDao userTourDao = new UserTourDao();
-        userTourDao.retrieveAll(handler);
+    public void getAllTours(FragmentHandler handler, int page) {
+        userTourDao.retrieveAll(handler, page);
     }
+
     /**
      * get all Favorites for the view
      * @param handler
      */
-//    public static void getAllFavorites(FragmentHandler handler) {
-//        UserTourDao userTourDao = new UserTourDao();
-//        userTourDao.retrieveAll(handler);
-//    }
+    public void getAllFavoriteTours(FragmentHandler handler) {
+        favoriteDao.retrieveAllFavoriteTours(handler);
+    }
     /**
      * get all tours out of db
      *
      * @return List of tours
      */
-    public UserTour getDataView(int tourID) {
-
-        UserTourDao userTourDao = new UserTourDao();
+    public Tour getDataView(int tourID) {
         return userTourDao.find().get(tourID);
     }
     /**
      * get thumbnail of each tour
      *
      */
-    public static void downloadThumbnail(long tourID, int image_id, FragmentHandler handler) {
-        DatabaseController.userTourDao.downloadImage(tourID, image_id, handler);
+    public void downloadThumbnail(long tourID, int image_id, FragmentHandler handler) {
+        userTourDao.downloadImage(tourID, image_id, handler);
     }
     /**
      * get all Favorites
      *
      */
-    public static void downloadFavorites(FragmentHandler handler) {
-        FavoriteDao favoriteDao = new FavoriteDao();
-        favoriteDao.retrievAllFavorites(handler);
+    public void downloadFavorites(FragmentHandler handler) {
+        favoriteDao.retrieveAllFavorites(handler);
+    }
+    /**
+     * get all difficulty types
+     *
+     */
+    public void downloadDifficultyTypes() {
+        difficultyType.retrive();
     }
     /**
      * get all Favorites
      *
      */
-    public static void setFavorite(UserTour tour, FragmentHandler handler) {
-        FavoriteDao favoriteDao = new FavoriteDao();
+    public void setFavorite(Tour tour, FragmentHandler handler) {
         favoriteDao.create(tour,handler);
     }
     /**
      * get all Favorites
      *
      */
-    public static void deleteFavorite(long favorite_id, FragmentHandler handler) {
-        FavoriteDao favoriteDao = new FavoriteDao();
+    public void deleteFavorite(long favorite_id, FragmentHandler handler) {
         favoriteDao.delete(favorite_id,handler);
     }
 
     public long getTourFavoriteId(long id){
-        FavoriteDao favoriteDao = new FavoriteDao();
         try {
             Favorite fav = favoriteDao.findOne(Favorite_.tour, id);
             if(fav != null) return fav.getFav_id();
-        } catch (Exception e){}
+        } catch (Exception e){
+            Log.d(TAG, e.getMessage());
+        }
         return -1;
     }
-
 }

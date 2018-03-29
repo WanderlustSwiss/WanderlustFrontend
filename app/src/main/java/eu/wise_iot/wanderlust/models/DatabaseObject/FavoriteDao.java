@@ -1,21 +1,23 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
+import android.util.Log;
+
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
-import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.UserTour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.FavoriteService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.objectbox.Property;
-import io.objectbox.query.Query;
-import io.objectbox.query.QueryBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,14 +31,25 @@ import retrofit2.Response;
 
 public class FavoriteDao extends DatabaseObjectAbstract{
 
-    private Box<Favorite> favoriteBox;
-    private Query<Favorite> favoriteQuery;
-    private QueryBuilder<Favorite> favoriteQueryBuilder;
-    private FavoriteService service;
+    private static class Holder {
+        private static final FavoriteDao INSTANCE = new FavoriteDao();
+    }
 
-    public FavoriteDao(){
-        this.favoriteBox = DatabaseController.boxStore.boxFor(Favorite.class);
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final String TAG = "FavoriteDao";
+
+    public static FavoriteDao getInstance(){
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
+
+    private final Box<Favorite> favoriteBox;
+    private final FavoriteService service;
+    private final ImageController imageController;
+
+    private FavoriteDao(){
+        favoriteBox = BOXSTORE.boxFor(Favorite.class);
         service = ServiceGenerator.createService(FavoriteService.class);
+        imageController = ImageController.getInstance();
     }
 
     /**
@@ -44,7 +57,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      *
      * //@param handler
      */
-    public void create(final UserTour tour, final FragmentHandler handler) {
+    public void create(Tour tour, final FragmentHandler handler) {
         Call<Favorite> call = service.createFavorite(tour);
         call.enqueue(new Callback<Favorite>() {
             @Override
@@ -64,13 +77,44 @@ public class FavoriteDao extends DatabaseObjectAbstract{
             }
         });
     }
+    /**
+     * Retriev all favorite tours
+     *
+     * @param handler
+     */
+    public void retrieveAllFavoriteTours(final FragmentHandler handler) {
+        Call<List<Tour>> call = service.retrieveAllFavoriteTours();
+        call.enqueue(new Callback<List<Tour>>() {
+            @Override
+            public void onResponse(Call<List<Tour>> call, retrofit2.Response<List<Tour>> response) {
+                if (response.isSuccessful()) {
+                    List<Tour> tours = response.body();
+                    for (Tour tour : tours) {
+                        for (ImageInfo imageInfo : tour.getImagePaths()) {
+                            String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
+                            imageInfo.setName(name);
+                            imageInfo.setId(tour.getTour_id());
+                            imageInfo.setLocalDir(imageController.getTourFolder());
+                        }
+                    }
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Tour>> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
 
     /**
      * Insert a favorite into the database
      *
      * @param handler
      */
-    public void retrievAllFavorites(final FragmentHandler handler) {
+    public void retrieveAllFavorites(final FragmentHandler handler) {
         Call<List<Favorite>> call = service.retrievAllFavorites();
         call.enqueue(new Callback<List<Favorite>>() {
             @Override
@@ -99,21 +143,24 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param favorite_id
      * @param handler
      */
-    public void delete(final Long favorite_id, final FragmentHandler handler) {
+    public void delete(long favorite_id, final FragmentHandler handler) {
         Call<Favorite> call = service.deleteFavorite(favorite_id);
         call.enqueue(new Callback<Favorite>() {
             @Override
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
                 if (response.isSuccessful()) {
                     try {
-                        Favorite favorite = DatabaseController.favoriteDao.findOne(Favorite_.fav_id, favorite_id);
-                        if (favorite != null){
+                        Favorite favorite = findOne(Favorite_.fav_id, favorite_id);
+                        if (favorite != null) {
                             favoriteBox.remove(favorite.getInternal_id());
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         }
-                    } catch (Exception e){}
-                } else
+                    } catch (Exception e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+                } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
             }
 
             @Override
@@ -165,13 +212,11 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return Favorite which match to the search pattern in the searched columns
      */
-    public Favorite findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Favorite findOne(Property searchedColumn, String searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Favorite findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Favorite findOne(Property searchedColumn, long searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -182,13 +227,11 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Favorite> which contains the equipments, which match to the search pattern in the searched columns
      */
-    public List<Favorite> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Favorite> find(Property searchedColumn, String searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Favorite> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Favorite> find(Property searchedColumn, long searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
