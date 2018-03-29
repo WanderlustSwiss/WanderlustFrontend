@@ -35,6 +35,28 @@ Latest documentation: [API JavaDoc](http://86.119.40.34/Frontend_Android_App/Doc
 ## Releases
 Released .apk packages: [Browse Packages](http://86.119.40.34/Frontend_Android_App)
 
+### Release 0.4
+The release tour, poi, maps and profile changes
+
+**Package**
+[wanderlust-app-0.4.0-17843.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.4.0-17843.apk)
+
+**Date**
+29.3.2018
+
+**Features**
+This release includes the following features:
+  - Profile Lists: POI, Favorite, Saved Tours
+  - Public transport layer
+  - SAC hut layer
+  - Paged Tour Overview with favorites
+  - Recommended Equipment
+  - Tour weather
+  - Elevation profile
+  - Hashtag search of POI's
+  - Tour rating
+  - Startup Guide
+
 ### Release 0.3
 The release contains tours, passwort reset, poi, change map type and profile
 
