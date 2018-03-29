@@ -373,7 +373,7 @@ public class TourFragment extends Fragment {
                float rateAvgRound = Float.parseFloat(String.format("%.1f", rateAvg));
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
-               tourRatingInNumbers.setText(0);
+               tourRatingInNumbers.setText(String.valueOf(0));
            }
         });
 
