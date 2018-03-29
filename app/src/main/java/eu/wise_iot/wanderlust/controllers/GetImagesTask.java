@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.media.Image;
 import android.os.AsyncTask;
 
 import java.io.File;
@@ -14,7 +13,6 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.services.ImageService;
-import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import okhttp3.ResponseBody;
 import retrofit2.Call;

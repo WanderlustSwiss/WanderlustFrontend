@@ -193,15 +193,12 @@ public class TourFragment extends Fragment {
         selectedDateTime = new DateTime(currentCalendar);
         selectedDateTime = DateTime.now();
         initializeControls(view);
-        tourController.loadGeoData(new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                if (controllerEvent.getType() == EventType.OK) {
-                    tour = (Tour) controllerEvent.getModel();
-                    setupEquipment(tour);
-                    setupWeather();
-                    drawChart();
-                }
+        tourController.loadGeoData(controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                tour = (Tour) controllerEvent.getModel();
+                setupEquipment(tour);
+                setupWeather();
+                drawChart();
             }
         });
         return view;
@@ -285,13 +282,10 @@ public class TourFragment extends Fragment {
                 PorterDuff.Mode.SRC_ATOP);
 
 
-        tourController.getRating(tour, new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        tourRating.setRating((float) controllerEvent.getModel());
-                }
+        tourController.getRating(tour, controllerEvent -> {
+            switch (controllerEvent.getType()) {
+                case OK:
+                    tourRating.setRating((float) controllerEvent.getModel());
             }
         });
 
@@ -454,15 +448,12 @@ public class TourFragment extends Fragment {
         };
 
         //date picker listener, which triggers time picker
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
+        DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
+            selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
 
-                TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
-                        0, 0, true);
-                tdialog.show();
-            }
+            TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
+                    0, 0, true);
+            tdialog.show();
         };
 
         //button click listener to select day, which triggers date picker

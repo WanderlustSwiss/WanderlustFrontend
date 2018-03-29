@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,7 +17,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import android.location.Address;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
@@ -77,86 +75,78 @@ public class MapController {
         RequestQueue queue = Volley.newRequestQueue(fragment.getActivity());
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String result) {
-                        JsonParser parser = new JsonParser();
-                        JsonElement json = parser.parse(result);
-                        JsonArray jResults = json.getAsJsonArray();
-                        List<MapSearchResult> list = new ArrayList<>(jResults.size());
-                        for (int i = 0; i < jResults.size(); i++) {
-                            JsonObject jResult = jResults.get(i).getAsJsonObject();
-                            MapSearchResult gAddress = new MapSearchResult();
-                            gAddress.setLatitued(jResult.get("lat").getAsDouble());
-                            gAddress.setLongitude(jResult.get("lon").getAsDouble());
+                result -> {
+                    JsonParser parser = new JsonParser();
+                    JsonElement json = parser.parse(result);
+                    JsonArray jResults = json.getAsJsonArray();
+                    List<MapSearchResult> list = new ArrayList<>(jResults.size());
+                    for (int i = 0; i < jResults.size(); i++) {
+                        JsonObject jResult = jResults.get(i).getAsJsonObject();
+                        MapSearchResult gAddress = new MapSearchResult();
+                        gAddress.setLatitued(jResult.get("lat").getAsDouble());
+                        gAddress.setLongitude(jResult.get("lon").getAsDouble());
 
 
-                            JsonObject jAddress = jResult.get("address").getAsJsonObject();
+                        JsonObject jAddress = jResult.get("address").getAsJsonObject();
 
-                            if (jAddress.has("peak")) {
-                                gAddress.setLocality(jAddress.get("peak").getAsString());
-                            } else if (jAddress.has("river")) {
-                                gAddress.setLocality(jAddress.get("river").getAsString());
-                            } else if (jAddress.has("water")) {
-                                gAddress.setLocality(jAddress.get("water").getAsString());
-                            } else if (jAddress.has("hamlet")) {
-                                gAddress.setLocality(jAddress.get("hamlet").getAsString());
-                            } else if (jAddress.has("city")) {
-                                gAddress.setLocality(jAddress.get("city").getAsString());
-                            } else if (jAddress.has("town")) {
-                                gAddress.setLocality(jAddress.get("town").getAsString());
-                            } else if (jAddress.has("village")) {
-                                gAddress.setLocality(jAddress.get("village").getAsString());
-                            } else if (jAddress.has("state")) {
-                                gAddress.setLocality(jAddress.get("state").getAsString());
-                            }
+                        if (jAddress.has("peak")) {
+                            gAddress.setLocality(jAddress.get("peak").getAsString());
+                        } else if (jAddress.has("river")) {
+                            gAddress.setLocality(jAddress.get("river").getAsString());
+                        } else if (jAddress.has("water")) {
+                            gAddress.setLocality(jAddress.get("water").getAsString());
+                        } else if (jAddress.has("hamlet")) {
+                            gAddress.setLocality(jAddress.get("hamlet").getAsString());
+                        } else if (jAddress.has("city")) {
+                            gAddress.setLocality(jAddress.get("city").getAsString());
+                        } else if (jAddress.has("town")) {
+                            gAddress.setLocality(jAddress.get("town").getAsString());
+                        } else if (jAddress.has("village")) {
+                            gAddress.setLocality(jAddress.get("village").getAsString());
+                        } else if (jAddress.has("state")) {
+                            gAddress.setLocality(jAddress.get("state").getAsString());
+                        }
 
-                            if (jResult.has("geojson") && !jResult.get("osm_type").getAsString().equals("node")) {
-                                JsonObject jPolygonPointsObj = jResult.get("geojson").getAsJsonObject();
-                                if (jPolygonPointsObj.get("type").getAsString().equals("MultiPolygon")) {
-                                    JsonArray jPolygonPoints = jPolygonPointsObj.get("coordinates").getAsJsonArray();
-                                    for (int k = 0; k < jPolygonPoints.size(); ++k) { // go through polygons
-                                        JsonArray polygon = jPolygonPoints.get(k).getAsJsonArray();
-                                        for (int j = 0; j < polygon.size(); ++j) { // go through multiPolygons
-                                            JsonArray subPolygon = polygon.get(j).getAsJsonArray();
-                                            ArrayList<GeoPoint> polygonPoints = new ArrayList<>();
-                                            for (int v = 0; v < subPolygon.size(); ++v) { // go through cordinates
-                                                JsonArray jCoords = subPolygon.get(v).getAsJsonArray();
-                                                double lon = jCoords.get(0).getAsDouble();
-                                                double lat = jCoords.get(1).getAsDouble();
-                                                GeoPoint p = new GeoPoint(lat, lon);
-                                                polygonPoints.add(p);
-                                            }
-                                            gAddress.setPolygon(polygonPoints);
+                        if (jResult.has("geojson") && !jResult.get("osm_type").getAsString().equals("node")) {
+                            JsonObject jPolygonPointsObj = jResult.get("geojson").getAsJsonObject();
+                            if (jPolygonPointsObj.get("type").getAsString().equals("MultiPolygon")) {
+                                JsonArray jPolygonPoints = jPolygonPointsObj.get("coordinates").getAsJsonArray();
+                                for (int k = 0; k < jPolygonPoints.size(); ++k) { // go through polygons
+                                    JsonArray polygon = jPolygonPoints.get(k).getAsJsonArray();
+                                    for (int j = 0; j < polygon.size(); ++j) { // go through multiPolygons
+                                        JsonArray subPolygon = polygon.get(j).getAsJsonArray();
+                                        ArrayList<GeoPoint> polygonPoints = new ArrayList<>();
+                                        for (int v = 0; v < subPolygon.size(); ++v) { // go through cordinates
+                                            JsonArray jCoords = subPolygon.get(v).getAsJsonArray();
+                                            double lon = jCoords.get(0).getAsDouble();
+                                            double lat = jCoords.get(1).getAsDouble();
+                                            GeoPoint p = new GeoPoint(lat, lon);
+                                            polygonPoints.add(p);
                                         }
+                                        gAddress.setPolygon(polygonPoints);
                                     }
-
-                                } else if (jPolygonPointsObj.get("type").getAsString().equals("Polygon")) {
-                                    ArrayList<GeoPoint> polygonPoints = new ArrayList<>();
-                                    JsonArray jPolygonPoints = jPolygonPointsObj.get("coordinates").getAsJsonArray().get(0).getAsJsonArray();
-                                    for (int j = 0; j < jPolygonPoints.size(); j++) {
-                                        JsonArray jCoords = jPolygonPoints.get(j).getAsJsonArray();
-                                        double lon = jCoords.get(0).getAsDouble();
-                                        double lat = jCoords.get(1).getAsDouble();
-                                        GeoPoint p = new GeoPoint(lat, lon);
-                                        polygonPoints.add(p);
-                                    }
-                                    gAddress.setPolygon(polygonPoints);
                                 }
 
-
+                            } else if (jPolygonPointsObj.get("type").getAsString().equals("Polygon")) {
+                                ArrayList<GeoPoint> polygonPoints = new ArrayList<>();
+                                JsonArray jPolygonPoints = jPolygonPointsObj.get("coordinates").getAsJsonArray().get(0).getAsJsonArray();
+                                for (int j = 0; j < jPolygonPoints.size(); j++) {
+                                    JsonArray jCoords = jPolygonPoints.get(j).getAsJsonArray();
+                                    double lon = jCoords.get(0).getAsDouble();
+                                    double lat = jCoords.get(1).getAsDouble();
+                                    GeoPoint p = new GeoPoint(lat, lon);
+                                    polygonPoints.add(p);
+                                }
+                                gAddress.setPolygon(polygonPoints);
                             }
 
-                            list.add(gAddress);
+
                         }
-                        handler.onResponse(new ControllerEvent(EventType.OK, list));
+
+                        list.add(gAddress);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(fragment.getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
-            }
-        });
+                    handler.onResponse(new ControllerEvent(EventType.OK, list));
+                }, error -> Toast.makeText(fragment.getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show());
 
         queue.add(stringRequest);
 
@@ -170,15 +160,15 @@ public class MapController {
             @Override
             public void onResponse(@NonNull Call<List<Poi>> call, @NonNull retrofit2.Response<List<Poi>> response) {
                 if (response.isSuccessful()) {
-                    fragmentHandler.onResponse(new ControllerEvent<List<Poi>>(EventType.getTypeByCode(response.code()), response.body()));
+                    fragmentHandler.onResponse(new ControllerEvent<>(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
-                    fragmentHandler.onResponse(new ControllerEvent<List<Poi>>(EventType.getTypeByCode(response.code())));
+                    fragmentHandler.onResponse(new ControllerEvent<>(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Poi>> call, @NonNull Throwable t) {
-                fragmentHandler.onResponse(new ControllerEvent<List<Poi>>(EventType.NETWORK_ERROR));
+                fragmentHandler.onResponse(new ControllerEvent<>(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -190,12 +180,12 @@ public class MapController {
             @Override
             public void onResponse(@NonNull Call<List<HashtagResult>> call, @NonNull retrofit2.Response<List<HashtagResult>> response) {
                 int x = 3;
-                fragmentHandler.onResponse(new ControllerEvent<List<HashtagResult>>(EventType.getTypeByCode(response.code()), response.body()));
+                fragmentHandler.onResponse(new ControllerEvent<>(EventType.getTypeByCode(response.code()), response.body()));
             }
 
             @Override
             public void onFailure(@NonNull Call<List<HashtagResult>> call, @NonNull Throwable t) {
-                fragmentHandler.onResponse(new ControllerEvent<List<HashtagResult>>(EventType.NETWORK_ERROR));
+                fragmentHandler.onResponse(new ControllerEvent<>(EventType.NETWORK_ERROR));
             }
         });
 
@@ -209,35 +199,27 @@ public class MapController {
 
         RequestQueue queue = Volley.newRequestQueue(fragment.getActivity());
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
-                JsonArray jRecords = jsonObject.get("records").getAsJsonArray();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
+            JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
+            JsonArray jRecords = jsonObject.get("records").getAsJsonArray();
 
-                List<PublicTransportPoint> publicTransportPoints = new ArrayList<>(jRecords.size());
+            List<PublicTransportPoint> publicTransportPoints = new ArrayList<>(jRecords.size());
 
-                for (int i = 0; i < jRecords.size(); i++) {
-                    JsonObject jField = jRecords.get(i).getAsJsonObject().get("fields").getAsJsonObject();
-                    String busStopDescription = jField.get("name").getAsString();
-                    JsonArray jGeoPoints = jField.get("geopos").getAsJsonArray();
-                    GeoPoint geoPoint = new GeoPoint(jGeoPoints.get(0).getAsDouble(), jGeoPoints.get(1).getAsDouble());
-                    int id = jField.get("nummer").getAsInt();
-                    PublicTransportPoint gPublicTransportPoint = new PublicTransportPoint(geoPoint, busStopDescription, id);
+            for (int i = 0; i < jRecords.size(); i++) {
+                JsonObject jField = jRecords.get(i).getAsJsonObject().get("fields").getAsJsonObject();
+                String busStopDescription = jField.get("name").getAsString();
+                JsonArray jGeoPoints = jField.get("geopos").getAsJsonArray();
+                GeoPoint geoPoint = new GeoPoint(jGeoPoints.get(0).getAsDouble(), jGeoPoints.get(1).getAsDouble());
+                int id = jField.get("nummer").getAsInt();
+                PublicTransportPoint gPublicTransportPoint = new PublicTransportPoint(geoPoint, busStopDescription, id);
 
-                    publicTransportPoints.add(gPublicTransportPoint);
-                }
-                handler.onResponse(new ControllerEvent<List<PublicTransportPoint>>(EventType.OK, publicTransportPoints));
-
-
-
+                publicTransportPoints.add(gPublicTransportPoint);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                handler.onResponse(new ControllerEvent<List<PublicTransportPoint>>(EventType.NETWORK_ERROR));
-            }
-        });
+            handler.onResponse(new ControllerEvent<>(EventType.OK, publicTransportPoints));
+
+
+
+        }, error -> handler.onResponse(new ControllerEvent<List<PublicTransportPoint>>(EventType.NETWORK_ERROR)));
 
         queue.add(stringRequest);
 
@@ -250,15 +232,15 @@ public class MapController {
             @Override
             public void onResponse(@NonNull Call<List<GeoObject>> call, @NonNull retrofit2.Response<List<GeoObject>> response) {
                 if (response.isSuccessful()) {
-                    fragmentHandler.onResponse(new ControllerEvent<List<GeoObject>>(EventType.getTypeByCode(response.code()), response.body()));
+                    fragmentHandler.onResponse(new ControllerEvent<>(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
-                    fragmentHandler.onResponse(new ControllerEvent<List<GeoObject>>(EventType.getTypeByCode(response.code())));
+                    fragmentHandler.onResponse(new ControllerEvent<>(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<GeoObject>> call, @NonNull Throwable t) {
-                fragmentHandler.onResponse(new ControllerEvent<List<GeoObject>>(EventType.NETWORK_ERROR));
+                fragmentHandler.onResponse(new ControllerEvent<>(EventType.NETWORK_ERROR));
             }
         });
     }

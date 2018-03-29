@@ -2,13 +2,10 @@ package eu.wise_iot.wanderlust.controllers;
 
 
 import android.content.Context;
-import android.content.Intent;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
@@ -51,11 +48,7 @@ public class PoiController {
      * @return a specific poi type
      */
     public PoiType getType(long poit_id) {
-        try {
-            return poiTypeDao.findOne(PoiType_.poit_id, poit_id);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            return null;
-        }
+        return poiTypeDao.findOne(PoiType_.poit_id, poit_id);
     }
 
 

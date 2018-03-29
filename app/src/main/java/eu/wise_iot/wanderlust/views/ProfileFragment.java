@@ -30,9 +30,6 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
-import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
-import eu.wise_iot.wanderlust.views.adapters.ProfileTripListAdapter;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
@@ -131,15 +128,12 @@ public class ProfileFragment extends Fragment {
         }
 
         //edit profile button_white
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ProfileEditFragment profileEditFragment = ProfileEditFragment.newInstance();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, profileEditFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
+        editProfile.setOnClickListener(v -> {
+            ProfileEditFragment profileEditFragment = ProfileEditFragment.newInstance();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, profileEditFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 
@@ -212,47 +206,44 @@ public class ProfileFragment extends Fragment {
     public void setupFavorites(View view) {
 
         ProfileFragment fragment = this;
-        profileController.getFavorites(new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                switch (controllerEvent.getType()){
-                    case OK:
+        profileController.getFavorites(controllerEvent -> {
+            switch (controllerEvent.getType()){
+                case OK:
 
-                        list = (List) controllerEvent.getModel();
+                    list = (List) controllerEvent.getModel();
 
-                        if (list != null && list.size() > 0) {
+                    if (list != null && list.size() > 0) {
 
-                            //set adapter
-                            ProfileFavoritesListAdapter adapter =
-                                    new ProfileFavoritesListAdapter(getActivity(),
-                                            R.layout.fragment_profile_list_favorites,
-                                            R.id.ListFavTitle,
-                                            list, fragment);
+                        //set adapter
+                        ProfileFavoritesListAdapter adapter =
+                                new ProfileFavoritesListAdapter(getActivity(),
+                                        R.layout.fragment_profile_list_favorites,
+                                        R.id.ListFavTitle,
+                                        list, fragment);
 
-                            listView.setAdapter(adapter);
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Tour tour = (Tour) listView.getItemAtPosition(position);
-                                    TourFragment tourFragment = TourFragment.newInstance(tour);
-                                    getFragmentManager().beginTransaction()
-                                                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                                                        .addToBackStack(Constants.TOUR_FRAGMENT)
-                                                        .commit();
-                                }
-                            });
+                        listView.setAdapter(adapter);
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view1, int position, long id) {
+                                Tour tour = (Tour) listView.getItemAtPosition(position);
+                                TourFragment tourFragment = TourFragment.newInstance(tour);
+                                getFragmentManager().beginTransaction()
+                                                    .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                                                    .addToBackStack(Constants.TOUR_FRAGMENT)
+                                                    .commit();
+                            }
+                        });
 
-                        } else {
+                    } else {
 
-                            list = null;
-                            listView.setAdapter(null);
-                            Toast.makeText(getActivity(), R.string.no_favorites, Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    default:
-                        Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
-                        break;
-                }
+                        list = null;
+                        listView.setAdapter(null);
+                        Toast.makeText(getActivity(), R.string.no_favorites, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                default:
+                    Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                    break;
             }
         });
     }
@@ -269,19 +260,16 @@ public class ProfileFragment extends Fragment {
             List<Trip> trips = list;
             list.clear();
             for(Trip trip : trips){
-                profileController.getTourToTrip(trip, new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        switch (controllerEvent.getType()){
-                            case OK:
-                                if(controllerEvent.getModel() != null){
-                                    Tour tour = (Tour) controllerEvent.getModel();
-                                    list.add(tour);
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                profileController.getTourToTrip(trip, controllerEvent -> {
+                    switch (controllerEvent.getType()){
+                        case OK:
+                            if(controllerEvent.getModel() != null){
+                                Tour tour = (Tour) controllerEvent.getModel();
+                                list.add(tour);
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 });
                 Toast.makeText(getActivity(), String.valueOf(list.size()), Toast.LENGTH_SHORT).show();
@@ -298,16 +286,13 @@ public class ProfileFragment extends Fragment {
                             list, this);
 
             listView.setAdapter(adapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Tour tour = (Tour) listView.getItemAtPosition(position);
-                    TourFragment tourFragment = TourFragment.newInstance(tour);
-                    getFragmentManager().beginTransaction()
-                                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                                        .addToBackStack(Constants.TOUR_FRAGMENT)
-                                        .commit();
-                }
+            listView.setOnItemClickListener((parent, view1, position, id) -> {
+                Tour tour = (Tour) listView.getItemAtPosition(position);
+                TourFragment tourFragment = TourFragment.newInstance(tour);
+                getFragmentManager().beginTransaction()
+                                    .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                                    .addToBackStack(Constants.TOUR_FRAGMENT)
+                                    .commit();
             });
 
         } else {
@@ -340,13 +325,10 @@ public class ProfileFragment extends Fragment {
                             list, this);
 
             listView.setAdapter(adapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Poi poi = (Poi) listView.getItemAtPosition(position);
-                    PoiViewDialog viewDialog = PoiViewDialog.newInstance(poi);
-                    viewDialog.show(getFragmentManager(), "POI");
-                }
+            listView.setOnItemClickListener((parent, view1, position, id) -> {
+                Poi poi = (Poi) listView.getItemAtPosition(position);
+                PoiViewDialog viewDialog = PoiViewDialog.newInstance(poi);
+                viewDialog.show(getFragmentManager(), "POI");
             });
 
         } else {
@@ -379,16 +361,13 @@ public class ProfileFragment extends Fragment {
                             list, this);
 
             listView.setAdapter(adapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Tour tour = (Tour) listView.getItemAtPosition(position);
-                    TourFragment tourFragment = TourFragment.newInstance(tour);
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                            .addToBackStack(Constants.TOUR_FRAGMENT)
-                            .commit();
-                }
+            listView.setOnItemClickListener((parent, view1, position, id) -> {
+                Tour tour = (Tour) listView.getItemAtPosition(position);
+                TourFragment tourFragment = TourFragment.newInstance(tour);
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                        .addToBackStack(Constants.TOUR_FRAGMENT)
+                        .commit();
             });
 
         } else {

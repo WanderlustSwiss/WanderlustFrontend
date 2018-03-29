@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
+import android.util.Log;
+
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -34,6 +36,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
     }
 
     private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final String TAG = "FavoriteDao";
 
     public static FavoriteDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
@@ -148,13 +151,16 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                 if (response.isSuccessful()) {
                     try {
                         Favorite favorite = findOne(Favorite_.fav_id, favorite_id);
-                        if (favorite != null){
+                        if (favorite != null) {
                             favoriteBox.remove(favorite.getInternal_id());
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         }
-                    } catch (Exception e){}
-                } else
+                    } catch (Exception e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+                } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
             }
 
             @Override
@@ -206,13 +212,11 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return Favorite which match to the search pattern in the searched columns
      */
-    public Favorite findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Favorite findOne(Property searchedColumn, String searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Favorite findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Favorite findOne(Property searchedColumn, long searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -223,13 +227,11 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Favorite> which contains the equipments, which match to the search pattern in the searched columns
      */
-    public List<Favorite> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Favorite> find(Property searchedColumn, String searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Favorite> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Favorite> find(Property searchedColumn, long searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

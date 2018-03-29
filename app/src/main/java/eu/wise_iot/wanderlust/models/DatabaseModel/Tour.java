@@ -2,10 +2,8 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 
 import org.osmdroid.util.GeoPoint;
 
-import java.io.File;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;

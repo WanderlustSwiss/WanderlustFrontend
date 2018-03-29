@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.services;
 
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import retrofit2.Call;

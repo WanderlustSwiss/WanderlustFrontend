@@ -8,7 +8,6 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;

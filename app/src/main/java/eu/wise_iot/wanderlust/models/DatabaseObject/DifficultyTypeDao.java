@@ -76,11 +76,11 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return DifficultyType which match to the search pattern in the searched columns
      */
-    public DifficultyType findOne(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public DifficultyType findOne(Property searchedColumn, String searchPattern) {
         return difficultyTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public DifficultyType findOne(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public DifficultyType findOne(Property searchedColumn, long searchPattern) {
         return difficultyTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 }

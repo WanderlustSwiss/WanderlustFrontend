@@ -133,26 +133,18 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
                 tripImage.setImageResource(R.drawable.example_image);
             }
 
-            favIcon.setOnClickListener(e -> {
-
-                tourController.unsetFavorite(new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        EventType type = controllerEvent.getType();
-                        switch (type) {
-                            case OK:
-                                View v = profileFragment.getView();
-                                profileFragment.setupFavorites(v);
-                                break;
-                            default:
-                                Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-                    }
-
-                });
-
-            });
+            favIcon.setOnClickListener(e -> tourController.unsetFavorite(controllerEvent -> {
+                EventType type = controllerEvent.getType();
+                switch (type) {
+                    case OK:
+                        View v = profileFragment.getView();
+                        profileFragment.setupFavorites(v);
+                        break;
+                    default:
+                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }));
 
         }
         return convertView;

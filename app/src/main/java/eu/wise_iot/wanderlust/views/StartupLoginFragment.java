@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,24 +151,21 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
      * initializes the actions of all controlls of the fragment
      */
     private void initActionControls() {
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnLogin.setOnClickListener(v -> {
 
-                //Disable LoginButton until request is complete
-                btnLogin.setEnabled(false);
+            //Disable LoginButton until request is complete
+            btnLogin.setEnabled(false);
 
-                loginUser = new LoginUser(
-                        nicknameEmailTextfield.getText().toString(),
-                        passwordTextfield.getText().toString()
-                );
+            loginUser = new LoginUser(
+                    nicknameEmailTextfield.getText().toString(),
+                    passwordTextfield.getText().toString()
+            );
 
-                loginController.logIn(loginUser, fragmentHandler);
+            loginController.logIn(loginUser, fragmentHandler);
 
-                // hide soft keyboard after button was clicked
-                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(btnLogin.getApplicationWindowToken(), 0);
-            }
+            // hide soft keyboard after button was clicked
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(btnLogin.getApplicationWindowToken(), 0);
         });
 
 
@@ -183,28 +179,22 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 //        });
 
 
-        redirectToRegistration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
-                //googleApiClient.disconnect();
-                StartupRegistrationFragment startupRegistrationFragment = new StartupRegistrationFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, startupRegistrationFragment)
-                        .commit();
-            }
+        redirectToRegistration.setOnClickListener(v -> {
+            //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
+            //googleApiClient.disconnect();
+            StartupRegistrationFragment startupRegistrationFragment = new StartupRegistrationFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, startupRegistrationFragment)
+                    .commit();
         });
 
-        fogotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
-                //googleApiClient.disconnect();
-                StartupResetPasswordFragment startupResetPasswordFragment = new StartupResetPasswordFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, startupResetPasswordFragment)
-                        .commit();
-            }
+        fogotPassword.setOnClickListener(v -> {
+            //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
+            //googleApiClient.disconnect();
+            StartupResetPasswordFragment startupResetPasswordFragment = new StartupResetPasswordFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, startupResetPasswordFragment)
+                    .commit();
         });
     }
 
