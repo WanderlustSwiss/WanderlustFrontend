@@ -6,8 +6,10 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.FavoriteService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -39,10 +41,12 @@ public class FavoriteDao extends DatabaseObjectAbstract{
 
     private Box<Favorite> favoriteBox;
     private FavoriteService service;
+    private ImageController imageController;
 
     private FavoriteDao(){
         favoriteBox = BOXSTORE.boxFor(Favorite.class);
         service = ServiceGenerator.createService(FavoriteService.class);
+        imageController = ImageController.getInstance();
     }
 
     /**
@@ -81,6 +85,15 @@ public class FavoriteDao extends DatabaseObjectAbstract{
             @Override
             public void onResponse(Call<List<Tour>> call, retrofit2.Response<List<Tour>> response) {
                 if (response.isSuccessful()) {
+                    List<Tour> tours = response.body();
+                    for (Tour tour : tours) {
+                        for (ImageInfo imageInfo : tour.getImagePaths()) {
+                            String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
+                            imageInfo.setName(name);
+                            imageInfo.setId(tour.getTour_id());
+                            imageInfo.setLocalDir(imageController.getTourFolder());
+                        }
+                    }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));

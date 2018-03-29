@@ -24,7 +24,6 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.ProfileFragment;
 
@@ -129,8 +128,7 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
             String t = StringUtils.abbreviate(fav.getTitle(), 30);
             title.setText(t);
 
-            List<ImageInfo> imagepaths = fav.getImagePaths();
-            List<File> imagefiles = imageController.getImages(imagepaths);
+            List<File> imagefiles = tourController.getImages();
             if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
                 Picasso.with(context)
                         .load(imagefiles.get(0))
