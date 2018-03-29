@@ -108,7 +108,7 @@ public class PoiController {
             //Download images if necessary
             GetImagesTask imagesTask = new GetImagesTask();
             //CAREFUL asynchron task, will fire the handler
-            imagesTask.execute(new ImagesTaskParameters(poi.getPoi_id(), poi.getImagePaths(), "poi", handler));
+            imagesTask.execute(new ImagesTaskParameters(poi.getPoi_id(), poi.getImagePaths(), imageController.getPoiFolder(), handler));
         } else {
             //Images should be local
             List<File> images = imageController.getImages(poi.getImagePaths());

@@ -136,6 +136,6 @@ public class ImageController {
             fo.close();
             return f;
         }
-        return null;
+        return imgFileOrig;
     }
 }
