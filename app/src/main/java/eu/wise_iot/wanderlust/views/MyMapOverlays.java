@@ -49,10 +49,10 @@ import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
  */
 public class MyMapOverlays implements Serializable, DatabaseListener {
     private static final String TAG = "MyMapOverlays";
-    private Activity activity;
-    private MapView mapView;
+    private final Activity activity;
+    private final MapView mapView;
     private Polyline currentTour;
-    private MapController searchMapController;
+    private final MapController searchMapController;
 
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiHashtagOverlay;
@@ -63,7 +63,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private Marker focusedPositionMarker;
     private ArrayList<Polyline> borderLines;
     private List<GeoObject> sacList;
-    private MapFragment mapFragment;
+    private final MapFragment mapFragment;
 
 
     public MyMapOverlays(Activity activity, MapView mapView, MapController searchMapController, MapFragment fragment) {

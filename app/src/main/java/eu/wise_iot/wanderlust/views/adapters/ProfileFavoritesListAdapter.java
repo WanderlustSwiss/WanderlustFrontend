@@ -24,6 +24,7 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.ProfileFragment;
 
@@ -40,22 +41,16 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
     private ImageView tripImage;
     private ImageView favIcon;
 
-    private Context context;
-    private int resource;
-    private int textResource;
-    private List objects;
+    private final Context context;
 
-    private ProfileFragment profileFragment;
-    private ImageController imageController;
+    private final ProfileFragment profileFragment;
+    private final ImageController imageController;
 
     public ProfileFavoritesListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
-        this.resource = resource;
-        this.textResource = textResource;
-        this.objects = objects;
-        this.imageController = ImageController.getInstance();
         this.profileFragment = fragment;
+        this.imageController = ImageController.getInstance();
     }
 
     /**
@@ -128,7 +123,8 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
             String t = StringUtils.abbreviate(fav.getTitle(), 30);
             title.setText(t);
 
-            List<File> imagefiles = tourController.getImages();
+            List<ImageInfo> imageinfos = fav.getImagePaths();
+            List<File> imagefiles = imageController.getImages(imageinfos);
             if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
                 Picasso.with(context)
                         .load(imagefiles.get(0))

@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || fragment instanceof StartupLoginFragment
                 || fragment instanceof MapFragment
                 || fragment instanceof StartupResetPasswordFragment) {
-            ;//NOP
         } else{
             super.onBackPressed();
         }

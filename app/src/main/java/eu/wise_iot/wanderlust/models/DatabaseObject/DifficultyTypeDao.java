@@ -19,14 +19,14 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
         private static final DifficultyTypeDao INSTANCE = new DifficultyTypeDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static DifficultyTypeDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static DifficultyTypeService service;
-    private Box<DifficultyType> difficultyTypeBox;
+    private final Box<DifficultyType> difficultyTypeBox;
 
     /**
      * Constructor.

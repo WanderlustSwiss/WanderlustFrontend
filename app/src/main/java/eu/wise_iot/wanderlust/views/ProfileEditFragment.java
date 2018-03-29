@@ -75,7 +75,7 @@ public class ProfileEditFragment extends Fragment {
     private CheckBox[] checkBoxes;
     private long difficulty;
 
-    private ProfileController profileController;
+    private final ProfileController profileController;
 
     public ProfileEditFragment() {
         // Required empty public constructor

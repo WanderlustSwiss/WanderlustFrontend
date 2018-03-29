@@ -43,15 +43,15 @@ public class ProfileDao extends DatabaseObjectAbstract {
         private static final ProfileDao INSTANCE = new ProfileDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static ProfileDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static ProfileService service;
-    private Box<Profile> profileBox;
-    private ImageController imageController;
+    private final Box<Profile> profileBox;
+    private final ImageController imageController;
 
     /**
      *

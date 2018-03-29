@@ -64,7 +64,7 @@ public class Poi extends AbstractModel {
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
     }
-// Response{protocol=http/1.1, code=200, message=OK, url=http://10.0.2.2:1337/hashtag/poi?lat1=47.149700898999264&long1=7.857840401785716&lat2=46.840870347941916&long2=8.140345982142865&hash_id=2}
+
     public Poi() {
         this.internal_id = 0;
         this.title = "No title";

@@ -34,8 +34,8 @@ public class ImageController {
         return CONTEXT != null ? Holder.INSTANCE : null;
     }
 
-    private String picturesDir;
-    private String[] FOLDERS;
+    private final String picturesDir;
+    private final String[] FOLDERS;
     private final int standardWidth;
 
     private ImageController(){

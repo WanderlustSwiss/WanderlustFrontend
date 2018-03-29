@@ -72,19 +72,13 @@ public class TourController {
         return text;
     }
 
-    private FavoriteDao favoriteDao;
+    private final FavoriteDao favoriteDao;
     private RatingDao ratingDao;
     private UserDao userDao;
     private Tour tour;
     private UserTourDao userTourDao;
     private DifficultyTypeDao difficultyTypeDao;
     private ImageController imageController;
-    private WeatherController weatherController;
-    private Float ratingNumber;
-    private ArrayList<GeoPoint> polyList;
-    private EquipmentController equipmentController;
-    private final TourKitDao tourKitDao;
-    public final List<Equipment> listEquipment = new ArrayList<>();
 
     private static final String TAG = "Tourcontroller";
 
@@ -96,9 +90,6 @@ public class TourController {
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         ratingDao = RatingDao.getInstance();
         imageController = ImageController.getInstance();
-        weatherController = WeatherController.getInstance();
-        equipmentController = EquipmentController.getInstance();
-        tourKitDao = TourKitDao.getInstance();
     }
 
 
@@ -122,9 +113,8 @@ public class TourController {
      * set favorite
      * @param handler Fragment handler
      */
-    public boolean setFavorite(FragmentHandler handler){
+    public void setFavorite(FragmentHandler handler){
         favoriteDao.create(tour, handler);
-        return true;
     }
 
     /**
@@ -292,7 +282,7 @@ public class TourController {
             return 0;
         }
     }
-    public float[] elevationDecode(String elevation){
+    private float[] elevationDecode(String elevation){
         byte[] decodedByteArray;
         // Base64 decode of string
         try {

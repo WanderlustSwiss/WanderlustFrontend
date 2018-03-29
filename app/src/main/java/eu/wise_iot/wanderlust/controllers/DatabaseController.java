@@ -57,14 +57,14 @@ public final class DatabaseController {
 
     //in bytes
     private final long MAXCACHESIZE;
-    private Context mainContext;
-    private BoxStore boxStore;
+    private final Context mainContext;
+    private final BoxStore boxStore;
     private List<DatabaseListener> listeners = new ArrayList<>();
     private boolean syncingPoiTypes;
     private boolean syncingPois;
     private Date lastSync;
 
-    private LinkedList<DownloadedImage> downloadedImages;
+    private final LinkedList<DownloadedImage> downloadedImages;
     private long cacheSize;
 
     private DatabaseController(){
@@ -147,7 +147,7 @@ public final class DatabaseController {
         clearCache();
     }
 
-    public void clearCache() {
+    private void clearCache() {
 
         //TODO endless loop if userimages are higher than maxchachesize
         while (cacheSize >= MAXCACHESIZE) {

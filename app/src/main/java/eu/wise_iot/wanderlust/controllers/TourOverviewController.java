@@ -16,10 +16,10 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
  */
 public class TourOverviewController {
 
-    private UserTourDao userTourDao;
+    private final UserTourDao userTourDao;
     private FavoriteDao favoriteDao;
-    private DifficultyTypeDao difficultyType;
-    private ImageController imageController;
+    private final DifficultyTypeDao difficultyType;
+    private final ImageController imageController;
 
     public TourOverviewController(){
         userTourDao = UserTourDao.getInstance();

@@ -26,11 +26,11 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
  */
 public class PoiController {
 
-    private PoiTypeDao poiTypeDao;
-    private PoiDao poiDao;
-    private UserDao userDao;
-    private ImageController imageController;
-    private Context context;
+    private final PoiTypeDao poiTypeDao;
+    private final PoiDao poiDao;
+    private final UserDao userDao;
+    private final ImageController imageController;
+    private final Context context;
 
     public PoiController(){
         poiTypeDao = PoiTypeDao.getInstance();

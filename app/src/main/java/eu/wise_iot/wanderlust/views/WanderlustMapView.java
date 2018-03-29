@@ -31,7 +31,7 @@ public class WanderlustMapView extends MapView {
     private BottomSheetBehavior bottomSheetBehavior;
     private View bottomSheet;
 
-    private ArrayList<MotionEventListener<WanderlustMapView>> motionEventListenerList = new ArrayList<>();
+    private final ArrayList<MotionEventListener<WanderlustMapView>> motionEventListenerList = new ArrayList<>();
 
     public void setBottomSheetClosingComponents(View bottomSheet, BottomSheetBehavior bottomSheetBehavior) {
         this.bottomSheet = bottomSheet;

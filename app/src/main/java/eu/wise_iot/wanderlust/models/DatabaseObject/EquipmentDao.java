@@ -33,13 +33,13 @@ public class EquipmentDao extends DatabaseObjectAbstract {
         private static final EquipmentDao INSTANCE = new EquipmentDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static EquipmentDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
-    private Box<Equipment> equipmentBox;
+    private final Box<Equipment> equipmentBox;
     public static EquipmentService service;
 
 

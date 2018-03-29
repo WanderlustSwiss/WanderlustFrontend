@@ -47,15 +47,15 @@ public class PoiDao extends DatabaseObjectAbstract {
         private static final PoiDao INSTANCE = new PoiDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static PoiDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
-    public static PoiService service;
-    public Box<Poi> poiBox;
-    private ImageController imageController;
+    private static PoiService service;
+    private final Box<Poi> poiBox;
+    private final ImageController imageController;
 
     /**
      * constructor

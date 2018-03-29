@@ -23,7 +23,7 @@ import retrofit2.Response;
 
 public class WeatherController {
 
-    private WeatherService service;
+    private final WeatherService service;
     private List<WeatherKeys> weatherKeys;
     private List<SeasonsKeys> seasonsKeys;
 

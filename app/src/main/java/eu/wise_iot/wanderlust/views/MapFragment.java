@@ -70,12 +70,12 @@ import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
  */
 public class MapFragment extends Fragment {
     private static final String TAG = "MapFragment";
+
     public static String photoPath;
     private static String imageFileName;
     private static DatabaseController databaseController;
     // preferences and default settings
     private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private boolean locationTogglerHasBeenClicked;
     private boolean myLocationIsEnabled;
     private int zoomLevel;
@@ -85,7 +85,6 @@ public class MapFragment extends Fragment {
     private WanderlustMapView mapView;
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
-    private Camera camera;
     private ImageButton locationToggler;
     private ImageButton cameraButton;
     private ImageButton layerButton;
@@ -358,7 +357,7 @@ public class MapFragment extends Fragment {
         int lastZoomLevel = mapView.getZoomLevel();
         double lastMapCenterLat = mapView.getMapCenter().getLatitude();
         double lastMapCenterLon = mapView.getMapCenter().getLongitude();
-        editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(Constants.LAST_ZOOM_LEVEL, lastZoomLevel);
         editor.putLong(Constants.LAST_MAP_CENTER_LAT, Double.doubleToRawLongBits(lastMapCenterLat));
         editor.putLong(Constants.LAST_MAP_CENTER_LON, Double.doubleToRawLongBits(lastMapCenterLon));
@@ -527,7 +526,7 @@ public class MapFragment extends Fragment {
 
     private void takePicture() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-        camera = new Camera(getActivity(), mapFragment);
+        Camera camera = new Camera(getActivity(), mapFragment);
         camera.start();
         imageFileName = camera.getImageName();
         photoPath = camera.getImagePath();

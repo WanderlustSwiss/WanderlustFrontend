@@ -21,13 +21,13 @@ public class TourKitDao extends DatabaseObjectAbstract {
         private static final TourKitDao INSTANCE = new TourKitDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static TourKitDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
-    private Box<TourKit> tourKitBox;
+    private final Box<TourKit> tourKitBox;
 
     /**
      * Constructor.

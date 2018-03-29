@@ -44,7 +44,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 public class StartupLoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "StartupLoginFragment";
 
-    public static int REQ_CODE = 9001;
+    public static final int REQ_CODE = 9001;
     private Context context;
     private Button btnLogin;
     private EditText nicknameEmailTextfield;
@@ -55,8 +55,8 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     private TextView fogotPassword;
     //    private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
-    private LoginController loginController;
-    private FragmentHandler fragmentHandler = new FragmentHandler() {
+    private final LoginController loginController;
+    private final FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {
 

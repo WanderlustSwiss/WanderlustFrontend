@@ -19,14 +19,14 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
         private static final PoiTypeDao INSTANCE = new PoiTypeDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static PoiTypeDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static PoiService service;
-    private Box<PoiType> poiTypeBox;
+    private final Box<PoiType> poiTypeBox;
 
     /**
      * Constructor.

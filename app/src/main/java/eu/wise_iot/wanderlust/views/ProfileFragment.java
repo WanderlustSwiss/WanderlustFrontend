@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment {
     private ListView listView;
     private List list;
 
-    private ProfileController profileController;
+    private final ProfileController profileController;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -103,7 +103,7 @@ public class ProfileFragment extends Fragment {
      *
      * @param view in which the data is set
      */
-    public void setupProfileInfo(View view) {
+    private void setupProfileInfo(View view) {
         //initializing views
         //birthday = (TextView) view.findViewById(R.id.profileBirthDay);
         amountPOI = (TextView) view.findViewById(R.id.profileAmountPOI);
@@ -166,7 +166,7 @@ public class ProfileFragment extends Fragment {
      *
      * @param view in which the list will be represented
      */
-    public void setupTabs(View view) {
+    private void setupTabs(View view) {
         //initializing views
         listView = (ListView) view.findViewById(R.id.listContent);
         tabLayout = (TabLayout) view.findViewById(R.id.profileTabs);

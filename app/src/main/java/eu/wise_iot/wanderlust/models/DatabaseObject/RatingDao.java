@@ -24,21 +24,20 @@ import retrofit2.Response;
  * @author Rilind Gashi
  * @license MIT
  */
-
 public class RatingDao extends DatabaseObjectAbstract{
 
     private static class Holder {
         private static final RatingDao INSTANCE = new RatingDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static RatingDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
-    private Box<Rating> RatingBox;
-    private RatingService service;
+    private final Box<Rating> RatingBox;
+    private final RatingService service;
 
     private RatingDao(){
         RatingBox = BOXSTORE.boxFor(Rating.class);

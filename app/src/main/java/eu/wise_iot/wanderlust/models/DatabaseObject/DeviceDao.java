@@ -22,13 +22,13 @@ public class DeviceDao extends DatabaseObjectAbstract {
         private static final DeviceDao INSTANCE = new DeviceDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static DeviceDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
-    private Box<Device> deviceBox;
+    private final Box<Device> deviceBox;
 
     /**
      * Constructor.

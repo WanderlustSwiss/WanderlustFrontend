@@ -46,7 +46,7 @@ import retrofit2.Callback;
 public class MapController {
     private final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
     private final String SBB_SERVICE_URL = "https://data.sbb.ch/api/records/1.0/search/";
-    private MapFragment fragment;
+    private final MapFragment fragment;
 
 
     /**

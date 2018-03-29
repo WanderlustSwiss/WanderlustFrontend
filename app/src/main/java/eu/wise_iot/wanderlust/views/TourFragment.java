@@ -373,7 +373,7 @@ public class TourFragment extends Fragment {
                float rateAvgRound = Float.parseFloat(String.format("%.1f", rateAvg));
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
-               tourRatingInNumbers.setText(0);
+               tourRatingInNumbers.setText("0");
            }
         });
 
@@ -403,9 +403,8 @@ public class TourFragment extends Fragment {
             //same time .... fuck yeah android
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
-                    TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
-                            tourRating);
-                    dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
+                    TourRatingDialog dialogRating = new TourRatingDialog().newInstance(tour, tourController, tourRating);
+                    dialogRating.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
                 }
@@ -643,7 +642,7 @@ public class TourFragment extends Fragment {
         }
     }
 
-    public void drawChart() {
+    private void drawChart() {
         Number[] domainLabels = tourController.getElevationProfileXAxis();
         Number[] series1Numbers = tourController.getElevationProfileYAxis();
 
@@ -702,7 +701,7 @@ public class TourFragment extends Fragment {
         plot.redraw();
     }
 
-    public void showMapWithTour() {
+    private void showMapWithTour() {
         if (tourController.getPolyline() == null) {
             return;
         }
@@ -735,6 +734,7 @@ public class TourFragment extends Fragment {
      * @param view
      * @param parEquipment
      */
+    // Todo: Implement Dialog
     private void onItemClickImages(View view, Equipment parEquipment) {
 
     }

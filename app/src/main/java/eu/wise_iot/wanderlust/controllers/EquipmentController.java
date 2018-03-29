@@ -29,13 +29,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EquipmentController {
-    private EquipmentService service;
+    private final EquipmentService service;
     private List<Equipment> equipmentList;
     private int typeCount;
     private volatile boolean equipmentInitiated;
     private volatile boolean imagesDownloaded;
-    private ImageController imageController;
-    private WeatherController weatherController;
+    private final ImageController imageController;
+    private final WeatherController weatherController;
 
 
     private static class Holder {
@@ -123,6 +123,7 @@ public class EquipmentController {
             public void onResponse(ControllerEvent controllerEvent) {
                 switch (controllerEvent.getType()) {
                     case OK:
+                        @SuppressWarnings("unchecked")
                         List<Weather> weather = (List<Weather>) controllerEvent.getModel();
                         List<Equipment> equipment = getEquipmentList();
 

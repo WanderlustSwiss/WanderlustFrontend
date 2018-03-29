@@ -30,14 +30,14 @@ public class TripDao extends DatabaseObjectAbstract {
         private static final TripDao INSTANCE = new TripDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static TripDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static TripService service;
-    private Box<Trip> routeBox;
+    private final Box<Trip> routeBox;
 
     /**
      * Constructor.

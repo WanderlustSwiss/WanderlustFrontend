@@ -41,19 +41,13 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
     private ImageView deleteIcon;
 
     private Context context;
-    private int resource;
-    private int textResource;
-    private List objects;
 
-    private ProfileFragment profileFragment;
-    private ImageController imageController;
+    private final ProfileFragment profileFragment;
+    private final ImageController imageController;
 
     public ProfileTripListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
-        this.resource = resource;
-        this.textResource = textResource;
-        this.objects = objects;
         this.imageController = ImageController.getInstance();
         this.profileFragment = fragment;
     }

@@ -33,15 +33,15 @@ public class FavoriteDao extends DatabaseObjectAbstract{
         private static final FavoriteDao INSTANCE = new FavoriteDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static FavoriteDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
-    private Box<Favorite> favoriteBox;
-    private FavoriteService service;
-    private ImageController imageController;
+    private final Box<Favorite> favoriteBox;
+    private final FavoriteService service;
+    private final ImageController imageController;
 
     private FavoriteDao(){
         favoriteBox = BOXSTORE.boxFor(Favorite.class);

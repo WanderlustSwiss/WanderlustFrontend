@@ -23,12 +23,12 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
         private static final CommunityTourDao INSTANCE = new CommunityTourDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static CommunityTourDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
-    private Box<Tour> communityTourBox;
+    private final Box<Tour> communityTourBox;
 
     /**
      * Constructor.

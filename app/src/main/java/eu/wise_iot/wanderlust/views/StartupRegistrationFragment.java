@@ -52,7 +52,7 @@ public class StartupRegistrationFragment extends Fragment {
     private TextInputLayout passwordRepeatLayout;
 
 
-    private RegistrationController registrationController;
+    private final RegistrationController registrationController;
 
 
     /**

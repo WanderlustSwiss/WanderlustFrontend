@@ -38,15 +38,15 @@ public class UserTourDao extends DatabaseObjectAbstract {
         private static final UserTourDao INSTANCE = new UserTourDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static UserTourDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static TourService service;
-    private Box<Tour> routeBox;
-    private ImageController imageController;
+    private final Box<Tour> routeBox;
+    private final ImageController imageController;
 
     /**
      * Constructor.

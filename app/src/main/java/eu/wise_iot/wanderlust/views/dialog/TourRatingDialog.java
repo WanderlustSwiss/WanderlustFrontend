@@ -96,10 +96,10 @@ public class TourRatingDialog extends DialogFragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initListeners();
+        setupListeners();
     }
 
-    public void initListeners(){
+    public void setupListeners(){
         long rate = controller.alreadyRated(tour.getTour_id());
         if(rate == 0) {
             buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, new FragmentHandler() {
@@ -135,7 +135,7 @@ public class TourRatingDialog extends DialogFragment {
         }
     }
 
-    public void changeButtonColor(int selectedStar){
+    private void changeButtonColor(int selectedStar){
         countRatedStars = selectedStar;
         for(int i=0; i < selectedStar; i++){
             starButtonCollection[i].setImageResource(R.drawable.ic_rate_star_yellow_32dp);

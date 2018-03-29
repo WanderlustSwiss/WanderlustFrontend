@@ -31,14 +31,14 @@ public class UserDao extends DatabaseObjectAbstract {
         private static final UserDao INSTANCE = new UserDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static UserDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static UserService service;
-    public Box<User> userBox;
+    public final Box<User> userBox;
 
     /**
      * Constructor.

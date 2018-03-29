@@ -57,7 +57,6 @@ public class PoiViewDialog extends DialogFragment {
     private ImageButton editPoiButton;
     private ImageButton deletePoiButton;
     private ImageButton sharePoiButton;
-    private long poiId;
     private PoiController controller;
     private TextView occupationTitleSac;
     private TableLayout sacOccupation;
@@ -108,14 +107,13 @@ public class PoiViewDialog extends DialogFragment {
         controller = new PoiController();
 
         Bundle args = getArguments();
-        poiId = args.getLong(Constants.POI_ID);
+        long poiId = args.getLong(Constants.POI_ID);
         setRetainInstance(true);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        return dialog;
+        return super.onCreateDialog(savedInstanceState);
     }
 
     @Nullable
@@ -166,7 +164,7 @@ public class PoiViewDialog extends DialogFragment {
 
         editPoiButton.setOnClickListener(v -> {
             if (controller.isOwnerOf(currentPoi)) {
-                PoiEditDialog dialog = PoiEditDialog.newInstance(this.currentPoi);
+                PoiEditDialog dialog = PoiEditDialog.newInstance(currentPoi);
                 dialog.show(getFragmentManager(), Constants.EDIT_POI_DIALOG);
             }
         });
@@ -280,7 +278,7 @@ public class PoiViewDialog extends DialogFragment {
      * @param text the description containing the occupation information
      *
      */
-    public String showSacOccupation(String text, View view){
+    private String showSacOccupation(String text, View view){
         initMonthTableString();
 
         sacOccupation.setVisibility(View.VISIBLE);

@@ -34,12 +34,12 @@ import static eu.wise_iot.wanderlust.controllers.ImageController.getInstance;
  */
 public class LoginController {
 
-    private UserDao userDao;
-    private ProfileDao profileDao;
-    private DatabaseController databaseController;
-    private ImageController imageController;
-    private WeatherController weatherController;
-    private EquipmentController equipmentController;
+    private final UserDao userDao;
+    private final ProfileDao profileDao;
+    private final DatabaseController databaseController;
+    private final ImageController imageController;
+    private final WeatherController weatherController;
+    private final EquipmentController equipmentController;
     /**
      * Create a login contoller
      */

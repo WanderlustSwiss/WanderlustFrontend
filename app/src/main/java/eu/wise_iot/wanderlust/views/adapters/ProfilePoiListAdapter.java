@@ -43,22 +43,16 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
     private ImageView editIcon;
     private ImageView deleteIcon;
 
-    private Context context;
-    private int resource;
-    private int textResource;
-    private List objects;
+    private final Context context;
 
-    private PoiController poiController;
-    private ImageController imageController;
+    private final PoiController poiController;
+    private final ImageController imageController;
 
-    private ProfileFragment profileFragment;
+    private final ProfileFragment profileFragment;
 
     public ProfilePoiListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
-        this.resource = resource;
-        this.textResource = textResource;
-        this.objects = objects;
         this.profileFragment = fragment;
         poiController = new PoiController();
         imageController = ImageController.getInstance();
