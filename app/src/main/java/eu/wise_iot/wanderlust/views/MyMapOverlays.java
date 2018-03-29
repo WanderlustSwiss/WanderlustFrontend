@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
@@ -28,6 +29,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
 import eu.wise_iot.wanderlust.controllers.EventType;
@@ -97,8 +99,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         if (this.currentTour == null) {
             this.currentTour = polyline;
             this.currentTour.setWidth(10);
-            this.currentTour.setColor(Color.RED);
-
+            Context context = DatabaseController.getMainContext();
+            this.currentTour.setColor(context.getResources().getColor(R.color.highlight_main_transparent75));
             mapView.getOverlays().add(this.currentTour);
         } else {
             this.currentTour = polyline;
