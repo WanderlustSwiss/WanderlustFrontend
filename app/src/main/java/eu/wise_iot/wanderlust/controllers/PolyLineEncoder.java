@@ -59,7 +59,7 @@ public class PolyLineEncoder {
      * @return the polyline.
      */
     public static ArrayList<GeoPoint> decode(String encodedString, int precision) {
-        ArrayList<GeoPoint> polyline = new ArrayList<GeoPoint>();
+        ArrayList<GeoPoint> polyline = new ArrayList<>();
         int index = 0;
         int len = encodedString.length();
         int lat = 0, lng = 0;

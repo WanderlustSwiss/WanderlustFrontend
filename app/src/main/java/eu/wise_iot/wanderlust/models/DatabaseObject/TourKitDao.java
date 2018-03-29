@@ -90,13 +90,11 @@ public class TourKitDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return CommunityTours Equipment which match to the search pattern in the searched columns
      */
-    public TourKit findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public TourKit findOne(Property searchedColumn, String searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public TourKit findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public TourKit findOne(Property searchedColumn, long searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -107,13 +105,11 @@ public class TourKitDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<TourKit> which contains the tour equipements, which match to the search pattern in the searched columns
      */
-    public List<TourKit> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<TourKit> find(Property searchedColumn, String searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<TourKit> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<TourKit> find(Property searchedColumn, long searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

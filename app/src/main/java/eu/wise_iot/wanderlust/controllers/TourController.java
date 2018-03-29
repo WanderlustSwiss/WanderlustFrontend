@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import android.util.Base64;
-import android.util.Log;
 
 import org.joda.time.DateTime;
 import com.google.gson.Gson;
@@ -20,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -34,11 +32,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
-import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.EquipmentDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
@@ -97,16 +91,8 @@ public class TourController {
      * True if Favorite is set, otherwise false
      */
     public boolean isFavorite(){
-        try {
-            Favorite fav = favoriteDao.findOne(Favorite_.tour, tour.getTour_id());
-            if(fav != null)
-                return true;
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return false;
+        Favorite fav = favoriteDao.findOne(Favorite_.tour, tour.getTour_id());
+        return fav != null;
     }
 
     /**
@@ -122,14 +108,10 @@ public class TourController {
      * @param handler Fragment handler
      */
     public boolean unsetFavorite(FragmentHandler handler){
-        try {
-            Favorite fav = favoriteDao.findOne(Favorite_.tour, tour.getTour_id());
-            if (fav != null){
-                favoriteDao.delete(fav.getFav_id(), handler);
-                return true;
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+        Favorite fav = favoriteDao.findOne(Favorite_.tour, tour.getTour_id());
+        if (fav != null){
+            favoriteDao.delete(fav.getFav_id(), handler);
+            return true;
         }
         return false;
     }
@@ -147,13 +129,7 @@ public class TourController {
     public long alreadyRated(long tour_id){
         Property property = Rating_.tour;
         Rating rating = null;
-        try {
-            rating = ratingDao.findOne(property, tour_id, userDao.getUser().getUser_id());
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        rating = ratingDao.findOne(property, tour_id, userDao.getUser().getUser_id());
         if(rating != null)
             return rating.getRate();
         else
@@ -196,17 +172,14 @@ public class TourController {
     }
 
     public void loadGeoData(FragmentHandler handler){
-        userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                if (controllerEvent.getType() ==  EventType.OK){
-                    Tour TourWithGeoData = (Tour) controllerEvent.getModel();
-                    tour.setPolyline(TourWithGeoData.getPolyline());
-                    tour.setElevation(TourWithGeoData.getElevation());
-                    handler.onResponse(new ControllerEvent(EventType.OK, tour));
-                }else{
-                    handler.onResponse(new ControllerEvent(controllerEvent.getType(), tour));
-                }
+        userTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
+            if (controllerEvent.getType() ==  EventType.OK){
+                Tour TourWithGeoData = (Tour) controllerEvent.getModel();
+                tour.setPolyline(TourWithGeoData.getPolyline());
+                tour.setElevation(TourWithGeoData.getElevation());
+                handler.onResponse(new ControllerEvent(EventType.OK, tour));
+            }else{
+                handler.onResponse(new ControllerEvent(controllerEvent.getType(), tour));
             }
         });
     }
@@ -263,11 +236,11 @@ public class TourController {
      * @return mark
      */
     public String getDifficultyMark(){
-        try {
-            DifficultyType difficultyType =  difficultyTypeDao.findOne(DifficultyType_.difft_id, tour.getDifficulty());
-            return difficultyType.getMark();
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        DifficultyType difficultyType =  difficultyTypeDao.findOne(DifficultyType_.difft_id, tour.getDifficulty());
+        if (difficultyType == null){
             return "T1";
+        }else{
+            return difficultyType.getMark();
         }
     }
     /**
@@ -275,11 +248,11 @@ public class TourController {
      * @return level
      */
     public long getLevel(){
-        try {
-            DifficultyType difficultyType =  difficultyTypeDao.findOne(DifficultyType_.difft_id, tour.getDifficulty());
+        DifficultyType difficultyType =  difficultyTypeDao.findOne(DifficultyType_.difft_id, tour.getDifficulty());
+        if (difficultyType == null){
+            return 1L;
+        }else{
             return difficultyType.getLevel();
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            return 0;
         }
     }
     private float[] elevationDecode(String elevation){

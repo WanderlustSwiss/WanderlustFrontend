@@ -30,16 +30,16 @@ public class DatabaseObjectAbstract implements DatabaseObject {
         throw new UnsupportedOperationException();
     }
 
-    public AbstractModel findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public AbstractModel findOne(String searchedColumn, String searchPattern) {
         throw new UnsupportedOperationException();
     }
 
-    public List<? extends AbstractModel> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public List<? extends AbstractModel> find(String searchedColumn, String searchPattern) {
         throw new UnsupportedOperationException();
 
     }
 
-    public void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(String searchedColumn, String searchPattern) {
         throw new UnsupportedOperationException();
     }
 
@@ -47,7 +47,7 @@ public class DatabaseObjectAbstract implements DatabaseObject {
         throw new UnsupportedOperationException();
     }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public long count(String searchedColumn, String searchPattern) {
         throw new UnsupportedOperationException();
     }
 

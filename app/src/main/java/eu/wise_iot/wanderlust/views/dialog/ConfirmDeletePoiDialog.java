@@ -82,9 +82,7 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
 
         messageTextView.setText(message);
 
-        abortButton.setOnClickListener(v -> {
-            dismiss();
-        });
+        abortButton.setOnClickListener(v -> dismiss());
 
         confirmButton.setOnClickListener(v -> {
             controller.deletePoi(this.currentPoi, e -> {

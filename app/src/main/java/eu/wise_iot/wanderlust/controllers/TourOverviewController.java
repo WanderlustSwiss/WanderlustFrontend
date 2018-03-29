@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.util.Log;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
@@ -16,6 +18,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
  */
 public class TourOverviewController {
 
+    private static final String TAG = "TourOverviewController";
     private final UserTourDao userTourDao;
     private FavoriteDao favoriteDao;
     private final DifficultyTypeDao difficultyType;
@@ -93,7 +96,9 @@ public class TourOverviewController {
         try {
             Favorite fav = favoriteDao.findOne(Favorite_.tour, id);
             if(fav != null) return fav.getFav_id();
-        } catch (Exception e){}
+        } catch (Exception e){
+            Log.d(TAG, e.getMessage());
+        }
         return -1;
     }
 }

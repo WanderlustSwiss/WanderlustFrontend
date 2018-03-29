@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,13 +105,10 @@ public class TourRatingDialog extends DialogFragment {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
                     getDialog().dismiss();
-                    controller.getRating(tour, new FragmentHandler() {
-                        @Override
-                        public void onResponse(ControllerEvent controllerEvent) {
-                            switch (controllerEvent.getType()) {
-                                case OK:
-                                    ratingBar.setRating((float) controllerEvent.getModel());
-                            }
+                    controller.getRating(tour, controllerEvent1 -> {
+                        switch (controllerEvent1.getType()) {
+                            case OK:
+                                ratingBar.setRating((float) controllerEvent1.getModel());
                         }
                     });
                 }

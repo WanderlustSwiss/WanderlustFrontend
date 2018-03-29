@@ -17,7 +17,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,16 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +49,6 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
-import eu.wise_iot.wanderlust.controllers.MotionEventListener;
 import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -404,7 +398,7 @@ public class MapFragment extends Fragment {
 
                 if (round(map.getMapCenter().getLatitude()) == round(centerOfMap.getLatitude())
                         && round(map.getMapCenter().getLongitude()) == round(centerOfMap.getLongitude())) {
-                    databaseController.sync(new DatabaseEvent<BoundingBox>(DatabaseEvent.SyncType.POIAREA, map.getProjection().getBoundingBox()));
+                    databaseController.sync(new DatabaseEvent<>(DatabaseEvent.SyncType.POIAREA, map.getProjection().getBoundingBox()));
                     v.removeOnLayoutChangeListener(this);
                 }
             }
@@ -454,36 +448,30 @@ public class MapFragment extends Fragment {
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(locationToggler);
         //toggle listener
-        locationToggler.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (myLocationIsEnabled) {
-                    // toggle to disabled
-                    myLocationIsEnabled = false;
-                    displayMyLocationOnMap(false);
+        locationToggler.setOnClickListener(v -> {
+            if (myLocationIsEnabled) {
+                // toggle to disabled
+                myLocationIsEnabled = false;
+                displayMyLocationOnMap(false);
 
-                    locationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
-                    Toast.makeText(getActivity(), R.string.msg_follow_mode_disabled, Toast.LENGTH_SHORT).show();
-                } else {
-                    // toggle to enabled
-                    myLocationIsEnabled = true;
-                    displayMyLocationOnMap(true);
+                locationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
+                Toast.makeText(getActivity(), R.string.msg_follow_mode_disabled, Toast.LENGTH_SHORT).show();
+            } else {
+                // toggle to enabled
+                myLocationIsEnabled = true;
+                displayMyLocationOnMap(true);
 
-                    locationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
-                    Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
-                    centerMapOnCurrentPosition();
-                }
+                locationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
+                Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
+                centerMapOnCurrentPosition();
             }
         });
 
         //long click listener
-        locationToggler.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Toast.makeText(getActivity(), R.string.msg_map_centered_on_long_click, Toast.LENGTH_SHORT).show();
-                centerMapOnCurrentPosition();
-                return true;
-            }
+        locationToggler.setOnLongClickListener(view1 -> {
+            Toast.makeText(getActivity(), R.string.msg_map_centered_on_long_click, Toast.LENGTH_SHORT).show();
+            centerMapOnCurrentPosition();
+            return true;
         });
     }
 
@@ -497,29 +485,26 @@ public class MapFragment extends Fragment {
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(cameraButton);
 
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // prevent multiple clicks on button
-                cameraButton.setEnabled(false);
+        cameraButton.setOnClickListener(view1 -> {
+            // prevent multiple clicks on button
+            cameraButton.setEnabled(false);
 
-                final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                //check if gps is activated and show corresponding toast
-                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    // buildAlertMessageNoGps();
-                    Toast.makeText(getActivity(), R.string.msg_camera_no_gps, Toast.LENGTH_SHORT).show();
-                    takePicture();
-                } else {
-                    mapOverlays.getMyLocationNewOverlay().enableMyLocation();
-                    Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
-                    mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
-                        @Override
-                        public void run() {
-                            lastKnownLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
-                            takePicture();
-                        }
-                    });
-                }
+            final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            //check if gps is activated and show corresponding toast
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                // buildAlertMessageNoGps();
+                Toast.makeText(getActivity(), R.string.msg_camera_no_gps, Toast.LENGTH_SHORT).show();
+                takePicture();
+            } else {
+                mapOverlays.getMyLocationNewOverlay().enableMyLocation();
+                Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
+                mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
+                    @Override
+                    public void run() {
+                        lastKnownLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
+                        takePicture();
+                    }
+                });
             }
         });
     }
@@ -548,14 +533,11 @@ public class MapFragment extends Fragment {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         // register behavior on clicked
-        layerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }
+        layerButton.setOnClickListener(view1 -> {
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            } else {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
 
@@ -652,16 +634,13 @@ public class MapFragment extends Fragment {
             mapOverlays.getMyLocationNewOverlay().enableMyLocation();
         }
         // start async task and center map as soon the current location has been found
-        mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
-            @Override
-            public void run() {
-                GeoPoint myLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
-                mapController.animateTo(myLocation);
+        mapOverlays.getMyLocationNewOverlay().runOnFirstFix(() -> {
+            GeoPoint myLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
+            mapController.animateTo(myLocation);
 
-                // stop location service if user has disabled myLocation
-                if (!myLocationIsEnabled) {
-                    mapOverlays.getMyLocationNewOverlay().disableMyLocation();
-                }
+            // stop location service if user has disabled myLocation
+            if (!myLocationIsEnabled) {
+                mapOverlays.getMyLocationNewOverlay().disableMyLocation();
             }
         });
 
@@ -751,17 +730,14 @@ public class MapFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.trim().startsWith("#") && s.length() >= 2) {
-                    searchMapController.suggestHashtags(s.substring(1), new FragmentHandler<List<HashtagResult>>() {
-                        @Override
-                        public void onResponse(ControllerEvent<List<HashtagResult>> controllerEvent) {
-                            if (controllerEvent.getModel() != null && controllerEvent.getModel().size() != 0) {
-                                hashTagSearchSuggestions = controllerEvent.getModel();
-                            } else {
-                                hashTagSearchSuggestions.clear();
-                            }
-                            populateAdapter(s.substring(1));
-
+                    searchMapController.suggestHashtags(s.substring(1), controllerEvent -> {
+                        if (controllerEvent.getModel() != null && controllerEvent.getModel().size() != 0) {
+                            hashTagSearchSuggestions = controllerEvent.getModel();
+                        } else {
+                            hashTagSearchSuggestions.clear();
                         }
+                        populateAdapter(s.substring(1));
+
                     });
                 } else {
                     if (hashTagSearchSuggestions != null) {
@@ -776,46 +752,43 @@ public class MapFragment extends Fragment {
 
             public void callSearch(String query) {
                 try {
-                    searchMapController.searchPlace(query, 1, new FragmentHandler<List<MapSearchResult>>() {
-                        @Override
-                        public void onResponse(ControllerEvent<List<MapSearchResult>> controllerEvent) {
-                            List<MapSearchResult> resultList = controllerEvent.getModel();
-                            if (!resultList.isEmpty()) {
-                                MapSearchResult firstResult = resultList.get(0);
-                                GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
-                                if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
-                                    mapOverlays.clearPolylines();
+                    searchMapController.searchPlace(query, 1, controllerEvent -> {
+                        List<MapSearchResult> resultList = (List<MapSearchResult>) controllerEvent.getModel();
+                        if (!resultList.isEmpty()) {
+                            MapSearchResult firstResult = resultList.get(0);
+                            GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
+                            if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
+                                mapOverlays.clearPolylines();
 
-                                    double minLat = 9999;
-                                    double maxLat = -9999;
-                                    double minLong = 9999;
-                                    double maxLong = -9999;
+                                double minLat = 9999;
+                                double maxLat = -9999;
+                                double minLong = 9999;
+                                double maxLong = -9999;
 
-                                    for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
-                                        mapOverlays.addPolyline(polygon);
+                                for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
+                                    mapOverlays.addPolyline(polygon);
 
-                                        for (GeoPoint point : polygon) {
-                                            if (point.getLatitude() < minLat)
-                                                minLat = point.getLatitude();
-                                            if (point.getLatitude() > maxLat)
-                                                maxLat = point.getLatitude();
-                                            if (point.getLongitude() < minLong)
-                                                minLong = point.getLongitude();
-                                            if (point.getLongitude() > maxLong)
-                                                maxLong = point.getLongitude();
-                                        }
+                                    for (GeoPoint point : polygon) {
+                                        if (point.getLatitude() < minLat)
+                                            minLat = point.getLatitude();
+                                        if (point.getLatitude() > maxLat)
+                                            maxLat = point.getLatitude();
+                                        if (point.getLongitude() < minLong)
+                                            minLong = point.getLongitude();
+                                        if (point.getLongitude() > maxLong)
+                                            maxLong = point.getLongitude();
                                     }
-
-                                    BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
-                                    mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
-                                } else {
-                                    mapController.setZoom(Defaults.ZOOM_SEARCH);
-                                    mapController.animateTo(geoPoint);
-                                    mapOverlays.addFocusedPositionMarker(geoPoint);
                                 }
+
+                                BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
+                                mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
                             } else {
-                                Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                                mapController.setZoom(Defaults.ZOOM_SEARCH);
+                                mapController.animateTo(geoPoint);
+                                mapOverlays.addFocusedPositionMarker(geoPoint);
                             }
+                        } else {
+                            Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
                         }
                     });
                 } catch (IOException e) {
@@ -853,25 +826,22 @@ public class MapFragment extends Fragment {
 
         for (HashtagResult hashtagResult : hashTagSearchSuggestions) {
             if (hashtagResult.getTag().equals(element)) {
-                searchMapController.serachHashtag(hashtagResult.getHashId(), point2, point1, new FragmentHandler<List<Poi>>() {
-                    @Override
-                    public void onResponse(ControllerEvent<List<Poi>> controllerEvent) {
-                        List<Poi> hashtagPoiList = controllerEvent.getModel();
+                searchMapController.serachHashtag(hashtagResult.getHashId(), point2, point1, controllerEvent -> {
+                    List<Poi> hashtagPoiList = controllerEvent.getModel();
 
-                        // hide poi layer so that hashtagsearch results can be displayed
-                        showPoiOverlay(false);
+                    // hide poi layer so that hashtagsearch results can be displayed
+                    showPoiOverlay(false);
 
-                        // hide poi layer so that hashtagsearch results can be displayed
-                        mapOverlays.updateHashtagPoiLayer(hashtagPoiList);
-                        if (hashtagPoiList.size() == 0) {
-                            Toast.makeText(getActivity(), R.string.hashtag_search_nothing_found, Toast.LENGTH_LONG).show();
-                        } else {
-                            // close keyboard
-                            View view = getActivity().getCurrentFocus();
-                            if (view != null) {
-                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                            }
+                    // hide poi layer so that hashtagsearch results can be displayed
+                    mapOverlays.updateHashtagPoiLayer(hashtagPoiList);
+                    if (hashtagPoiList.size() == 0) {
+                        Toast.makeText(getActivity(), R.string.hashtag_search_nothing_found, Toast.LENGTH_LONG).show();
+                    } else {
+                        // close keyboard
+                        View view = getActivity().getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                         }
                     }
                 });

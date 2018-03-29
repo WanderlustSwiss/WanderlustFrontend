@@ -1,9 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,8 +22,6 @@ import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static eu.wise_iot.wanderlust.controllers.ImageController.getInstance;
 
 /*
  * Login Controller which handles the login of the user
@@ -104,23 +100,18 @@ public class LoginController {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if(response.isSuccessful()){
-
-                    try {
-                        Profile internalProfile = profileDao.findOne(Profile_.profile_id, user.getProfile());
-                        Profile updatedProfile = response.body();
-                        if (internalProfile == null){
-                            profileDao.removeAll();
-                            updatedProfile.setInternal_id(0);
-                            profileDao.create(updatedProfile);
-                        }else{
-                            if (updatedProfile.getImagePath() != null){
-                                updatedProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
-                            }
-                            updatedProfile.setInternal_id(internalProfile.getInternal_id());
-                            profileDao.update(updatedProfile);
+                    Profile internalProfile = profileDao.findOne(Profile_.profile_id, user.getProfile());
+                    Profile updatedProfile = response.body();
+                    if (internalProfile == null){
+                        profileDao.removeAll();
+                        updatedProfile.setInternal_id(0);
+                        profileDao.create(updatedProfile);
+                    }else{
+                        if (updatedProfile.getImagePath() != null){
+                            updatedProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
                         }
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        e.printStackTrace();
+                        updatedProfile.setInternal_id(internalProfile.getInternal_id());
+                        profileDao.update(updatedProfile);
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), user));
                 } else {

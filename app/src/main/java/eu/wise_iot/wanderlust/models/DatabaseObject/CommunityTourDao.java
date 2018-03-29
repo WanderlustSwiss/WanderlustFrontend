@@ -97,26 +97,17 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * get all communityTours out of the remote database
-     */
-    public List<Tour> retrieveAll() {
-        return communityTourBox.getAll();
-    }
-
-    /**
      * Searching for a single route with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern  (required) contain the search pattern.
      * @return Tour which match to the search pattern in the searched columns
      */
-    public Tour findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Tour findOne(Property searchedColumn, String searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Tour findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Tour findOne(Property searchedColumn, long searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -128,13 +119,11 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
      * @return List<Tour> which contains the equipements,
      * which match to the search pattern in the searched columns
      */
-    public List<Tour> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Tour> find(Property searchedColumn, String searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Tour> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Tour> find(Property searchedColumn, long searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

@@ -8,10 +8,6 @@ package eu.wise_iot.wanderlust.constants;
  */
 public interface Constants {
 
-    /* DISPLAY MODE */
-    boolean MODE_PUBLIC = true;
-    boolean MODE_PRIVATE = false;
-
     // new types
     int TYPE_VIEW = 0;
     int TYPE_RESTAURANT = 1;

@@ -104,14 +104,11 @@ public class StartupResetPasswordFragment extends Fragment {
             }
         });
 
-        redirectToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, startupLoginFragment)
-                        .commit();
-            }
+        redirectToLogin.setOnClickListener(v -> {
+            StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, startupLoginFragment)
+                    .commit();
         });
     }
 

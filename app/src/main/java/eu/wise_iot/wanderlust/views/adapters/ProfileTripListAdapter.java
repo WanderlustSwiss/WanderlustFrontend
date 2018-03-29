@@ -134,22 +134,17 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
                 tripImage.setImageResource(R.drawable.example_image);
             }
 
-            deleteIcon.setOnClickListener(e -> {
-                profileFragment.getProfileController().deleteTrip(tour, new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        switch (controllerEvent.getType()){
-                            case OK:
-                                profileFragment.setProfileStats();
-                                profileFragment.setupMyTours(profileFragment.getView());
-                                break;
-                            default:
-                                Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-                    }
-                });
-            });
+            deleteIcon.setOnClickListener(e -> profileFragment.getProfileController().deleteTrip(tour, controllerEvent -> {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        profileFragment.setProfileStats();
+                        profileFragment.setupMyTours(profileFragment.getView());
+                        break;
+                    default:
+                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }));
 
         }
 

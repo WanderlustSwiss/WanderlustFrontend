@@ -6,11 +6,9 @@ import android.util.Log;
 
 import org.osmdroid.util.BoundingBox;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
@@ -77,20 +75,6 @@ public final class DatabaseController {
         downloadedImages = new LinkedList<>();
     }
 
-    /**
-     * Deletes all files in the frontend database
-     */
-    public void flushDatabase() {
-        boxStore.deleteAllFiles();
-    }
-
-    /**
-     * Deletes all pois from the frontend database
-     */
-    public void deleteAllPois() {
-        PoiDao.getInstance().deleteAll();
-    }
-
 
     /**
      * syncs models based on syncType
@@ -128,13 +112,6 @@ public final class DatabaseController {
     public void syncPoisDone() {
         syncingPois = false;
         sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA));
-    }
-
-    /**
-     * @return the time when the last sync !STARTED!
-     */
-    public Date lastSync() {
-        return lastSync;
     }
 
 

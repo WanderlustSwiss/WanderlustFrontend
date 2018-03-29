@@ -33,7 +33,6 @@ import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 
 /**
  * PoiViewDialog:
@@ -153,9 +152,7 @@ public class PoiViewDialog extends DialogFragment {
 
     private void initActionControls() {
 
-        sharePoiButton.setOnClickListener(v -> {
-            shareImage();
-        });
+        sharePoiButton.setOnClickListener(v -> shareImage());
 
         closeDialogButton.setOnClickListener(v -> {
             // dismisses the current dialog view
@@ -180,13 +177,10 @@ public class PoiViewDialog extends DialogFragment {
 
     private void fillOutPoiView(View view) {
         if (currentPoi.getType() >= 0) {
-            controller.getImages(currentPoi, new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    List<File> images = (List<File>) controllerEvent.getModel();
-                    if (images.size() > 0) {
-                        Picasso.with(context).load(images.get(0)).fit().into(poiImage);
-                    }
+            controller.getImages(currentPoi, controllerEvent -> {
+                List<File> images = (List<File>) controllerEvent.getModel();
+                if (images.size() > 0) {
+                    Picasso.with(context).load(images.get(0)).fit().into(poiImage);
                 }
             });
         } else {

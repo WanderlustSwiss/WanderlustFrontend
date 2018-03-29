@@ -1,31 +1,18 @@
 package eu.wise_iot.wanderlust;
 
-import android.app.Activity;
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.views.MainActivity;
-import eu.wise_iot.wanderlust.views.ProfileFragment;
-import io.objectbox.BoxStore;
 
 import static org.junit.Assert.*;
 
