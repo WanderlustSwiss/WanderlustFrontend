@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,9 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
 
@@ -40,6 +43,7 @@ public class PoiEditDialog extends DialogFragment {
     private FragmentHandler poiHandler;
     private Context context;
     private Poi poi;
+    private MapController mapController;
     private GeoPoint lastKnownLocation;
     private EditText titleEditText;
     private TextInputLayout titleTextLayout;
@@ -67,6 +71,7 @@ public class PoiEditDialog extends DialogFragment {
         args.putDouble(Constants.LAST_POS_LON, lastKnownLocation.getLongitude());
         args.putBoolean(Constants.POI_IS_NEW, true);
         fragment.poi = new Poi();
+        fragment.mapController = new MapController(fragment);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,6 +83,7 @@ public class PoiEditDialog extends DialogFragment {
      */
     public static PoiEditDialog newInstance(Poi poi) {
         PoiEditDialog fragment = new PoiEditDialog();
+
         Bundle args = new Bundle();
         fragment.poi = poi;
         args.putBoolean(Constants.POI_IS_NEW, false);
@@ -151,6 +157,8 @@ public class PoiEditDialog extends DialogFragment {
         initActionControls();
         if (!isNewPoi) {
             fillInDataFromExistingPoi();
+        }else{
+            fillInDataFromAddress();
         }
     }
 
@@ -248,5 +256,19 @@ public class PoiEditDialog extends DialogFragment {
         } else {
             modeSpinner.setSelection(1); // private
         }
+    }
+
+    /**
+     * Prefills all data from address
+     */
+    private void fillInDataFromAddress(){
+        mapController.searchCoordinates(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),1, controllerEvent -> {
+            AddressPoint addressPoint = (AddressPoint) controllerEvent.getModel();
+            if (addressPoint != null &&
+                    addressPoint.getCity() != null && addressPoint.getName() != null){
+                Log.d(TAG, addressPoint.getName());
+                titleEditText.setText(addressPoint.getName() + ", " + addressPoint.getCity());
+            }
+        });
     }
 }

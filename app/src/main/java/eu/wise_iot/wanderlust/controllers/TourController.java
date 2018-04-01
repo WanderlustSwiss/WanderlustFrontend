@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import android.util.Base64;
+import android.util.Log;
 
 import org.joda.time.DateTime;
 import com.google.gson.Gson;
@@ -31,10 +32,13 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Region_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
@@ -73,6 +77,7 @@ public class TourController {
     private Tour tour;
     private UserTourDao userTourDao;
     private DifficultyTypeDao difficultyTypeDao;
+    private RegionDao regionDao;
     private ImageController imageController;
 
     private static final String TAG = "Tourcontroller";
@@ -85,6 +90,7 @@ public class TourController {
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         ratingDao = RatingDao.getInstance();
         imageController = ImageController.getInstance();
+        regionDao = RegionDao.getInstance();
     }
 
 
@@ -145,12 +151,25 @@ public class TourController {
         ratingDao.retrieve(tour.getTour_id(), handler);
     }
 
-    public void getRating(FragmentHandler handler) {
+
+    public void getRating(FragmentHandler handler){
         ratingDao.retrieve(tour.getTour_id(), handler);
     }
-
-    public Number[] getElevationProfileXAxis() {
-        ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tour.getPolyline(), 10);
+    public String getRegion(){
+        Log.d(TAG, "Region number: " + regionDao.find().size());
+        Region region = regionDao.findOne(Region_.region_id, tour.getRegion());
+        if (region == null){
+            return "";
+        }else{
+            return region.getName() + " " + region.getCountryCode();
+        }
+    }
+    /**
+     * Calculate Distance between two coordinates, sum them up for every element
+     * @return Array of distance numbers
+     */
+    public Number[] getElevationProfileXAxis(){
+        ArrayList<GeoPoint> polyList  = PolyLineEncoder.decode(tour.getPolyline(),10);
         Number[] xAxis = new Number[polyList.size()];
         Iterator<GeoPoint> iter = polyList.iterator();
         GeoPoint first = iter.next();
@@ -168,7 +187,12 @@ public class TourController {
         return xAxis;
     }
 
-    public Number[] getElevationProfileYAxis() {
+
+    /**
+     * Converts elveation string into number array
+     * @return Array of elevation numbers
+     */
+    public Number[] getElevationProfileYAxis(){
         float[] elevations = elevationDecode(tour.getElevation());
         Number[] elevationObj = new Number[elevations.length];
         for (int i = 0; i < elevations.length; i++) {
@@ -271,7 +295,13 @@ public class TourController {
         }
     }
 
-    private float[] elevationDecode(String elevation) {
+
+    /**
+     * Decodes base64 and GZIP compressed JSON Array String of elevations into a float array
+     * @param elevation Base64 and GZIP compressed JSON Array String
+     * @return elevations
+     */
+    private float[] elevationDecode(String elevation){
         byte[] decodedByteArray;
         // Base64 decode of string
         try {
@@ -299,7 +329,12 @@ public class TourController {
         return new float[0];
     }
 
-    public String getCreatedAtString() {
+
+    /**
+     * Formats Date to string
+     * @return date
+     */
+    public String getCreatedAtString(){
         DateTimeFormatter encodef = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         DateTime dt = encodef.parseDateTime(tour.getCreatedAt());
         DateTimeFormatter decodef = DateTimeFormat.forPattern("dd. MMMMM yyyy");

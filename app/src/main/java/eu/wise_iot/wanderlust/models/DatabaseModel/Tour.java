@@ -54,7 +54,7 @@ public class Tour extends AbstractModel {
     public Tour(long internal_id, long tour_id, String title, String description,
                 String imagePath, String polyline, String elevation, long duration, long distance,
                 long ascent, long descent, long difficulty, boolean editable,
-                String updatedAt, String createdAt, boolean isPublic, List<String> seasons, long region) {
+                String updatedAt, String createdAt, long region, boolean isPublic, List<String> seasons) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;

@@ -29,7 +29,9 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -209,6 +211,7 @@ public class PoiViewDialog extends DialogFragment {
         elevationTextView.setText(elevationText);
 
         titleTextView.setText(currentPoi.getTitle());
+
         if(currentPoi.getType() >= 0){
             dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
         }

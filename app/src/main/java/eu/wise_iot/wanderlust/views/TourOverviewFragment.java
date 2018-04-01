@@ -77,7 +77,6 @@ public class TourOverviewFragment extends Fragment {
     private static void getDataFromServer(List<Tour> tours){
         TourOverviewController toc = new TourOverviewController();
         //get given favorites
-        toc.downloadDifficultyTypes();
         toc.downloadFavorites(controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
