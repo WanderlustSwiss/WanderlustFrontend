@@ -111,26 +111,23 @@ public class StartupRegistrationFragment extends Fragment {
                 btnRegister.setEnabled(false);
 
                 //get response
-                registrationController.registerUser(user, new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        btnRegister.setEnabled(true);
-                        EventType eventType = controllerEvent.getType();
-                        switch (eventType) {
-                            case OK:
-                                ((MainActivity) getActivity()).setupDrawerHeader(user);
-                                Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
-                                StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
-                                getFragmentManager().beginTransaction()
-                                        .add(R.id.content_frame, startupLoginFragment)
-                                        .commit();
-                                break;
-                            case CONFLICT:
-                                Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
-                                break;
-                            default:
-                                Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
-                        }
+                registrationController.registerUser(user, controllerEvent -> {
+                    btnRegister.setEnabled(true);
+                    EventType eventType = controllerEvent.getType();
+                    switch (eventType) {
+                        case OK:
+                            ((MainActivity) getActivity()).setupDrawerHeader(user);
+                            Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
+                            StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.content_frame, startupLoginFragment)
+                                    .commit();
+                            break;
+                        case CONFLICT:
+                            Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
                     }
                 });
             }

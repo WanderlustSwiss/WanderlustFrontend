@@ -71,13 +71,6 @@ public class TourOverviewController {
         favoriteDao.retrieveAllFavorites(handler);
     }
     /**
-     * get all difficulty types
-     *
-     */
-    public void downloadDifficultyTypes() {
-        difficultyType.retrive();
-    }
-    /**
      * get all Favorites
      *
      */

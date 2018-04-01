@@ -38,6 +38,7 @@
     <!-- TOUR RELATED STRINGS -->
     <string name="tour_button_show_map">Start</string>
     <string name="tour_equipment">Ausrüstung</string>
+    <string name="tour_region">Region</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
     <string name="dialog_feedback_description_edit_hint">Beschreibung</string>
