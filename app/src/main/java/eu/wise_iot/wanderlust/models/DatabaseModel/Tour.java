@@ -1,13 +1,18 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.osmdroid.util.GeoPoint;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.converter.PropertyConverter;
 
 /**
  * CommunityTours
@@ -33,18 +38,23 @@ public class Tour extends AbstractModel {
     long duration;
     long ascent;
     long descent;
-
     long difficulty;
-    long tourKit;
     boolean editable;
+    boolean isPublic;
+    long region;
+
+
+    @Convert(converter = seasonConverter.class, dbType = String.class)
+    List<String> seasons;
+
 
     @Convert(converter = Poi.imageInfoConverter.class, dbType = String.class)
     List<ImageInfo> imagePaths;
 
     public Tour(long internal_id, long tour_id, String title, String description,
-                    String imagePath, String polyline, String elevation, long duration, long distance,
-                    long ascent, long descent, long difficulty, long tourKit, boolean editable,
-                    String updatedAt, String createdAt) {
+                String imagePath, String polyline, String elevation, long duration, long distance,
+                long ascent, long descent, long difficulty, boolean editable,
+                String updatedAt, String createdAt, boolean isPublic, List<String> seasons, long region) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
@@ -57,19 +67,32 @@ public class Tour extends AbstractModel {
         this.ascent = ascent;
         this.descent = descent;
         this.difficulty = difficulty;
-        this.tourKit = tourKit;
         this.editable = editable;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
+        this.isPublic = isPublic;
+        this.seasons = seasons;
+        this.region = region;
     }
 
-    public Tour(){
+    public Tour() {
         this.internal_id = 0;
         this.title = "No title";
         this.description = "No description";
     }
 
-    public List<GeoPoint> getGeoPoints(){
+    public Tour(String title, String description, String polyline, long difficulty, boolean isPublic, List<String> seasons, long region) {
+        this.internal_id = 0;
+        this.title = title;
+        this.description = description;
+        this.polyline = polyline;
+        this.difficulty = difficulty;
+        this.isPublic = isPublic;
+        this.seasons = seasons;
+        this.region = region;
+    }
+
+    public List<GeoPoint> getGeoPoints() {
         return PolyLineEncoder.decode(this.getPolyline(), 10);
     }
 
@@ -77,9 +100,9 @@ public class Tour extends AbstractModel {
         return imagePaths;
     }
 
-    public ImageInfo getImageById(long id){
-        for(ImageInfo imageInfo : imagePaths){
-            if(imageInfo.getId() == id){
+    public ImageInfo getImageById(long id) {
+        for (ImageInfo imageInfo : imagePaths) {
+            if (imageInfo.getId() == id) {
                 return imageInfo;
             }
         }
@@ -92,14 +115,6 @@ public class Tour extends AbstractModel {
 
     public void setInternal_id(long internal_id) {
         this.internal_id = internal_id;
-    }
-
-    public long getTourKit() {
-        return tourKit;
-    }
-
-    public void setTourKit(long tourKit) {
-        this.tourKit = tourKit;
     }
 
     public long getTour_id() {
@@ -212,5 +227,53 @@ public class Tour extends AbstractModel {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public static class seasonConverter implements PropertyConverter<List<String>, String> {
+        @Override
+        public List<String> convertToEntityProperty(String databaseValue) {
+            if (databaseValue == null) {
+                return null;
+            }
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            return gson.fromJson(databaseValue, type);
+        }
+
+        @Override
+        public String convertToDatabaseValue(List<String> entityProperty) {
+            if (entityProperty == null) {
+                return null;
+            }
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            return gson.toJson(entityProperty, type);
+        }
+    }
+
+    public List<String> getSeasons() {
+        return seasons;
+    }
+
+    public void setSeasons(List<String> seasons) {
+        this.seasons = seasons;
+    }
+
+    public long getRegion() {
+        return region;
+    }
+
+    public void setRegion(long region) {
+        this.region = region;
     }
 }

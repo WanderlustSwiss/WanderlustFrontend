@@ -3,8 +3,11 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.MatrixCursor;
 import android.graphics.Rect;
@@ -13,10 +16,13 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +41,7 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,15 +52,22 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.CreateTourBackgroundTask;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
+import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
+import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
+import eu.wise_iot.wanderlust.views.dialog.CreateTourDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 
 /**
@@ -103,6 +117,11 @@ public class MapFragment extends Fragment {
     // Bottom Sheet with information String
     private BottomSheetBehavior informationBottomSheet;
     private TextView informationBottomSheetString;
+
+    // GPS Creating Tour
+    private ImageButton createTourButton;
+    private TextView creatingTourInformation;
+    private Intent createTourIntent;
 
 
     /**
@@ -172,6 +191,37 @@ public class MapFragment extends Fragment {
         initLayerButton(view);
         initMapTypeButton(view);
         initInformationBottomSheet(view);
+        initCreatingTourControlls(view);
+
+    }
+
+    boolean isTrackingTour = false;
+    boolean wholeRouteRequiredTrackingTour = false;
+
+    private void initCreatingTourControlls(View view) {
+        createTourButton = (ImageButton) view.findViewById(R.id.createTourButton);
+        creatingTourInformation = (TextView) view.findViewById(R.id.createTourInformation);
+
+
+        createTourButton.setOnClickListener(view1 -> {
+            if (!isTrackingTour) {
+                startTourTracking();
+                createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
+                creatingTourInformation.setVisibility(View.VISIBLE);
+            } else {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Save route")
+                        .setMessage("Do you really want to stop recording?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> {
+                            stoptTourTracking();
+                            createTourButton.setImageResource(R.drawable.ic_library_add_grey_24dp);
+                            creatingTourInformation.setVisibility(View.GONE);
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
+
+            }
+        });
     }
 
     private void initInformationBottomSheet(View view) {
@@ -259,6 +309,9 @@ public class MapFragment extends Fragment {
         // disable energy consuming processes
         mapOverlays.getMyLocationNewOverlay().disableMyLocation();
         mapOverlays.getMyLocationNewOverlay().disableFollowLocation();
+        if (isTrackingTour) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(updateTrackingOverlayReceiver);
+        }
         savePreferences();
     }
 
@@ -266,6 +319,13 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadPreferences();
+        if (isTrackingTour) {
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateTrackingOverlayReceiver, new IntentFilter(Constants.CREATE_TOUR_UPDATE_MYOVERLAY));
+            Intent intent = new Intent(Constants.CREATE_TOUR_WHOLE_ROUTE_REQUIRED);
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+            wholeRouteRequiredTrackingTour = true;
+        }
+
     }
 
     @Override
@@ -743,7 +803,7 @@ public class MapFragment extends Fragment {
                     if (hashTagSearchSuggestions != null) {
                         hashTagSearchSuggestions.clear();
                     }
-                    if(s.length() >= 1){
+                    if (s.length() >= 1) {
                         populateAdapter(s.substring(1));
                     }
                 }
@@ -858,5 +918,73 @@ public class MapFragment extends Fragment {
             informationBottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
     }
-}
 
+
+    /************************************************* Tour Tracking ***************************************************/
+
+    private void startTourTracking() {
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(createTourReceiver, new IntentFilter(Constants.CREATE_TOUR_INTENT));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateTrackingOverlayReceiver, new IntentFilter(Constants.CREATE_TOUR_UPDATE_MYOVERLAY));
+        createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
+        getActivity().startService(createTourIntent);
+        isTrackingTour = true;
+    }
+
+    private void stoptTourTracking() {
+        getActivity().stopService(createTourIntent);
+        isTrackingTour = false;
+    }
+
+    /**
+     * Shows dialog after successfully collecting geoPoints
+     *
+     * @param track the collected geopoints from the tracked tour
+     */
+    private void openCreateTourDialog(ArrayList<GeoPoint> track) {
+        FragmentTransaction fragmentTransaction = getActivity().getFragmentManager().beginTransaction();
+        // make sure that no other dialog is running
+        Fragment prevFragment = getActivity().getFragmentManager().findFragmentByTag(Constants.CREATE_TOUR_DIALOG);
+        if (prevFragment != null) fragmentTransaction.remove(prevFragment);
+        fragmentTransaction.addToBackStack(null);
+
+        CreateTourDialog dialog = CreateTourDialog.newInstance(track);
+        dialog.show(fragmentTransaction, Constants.CREATE_TOUR_DIALOG);
+    }
+
+    private BroadcastReceiver createTourReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle args = intent.getBundleExtra(Constants.CREATE_TOUR_BUNDLE);
+            ArrayList<GeoPoint> track = (ArrayList<GeoPoint>) args.getSerializable(Constants.CREATE_TOUR_TRACK);
+            if(track != null){
+                openCreateTourDialog(track);
+            } else {
+                Toast.makeText(getActivity(), "nüt ufgno worde", Toast.LENGTH_SHORT).show();
+            }
+            mapOverlays.clearTrackingOverlay();
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(createTourReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(updateTrackingOverlayReceiver);
+            mapOverlays.clearTrackingOverlay();
+        }
+    };
+
+    private BroadcastReceiver updateTrackingOverlayReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle args = intent.getBundleExtra(Constants.CREATE_TOUR_BUNDLE);
+            if (!wholeRouteRequiredTrackingTour) {
+                GeoPoint trackedGeoPoint = (GeoPoint) args.getSerializable(Constants.CREATE_TOUR_ADDING_GEOPOINT);
+                mapOverlays.addItemToTrackingOverlay(trackedGeoPoint);
+            } else {
+                ArrayList<GeoPoint> trackedGeoPoints = (ArrayList<GeoPoint>) args.getSerializable(Constants.CREATE_TOUR_ADDING_GEOPOINTS);
+                if(trackedGeoPoints != null){
+                    mapOverlays.refreshTrackingOverlay(trackedGeoPoints);
+                    wholeRouteRequiredTrackingTour = false;
+                }
+            }
+
+        }
+    };
+
+
+}

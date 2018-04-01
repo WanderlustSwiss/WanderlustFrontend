@@ -65,6 +65,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private ArrayList<Polyline> borderLines;
     private List<GeoObject> sacList;
     private final MapFragment mapFragment;
+    private ArrayList<GeoPoint> trackingTourPoints;
+    private ArrayList<Polyline> trackingTourOverlay;
 
 
     public MyMapOverlays(Activity activity, MapView mapView, MapController searchMapController, MapFragment fragment) {
@@ -374,7 +376,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
 
-
     @Override
     public void update(DatabaseEvent event) {
 
@@ -426,9 +427,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         if (focusedPositionMarker != null) {
             removeFocusedPositionMarker();
         }
-        if (borderLines != null) {
-            clearPolylines();
-        }
 
         if (geoPoint != null) {
             Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
@@ -458,9 +456,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      * @param geoPoints A List of Geopoint to be displayed
      */
     public void addPolyline(ArrayList<GeoPoint> geoPoints) {
-        if (focusedPositionMarker != null) {
-            removeFocusedPositionMarker();
-        }
         if (borderLines == null) {
             borderLines = new ArrayList<>();
         }
@@ -492,8 +487,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     /**
      * Triggers the loading of sac hut layer arround the current location and displays it
      *
-     * @param geoPoint1 Current location of the user
-     * @param geoPoint2 Current location of the user
+     * @param geoPoint1  Current location of the user
+     * @param geoPoint2  Current location of the user
      * @param setVisible display or hide layer
      */
     void showSacHutLayer(boolean setVisible, GeoPoint geoPoint1, GeoPoint geoPoint2) {
@@ -556,6 +551,59 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         }
         mapView.invalidate();
 
+    }
+
+
+    /**
+     * Adds a GeoPoint to the map view for Tracking tour and deactivates position marker
+     *
+     * @param geoPoint A point to be added to to tracking overlay
+     */
+    public void addItemToTrackingOverlay(GeoPoint geoPoint) {
+        if (trackingTourPoints == null) {
+            trackingTourPoints = new ArrayList<>();
+        }
+        if (trackingTourOverlay == null) {
+            trackingTourOverlay = new ArrayList<>();
+        }
+        mapView.getOverlays().removeAll(trackingTourOverlay);
+
+        Polyline polyline = new Polyline();
+        trackingTourPoints.add(geoPoint);
+        polyline.setPoints(this.trackingTourPoints);
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
+        trackingTourOverlay.add(polyline);
+        mapView.getOverlays().add(polyline);
+        mapView.invalidate();
+    }
+
+    /**
+     * Deletes the points of the tracking tour overlay
+     */
+    public void clearTrackingOverlay() {
+        if (trackingTourOverlay != null) {
+            mapView.getOverlays().removeAll(trackingTourOverlay);
+            trackingTourOverlay = null;
+            trackingTourPoints = null;
+        }
+    }
+
+    /**
+     * Adds a GeoPoint to the map view for Tracking tour and deactivates position marker
+     *
+     * @param geoPoints A list of points to be added to to tracking overlay
+     */
+    public void refreshTrackingOverlay(ArrayList<GeoPoint> geoPoints) {
+        clearTrackingOverlay();
+        trackingTourPoints = geoPoints;
+        trackingTourOverlay = new ArrayList<>();
+
+        Polyline polyline = new Polyline();
+        polyline.setPoints(this.trackingTourPoints);
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
+        trackingTourOverlay.add(polyline);
+        mapView.getOverlays().add(polyline);
+        mapView.invalidate();
     }
 
 }

@@ -51,6 +51,14 @@
         <item>Rastplatz</item>
         <item>Flora / Fauna</item>
     </string-array>
+    <string-array name="dialog_difficulties">
+        <item>T1</item>
+        <item>T2</item>
+        <item>T3</item>
+        <item>T4</item>
+        <item>T5</item>
+        <item>T6</item>
+    </string-array>
 
     <string-array name="dialog_feedback_spinner_geoobject_type">
         <item>SAC</item>
@@ -203,5 +211,12 @@
     <string name="start">Start</string>
     <string name="end">Ende</string>
     <string name="temperature_abbrevation">°C</string>
+    <string name="create_tour_information">Tour wird aufgenommen. Bitte GPS nicht ausschalten.</string>
+
+    <!--- Seasons -->
+    <string name="summer">Sommer</string>
+    <string name="winter">Winter</string>
+    <string name="fall">Herbst</string>
+    <string name="spring">Frühling</string>
 
 </resources>

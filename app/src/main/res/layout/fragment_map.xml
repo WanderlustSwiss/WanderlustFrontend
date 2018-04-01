@@ -42,6 +42,18 @@
                     android:layout_marginTop="16dp" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/createTourInformation"
+                style="@style/p.Small.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-24dp"
+                android:background="@color/highlight_main"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="@string/create_tour_information"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,6 +80,13 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/createTourButton"
+                style="@style/FloatingActionButton.Light"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_library_add_grey_24dp" />
 
             <ImageButton
                 android:id="@+id/locationButton"
@@ -287,12 +306,12 @@
             android:id="@+id/public_transport_station_name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="24dp"
             android:paddingLeft="24dp"
             android:paddingTop="24dp"
-            android:paddingBottom="24dp"
             android:text="@string/map_layer_layers"
             android:textColor="@color/black"
-            android:textSize="21sp"/>
+            android:textSize="21sp" />
 
     </android.support.v4.widget.NestedScrollView>
 
