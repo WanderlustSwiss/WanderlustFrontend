@@ -39,7 +39,7 @@ Released .apk packages: [Browse Packages](http://86.119.40.34/Frontend_Android_A
 The release tour, poi, maps and profile changes
 
 **Package**
-[wanderlust-app-0.4.0-18048.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.4.0-18048.apk)
+[wanderlust-app-0.4.0-18052.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.4.0-18052.apk)
 
 **Date**
 02.04.2018
