@@ -53,7 +53,7 @@ public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<Fi
             if (!image.exists()) {
                 //Download it!
                 try {
-                    Call call = service.downloadImage(route, id, imageInfo.getId());
+                    Call call = service.downloadImage(route, id, 1);
                     Response<ResponseBody> response = call.execute();
                     if (response.isSuccessful()) {
                         ResponseBody downloadedImg = response.body();

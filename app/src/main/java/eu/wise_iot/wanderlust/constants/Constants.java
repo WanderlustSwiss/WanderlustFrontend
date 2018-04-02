@@ -9,10 +9,10 @@ package eu.wise_iot.wanderlust.constants;
 public interface Constants {
 
     // new types
-    int TYPE_VIEW = 0;
-    int TYPE_RESTAURANT = 1;
-    int TYPE_REST_AREA = 2;
-    int TYPE_FLORA_FAUNA = 3;
+    int TYPE_VIEW = 1;
+    int TYPE_RESTAURANT = 2;
+    int TYPE_REST_AREA = 3;
+    int TYPE_FLORA_FAUNA = 4;
 
     // GeoObjectTypes
     long TYPE_SAC = -1;
