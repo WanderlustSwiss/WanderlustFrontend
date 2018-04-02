@@ -193,7 +193,7 @@ public class EquipmentController {
                     }
 
                     List<Equipment> recEquipmentList = new ArrayList<>();
-                    for(Equipment equipmentItem : recEquipmentList){
+                    for(Equipment equipmentItem : recommendedEquipment){
                         if(equipmentItem != null) {
                             recEquipmentList.add(equipmentItem);
                         }
