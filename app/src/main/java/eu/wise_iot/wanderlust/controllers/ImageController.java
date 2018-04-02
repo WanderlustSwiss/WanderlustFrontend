@@ -40,7 +40,7 @@ public class ImageController {
     private ImageController(){
         picturesDir = CONTEXT.getApplicationContext().getApplicationContext().getExternalFilesDir("pictures").getAbsolutePath();
         FOLDERS = new String[4];
-        FOLDERS[0] = "pois";
+        FOLDERS[0] = "poi";
         FOLDERS[1] = "tours";
         FOLDERS[2] = "profile";
         FOLDERS[3] = "equipment";
