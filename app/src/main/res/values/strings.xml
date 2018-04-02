@@ -46,6 +46,7 @@
         <item>nur für mich</item>
     </string-array>
     <string-array name="dialog_feedback_spinner_type">
+        <item></item>
         <item>Aussichtspunkt</item>
         <item>Restaurant</item>
         <item>Rastplatz</item>
