@@ -186,7 +186,7 @@ public class PoiViewDialog extends DialogFragment {
         } else {
             List<File> images = new ArrayList<>();
             images.add(new File(currentPoi.getImagePaths().get(0).getPath()));
-            Picasso.with(context).load(images.get(0).getPath()).into(poiImage);
+            Picasso.with(context).load(images.get(0).getPath()).fit().centerCrop().into(poiImage);
         }
 
         // todo: add better image to display that poi is private (ask Hristian how)
