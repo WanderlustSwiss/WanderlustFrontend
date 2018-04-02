@@ -161,7 +161,7 @@ public class LoginController {
     }
     public File getProfileImage(){
         Profile profile = profileDao.getProfile();
-        if (profile.getImagePath() != null){
+        if (profile != null && profile.getImagePath() != null){
             return imageController.getImage(profile.getImagePath());
         }
         return null;
