@@ -700,8 +700,11 @@ public class TourFragment extends Fragment {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-        MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
 
+        //Disable my location
+        getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.MY_LOCATION_ENABLED, false).apply();
+
+        MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
         getFragmentManager().beginTransaction()
                 .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                 .addToBackStack(Constants.MAP_FRAGMENT)
