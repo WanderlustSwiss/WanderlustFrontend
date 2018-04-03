@@ -15,6 +15,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourKitEquipment;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TourService;
 import io.objectbox.Box;
@@ -375,10 +376,10 @@ public class UserTourDao extends DatabaseObjectAbstract {
     }
 
     public void getExtraEquipment(long id, FragmentHandler handler){
-        Call<List<Equipment>> call = service.retrieveExtraEquipment(id);
-        call.enqueue(new Callback<List<Equipment>>() {
+        Call<List<TourKitEquipment>> call = service.retrieveExtraEquipment(id);
+        call.enqueue(new Callback<List<TourKitEquipment>>() {
             @Override
-            public void onResponse(Call<List<Equipment>> call, Response<List<Equipment>> response) {
+            public void onResponse(Call<List<TourKitEquipment>> call, Response<List<TourKitEquipment>> response) {
                 if(response.isSuccessful()){
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
@@ -387,7 +388,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
 
             @Override
-            public void onFailure(Call<List<Equipment>> call, Throwable t) {
+            public void onFailure(Call<List<TourKitEquipment>> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });

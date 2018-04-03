@@ -11,6 +11,7 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourKitEquipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
@@ -238,8 +239,10 @@ public class EquipmentController {
                     getExtraEquipment(tour.getTour_id(), controllerEventExtraEquipment -> {
                         switch (controllerEventExtraEquipment.getType()){
                             case OK:
-                                List<Equipment> extraEquipment = (List<Equipment>) controllerEventExtraEquipment.getModel();
-                                recEquipmentList.addAll(extraEquipment);
+                                List<TourKitEquipment> extraEquipment = (List<TourKitEquipment>) controllerEventExtraEquipment.getModel();
+                                for(TourKitEquipment tourKitEquipment : extraEquipment){
+                                    recEquipmentList.add(tourKitEquipment.getEquipment());
+                                }
                                 handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
                                 break;
                             case NOT_FOUND:
