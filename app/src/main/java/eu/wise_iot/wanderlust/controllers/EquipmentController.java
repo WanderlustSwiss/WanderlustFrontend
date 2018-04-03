@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
@@ -122,6 +121,7 @@ public class EquipmentController {
                     List<Equipment> equipment = getEquipmentList();
 
 
+
                     //Calculate the score of each weather type
                     float maxTemp = Float.NEGATIVE_INFINITY;
                     float minTemp = Float.POSITIVE_INFINITY;
@@ -148,20 +148,38 @@ public class EquipmentController {
                     Equipment[] recommendedEquipment = new Equipment[getTypeCount()];
                     ArrayList<Equipment> basicEquipment = new ArrayList<>();
 
+
+                    //find out current Season
+                    int currentSeasonKey = weatherController.getCurrentSeason();
+
+
                     for (Equipment e : equipment) {
 
-
                         //Add to basic equipment
-                        //TODO discuss if map on id or String
-                        if(e.getType() == 3){
+                        if(e.getType() == 1){
                             basicEquipment.add(e);
                             continue;
                         }
 
                         //If Equipment is not in recommended temperature skip it
-                        if (e.getMaxTemperature() < maxTemp || e.getMinTemperature() > minTemp) {
+                        if (e.getMaxTemperature() < maxTemp || e.getMinTemperature() > minTemp)  {
                             continue;
                         }
+
+                        //If Equipment is not in current season skip it
+                        byte[] seasonsEquipment = e.getSeasons();
+                        boolean seasonIsContained = false;
+                        for(int i = 0; i < seasonsEquipment.length; i++){
+                            if((seasonsEquipment[i] == 1) && currentSeasonKey == i){
+                                seasonIsContained = true;
+                                break;
+                            }
+                        }
+
+                        if(!seasonIsContained){
+                            continue;
+                        }
+
 
 
                         //Check if type of equipment is already present
