@@ -4,6 +4,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import org.joda.time.DateTime;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -152,24 +153,27 @@ public class TourController {
     }
 
 
-    public void getRating(FragmentHandler handler){
+    public void getRating(FragmentHandler handler) {
         ratingDao.retrieve(tour.getTour_id(), handler);
     }
-    public String getRegion(){
+
+    public String getRegion() {
         Log.d(TAG, "Region number: " + regionDao.find().size());
         Region region = regionDao.findOne(Region_.region_id, tour.getRegion());
-        if (region == null){
+        if (region == null) {
             return "";
-        }else{
+        } else {
             return region.getName() + " " + region.getCountryCode();
         }
     }
+
     /**
      * Calculate Distance between two coordinates, sum them up for every element
+     *
      * @return Array of distance numbers
      */
-    public Number[] getElevationProfileXAxis(){
-        ArrayList<GeoPoint> polyList  = PolyLineEncoder.decode(tour.getPolyline(),10);
+    public Number[] getElevationProfileXAxis() {
+        ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tour.getPolyline(), 10);
         Number[] xAxis = new Number[polyList.size()];
         Iterator<GeoPoint> iter = polyList.iterator();
         GeoPoint first = iter.next();
@@ -190,9 +194,10 @@ public class TourController {
 
     /**
      * Converts elveation string into number array
+     *
      * @return Array of elevation numbers
      */
-    public Number[] getElevationProfileYAxis(){
+    public Number[] getElevationProfileYAxis() {
         float[] elevations = elevationDecode(tour.getElevation());
         Number[] elevationObj = new Number[elevations.length];
         for (int i = 0; i < elevations.length; i++) {
@@ -298,10 +303,11 @@ public class TourController {
 
     /**
      * Decodes base64 and GZIP compressed JSON Array String of elevations into a float array
+     *
      * @param elevation Base64 and GZIP compressed JSON Array String
      * @return elevations
      */
-    private float[] elevationDecode(String elevation){
+    private float[] elevationDecode(String elevation) {
         byte[] decodedByteArray;
         // Base64 decode of string
         try {
@@ -332,9 +338,10 @@ public class TourController {
 
     /**
      * Formats Date to string
+     *
      * @return date
      */
-    public String getCreatedAtString(){
+    public String getCreatedAtString() {
         DateTimeFormatter encodef = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         DateTime dt = encodef.parseDateTime(tour.getCreatedAt());
         DateTimeFormatter decodef = DateTimeFormat.forPattern("dd. MMMMM yyyy");
@@ -371,9 +378,18 @@ public class TourController {
 
     public void createTour(FragmentHandler<Trip> handler) {
         TripDao dao = TripDao.getInstance();
-        if(dao != null){
+        if (dao != null) {
             dao.create(this.tour, handler);
         }
     }
+
+    public Region getRegionFromString(String state) {
+        return regionDao.findOne(Region_.name, state);
+    }
+
+    public List<Region> getAllRegions(){
+        return regionDao.find();
+    }
+
 }
 

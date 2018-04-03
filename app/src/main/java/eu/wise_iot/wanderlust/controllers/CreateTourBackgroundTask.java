@@ -24,6 +24,11 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.views.MainActivity;
 
+/*
+ * A background service which is collecting geoPoints for Creating a tour.
+ * @author Joshua Meier
+ * @license MIT
+ */
 public class CreateTourBackgroundTask extends Service {
     private static final String TAG = "CreateTourContoller";
     private LocationManager mLocationManager = null;
@@ -69,11 +74,10 @@ public class CreateTourBackgroundTask extends Service {
                 sendLocationBroadcastUpdateMapOverlay(addedGeopoint);
             }
             mLastLocation = location;
-
         }
 
         /**
-         * Time difference threshold set for one minute.
+         * Time difference threshold set for 15 seconds (after 15 seconds bad signal, just take the point).
          */
         static final int TIME_DIFFERENCE_THRESHOLD = 15 * 1000;
 
@@ -93,7 +97,7 @@ public class CreateTourBackgroundTask extends Service {
             boolean isMoreAccurate = newLocation.getAccuracy() <= oldLocation.getAccuracy();
             if (isMoreAccurate) {
                 return true;
-            } else { // if there is no accurant signal the last 20 seconds, just take the location
+            } else { // if the signal hasn't approved the last 15 seconds, just take the location
                 long timeDifference = newLocation.getTime() - oldLocation.getTime();
                 if (timeDifference > -TIME_DIFFERENCE_THRESHOLD) {
                     return true;
@@ -141,6 +145,9 @@ public class CreateTourBackgroundTask extends Service {
         }
     }
 
+    /**
+     * Starts the Background Task in Foreground (visible for user) so that the user can see that a tour is recording and so that the system doesn't kill the long living background task.
+     */
     private void startForeground() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
 
@@ -149,8 +156,8 @@ public class CreateTourBackgroundTask extends Service {
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Wanderlust")
-                .setContentText("Tracking tour...")
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.create_tour_tracking_tour))
                 .setContentIntent(pendingIntent).build();
 
         startForeground(1337, notification);
@@ -170,6 +177,9 @@ public class CreateTourBackgroundTask extends Service {
         sendLocationBroadcastTrackingFinished();
     }
 
+    /**
+     * Initializes the Location Manager.
+     */
     private void initializeLocationManager() {
         Log.e(TAG, "initializeLocationManager");
         if (mLocationManager == null) {
@@ -177,6 +187,9 @@ public class CreateTourBackgroundTask extends Service {
         }
     }
 
+    /**
+     * Sends a Local Broadcast that the tracking is finished with the whole tour as parameter.
+     */
     private void sendLocationBroadcastTrackingFinished() {
         Intent intent = new Intent(Constants.CREATE_TOUR_INTENT);
         Bundle args = new Bundle();
@@ -185,6 +198,11 @@ public class CreateTourBackgroundTask extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
+    /**
+     * If wholeRouteRequired is true, it send the whole Route as a Local Broadcast, else only the newest geoPoint
+     *
+     * @param geoPoint The the newly recorded geopoint which needs to be added in the frontend tracking view.
+     */
     private void sendLocationBroadcastUpdateMapOverlay(GeoPoint geoPoint) {
         Bundle args = new Bundle();
 
@@ -205,6 +223,9 @@ public class CreateTourBackgroundTask extends Service {
 
     }
 
+    /**
+     * Is listening for the duty to send the whole tracking tour.
+     */
     private BroadcastReceiver wholeTourRequiredReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -219,7 +240,7 @@ public class CreateTourBackgroundTask extends Service {
      *
      * @return Name of best suiting provider.
      */
-    String getProviderName() {
+    private String getProviderName() {
         LocationManager locationManager = (LocationManager) this
                 .getSystemService(Context.LOCATION_SERVICE);
 

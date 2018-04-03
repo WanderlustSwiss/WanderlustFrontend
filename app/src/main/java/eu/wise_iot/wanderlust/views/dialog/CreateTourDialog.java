@@ -1,13 +1,16 @@
 package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DialogFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -16,13 +19,19 @@ import android.widget.Toast;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 
@@ -35,8 +44,9 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 public class CreateTourDialog extends DialogFragment {
     private static final String TAG = "CreateTourDialog";
     private FragmentHandler<Trip> createTourhandler;
-    private Context context;
     private ArrayList<GeoPoint> trackedTour;
+    private List<Region> regions;
+    private List<String> regionNames;
 
     private Tour tour;
     private EditText titleEditText;
@@ -44,10 +54,17 @@ public class CreateTourDialog extends DialogFragment {
     private EditText descriptionEditText;
     private Spinner difficultySpinner;
     private Spinner publicSpinner;
+    private Spinner regionSpinner;
+    private CheckBox summerCheckBox;
+    private CheckBox fallCheckBox;
+    private CheckBox springCheckBox;
+    private CheckBox winterCheckBox;
+
 
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
-    private TourController controller;
+    private TourController tourController;
+    private MapController mapController;
     private boolean isNewTour;
     private boolean publish;
 
@@ -83,8 +100,14 @@ public class CreateTourDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity();
-        controller = new TourController(this.tour);
+        tourController = new TourController(this.tour);
+        mapController = new MapController(this);
+        regions = tourController.getAllRegions();
+        regionNames = new ArrayList<>();
+
+        for (Region region : regions) {
+            regionNames.add(region.getName());
+        }
 
         Bundle args = getArguments();
         isNewTour = args.getBoolean(Constants.CREATE_TOUR_IS_NEW);
@@ -95,22 +118,15 @@ public class CreateTourDialog extends DialogFragment {
 
         }
 
-        // Todo: implement season selector
-        ArrayList<String> seasons = new ArrayList<>();
-        seasons.add("summer");
-        seasons.add("spring");
-        this.tour.setSeasons(seasons);
-
-        // ToDo: Make Region spinner
-        tour.setRegion(2);
-
         // set style
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog);
 
         createTourhandler = controllerEvent -> {
             if (controllerEvent.getType() == EventType.OK) {
-                Toast.makeText(getActivity(), "Erfolg", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.create_tour_saved, Toast.LENGTH_SHORT).show();
                 dismiss();
+            } else {
+                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -126,6 +142,17 @@ public class CreateTourDialog extends DialogFragment {
         difficultySpinner = (Spinner) view.findViewById(R.id.tour_difficulty);
         buttonSave = (ImageButton) view.findViewById(R.id.tour_save_button);
         buttonCancel = (ImageButton) view.findViewById(R.id.tour_return_button);
+        regionSpinner = (Spinner) view.findViewById(R.id.tour_region);
+        winterCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_winter);
+        summerCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_summer);
+        fallCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_fall);
+        springCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_spring);
+
+
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, regionNames);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        regionSpinner.setAdapter(spinnerArrayAdapter);
+
 
         return view;
     }
@@ -134,6 +161,7 @@ public class CreateTourDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initActionControls();
+        fillInDataFromFirstGeopoint();
         if (!isNewTour) {
             fillInDataFromExistingTour();
         }
@@ -144,40 +172,57 @@ public class CreateTourDialog extends DialogFragment {
      */
     private void initActionControls() {
         buttonSave.setOnClickListener(v -> {
-            if (titleEditText != null && titleEditText.getText() != null) {
-                String title = titleEditText.getText().toString();
-                tour.setTitle(title);
-            }
+            String title = titleEditText.getText().toString();
+            tour.setTitle(title);
 
             if (tour.getTitle().isEmpty()) {
                 titleTextLayout.setError(getString(R.string.message_add_title));
                 return;
             }
 
-            if (descriptionEditText != null && descriptionEditText.getText() != null) {
-                String description = descriptionEditText.getText().toString();
-                tour.setDescription(description);
+            String description = descriptionEditText.getText().toString();
+            tour.setDescription(description);
+
+            tour.setDifficulty(difficultySpinner.getSelectedItemPosition() + 1);
+
+            publish = !tour.isPublic() && publicSpinner.getSelectedItemPosition() == 0;
+            tour.setPublic(publicSpinner.getSelectedItemPosition() == 0);
+            tour.setRegion(regions.get((int) regionSpinner.getSelectedItemId()).getRegion_id());
+
+            ArrayList<String> seasons = new ArrayList<>();
+            if (springCheckBox.isChecked()) seasons.add("spring");
+            if (winterCheckBox.isChecked()) seasons.add("winter");
+            if (fallCheckBox.isChecked()) seasons.add("fall");
+            if (summerCheckBox.isChecked()) seasons.add("summer");
+            tour.setSeasons(seasons);
+
+            if (seasons.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.create_tour_no_seasons, Toast.LENGTH_SHORT).show();
+                return;
             }
-
-            if (difficultySpinner != null) {
-                tour.setDifficulty(difficultySpinner.getSelectedItemPosition() + 1);
-            }
-
-
-            if (publicSpinner != null) {
-                publish = !tour.isPublic() && publicSpinner.getSelectedItemPosition() == 0;
-                tour.setPublic( publicSpinner.getSelectedItemPosition() == 0);
-            }
-
 
             if (isNewTour) {
-                controller.createTour(createTourhandler);
+                tourController.createTour(createTourhandler);
             } else {
                 // Todo: Edit the selected tour
             }
         });
 
-        buttonCancel.setOnClickListener(view -> dismiss());
+        buttonCancel.setOnClickListener(view -> {
+            if (isNewTour) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.create_tour_not_saved)
+                        .setMessage(R.string.create_tour_not_save_tour)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> {
+                            dismiss();
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
+            } else {
+                dismiss();
+            }
+
+        });
     }
 
     /**
@@ -192,5 +237,22 @@ public class CreateTourDialog extends DialogFragment {
         } else {
             publicSpinner.setSelection(1); // private
         }
+    }
+
+    private void fillInDataFromFirstGeopoint() {
+        GeoPoint firstTrackedPoint = trackedTour.get(0);
+        mapController.searchCoordinates(firstTrackedPoint.getLatitude(), firstTrackedPoint.getLongitude(), 1, (ControllerEvent controllerEvent) -> {
+            AddressPoint addressPoint = (AddressPoint) controllerEvent.getModel();
+            if (addressPoint != null && addressPoint.getState() != null) {
+                Region region = tourController.getRegionFromString(addressPoint.getState());
+                if (region != null) {
+                    for (Region region1 : regions) {
+                        if (region1.getRegion_id() == region.getRegion_id()) {
+                            regionSpinner.setSelection(regions.indexOf(region1));
+                        }
+                    }
+                }
+            }
+        });
     }
 }

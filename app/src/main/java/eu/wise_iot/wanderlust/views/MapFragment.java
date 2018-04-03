@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -180,6 +181,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        stoptTourTracking();
         databaseController.unregister(mapOverlays);
     }
 
@@ -195,31 +197,25 @@ public class MapFragment extends Fragment {
 
     }
 
-    boolean isTrackingTour = false;
-    boolean wholeRouteRequiredTrackingTour = false;
-
     private void initCreatingTourControlls(View view) {
         createTourButton = (ImageButton) view.findViewById(R.id.createTourButton);
         creatingTourInformation = (TextView) view.findViewById(R.id.createTourInformation);
 
 
         createTourButton.setOnClickListener(view1 -> {
-            if (!isTrackingTour) {
+            if (!isMyServiceRunning(CreateTourBackgroundTask.class)) {
                 startTourTracking();
                 createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
                 creatingTourInformation.setVisibility(View.VISIBLE);
             } else {
                 new AlertDialog.Builder(getActivity())
-                        .setTitle("Save route")
-                        .setMessage("Do you really want to stop recording?")
+                        .setTitle(R.string.create_tour_save_tour)
+                        .setMessage(R.string.create_tour_stop_recording_request)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> {
                             stoptTourTracking();
-                            createTourButton.setImageResource(R.drawable.ic_library_add_grey_24dp);
-                            creatingTourInformation.setVisibility(View.GONE);
                         })
                         .setNegativeButton(android.R.string.no, null).show();
-
             }
         });
     }
@@ -309,8 +305,9 @@ public class MapFragment extends Fragment {
         // disable energy consuming processes
         mapOverlays.getMyLocationNewOverlay().disableMyLocation();
         mapOverlays.getMyLocationNewOverlay().disableFollowLocation();
-        if (isTrackingTour) {
+        if (isMyServiceRunning(CreateTourBackgroundTask.class)) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(updateTrackingOverlayReceiver);
+            Log.e(TAG, "Stop drawing points on map. Energy saver.");
         }
         savePreferences();
     }
@@ -319,11 +316,11 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadPreferences();
-        if (isTrackingTour) {
+        if (isMyServiceRunning(CreateTourBackgroundTask.class)) {
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateTrackingOverlayReceiver, new IntentFilter(Constants.CREATE_TOUR_UPDATE_MYOVERLAY));
             Intent intent = new Intent(Constants.CREATE_TOUR_WHOLE_ROUTE_REQUIRED);
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-            wholeRouteRequiredTrackingTour = true;
+            Log.e(TAG, "A request for the whole tour is sent and start tracking on map again.");
         }
 
     }
@@ -927,12 +924,12 @@ public class MapFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateTrackingOverlayReceiver, new IntentFilter(Constants.CREATE_TOUR_UPDATE_MYOVERLAY));
         createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
         getActivity().startService(createTourIntent);
-        isTrackingTour = true;
     }
 
     private void stoptTourTracking() {
         getActivity().stopService(createTourIntent);
-        isTrackingTour = false;
+        createTourButton.setImageResource(R.drawable.ic_library_add_grey_24dp);
+        creatingTourInformation.setVisibility(View.GONE);
     }
 
     /**
@@ -956,15 +953,14 @@ public class MapFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             Bundle args = intent.getBundleExtra(Constants.CREATE_TOUR_BUNDLE);
             ArrayList<GeoPoint> track = (ArrayList<GeoPoint>) args.getSerializable(Constants.CREATE_TOUR_TRACK);
-            if(track != null){
+            if (track != null && track.size() > 1) {
                 openCreateTourDialog(track);
             } else {
-                Toast.makeText(getActivity(), "nüt ufgno worde", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.create_tour_nothing_tracked, Toast.LENGTH_SHORT).show();
             }
             mapOverlays.clearTrackingOverlay();
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(createTourReceiver);
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(updateTrackingOverlayReceiver);
-            mapOverlays.clearTrackingOverlay();
         }
     };
 
@@ -972,19 +968,31 @@ public class MapFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle args = intent.getBundleExtra(Constants.CREATE_TOUR_BUNDLE);
-            if (!wholeRouteRequiredTrackingTour) {
-                GeoPoint trackedGeoPoint = (GeoPoint) args.getSerializable(Constants.CREATE_TOUR_ADDING_GEOPOINT);
+            GeoPoint trackedGeoPoint = (GeoPoint) args.getSerializable(Constants.CREATE_TOUR_ADDING_GEOPOINT);
+            if (trackedGeoPoint != null) {
                 mapOverlays.addItemToTrackingOverlay(trackedGeoPoint);
-            } else {
+            } else { // No GeoPoint was sent, maybe the whole tour was sent
                 ArrayList<GeoPoint> trackedGeoPoints = (ArrayList<GeoPoint>) args.getSerializable(Constants.CREATE_TOUR_ADDING_GEOPOINTS);
-                if(trackedGeoPoints != null){
+                if (trackedGeoPoints != null) {
                     mapOverlays.refreshTrackingOverlay(trackedGeoPoints);
-                    wholeRouteRequiredTrackingTour = false;
                 }
             }
 
         }
     };
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager == null) {
+            return false;
+        }
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }

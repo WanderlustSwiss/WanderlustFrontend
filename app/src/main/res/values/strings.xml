@@ -220,4 +220,13 @@
     <string name="fall">Herbst</string>
     <string name="spring">Frühling</string>
 
+    <string name="create_tour_stop_recording_request">Soll das Tracking wirklich beendet werden?</string>
+    <string name="create_tour_save_tour">Tour Speichern</string>
+    <string name="create_tour_tracking_tour">Tracking tour...</string>
+    <string name="create_tour_saved">Die Tour wurde erfolgreich gespeichert</string>
+    <string name="create_tour_nothing_tracked">Dummy Touren können nicht gespeichert werden</string>
+    <string name="create_tour_no_seasons">Tour kann ohne Jahreszeit nicht gespeichert werden</string>
+    <string name="create_tour_not_save_tour">Wollen Sie wirklich ohne zu speichern fortfahren. Die aufgenommene Tour wird nicht mehr verfügbar sein</string>
+    <string name="create_tour_not_saved">Tour nicht gespeichert</string>
+
 </resources>

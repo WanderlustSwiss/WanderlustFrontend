@@ -8,7 +8,7 @@
         android:id="@+id/poi_action_control_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="48dp"
         android:background="@color/primary_main"
         android:padding="16dp">
 
@@ -78,13 +78,16 @@
             android:entries="@array/dialog_difficulties"
             android:paddingTop="16dp" />
 
+        <Spinner
+            android:id="@+id/tour_region"
+            style="@style/default_spinner"
+            android:paddingTop="16dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_marginTop="24dp"
-
-            >
+            android:layout_marginTop="24dp">
 
 
         <CheckBox
@@ -110,6 +113,7 @@
             android:layout_height="wrap_content"
             android:text="@string/spring" />
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
