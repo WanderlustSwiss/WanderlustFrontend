@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.services;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import okhttp3.MultipartBody;
@@ -36,6 +37,9 @@ public interface TourService {
 
     @GET("tour/")
     Call<List<Tour>> retrieveAllTours(@Query("page") int page);
+
+    @GET("tourkit/tour/{id}")
+    Call<List<Equipment>> retrieveExtraEquipment(@Path("id") long id);
 
     @PUT("tour/{id}")
     Call<Tour> updateTour(int id, @Body Tour tour);
