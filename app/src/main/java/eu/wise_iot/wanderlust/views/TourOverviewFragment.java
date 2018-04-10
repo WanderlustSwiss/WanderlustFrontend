@@ -12,9 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -23,6 +26,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
@@ -77,6 +81,23 @@ public class TourOverviewFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tour_filter_menu, menu);
         menu.removeItem(R.id.drawer_layout);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.filterIcon:
+                Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
+                FilterFragment filterFragment = FilterFragment.newInstance();
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, filterFragment, Constants.FILTER_FRAGMENT)
+                        .addToBackStack(Constants.FILTER_FRAGMENT)
+                        .commit();
+                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                break;
+        }
+        return true;
     }
 
     /**
