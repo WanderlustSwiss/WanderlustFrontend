@@ -1,3 +1,7 @@
+plugins {
+    id "org.sonarqube" version "2.6.2"
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.objectbox'
 
@@ -162,3 +166,4 @@ android.applicationVariants.all { variant ->
     }
 }
 apply plugin: 'com.google.gms.google-services'
+

@@ -203,21 +203,12 @@ public class TourFragment extends Fragment {
         });
         return view;
     }
-
-    /**
-     * @param view
-     * @param savedInstanceState
-     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fillControls();
         setupActionListeners();
     }
-
-    /**
-     * @param view
-     */
     private void initializeControls(View view) {
         imageViewTourImage = (ImageView) view.findViewById(R.id.tour_image);
         favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
