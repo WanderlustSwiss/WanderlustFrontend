@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -57,6 +59,7 @@ public class TourOverviewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
         imageController = ImageController.getInstance();
+        setHasOptionsMenu(true);
     }
     /**
      * Static instance constructor.
@@ -68,6 +71,12 @@ public class TourOverviewFragment extends Fragment {
         TourOverviewFragment fragment = new TourOverviewFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.tour_filter_menu, menu);
+        menu.removeItem(R.id.drawer_layout);
     }
 
     /**
