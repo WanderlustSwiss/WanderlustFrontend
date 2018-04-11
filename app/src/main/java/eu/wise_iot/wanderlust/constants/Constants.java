@@ -26,6 +26,7 @@ public interface Constants {
     String TOUR_FRAGMENT = "TourFragment";
     String FILTER_FRAGMENT = "FilterFragment";
     String TOUROVERVIEW_FRAGMENT = "TourOverviewFragment";
+    String RESULT_FILTER_FRAGMENT = "ResultFilterFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
     String LOGIN_FRAGMENT = "SartupLoginFragment";
     String USER_GUIDE_FRAGMENT = "UserGuideFragment";

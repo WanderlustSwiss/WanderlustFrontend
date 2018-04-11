@@ -16,6 +16,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TourService;
+import eu.wise_iot.wanderlust.views.FilterFragment;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -242,6 +243,39 @@ public class UserTourDao extends DatabaseObjectAbstract {
      */
     public void retrieveAll(final FragmentHandler handler, int page) {
         Call<List<Tour>> call = service.retrieveAllTours(page);
+        call.enqueue(new Callback<List<Tour>>() {
+            @Override
+            public void onResponse(Call<List<Tour>> call, Response<List<Tour>> response) {
+                if (response.isSuccessful()) {
+                    List<Tour> tours = response.body();
+                    for (Tour tour : tours) {
+                        for (ImageInfo imageInfo : tour.getImagePaths()) {
+                            String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
+                            imageInfo.setName(name);
+                            imageInfo.setId(tour.getTour_id());
+                            imageInfo.setLocalDir(imageController.getTourFolder());
+                        }
+                    }
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                }
+                else{
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Tour>> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+    /**
+     * get all usertours out of the remote database by filter
+     *
+     * @param handler
+     */
+    public void retrieveAllFiltered(final FragmentHandler handler, int page, int durationS, int durationE, int regionID, String title, String difficulties) {
+        Call<List<Tour>> call = service.retrieveAllFilteredTours(page, durationS, durationE, regionID, title, difficulties);
         call.enqueue(new Callback<List<Tour>>() {
             @Override
             public void onResponse(Call<List<Tour>> call, Response<List<Tour>> response) {
