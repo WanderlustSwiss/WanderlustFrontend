@@ -31,7 +31,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
  */
 public class FilterFragment extends Fragment {
 
-    private RangeSeekBar rsbDifficulty, rsbDistance;
+    private RangeSeekBar rsbDistance, rsbDuration;
     private Button btnSearch;
     private TextInputEditText tiName, tiRegion;
     private CheckBox cbT1, cbT2, cbT3, cbT4, cbT5, cbT6;
@@ -56,8 +56,8 @@ public class FilterFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rsbDifficulty = (RangeSeekBar)view.findViewById(R.id.rsbDifficulty);
         rsbDistance = (RangeSeekBar)view.findViewById(R.id.rsbDistance);
+        rsbDuration = (RangeSeekBar)view.findViewById(R.id.rsbDuration);
         btnSearch = (Button)view.findViewById(R.id.btnSearch);
         tiName = (TextInputEditText)view.findViewById(R.id.tiTourNameInput);
         tiRegion = (TextInputEditText)view.findViewById(R.id.tiTourRegionInput);
@@ -85,6 +85,9 @@ public class FilterFragment extends Fragment {
         setting.cbT6 = cbT6.isChecked();
         setting.distanceS = (int)rsbDistance.getSelectedMinValue();
         setting.distanceE = (int)rsbDistance.getSelectedMaxValue();
+        setting.durationS = (int)rsbDuration.getSelectedMinValue();
+        setting.durationE = (int)rsbDuration.getSelectedMaxValue();
+
         setting.region = tiRegion.getText().toString();
         setting.name = tiName.getText().toString();
 
@@ -102,6 +105,6 @@ public class FilterFragment extends Fragment {
     public final class FilterSetting {
         boolean cbT1, cbT2, cbT3, cbT4, cbT5, cbT6;
         String region, name;
-        int distanceS, distanceE;
+        int distanceS, distanceE, durationS, durationE;
     }
 }

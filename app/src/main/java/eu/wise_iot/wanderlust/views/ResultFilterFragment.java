@@ -22,12 +22,14 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.views.adapters.ResultFilterRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 
 import static eu.wise_iot.wanderlust.controllers.EventType.OK;
@@ -44,7 +46,7 @@ public class ResultFilterFragment extends Fragment {
     private ResultFilterController resultFilterController;
     private ImageController imageController;
     private Context context;
-    private ToursOverviewRVAdapter adapterRoutes;
+    private ResultFilterRVAdapter adapterRoutes;
     private LinkedList<Tour> listFilteredTours;
     private RecyclerView rvToursFiltered;
     private int currentPage = 0;
@@ -73,82 +75,81 @@ public class ResultFilterFragment extends Fragment {
         // Inflate the layout for this fragment
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_filtertours, container, false);
-        resultFilterController.getFilteredTours((FragmentHandler) controllerEvent -> {
+        resultFilterController.getFilteredTours(new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent event) {
+                switch (event.getType()) {
+                    case OK:
+                        //get all needed information from server db
+                        listFilteredTours = new LinkedList<>((List<Tour>) event.getModel());
+                        currentPage++;
+                        Log.d(TAG, "Getting filtered Tours: Server response arrived");
+                        //get all the images needed and save them on the device
+                        getDataFromServer(listFilteredTours);
 
-            switch (controllerEvent.getType()) {
-                case OK:
-                    //get all needed information from server db
-                    listFilteredTours  = new LinkedList<>((List<Tour>)controllerEvent.getModel());
-                    currentPage++;
-                    Log.d(TAG,"Getting filtered Tours: Server response arrived");
-                    //get all the images needed and save them on the device
-                    getDataFromServer(listFilteredTours);
+                        // set up the RecyclerView 1
+                        rvToursFiltered = (RecyclerView) rootView.findViewById(R.id.rvFilteredTours);
+                        rvToursFiltered.setPadding(5, 5, 5, 5);
+                        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                        rvToursFiltered.setLayoutManager(verticalLayoutManager);
+                        adapterRoutes = new ResultFilterRVAdapter(context, listFilteredTours);
+                        adapterRoutes.setClickListener(this::onItemClickImages);
+                        rvToursFiltered.setAdapter(adapterRoutes);
 
-                    // set up the RecyclerView 1
-                    rvToursFiltered = (RecyclerView) rootView.findViewById(R.id.rvFilteredTours);
-                    rvToursFiltered.setPadding(5,5,5,5);
-                    LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-                    rvToursFiltered.setLayoutManager(horizontalLayoutManager);
-                    adapterRoutes = new ToursOverviewRVAdapter(context, listFilteredTours);
-                    adapterRoutes.setClickListener(this::onItemClickImages);
-                    rvToursFiltered.setAdapter(adapterRoutes);
-
-                    DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-                    itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
-                    rvToursFiltered.addItemDecoration(itemDecorator);
+                        DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+                        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
+                        rvToursFiltered.addItemDecoration(itemDecorator);
 
 
-/*                    RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                            switch (newState) {
-                                case RecyclerView.SCROLL_STATE_IDLE:
-                                    Log.d(TAG,"The RecyclerView is not scrolling");
-                                    int myCellWidth = rvToursFiltered.getChildAt(0).getMeasuredWidth();
-                                    final int offset = rvToursFiltered.computeHorizontalScrollOffset();
-                                    int position = offset / myCellWidth;
-                                    //Log.d(TAG, "pos: "+position);
-                                    if (5 < (position - (10*currentPage))) {
-                                        resultFilterController.getFilteredTours(controllerEvent -> {
-                                            switch (controllerEvent.getType()) {
-                                                case OK:
-                                                    //get all needed information from server db
-                                                    //Log.d(TAG,"added new page " + currentPage);
-                                                    LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
-                                                    currentPage++;
-                                                    listTours.addAll(newList);
-                                                    getDataFromServer(listTours);
-                                                    adapterRoutes.notifyDataSetChanged();
-                                                    break;
-                                                default:
-                                                    Log.d(TAG,"Server response ERROR: " + controllerEvent.getType().name());
-                                                    break;
-                                            }
-                                        },currentPage,//TODO add params);
-                                    }
-                                    Log.d(TAG,"Scroll idle");
-                                    break;
-                                case RecyclerView.SCROLL_STATE_DRAGGING:
-                                    Log.d(TAG,"Scrolling now");
-                                    break;
+    /*                    RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                                switch (newState) {
+                                    case RecyclerView.SCROLL_STATE_IDLE:
+                                        Log.d(TAG,"The RecyclerView is not scrolling");
+                                        int myCellWidth = rvToursFiltered.getChildAt(0).getMeasuredHeight();
+                                        final int offset = rvToursFiltered.computeHorizontalScrollOffset();
+                                        int position = offset / myCellWidth;
+                                        //Log.d(TAG, "pos: "+position);
+                                        if (5 < (position - (10*currentPage))) {
+                                            resultFilterController.getFilteredTours(controllerEvent -> {
+                                                switch (controllerEvent.getType()) {
+                                                    case OK:
+                                                        //get all needed information from server db
+                                                        //Log.d(TAG,"added new page " + currentPage);
+                                                        LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
+                                                        currentPage++;
+                                                        listTours.addAll(newList);
+                                                        getDataFromServer(listTours);
+                                                        adapterRoutes.notifyDataSetChanged();
+                                                        break;
+                                                    default:
+                                                        Log.d(TAG,"Server response ERROR: " + controllerEvent.getType().name());
+                                                        break;
+                                                }
+                                            },currentPage,//TODO add params);
+                                        }
+                                        Log.d(TAG,"Scroll idle");
+                                        break;
+                                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                                        Log.d(TAG,"Scrolling now");
+                                        break;
+                                }
                             }
-                        }
-                    };
-                    rvToursFiltered.addOnScrollListener(mScrollListener);
-                    */
-                    break;
-                default:
-                    break;
+                        };
+                        rvToursFiltered.addOnScrollListener(mScrollListener);
+                        */
+                        break;
+                }
             }
-            /**
-             * handles click in Recyclerview
-             * @param view
-             * @param tour
-             */
+                /**
+                 * handles click in Recyclerview
+                 * @param view
+                 * @param tour
+                 */
+
             public void onItemClickImages(View view, Tour tour) {
-
-
-                Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
+                Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
                 TourFragment tourFragment = TourFragment.newInstance(tour);
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
@@ -157,18 +158,15 @@ public class ResultFilterFragment extends Fragment {
                 ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
             }
-        }, currentPage, settingsSet.distanceS, settingsSet.distanceE, //TODO ADD PARAMS);
-
+        }, currentPage, settingsSet.distanceS, settingsSet.distanceE,settingsSet.durationS,
+                settingsSet.durationE, resultFilterController.getRegionIdByString(settingsSet.region),
+                settingsSet.name, resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
         return rootView;
-
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-
     }
 
     /**
@@ -204,7 +202,5 @@ public class ResultFilterFragment extends Fragment {
                 Log.d(TAG, "Server response ERROR: " + e.getMessage());
             }
         }
-
     }
-
 }
