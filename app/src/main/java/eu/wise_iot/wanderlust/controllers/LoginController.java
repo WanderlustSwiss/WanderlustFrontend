@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ProfileService;
@@ -36,6 +39,8 @@ public class LoginController {
     private final ImageController imageController;
     private final WeatherController weatherController;
     private final EquipmentController equipmentController;
+    private final RegionDao regionDao;
+    private final DifficultyTypeDao difficultyTypeDao;
     /**
      * Create a login contoller
      */
@@ -46,6 +51,8 @@ public class LoginController {
         imageController = ImageController.getInstance();
         weatherController = WeatherController.getInstance();
         equipmentController = EquipmentController.getInstance();
+        regionDao = RegionDao.getInstance();
+        difficultyTypeDao = DifficultyTypeDao.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
@@ -65,10 +72,7 @@ public class LoginController {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-
-                    databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
-                    weatherController.initKeys();
-                    equipmentController.initEquipment();
+                    initAppData();
                     User updatedUser = response.body();
                     User internalUser = userDao.getUser();
                     if (internalUser == null){
@@ -161,7 +165,7 @@ public class LoginController {
     }
     public File getProfileImage(){
         Profile profile = profileDao.getProfile();
-        if (profile.getImagePath() != null){
+        if (profile != null && profile.getImagePath() != null){
             return imageController.getImage(profile.getImagePath());
         }
         return null;
@@ -176,6 +180,17 @@ public class LoginController {
         public String getEmail() {
             return email;
         }
+    }
+
+    /**
+     * This Method is used to download all app data like (equipment, poi types etc.) when login
+     */
+    private void initAppData(){
+        databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
+        weatherController.initKeys();
+        equipmentController.initEquipment();
+        regionDao.retrive();
+        difficultyTypeDao.retrive();
     }
 }
 

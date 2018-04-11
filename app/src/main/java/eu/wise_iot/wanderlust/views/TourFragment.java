@@ -348,15 +348,15 @@ public class TourFragment extends Fragment {
         } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
-        // TODO: add tour region here
-//        tourRegion.setText("Region <Namen>");
+        tourRegion.setText(getString(R.string.tour_region) + " " + tourController.getRegion());
 
         tourTitle.setText(tourController.getTitle());
 
         tourController.getRating(controllerEvent -> {
            if (controllerEvent.getType() == EventType.OK){
                float rateAvg = (float) controllerEvent.getModel();
-               float rateAvgRound = Float.parseFloat(String.format("%.1f", rateAvg));
+
+               float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateAvg * 2) / 2.0));
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
                tourRatingInNumbers.setText("0");

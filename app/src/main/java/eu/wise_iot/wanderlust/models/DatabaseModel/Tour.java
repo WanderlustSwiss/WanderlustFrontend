@@ -35,6 +35,7 @@ public class Tour extends AbstractModel {
     long ascent;
     long descent;
 
+    long region;
     long difficulty;
     long tourKit;
     boolean editable;
@@ -45,7 +46,7 @@ public class Tour extends AbstractModel {
     public Tour(long internal_id, long tour_id, String title, String description,
                     String imagePath, String polyline, String elevation, long duration, long distance,
                     long ascent, long descent, long difficulty, long tourKit, boolean editable,
-                    String updatedAt, String createdAt) {
+                    String updatedAt, String createdAt, long region) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
@@ -62,6 +63,7 @@ public class Tour extends AbstractModel {
         this.editable = editable;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
+        this.region = region;
     }
 
     public Tour(){
@@ -213,5 +215,13 @@ public class Tour extends AbstractModel {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public long getRegion() {
+        return region;
+    }
+
+    public void setRegion(long region) {
+        this.region = region;
     }
 }
