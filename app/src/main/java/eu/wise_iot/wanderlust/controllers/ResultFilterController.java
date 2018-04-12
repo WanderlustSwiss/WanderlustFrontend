@@ -4,10 +4,13 @@ import android.util.Log;
 
 import org.apache.commons.lang3.builder.Diff;
 
+import java.util.List;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Region_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
@@ -45,11 +48,15 @@ public class ResultFilterController {
      * @param handler
      * @param page
      */
-    public void getFilteredTours(FragmentHandler handler, int page, int durationS, int durationE, int regionID, String title, String difficulties) {
-        userTourDao.retrieveAllFiltered(handler, page, durationS, durationE, regionID, title, difficulties);
+    public void getFilteredTours(FragmentHandler handler, int distanceS, int distanceE, int page, int durationS, int durationE, int regionID, String title, String difficulties) {
+        userTourDao.retrieveAllFiltered(handler, page, distanceS, distanceE, durationS, durationE, regionID, title, difficulties);
     }
+
     public int getRegionIdByString(String region) {
-        regionDao.findOne(Region_.)
+        //should be limited to 20 values
+        List<Region> result = regionDao.find(Region_.name,region);
+        if(result != null && result.size() > 0) return (int)result.get(0).getRegion_id();
+        else return 0;
     }
     public String getDifficultiesByArray(boolean t1, boolean t2, boolean t3, boolean t4, boolean t5, boolean t6) {
         StringBuilder sb = new StringBuilder();

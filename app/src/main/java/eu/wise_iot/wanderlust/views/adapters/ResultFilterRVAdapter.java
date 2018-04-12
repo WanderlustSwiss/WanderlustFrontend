@@ -70,7 +70,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("ToursRecyclerview", "Creating View Holder");
-        View view = mInflater.inflate(R.layout.recyclerview_tour_overview, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_filter_result, parent, false);
         return new ViewHolder(view);
     }
 

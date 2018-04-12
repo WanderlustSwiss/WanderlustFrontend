@@ -274,8 +274,8 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @param handler
      */
-    public void retrieveAllFiltered(final FragmentHandler handler, int page, int durationS, int durationE, int regionID, String title, String difficulties) {
-        Call<List<Tour>> call = service.retrieveAllFilteredTours(page, durationS, durationE, regionID, title, difficulties);
+    public void retrieveAllFiltered(final FragmentHandler handler, int page, int distanceS, int distanceE, int durationS, int durationE, int regionID, String title, String difficulties) {
+        Call<List<Tour>> call = service.retrieveAllFilteredTours(page, distanceS, distanceE, durationS, durationE, regionID, title, difficulties);
         call.enqueue(new Callback<List<Tour>>() {
             @Override
             public void onResponse(Call<List<Tour>> call, Response<List<Tour>> response) {

@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
@@ -22,6 +24,10 @@ import org.w3c.dom.Text;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.FilterController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
+import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
 
 /**
  * Fragment that contains the filtering functionality for all tours
@@ -33,10 +39,13 @@ public class FilterFragment extends Fragment {
 
     private RangeSeekBar rsbDistance, rsbDuration;
     private Button btnSearch;
-    private TextInputEditText tiName, tiRegion;
+    private RegionsCompletionView tiRegion;
+    private AutoCompleteTextView tiName;
     private CheckBox cbT1, cbT2, cbT3, cbT4, cbT5, cbT6;
+    private FilterController filterController;
 
     public static FilterFragment newInstance() {
+
         Bundle args = new Bundle();
         FilterFragment fragment = new FilterFragment();
         fragment.setArguments(args);
@@ -46,6 +55,7 @@ public class FilterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        filterController = new FilterController();
         // Inflate the layout for this fragment
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_filtertours, container, false);
@@ -59,8 +69,8 @@ public class FilterFragment extends Fragment {
         rsbDistance = (RangeSeekBar)view.findViewById(R.id.rsbDistance);
         rsbDuration = (RangeSeekBar)view.findViewById(R.id.rsbDuration);
         btnSearch = (Button)view.findViewById(R.id.btnSearch);
-        tiName = (TextInputEditText)view.findViewById(R.id.tiTourNameInput);
-        tiRegion = (TextInputEditText)view.findViewById(R.id.tiTourRegionInput);
+        tiName = (AutoCompleteTextView)view.findViewById(R.id.tiTourNameInput);
+        tiRegion = (RegionsCompletionView)view.findViewById(R.id.tiTourRegionInput);
         cbT1 = (CheckBox)view.findViewById(R.id.checkboxT1);
         cbT2 = (CheckBox)view.findViewById(R.id.checkboxT2);
         cbT3 = (CheckBox)view.findViewById(R.id.checkboxT3);
@@ -69,6 +79,12 @@ public class FilterFragment extends Fragment {
         cbT6 = (CheckBox)view.findViewById(R.id.checkboxT6);
 
         btnSearch.setOnClickListener((View v) -> performSearch());
+
+        tiName.setThreshold(1);
+        tiRegion.setThreshold(1);
+
+        ArrayAdapter<Region> regionAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.select_dialog_item, filterController.getRegions());
+        tiName.setAdapter(regionAdapter);
     }
 
     /**

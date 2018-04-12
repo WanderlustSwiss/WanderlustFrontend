@@ -70,6 +70,16 @@ public class RegionDao extends DatabaseObjectAbstract {
     }
 
     /**
+     *  Return a List of Regions
+     *
+     * @param searchedColumn
+     * @param searchPattern
+     * @return
+     */
+    public List<Region> find(Property searchedColumn, String searchPattern) {
+        return regionBox.query().equal(searchedColumn, searchPattern).build().find();
+    }
+    /**
      * Searching for a single region with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.

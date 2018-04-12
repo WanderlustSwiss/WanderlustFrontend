@@ -67,6 +67,7 @@ public class ResultFilterFragment extends Fragment {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
         imageController = ImageController.getInstance();
+        resultFilterController = new ResultFilterController();
         setHasOptionsMenu(true);
     }
     @Override
@@ -74,7 +75,7 @@ public class ResultFilterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_filtertours, container, false);
+                R.layout.fragment_filteredtours, container, false);
         resultFilterController.getFilteredTours(new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent event) {
@@ -97,7 +98,7 @@ public class ResultFilterFragment extends Fragment {
                         rvToursFiltered.setAdapter(adapterRoutes);
 
                         DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-                        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
+                        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_vertical));
                         rvToursFiltered.addItemDecoration(itemDecorator);
 
 
@@ -176,16 +177,8 @@ public class ResultFilterFragment extends Fragment {
     private static void getDataFromServer(List<Tour> tours){
         TourOverviewController toc = new TourOverviewController();
         //get given favorites
-        toc.downloadDifficultyTypes();
-        toc.downloadFavorites(controllerEvent -> {
-            switch (controllerEvent.getType()) {
-                case OK:
-                    Log.d(TAG, "Server response getting favorites: " + controllerEvent.getType().name());
-                    break;
-                default:
-                    Log.d(TAG, "Download favorites: Server response ERROR: " + controllerEvent.getType().name());
-            }
-        });
+       // toc.downloadDifficultyTypes();
+
         //get thumbnail for each tour
         for(Tour ut : tours){
             try {

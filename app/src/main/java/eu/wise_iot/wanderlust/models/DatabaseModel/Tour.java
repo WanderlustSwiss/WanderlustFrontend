@@ -29,7 +29,6 @@ public class Tour extends AbstractModel {
     String elevation;
     String createdAt;
     String updatedAt;
-    String region;
     long distance;
     long duration;
     long ascent;

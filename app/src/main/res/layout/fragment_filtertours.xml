@@ -27,18 +27,17 @@
                 android:layout_weight="1"
                 android:text="Name" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <AutoCompleteTextView
+                android:id="@+id/tiTourNameInput"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/textView"
+                android:layout_marginLeft="36dp"
+                android:layout_marginTop="17dp"
+                android:ems="10"
+                android:text=""/>
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/tiTourNameInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="hint" />
-
-            </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
 
@@ -56,17 +55,11 @@
                 android:layout_weight="1"
                 android:text="Region" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/tiTourRegionInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="hint" />
-            </android.support.design.widget.TextInputLayout>
+            <eu.wise_iot.wanderlust.views.controls.RegionsCompletionView
+                android:id="@+id/tiTourRegionInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
