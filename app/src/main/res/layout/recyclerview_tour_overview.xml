@@ -6,7 +6,9 @@
     android:layout_marginStart="12dp"
     android:background="@color/white"
     android:elevation="5dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/tour_rv_item"
+    android:clickable="true">
 
     <ImageView
         android:id="@+id/tour_image"

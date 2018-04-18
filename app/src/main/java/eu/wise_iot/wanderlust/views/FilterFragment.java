@@ -79,8 +79,6 @@ public class FilterFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
         rsbDistance = (RangeSeekBar)view.findViewById(R.id.rsbDistance);
         rsbDuration = (RangeSeekBar)view.findViewById(R.id.rsbDuration);
         btnSearch = (Button)view.findViewById(R.id.btnSearch);

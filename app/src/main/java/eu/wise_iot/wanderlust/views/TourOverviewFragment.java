@@ -294,7 +294,7 @@ public class TourOverviewFragment extends Fragment {
                             });
                         }
                         break;
-                    default:
+                    case R.id.tour_rv_item:
                         Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
                         TourFragment tourFragment = TourFragment.newInstance(tour);
                         getFragmentManager().beginTransaction()
