@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -33,43 +33,30 @@
 
                 <TextView
                     android:id="@+id/tour_region"
-                    style="@style/p"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true" />
+                    android:text="test"/>
 
                 <TextView
                     android:id="@+id/tour_title"
-                    style="@style/p"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true" />
+                    android:layout_height="wrap_content"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:divider="@drawable/divider_vertical"
                         android:orientation="vertical">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="1dp">
+                            android:layout_height="wrap_content">
 
                             <ImageView
                                 android:id="@+id/imageDistance"
@@ -82,10 +69,8 @@
                                 style="@style/p"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
                                 android:layout_toRightOf="@id/imageDistance"
-                                android:textSize="14dp"
-                                android:paddingLeft="12dp" />
+                                android:textSize="14dp" />
                         </RelativeLayout>
 
                         <View
@@ -104,18 +89,17 @@
                                 android:src="@drawable/ic_timer_black_15dp" />
 
                             <TextView
-                                android:id="@+id/tourTime"
+                                android:id="@+id/tour_time"
                                 style="@style/p"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
                                 android:layout_toRightOf="@id/imageTime"
-                                android:paddingLeft="12dp" />
+                                android:textSize="14dp" />
                         </RelativeLayout>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="1dip"
+                            android:layout_height="1dp"
                             android:background="@color/background_two_and_inactive" />
 
                         <RelativeLayout
@@ -123,52 +107,43 @@
                             android:layout_height="wrap_content">
 
                             <ImageView
-                                android:id="@+id/imgTourDifficulty"
+                                android:id="@+id/ivTourDifficulty"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_fiber_manual_record_black_24dp" />
+                                android:layout_height="wrap_content"/>
 
                             <TextView
-                                android:id="@+id/tvTourDifficulty"
+                                android:id="@+id/tour_difficulty"
                                 style="@style/p"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_toRightOf="@drawable/ic_fiber_manual_record_black_24dp"
-                                android:paddingLeft="12dp" />
+                                android:layout_toRightOf="@id/ivTourDifficulty"
+                                android:textSize="14dp" />
                         </RelativeLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:divider="@drawable/divider_vertical"
-                        android:orientation="vertical"
-                        android:showDividers="middle"
-                        >
+                        android:orientation="vertical">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="-10dp"
-                            android:includeFontPadding="false">
+                            android:layout_height="wrap_content">
 
                             <ImageView
                                 android:id="@+id/imgTourAscending"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_directions_walk_black_15dp" />
+                                android:src="@drawable/ic_arrow_upward_black_15dp" />
 
                             <TextView
-                                android:id="@+id/tvTourAscending"
+                                android:id="@+id/tour_ascend"
                                 style="@style/p"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
                                 android:layout_toRightOf="@id/imgTourAscending"
-                                android:textSize="14dp"
-                                android:paddingLeft="12dp" />
+                                android:textSize="14dp" />
                         </RelativeLayout>
 
                         <View
@@ -184,42 +159,17 @@
                                 android:id="@+id/imgTourDescending"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_timer_black_15dp" />
+                                android:src="@drawable/ic_arrow_downward_black_15dp" />
 
                             <TextView
-                                android:id="@+id/tvTourDescending"
+                                android:id="@+id/tour_descend"
                                 style="@style/p"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
                                 android:layout_toRightOf="@id/imgTourDescending"
-                                android:paddingLeft="12dp" />
+                                android:textSize="14dp" />
                         </RelativeLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dip"
-                            android:background="@color/background_two_and_inactive" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <ImageView
-                                android:id="@+id/imageDifficulty"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_fiber_manual_record_black_24dp" />
-
-                            <TextView
-                                android:id="@+id/tour_difficulty"
-                                style="@style/p"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/imageDifficulty"
-                                android:paddingLeft="12dp" />
-                        </RelativeLayout>
+                        <!-- TODO insert rating -->
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

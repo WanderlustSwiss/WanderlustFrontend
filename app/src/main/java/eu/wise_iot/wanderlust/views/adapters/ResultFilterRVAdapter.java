@@ -33,7 +33,6 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
  * @author Alexander Weinbeck
  * @license MIT
  */
-@SuppressWarnings("JavaDoc")
 public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAdapter.ViewHolder> {
 
     private List<Tour> tours = Collections.emptyList();
@@ -88,19 +87,22 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         //difficulty calculations
         long difficulty = tour.getDifficulty();
         if (difficulty >= 6)
-            holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t6));
+            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t6));
         else if (difficulty >= 4)
-            holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t4_t5));
+            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t4_t5));
         else if (difficulty >= 2)
-            holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t2_t3));
+            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t2_t3));
         else
-            holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t1));
+            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t1));
 
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
 
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
 
+        holder.tvDescending.setText(tour.getDescent() + " m");
+        holder.tvAscending.setText(tour.getAscent() + " m");
+        
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
             File image = images.get(0);
@@ -156,10 +158,12 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         public final TextView tvDistance;
         public final TextView tvDifficulty;
         public final TextView tvRegion;
+        public final TextView tvAscending;
+        public final TextView tvDescending;
         public final TextView tvTitle;
         public final TextView tvTime;
         public final ImageView tvImage;
-        public final ImageView tvDifficultyIcon;
+        public final ImageView ivTourDifficulty;
 
         /**
          * copy constructor for each element which holds the view
@@ -171,9 +175,11 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
             tvDifficulty = (TextView) itemView.findViewById(R.id.tour_difficulty);
             tvRegion = (TextView) itemView.findViewById(R.id.tour_region);
             tvTitle = (TextView) itemView.findViewById(R.id.tour_title);
-            tvTime = (TextView) itemView.findViewById(R.id.tourTime);
+            tvTime = (TextView) itemView.findViewById(R.id.tour_time);
+            tvAscending = (TextView) itemView.findViewById(R.id.tour_ascend);
+            tvDescending = (TextView) itemView.findViewById(R.id.tour_descend);
             tvImage = (ImageView) itemView.findViewById(R.id.tour_image);
-            tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.imageDifficulty);
+            ivTourDifficulty = (ImageView) itemView.findViewById(R.id.ivTourDifficulty);
 
             itemView.setOnClickListener(this);
         }

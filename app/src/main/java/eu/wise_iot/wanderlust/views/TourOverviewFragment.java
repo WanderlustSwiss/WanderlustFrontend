@@ -85,7 +85,6 @@ public class TourOverviewFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.filterIcon:
                 Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
