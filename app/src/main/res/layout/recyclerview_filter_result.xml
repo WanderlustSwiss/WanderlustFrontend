@@ -64,18 +64,18 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:divider="@drawable/divider_vertical"
-                        android:orientation="vertical"
-                        android:showDividers="middle">
+                        android:orientation="vertical">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:padding="1dp">
 
                             <ImageView
                                 android:id="@+id/imageDistance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_directions_walk_black_24dp" />
+                                android:src="@drawable/ic_directions_walk_black_15dp" />
 
                             <TextView
                                 android:id="@+id/tour_distance"
@@ -84,12 +84,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_toRightOf="@id/imageDistance"
+                                android:textSize="14dp"
                                 android:paddingLeft="12dp" />
                         </RelativeLayout>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="1dip"
+                            android:layout_height="1dp"
                             android:background="@color/background_two_and_inactive" />
 
                         <RelativeLayout
@@ -100,7 +101,7 @@
                                 android:id="@+id/imageTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_timer_black_24dp" />
+                                android:src="@drawable/ic_timer_black_15dp" />
 
                             <TextView
                                 android:id="@+id/tourTime"
@@ -133,7 +134,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/imageDifficulty"
+                                android:layout_toRightOf="@drawable/ic_fiber_manual_record_black_24dp"
                                 android:paddingLeft="12dp" />
                         </RelativeLayout>
                     </LinearLayout>
@@ -144,17 +145,20 @@
                         android:layout_weight="1"
                         android:divider="@drawable/divider_vertical"
                         android:orientation="vertical"
-                        android:showDividers="middle">
+                        android:showDividers="middle"
+                        >
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-10dp"
+                            android:includeFontPadding="false">
 
                             <ImageView
                                 android:id="@+id/imgTourAscending"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_directions_walk_black_24dp" />
+                                android:src="@drawable/ic_directions_walk_black_15dp" />
 
                             <TextView
                                 android:id="@+id/tvTourAscending"
@@ -163,6 +167,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_toRightOf="@id/imgTourAscending"
+                                android:textSize="14dp"
                                 android:paddingLeft="12dp" />
                         </RelativeLayout>
 
@@ -179,7 +184,7 @@
                                 android:id="@+id/imgTourDescending"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_timer_black_24dp" />
+                                android:src="@drawable/ic_timer_black_15dp" />
 
                             <TextView
                                 android:id="@+id/tvTourDescending"
@@ -217,10 +222,7 @@
                         </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

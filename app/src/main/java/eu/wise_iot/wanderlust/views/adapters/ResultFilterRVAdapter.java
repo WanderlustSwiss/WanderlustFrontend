@@ -98,17 +98,6 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
 
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
 
-        holder.ibShare.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
-        holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
-        holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
-        //button Favorite
-        for (Favorite favorite : favoriteDao.find()) {
-            if (favorite.getTour() == tour.getTour_id()) {
-                holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.highlight_main));
-                //add to favored tours
-                this.favorizedTours.add(favorite.getTour());
-            }
-        }
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
 
@@ -171,9 +160,6 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         public final TextView tvTime;
         public final ImageView tvImage;
         public final ImageView tvDifficultyIcon;
-        public final ImageButton ibFavorite;
-        public final ImageButton ibSave;
-        public final ImageButton ibShare;
 
         /**
          * copy constructor for each element which holds the view
@@ -188,12 +174,8 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
             tvTime = (TextView) itemView.findViewById(R.id.tourTime);
             tvImage = (ImageView) itemView.findViewById(R.id.tour_image);
             tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.imageDifficulty);
-            ibFavorite = (ImageButton) itemView.findViewById(R.id.favoriteButton);
-            ibSave = (ImageButton) itemView.findViewById(R.id.saveButton);
-            ibShare = (ImageButton) itemView.findViewById(R.id.shareButton);
 
             itemView.setOnClickListener(this);
-            ibFavorite.setOnClickListener(this);
         }
 
         /**

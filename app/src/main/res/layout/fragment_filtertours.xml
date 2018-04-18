@@ -31,11 +31,9 @@
                 android:id="@+id/tiTourNameInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textView"
-                android:layout_marginLeft="36dp"
                 android:layout_marginTop="17dp"
-                android:ems="10"
+
                 android:text=""/>
 
 

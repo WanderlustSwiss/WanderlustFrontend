@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Range;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,11 +46,16 @@ public class FilterFragment extends Fragment {
     private FilterController filterController;
 
     public static FilterFragment newInstance() {
-
         Bundle args = new Bundle();
         FilterFragment fragment = new FilterFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -63,8 +69,17 @@ public class FilterFragment extends Fragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu (Menu menu) {
+        getActivity().invalidateOptionsMenu();
+        menu.findItem(R.id.filterIcon).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
 
         rsbDistance = (RangeSeekBar)view.findViewById(R.id.rsbDistance);
         rsbDuration = (RangeSeekBar)view.findViewById(R.id.rsbDuration);

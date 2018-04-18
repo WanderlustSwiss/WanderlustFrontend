@@ -94,7 +94,7 @@ public class TourOverviewFragment extends Fragment {
                         .add(R.id.content_frame, filterFragment, Constants.FILTER_FRAGMENT)
                         .addToBackStack(Constants.FILTER_FRAGMENT)
                         .commit();
-                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
                 break;
         }
         return true;
