@@ -51,7 +51,7 @@ public class StartupResetPasswordFragment extends Fragment {
                     Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
                     StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                     getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+                            .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                             .commit();
 
                     break;
@@ -107,7 +107,7 @@ public class StartupResetPasswordFragment extends Fragment {
         redirectToLogin.setOnClickListener(v -> {
             StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, startupLoginFragment)
+                    .replace(R.id.content_frame, startupLoginFragment)
                     .commit();
         });
     }

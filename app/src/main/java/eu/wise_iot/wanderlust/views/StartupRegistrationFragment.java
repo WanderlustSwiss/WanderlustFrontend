@@ -120,7 +120,7 @@ public class StartupRegistrationFragment extends Fragment {
                             Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
                             StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
                             getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame, startupLoginFragment)
+                                    .replace(R.id.content_frame, startupLoginFragment)
                                     .commit();
                             break;
                         case CONFLICT:
@@ -139,7 +139,7 @@ public class StartupRegistrationFragment extends Fragment {
         redirectToLogin.setOnClickListener(v -> {
             StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, startupLoginFragment)
+                    .replace(R.id.content_frame, startupLoginFragment)
                     .commit();
         });
     }

@@ -75,11 +75,11 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 
                         getFragmentManager().beginTransaction()
                                 .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
-                                .add(R.id.content_frame, UserGuideFragment.newInstance(), Constants.USER_GUIDE_FRAGMENT)
+                                .replace(R.id.content_frame, UserGuideFragment.newInstance(), Constants.USER_GUIDE_FRAGMENT)
                                 .commit();
                     } else {
                         getFragmentManager().beginTransaction()
-                                .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                .replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                 .commit();
                         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     }
@@ -184,7 +184,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             //googleApiClient.disconnect();
             StartupRegistrationFragment startupRegistrationFragment = new StartupRegistrationFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, startupRegistrationFragment)
+                    .replace(R.id.content_frame, startupRegistrationFragment)
                     .commit();
         });
 
@@ -193,7 +193,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             //googleApiClient.disconnect();
             StartupResetPasswordFragment startupResetPasswordFragment = new StartupResetPasswordFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, startupResetPasswordFragment)
+                    .replace(R.id.content_frame, startupResetPasswordFragment)
                     .commit();
         });
     }
