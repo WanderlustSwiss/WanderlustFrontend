@@ -41,8 +41,8 @@
     <string name="tour_region">Region</string>
     <string name="tour_difficulty">Schwierigkeit</string>
     <string name="tour_name">Name</string>
-    <string name="tour_distance">Distanz (km)</string>
-    <string name="tour_duration">Dauer (s)</string>
+    <string name="tour_distance">Distanz (KM)</string>
+    <string name="tour_duration">Dauer (Stunden)</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
     <string name="dialog_feedback_description_edit_hint">Beschreibung</string>

@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.io.Serializable;
+
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
@@ -11,7 +13,7 @@ import io.objectbox.annotation.Id;
  */
 
 @Entity
-public class Region extends AbstractModel {
+public class Region extends AbstractModel implements Serializable {
     @Id
     long internal_id;
     long region_id;
@@ -62,4 +64,7 @@ public class Region extends AbstractModel {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() { return name; }
 }

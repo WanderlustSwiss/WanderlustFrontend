@@ -100,7 +100,7 @@ public class ResultFilterFragment extends Fragment {
                         rvToursFiltered.addItemDecoration(itemDecorator);
 
 
-    /*                    RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+                        RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
                             @Override
                             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                                 switch (newState) {
@@ -118,15 +118,17 @@ public class ResultFilterFragment extends Fragment {
                                                         //Log.d(TAG,"added new page " + currentPage);
                                                         LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                                         currentPage++;
-                                                        listTours.addAll(newList);
-                                                        getDataFromServer(listTours);
+                                                        listFilteredTours.addAll(newList);
+                                                        getDataFromServer(listFilteredTours);
                                                         adapterRoutes.notifyDataSetChanged();
                                                         break;
                                                     default:
                                                         Log.d(TAG,"Server response ERROR: " + controllerEvent.getType().name());
                                                         break;
                                                 }
-                                            },currentPage,//TODO add params);
+                                            },settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
+                                                    settingsSet.durationE, resultFilterController.getRegionIdByString(settingsSet.region),
+                                                    settingsSet.name, resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
                                         }
                                         Log.d(TAG,"Scroll idle");
                                         break;
@@ -137,7 +139,7 @@ public class ResultFilterFragment extends Fragment {
                             }
                         };
                         rvToursFiltered.addOnScrollListener(mScrollListener);
-                        */
+
                         break;
                 }
             }

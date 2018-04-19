@@ -100,14 +100,12 @@ public class FilterFragment extends Fragment {
         cbT5 = (CheckBox)view.findViewById(R.id.checkboxT5);
         cbT6 = (CheckBox)view.findViewById(R.id.checkboxT6);
 
-
         btnSearch.setOnClickListener((View v) -> performSearch());
 
-        tiName.setThreshold(1);
         tiRegion.setThreshold(1);
 
-        ArrayAdapter<Region> regionAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.select_dialog_item, filterController.getRegions());
-        tiName.setAdapter(regionAdapter);
+        ArrayAdapter<Region> regionAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, filterController.getRegions());
+        tiRegion.setAdapter(regionAdapter);
     }
 
     /**
@@ -122,10 +120,10 @@ public class FilterFragment extends Fragment {
         setting.cbT4 = cbT4.isChecked();
         setting.cbT5 = cbT5.isChecked();
         setting.cbT6 = cbT6.isChecked();
-        setting.distanceS = ((int)rsbDistance.getSelectedMaxValue() * 1000);
-        setting.distanceE = ((int)rsbDistance.getSelectedMinValue() * 1000);
-        setting.durationS = (int)rsbDuration.getSelectedMaxValue();
-        setting.durationE = (int)rsbDuration.getSelectedMinValue();
+        setting.distanceS = ((int)rsbDistance.getSelectedMinValue() * 1000);
+        setting.distanceE = ((int)rsbDistance.getSelectedMaxValue() * 1000);
+        setting.durationS = ((int)rsbDuration.getSelectedMinValue() * 60);
+        setting.durationE = ((int)rsbDuration.getSelectedMaxValue() * 60);
 
         setting.region = tiRegion.getText().toString();
         setting.name = tiName.getText().toString();

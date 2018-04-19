@@ -261,7 +261,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                rsb:absoluteMinValue="200"
+                rsb:absoluteMinValue="10"
                 rsb:absoluteMaxValue="0"
                 rsb:textAboveThumbsColor="@color/black"
                 rsb:valuesAboveThumbs="true" />
