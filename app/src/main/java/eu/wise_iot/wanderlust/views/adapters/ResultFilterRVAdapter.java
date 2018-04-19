@@ -99,6 +99,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
             holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t1));
 
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
+        holder.tvDifficulty.setTextSize(14);
 
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));

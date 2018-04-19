@@ -14,9 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,10 +25,8 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ResultFilterRVAdapter;
-import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 
 import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
@@ -127,7 +123,7 @@ public class ResultFilterFragment extends Fragment {
                                                         break;
                                                 }
                                             },settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
-                                                    settingsSet.durationE, resultFilterController.getRegionIdByString(settingsSet.region),
+                                                    settingsSet.durationE, settingsSet.region,
                                                     settingsSet.name, resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
                                         }
                                         Log.d(TAG,"Scroll idle");
@@ -149,7 +145,7 @@ public class ResultFilterFragment extends Fragment {
              * @param view
              * @param tour
              */
-            public void onItemClickImages(View view, Tour tour) {
+            private void onItemClickImages(View view, Tour tour) {
                 Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
                 TourFragment tourFragment = TourFragment.newInstance(tour);
                 getFragmentManager().beginTransaction()
@@ -159,15 +155,10 @@ public class ResultFilterFragment extends Fragment {
                 ((AppCompatActivity) getActivity()).getSupportActionBar().show();
             }
         }, settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
-                settingsSet.durationE, resultFilterController.getRegionIdByString(settingsSet.region),
+                settingsSet.durationE, settingsSet.region,
                 settingsSet.name, resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
 
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     /**

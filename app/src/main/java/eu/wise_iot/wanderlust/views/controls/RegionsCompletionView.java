@@ -14,8 +14,15 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 
+/**
+ * represents a token auto complete textview used for putting in regions with usage of 3rd party library
+ * see TokenCompleteTextView for reference
+ * inside the filter
+ * @author Alexander Weinbeck
+ * @license MIT
+ */
 public class RegionsCompletionView extends TokenCompleteTextView<Region> {
-    RegionDao regionDao;
+    private RegionDao regionDao;
     public RegionsCompletionView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }

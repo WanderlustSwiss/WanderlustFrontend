@@ -44,6 +44,9 @@
     <string name="tour_distance">Distanz (KM)</string>
     <string name="tour_duration">Dauer (Stunden)</string>
 
+    <!-- FILTER RELATED STRINGS -->
+    <string name="filter_search">Suchen</string>
+
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
     <string name="dialog_feedback_description_edit_hint">Beschreibung</string>
     <string-array name="dialog_feedback_spinner_mode">

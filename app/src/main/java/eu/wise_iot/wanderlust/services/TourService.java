@@ -44,7 +44,7 @@ public interface TourService {
                                               @Query("distanceE") int distanceE,
                                               @Query("durationS") int durationS,
                                               @Query("durationE") int durationE,
-                                              @Query("region") int region,
+                                              @Query("regions") String region,
                                               @Query("title") String title,
                                               @Query("difficulties") String difficulties);
 

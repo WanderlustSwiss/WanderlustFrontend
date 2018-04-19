@@ -44,13 +44,7 @@ public class ResultFilterController {
         imageController = ImageController.getInstance();
     }
 
-    /**
-     * get all required data for the view and does following request:
-     * HTTP request, Expected Param: page, Optional: durationS (minutes), durationE (minutes), region (id), title (string), difficulties (list of comma separated ids)
-     * @param handler
-     * @param page
-     */
-    public void getFilteredTours(FragmentHandler handler, int distanceS, int distanceE, int page, int durationS, int durationE, int regionID, String title, String difficulties) {
+    public void getFilteredTours(FragmentHandler handler, int distanceS, int distanceE, int page, int durationS, int durationE, String regionID, String title, String difficulties) {
         userTourDao.retrieveAllFiltered(handler, page, distanceS, distanceE, durationS, durationE, regionID, title, difficulties);
     }
 

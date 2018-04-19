@@ -4,37 +4,22 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.util.Range;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-
-import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarChangeListener;
-import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
-import com.crystal.crystalrangeseekbar.widgets.BubbleThumbRangeSeekbar;
-import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
-import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
-import org.w3c.dom.Text;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.FilterController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
-import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
 
 /**
@@ -45,8 +30,7 @@ import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
  */
 public class FilterFragment extends Fragment {
 
-    private RangeSeekBar rsbDistance;
-    private RangeSeekBar rsbDuration;
+    private RangeSeekBar rsbDistance, rsbDuration;
     private Button btnSearch;
     private RegionsCompletionView tiRegion;
     private AutoCompleteTextView tiName;
@@ -125,7 +109,12 @@ public class FilterFragment extends Fragment {
         setting.durationS = ((int)rsbDuration.getSelectedMinValue() * 60);
         setting.durationE = ((int)rsbDuration.getSelectedMaxValue() * 60);
 
-        setting.region = tiRegion.getText().toString();
+        //build query for regions
+        StringBuilder sb = new StringBuilder();
+        for(Region r : tiRegion.getObjects())
+            sb.append(r.getRegion_id()).append(",");
+        if(!sb.toString().isEmpty())sb.deleteCharAt(sb.length() - 1);
+        setting.region = sb.toString();
         setting.name = tiName.getText().toString();
 
         ResultFilterFragment resultFilterFragment = ResultFilterFragment.newInstance(setting);
@@ -141,7 +130,7 @@ public class FilterFragment extends Fragment {
      */
     public final class FilterSetting {
         boolean cbT1, cbT2, cbT3, cbT4, cbT5, cbT6;
-        String region, name;
+        String name, region;
         int distanceS, distanceE, durationS, durationE;
     }
 }

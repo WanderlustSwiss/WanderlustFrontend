@@ -16,7 +16,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
+        android:layout_marginLeft="10dp"
         android:orientation="vertical"
         android:padding="1dp">
 
@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:layout_marginTop="12dp"
+            android:layout_marginLeft="10dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -35,8 +36,7 @@
                 <TextView
                     android:id="@+id/tour_region"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="test"/>
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/tour_title"
@@ -71,7 +71,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_toRightOf="@id/imageDistance"
-                                android:textSize="14dp" />
+                                android:textSize="14sp" />
                         </RelativeLayout>
 
                         <View
@@ -95,7 +95,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_toRightOf="@id/imageTime"
-                                android:textSize="14dp" />
+                                android:textSize="14sp" />
                         </RelativeLayout>
 
                         <View
@@ -119,7 +119,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_toRightOf="@id/ivTourDifficulty"
-                                android:textSize="14dp" />
+                                android:textSize="14sp" />
                         </RelativeLayout>
                     </LinearLayout>
 
@@ -145,7 +145,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_toRightOf="@id/imgTourAscending"
-                                android:textSize="14dp" />
+                                android:textSize="14sp" />
                         </RelativeLayout>
 
                         <View
@@ -169,7 +169,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_toRightOf="@id/imgTourDescending"
-                                android:textSize="14dp" />
+                                android:textSize="14sp" />
                         </RelativeLayout>
                         <!-- TODO insert rating -->
                     </LinearLayout>
