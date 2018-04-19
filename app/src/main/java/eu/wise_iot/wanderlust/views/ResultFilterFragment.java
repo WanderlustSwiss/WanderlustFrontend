@@ -159,6 +159,7 @@ public class ResultFilterFragment extends Fragment {
         }, settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
                 settingsSet.durationE, resultFilterController.getRegionIdByString(settingsSet.region),
                 settingsSet.name, resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
+
         return rootView;
     }
 
