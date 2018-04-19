@@ -39,6 +39,10 @@
     <string name="tour_button_show_map">Start</string>
     <string name="tour_equipment">Ausrüstung</string>
     <string name="tour_region">Region</string>
+    <string name="tour_difficulty">Schwierigkeit</string>
+    <string name="tour_name">Name</string>
+    <string name="tour_distance">Distanz (km)</string>
+    <string name="tour_duration">Dauer (s)</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
     <string name="dialog_feedback_description_edit_hint">Beschreibung</string>

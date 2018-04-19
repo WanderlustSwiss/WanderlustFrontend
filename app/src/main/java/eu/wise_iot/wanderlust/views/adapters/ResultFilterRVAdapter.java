@@ -20,6 +20,7 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
@@ -40,6 +41,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
     private ItemClickListener mClickListener;
     private final Context context;
     private final ImageController imageController;
+    private final ResultFilterController resultFilterController;
 
     private final FavoriteDao favoriteDao = FavoriteDao.getInstance();
     private final List<Long> favorizedTours = new ArrayList<>();
@@ -58,6 +60,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         this.tours = parTours;
         //get which tour is favored
         this.imageController = ImageController.getInstance();
+        this.resultFilterController = new ResultFilterController();
     }
 
     /**
@@ -99,6 +102,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
 
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
+        holder.tvRegion.setText(resultFilterController.getRegionbyID(tour.getRegion(),this.context));
 
         holder.tvDescending.setText(tour.getDescent() + " m");
         holder.tvAscending.setText(tour.getAscent() + " m");

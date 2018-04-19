@@ -17,8 +17,15 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarChangeListener;
+import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
+import com.crystal.crystalrangeseekbar.widgets.BubbleThumbRangeSeekbar;
+import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
+import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 import org.w3c.dom.Text;
@@ -38,7 +45,8 @@ import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
  */
 public class FilterFragment extends Fragment {
 
-    private RangeSeekBar rsbDistance, rsbDuration;
+    private RangeSeekBar rsbDistance;
+    private RangeSeekBar rsbDuration;
     private Button btnSearch;
     private RegionsCompletionView tiRegion;
     private AutoCompleteTextView tiName;
@@ -62,6 +70,7 @@ public class FilterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         filterController = new FilterController();
+
         // Inflate the layout for this fragment
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_filtertours, container, false);
@@ -80,7 +89,7 @@ public class FilterFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rsbDistance = (RangeSeekBar)view.findViewById(R.id.rsbDistance);
-        rsbDuration = (RangeSeekBar)view.findViewById(R.id.rsbDuration);
+        rsbDuration = (RangeSeekBar) view.findViewById(R.id.rsbDuration);
         btnSearch = (Button)view.findViewById(R.id.btnSearch);
         tiName = (AutoCompleteTextView)view.findViewById(R.id.tiTourNameInput);
         tiRegion = (RegionsCompletionView)view.findViewById(R.id.tiTourRegionInput);
@@ -90,6 +99,7 @@ public class FilterFragment extends Fragment {
         cbT4 = (CheckBox)view.findViewById(R.id.checkboxT4);
         cbT5 = (CheckBox)view.findViewById(R.id.checkboxT5);
         cbT6 = (CheckBox)view.findViewById(R.id.checkboxT6);
+
 
         btnSearch.setOnClickListener((View v) -> performSearch());
 
@@ -112,10 +122,10 @@ public class FilterFragment extends Fragment {
         setting.cbT4 = cbT4.isChecked();
         setting.cbT5 = cbT5.isChecked();
         setting.cbT6 = cbT6.isChecked();
-        setting.distanceS = (int)rsbDistance.getSelectedMinValue();
-        setting.distanceE = (int)rsbDistance.getSelectedMaxValue();
-        setting.durationS = (int)rsbDuration.getSelectedMinValue();
-        setting.durationE = (int)rsbDuration.getSelectedMaxValue();
+        setting.distanceS = ((int)rsbDistance.getSelectedMaxValue() * 1000);
+        setting.distanceE = ((int)rsbDistance.getSelectedMinValue() * 1000);
+        setting.durationS = (int)rsbDuration.getSelectedMaxValue();
+        setting.durationE = (int)rsbDuration.getSelectedMinValue();
 
         setting.region = tiRegion.getText().toString();
         setting.name = tiName.getText().toString();

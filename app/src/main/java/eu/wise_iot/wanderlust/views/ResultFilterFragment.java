@@ -58,10 +58,7 @@ public class ResultFilterFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-    /**
-     * Constructor of view
-     * @param savedInstanceState
-     */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +67,7 @@ public class ResultFilterFragment extends Fragment {
         resultFilterController = new ResultFilterController();
         setHasOptionsMenu(true);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -143,12 +141,12 @@ public class ResultFilterFragment extends Fragment {
                         break;
                 }
             }
-                /**
-                 * handles click in Recyclerview
-                 * @param view
-                 * @param tour
-                 */
 
+            /**
+             * handles click in Recyclerview
+             * @param view
+             * @param tour
+             */
             public void onItemClickImages(View view, Tour tour) {
                 Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
                 TourFragment tourFragment = TourFragment.newInstance(tour);
@@ -157,9 +155,8 @@ public class ResultFilterFragment extends Fragment {
                         .addToBackStack(Constants.TOUR_FRAGMENT)
                         .commit();
                 ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-
             }
-        }, currentPage, settingsSet.distanceS, settingsSet.distanceE,settingsSet.durationS,
+        }, settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
                 settingsSet.durationE, resultFilterController.getRegionIdByString(settingsSet.region),
                 settingsSet.name, resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
         return rootView;

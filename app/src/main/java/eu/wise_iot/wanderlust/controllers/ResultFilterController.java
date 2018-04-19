@@ -1,11 +1,13 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.apache.commons.lang3.builder.Diff;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
@@ -57,6 +59,13 @@ public class ResultFilterController {
         List<Region> result = regionDao.find(Region_.name,region);
         if(result != null && result.size() > 0) return (int)result.get(0).getRegion_id();
         else return 0;
+    }
+    public String getRegionbyID(long region, Context context) {
+        //should be limited to 20 values
+        Region r = regionDao.findOne(Region_.region_id,region);
+        if(r != null) return r.getName();
+        else return context.getResources().getString(R.string.unknown);
+
     }
     public String getDifficultiesByArray(boolean t1, boolean t2, boolean t3, boolean t4, boolean t5, boolean t6) {
         StringBuilder sb = new StringBuilder();

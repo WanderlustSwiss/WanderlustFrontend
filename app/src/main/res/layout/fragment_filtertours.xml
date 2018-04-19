@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/tools"
     android:clickable="true"
     xmlns:rsb="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background_main">
+    android:background="@color/background_main"
+    app:ignore="NamespaceTypo">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,23 +20,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvTourName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Name" />
+                android:text="@string/tour_name" />
 
             <AutoCompleteTextView
                 android:id="@+id/tiTourNameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView"
-                android:layout_marginTop="17dp"
-                android:text=""/>
+                android:layout_below="@+id/textView"/>
 
 
         </LinearLayout>
@@ -43,7 +41,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -51,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Region" />
+                android:text="@string/tour_region" />
 
 
             <eu.wise_iot.wanderlust.views.controls.RegionsCompletionView
@@ -64,20 +61,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tourDifficulty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Difficulty" />
+                android:text="@string/tour_difficulty" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <!--<Space-->
@@ -228,15 +222,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tourDistance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Distance" />
+                android:text="@string/tour_distance" />
 
             <org.florescu.android.rangeseekbar.RangeSeekBar
                 android:id="@+id/rsbDistance"
@@ -244,9 +236,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                rsb:absoluteMaxValue="200"
-                rsb:absoluteMinValue="0"
-                rsb:showLabels="true"
+                rsb:absoluteMinValue="40"
+                rsb:absoluteMaxValue="0"
                 rsb:textAboveThumbsColor="@color/black"
                 rsb:valuesAboveThumbs="true" />
 
@@ -256,15 +247,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tourDuration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Duration" />
+                android:text="@string/tour_duration" />
 
             <org.florescu.android.rangeseekbar.RangeSeekBar
                 android:id="@+id/rsbDuration"
@@ -272,12 +261,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                rsb:absoluteMaxValue="200"
-                rsb:absoluteMinValue="0"
-                rsb:showLabels="true"
+                rsb:absoluteMinValue="200"
+                rsb:absoluteMaxValue="0"
                 rsb:textAboveThumbsColor="@color/black"
                 rsb:valuesAboveThumbs="true" />
-
         </LinearLayout>
 
         <Button
@@ -285,7 +272,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_weight="1"
             android:text="Search" />
     </LinearLayout>
 

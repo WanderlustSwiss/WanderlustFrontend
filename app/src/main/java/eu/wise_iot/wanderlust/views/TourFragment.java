@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -178,6 +179,13 @@ public class TourFragment extends Fragment {
         context = getActivity();
         tour = tourController.getCurrentTour();
         listEquipment = new ArrayList<>();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu (Menu menu) {
+        getActivity().invalidateOptionsMenu();
+        menu.findItem(R.id.filterIcon).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 
     /**

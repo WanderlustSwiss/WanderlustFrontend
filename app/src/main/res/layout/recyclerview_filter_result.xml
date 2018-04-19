@@ -16,6 +16,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:paddingLeft="10dp"
         android:orientation="vertical"
         android:padding="1dp">
 
@@ -49,7 +50,7 @@
                     android:layout_marginTop="10dp">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:divider="@drawable/divider_vertical"
                         android:orientation="vertical">
@@ -75,7 +76,7 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
+                            android:layout_height="1dip"
                             android:background="@color/background_two_and_inactive" />
 
                         <RelativeLayout
@@ -109,7 +110,8 @@
                             <ImageView
                                 android:id="@+id/ivTourDifficulty"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_timer_black_15dp" />
 
                             <TextView
                                 android:id="@+id/tour_difficulty"
@@ -122,7 +124,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:divider="@drawable/divider_vertical"
                         android:orientation="vertical">
