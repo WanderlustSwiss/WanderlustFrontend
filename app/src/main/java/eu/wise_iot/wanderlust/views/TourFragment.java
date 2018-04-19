@@ -193,15 +193,12 @@ public class TourFragment extends Fragment {
         selectedDateTime = new DateTime(currentCalendar);
         selectedDateTime = DateTime.now();
         initializeControls(view);
-        tourController.loadGeoData(new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                if (controllerEvent.getType() == EventType.OK) {
-                    tour = (Tour) controllerEvent.getModel();
-                    setupEquipment(tour);
-                    setupWeather();
-                    drawChart();
-                }
+        tourController.loadGeoData(controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                tour = (Tour) controllerEvent.getModel();
+                setupEquipment(tour);
+                setupWeather();
+                drawChart();
             }
         });
         return view;
@@ -373,7 +370,7 @@ public class TourFragment extends Fragment {
                float rateAvgRound = Float.parseFloat(String.format("%.1f", rateAvg));
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
-               tourRatingInNumbers.setText(String.valueOf(0));
+               tourRatingInNumbers.setText(0);
            }
         });
 

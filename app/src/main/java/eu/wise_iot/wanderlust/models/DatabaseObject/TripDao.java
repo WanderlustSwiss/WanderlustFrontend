@@ -30,14 +30,14 @@ public class TripDao extends DatabaseObjectAbstract {
         private static final TripDao INSTANCE = new TripDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static TripDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static TripService service;
-    private Box<Trip> routeBox;
+    private final Box<Trip> routeBox;
 
     /**
      * Constructor.
@@ -217,13 +217,11 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Trip which match to the search pattern in the searched columns
      */
-    public Trip findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Trip findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Trip findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Trip findOne(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -235,13 +233,11 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Trip> which contains the equipements, which match to the search pattern in the searched columns
      */
-    public List<Trip> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Trip> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Trip> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Trip> find(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

@@ -94,24 +94,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 return;
             }
-            loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    User logtInUser = (User) controllerEvent.getModel();
-                    switch (controllerEvent.getType()) {
-                        case OK:
-                            setupDrawerHeader(logtInUser);
-                            MapFragment mapFragment = MapFragment.newInstance();
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                                    .commit();
-                            break;
-                        default:
-                            StartupLoginFragment loginFragment = new StartupLoginFragment();
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame, loginFragment)
-                                    .commit();
-                    }
+            loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
+                User logtInUser = (User) controllerEvent.getModel();
+                switch (controllerEvent.getType()) {
+                    case OK:
+                        setupDrawerHeader(logtInUser);
+                        MapFragment mapFragment = MapFragment.newInstance();
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                .commit();
+                        break;
+                    default:
+                        StartupLoginFragment loginFragment = new StartupLoginFragment();
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.content_frame, loginFragment)
+                                .commit();
                 }
             });
         }
@@ -158,7 +155,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || fragment instanceof StartupLoginFragment
                 || fragment instanceof MapFragment
                 || fragment instanceof StartupResetPasswordFragment) {
-            ;//NOP
         } else{
             super.onBackPressed();
         }
@@ -196,17 +192,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         else if (id == R.id.logout) {
-            loginController.logout(new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    switch (controllerEvent.getType()) {
-                        case OK:
-                            LoginUser.clearCookies();
-                            Toast.makeText(getApplicationContext(), R.string.logout_successful, Toast.LENGTH_LONG).show();
-                            break;
-                        default:
-                            Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
-                    }
+            loginController.logout(controllerEvent -> {
+                switch (controllerEvent.getType()) {
+                    case OK:
+                        LoginUser.clearCookies();
+                        Toast.makeText(getApplicationContext(), R.string.logout_successful, Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
                 }
             });
             fragment = new StartupLoginFragment();

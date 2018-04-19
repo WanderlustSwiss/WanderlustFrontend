@@ -8,10 +8,6 @@ package eu.wise_iot.wanderlust.constants;
  */
 public interface Constants {
 
-    /* DISPLAY MODE */
-    boolean MODE_PUBLIC = true;
-    boolean MODE_PRIVATE = false;
-
     // new types
     int TYPE_VIEW = 0;
     int TYPE_RESTAURANT = 1;
@@ -29,9 +25,6 @@ public interface Constants {
     String MAP_FRAGMENT = "MapFragment";
     String TOUR_FRAGMENT = "TourFragment";
     String TOUROVERVIEW_FRAGMENT = "TourOverviewFragment";
-    String WELCOME_FRAGMENT = "WelcomeFragment";
-    String DISCLAIMER_FRAGMENT = "DisclaimerFragment";
-    String MANUAL_FRAGMENT = "ManualFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
     String LOGIN_FRAGMENT = "SartupLoginFragment";
     String USER_GUIDE_FRAGMENT = "UserGuideFragment";
@@ -53,7 +46,6 @@ public interface Constants {
     String LAST_POS_LAT = "last_position_lat";
     String LAST_POS_LON = "last_position_lon";
     String POI_ID = "feedback_id";
-    String FEEDBACK_TYPE = "feedback_type";
     String DISPLAY_MODE = "feedback_display_mode";
     String FEEDBACK_DESCRIPTION = "feedback_description";
     String POI_IS_NEW = "isNew";

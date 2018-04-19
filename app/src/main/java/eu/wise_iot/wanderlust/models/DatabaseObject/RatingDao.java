@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
+import android.util.Log;
+
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -24,21 +26,20 @@ import retrofit2.Response;
  * @author Rilind Gashi
  * @license MIT
  */
-
 public class RatingDao extends DatabaseObjectAbstract{
 
     private static class Holder {
         private static final RatingDao INSTANCE = new RatingDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static RatingDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
-
-    private Box<Rating> RatingBox;
-    private RatingService service;
+    private static final String TAG = "RatingDao";
+    private final Box<Rating> RatingBox;
+    private final RatingService service;
 
     private RatingDao(){
         RatingBox = BOXSTORE.boxFor(Rating.class);
@@ -92,7 +93,9 @@ public class RatingDao extends DatabaseObjectAbstract{
                             RatingBox.remove(Rating.getInternal_id());
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         }
-                    } catch (Exception e){}
+                    } catch (Exception e){
+                        Log.d(TAG, e.getMessage());
+                    }
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
@@ -147,18 +150,15 @@ public class RatingDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return Rating which match to the search pattern in the searched columns
      */
-    public Rating findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Rating findOne(Property searchedColumn, String searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Rating findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Rating findOne(Property searchedColumn, long searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Rating findOne(Property searchedColumn, long searchPattern, long additionalSearchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Rating findOne(Property searchedColumn, long searchPattern, long additionalSearchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern)
                 .equal(Rating_.user, additionalSearchPattern).build().findFirst();
     }
@@ -170,13 +170,11 @@ public class RatingDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Rating> which contains the equipments, which match to the search pattern in the searched columns
      */
-    public List<Rating> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Rating> find(Property searchedColumn, String searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Rating> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Rating> find(Property searchedColumn, long searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

@@ -9,8 +9,8 @@ android {
         minSdkVersion 21
         //noinspection OldTargetApi
         targetSdkVersion 25
-        versionCode 3
-        versionName "0.3.0"
+        versionCode 4
+        versionName "0.4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -158,7 +158,7 @@ android.applicationVariants.all { variant ->
         }
         exclude '**/BuildConfig.java'
         exclude '**/R.java'
-        failOnError false;
+        failOnError false
     }
 }
 apply plugin: 'com.google.gms.google-services'

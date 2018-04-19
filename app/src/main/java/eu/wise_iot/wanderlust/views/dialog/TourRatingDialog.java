@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,23 +95,20 @@ public class TourRatingDialog extends DialogFragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initListeners();
+        setupListeners();
     }
 
-    public void initListeners(){
+    public void setupListeners(){
         long rate = controller.alreadyRated(tour.getTour_id());
         if(rate == 0) {
             buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
                     getDialog().dismiss();
-                    controller.getRating(tour, new FragmentHandler() {
-                        @Override
-                        public void onResponse(ControllerEvent controllerEvent) {
-                            switch (controllerEvent.getType()) {
-                                case OK:
-                                    ratingBar.setRating((float) controllerEvent.getModel());
-                            }
+                    controller.getRating(tour, controllerEvent1 -> {
+                        switch (controllerEvent1.getType()) {
+                            case OK:
+                                ratingBar.setRating((float) controllerEvent1.getModel());
                         }
                     });
                 }
@@ -135,7 +131,7 @@ public class TourRatingDialog extends DialogFragment {
         }
     }
 
-    public void changeButtonColor(int selectedStar){
+    private void changeButtonColor(int selectedStar){
         countRatedStars = selectedStar;
         for(int i=0; i < selectedStar; i++){
             starButtonCollection[i].setImageResource(R.drawable.ic_rate_star_yellow_32dp);

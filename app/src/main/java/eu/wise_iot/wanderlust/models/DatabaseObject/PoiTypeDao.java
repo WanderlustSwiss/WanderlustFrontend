@@ -19,14 +19,14 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
         private static final PoiTypeDao INSTANCE = new PoiTypeDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static PoiTypeDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static PoiService service;
-    private Box<PoiType> poiTypeBox;
+    private final Box<PoiType> poiTypeBox;
 
     /**
      * Constructor.
@@ -77,11 +77,11 @@ public class PoiTypeDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return PoiType which match to the search pattern in the searched columns
      */
-    public PoiType findOne(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public PoiType findOne(Property searchedColumn, String searchPattern) {
         return poiTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public PoiType findOne(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public PoiType findOne(Property searchedColumn, long searchPattern) {
         return poiTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 }

@@ -9,7 +9,7 @@ public enum EventType {
 
     OK(200), NOT_FOUND(404), CONFLICT(409), BAD_REQUEST(400), SERVER_ERROR(500), NETWORK_ERROR(0);
 
-    int code;
+    final int code;
 
     /**
      * Create EventType

@@ -33,7 +33,6 @@ import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 
 /**
  * PoiViewDialog:
@@ -57,7 +56,6 @@ public class PoiViewDialog extends DialogFragment {
     private ImageButton editPoiButton;
     private ImageButton deletePoiButton;
     private ImageButton sharePoiButton;
-    private long poiId;
     private PoiController controller;
     private TextView occupationTitleSac;
     private TableLayout sacOccupation;
@@ -108,14 +106,13 @@ public class PoiViewDialog extends DialogFragment {
         controller = new PoiController();
 
         Bundle args = getArguments();
-        poiId = args.getLong(Constants.POI_ID);
+        long poiId = args.getLong(Constants.POI_ID);
         setRetainInstance(true);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        return dialog;
+        return super.onCreateDialog(savedInstanceState);
     }
 
     @Nullable
@@ -155,9 +152,7 @@ public class PoiViewDialog extends DialogFragment {
 
     private void initActionControls() {
 
-        sharePoiButton.setOnClickListener(v -> {
-            shareImage();
-        });
+        sharePoiButton.setOnClickListener(v -> shareImage());
 
         closeDialogButton.setOnClickListener(v -> {
             // dismisses the current dialog view
@@ -166,7 +161,7 @@ public class PoiViewDialog extends DialogFragment {
 
         editPoiButton.setOnClickListener(v -> {
             if (controller.isOwnerOf(currentPoi)) {
-                PoiEditDialog dialog = PoiEditDialog.newInstance(this.currentPoi);
+                PoiEditDialog dialog = PoiEditDialog.newInstance(currentPoi);
                 dialog.show(getFragmentManager(), Constants.EDIT_POI_DIALOG);
             }
         });
@@ -182,13 +177,10 @@ public class PoiViewDialog extends DialogFragment {
 
     private void fillOutPoiView(View view) {
         if (currentPoi.getType() >= 0) {
-            controller.getImages(currentPoi, new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    List<File> images = (List<File>) controllerEvent.getModel();
-                    if (images.size() > 0) {
-                        Picasso.with(context).load(images.get(0)).fit().into(poiImage);
-                    }
+            controller.getImages(currentPoi, controllerEvent -> {
+                List<File> images = (List<File>) controllerEvent.getModel();
+                if (images.size() > 0) {
+                    Picasso.with(context).load(images.get(0)).fit().into(poiImage);
                 }
             });
         } else {
@@ -280,7 +272,7 @@ public class PoiViewDialog extends DialogFragment {
      * @param text the description containing the occupation information
      *
      */
-    public String showSacOccupation(String text, View view){
+    private String showSacOccupation(String text, View view){
         initMonthTableString();
 
         sacOccupation.setVisibility(View.VISIBLE);

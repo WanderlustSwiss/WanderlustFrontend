@@ -2,12 +2,10 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -35,16 +33,16 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
  */
 public class ProfileController {
 
-    private ProfileDao profileDao;
-    private UserDao userDao;
-    private UserTourDao userTourDao;
-    private TripDao tripDao;
-    private PoiDao poiDao;
-    private FavoriteDao favoriteDao;
-    private CommunityTourDao communityTourDao;
-    private DifficultyTypeDao difficultyTypeDao;
-    private ImageController imageController;
-    private Context context;
+    private final ProfileDao profileDao;
+    private final UserDao userDao;
+    private final UserTourDao userTourDao;
+    private final TripDao tripDao;
+    private final PoiDao poiDao;
+    private final FavoriteDao favoriteDao;
+    private final CommunityTourDao communityTourDao;
+    private final DifficultyTypeDao difficultyTypeDao;
+    private final ImageController imageController;
+    private final Context context;
 
     public ProfileController() {
         profileDao = ProfileDao.getInstance();
@@ -179,13 +177,12 @@ public class ProfileController {
      */
     public void setProfilePicture(Bitmap srcBmp, FragmentHandler handler){
         Profile profile = profileDao.getProfile();
-        Bitmap mutableDstBmp = srcBmp;
 
         File image = new File(context.getCacheDir(), "profile_image.jpg");
         OutputStream os;
         try {
             os = new BufferedOutputStream(new FileOutputStream(image));
-            mutableDstBmp.compress(Bitmap.CompressFormat.JPEG, 80, os);
+            srcBmp.compress(Bitmap.CompressFormat.JPEG, 80, os);
             os.close();
             profileDao.addImage(image, profile, handler);
         } catch (java.io.IOException e) {
@@ -198,7 +195,6 @@ public class ProfileController {
      * @param handler
      */
     public void deleteProfilePicture(FragmentHandler handler){
-        //Todo: Wrire Fragment hanlder
         Profile profile = profileDao.getProfile();
         if (profile.getImagePath() != null){
             profileDao.deleteImage(handler);

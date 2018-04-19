@@ -36,20 +36,14 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
     private ImageView tripImage;
     private ImageView deleteIcon;
 
-    private Context context;
-    private int resource;
-    private int textResource;
-    private List objects;
+    private final Context context;
 
-    private ImageController imageController;
-    private ProfileFragment profileFragment;
+    private final ImageController imageController;
+    private final ProfileFragment profileFragment;
 
     public ProfileSavedListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
-        this.resource = resource;
-        this.textResource = textResource;
-        this.objects = objects;
         this.imageController = ImageController.getInstance();
         this.profileFragment = fragment;
     }

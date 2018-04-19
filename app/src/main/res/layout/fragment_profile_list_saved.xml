@@ -1,6 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:background="@color/background_main">
@@ -46,7 +44,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="40dp"
         android:layout_toRightOf="@id/ListSavedInfo"
-        android:src="@drawable/ic_delete_white_24dp"
+        android:src="@drawable/ic_delete_black_24dp"
         />
 
 

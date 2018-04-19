@@ -41,19 +41,13 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
     private ImageView deleteIcon;
 
     private Context context;
-    private int resource;
-    private int textResource;
-    private List objects;
 
-    private ProfileFragment profileFragment;
-    private ImageController imageController;
+    private final ProfileFragment profileFragment;
+    private final ImageController imageController;
 
     public ProfileTripListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
-        this.resource = resource;
-        this.textResource = textResource;
-        this.objects = objects;
         this.imageController = ImageController.getInstance();
         this.profileFragment = fragment;
     }
@@ -140,22 +134,17 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
                 tripImage.setImageResource(R.drawable.example_image);
             }
 
-            deleteIcon.setOnClickListener(e -> {
-                profileFragment.getProfileController().deleteTrip(tour, new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        switch (controllerEvent.getType()){
-                            case OK:
-                                profileFragment.setProfileStats();
-                                profileFragment.setupMyTours(profileFragment.getView());
-                                break;
-                            default:
-                                Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-                    }
-                });
-            });
+            deleteIcon.setOnClickListener(e -> profileFragment.getProfileController().deleteTrip(tour, controllerEvent -> {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        profileFragment.setProfileStats();
+                        profileFragment.setupMyTours(profileFragment.getView());
+                        break;
+                    default:
+                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }));
 
         }
 

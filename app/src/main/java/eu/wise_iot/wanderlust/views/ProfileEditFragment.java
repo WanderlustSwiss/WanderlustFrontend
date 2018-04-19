@@ -2,7 +2,6 @@ package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -39,7 +38,6 @@ import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
@@ -75,7 +73,7 @@ public class ProfileEditFragment extends Fragment {
     private CheckBox[] checkBoxes;
     private long difficulty;
 
-    private ProfileController profileController;
+    private final ProfileController profileController;
 
     public ProfileEditFragment() {
         // Required empty public constructor
@@ -124,18 +122,16 @@ public class ProfileEditFragment extends Fragment {
                 checkT4, checkT5, checkT6};
 
         Rect outRect = new Rect();
-        view.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
+        view.setOnTouchListener((v, event) -> {
 
-                if (event.getAction() == MotionEvent.ACTION_DOWN && bottomSheet != null && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                    Rect outRect = new Rect();
-                    bottomSheet.getGlobalVisibleRect(outRect);
+            if (event.getAction() == MotionEvent.ACTION_DOWN && bottomSheet != null && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                Rect outRect1 = new Rect();
+                bottomSheet.getGlobalVisibleRect(outRect1);
 
-                    if (!outRect.contains((int) event.getRawX(), (int) event.getRawY()))
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }
-                return true;
+                if (!outRect1.contains((int) event.getRawX(), (int) event.getRawY()))
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
+            return true;
         });
 
         //initialize current values
@@ -159,42 +155,36 @@ public class ProfileEditFragment extends Fragment {
                 //save changings
                 String newMail = emailTextfield.getText().toString();
 
-                profileController.setEmail(newMail, getActivity(), new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        EventType type = controllerEvent.getType();
+                profileController.setEmail(newMail, getActivity(), controllerEvent -> {
+                    EventType type = controllerEvent.getType();
 
-                        switch (type) {
-                            case OK:
-                                ((MainActivity) getActivity()).updateEmailAdress(newMail);
-                                Toast.makeText(getActivity(), R.string.msg_email_edit_successful,
-                                        Toast.LENGTH_SHORT).show();
-                                break;
-                            default:
-                                Toast.makeText(getActivity(), R.string.err_msg_error_occured,
-                                        Toast.LENGTH_SHORT).show();
-                                break;
-                        }
+                    switch (type) {
+                        case OK:
+                            ((MainActivity) getActivity()).updateEmailAdress(newMail);
+                            Toast.makeText(getActivity(), R.string.msg_email_edit_successful,
+                                    Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
+                                    Toast.LENGTH_SHORT).show();
+                            break;
                     }
                 });
 
-                profileController.setDifficulty(difficulty, getActivity(), new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        EventType type = controllerEvent.getType();
+                profileController.setDifficulty(difficulty, getActivity(), controllerEvent -> {
+                    EventType type = controllerEvent.getType();
 
-                        switch (type) {
-                            case OK:
-                                Toast.makeText(getActivity(),
-                                        getString(R.string.msg_difficulty_level_changed_to_1) + " " + difficulty + " " + getString(R.string.msg_difficulty_level_changed_to_2),
-                                        Toast.LENGTH_SHORT).show();
-                                break;
+                    switch (type) {
+                        case OK:
+                            Toast.makeText(getActivity(),
+                                    getString(R.string.msg_difficulty_level_changed_to_1) + " " + difficulty + " " + getString(R.string.msg_difficulty_level_changed_to_2),
+                                    Toast.LENGTH_SHORT).show();
+                            break;
 
-                            default:
-                                Toast.makeText(getActivity(), R.string.err_msg_error_occured,
-                                        Toast.LENGTH_SHORT).show();
-                                break;
-                        }
+                        default:
+                            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
+                                    Toast.LENGTH_SHORT).show();
+                            break;
                     }
                 });
                 return true;
@@ -234,14 +224,11 @@ public class ProfileEditFragment extends Fragment {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        changeImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                } else {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }
+        changeImage.setOnClickListener(view -> {
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            } else {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
         buttonOpenGallery.setOnClickListener(v -> {
@@ -251,15 +238,12 @@ public class ProfileEditFragment extends Fragment {
                     openGallery();
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }else{
-                    profileController.deleteProfilePicture(new FragmentHandler() {
-                        @Override
-                        public void onResponse(ControllerEvent controllerEvent) {
-                            EventType type = controllerEvent.getType();
-                            if (type == EventType.OK){
-                                openGallery();
-                            }
-                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    profileController.deleteProfilePicture(controllerEvent -> {
+                        EventType type = controllerEvent.getType();
+                        if (type == EventType.OK){
+                            openGallery();
                         }
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     });
                 }
             }else{
@@ -270,13 +254,10 @@ public class ProfileEditFragment extends Fragment {
         });
         buttonDeleteImage.setOnClickListener(v -> {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            profileController.deleteProfilePicture(new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    EventType type = controllerEvent.getType();
-                    if (type == EventType.OK){
-                        setupAvatar();
-                    }
+            profileController.deleteProfilePicture(controllerEvent -> {
+                EventType type = controllerEvent.getType();
+                if (type == EventType.OK){
+                    setupAvatar();
                 }
             });
         });
@@ -325,20 +306,17 @@ public class ProfileEditFragment extends Fragment {
         try {
             bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
             if (bitmapImage != null){
-                profileController.setProfilePicture(bitmapImage, new FragmentHandler() {
-                    @Override
-                    public void onResponse(ControllerEvent controllerEvent) {
-                        if (controllerEvent.getType() == EventType.OK){
-                            setupAvatar();
-                        }else{
-                            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                profileController.setProfilePicture(bitmapImage, controllerEvent -> {
+                    if (controllerEvent.getType() == EventType.OK){
+                        setupAvatar();
+                    }else{
+                        Toast.makeText(getActivity(), R.string.err_msg_error_occured,
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         } catch (IOException e) {
-
+            Log.d(TAG, e.getMessage());
         }
     }
     private void setupAvatar() {

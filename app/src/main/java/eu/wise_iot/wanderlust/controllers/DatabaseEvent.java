@@ -28,6 +28,6 @@ public class DatabaseEvent<T> {
     }
 
     public enum SyncType {
-        POI, SINGLEPOI, POITYPE, POIAREA, DELETESINGLEPOI, EDITSINGLEPOI;
+        POI, SINGLEPOI, POITYPE, POIAREA, DELETESINGLEPOI, EDITSINGLEPOI
     }
 }

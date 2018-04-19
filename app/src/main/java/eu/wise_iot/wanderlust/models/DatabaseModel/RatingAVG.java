@@ -1,12 +1,14 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
 /**
- * Created by rilindgashi on 15.03.18.
+ * Helper object for backend communication
+ *
+ * @author Gashi Rilind
+ * @license MIT
  */
-
 public class RatingAVG {
 
-    private float rateAvg;
+    private final float rateAvg;
 
     public RatingAVG(float ratingAVG) {
         this.rateAvg = ratingAVG;

@@ -18,14 +18,14 @@ public interface DatabaseObject {
 
     void update(final AbstractModel abstractModel, final FragmentHandler handler);
 
-    void delete(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
+    void delete(String searchedColumn, String searchPattern);
 
     List<? extends AbstractModel> find();
 
-    List<? extends AbstractModel> find(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
+    List<? extends AbstractModel> find(String searchedColumn, String searchPattern);
 
-    AbstractModel findOne(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
+    AbstractModel findOne(String searchedColumn, String searchPattern);
 
-    long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException;
+    long count(String searchedColumn, String searchPattern);
 
 }

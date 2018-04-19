@@ -36,13 +36,13 @@ public class StartupResetPasswordFragment extends Fragment {
     private TextInputLayout textInputForgotPassword;
     private TextView redirectToLogin;
 
-    private LoginController loginController;
+    private final LoginController loginController;
 
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,5}$", Pattern.CASE_INSENSITIVE);
 
 
-    private FragmentHandler fragmentHandler = new FragmentHandler() {
+    private final FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {
             EventType eventType = event.getType();
@@ -104,14 +104,11 @@ public class StartupResetPasswordFragment extends Fragment {
             }
         });
 
-        redirectToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, startupLoginFragment)
-                        .commit();
-            }
+        redirectToLogin.setOnClickListener(v -> {
+            StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, startupLoginFragment)
+                    .commit();
         });
     }
 

@@ -4,7 +4,6 @@ package eu.wise_iot.wanderlust.controllers;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,8 +33,8 @@ public class ImageController {
         return CONTEXT != null ? Holder.INSTANCE : null;
     }
 
-    private String picturesDir;
-    private String[] FOLDERS;
+    private final String picturesDir;
+    private final String[] FOLDERS;
     private final int standardWidth;
 
     private ImageController(){
@@ -136,6 +135,6 @@ public class ImageController {
             fo.close();
             return f;
         }
-        return null;
+        return imgFileOrig;
     }
 }

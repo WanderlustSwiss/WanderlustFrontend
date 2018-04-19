@@ -8,7 +8,6 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -18,11 +17,11 @@ import eu.wise_iot.wanderlust.controllers.WeatherController;
 
 public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather>> {
 
-    FragmentHandler handler;
-    WeatherController controller;
-    Weather[] weather;
-    DateTime dateTime;
-    long duration;
+    public FragmentHandler handler;
+    public WeatherController controller;
+    public Weather[] weather;
+    public DateTime dateTime;
+    public long duration;
 
     public GetWeatherTask(FragmentHandler handler, DateTime dateTime, long duration) {
         this.handler = handler;

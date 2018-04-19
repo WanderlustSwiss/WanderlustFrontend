@@ -1,13 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import android.content.Context;
-import android.util.Log;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -17,7 +11,6 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
@@ -43,15 +36,15 @@ public class ProfileDao extends DatabaseObjectAbstract {
         private static final ProfileDao INSTANCE = new ProfileDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static ProfileDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static ProfileService service;
-    private Box<Profile> profileBox;
-    private ImageController imageController;
+    private final Box<Profile> profileBox;
+    private final ImageController imageController;
 
     /**
      *
@@ -236,13 +229,11 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Profile who match to the search pattern in the searched columns
      */
-    public Profile findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Profile findOne(Property searchedColumn, String searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Profile findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Profile findOne(Property searchedColumn, long searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -253,13 +244,11 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Profile> which contains the users, who match to the search pattern in the searched columns
      */
-    public List<Profile> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Profile> find(Property searchedColumn, String searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Profile> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Profile> find(Property searchedColumn, long searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

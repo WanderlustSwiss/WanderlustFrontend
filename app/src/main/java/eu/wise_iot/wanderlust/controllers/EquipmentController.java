@@ -5,37 +5,29 @@ import android.content.Context;
 
 import org.joda.time.DateTime;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
-import eu.wise_iot.wanderlust.models.DatabaseModel.SeasonsKeys;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import eu.wise_iot.wanderlust.services.EquipmentService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.services.WeatherService;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EquipmentController {
-    private EquipmentService service;
+    private final EquipmentService service;
     private List<Equipment> equipmentList;
     private int typeCount;
     private volatile boolean equipmentInitiated;
     private volatile boolean imagesDownloaded;
-    private ImageController imageController;
-    private WeatherController weatherController;
+    private final ImageController imageController;
+    private final WeatherController weatherController;
 
 
     private static class Holder {
@@ -118,100 +110,98 @@ public class EquipmentController {
     //TODO dateTime seasons
     public void retrieveRecommendedEquipment(Tour tour, DateTime dateTime, FragmentHandler handler) {
         //get weather from points
-        weatherController.getWeatherFromTour(tour, dateTime, new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        List<Weather> weather = (List<Weather>) controllerEvent.getModel();
-                        List<Equipment> equipment = getEquipmentList();
+        weatherController.getWeatherFromTour(tour, dateTime, controllerEvent -> {
+            switch (controllerEvent.getType()) {
+                case OK:
+                    @SuppressWarnings("unchecked")
+                    List<Weather> weather = (List<Weather>) controllerEvent.getModel();
+                    List<Equipment> equipment = getEquipmentList();
 
 
-                        //Calculate the score of each weather type
-                        float maxTemp = Float.NEGATIVE_INFINITY;
-                        float minTemp = Float.POSITIVE_INFINITY;
-                        List<WeatherKeys> weatherKeys = weatherController.getWeatherKeys();
-                        boolean[] weatherFilter = new boolean[weatherKeys.size()];
-                        for (Weather w : weather) {
-                            //TODO: Besseres error handling
-                            if (w == null){
-                                continue;
-                            }
-                            weatherFilter[w.getCategory()] = true;
+                    //Calculate the score of each weather type
+                    float maxTemp = Float.NEGATIVE_INFINITY;
+                    float minTemp = Float.POSITIVE_INFINITY;
+                    List<WeatherKeys> weatherKeys = weatherController.getWeatherKeys();
+                    boolean[] weatherFilter = new boolean[weatherKeys.size()];
+                    for (Weather w : weather) {
+                        //TODO: Besseres error handling
+                        if (w == null){
+                            continue;
+                        }
+                        weatherFilter[w.getCategory()] = true;
 
-                            if (w.getMaxTemp() > maxTemp) {
-                                maxTemp = w.getMaxTemp();
-                            }
-                            if (w.getMinTemp() < minTemp) {
-                                minTemp = w.getMinTemp();
-                            }
+                        if (w.getMaxTemp() > maxTemp) {
+                            maxTemp = w.getMaxTemp();
+                        }
+                        if (w.getMinTemp() < minTemp) {
+                            minTemp = w.getMinTemp();
+                        }
 
+                    }
+
+
+                    //safe equipment at array pos = type of equipment
+                    Equipment[] recommendedEquipment = new Equipment[getTypeCount()];
+
+                    for (Equipment e : equipment) {
+
+                        //If Equipment is not in recommended temperature skip it
+                        if (e.getMaxTemperature() < maxTemp || e.getMinTemperature() > minTemp) {
+                            continue;
                         }
 
 
-                        //safe equipment at array pos = type of equipment
-                        Equipment[] recommendedEquipment = new Equipment[getTypeCount()];
+                        //Check if type of equipment is already present
+                        if (recommendedEquipment[e.getType() - 1] != null) {
 
-                        for (Equipment e : equipment) {
+                            //Check if better than current recommended
+                            Equipment current = recommendedEquipment[e.getType() - 1];
 
-                            //If Equipment is not in recommended temperature skip it
-                            if (e.getMaxTemperature() < maxTemp || e.getMinTemperature() > minTemp) {
-                                continue;
+                            int scoreCurrent = 0;
+                            int scoreNew = 0;
+
+                            //Calculate score from weather
+                            for (int i = 0; i < current.getWeather().length; i++) {
+                                if (current.getWeather()[i] == 1 && weatherFilter[i]) {
+                                    scoreCurrent++;
+                                }
                             }
 
-
-                            //Check if type of equipment is already present
-                            if (recommendedEquipment[e.getType() - 1] != null) {
-
-                                //Check if better than current recommended
-                                Equipment current = recommendedEquipment[e.getType() - 1];
-
-                                int scoreCurrent = 0;
-                                int scoreNew = 0;
-
-                                //Calculate score from weather
-                                for (int i = 0; i < current.getWeather().length; i++) {
-                                    if (current.getWeather()[i] == 1 && weatherFilter[i]) {
-                                        scoreCurrent++;
-                                    }
+                            for (int i = 0; i < e.getWeather().length; i++) {
+                                if (e.getWeather()[i] == 1 && weatherFilter[i]) {
+                                    scoreNew++;
                                 }
+                            }
 
-                                for (int i = 0; i < e.getWeather().length; i++) {
-                                    if (e.getWeather()[i] == 1 && weatherFilter[i]) {
-                                        scoreNew++;
-                                    }
-                                }
+                            //set Equipment e to the recommended if it is better suited
+                            if (scoreNew > scoreCurrent) {
+                                recommendedEquipment[e.getType() - 1] = e;
+                            }
+                        }
+                        //Else set it recommended
+                        else {
 
-                                //set Equipment e to the recommended if it is better suited
-                                if (scoreNew > scoreCurrent) {
+                            //If at least one weather type
+                            for (int i = 0; i < e.getWeather().length; i++) {
+                                if (e.getWeather()[i] == 1 && weatherFilter[i]) {
                                     recommendedEquipment[e.getType() - 1] = e;
+                                    break;
                                 }
                             }
-                            //Else set it recommended
-                            else {
 
-                                //If at least one weather type
-                                for (int i = 0; i < e.getWeather().length; i++) {
-                                    if (e.getWeather()[i] == 1 && weatherFilter[i]) {
-                                        recommendedEquipment[e.getType() - 1] = e;
-                                        break;
-                                    }
-                                }
-
-                            }
                         }
+                    }
 
-                        List<Equipment> recEquipmentList = new ArrayList<>();
-                        for(int i = 0; i<recommendedEquipment.length; i++){
-                            if(recommendedEquipment[i] != null) {
-                                recEquipmentList.add(recommendedEquipment[i]);
-                            }
+                    List<Equipment> recEquipmentList = new ArrayList<>();
+                    for(Equipment equipmentItem : recEquipmentList){
+                        if(equipmentItem != null) {
+                            recEquipmentList.add(equipmentItem);
                         }
-                        handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
-                        break;
-                    default:
+                    }
+                    handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
+                    break;
+                default:
 
-                }
             }
         });
     }

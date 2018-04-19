@@ -6,11 +6,9 @@ import android.util.Log;
 
 import org.osmdroid.util.BoundingBox;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
@@ -57,14 +55,14 @@ public final class DatabaseController {
 
     //in bytes
     private final long MAXCACHESIZE;
-    private Context mainContext;
-    private BoxStore boxStore;
+    private final Context mainContext;
+    private final BoxStore boxStore;
     private List<DatabaseListener> listeners = new ArrayList<>();
     private boolean syncingPoiTypes;
     private boolean syncingPois;
     private Date lastSync;
 
-    private LinkedList<DownloadedImage> downloadedImages;
+    private final LinkedList<DownloadedImage> downloadedImages;
     private long cacheSize;
 
     private DatabaseController(){
@@ -75,20 +73,6 @@ public final class DatabaseController {
 
         listeners = new ArrayList<>();
         downloadedImages = new LinkedList<>();
-    }
-
-    /**
-     * Deletes all files in the frontend database
-     */
-    public void flushDatabase() {
-        boxStore.deleteAllFiles();
-    }
-
-    /**
-     * Deletes all pois from the frontend database
-     */
-    public void deleteAllPois() {
-        PoiDao.getInstance().deleteAll();
     }
 
 
@@ -130,13 +114,6 @@ public final class DatabaseController {
         sendUpdate(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA));
     }
 
-    /**
-     * @return the time when the last sync !STARTED!
-     */
-    public Date lastSync() {
-        return lastSync;
-    }
-
 
     public void addDownloadedImages(List<DownloadedImage> images) {
 
@@ -147,7 +124,7 @@ public final class DatabaseController {
         clearCache();
     }
 
-    public void clearCache() {
+    private void clearCache() {
 
         //TODO endless loop if userimages are higher than maxchachesize
         while (cacheSize >= MAXCACHESIZE) {
