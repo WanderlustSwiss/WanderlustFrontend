@@ -124,6 +124,7 @@ public class StartupRegistrationFragment extends Fragment {
                                     .commit();
                             break;
                         case CONFLICT:
+                            // TODO: make here a distinction if user name or email address are already in use
                             Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
                             break;
                         default:

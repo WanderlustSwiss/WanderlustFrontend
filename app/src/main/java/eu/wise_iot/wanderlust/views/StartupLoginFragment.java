@@ -133,8 +133,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 //        signInButtonGoogle = (SignInButton) view.findViewById(R.id.sign_in_button);
         redirectToRegistration = (TextView) view.findViewById(R.id.link_registration);
         fogotPassword = (TextView) view.findViewById(R.id.login_forgetPassword);
-
-
         passwordTextfield = (EditText) view.findViewById(R.id.input_password);
         return view;
     }
@@ -228,7 +226,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             LoginUser user = new LoginUser(account.getEmail(), token);
             //   loginController.logIn(user, fragmentHandler);
         } else {
-
             Toast.makeText(context, R.string.login_failure, Toast.LENGTH_LONG).show();
         }
     }
