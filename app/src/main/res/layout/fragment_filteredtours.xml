@@ -1,15 +1,33 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profileLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_two_and_inactive"
-    tools:context=".views.MainActivity">
+    android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvFilteredTours"
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:id="@+id/pbTourResult"
+        style="?android:progressBarStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="70dp"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
 
-</ScrollView>
+    <ScrollView
+        android:id="@+id/svFilteredTours"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_two_and_inactive"
+        tools:context=".views.MainActivity">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvFilteredTours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            layout_height="wrap_content" />
+
+    </ScrollView>
+</LinearLayout>
