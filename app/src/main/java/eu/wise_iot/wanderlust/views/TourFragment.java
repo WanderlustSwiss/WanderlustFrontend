@@ -282,10 +282,13 @@ public class TourFragment extends Fragment {
                 PorterDuff.Mode.SRC_ATOP);
 
 
-        tourController.getRating(tour, controllerEvent -> {
-            switch (controllerEvent.getType()) {
-                case OK:
-                    tourRating.setRating((float) controllerEvent.getModel());
+        tourController.getRating(tour, new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()) {
+                    case OK:
+                        tourRating.setRating((float) controllerEvent.getModel());
+                }
             }
         });
 
@@ -367,7 +370,7 @@ public class TourFragment extends Fragment {
                float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateAvg * 2) / 2.0));
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
-               tourRatingInNumbers.setText("0");
+               tourRatingInNumbers.setText(0);
            }
         });
 
@@ -397,8 +400,9 @@ public class TourFragment extends Fragment {
             //same time .... fuck yeah android
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
-                    TourRatingDialog dialogRating = new TourRatingDialog().newInstance(tour, tourController, tourRating);
-                    dialogRating.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
+                    TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
+                            tourRating);
+                    dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
                 }
@@ -448,12 +452,15 @@ public class TourFragment extends Fragment {
         };
 
         //date picker listener, which triggers time picker
-        DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
-            selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
 
-            TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
-                    0, 0, true);
-            tdialog.show();
+                TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
+                        0, 0, true);
+                tdialog.show();
+            }
         };
 
         //button click listener to select day, which triggers date picker
@@ -633,7 +640,7 @@ public class TourFragment extends Fragment {
         }
     }
 
-    private void drawChart() {
+    public void drawChart() {
         Number[] domainLabels = tourController.getElevationProfileXAxis();
         Number[] series1Numbers = tourController.getElevationProfileYAxis();
 
@@ -692,7 +699,7 @@ public class TourFragment extends Fragment {
         plot.redraw();
     }
 
-    private void showMapWithTour() {
+    public void showMapWithTour() {
         if (tourController.getPolyline() == null) {
             return;
         }
@@ -700,6 +707,8 @@ public class TourFragment extends Fragment {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+        // fixme: color does not get adjusted (only #f00)
+        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
 
         getFragmentManager().beginTransaction()
@@ -723,7 +732,6 @@ public class TourFragment extends Fragment {
      * @param view
      * @param parEquipment
      */
-    // Todo: Implement Dialog
     private void onItemClickImages(View view, Equipment parEquipment) {
 
     }
