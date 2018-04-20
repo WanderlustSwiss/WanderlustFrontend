@@ -78,6 +78,7 @@ public class TourOverviewFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.tour_filter_menu, menu);
         menu.removeItem(R.id.drawer_layout);
     }

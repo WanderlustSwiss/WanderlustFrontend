@@ -78,7 +78,6 @@ public class ResultFilterFragment extends Fragment {
         // set up the RecyclerView 1
         pbToursFiltered = (ProgressBar) rootView.findViewById(R.id.pbTourResult);
         rvToursFiltered = (RecyclerView) rootView.findViewById(R.id.rvFilteredTours);
-        svToursFiltered = (ScrollView) rootView.findViewById(R.id.svFilteredTours);
 
         rvToursFiltered.setPadding(5, 5, 5, 5);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -95,14 +94,14 @@ public class ResultFilterFragment extends Fragment {
             switch (event.getType()) {
                 case OK:
                     //get all needed information from server db
-                    listFilteredTours = new LinkedList<>((List<Tour>) event.getModel());
-                    ResultFilterFragment.this.listFilteredTours.addAll(listFilteredTours);
+                    List<Tour> list  = new LinkedList<>((List<Tour>) event.getModel());
+                    ResultFilterFragment.this.listFilteredTours.addAll(list);
                     currentPage++;
                     Log.d(TAG, "Getting filtered Tours: Server response arrived");
                     //get all the images needed and save them on the device
                     getDataFromServer(listFilteredTours);
                     adapterRoutes.notifyDataSetChanged();
-                    svToursFiltered.setVisibility(View.VISIBLE);
+                    rvToursFiltered.setVisibility(View.VISIBLE);
                     pbToursFiltered.setVisibility(View.GONE);
 
                     RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
