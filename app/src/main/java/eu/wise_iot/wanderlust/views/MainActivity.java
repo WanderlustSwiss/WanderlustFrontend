@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -206,6 +207,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTag = Constants.LOGIN_FRAGMENT;
         }
 
+        switchFragment(fragment, fragmentTag);
+
+        return true;
+    }
+    private void switchFragment(Fragment fragment, String fragmentTag){
         if (fragment != null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, fragment, fragmentTag)
@@ -218,11 +224,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
-
-        return true;
     }
-
     /**
      * Checks if device has granted permissions to access location manager and permissions to
      * write on storage. Requires API Level >= 23
@@ -244,10 +246,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setupDrawerHeader(User user){
-
         username = (TextView) findViewById(R.id.user_name);
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+
+        userProfileImage.setOnClickListener((View v) -> {
+            Fragment fragment = null;
+            String fragmentTag = null;
+            fragment = ProfileFragment.newInstance();
+            fragmentTag = Constants.PROFILE_FRAGMENT;
+            switchFragment(fragment, fragmentTag);
+        });
         
         username.setText(user.getNickname());
         email.setText(user.getEmail());

@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,6 +181,13 @@ public class TourFragment extends Fragment {
         listEquipment = new ArrayList<>();
     }
 
+    @Override
+    public void onPrepareOptionsMenu (Menu menu) {
+        getActivity().invalidateOptionsMenu();
+        menu.findItem(R.id.filterIcon).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
     /**
      * @param inflater
      * @param container
@@ -188,6 +196,7 @@ public class TourFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_tour, container, false);
         Calendar currentCalendar = GregorianCalendar.getInstance();
         selectedDateTime = new DateTime(currentCalendar);
@@ -203,21 +212,12 @@ public class TourFragment extends Fragment {
         });
         return view;
     }
-
-    /**
-     * @param view
-     * @param savedInstanceState
-     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fillControls();
         setupActionListeners();
     }
-
-    /**
-     * @param view
-     */
     private void initializeControls(View view) {
         imageViewTourImage = (ImageView) view.findViewById(R.id.tour_image);
         favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
@@ -356,15 +356,15 @@ public class TourFragment extends Fragment {
         } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
-        // TODO: add tour region here
-//        tourRegion.setText("Region <Namen>");
+        tourRegion.setText(getString(R.string.tour_region) + " " + tourController.getRegion());
 
         tourTitle.setText(tourController.getTitle());
 
         tourController.getRating(controllerEvent -> {
            if (controllerEvent.getType() == EventType.OK){
                float rateAvg = (float) controllerEvent.getModel();
-               float rateAvgRound = Float.parseFloat(String.format("%.1f", rateAvg));
+
+               float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateAvg * 2) / 2.0));
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
                tourRatingInNumbers.setText("0");

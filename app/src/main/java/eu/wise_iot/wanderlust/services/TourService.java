@@ -27,6 +27,7 @@ import retrofit2.http.Query;
  * downloadImage	GET	        /tour/:id/img/:image_id | restricted
  * uploadImage	    POST	    /tour/:id/img           | restricted
  * deleteImage	    DELETE	    /tour/:id/img/:image_id | restricted
+ * showPublic: HTTP request, Expected Param: page, Optional: durationS (minutes), durationE (minutes), region (id), title (string), difficulties (list of comma separated ids)
  *
  * @author Alexander Weinbeck
  */
@@ -36,6 +37,16 @@ public interface TourService {
 
     @GET("tour/")
     Call<List<Tour>> retrieveAllTours(@Query("page") int page);
+
+    @GET("tour/")
+    Call<List<Tour>> retrieveAllFilteredTours(@Query("page") int page,
+                                              @Query("distanceS") int distanceS,
+                                              @Query("distanceE") int distanceE,
+                                              @Query("durationS") int durationS,
+                                              @Query("durationE") int durationE,
+                                              @Query("regions") String region,
+                                              @Query("title") String title,
+                                              @Query("difficulties") String difficulties);
 
     @PUT("tour/{id}")
     Call<Tour> updateTour(int id, @Body Tour tour);
