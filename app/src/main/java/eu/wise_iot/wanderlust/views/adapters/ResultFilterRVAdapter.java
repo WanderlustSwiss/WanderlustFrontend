@@ -111,11 +111,11 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
             File image = images.get(0);
-            Picasso.with(context).load(image).fit().centerInside().noFade()
+            Picasso.with(context).load(image).fit().centerCrop().noFade()
                     .placeholder(R.drawable.progress_animation).into(holder.tvImage);
             Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
         } else {
-            Picasso.with(context).load(R.drawable.no_image_found).fit().centerInside().noFade()
+            Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
                     .placeholder(R.drawable.progress_animation).into(holder.tvImage);
             Log.d("ToursoverviewAdapters", "Images not found");
         }
