@@ -228,5 +228,17 @@
     <string name="create_tour_no_seasons">Tour kann ohne Jahreszeit nicht gespeichert werden</string>
     <string name="create_tour_not_save_tour">Wollen Sie wirklich ohne zu speichern fortfahren. Die aufgenommene Tour wird nicht mehr verfügbar sein</string>
     <string name="create_tour_not_saved">Tour nicht gespeichert</string>
+    <string name="short_january">Jan</string>
+    <string name="short_february">Feb</string>
+    <string name="short_march">Mar</string>
+    <string name="short_april">Apr</string>
+    <string name="short_mai">Mai</string>
+    <string name="short_june">Jun</string>
+    <string name="short_july">Jul</string>
+    <string name="short_august">Aug</string>
+    <string name="short_september">Sep</string>
+    <string name="short_october">Okt</string>
+    <string name="short_november">Nov</string>
+    <string name="short_december">Dez</string>
 
 </resources>

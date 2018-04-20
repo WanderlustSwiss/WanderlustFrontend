@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -36,6 +37,7 @@ public class CreateTourBackgroundTask extends Service {
     private static final float LOCATION_DISTANCE = 10f;
     private ArrayList<GeoPoint> track = new ArrayList<>();
     private boolean wholeRouteRequired = false;
+    private PowerManager.WakeLock cpuWakeLock;
 
     private class LocationListener implements android.location.LocationListener {
 
@@ -129,6 +131,12 @@ public class CreateTourBackgroundTask extends Service {
     @Override
     public void onCreate() {
         Log.e(TAG, "onCreate");
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        cpuWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "gps_service");
+        cpuWakeLock.acquire();
+
         initializeLocationManager();
         startForeground();
         LocalBroadcastManager.getInstance(this).registerReceiver(wholeTourRequiredReceiver, new IntentFilter(Constants.CREATE_TOUR_WHOLE_ROUTE_REQUIRED));
@@ -175,6 +183,8 @@ public class CreateTourBackgroundTask extends Service {
             }
         }
         sendLocationBroadcastTrackingFinished();
+        if (cpuWakeLock.isHeld())
+            cpuWakeLock.release();
     }
 
     /**
@@ -245,8 +255,8 @@ public class CreateTourBackgroundTask extends Service {
                 .getSystemService(Context.LOCATION_SERVICE);
 
         Criteria criteria = new Criteria();
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+        criteria.setAccuracy(Criteria.ACCURACY_MEDIUM);
         criteria.setSpeedRequired(true);
         criteria.setAltitudeRequired(false);
         criteria.setBearingRequired(false);

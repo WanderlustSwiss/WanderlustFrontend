@@ -85,6 +85,7 @@
                 android:id="@+id/createTourButton"
                 style="@style/FloatingActionButton.Light"
                 android:layout_marginBottom="16dp"
+                android:visibility="gone"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_library_add_grey_24dp" />
 

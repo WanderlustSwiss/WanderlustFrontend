@@ -181,7 +181,6 @@ public class MapFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        stoptTourTracking();
         databaseController.unregister(mapOverlays);
     }
 
@@ -200,6 +199,7 @@ public class MapFragment extends Fragment {
     private void initCreatingTourControlls(View view) {
         createTourButton = (ImageButton) view.findViewById(R.id.createTourButton);
         creatingTourInformation = (TextView) view.findViewById(R.id.createTourInformation);
+        createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
 
 
         createTourButton.setOnClickListener(view1 -> {
@@ -922,7 +922,6 @@ public class MapFragment extends Fragment {
     private void startTourTracking() {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(createTourReceiver, new IntentFilter(Constants.CREATE_TOUR_INTENT));
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateTrackingOverlayReceiver, new IntentFilter(Constants.CREATE_TOUR_UPDATE_MYOVERLAY));
-        createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
         getActivity().startService(createTourIntent);
     }
 

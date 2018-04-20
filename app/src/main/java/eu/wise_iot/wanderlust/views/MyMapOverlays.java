@@ -313,7 +313,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     /**
      * Triggers the loading of public transport layer arround the current location and displays it
      *
-     * @param geoPoint Current location of the user
+     * @param geoPoint   Current location of the user
      * @param setVisible display or hide layer
      */
     void showPublicTransportLayer(boolean setVisible, GeoPoint geoPoint) {
@@ -334,22 +334,24 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         }
 
         if (setVisible) {
+            if (mapView.getZoomLevel() > 14) {
+                searchMapController.searchPublicTransportStations(geoPoint, 200, 2000, (ControllerEvent controllerEvent) -> {
+                    if (controllerEvent.getType() == EventType.OK) {
 
-            searchMapController.searchPublicTransportStations(geoPoint, 200, 2000, (ControllerEvent controllerEvent) -> {
-                if (controllerEvent.getType() == EventType.OK) {
+                        Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_train_black_24dp);
+                        publicTransportOverlay.removeAllItems();
 
-                    Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_train_black_24dp);
-                    publicTransportOverlay.removeAllItems();
-
-                    for (PublicTransportPoint publicTransportPoint : (List<PublicTransportPoint>) controllerEvent.getModel()) {
-                        OverlayItem overlayItem = new OverlayItem(Integer.toString(publicTransportPoint.getId()), publicTransportPoint.getTitle(), publicTransportPoint.getTitle(), publicTransportPoint.getGeoPoint());
-                        overlayItem.setMarker(drawable);
-                        publicTransportOverlay.addItem(overlayItem);
+                        for (PublicTransportPoint publicTransportPoint : (List<PublicTransportPoint>) controllerEvent.getModel()) {
+                            OverlayItem overlayItem = new OverlayItem(Integer.toString(publicTransportPoint.getId()), publicTransportPoint.getTitle(), publicTransportPoint.getTitle(), publicTransportPoint.getGeoPoint());
+                            overlayItem.setMarker(drawable);
+                            publicTransportOverlay.addItem(overlayItem);
+                        }
+                        mapView.getOverlays().add(publicTransportOverlay);
                     }
-                    mapView.getOverlays().add(publicTransportOverlay);
-                }
-                mapView.invalidate();
-            });
+                    mapView.invalidate();
+                });
+            }
+
         } else {
             publicTransportOverlay.removeAllItems();
             mapView.getOverlays().remove(publicTransportOverlay);
@@ -484,6 +486,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
 
     // *********************** SAC LAYER ************************************************** //
+
     /**
      * Triggers the loading of sac hut layer arround the current location and displays it
      *
