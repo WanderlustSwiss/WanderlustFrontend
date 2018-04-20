@@ -84,6 +84,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
         Tour tour = this.tours.get(position);
+        TourController tourController = new TourController(tour);
 //        holder.tvTitle.setTextColor(Color.BLACK);
         //difficulty calculations
         long difficulty = tour.getDifficulty();
@@ -100,6 +101,10 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
 
         holder.ibShare.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
+        if(tourController.isSaved()){
+            holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.medium));
+        }
+
         holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         //button Favorite
         for (Favorite favorite : favoriteDao.find()) {
@@ -194,6 +199,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
 
             itemView.setOnClickListener(this);
             ibFavorite.setOnClickListener(this);
+            ibSave.setOnClickListener(this);
         }
 
         /**

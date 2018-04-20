@@ -91,6 +91,8 @@ public class TourFragment extends Fragment {
 
     private ImageView imageViewTourImage;
     private ImageButton favButton;
+    private ImageButton tourSavedButton;
+    private ImageButton tourSharedButton;
     private ImageButton backbutton;
     private TextView tourRegion;
     private TextView tourTitle;
@@ -225,8 +227,8 @@ public class TourFragment extends Fragment {
         tourRegion = (TextView) view.findViewById(R.id.tour_region);
         tourTitle = (TextView) view.findViewById(R.id.tour_title);
         tourExecutionDate = (TextView) view.findViewById(R.id.tour_execution_date);
-        ImageButton tourSavedButton = (ImageButton) view.findViewById(R.id.save_tour_button);
-        ImageButton tourSharedButton = (ImageButton) view.findViewById(R.id.share_tour_button);
+        tourSavedButton = (ImageButton) view.findViewById(R.id.save_tour_button);
+        tourSharedButton = (ImageButton) view.findViewById(R.id.share_tour_button);
         backbutton = (ImageButton) view.findViewById(R.id.tour_back_button);
         textViewTourDistance = (TextView) view.findViewById(R.id.tour_distance);
         textViewAscend = (TextView) view.findViewById(R.id.tour_ascend);
@@ -359,6 +361,13 @@ public class TourFragment extends Fragment {
         } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
+
+        if(tourController.isSaved()){
+            tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+        }else{
+            tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+        }
+
         // TODO: add tour region here
 //        tourRegion.setText("Region <Namen>");
 
@@ -370,7 +379,7 @@ public class TourFragment extends Fragment {
                float rateAvgRound = Float.parseFloat(String.format("%.1f", rateAvg));
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
-               tourRatingInNumbers.setText(0);
+               tourRatingInNumbers.setText("0");
            }
         });
 
@@ -394,6 +403,7 @@ public class TourFragment extends Fragment {
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
         backbutton.setOnClickListener((View v) -> showTourView());
         favButton.setOnClickListener((View v) -> toggleFavorite());
+        tourSavedButton.setOnClickListener((View v) -> toggleSaved());
         tourRating.setOnTouchListener((View v, MotionEvent e) -> {
             //setOnTouchListener creates two MotionEvents and without if-Statement, it would
             //open the dialog twice even if android doc says that you cant open two dialogs at the
@@ -637,6 +647,20 @@ public class TourFragment extends Fragment {
                 favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
                 isFavoriteUpdate = false;
             });
+        }
+    }
+
+    private void toggleSaved(){
+        if (tourController.isSaved()){
+            boolean unsaved = tourController.unsetSaved();
+            if(unsaved){
+                tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+            }
+        }else{
+            boolean saved = tourController.setSaved();
+            if(saved){
+                tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+            }
         }
     }
 
