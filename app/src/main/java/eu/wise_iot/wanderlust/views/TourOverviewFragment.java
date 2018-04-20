@@ -45,12 +45,10 @@ import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 public class TourOverviewFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
     private Context context;
-    private ToursOverviewRVAdapter adapterRoutes;
-    private ToursOverviewRVAdapter adapterFavs;
+    private ToursOverviewRVAdapter adapterRoutes, adapterFavs;
     private LinkedList<Tour> listTours;
     private final List<Tour> favTours = new ArrayList<>();
-    private RecyclerView rvTouren;
-    private RecyclerView rvFavorites;
+    private RecyclerView rvTouren, rvFavorites;
     private int currentPage = 0;
     private ImageController imageController;
 
@@ -65,11 +63,7 @@ public class TourOverviewFragment extends Fragment {
         imageController = ImageController.getInstance();
         setHasOptionsMenu(true);
     }
-    /**
-     * Static instance constructor.
-     *
-     * @return Fragment: TourOverviewFragment
-     */
+
     public static TourOverviewFragment newInstance() {
         Bundle args = new Bundle();
         TourOverviewFragment fragment = new TourOverviewFragment();
@@ -84,6 +78,13 @@ public class TourOverviewFragment extends Fragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu (Menu menu) {
+        getActivity().invalidateOptionsMenu();
+        menu.findItem(R.id.filterIcon).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.filterIcon:
@@ -93,7 +94,6 @@ public class TourOverviewFragment extends Fragment {
                         .add(R.id.content_frame, filterFragment, Constants.FILTER_FRAGMENT)
                         .addToBackStack(Constants.FILTER_FRAGMENT)
                         .commit();
-                //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
                 break;
         }
         return true;

@@ -85,7 +85,6 @@ public class FilterFragment extends Fragment {
         cbT6 = (CheckBox)view.findViewById(R.id.checkboxT6);
 
         btnSearch.setOnClickListener((View v) -> performSearch());
-
         tiRegion.setThreshold(1);
 
         ArrayAdapter<Region> regionAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, filterController.getRegions());
