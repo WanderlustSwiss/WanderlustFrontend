@@ -18,10 +18,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.xml.datatype.Duration;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -199,7 +202,7 @@ public class TourOverviewFragment extends Fragment {
                     break;
                 default:
                     Log.d(TAG, "Server response ERROR: " + event.getType().name());
-                    //do nothing
+                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
             }
         }, currentPage);
 
@@ -230,7 +233,7 @@ public class TourOverviewFragment extends Fragment {
                     }
                 default:
                     Log.d("ERROR", "failed to get Favorites");
-                    break;
+                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
             }
         });
 
@@ -257,7 +260,7 @@ public class TourOverviewFragment extends Fragment {
                                         break;
                                     default:
                                         Log.d(TAG, "Server response ERROR: " + controllerEvent.getType().name());
-                                        break;
+                                        Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
                                 }
                             }, currentPage);
                         }
@@ -303,10 +306,10 @@ public class TourOverviewFragment extends Fragment {
                                     tvToursFavoritePlaceholder.setVisibility(View.VISIBLE);
                                     pbFavorites.setVisibility(View.GONE);
                                 }
-
                                 break;
                             default:
                                 Log.d(TAG, "favorite failure while deleting " + tour.getTour_id());
+                                Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
                         }
                     });
                 } else {
@@ -333,6 +336,7 @@ public class TourOverviewFragment extends Fragment {
                                 break;
                             default:
                                 Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());
+                                Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
                         }
                     });
                 }
