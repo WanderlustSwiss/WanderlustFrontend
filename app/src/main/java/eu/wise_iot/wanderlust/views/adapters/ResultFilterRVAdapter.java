@@ -35,17 +35,12 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
  * @license MIT
  */
 public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAdapter.ViewHolder> {
-
     private List<Tour> tours = Collections.emptyList();
     private final LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
+    public ItemClickListener mClickListener;
     private final Context context;
     private final ImageController imageController;
     private final ResultFilterController resultFilterController;
-
-    private final FavoriteDao favoriteDao = FavoriteDao.getInstance();
-    private final List<Long> favorizedTours = new ArrayList<>();
-
 
     /**
      * data is passed into the constructor, here as a Tour
@@ -162,21 +157,15 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each tour
-        public final TextView tvDistance;
-        public final TextView tvDifficulty;
-        public final TextView tvRegion;
-        public final TextView tvAscending;
-        public final TextView tvDescending;
-        public final TextView tvTitle;
-        public final TextView tvTime;
-        public final ImageView tvImage;
-        public final ImageView ivTourDifficulty;
+        private final TextView tvDistance, tvDifficulty, tvRegion, tvAscending, tvDescending, tvTitle, tvTime;
+        private final ImageView tvImage;
+        private final ImageView ivTourDifficulty;
 
         /**
          * copy constructor for each element which holds the view
          * @param itemView
          */
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             tvDistance = (TextView) itemView.findViewById(R.id.tour_distance);
             tvDifficulty = (TextView) itemView.findViewById(R.id.tour_difficulty);

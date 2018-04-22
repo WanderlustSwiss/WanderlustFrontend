@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -52,17 +51,15 @@ public class FilterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        filterController = new FilterController();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        filterController = new FilterController();
-
         // Inflate the layout for this fragment
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
+        return inflater.inflate(
                 R.layout.fragment_filtertours, container, false);
-        return rootView;
     }
 
     @Override

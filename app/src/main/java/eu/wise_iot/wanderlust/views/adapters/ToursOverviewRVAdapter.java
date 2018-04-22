@@ -36,12 +36,11 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 @SuppressWarnings("JavaDoc")
 public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRVAdapter.ViewHolder> {
 
-    private List<Tour> tours = Collections.emptyList();
+    private List<Tour> tours;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private final Context context;
     private final ImageController imageController;
-
     private final FavoriteDao favoriteDao = FavoriteDao.getInstance();
     private final List<Long> favorizedTours = new ArrayList<>();
 
@@ -166,16 +165,9 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each tour
-        public final TextView tvDistance;
-        public final TextView tvDifficulty;
-        public final TextView tvRegion;
-        public final TextView tvTitle;
-        public final TextView tvTime;
-        public final ImageView tvImage;
-        public final ImageView tvDifficultyIcon;
-        public final ImageButton ibFavorite;
-        public final ImageButton ibSave;
-        public final ImageButton ibShare;
+        private final TextView tvDistance, tvDifficulty, tvTitle, tvTime;
+        private final ImageView tvImage, tvDifficultyIcon;
+        private final ImageButton ibFavorite, ibSave, ibShare;
 
         /**
          * copy constructor for each element which holds the view
@@ -185,7 +177,6 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
             super(itemView);
             tvDistance = (TextView) itemView.findViewById(R.id.tour_distance);
             tvDifficulty = (TextView) itemView.findViewById(R.id.tour_difficulty);
-            tvRegion = (TextView) itemView.findViewById(R.id.tour_region);
             tvTitle = (TextView) itemView.findViewById(R.id.tour_title);
             tvTime = (TextView) itemView.findViewById(R.id.tourTime);
             tvImage = (ImageView) itemView.findViewById(R.id.tour_image);

@@ -4,7 +4,6 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,18 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
@@ -45,10 +39,9 @@ public class ResultFilterFragment extends Fragment {
     private static final String TAG = "ResultFilterFragment";
     private static FilterFragment.FilterSetting settingsSet;
     private ResultFilterController resultFilterController;
-    private ImageController imageController;
     private Context context;
     private ResultFilterRVAdapter adapterRoutes;
-    private LinkedList<Tour> listFilteredTours = new LinkedList<>();
+    private final LinkedList<Tour> listFilteredTours = new LinkedList<>();
     private ProgressBar pbToursFiltered;
     private RecyclerView rvToursFiltered;
     private TextView tvToursFilteredPlaceholder;
@@ -67,7 +60,6 @@ public class ResultFilterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
-        imageController = ImageController.getInstance();
         resultFilterController = new ResultFilterController();
         setHasOptionsMenu(true);
     }
@@ -165,11 +157,11 @@ public class ResultFilterFragment extends Fragment {
         return rootView;
     }
     /**
-     * handles click in Recyclerview
+     * handles click in Recyclerview item
      * @param view
      * @param tour
      */
-    private void onItemClickImages(View view, Tour tour) {
+    protected void onItemClickImages(View view, Tour tour) {
         Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
         TourFragment tourFragment = TourFragment.newInstance(tour);
         getFragmentManager().beginTransaction()
