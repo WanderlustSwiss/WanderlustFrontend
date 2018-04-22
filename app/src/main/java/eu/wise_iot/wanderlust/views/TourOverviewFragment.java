@@ -143,7 +143,7 @@ public class TourOverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         toc = new TourOverviewController();
-        View view = inflater.inflate(R.layout.fragment_toursoverview, container, false);
+        View view = inflater.inflate(R.layout.fragment_tour_overview, container, false);
 
         tvToursAllPlaceholder = (TextView) view.findViewById(R.id.tvToursAllPlaceholder);
         tvToursFavoritePlaceholder = (TextView) view.findViewById(R.id.tvToursFavoritePlaceholder);
@@ -185,7 +185,8 @@ public class TourOverviewFragment extends Fragment {
                     Log.d(TAG, "Getting Tours: Server response arrived");
                     //get all the images needed and save them on the device
                     getDataFromServer(listTours);
-                    adapterRoutes.notifyDataSetChanged();
+                    currentPage++;
+                    TourOverviewFragment.this.adapterRoutes.notifyDataSetChanged();
                     if(adapterRoutes.getItemCount() > 0) {
                         rvTours.setVisibility(View.VISIBLE);
                         tvToursAllPlaceholder.setVisibility(View.GONE);
@@ -195,7 +196,6 @@ public class TourOverviewFragment extends Fragment {
                         tvToursAllPlaceholder.setVisibility(View.VISIBLE);
                         pbTours.setVisibility(View.GONE);
                     }
-                    currentPage++;
                     break;
                 default:
                     Log.d(TAG, "Server response ERROR: " + event.getType().name());
@@ -218,9 +218,8 @@ public class TourOverviewFragment extends Fragment {
                     getDataFromServer(favTours);
                     Log.d(TAG, favTours.toString());
                     TourOverviewFragment.this.adapterFavs.notifyDataSetChanged();
-                    rvFavorites.setVisibility(View.VISIBLE);
-                    pbFavorites.setVisibility(View.GONE);
-                    if(adapterRoutes.getItemCount() > 0) {
+
+                    if(adapterFavs.getItemCount() > 0) {
                         rvFavorites.setVisibility(View.VISIBLE);
                         tvToursFavoritePlaceholder.setVisibility(View.GONE);
                         pbFavorites.setVisibility(View.GONE);
@@ -295,6 +294,16 @@ public class TourOverviewFragment extends Fragment {
                                 //notify observer of adapters
                                 adapterFavs.notifyDataSetChanged();
                                 adapterRoutes.notifyDataSetChanged();
+                                if(adapterFavs.getItemCount() > 0) {
+                                    rvFavorites.setVisibility(View.VISIBLE);
+                                    tvToursFavoritePlaceholder.setVisibility(View.GONE);
+                                    pbFavorites.setVisibility(View.GONE);
+                                } else {
+                                    rvFavorites.setVisibility(View.GONE);
+                                    tvToursFavoritePlaceholder.setVisibility(View.VISIBLE);
+                                    pbFavorites.setVisibility(View.GONE);
+                                }
+
                                 break;
                             default:
                                 Log.d(TAG, "favorite failure while deleting " + tour.getTour_id());
@@ -310,7 +319,17 @@ public class TourOverviewFragment extends Fragment {
                                 //add tour to adapter dataset
                                 favTours.add(tour);
                                 //notify adapter of dataset change
+                                adapterRoutes.notifyDataSetChanged();
                                 adapterFavs.notifyDataSetChanged();
+                                if(adapterFavs.getItemCount() > 0) {
+                                    rvFavorites.setVisibility(View.VISIBLE);
+                                    tvToursFavoritePlaceholder.setVisibility(View.GONE);
+                                    pbFavorites.setVisibility(View.GONE);
+                                } else {
+                                    rvFavorites.setVisibility(View.GONE);
+                                    tvToursFavoritePlaceholder.setVisibility(View.VISIBLE);
+                                    pbFavorites.setVisibility(View.GONE);
+                                }
                                 break;
                             default:
                                 Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());

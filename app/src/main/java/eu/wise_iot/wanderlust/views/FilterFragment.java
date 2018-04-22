@@ -59,7 +59,7 @@ public class FilterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(
-                R.layout.fragment_filtertours, container, false);
+                R.layout.fragment_tour_filter, container, false);
     }
 
     @Override

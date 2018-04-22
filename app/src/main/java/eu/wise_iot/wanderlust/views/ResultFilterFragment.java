@@ -21,13 +21,10 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ResultFilterRVAdapter;
-
-import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
  * Fragment that contains the filtering functionality for all tours
@@ -68,7 +65,7 @@ public class ResultFilterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_filteredtours, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_tour_filter_result, container, false);
 
         // set up the RecyclerView 1
         pbToursFiltered = (ProgressBar) rootView.findViewById(R.id.pbTourResult);
