@@ -20,6 +20,13 @@
             android:padding="12dp"
             android:textSize="30sp" />
 
+        <TextView
+            android:id="@+id/tvToursAllPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:text="@string/tour_filter_noresult"/>
         <ProgressBar
             android:id="@+id/pbTouren"
             style="?android:progressBarStyle"
@@ -38,7 +45,13 @@
             android:text="@string/favourites"
             android:padding="12dp"
             android:textSize="30sp" />
-
+        <TextView
+            android:id="@+id/tvToursFavoritePlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:text="@string/tour_filter_noresult"/>
         <ProgressBar
             android:id="@+id/pbFavorites"
             style="?android:progressBarStyle"

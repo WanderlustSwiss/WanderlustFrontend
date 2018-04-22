@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -46,6 +47,7 @@ public class TourOverviewFragment extends Fragment {
     private final List<Tour> favTours = new ArrayList<>();
     private RecyclerView rvTours, rvFavorites;
     private ProgressBar pbTours, pbFavorites;
+    private TextView tvToursAllPlaceholder, tvToursFavoritePlaceholder;
     private TourOverviewController toc;
     private int currentPage = 0;
     private ImageController imageController;
@@ -143,6 +145,8 @@ public class TourOverviewFragment extends Fragment {
         toc = new TourOverviewController();
         View view = inflater.inflate(R.layout.fragment_toursoverview, container, false);
 
+        tvToursAllPlaceholder = (TextView) view.findViewById(R.id.tvToursAllPlaceholder);
+        tvToursFavoritePlaceholder = (TextView) view.findViewById(R.id.tvToursFavoritePlaceholder);
         // set up the RecyclerView Tours
         rvTours = (RecyclerView) view.findViewById(R.id.rvTouren);
         pbTours = (ProgressBar) view.findViewById(R.id.pbTouren);
@@ -182,8 +186,15 @@ public class TourOverviewFragment extends Fragment {
                     //get all the images needed and save them on the device
                     getDataFromServer(listTours);
                     adapterRoutes.notifyDataSetChanged();
-                    rvTours.setVisibility(View.VISIBLE);
-                    pbTours.setVisibility(View.GONE);
+                    if(adapterRoutes.getItemCount() > 0) {
+                        rvTours.setVisibility(View.VISIBLE);
+                        tvToursAllPlaceholder.setVisibility(View.GONE);
+                        pbTours.setVisibility(View.GONE);
+                    } else {
+                        rvTours.setVisibility(View.GONE);
+                        tvToursAllPlaceholder.setVisibility(View.VISIBLE);
+                        pbTours.setVisibility(View.GONE);
+                    }
                     currentPage++;
                     break;
                 default:
@@ -196,7 +207,7 @@ public class TourOverviewFragment extends Fragment {
         toc.getAllFavoriteTours(controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
-                    Log.d("INFO", "refresh Favorites");
+                    Log.d(TAG, "refresh Favorites");
                     List<Tour> list = (List<Tour>) controllerEvent.getModel();
 
                     for (Tour tour : list)
@@ -205,10 +216,19 @@ public class TourOverviewFragment extends Fragment {
 
                     TourOverviewFragment.this.favTours.addAll(list);
                     getDataFromServer(favTours);
-                    Log.d("INFO", favTours.toString());
+                    Log.d(TAG, favTours.toString());
                     TourOverviewFragment.this.adapterFavs.notifyDataSetChanged();
                     rvFavorites.setVisibility(View.VISIBLE);
                     pbFavorites.setVisibility(View.GONE);
+                    if(adapterRoutes.getItemCount() > 0) {
+                        rvFavorites.setVisibility(View.VISIBLE);
+                        tvToursFavoritePlaceholder.setVisibility(View.GONE);
+                        pbFavorites.setVisibility(View.GONE);
+                    } else {
+                        rvFavorites.setVisibility(View.GONE);
+                        tvToursFavoritePlaceholder.setVisibility(View.VISIBLE);
+                        pbFavorites.setVisibility(View.GONE);
+                    }
                 default:
                     Log.d("ERROR", "failed to get Favorites");
                     break;
