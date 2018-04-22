@@ -184,16 +184,11 @@ public class TourFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu (Menu menu) {
         getActivity().invalidateOptionsMenu();
-        menu.findItem(R.id.filterIcon).setVisible(false);
+        if(menu.findItem(R.id.filterIcon) != null)
+            menu.findItem(R.id.filterIcon).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 
-    /**
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);

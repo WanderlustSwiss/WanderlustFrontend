@@ -86,7 +86,8 @@ public class TourOverviewFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu (Menu menu) {
         getActivity().invalidateOptionsMenu();
-        menu.findItem(R.id.filterIcon).setVisible(true);
+        if(menu.findItem(R.id.filterIcon) != null)
+            menu.findItem(R.id.filterIcon).setVisible(true);
         super.onPrepareOptionsMenu(menu);
     }
 

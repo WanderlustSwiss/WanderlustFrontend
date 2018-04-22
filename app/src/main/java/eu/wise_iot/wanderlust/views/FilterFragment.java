@@ -64,7 +64,8 @@ public class FilterFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu (Menu menu) {
         getActivity().invalidateOptionsMenu();
-        menu.findItem(R.id.filterIcon).setVisible(false);
+        if(menu.findItem(R.id.filterIcon) != null)
+            menu.findItem(R.id.filterIcon).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 

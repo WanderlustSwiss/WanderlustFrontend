@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="70dp"
+        android:visibility="gone"
         android:text="@string/tour_filter_noresult"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvFilteredTours"
