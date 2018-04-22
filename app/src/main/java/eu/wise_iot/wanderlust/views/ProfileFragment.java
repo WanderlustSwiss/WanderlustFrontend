@@ -117,7 +117,7 @@ public class ProfileFragment extends Fragment {
 
         File image = profileController.getProfilePicture();
         if (image != null) {
-            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().into(profilePicture);
+            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(profilePicture);
             ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
         }else{
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);

@@ -43,6 +43,7 @@
     <string name="tour_name">Name</string>
     <string name="tour_distance">Distanz (KM)</string>
     <string name="tour_duration">Dauer (Stunden)</string>
+    <string name="tour_filter_noresult">Keine Touren gefunden</string>
 
     <!-- FILTER RELATED STRINGS -->
     <string name="filter_search">Suchen</string>

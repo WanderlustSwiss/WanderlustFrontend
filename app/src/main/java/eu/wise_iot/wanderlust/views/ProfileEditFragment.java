@@ -323,7 +323,7 @@ public class ProfileEditFragment extends Fragment {
         File image = profileController.getProfilePicture();
         if (image != null) {
             Picasso.with(getActivity()).invalidate(image);
-            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().into(profileImage);
+            Picasso.with(getActivity()).load(image).placeholder(R.drawable.progress_animation).transform(new CircleTransform()).fit().into(profileImage);
             ((MainActivity) getActivity()).updateProfileImage(image);
         } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
@@ -332,6 +332,5 @@ public class ProfileEditFragment extends Fragment {
             profileImage.setImageDrawable(drawable);
             ((MainActivity) getActivity()).updateProfileImage(image);
         }
-
     }
 }

@@ -16,6 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -47,8 +50,8 @@ public class ResultFilterFragment extends Fragment {
     private ResultFilterRVAdapter adapterRoutes;
     private LinkedList<Tour> listFilteredTours = new LinkedList<>();
     private ProgressBar pbToursFiltered;
-    private ScrollView svToursFiltered;
     private RecyclerView rvToursFiltered;
+    private TextView tvToursFilteredPlaceholder;
     private int currentPage = 0;
 
 
@@ -78,6 +81,7 @@ public class ResultFilterFragment extends Fragment {
         // set up the RecyclerView 1
         pbToursFiltered = (ProgressBar) rootView.findViewById(R.id.pbTourResult);
         rvToursFiltered = (RecyclerView) rootView.findViewById(R.id.rvFilteredTours);
+        tvToursFilteredPlaceholder = (TextView) rootView.findViewById(R.id.tvToursFilteredPlaceholder);
 
         rvToursFiltered.setPadding(5, 5, 5, 5);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -101,8 +105,16 @@ public class ResultFilterFragment extends Fragment {
                     //get all the images needed and save them on the device
                     getDataFromServer(listFilteredTours);
                     adapterRoutes.notifyDataSetChanged();
-                    rvToursFiltered.setVisibility(View.VISIBLE);
-                    pbToursFiltered.setVisibility(View.GONE);
+                    if(adapterRoutes.getItemCount() > 0) {
+                        rvToursFiltered.setVisibility(View.VISIBLE);
+                        tvToursFilteredPlaceholder.setVisibility(View.GONE);
+                        pbToursFiltered.setVisibility(View.GONE);
+                    } else {
+                        rvToursFiltered.setVisibility(View.GONE);
+                        tvToursFilteredPlaceholder.setVisibility(View.VISIBLE);
+                        pbToursFiltered.setVisibility(View.GONE);
+                    }
+
 
                     RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
                         @Override
