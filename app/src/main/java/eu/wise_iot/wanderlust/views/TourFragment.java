@@ -347,7 +347,7 @@ public class TourFragment extends Fragment {
         } else {
             Picasso.with(context)
                     .load(R.drawable.no_image_found)
-                    .fit().placeholder(R.drawable.progress_animation)
+                    .fit().centerCrop().placeholder(R.drawable.progress_animation)
                     .into(this.imageViewTourImage);
         }
 

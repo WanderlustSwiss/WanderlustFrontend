@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,11 +77,11 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 
                         getFragmentManager().beginTransaction()
                                 .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
-                                .add(R.id.content_frame, UserGuideFragment.newInstance(), Constants.USER_GUIDE_FRAGMENT)
+                                .replace(R.id.content_frame, UserGuideFragment.newInstance(), Constants.USER_GUIDE_FRAGMENT)
                                 .commit();
                     } else {
                         getFragmentManager().beginTransaction()
-                                .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                .replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                 .commit();
                         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     }
@@ -104,11 +106,11 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         context = getActivity();
 
-        if (((AppCompatActivity) context).getSupportActionBar() != null) {
-            ((AppCompatActivity) context).getSupportActionBar().hide();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
         }
 
 //        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -133,8 +135,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 //        signInButtonGoogle = (SignInButton) view.findViewById(R.id.sign_in_button);
         redirectToRegistration = (TextView) view.findViewById(R.id.link_registration);
         fogotPassword = (TextView) view.findViewById(R.id.login_forgetPassword);
-
-
         passwordTextfield = (EditText) view.findViewById(R.id.input_password);
         return view;
     }
@@ -144,7 +144,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initActionControls();
-
     }
 
     /**
@@ -184,7 +183,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             //googleApiClient.disconnect();
             StartupRegistrationFragment startupRegistrationFragment = new StartupRegistrationFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, startupRegistrationFragment)
+                    .replace(R.id.content_frame, startupRegistrationFragment)
                     .commit();
         });
 
@@ -193,7 +192,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             //googleApiClient.disconnect();
             StartupResetPasswordFragment startupResetPasswordFragment = new StartupResetPasswordFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, startupResetPasswordFragment)
+                    .replace(R.id.content_frame, startupResetPasswordFragment)
                     .commit();
         });
     }
@@ -228,7 +227,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             LoginUser user = new LoginUser(account.getEmail(), token);
             //   loginController.logIn(user, fragmentHandler);
         } else {
-
             Toast.makeText(context, R.string.login_failure, Toast.LENGTH_LONG).show();
         }
     }
