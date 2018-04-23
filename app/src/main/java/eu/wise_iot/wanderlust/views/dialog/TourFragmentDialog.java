@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -722,9 +721,7 @@ public class TourFragmentDialog extends DialogFragment {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-
-        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
-
+        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent));
 
         //Disable my location
         getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.MY_LOCATION_ENABLED, false).apply();

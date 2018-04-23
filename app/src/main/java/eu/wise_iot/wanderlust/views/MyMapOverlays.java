@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.DisplayMetrics;
@@ -33,7 +32,6 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
 import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
@@ -100,9 +98,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public void setTour(Polyline polyline) {
         if (this.currentTour == null) {
             this.currentTour = polyline;
-            this.currentTour.setWidth(10);
+            this.currentTour.setWidth(25);
             Context context = DatabaseController.getMainContext();
-            this.currentTour.setColor(context.getResources().getColor(R.color.highlight_main_transparent75));
+            this.currentTour.setColor(context.getResources().getColor(R.color.highlight_main_transparent));
             mapView.getOverlays().add(this.currentTour);
         } else {
             this.currentTour = polyline;
@@ -463,10 +461,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         }
 
         Polyline polyline = new Polyline();
-
         polyline.setPoints(geoPoints);
-        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
-
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent));
         borderLines.add(polyline);
 
         mapView.getOverlays().add(polyline);
@@ -574,7 +570,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         Polyline polyline = new Polyline();
         trackingTourPoints.add(geoPoint);
         polyline.setPoints(this.trackingTourPoints);
-        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent));
         trackingTourOverlay.add(polyline);
         mapView.getOverlays().add(polyline);
         mapView.invalidate();
@@ -603,7 +599,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
         Polyline polyline = new Polyline();
         polyline.setPoints(this.trackingTourPoints);
-        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent));
         trackingTourOverlay.add(polyline);
         mapView.getOverlays().add(polyline);
         mapView.invalidate();
