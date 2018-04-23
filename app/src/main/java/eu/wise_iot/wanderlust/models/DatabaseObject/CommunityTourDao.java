@@ -88,6 +88,15 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
     }
 
     /**
+     * insert community tour only local
+     *
+     * @param communityTour
+     */
+    public void create(final AbstractModel communityTour){
+        communityTourBox.put((Tour) communityTour);
+    }
+
+    /**
      * get communityTour with specific id
      *
      * @param id
@@ -153,6 +162,12 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
     }
 
     public void delete(Tour communityTour){
-        communityTourBox.remove(communityTour);
+        List<Tour> list = communityTourBox.getAll();
+        for(Tour t : list){
+            if(t.getTour_id() == communityTour.getTour_id()){
+                communityTourBox.remove(t);
+            }
+        }
     }
+
 }

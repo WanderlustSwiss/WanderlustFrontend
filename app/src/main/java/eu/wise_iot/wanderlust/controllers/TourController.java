@@ -3,10 +3,10 @@ package eu.wise_iot.wanderlust.controllers;
 import android.util.Base64;
 import android.util.Log;
 
-import org.joda.time.DateTime;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.osmdroid.util.GeoPoint;
@@ -19,26 +19,23 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
@@ -75,6 +72,7 @@ public class TourController {
     private UserDao userDao;
     private Tour tour;
     private UserTourDao userTourDao;
+    private CommunityTourDao communityTourDao;
     private DifficultyTypeDao difficultyTypeDao;
     private RegionDao regionDao;
     private ImageController imageController;
@@ -85,6 +83,7 @@ public class TourController {
         this.tour = tour;
         userDao = UserDao.getInstance();
         userTourDao = UserTourDao.getInstance();
+        communityTourDao = CommunityTourDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         ratingDao = RatingDao.getInstance();
@@ -120,6 +119,27 @@ public class TourController {
             return true;
         }
         return false;
+    }
+
+    public boolean isSaved(){
+        for(Tour t : communityTourDao.find()){
+            if(t.getTour_id() == tour.getTour_id()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean setSaved(){
+        communityTourDao.create(tour);
+        Log.d(TAG, "Is saved");
+        return true;
+    }
+
+    public boolean unsetSaved(){
+        communityTourDao.delete(tour);
+        Log.d(TAG, "Is deleted");
+        return true;
     }
 
     public boolean setRating(Tour tour, int starRating, FragmentHandler handler){

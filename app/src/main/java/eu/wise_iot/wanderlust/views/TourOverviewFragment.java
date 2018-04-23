@@ -30,6 +30,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
@@ -307,6 +308,25 @@ public class TourOverviewFragment extends Fragment {
                     });
                 }
                 break;
+            case R.id.saveButton:
+                ImageButton ibSave = (ImageButton) view.findViewById(R.id.saveButton);
+                TourController controller = new TourController(tour);
+                Log.d("SAVE", "klickt...");
+                boolean saved = controller.isSaved();
+                if(saved){
+                    Log.d("SAVE", "saved");
+                    boolean unset = controller.unsetSaved();
+                    if(unset){
+                        ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                    }
+                }else{
+                    Log.d("SAVED", "nicht saved");
+                    boolean set = controller.setSaved();
+                    if(set){
+                        ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                    }
+                }
+                break;
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
                 TourFragment tourFragment = TourFragment.newInstance(tour);
@@ -473,6 +493,26 @@ public class TourOverviewFragment extends Fragment {
                             });
                         }
                         break;
+                   case R.id.saveButton:
+                        ImageButton ibSave = (ImageButton) view.findViewById(R.id.saveButton);
+                        TourController controller = new TourController(tour);
+                        Log.d("SAVE", "klickt...");
+                        boolean saved = controller.isSaved();
+                        if(saved){
+                            Log.d("SAVE", "saved");
+                            boolean unset = controller.unsetSaved();
+                            if(unset){
+                                ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                            }
+                        }else{
+                            Log.d("SAVED", "nicht saved");
+                            boolean set = controller.setSaved();
+                            if(set){
+                                ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                            }
+                        }
+                        break;
+
                     case R.id.tour_rv_item:
                         Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
                         TourFragment tourFragment = TourFragment.newInstance(tour);
