@@ -37,6 +37,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
@@ -77,6 +78,7 @@ public class TourController {
     private CommunityTourDao communityTourDao;
     private DifficultyTypeDao difficultyTypeDao;
     private RegionDao regionDao;
+    private RecentTourDao recentTourDao;
     private ImageController imageController;
 
     private static final String TAG = "Tourcontroller";
@@ -91,9 +93,13 @@ public class TourController {
         ratingDao = RatingDao.getInstance();
         imageController = ImageController.getInstance();
         regionDao = RegionDao.getInstance();
+        recentTourDao = RecentTourDao.getInstance();
     }
 
 
+    public void addRecentTour(Tour tour){
+        recentTourDao.create(tour);
+    }
     /**
      * True if Favorite is set, otherwise false
      */

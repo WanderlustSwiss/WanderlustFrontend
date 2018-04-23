@@ -103,6 +103,7 @@
 
     <string name="tours">Touren</string>
     <string name="favourites">Favoriten</string>
+    <string name="recentTours">Kürzlich</string>
     <string name="saved">Gespeichert</string>
     <string name="pois">POIs</string>
 

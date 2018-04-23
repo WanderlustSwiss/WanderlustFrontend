@@ -49,12 +49,13 @@ import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 public class TourOverviewFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
     private Context context;
-    private ToursOverviewRVAdapter adapterRoutes, adapterFavs;
+    private ToursOverviewRVAdapter adapterRoutes, adapterFavs, adapterRecent;
     private List<Tour> listTours;
     private final List<Tour> favTours = new ArrayList<>();
-    private RecyclerView rvTours, rvFavorites;
-    private ProgressBar pbTours, pbFavorites;
-    private TextView tvToursAllPlaceholder, tvToursFavoritePlaceholder;
+    private final List<Tour> recentTours = new ArrayList<>();
+    private RecyclerView rvTours, rvFavorites, rvRecent;
+    private ProgressBar pbTours, pbFavorites, pbRecent;
+    private TextView tvToursAllPlaceholder, tvToursFavoritePlaceholder, tvToursRecentPlaceholder;
     private TourOverviewController toc;
     private int currentPage = 0;
     private ImageController imageController;
@@ -155,7 +156,6 @@ public class TourOverviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tour_overview, container, false);
 
         tvToursAllPlaceholder = (TextView) view.findViewById(R.id.tvToursAllPlaceholder);
-        tvToursFavoritePlaceholder = (TextView) view.findViewById(R.id.tvToursFavoritePlaceholder);
         // set up the RecyclerView Tours
         rvTours = (RecyclerView) view.findViewById(R.id.rvTouren);
         pbTours = (ProgressBar) view.findViewById(R.id.pbTouren);
@@ -169,6 +169,7 @@ public class TourOverviewFragment extends Fragment {
         itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
         rvTours.addItemDecoration(itemDecorator);
 
+        tvToursFavoritePlaceholder = (TextView) view.findViewById(R.id.tvToursFavoritePlaceholder);
         // set up the RecyclerView favorites
         rvFavorites = (RecyclerView) view.findViewById(R.id.rvFavorites);
         pbFavorites = (ProgressBar) view.findViewById(R.id.pbFavorites);
@@ -177,6 +178,30 @@ public class TourOverviewFragment extends Fragment {
         adapterFavs = new ToursOverviewRVAdapter(context, favTours);
         adapterFavs.setClickListener(this::onItemClickImages);
         rvFavorites.setAdapter(adapterFavs);
+
+        tvToursRecentPlaceholder = (TextView) view.findViewById(R.id.tvToursRecentPlaceholder);
+        // set up the RecyclerView favorites
+        rvRecent = (RecyclerView) view.findViewById(R.id.rvRecent);
+        pbRecent = (ProgressBar) view.findViewById(R.id.pbRecent);
+        LinearLayoutManager horizontalLayoutManager3 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        rvRecent.setLayoutManager(horizontalLayoutManager3);
+        adapterRecent = new ToursOverviewRVAdapter(context, recentTours);
+        adapterRecent.setClickListener(this::onItemClickImages);
+        rvRecent.setAdapter(adapterRecent);
+
+        recentTours.addAll(toc.getRecentTours());
+        getDataFromServer(recentTours);
+        adapterRecent.notifyDataSetChanged();
+
+        if(adapterRecent.getItemCount() > 0) {
+            rvRecent.setVisibility(View.VISIBLE);
+            tvToursRecentPlaceholder.setVisibility(View.GONE);
+            pbRecent.setVisibility(View.GONE);
+        } else {
+            rvRecent.setVisibility(View.GONE);
+            tvToursRecentPlaceholder.setVisibility(View.VISIBLE);
+            pbRecent.setVisibility(View.GONE);
+        }
 
         //get all tours
         toc.getAllTours(currentPage, event -> {
@@ -218,7 +243,7 @@ public class TourOverviewFragment extends Fragment {
                 case OK:
                     Log.d(TAG, "refresh Favorites");
                     List<Tour> list = (List<Tour>) controllerEvent.getModel();
-
+                    TourOverviewFragment.this.favTours.clear();
                     for (Tour tour : list)
                         for (ImageInfo imageInfo : tour.getImagePaths())
                             imageInfo.setLocalDir(imageController.getTourFolder());
@@ -303,6 +328,7 @@ public class TourOverviewFragment extends Fragment {
                                 //notify observer of adapters
                                 adapterFavs.notifyDataSetChanged();
                                 adapterRoutes.notifyDataSetChanged();
+                                adapterRecent.notifyDataSetChanged();
                                 if(adapterFavs.getItemCount() > 0) {
                                     rvFavorites.setVisibility(View.VISIBLE);
                                     tvToursFavoritePlaceholder.setVisibility(View.GONE);
@@ -330,6 +356,7 @@ public class TourOverviewFragment extends Fragment {
                                 //notify adapter of dataset change
                                 adapterRoutes.notifyDataSetChanged();
                                 adapterFavs.notifyDataSetChanged();
+                                adapterRecent.notifyDataSetChanged();
                                 if(adapterFavs.getItemCount() > 0) {
                                     rvFavorites.setVisibility(View.VISIBLE);
                                     tvToursFavoritePlaceholder.setVisibility(View.GONE);
@@ -357,12 +384,18 @@ public class TourOverviewFragment extends Fragment {
                     boolean unset = controller.unsetSaved();
                     if(unset){
                         ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        adapterRoutes.notifyDataSetChanged();
+                        adapterFavs.notifyDataSetChanged();
+                        adapterRecent.notifyDataSetChanged();
                     }
                 }else{
                     Log.d("SAVED", "nicht saved");
                     boolean set = controller.setSaved();
                     if(set){
                         ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                        adapterRoutes.notifyDataSetChanged();
+                        adapterFavs.notifyDataSetChanged();
+                        adapterRecent.notifyDataSetChanged();
                     }
                 }
                 break;

@@ -73,6 +73,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 
@@ -714,6 +715,9 @@ public class TourFragment extends Fragment {
     }
 
     public void showMapWithTour() {
+        //handle recent tours
+        tourController.addRecentTour(this.tour);
+
         if (tourController.getPolyline() == null) {
             return;
         }
