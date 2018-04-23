@@ -182,7 +182,7 @@ public class PoiViewDialog extends DialogFragment {
             controller.getImages(currentPoi, controllerEvent -> {
                 List<File> images = (List<File>) controllerEvent.getModel();
                 if (images.size() > 0) {
-                    Picasso.with(context).load(images.get(0)).fit().centerCrop().into(poiImage);
+                    Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
                 }
             });
         } else {
@@ -193,7 +193,7 @@ public class PoiViewDialog extends DialogFragment {
 
         // todo: add better image to display that poi is private (ask Hristian how)
         if (!currentPoi.isPublic()) {
-            Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
+            Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().placeholder(R.drawable.progress_animation).into(displayModeImage);
         }
 
 

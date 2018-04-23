@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
         }
         if (image != null){
-            Picasso.with(activity).load(image).transform(new CircleTransform()).fit().into(userProfileImage);
+            Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
         }else{
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);

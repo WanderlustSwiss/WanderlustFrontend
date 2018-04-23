@@ -1,13 +1,11 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,9 +20,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 
 
 /**
@@ -35,17 +31,12 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
  * @license MIT
  */
 public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAdapter.ViewHolder> {
-
     private List<Tour> tours = Collections.emptyList();
     private final LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
+    public ItemClickListener mClickListener;
     private final Context context;
     private final ImageController imageController;
     private final ResultFilterController resultFilterController;
-
-    private final FavoriteDao favoriteDao = FavoriteDao.getInstance();
-    private final List<Long> favorizedTours = new ArrayList<>();
-
 
     /**
      * data is passed into the constructor, here as a Tour
@@ -72,7 +63,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("ToursRecyclerview", "Creating View Holder");
-        View view = mInflater.inflate(R.layout.recyclerview_filter_result, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_tour_filter_result, parent, false);
         return new ViewHolder(view);
     }
 
@@ -90,13 +81,13 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         //difficulty calculations
         long difficulty = tour.getDifficulty();
         if (difficulty >= 6)
-            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t6));
+            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t6_15dp));
         else if (difficulty >= 4)
-            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t4_t5));
+            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t4_t5_15dp));
         else if (difficulty >= 2)
-            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t2_t3));
+            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t2_t3_15dp));
         else
-            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t1));
+            holder.ivTourDifficulty.setImageDrawable(context.getResources().getDrawable(R.drawable.t1_15dp));
 
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
         holder.tvDifficulty.setTextSize(14);
@@ -162,21 +153,15 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each tour
-        public final TextView tvDistance;
-        public final TextView tvDifficulty;
-        public final TextView tvRegion;
-        public final TextView tvAscending;
-        public final TextView tvDescending;
-        public final TextView tvTitle;
-        public final TextView tvTime;
-        public final ImageView tvImage;
-        public final ImageView ivTourDifficulty;
+        private final TextView tvDistance, tvDifficulty, tvRegion, tvAscending, tvDescending, tvTitle, tvTime;
+        private final ImageView tvImage;
+        private final ImageView ivTourDifficulty;
 
         /**
          * copy constructor for each element which holds the view
          * @param itemView
          */
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             tvDistance = (TextView) itemView.findViewById(R.id.tour_distance);
             tvDifficulty = (TextView) itemView.findViewById(R.id.tour_difficulty);

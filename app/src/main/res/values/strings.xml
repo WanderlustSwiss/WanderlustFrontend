@@ -43,6 +43,7 @@
     <string name="tour_name">Name</string>
     <string name="tour_distance">Distanz (KM)</string>
     <string name="tour_duration">Dauer (Stunden)</string>
+    <string name="tour_filter_noresult">Keine Touren gefunden</string>
 
     <!-- FILTER RELATED STRINGS -->
     <string name="filter_search">Suchen</string>
@@ -69,6 +70,7 @@
     <!-- USER MESSAGES -->
     <string name="msg_picture_not_saved">Foto konnte nicht gespeichert werden</string>
     <string name="msg_no_action_defined">Noch keine Aktion definiert</string>
+    <string name="msg_no_internet">Fehler: keine Internetverbindung konnte aufgebaut werden</string>
 
     <string name="msg_not_saved">nicht gespeichert</string>
     <string name="msg_camera_about_to_start">Kamera wird geöffnet</string>

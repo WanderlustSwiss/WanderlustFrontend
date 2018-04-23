@@ -127,7 +127,7 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
             List<File> imagefiles = imageController.getImages(imageinfos);
             if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
                 Picasso.with(context)
-                        .load(imagefiles.get(0))
+                        .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
                         .into(tripImage);
             } else {
                 tripImage.setImageResource(R.drawable.example_image);

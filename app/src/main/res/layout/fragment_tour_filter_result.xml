@@ -22,11 +22,18 @@
         android:layout_gravity="center"
         android:layout_marginTop="70dp"
         xmlns:android="http://schemas.android.com/apk/res/android" />
+    <TextView
+        android:id="@+id/tvToursFilteredPlaceholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="70dp"
+        android:visibility="gone"
+        android:text="@string/tour_filter_noresult"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvFilteredTours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        layout_height="wrap_content" />
+        android:layout_marginTop="70dp"/>
     </LinearLayout>
 </ScrollView>

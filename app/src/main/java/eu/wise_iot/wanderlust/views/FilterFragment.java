@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -21,6 +22,8 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.FilterController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Fragment that contains the filtering functionality for all tours
@@ -48,29 +51,35 @@ public class FilterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        filterController = new FilterController();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        filterController = new FilterController();
-
         // Inflate the layout for this fragment
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_filtertours, container, false);
-        return rootView;
+        return inflater.inflate(
+                R.layout.fragment_tour_filter, container, false);
     }
 
     @Override
     public void onPrepareOptionsMenu (Menu menu) {
         getActivity().invalidateOptionsMenu();
-        menu.findItem(R.id.filterIcon).setVisible(false);
+        if(menu.findItem(R.id.filterIcon) != null)
+            menu.findItem(R.id.filterIcon).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //handle keyboard closing
+        view.findViewById(R.id.filterRootLayout).setOnTouchListener((v, event) -> {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            return true;
+        });
 
         rsbDistance = (RangeSeekBar)view.findViewById(R.id.rsbDistance);
         rsbDuration = (RangeSeekBar) view.findViewById(R.id.rsbDuration);

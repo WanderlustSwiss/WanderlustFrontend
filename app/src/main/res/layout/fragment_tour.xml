@@ -25,6 +25,7 @@
                     android:id="@+id/tour_image"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
+                    android:scaleType="centerInside"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
