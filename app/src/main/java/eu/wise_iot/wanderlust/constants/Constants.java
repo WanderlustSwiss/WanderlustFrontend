@@ -36,6 +36,7 @@ public interface Constants {
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
     String EDIT_POI_DIALOG = "PoiFeedbackDialog";
     String RATE_TOUR_DIALOG = "TourRatingDialog";
+    String CREATE_TOUR_DIALOG = "CreateTourDialog";
     String CONFIRM_DELETE_POI_DIALOG = "YesNoDialog";
 
     /* PHOTO INTENT */
@@ -62,4 +63,15 @@ public interface Constants {
     /* INTENTS */
     int TAKE_PHOTO = 1;
     int REQUEST_FOR_MULTIPLE_PERMISSIONS = 2;
+
+    /* Create Tour */
+    String CREATE_TOUR_INTENT = "gpsTrackingFinished";
+    String CREATE_TOUR_TRACK = "tourTrackGeoPoints";
+    String CREATE_TOUR_BUNDLE = "tourTrackBundle";
+    String CREATE_TOUR_UPDATE_MYOVERLAY = "tourTrackUpdateMyOverlay";
+    String CREATE_TOUR_ADDING_GEOPOINT = "tourTrackAddingGeopoint";
+    String CREATE_TOUR_ADDING_GEOPOINTS = "tourTrackAddingGeopoints";
+    String CREATE_TOUR_WHOLE_ROUTE_REQUIRED = "tourTrackWholeRouteRequired";
+    String CREATE_TOUR_IS_NEW = "tourTrackNewTOur";
+
 }

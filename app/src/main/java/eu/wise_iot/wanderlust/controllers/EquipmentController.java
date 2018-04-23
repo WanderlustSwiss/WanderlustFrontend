@@ -201,7 +201,6 @@ public class EquipmentController {
                     handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
                     break;
                 default:
-
             }
         });
     }

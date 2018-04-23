@@ -270,8 +270,11 @@ public class MapController {
             RequestQueue queue = Volley.newRequestQueue(fragment.getActivity());
 
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
-                JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
-                JsonArray jResults = jsonObject.getAsJsonArray();
+                JsonParser parser = new JsonParser();
+                JsonElement json = parser.parse(response);
+                JsonArray jResults = json.getAsJsonArray();
+          //      JsonObject jsonObject = new Gson().fromJson(response, JsonArray.class);
+           //     JsonArray jResults = jsonObject.getAsJsonArray();
                 JsonObject jResult = jResults.get(0).getAsJsonObject();
                 AddressPoint gAddress = new AddressPoint();
                 JsonObject jAddress = jResult.get("address").getAsJsonObject();
@@ -285,6 +288,10 @@ public class MapController {
                 }
                 if (jAddress.has("city")) {
                     gAddress.setCity(jAddress.get("city").getAsString());
+                }
+
+                if(jAddress.has("state")){
+                    gAddress.setState(jAddress.get("state").getAsString());
                 }
 
                 handler.onResponse(new ControllerEvent<>(EventType.OK, gAddress));

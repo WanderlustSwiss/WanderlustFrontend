@@ -87,7 +87,12 @@ public class RegionDao extends DatabaseObjectAbstract {
      * @return Region which match to the search pattern in the searched columns
      */
     public Region findOne(Property searchedColumn, String searchPattern) {
-        return regionBox.query().equal(searchedColumn, searchPattern).build().findFirst();
+        List<Region> list = regionBox.query().filter(entity -> entity.getName().toLowerCase().contains(searchPattern.toLowerCase()) || searchPattern.toLowerCase().contains(entity.getName().toLowerCase())).build().find();
+        if(list.size() >= 1){
+            return list.get(0);
+        } else{
+            return null;
+        }
     }
 
     public Region findOne(Property searchedColumn, long searchPattern) {
