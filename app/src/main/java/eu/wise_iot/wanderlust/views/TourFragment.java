@@ -136,8 +136,6 @@ public class TourFragment extends Fragment {
 
     private TextView tourRatingInNumbers;
     private RatingBar tourRating;
-    private static MapFragment mapFragment;
-    private static TourOverviewFragment tourOverviewFragment;
 
     private Favorite favorite;
     private boolean isFavoriteUpdate;
@@ -161,8 +159,6 @@ public class TourFragment extends Fragment {
 
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
-        mapFragment = new MapFragment();
-        tourOverviewFragment = new TourOverviewFragment();
         fragment.setArguments(args);
         tour = paramTour;
         tourController = new TourController(tour);
@@ -725,23 +721,38 @@ public class TourFragment extends Fragment {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-        // fixme: color does not get adjusted (only #f00)
+
         roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
+
+
+        //Disable my location
+        getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.MY_LOCATION_ENABLED, false).apply();
+
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
+        Fragment oldMapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+        if(oldMapFragment != null) {
+            getFragmentManager().beginTransaction()
+                    .remove(oldMapFragment)
+                    .commit();
+        }
 
         getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                 .addToBackStack(Constants.MAP_FRAGMENT)
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
     }
     private void showTourView(){
-        getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
-                .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
-                .commit();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
+        Fragment tourOverviewFragment = getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT);
+        if(tourOverviewFragment != null) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
+                    .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
+                    .commit();
+            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        }
     }
 
     /**

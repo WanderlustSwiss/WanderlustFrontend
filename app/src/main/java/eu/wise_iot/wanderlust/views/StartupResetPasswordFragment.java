@@ -43,6 +43,17 @@ public class StartupResetPasswordFragment extends Fragment {
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,5}$", Pattern.CASE_INSENSITIVE);
 
 
+    public StartupResetPasswordFragment() {
+        loginController = new LoginController();
+    }
+
+    public static StartupResetPasswordFragment newInstance() {
+        Bundle args = new Bundle();
+        StartupResetPasswordFragment fragment = new StartupResetPasswordFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     private final FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {
@@ -50,7 +61,8 @@ public class StartupResetPasswordFragment extends Fragment {
             switch (eventType) {
                 case OK:
                     Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
-                    StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
+                    Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                    if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
                     getFragmentManager().beginTransaction()
                             .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                             .commit();
@@ -62,10 +74,6 @@ public class StartupResetPasswordFragment extends Fragment {
             }
         }
     };
-
-    public StartupResetPasswordFragment() {
-        loginController = new LoginController();
-    }
 
 
     @Override
@@ -107,9 +115,10 @@ public class StartupResetPasswordFragment extends Fragment {
         });
 
         redirectToLogin.setOnClickListener(v -> {
-            StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
+            Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+            if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
             getFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, startupLoginFragment)
+                    .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                     .commit();
         });
     }

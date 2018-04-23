@@ -20,6 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoCache;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +50,7 @@ public class TourOverviewFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
     private Context context;
     private ToursOverviewRVAdapter adapterRoutes, adapterFavs;
-    private final LinkedList<Tour> listTours = new LinkedList<>();
+    private List<Tour> listTours;
     private final List<Tour> favTours = new ArrayList<>();
     private RecyclerView rvTours, rvFavorites;
     private ProgressBar pbTours, pbFavorites;
@@ -62,6 +65,8 @@ public class TourOverviewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         context = getActivity().getApplicationContext();
         imageController = ImageController.getInstance();
+        listTours = new LinkedList<>();
+        toc = new TourOverviewController();
         setHasOptionsMenu(true);
     }
 
@@ -92,10 +97,10 @@ public class TourOverviewFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.filterIcon:
                 Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
-                FilterFragment filterFragment = FilterFragment.newInstance();
+                Fragment filterFragment = getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT);
+                if(filterFragment == null) filterFragment = FilterFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, filterFragment, Constants.FILTER_FRAGMENT)
-                        .addToBackStack(Constants.FILTER_FRAGMENT)
+                        .replace(R.id.content_frame, filterFragment, Constants.FILTER_FRAGMENT)
                         .commit();
                 break;
         }
@@ -106,8 +111,7 @@ public class TourOverviewFragment extends Fragment {
      * retrieve all images from the database
      * @param tours
      */
-    private static void getDataFromServer(List<Tour> tours){
-        TourOverviewController toc = new TourOverviewController();
+    private void getDataFromServer(List<Tour> tours){
         //get given favorites
         toc.downloadFavorites(controllerEvent -> {
             switch (controllerEvent.getType()) {
@@ -146,7 +150,8 @@ public class TourOverviewFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        toc = new TourOverviewController();
+        currentPage = 0;
+        PicassoCache.clearCache(Picasso.with(context)); //https://stackoverflow.com/questions/22016382/invalidate-cache-in-picasso
         View view = inflater.inflate(R.layout.fragment_tour_overview, container, false);
 
         tvToursAllPlaceholder = (TextView) view.findViewById(R.id.tvToursAllPlaceholder);
@@ -174,23 +179,23 @@ public class TourOverviewFragment extends Fragment {
         rvFavorites.setAdapter(adapterFavs);
 
         //get all tours
-        toc.getAllTours(event -> {
+        toc.getAllTours(currentPage, event -> {
             switch (event.getType()) {
                 case OK:
                     //get all needed information from server db
                     List<Tour> list = (List<Tour>) event.getModel();
-
+                    currentPage++;
                     for (Tour tour : list)
                         for (ImageInfo imageInfo : tour.getImagePaths())
                             imageInfo.setLocalDir(imageController.getTourFolder());
 
-                    TourOverviewFragment.this.listTours.addAll(list);
+                    listTours.addAll(list);
 
                     Log.d(TAG, "Getting Tours: Server response arrived");
                     //get all the images needed and save them on the device
                     getDataFromServer(listTours);
-                    currentPage++;
-                    TourOverviewFragment.this.adapterRoutes.notifyDataSetChanged();
+
+                    adapterRoutes.notifyDataSetChanged();
                     if(adapterRoutes.getItemCount() > 0) {
                         rvTours.setVisibility(View.VISIBLE);
                         tvToursAllPlaceholder.setVisibility(View.GONE);
@@ -205,7 +210,7 @@ public class TourOverviewFragment extends Fragment {
                     Log.d(TAG, "Server response ERROR: " + event.getType().name());
                     Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
             }
-        }, currentPage);
+        });
 
         //get favorized tours
         toc.getAllFavoriteTours(controllerEvent -> {
@@ -248,8 +253,8 @@ public class TourOverviewFragment extends Fragment {
                         final int offset = rvTours.computeHorizontalScrollOffset();
                         int position = offset / myCellWidth;
                         Log.d(TAG, "Position=" + position + " " + myCellWidth + " " + offset );
-                        if (5 < (position - (10*currentPage))) {
-                            toc.getAllTours(controllerEvent -> {
+                        if (20 < (position - (25*(currentPage-1)))) {
+                            toc.getAllTours(currentPage, controllerEvent -> {
                                 switch (controllerEvent.getType()) {
                                     case OK:
                                         LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
@@ -263,7 +268,7 @@ public class TourOverviewFragment extends Fragment {
                                         Log.d(TAG, "Server response ERROR: " + controllerEvent.getType().name());
                                         Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
                                 }
-                            }, currentPage);
+                            });
                         }
                         Log.d(TAG, "Scroll idle");
                         break;
@@ -364,12 +369,19 @@ public class TourOverviewFragment extends Fragment {
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
                 TourFragment tourFragment = TourFragment.newInstance(tour);
+                Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
+                if(oldTourFragment != null) {
+                    getFragmentManager().beginTransaction()
+                            .remove(oldTourFragment)
+                            .commit();
+                }
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                        .addToBackStack(Constants.TOUR_FRAGMENT)
+                        .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
                         .commit();
                 ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                 break;
+
             //the same can be applied to other components in Row_Layout.xml
         }
     }

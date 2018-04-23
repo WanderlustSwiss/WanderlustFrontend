@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
@@ -193,7 +194,8 @@ public class ProfileEditFragment extends Fragment {
                 //back to profile
                 Toast.makeText(getActivity(), R.string.msg_no_changes_done,
                         Toast.LENGTH_SHORT).show();
-                ProfileFragment profileFragment = new ProfileFragment();
+                Fragment profileFragment = getFragmentManager().findFragmentByTag(Constants.PROFILE_FRAGMENT);
+                if (profileFragment == null) profileFragment = MapFragment.newInstance();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, profileFragment)
                         .commit();

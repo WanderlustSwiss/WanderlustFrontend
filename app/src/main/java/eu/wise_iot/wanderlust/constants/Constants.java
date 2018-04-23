@@ -28,8 +28,11 @@ public interface Constants {
     String TOUROVERVIEW_FRAGMENT = "TourOverviewFragment";
     String RESULT_FILTER_FRAGMENT = "ResultFilterFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
-    String LOGIN_FRAGMENT = "SartupLoginFragment";
+    String LOGIN_FRAGMENT = "StartupLoginFragment";
     String USER_GUIDE_FRAGMENT = "UserGuideFragment";
+    String REGISTRATION_FRAGMENT = "RegistrationFragment";
+    String RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment";
+    String PROFILE_EDIT_FRAGMENT = "ProfileEditFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";

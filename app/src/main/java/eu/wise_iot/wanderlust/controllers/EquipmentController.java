@@ -11,8 +11,10 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourKitEquipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.services.EquipmentService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import okhttp3.ResponseBody;
@@ -106,16 +108,19 @@ public class EquipmentController {
 
     }
 
+    public void getExtraEquipment(long id, FragmentHandler handler){
+        UserTourDao.getInstance().getExtraEquipment(id, handler);
+    }
 
-    //TODO dateTime seasons
     public void retrieveRecommendedEquipment(Tour tour, DateTime dateTime, FragmentHandler handler) {
         //get weather from points
-        weatherController.getWeatherFromTour(tour, dateTime, controllerEvent -> {
+        weatherController.getWeatherFromTour(tour, dateTime, (ControllerEvent controllerEvent) -> {
             switch (controllerEvent.getType()) {
                 case OK:
                     @SuppressWarnings("unchecked")
                     List<Weather> weather = (List<Weather>) controllerEvent.getModel();
                     List<Equipment> equipment = getEquipmentList();
+
 
 
                     //Calculate the score of each weather type
@@ -124,7 +129,7 @@ public class EquipmentController {
                     List<WeatherKeys> weatherKeys = weatherController.getWeatherKeys();
                     boolean[] weatherFilter = new boolean[weatherKeys.size()];
                     for (Weather w : weather) {
-                        //TODO: Besseres error handling
+
                         if (w == null){
                             continue;
                         }
@@ -142,13 +147,40 @@ public class EquipmentController {
 
                     //safe equipment at array pos = type of equipment
                     Equipment[] recommendedEquipment = new Equipment[getTypeCount()];
+                    ArrayList<Equipment> basicEquipment = new ArrayList<>();
+
+
+                    //find out current Season
+                    int currentSeasonKey = weatherController.getCurrentSeason();
+
 
                     for (Equipment e : equipment) {
 
-                        //If Equipment is not in recommended temperature skip it
-                        if (e.getMaxTemperature() < maxTemp || e.getMinTemperature() > minTemp) {
+                        //Add to basic equipment
+                        if(e.getType() == 1){
+                            basicEquipment.add(e);
                             continue;
                         }
+
+                        //If Equipment is not in recommended temperature skip it
+                        if (e.getMaxTemperature() < maxTemp || e.getMinTemperature() > minTemp)  {
+                            continue;
+                        }
+
+                        //If Equipment is not in current season skip it
+                        byte[] seasonsEquipment = e.getSeasons();
+                        boolean seasonIsContained = false;
+                        for(int i = 0; i < seasonsEquipment.length; i++){
+                            if((seasonsEquipment[i] == 1) && currentSeasonKey == i){
+                                seasonIsContained = true;
+                                break;
+                            }
+                        }
+
+                        if(!seasonIsContained){
+                            continue;
+                        }
+
 
 
                         //Check if type of equipment is already present
@@ -178,7 +210,7 @@ public class EquipmentController {
                                 recommendedEquipment[e.getType() - 1] = e;
                             }
                         }
-                        //Else set it recommended
+
                         else {
 
                             //If at least one weather type
@@ -192,13 +224,34 @@ public class EquipmentController {
                         }
                     }
 
+                    //Remove null type equipments
                     List<Equipment> recEquipmentList = new ArrayList<>();
                     for(Equipment equipmentItem : recommendedEquipment){
                         if(equipmentItem != null) {
                             recEquipmentList.add(equipmentItem);
                         }
                     }
-                    handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
+
+                    //Add basic equipment
+                    recEquipmentList.addAll(basicEquipment);
+
+                    //Add extra equipment
+                    getExtraEquipment(tour.getTour_id(), controllerEventExtraEquipment -> {
+                        switch (controllerEventExtraEquipment.getType()){
+                            case OK:
+                                List<TourKitEquipment> extraEquipment = (List<TourKitEquipment>) controllerEventExtraEquipment.getModel();
+                                for(TourKitEquipment tourKitEquipment : extraEquipment){
+                                    recEquipmentList.add(tourKitEquipment.getEquipment());
+                                }
+                                handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
+                                break;
+                            case NOT_FOUND:
+                                //No extra Equipment
+                                handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
+                            default:
+                                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+                        }
+                    });
                     break;
                 default:
             }

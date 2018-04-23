@@ -127,9 +127,11 @@ public class ProfileFragment extends Fragment {
 
         //edit profile button_white
         editProfile.setOnClickListener(v -> {
-            ProfileEditFragment profileEditFragment = ProfileEditFragment.newInstance();
+
+            Fragment profileEditFragment = getFragmentManager().findFragmentByTag(Constants.PROFILE_EDIT_FRAGMENT);
+            if (profileEditFragment == null) profileEditFragment = ProfileEditFragment.newInstance();
             getFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, profileEditFragment)
+                    .replace(R.id.content_frame, profileEditFragment, Constants.PROFILE_EDIT_FRAGMENT)
                     .addToBackStack(null)
                     .commit();
         });
@@ -224,7 +226,15 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view1, int position, long id) {
                                 Tour tour = (Tour) listView.getItemAtPosition(position);
+
+
                                 TourFragment tourFragment = TourFragment.newInstance(tour);
+                                Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
+                                if(oldTourFragment != null) {
+                                    getFragmentManager().beginTransaction()
+                                            .remove(oldTourFragment)
+                                            .commit();
+                                }
                                 getFragmentManager().beginTransaction()
                                                     .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
                                                     .addToBackStack(Constants.TOUR_FRAGMENT)
@@ -286,7 +296,14 @@ public class ProfileFragment extends Fragment {
             listView.setAdapter(adapter);
             listView.setOnItemClickListener((parent, view1, position, id) -> {
                 Tour tour = (Tour) listView.getItemAtPosition(position);
+
                 TourFragment tourFragment = TourFragment.newInstance(tour);
+                Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
+                if(oldTourFragment != null) {
+                    getFragmentManager().beginTransaction()
+                            .remove(oldTourFragment)
+                            .commit();
+                }
                 getFragmentManager().beginTransaction()
                                     .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
                                     .addToBackStack(Constants.TOUR_FRAGMENT)
@@ -362,6 +379,12 @@ public class ProfileFragment extends Fragment {
             listView.setOnItemClickListener((parent, view1, position, id) -> {
                 Tour tour = (Tour) listView.getItemAtPosition(position);
                 TourFragment tourFragment = TourFragment.newInstance(tour);
+                Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
+                if(oldTourFragment != null) {
+                    getFragmentManager().beginTransaction()
+                            .remove(oldTourFragment)
+                            .commit();
+                }
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
                         .addToBackStack(Constants.TOUR_FRAGMENT)
