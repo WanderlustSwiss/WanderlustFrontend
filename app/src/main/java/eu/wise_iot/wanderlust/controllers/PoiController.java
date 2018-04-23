@@ -9,6 +9,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
@@ -153,6 +154,15 @@ public class PoiController {
             return images.get(0);
         }else{
             return null;
+        }
+    }
+    public class Violation{
+        long poi_id;
+        ViolationType violationType;
+
+        Violation(long poi_id, ViolationType violationType){
+            this.poi_id = poi_id;
+            this.violationType = violationType;
         }
     }
 

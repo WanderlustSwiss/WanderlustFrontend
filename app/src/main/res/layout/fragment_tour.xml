@@ -141,6 +141,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:src="@drawable/ic_reply_white_24dp" />
+
                 </LinearLayout>
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
@@ -463,5 +464,14 @@
 
             </LinearLayout>
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/report_tour_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@null"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/ic_report_problem_black_24dp" />
     </LinearLayout>
 </ScrollView>

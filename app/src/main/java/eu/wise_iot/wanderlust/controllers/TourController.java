@@ -36,6 +36,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
@@ -421,5 +422,18 @@ public class TourController {
         return regionDao.find();
     }
 
+    public void reportViolation(Violation violation){
+
+
+    }
+    public class Violation{
+        long tour_id;
+        ViolationType violationType;
+
+        public Violation(long tour_id, ViolationType violationType){
+            this.tour_id = tour_id;
+            this.violationType = violationType;
+        }
+    }
 }
 

@@ -2,7 +2,7 @@
 
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
-    <string name="app_domain"> \@wanderlust-app</string>
+    <string name="app_domain"> #wanderlustapp</string>
     <!-- WELCOME FRAGMENT -->
     <string name="msg_welcome_header">Willkommen und danke, dass du das Release 0.1 von Wanderlust testen willst!</string>
     <string name="msg_welcome_text1">Bei dieser Version geht es vorerst darum Eindrücke zu sammeln und so schöne und weniger schöne Orte sichtbar zu machen. Bilder hingegen werden vorerst nur lokal bei dir abgespeichert. Wenn du sie mir aber (mit dem Original-Namen) zuschickst, kann ich sie beim nächsten Release hinzufügen.</string>
@@ -45,6 +45,16 @@
     <string name="tour_distance">Distanz (KM)</string>
     <string name="tour_duration">Dauer (Stunden)</string>
     <string name="tour_filter_noresult">Keine Touren gefunden</string>
+
+    <!-- VIOATION RELATED STRINGS -->
+    <string name="violation_nudity">Entblössung</string>
+    <string name="violation_violence">Gewalt</string>
+    <string name="violation_harassment">Erniedrigung</string>
+    <string name="violation_suicide">Suizid</string>
+    <string name="violation_spam">Spam</string>
+    <string name="violation_hatespeech">Rufmord</string>
+    <string name="violation_other">Andere</string>
+    <string name="report_submit">Vielen Dank für Ihre Einreichung</string>
 
     <!-- FILTER RELATED STRINGS -->
     <string name="filter_search">Suchen</string>

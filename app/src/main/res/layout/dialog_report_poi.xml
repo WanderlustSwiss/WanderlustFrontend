@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rate_action_control_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@color/primary_main"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/dialog_canel_rate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/rate_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_check_white_24dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:padding="5dp">
+
+        <RadioGroup
+            android:id="@+id/violationTypePoi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/violationPoiNudity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_nudity"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/violationPoiViolence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_violence" />
+
+            <RadioButton
+                android:id="@+id/violationPoiHarassment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_harassment" />
+
+            <RadioButton
+                android:id="@+id/violationPoiSuicide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_suicide" />
+
+            <RadioButton
+                android:id="@+id/violationPoiSpam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_spam" />
+
+            <RadioButton
+                android:id="@+id/violationPoiHateSpeech"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_hatespeech" />
+
+            <RadioButton
+                android:id="@+id/violationPoiOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_other" />
+
+        </RadioGroup>
+    </LinearLayout>
+</LinearLayout>

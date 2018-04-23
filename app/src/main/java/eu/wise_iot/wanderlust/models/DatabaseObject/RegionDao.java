@@ -40,7 +40,7 @@ public class RegionDao extends DatabaseObjectAbstract {
     /**
      * Update all region in the database.
      */
-    public void retrive() {
+    public void retrieve() {
         Call<List<Region>> call = service.retrieveAllRegions();
         call.enqueue(new Callback<List<Region>>() {
             @Override
