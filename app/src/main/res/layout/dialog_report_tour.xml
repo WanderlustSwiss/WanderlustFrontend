@@ -43,6 +43,7 @@
 
             <RadioButton
                 android:id="@+id/violationTourNudity"
+                android:tag="nudity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_nudity"
@@ -50,30 +51,35 @@
 
             <RadioButton
                 android:id="@+id/violationTourViolence"
+                android:tag="violence"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_violence" />
 
             <RadioButton
                 android:id="@+id/violationTourHarassment"
+                android:tag="harassment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_harassment" />
 
             <RadioButton
                 android:id="@+id/violationTourSuicide"
+                android:tag="suicide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_suicide" />
 
             <RadioButton
                 android:id="@+id/violationTourSpam"
+                android:tag="spam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_spam" />
 
             <RadioButton
                 android:id="@+id/violationTourHateSpeech"
+                android:tag="hate speech"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_hatespeech" />

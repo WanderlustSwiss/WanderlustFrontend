@@ -80,7 +80,7 @@ public class PoiReportDialog extends DialogFragment {
         else if(rbOther.isChecked()) violationName = rbOther.getText().toString();
         else if(rbSpam.isChecked()) violationName = rbSpam.getText().toString();
         else if(rbViolence.isChecked()) violationName = rbViolence.getText().toString();
-        else if(violationName == null) violationName = "fehler";
+        else if(violationName == null) violationName = "failure";
         ViolationType violationType = violationTypeDao.getViolationTypebyName(violationName);
 
 

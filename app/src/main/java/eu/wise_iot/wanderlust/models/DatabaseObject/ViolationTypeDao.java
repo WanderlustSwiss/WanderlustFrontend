@@ -43,11 +43,12 @@ public class ViolationTypeDao extends DatabaseObjectAbstract{
     }
 
     /**
-     * get the vilationType by name
+     * get the violationType by name
      * @param name
      * @return
      */
     public ViolationType getViolationTypebyName(String name){
+
         return this.findOne(ViolationType_.name,name);
     }
 
@@ -91,7 +92,7 @@ public class ViolationTypeDao extends DatabaseObjectAbstract{
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern  (required) contain the search pattern.
-     * @return ViolationType which match to the search pattern in the searched columns
+     * @return ViolationType which matches the search pattern in the searched columns
      */
     public ViolationType findOne(Property searchedColumn, String searchPattern) {
         return violationTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();

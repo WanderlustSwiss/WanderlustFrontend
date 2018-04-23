@@ -6,7 +6,7 @@ import io.objectbox.annotation.Id;
 /**
  * Favorite
  *
- * @author Rilind Gashi
+ * @author Alexander Weinbeck
  * @license MIT
  */
 
@@ -33,5 +33,7 @@ public class ViolationType extends AbstractModel {
     public void setInternal_id(long internal_id) {
         this.internal_id = internal_id;
     }
+
+    public long getViolationt_id() { return violationt_id;}
 
 }

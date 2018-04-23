@@ -446,11 +446,11 @@ public class TourController {
     }
     public class Violation{
         long tour_id;
-        ViolationType violationType;
+        long violationType_id;
 
-        public Violation(long tour_id, ViolationType violationType){
+        public Violation(long tour_id, long violationType_id){
             this.tour_id = tour_id;
-            this.violationType = violationType;
+            this.violationType_id = violationType_id;
         }
     }
 }
