@@ -37,7 +37,7 @@ public class ImageController {
     private final String[] FOLDERS;
     private final int standardWidth;
 
-    private ImageController(){
+    public ImageController(){
         picturesDir = CONTEXT.getApplicationContext().getApplicationContext().getExternalFilesDir("pictures").getAbsolutePath();
         FOLDERS = new String[4];
         FOLDERS[0] = "poi";

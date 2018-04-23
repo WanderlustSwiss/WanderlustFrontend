@@ -73,6 +73,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
+import eu.wise_iot.wanderlust.views.dialog.EquipmentDialog;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 
 /**
@@ -723,8 +724,8 @@ public class TourFragment extends Fragment {
      * @param view
      * @param parEquipment
      */
-    // Todo: Implement Dialog
     private void onItemClickImages(View view, Equipment parEquipment) {
-
+        EquipmentDialog equipmentDialog = new EquipmentDialog().newInstance(context, parEquipment);
+        equipmentDialog.show(getFragmentManager(), Constants.EQUIPMENT_DIALOG);
     }
 }

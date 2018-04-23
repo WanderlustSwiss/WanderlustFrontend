@@ -34,6 +34,7 @@ public interface Constants {
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
     String EDIT_POI_DIALOG = "PoiFeedbackDialog";
     String RATE_TOUR_DIALOG = "TourRatingDialog";
+    String EQUIPMENT_DIALOG = "EquipmentDialog";
     String CONFIRM_DELETE_POI_DIALOG = "YesNoDialog";
 
     /* PHOTO INTENT */

@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.util.List;
+
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -61,6 +63,13 @@ public class Equipment extends AbstractModel {
 
     public ImageInfo getImagePath() {
         return imagePath;
+    }
+
+    public ImageInfo getImageById(long id){
+        if(imagePath.getId() == id){
+            return imagePath;
+        }
+        return null;
     }
 
     public void setInternal_id(long internal_id) {
