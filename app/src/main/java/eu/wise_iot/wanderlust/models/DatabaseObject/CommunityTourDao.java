@@ -11,7 +11,7 @@ import io.objectbox.BoxStore;
 import io.objectbox.Property;
 
 /**
- * TourDao:
+ * CommunityTourDao:
  *
  * @author Rilind Gashi, Alexander Weinbeck, Simon Kaspar
  * @license MIT
