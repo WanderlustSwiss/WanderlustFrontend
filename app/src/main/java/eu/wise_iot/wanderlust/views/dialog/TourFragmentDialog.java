@@ -1,6 +1,7 @@
-package eu.wise_iot.wanderlust.views;
+package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -73,8 +74,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.views.MapFragment;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
-import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 
 /**
  * TourController:
@@ -82,7 +83,7 @@ import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
  * @author Alexander Weinbeck, Rilind Gashi, Baris Demirci, Simon Kaspar
  * @license MIT
  */
-public class TourFragment extends Fragment {
+public class TourFragmentDialog extends DialogFragment {
     private static final String TAG = "TourOverviewFragment";
     private static Tour tour;
     private static TourController tourController;
@@ -145,7 +146,7 @@ public class TourFragment extends Fragment {
 
     private XYPlot plot;
 
-    public TourFragment() {
+    public TourFragmentDialog() {
         // Required empty public constructor
     }
 
@@ -153,12 +154,12 @@ public class TourFragment extends Fragment {
     /**
      * Static instance constructor.
      *
-     * @return Fragment: TourFragment
+     * @return Fragment: TourFragmentDialog
      */
-    public static TourFragment newInstance(Tour paramTour) {
+    public static TourFragmentDialog newInstance(Tour paramTour) {
 
         Bundle args = new Bundle();
-        TourFragment fragment = new TourFragment();
+        TourFragmentDialog fragment = new TourFragmentDialog();
         fragment.setArguments(args);
         tour = paramTour;
         tourController = new TourController(tour);
@@ -317,8 +318,8 @@ public class TourFragment extends Fragment {
             switch (controllerEvent.getType()) {
                 case OK:
                     Log.d(TAG, "got equipment for tour");
-                    TourFragment.this.listEquipment.clear();
-                    TourFragment.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
+                    TourFragmentDialog.this.listEquipment.clear();
+                    TourFragmentDialog.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
                     getActivity().runOnUiThread(() -> adapterEquip.notifyDataSetChanged());
                     break;
                 default:
@@ -740,18 +741,17 @@ public class TourFragment extends Fragment {
                 .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                 .addToBackStack(Constants.MAP_FRAGMENT)
                 .commit();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
     }
     private void showTourView(){
-
         Fragment tourOverviewFragment = getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT);
         if(tourOverviewFragment != null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
                     .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
                     .commit();
-            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+//            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         }
     }
 
