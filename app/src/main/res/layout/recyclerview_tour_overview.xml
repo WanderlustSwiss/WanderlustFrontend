@@ -6,24 +6,21 @@
     android:layout_marginStart="12dp"
     android:background="@color/white"
     android:elevation="5dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/tour_rv_item"
+    android:clickable="true">
 
     <ImageView
         android:id="@+id/tour_image"
         android:layout_width="match_parent"
-        android:layout_height="150dp" />
+        android:layout_height="150dp"
+        android:scaleType="centerInside"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="8dp">
-
-        <!--<TextView-->
-        <!--android:id="@+id/tourMainTitle"-->
-        <!--style="@style/h2"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,7 +99,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dip"
-                    android:background="@color/background_two_and_inactive" />
+                    android:background="@color/background_two_and_inactive"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

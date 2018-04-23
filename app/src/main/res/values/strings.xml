@@ -38,6 +38,16 @@
     <!-- TOUR RELATED STRINGS -->
     <string name="tour_button_show_map">Start</string>
     <string name="tour_equipment">Ausrüstung</string>
+    <string name="tour_region">Region</string>
+    <string name="tour_difficulty">Schwierigkeit</string>
+    <string name="tour_name">Name</string>
+    <string name="tour_distance">Distanz (KM)</string>
+    <string name="tour_duration">Dauer (Stunden)</string>
+    <string name="tour_filter_noresult">Keine Touren gefunden</string>
+    <string name="go_to_shop_string">Zum Onlineshop</string>
+
+    <!-- FILTER RELATED STRINGS -->
+    <string name="filter_search">Suchen</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
     <string name="dialog_feedback_description_edit_hint">Beschreibung</string>
@@ -52,6 +62,14 @@
         <item>Rastplatz</item>
         <item>Flora / Fauna</item>
     </string-array>
+    <string-array name="dialog_difficulties">
+        <item>T1</item>
+        <item>T2</item>
+        <item>T3</item>
+        <item>T4</item>
+        <item>T5</item>
+        <item>T6</item>
+    </string-array>
 
     <string-array name="dialog_feedback_spinner_geoobject_type">
         <item>SAC</item>
@@ -61,6 +79,7 @@
     <!-- USER MESSAGES -->
     <string name="msg_picture_not_saved">Foto konnte nicht gespeichert werden</string>
     <string name="msg_no_action_defined">Noch keine Aktion definiert</string>
+    <string name="msg_no_internet">Fehler: keine Internetverbindung konnte aufgebaut werden</string>
 
     <string name="msg_not_saved">nicht gespeichert</string>
     <string name="msg_camera_about_to_start">Kamera wird geöffnet</string>
@@ -94,24 +113,26 @@
     <string name="registration_email">E-Mail</string>
     <string name="registration_password">Passwort</string>
     <string name="registration_password_repeat">Passwort wiederholen</string>
-    <string name="registration_account_exist"><u>Bereits registriert? Login</u></string>
+    <string name="registration_account_exist">Bereits registriert? Login</string>
     <string name="registration_create_account">Account erstellen</string>
     <string name="registration_password_required">Ein Passwort wird benötigt</string>
     <string name="registration_password_no_match">Passwort stimmt nicht überein</string>
     <string name="registration_username_required">Ein Name wird benötigt</string>
     <string name="registration_email_required">E-Mail-Adresse wird benötigt</string>
-    <string name="registration_nickname_mail_used">Die E-Mail-Adresse wird bereits verwendet</string>
+    <string name="registration_nickname_mail_used">Benutzernamen oder E-Mail-Adresse wird bereits verwendet</string>
     <string name="registration_email_invalid">Ungültige E-Mail-Adresse</string>
     <string name="registration_password_invalid">Minimum 8 Buchstaben und mindestens 1 Nummer</string>
     <string name="registration_connection_error">Verbindung mit Server nicht möglich</string>
+    <string name="registration_insert_email_address">E-Mail-Adresse eingeben</string>
+
 
     <!-- LOGIN -->
     <string name="login_nickname_email">Nickname / E-Mail</string>
     <string name="login_password">Passwort</string>
     <string name="login_login">Login</string>
     <string name="login_failure">Login fehlgeschlagen</string>
-    <string name="login_need_registration"><u>Neuen Account erstellen</u></string>
-    <string name="login_forgot_password"><u>Passwort vergessen?</u></string>
+    <string name="login_need_registration">Neuen Account erstellen</string>
+    <string name="login_forgot_password">Passwort vergessen?</string>
 
 
     <!-- POI -->
@@ -123,7 +144,7 @@
     <string name="forgot_password_btn">Passwort zurücksetzen</string>
     <string name="forgot_password_reset_mail_success">Eine E-Mail fürs Zurücksetzen des Passwortes wurde erfolgreich versendet</string>
     <string name="forgot_password_reset_mail_fail">Fehler beim zurücksetzen des Passwortes</string>
-    <string name="forgot_password_link_login"><u>Zurück zum Login</u></string>
+    <string name="forgot_password_link_login">Zurück zum Login</string>
     <string name="registration_email_confirmation">Eine E-Mail wurde verschickt. Bitte bestätigen vor dem einloggen</string>
 
 
@@ -204,5 +225,33 @@
     <string name="start">Start</string>
     <string name="end">Ende</string>
     <string name="temperature_abbrevation">°C</string>
+    <string name="create_tour_information">Tour wird aufgenommen. Bitte GPS nicht ausschalten.</string>
+
+    <!--- Seasons -->
+    <string name="summer">Sommer</string>
+    <string name="winter">Winter</string>
+    <string name="fall">Herbst</string>
+    <string name="spring">Frühling</string>
+
+    <string name="create_tour_stop_recording_request">Soll das Tracking wirklich beendet werden?</string>
+    <string name="create_tour_save_tour">Tour Speichern</string>
+    <string name="create_tour_tracking_tour">Tracking tour...</string>
+    <string name="create_tour_saved">Die Tour wurde erfolgreich gespeichert</string>
+    <string name="create_tour_nothing_tracked">Dummy Touren können nicht gespeichert werden</string>
+    <string name="create_tour_no_seasons">Tour kann ohne Jahreszeit nicht gespeichert werden</string>
+    <string name="create_tour_not_save_tour">Wollen Sie wirklich ohne zu speichern fortfahren. Die aufgenommene Tour wird nicht mehr verfügbar sein</string>
+    <string name="create_tour_not_saved">Tour nicht gespeichert</string>
+    <string name="short_january">Jan</string>
+    <string name="short_february">Feb</string>
+    <string name="short_march">Mar</string>
+    <string name="short_april">Apr</string>
+    <string name="short_mai">Mai</string>
+    <string name="short_june">Jun</string>
+    <string name="short_july">Jul</string>
+    <string name="short_august">Aug</string>
+    <string name="short_september">Sep</string>
+    <string name="short_october">Okt</string>
+    <string name="short_november">Nov</string>
+    <string name="short_december">Dez</string>
 
 </resources>

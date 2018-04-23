@@ -46,7 +46,9 @@ public class UserGuideFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         goToMapButton.setOnClickListener(v -> {
-            MapFragment mapFragment = MapFragment.newInstance();
+
+            Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+            if (mapFragment == null) mapFragment = MapFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .addToBackStack(null)

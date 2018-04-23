@@ -55,7 +55,6 @@ public class ProfileController {
         communityTourDao = CommunityTourDao.getInstance();
         imageController = ImageController.getInstance();
         context = DatabaseController.getMainContext();
-        difficultyTypeDao.retrive();
     }
 
     /**

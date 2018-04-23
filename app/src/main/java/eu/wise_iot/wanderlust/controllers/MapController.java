@@ -17,12 +17,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import android.app.Fragment;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
@@ -44,13 +47,14 @@ import retrofit2.Callback;
 public class MapController {
     private final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
     private final String SBB_SERVICE_URL = "https://data.sbb.ch/api/records/1.0/search/";
-    private final MapFragment fragment;
+    private static final String TAG = "MapController";
+    private final Fragment fragment;
 
 
     /**
      * Create a map contoller
      */
-    public MapController(MapFragment fragment) {
+    public MapController(Fragment fragment) {
         this.fragment = fragment;
     }
 
@@ -243,5 +247,63 @@ public class MapController {
                 fragmentHandler.onResponse(new ControllerEvent<>(EventType.NETWORK_ERROR));
             }
         });
+    }
+
+    /**
+     * Search address by coodinates
+     *
+     * @param latitude     Latitude
+     * @param longitude    Longitude
+     * @param maxResults   The number of results requested within the query
+     * @param handler      The fragment handler, which deals with the response
+     */
+    public void searchCoordinates(double latitude, double longitude,
+                                  int maxResults, final FragmentHandler handler){
+        try {
+            String url = NOMINATIM_SERVICE_URL
+                    + "search?"
+                    + "q=" + URLEncoder.encode(Double.toString(latitude)
+                    + "," + Double.toString(longitude), "utf-8")
+                    + "&format=json"
+                    + "&addressdetails=1"
+                    + "&limit=" + maxResults;
+            RequestQueue queue = Volley.newRequestQueue(fragment.getActivity());
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
+                JsonParser parser = new JsonParser();
+                JsonElement json = parser.parse(response);
+                JsonArray jResults = json.getAsJsonArray();
+          //      JsonObject jsonObject = new Gson().fromJson(response, JsonArray.class);
+           //     JsonArray jResults = jsonObject.getAsJsonArray();
+                JsonObject jResult = jResults.get(0).getAsJsonObject();
+                AddressPoint gAddress = new AddressPoint();
+                JsonObject jAddress = jResult.get("address").getAsJsonObject();
+
+                if (jAddress.has("path")) {
+                    gAddress.setName(jAddress.get("path").getAsString());
+                }else{
+                    if (jAddress.has("suburb")) {
+                        gAddress.setName(jAddress.get("suburb").getAsString());
+                    }
+                }
+                if (jAddress.has("city")) {
+                    gAddress.setCity(jAddress.get("city").getAsString());
+                }
+
+                if(jAddress.has("state")){
+                    gAddress.setState(jAddress.get("state").getAsString());
+                }
+
+                handler.onResponse(new ControllerEvent<>(EventType.OK, gAddress));
+
+
+
+            }, error -> handler.onResponse(new ControllerEvent<AddressPoint>(EventType.NETWORK_ERROR)));
+
+            queue.add(stringRequest);
+        }catch(IOException ex){
+            handler.onResponse(new ControllerEvent<AddressPoint>(EventType.NETWORK_ERROR));
+        }
+
     }
 }

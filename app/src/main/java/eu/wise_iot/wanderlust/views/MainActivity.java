@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,39 +80,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (preferences.getBoolean("firstTimeOpened", true)) {
             // start welcome screen
-            StartupRegistrationFragment registrationFragment = new StartupRegistrationFragment();
+            StartupRegistrationFragment registrationFragment = StartupRegistrationFragment.newInstance();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, registrationFragment)
+                    .replace(R.id.content_frame, registrationFragment, Constants.REGISTRATION_FRAGMENT)
                     .commit();
 
             // else try to login
         } else {
             User user = UserDao.getInstance().getUser();
             if (user == null) {
-                StartupLoginFragment loginFragment = new StartupLoginFragment();
+                StartupLoginFragment loginFragment = StartupLoginFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, loginFragment)
+                        .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
                         .commit();
                 return;
             }
             loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
-                User logtInUser = (User) controllerEvent.getModel();
+                User logInUser = (User) controllerEvent.getModel();
                 switch (controllerEvent.getType()) {
                     case OK:
-                        setupDrawerHeader(logtInUser);
+                        setupDrawerHeader(logInUser);
                         MapFragment mapFragment = MapFragment.newInstance();
                         getFragmentManager().beginTransaction()
-                                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                                 .commit();
                         break;
                     default:
                         StartupLoginFragment loginFragment = new StartupLoginFragment();
                         getFragmentManager().beginTransaction()
-                                .add(R.id.content_frame, loginFragment)
+                                .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
                                 .commit();
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -174,21 +180,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // MAIN FRAGMENTS
         if (id == R.id.nav_map) {
-            fragment = MapFragment.newInstance();
             fragmentTag = Constants.MAP_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = MapFragment.newInstance(); //create if not available yet
+
         } else if (id == R.id.nav_tours) {
-            fragment = TourOverviewFragment.newInstance();
             fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = TourOverviewFragment.newInstance();
         } else if (id == R.id.nav_profile) {
-            fragment = ProfileFragment.newInstance();
             fragmentTag = Constants.PROFILE_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = ProfileFragment.newInstance();
         }
 
         // OTHER FRAGMENTS
 
         else if (id == R.id.setup_guide) {
-            fragment = UserGuideFragment.newInstance();
             fragmentTag = Constants.USER_GUIDE_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = UserGuideFragment.newInstance();
         }
 
         else if (id == R.id.logout) {
@@ -202,10 +213,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
                 }
             });
-            fragment = new StartupLoginFragment();
             fragmentTag = Constants.LOGIN_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = StartupLoginFragment.newInstance();
         }
 
+        switchFragment(fragment, fragmentTag);
+
+        return true;
+    }
+    private void switchFragment(Fragment fragment, String fragmentTag){
         if (fragment != null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, fragment, fragmentTag)
@@ -218,11 +235,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
-
-        return true;
     }
-
     /**
      * Checks if device has granted permissions to access location manager and permissions to
      * write on storage. Requires API Level >= 23
@@ -244,10 +257,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setupDrawerHeader(User user){
-
         username = (TextView) findViewById(R.id.user_name);
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+
+        userProfileImage.setOnClickListener((View v) -> {
+            Fragment fragment = null;
+            String fragmentTag = null;
+            fragment = ProfileFragment.newInstance();
+            fragmentTag = Constants.PROFILE_FRAGMENT;
+            switchFragment(fragment, fragmentTag);
+        });
         
         username.setText(user.getNickname());
         email.setText(user.getEmail());
@@ -259,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
         }
         if (image != null){
-            Picasso.with(activity).load(image).transform(new CircleTransform()).fit().into(userProfileImage);
+            Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
         }else{
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);

@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/img_201"
-    android:gravity="center"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:id="@+id/login_layout">
+    android:layout_height="match_parent">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_main"
+        android:minHeight="?attr/actionBarSize"
+        app:title="@string/login_login"
+        app:titleTextColor="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:orientation="vertical"
-        android:paddingBottom="50dp">
+        android:paddingBottom="96dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/text_input_layout_nickname_email"
-            style="@style/TextInputLayout.Light">
+            style="@style/TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/input_nickname_email"
@@ -32,10 +39,10 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/text_input_layout_password"
-            style="@style/TextInputLayout.Light">
+            style="@style/TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <EditText
                 android:id="@+id/input_password"
@@ -52,8 +59,8 @@
             style="@style/standard_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginBottom="48dp"
+            android:layout_marginTop="24dp"
             android:padding="12dp"
             android:text="@string/login_login" />
 
@@ -72,7 +79,7 @@
 
             <TextView
                 android:id="@+id/link_registration"
-                style="@style/p.Light"
+                style="@style/p"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -81,7 +88,7 @@
 
             <TextView
                 android:id="@+id/separator"
-                style="@style/p.Light"
+                style="@style/p"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -90,7 +97,7 @@
 
             <TextView
                 android:id="@+id/login_forgetPassword"
-                style="@style/p.Light"
+                style="@style/p"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -98,6 +105,5 @@
                 android:textAlignment="center" />
 
         </LinearLayout>
-
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

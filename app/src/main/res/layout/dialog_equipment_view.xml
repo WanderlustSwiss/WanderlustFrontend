@@ -51,17 +51,36 @@
             <TextView
                 android:id="@+id/equipment_description_text_view"
                 style="@style/p.Light"
+                android:layout_below="@id/equipment_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="24dp"/>
-
-            <ImageButton
-                android:id="@+id/link_to_shop_button"
-                android:layout_width="wrap_content"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_check_black_24dp" />
+                android:layout_below="@id/equipment_description_text_view">
+                <ImageButton
+                    android:id="@+id/link_to_shop_button_icon"
+                    android:layout_below="@id/equipment_description_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/go_to_shop_string"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_worldwide_white_32dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="12dp"/>
+
+                <Button
+                    android:id="@+id/link_to_shop_button_text"
+                    android:background="@android:color/transparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/go_to_shop_string"
+                    android:layout_below="@id/equipment_description_text_view"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginTop="3dp"
+                    style="@style/p.Light"/>
+            </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

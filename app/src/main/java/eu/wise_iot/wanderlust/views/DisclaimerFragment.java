@@ -31,6 +31,6 @@ public class DisclaimerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ImageView backgroundImage = (ImageView) view.findViewById(R.id.background_image);
-        Picasso.with(getActivity()).load(R.drawable.image_bg_disclaimer).fit().centerCrop().into(backgroundImage);
+        Picasso.with(getActivity()).load(R.drawable.image_bg_disclaimer).fit().centerCrop().placeholder(R.drawable.progress_animation).into(backgroundImage);
     }
 }

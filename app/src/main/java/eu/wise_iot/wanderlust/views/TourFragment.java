@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,6 +93,8 @@ public class TourFragment extends Fragment {
 
     private ImageView imageViewTourImage;
     private ImageButton favButton;
+    private ImageButton tourSavedButton;
+    private ImageButton tourSharedButton;
     private ImageButton backbutton;
     private TextView tourRegion;
     private TextView tourTitle;
@@ -134,8 +137,6 @@ public class TourFragment extends Fragment {
 
     private TextView tourRatingInNumbers;
     private RatingBar tourRating;
-    private static MapFragment mapFragment;
-    private static TourOverviewFragment tourOverviewFragment;
 
     private Favorite favorite;
     private boolean isFavoriteUpdate;
@@ -159,8 +160,6 @@ public class TourFragment extends Fragment {
 
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
-        mapFragment = new MapFragment();
-        tourOverviewFragment = new TourOverviewFragment();
         fragment.setArguments(args);
         tour = paramTour;
         tourController = new TourController(tour);
@@ -181,14 +180,17 @@ public class TourFragment extends Fragment {
         listEquipment = new ArrayList<>();
     }
 
-    /**
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
+    @Override
+    public void onPrepareOptionsMenu (Menu menu) {
+        getActivity().invalidateOptionsMenu();
+        if(menu.findItem(R.id.filterIcon) != null)
+            menu.findItem(R.id.filterIcon).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_tour, container, false);
         Calendar currentCalendar = GregorianCalendar.getInstance();
         selectedDateTime = new DateTime(currentCalendar);
@@ -204,21 +206,12 @@ public class TourFragment extends Fragment {
         });
         return view;
     }
-
-    /**
-     * @param view
-     * @param savedInstanceState
-     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fillControls();
         setupActionListeners();
     }
-
-    /**
-     * @param view
-     */
     private void initializeControls(View view) {
         imageViewTourImage = (ImageView) view.findViewById(R.id.tour_image);
         favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
@@ -226,8 +219,8 @@ public class TourFragment extends Fragment {
         tourRegion = (TextView) view.findViewById(R.id.tour_region);
         tourTitle = (TextView) view.findViewById(R.id.tour_title);
         tourExecutionDate = (TextView) view.findViewById(R.id.tour_execution_date);
-        ImageButton tourSavedButton = (ImageButton) view.findViewById(R.id.save_tour_button);
-        ImageButton tourSharedButton = (ImageButton) view.findViewById(R.id.share_tour_button);
+        tourSavedButton = (ImageButton) view.findViewById(R.id.save_tour_button);
+        tourSharedButton = (ImageButton) view.findViewById(R.id.share_tour_button);
         backbutton = (ImageButton) view.findViewById(R.id.tour_back_button);
         textViewTourDistance = (TextView) view.findViewById(R.id.tour_distance);
         textViewAscend = (TextView) view.findViewById(R.id.tour_ascend);
@@ -283,10 +276,13 @@ public class TourFragment extends Fragment {
                 PorterDuff.Mode.SRC_ATOP);
 
 
-        tourController.getRating(tour, controllerEvent -> {
-            switch (controllerEvent.getType()) {
-                case OK:
-                    tourRating.setRating((float) controllerEvent.getModel());
+        tourController.getRating(tour, new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()) {
+                    case OK:
+                        tourRating.setRating((float) controllerEvent.getModel());
+                }
             }
         });
 
@@ -348,7 +344,7 @@ public class TourFragment extends Fragment {
         } else {
             Picasso.with(context)
                     .load(R.drawable.no_image_found)
-                    .fit()
+                    .fit().centerCrop().placeholder(R.drawable.progress_animation)
                     .into(this.imageViewTourImage);
         }
 
@@ -357,15 +353,21 @@ public class TourFragment extends Fragment {
         } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
-        // TODO: add tour region here
-//        tourRegion.setText("Region <Namen>");
+        tourRegion.setText(getString(R.string.tour_region) + " " + tourController.getRegion());
+
+        if(tourController.isSaved()){
+            tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+        }else{
+            tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.white));
+        }
 
         tourTitle.setText(tourController.getTitle());
 
         tourController.getRating(controllerEvent -> {
            if (controllerEvent.getType() == EventType.OK){
                float rateAvg = (float) controllerEvent.getModel();
-               float rateAvgRound = Float.parseFloat(String.format("%.1f", rateAvg));
+
+               float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateAvg * 2) / 2.0));
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
                tourRatingInNumbers.setText("0");
@@ -392,14 +394,16 @@ public class TourFragment extends Fragment {
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
         backbutton.setOnClickListener((View v) -> showTourView());
         favButton.setOnClickListener((View v) -> toggleFavorite());
+        tourSavedButton.setOnClickListener((View v) -> toggleSaved());
         tourRating.setOnTouchListener((View v, MotionEvent e) -> {
             //setOnTouchListener creates two MotionEvents and without if-Statement, it would
             //open the dialog twice even if android doc says that you cant open two dialogs at the
             //same time .... fuck yeah android
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
-                    TourRatingDialog dialogRating = new TourRatingDialog().newInstance(tour, tourController, tourRating);
-                    dialogRating.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
+                    TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
+                            tourRating);
+                    dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
                 }
@@ -449,12 +453,15 @@ public class TourFragment extends Fragment {
         };
 
         //date picker listener, which triggers time picker
-        DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
-            selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
 
-            TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
-                    0, 0, true);
-            tdialog.show();
+                TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
+                        0, 0, true);
+                tdialog.show();
+            }
         };
 
         //button click listener to select day, which triggers date picker
@@ -634,7 +641,21 @@ public class TourFragment extends Fragment {
         }
     }
 
-    private void drawChart() {
+    private void toggleSaved(){
+        if (tourController.isSaved()){
+            boolean unsaved = tourController.unsetSaved();
+            if(unsaved){
+                tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.white));
+            }
+        }else{
+            boolean saved = tourController.setSaved();
+            if(saved){
+                tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+            }
+        }
+    }
+
+    public void drawChart() {
         Number[] domainLabels = tourController.getElevationProfileXAxis();
         Number[] series1Numbers = tourController.getElevationProfileYAxis();
 
@@ -693,7 +714,7 @@ public class TourFragment extends Fragment {
         plot.redraw();
     }
 
-    private void showMapWithTour() {
+    public void showMapWithTour() {
         if (tourController.getPolyline() == null) {
             return;
         }
@@ -701,21 +722,38 @@ public class TourFragment extends Fragment {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
+
+        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
+
+
+        //Disable my location
+        getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.MY_LOCATION_ENABLED, false).apply();
+
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
+        Fragment oldMapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+        if(oldMapFragment != null) {
+            getFragmentManager().beginTransaction()
+                    .remove(oldMapFragment)
+                    .commit();
+        }
 
         getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                 .addToBackStack(Constants.MAP_FRAGMENT)
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
     }
     private void showTourView(){
-        getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
-                .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
-                .commit();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
+        Fragment tourOverviewFragment = getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT);
+        if(tourOverviewFragment != null) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
+                    .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
+                    .commit();
+            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        }
     }
 
     /**

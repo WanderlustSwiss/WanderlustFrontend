@@ -60,7 +60,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "Creating Viewholder");
-        View view = mInflater.inflate(R.layout.recyclerview_equipment, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_tour_equipment, parent, false);
         return new ViewHolder(view);
     }
 
@@ -81,11 +81,10 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
             Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
         }else{
             File image = imageController.getImage(equipment.getImagePath());
-            if (image == null){
-                Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
-            }else{
+            if (image == null)
+                Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).placeholder(R.drawable.progress_animation).into(holder.ivImage);
+            else
                 Picasso.with(context).load(image).placeholder(R.drawable.loader).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
-            }
         }
     }
 
@@ -129,14 +128,14 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each equipment part
-        public final TextView tvTitle;
-        public final ImageView ivImage;
+        final TextView tvTitle;
+        final ImageView ivImage;
 
         /**
          * copy constructor for each element which holds the view
          * @param itemView
          */
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.equipmentTitle);
             ivImage = (ImageView) itemView.findViewById(R.id.equipmentImage);

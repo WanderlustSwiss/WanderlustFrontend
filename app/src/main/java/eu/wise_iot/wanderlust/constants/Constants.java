@@ -24,10 +24,15 @@ public interface Constants {
     /* FRAGMENTS */
     String MAP_FRAGMENT = "MapFragment";
     String TOUR_FRAGMENT = "TourFragment";
+    String FILTER_FRAGMENT = "FilterFragment";
     String TOUROVERVIEW_FRAGMENT = "TourOverviewFragment";
+    String RESULT_FILTER_FRAGMENT = "ResultFilterFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
-    String LOGIN_FRAGMENT = "SartupLoginFragment";
+    String LOGIN_FRAGMENT = "StartupLoginFragment";
     String USER_GUIDE_FRAGMENT = "UserGuideFragment";
+    String REGISTRATION_FRAGMENT = "RegistrationFragment";
+    String RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment";
+    String PROFILE_EDIT_FRAGMENT = "ProfileEditFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";
@@ -35,6 +40,7 @@ public interface Constants {
     String EDIT_POI_DIALOG = "PoiFeedbackDialog";
     String RATE_TOUR_DIALOG = "TourRatingDialog";
     String EQUIPMENT_DIALOG = "EquipmentDialog";
+    String CREATE_TOUR_DIALOG = "CreateTourDialog";
     String CONFIRM_DELETE_POI_DIALOG = "YesNoDialog";
 
     /* PHOTO INTENT */
@@ -61,4 +67,15 @@ public interface Constants {
     /* INTENTS */
     int TAKE_PHOTO = 1;
     int REQUEST_FOR_MULTIPLE_PERMISSIONS = 2;
+
+    /* Create Tour */
+    String CREATE_TOUR_INTENT = "gpsTrackingFinished";
+    String CREATE_TOUR_TRACK = "tourTrackGeoPoints";
+    String CREATE_TOUR_BUNDLE = "tourTrackBundle";
+    String CREATE_TOUR_UPDATE_MYOVERLAY = "tourTrackUpdateMyOverlay";
+    String CREATE_TOUR_ADDING_GEOPOINT = "tourTrackAddingGeopoint";
+    String CREATE_TOUR_ADDING_GEOPOINTS = "tourTrackAddingGeopoints";
+    String CREATE_TOUR_WHOLE_ROUTE_REQUIRED = "tourTrackWholeRouteRequired";
+    String CREATE_TOUR_IS_NEW = "tourTrackNewTOur";
+
 }

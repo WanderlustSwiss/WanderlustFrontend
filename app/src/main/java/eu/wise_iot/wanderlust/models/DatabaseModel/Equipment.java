@@ -22,6 +22,7 @@ public class Equipment extends AbstractModel {
     int type;
     String name;
     String description;
+    String url;
     byte[] seasons;
     byte[] weather;
     int minTemperature;
@@ -88,6 +89,10 @@ public class Equipment extends AbstractModel {
         this.name = name;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -130,6 +135,10 @@ public class Equipment extends AbstractModel {
 
     public String getName() {
         return name;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getDescription() {

@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
@@ -37,7 +36,8 @@ public class EquipmentDialog extends DialogFragment{
     public TextView titleTextView;
     public TextView descriptionTextView;
     public ImageView equipment_imageView;
-    public ImageButton linkToOnlineShopButton;
+    public ImageButton linkToOnlineShopButtonIcon;
+    public Button linkToOnlineShopButtonText;
 
     public static EquipmentDialog newInstance(Context paramContext, Equipment paramEquipment){
         EquipmentDialog fragment = new EquipmentDialog();
@@ -63,7 +63,8 @@ public class EquipmentDialog extends DialogFragment{
         equipment_imageView = (ImageView) view.findViewById(R.id.equipment_image);
         titleTextView = (TextView) view.findViewById(R.id.equipment_title_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.equipment_description_text_view);
-        linkToOnlineShopButton = (ImageButton) view.findViewById(R.id.link_to_shop_button);
+        linkToOnlineShopButtonIcon = (ImageButton) view.findViewById(R.id.link_to_shop_button_icon);
+        linkToOnlineShopButtonText = (Button) view.findViewById(R.id.link_to_shop_button_text);
 
         ImageInfo imagepath = equipment.getImagePath();
         if(imagepath != null){
@@ -79,12 +80,16 @@ public class EquipmentDialog extends DialogFragment{
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        linkToOnlineShopButton.setOnClickListener(e ->{
-            String url = "http://www.wanderlust-app.ch";
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
-            startActivity(i);
-        });
+        linkToOnlineShopButtonIcon.setOnClickListener(e ->{ linkToOnlineShop(); });
+        linkToOnlineShopButtonText.setOnClickListener(e ->{ linkToOnlineShop(); });
+    }
+
+    public void linkToOnlineShop(){
+        //String url = equipment.getUrl();
+        String url = "http://www.wanderlust-app.ch";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 
 }
