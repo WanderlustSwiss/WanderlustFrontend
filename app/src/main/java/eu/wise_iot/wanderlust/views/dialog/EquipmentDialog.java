@@ -61,10 +61,10 @@ public class EquipmentDialog extends DialogFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_equipment_view, container, false);
         equipment_imageView = (ImageView) view.findViewById(R.id.equipment_image);
-        titleTextView = (TextView) view.findViewById(R.id.equipment_title_text_view);
-        descriptionTextView = (TextView) view.findViewById(R.id.equipment_description_text_view);
-        linkToOnlineShopButtonIcon = (ImageButton) view.findViewById(R.id.link_to_shop_button_icon);
-        linkToOnlineShopButtonText = (Button) view.findViewById(R.id.link_to_shop_button_text);
+        titleTextView = (TextView) view.findViewById(R.id.equipmentTitleTextView);
+        descriptionTextView = (TextView) view.findViewById(R.id.equipmentDescriptionTextView);
+        linkToOnlineShopButtonIcon = (ImageButton) view.findViewById(R.id.linkToShopButtonIcon);
+        linkToOnlineShopButtonText = (Button) view.findViewById(R.id.linkToShopButtonText);
 
         ImageInfo imagepath = equipment.getImagePath();
         if(imagepath != null){

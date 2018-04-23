@@ -42,26 +42,26 @@
             android:padding="12dp">
 
             <TextView
-                android:id="@+id/equipment_title_text_view"
+                android:id="@+id/equipmentTitleTextView"
                 style="@style/h1.Light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
 
             <TextView
-                android:id="@+id/equipment_description_text_view"
+                android:id="@+id/equipmentDescriptionTextView"
                 style="@style/p.Light"
-                android:layout_below="@id/equipment_title_text_view"
+                android:layout_below="@id/equipmentTitleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/equipment_description_text_view">
+                android:layout_below="@id/equipmentDescriptionTextView">
                 <ImageButton
-                    android:id="@+id/link_to_shop_button_icon"
-                    android:layout_below="@id/equipment_description_text_view"
+                    android:id="@+id/linkToShopButtonIcon"
+                    android:layout_below="@id/equipmentDescriptionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/go_to_shop_string"
@@ -71,12 +71,12 @@
                     android:layout_marginLeft="12dp"/>
 
                 <Button
-                    android:id="@+id/link_to_shop_button_text"
+                    android:id="@+id/linkToShopButtonText"
                     android:background="@android:color/transparent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/go_to_shop_string"
-                    android:layout_below="@id/equipment_description_text_view"
+                    android:layout_below="@id/equipmentDescriptionTextView"
                     android:layout_marginLeft="32dp"
                     android:layout_marginTop="3dp"
                     style="@style/p.Light"/>
