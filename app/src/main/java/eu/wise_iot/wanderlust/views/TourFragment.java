@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -73,7 +74,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
-import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 
@@ -213,20 +213,20 @@ public class TourFragment extends Fragment {
         setupActionListeners();
     }
     private void initializeControls(View view) {
-        imageViewTourImage = (ImageView) view.findViewById(R.id.tour_image);
+        imageViewTourImage = (ImageView) view.findViewById(R.id.tourOVTourImage);
         favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
 
         tourRegion = (TextView) view.findViewById(R.id.tour_region);
-        tourTitle = (TextView) view.findViewById(R.id.tour_title);
+        tourTitle = (TextView) view.findViewById(R.id.tourOVTourTitle);
         tourExecutionDate = (TextView) view.findViewById(R.id.tour_execution_date);
         tourSavedButton = (ImageButton) view.findViewById(R.id.save_tour_button);
         tourSharedButton = (ImageButton) view.findViewById(R.id.share_tour_button);
         backbutton = (ImageButton) view.findViewById(R.id.tour_back_button);
-        textViewTourDistance = (TextView) view.findViewById(R.id.tour_distance);
+        textViewTourDistance = (TextView) view.findViewById(R.id.tourOVTourDistance);
         textViewAscend = (TextView) view.findViewById(R.id.tour_ascend);
         textViewDuration = (TextView) view.findViewById(R.id.tour_duration);
         textViewDescend = (TextView) view.findViewById(R.id.tour_descend);
-        textViewDifficulty = (TextView) view.findViewById(R.id.tour_difficulty);
+        textViewDifficulty = (TextView) view.findViewById(R.id.tourOVTourDifficulty);
 
         tourDescriptionTextView = (ExpandableTextView) view.findViewById(R.id.tour_description);
         tourDescriptionToggler = (ImageButton) view.findViewById(R.id.tour_descrition_toggler);
@@ -391,6 +391,7 @@ public class TourFragment extends Fragment {
      *
      */
     private void setupActionListeners() {
+        tourSharedButton.setOnClickListener((View v) -> shareTour());
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
         backbutton.setOnClickListener((View v) -> showTourView());
         favButton.setOnClickListener((View v) -> toggleFavorite());
@@ -757,6 +758,19 @@ public class TourFragment extends Fragment {
                     .commit();
             ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         }
+    }
+
+    /**
+     * shares the tour with other apps
+     */
+    private void shareTour(){
+        //TODO check what @ will be used
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        String description = tour.getDescription() + getResources().getString(R.string.app_domain);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, description);
+        shareIntent.putExtra(Intent.EXTRA_TITLE, tour.getTitle());
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, tour.getTitle());
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
     }
 
     /**

@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
@@ -24,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -373,6 +376,7 @@ public class TourController {
         DateTimeFormatter decodef = DateTimeFormat.forPattern("dd. MMMMM yyyy");
         return dt.toString(decodef);
     }
+
 
     public long getAscent() {
         return tour.getAscent();

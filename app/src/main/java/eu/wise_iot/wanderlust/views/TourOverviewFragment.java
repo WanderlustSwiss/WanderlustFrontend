@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +27,6 @@ import com.squareup.picasso.PicassoCache;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.xml.datatype.Duration;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -310,9 +309,9 @@ public class TourOverviewFragment extends Fragment {
 
     private void onItemClickImages(View view, Tour tour) {
         switch (view.getId()) {
-            case R.id.favoriteButton:
+            case R.id.tourOVFavoriteButton:
                 Log.d(TAG,"Tour Favorite Clicked and event triggered ");
-                ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.favoriteButton);
+                ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.tourOVFavoriteButton);
                 Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
                 long favId = toc.getTourFavoriteId(tour.getTour_id());
                 if(favId != -1) {
@@ -375,8 +374,8 @@ public class TourOverviewFragment extends Fragment {
                     });
                 }
                 break;
-            case R.id.saveButton:
-                ImageButton ibSave = (ImageButton) view.findViewById(R.id.saveButton);
+            case R.id.tourOVSaveButton:
+                ImageButton ibSave = (ImageButton) view.findViewById(R.id.tourOVSaveButton);
                 TourController controller = new TourController(tour);
                 Log.d("SAVE", "klickt...");
                 boolean saved = controller.isSaved();
@@ -400,6 +399,10 @@ public class TourOverviewFragment extends Fragment {
                     }
                 }
                 break;
+            case R.id.tourOVShareButton:
+                Log.d(TAG,"Tour share");
+                shareTour(tour);
+                break;
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
                 TourFragment tourFragment = TourFragment.newInstance(tour);
@@ -415,8 +418,19 @@ public class TourOverviewFragment extends Fragment {
                         .commit();
                 ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                 break;
-
             //the same can be applied to other components in Row_Layout.xml
         }
+    }
+    /**
+     * shares the tour with other apps
+     */
+    private void shareTour(Tour tour){
+        //TODO check what @ will be used
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        String description = tour.getDescription() + getResources().getString(R.string.app_domain);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, description);
+        shareIntent.putExtra(Intent.EXTRA_TITLE, tour.getTitle());
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, tour.getTitle());
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
     }
 }

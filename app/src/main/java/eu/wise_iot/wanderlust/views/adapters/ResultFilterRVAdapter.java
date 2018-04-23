@@ -163,14 +163,14 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
          */
         ViewHolder(View itemView) {
             super(itemView);
-            tvDistance = (TextView) itemView.findViewById(R.id.tour_distance);
-            tvDifficulty = (TextView) itemView.findViewById(R.id.tour_difficulty);
+            tvDistance = (TextView) itemView.findViewById(R.id.tourOVTourDistance);
+            tvDifficulty = (TextView) itemView.findViewById(R.id.tourOVTourDifficulty);
             tvRegion = (TextView) itemView.findViewById(R.id.tour_region);
-            tvTitle = (TextView) itemView.findViewById(R.id.tour_title);
+            tvTitle = (TextView) itemView.findViewById(R.id.tourOVTourTitle);
             tvTime = (TextView) itemView.findViewById(R.id.tour_time);
             tvAscending = (TextView) itemView.findViewById(R.id.tour_ascend);
             tvDescending = (TextView) itemView.findViewById(R.id.tour_descend);
-            tvImage = (ImageView) itemView.findViewById(R.id.tour_image);
+            tvImage = (ImageView) itemView.findViewById(R.id.tourOVTourImage);
             ivTourDifficulty = (ImageView) itemView.findViewById(R.id.ivTourDifficulty);
 
             itemView.setOnClickListener(this);

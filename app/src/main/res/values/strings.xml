@@ -2,6 +2,7 @@
 
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
+    <string name="app_domain"> \@wanderlust-app</string>
     <!-- WELCOME FRAGMENT -->
     <string name="msg_welcome_header">Willkommen und danke, dass du das Release 0.1 von Wanderlust testen willst!</string>
     <string name="msg_welcome_text1">Bei dieser Version geht es vorerst darum Eindrücke zu sammeln und so schöne und weniger schöne Orte sichtbar zu machen. Bilder hingegen werden vorerst nur lokal bei dir abgespeichert. Wenn du sie mir aber (mit dem Original-Namen) zuschickst, kann ich sie beim nächsten Release hinzufügen.</string>
@@ -168,6 +169,7 @@
     <string name="message_add_title">Bitte Titel hinzufügen</string>
     <string name="meter_above_sea_level_abbreviation">m ü. M.</string>
     <string name="share_title_poi">Teilen</string>
+    <string name="share_title_tour">Teilen</string>
 
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>

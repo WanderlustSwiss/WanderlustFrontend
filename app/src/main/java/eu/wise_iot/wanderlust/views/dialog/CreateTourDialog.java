@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -135,11 +133,11 @@ public class CreateTourDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_create_tour, container, false);
 
-        titleEditText = (EditText) view.findViewById(R.id.tour_title);
+        titleEditText = (EditText) view.findViewById(R.id.tourOVTourTitle);
         titleTextLayout = (TextInputLayout) view.findViewById(R.id.tour_title_layout);
         descriptionEditText = (EditText) view.findViewById(R.id.tour_description);
         publicSpinner = (Spinner) view.findViewById(R.id.tour_is_public);
-        difficultySpinner = (Spinner) view.findViewById(R.id.tour_difficulty);
+        difficultySpinner = (Spinner) view.findViewById(R.id.tourOVTourDifficulty);
         buttonSave = (ImageButton) view.findViewById(R.id.tour_save_button);
         buttonCancel = (ImageButton) view.findViewById(R.id.tour_return_button);
         regionSpinner = (Spinner) view.findViewById(R.id.tour_region);
