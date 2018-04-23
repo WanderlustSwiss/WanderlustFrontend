@@ -51,7 +51,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     private TextInputLayout nicknameEmailLayout;
     private SignInButton signInButtonGoogle;
     private TextView redirectToRegistration;
-    private TextView fogotPassword;
+    private TextView forgotPassword;
     //    private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
     private final LoginController loginController;
@@ -73,13 +73,19 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                         editor.putBoolean("firstTimeOpened", false); // save that app has been opened
                         editor.apply();
 
+                        Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
+                        if (userGuideFragment == null)userGuideFragment = UserGuideFragment.newInstance();
+
                         getFragmentManager().beginTransaction()
                                 .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
-                                .add(R.id.content_frame, UserGuideFragment.newInstance(), Constants.USER_GUIDE_FRAGMENT)
+                                .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
                                 .commit();
                     } else {
+
+                        Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+                        if (mapFragment == null) mapFragment = MapFragment.newInstance();
                         getFragmentManager().beginTransaction()
-                                .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                                 .commit();
                         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     }
@@ -98,6 +104,13 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
      */
     public StartupLoginFragment() {
         this.loginController = new LoginController();
+    }
+
+    public static StartupLoginFragment newInstance() {
+        Bundle args = new Bundle();
+        StartupLoginFragment fragment = new StartupLoginFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
@@ -132,7 +145,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
         nicknameEmailLayout.setErrorEnabled(true);
 //        signInButtonGoogle = (SignInButton) view.findViewById(R.id.sign_in_button);
         redirectToRegistration = (TextView) view.findViewById(R.id.link_registration);
-        fogotPassword = (TextView) view.findViewById(R.id.login_forgetPassword);
+        forgotPassword = (TextView) view.findViewById(R.id.login_forgetPassword);
 
 
         passwordTextfield = (EditText) view.findViewById(R.id.input_password);
@@ -182,18 +195,21 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
         redirectToRegistration.setOnClickListener(v -> {
             //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
             //googleApiClient.disconnect();
-            StartupRegistrationFragment startupRegistrationFragment = new StartupRegistrationFragment();
+            Fragment startupRegistrationFragment = getFragmentManager().findFragmentByTag(Constants.REGISTRATION_FRAGMENT);
+            if (startupRegistrationFragment == null)startupRegistrationFragment = StartupRegistrationFragment.newInstance();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, startupRegistrationFragment)
+                    .replace(R.id.content_frame, startupRegistrationFragment, Constants.REGISTRATION_FRAGMENT)
                     .commit();
         });
 
-        fogotPassword.setOnClickListener(v -> {
+        forgotPassword.setOnClickListener(v -> {
             //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
             //googleApiClient.disconnect();
-            StartupResetPasswordFragment startupResetPasswordFragment = new StartupResetPasswordFragment();
+
+            Fragment startupResetPasswordFragment = getFragmentManager().findFragmentByTag(Constants.RESET_PASSWORD_FRAGMENT);
+            if (startupResetPasswordFragment == null)startupResetPasswordFragment = StartupResetPasswordFragment.newInstance();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, startupResetPasswordFragment)
+                    .replace(R.id.content_frame, startupResetPasswordFragment, Constants.RESET_PASSWORD_FRAGMENT)
                     .commit();
         });
     }

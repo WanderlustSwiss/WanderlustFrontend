@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -24,6 +26,7 @@ import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.views.MainActivity;
 
 
 /**
@@ -115,6 +118,19 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
             File image = images.get(0);
+
+
+//            Picasso.Builder builder = new Picasso.Builder(context);
+//            builder.listener(new Picasso.Listener()
+//            {
+//                @Override
+//                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+//                {
+//                    exception.printStackTrace(); //TODO update to newer Picasso library https://github.com/square/picasso/issues/364
+//                }
+//            });
+//            builder.build().load(image).fit().centerCrop().into(holder.tvImage);
+
             Picasso.with(context).load(image).fit().centerCrop().into(holder.tvImage);
             Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
         } else {

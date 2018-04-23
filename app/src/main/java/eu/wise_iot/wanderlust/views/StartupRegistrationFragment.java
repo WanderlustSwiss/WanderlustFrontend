@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
@@ -61,6 +62,12 @@ public class StartupRegistrationFragment extends Fragment {
         this.registrationController = new RegistrationController();
     }
 
+    public static StartupRegistrationFragment newInstance() {
+        Bundle args = new Bundle();
+        StartupRegistrationFragment fragment = new StartupRegistrationFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,9 +127,10 @@ public class StartupRegistrationFragment extends Fragment {
                             case OK:
                                 ((MainActivity) getActivity()).setupDrawerHeader(user);
                                 Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
-                                StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
+                                Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                                if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
                                 getFragmentManager().beginTransaction()
-                                        .add(R.id.content_frame, startupLoginFragment)
+                                        .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                                         .commit();
                                 break;
                             case CONFLICT:
@@ -140,9 +148,11 @@ public class StartupRegistrationFragment extends Fragment {
         });
 
         redirectToLogin.setOnClickListener(v -> {
-            StartupLoginFragment startupLoginFragment = new StartupLoginFragment();
+
+            Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+            if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
             getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, startupLoginFragment)
+                    .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                     .commit();
         });
     }

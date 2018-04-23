@@ -37,7 +37,7 @@ public class TourOverviewController {
      * @param handler
      * @param page
      */
-    public void getAllTours(FragmentHandler handler, int page) {
+    public void getAllTours(int page, FragmentHandler handler) {
         userTourDao.retrieveAll(handler, page);
     }
 
