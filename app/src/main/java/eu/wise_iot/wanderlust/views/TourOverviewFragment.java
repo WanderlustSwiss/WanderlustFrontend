@@ -189,6 +189,7 @@ public class TourOverviewFragment extends Fragment {
         adapterRecent.setClickListener(this::onItemClickImages);
         rvRecent.setAdapter(adapterRecent);
 
+        recentTours.clear();
         recentTours.addAll(toc.getRecentTours());
         getDataFromServer(recentTours);
         adapterRecent.notifyDataSetChanged();
