@@ -11,6 +11,8 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
@@ -55,7 +57,7 @@ public class TourReportDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_report_tour, container, false);
 
-        buttonCancel = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
+        buttonCancel = (ImageButton) view.findViewById(R.id.violationTourCancelButton);
         buttonSave = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
         rbHarassment = (RadioButton) view.findViewById(R.id.violationTourHarassment);
         rbHatespeech = (RadioButton) view.findViewById(R.id.violationTourHateSpeech);
@@ -81,10 +83,17 @@ public class TourReportDialog extends DialogFragment {
         else if(violationName == null) violationName = "fehler";
         ViolationType violationType = violationTypeDao.getViolationTypebyName(violationName);
 
-
-        tourController.reportViolation(tourController.new Violation(this.tour.getTour_id(), violationType));
-        getDialog().dismiss();
-        Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.report_submit), Toast.LENGTH_SHORT).show();
+        tourController.reportViolation(tourController.new Violation(this.tour.getTour_id(), violationType), controllerEvent -> {
+            switch (controllerEvent.getType()){
+                case OK:
+                    getDialog().dismiss();
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.report_submit), Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    getDialog().dismiss();
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

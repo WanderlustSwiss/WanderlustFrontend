@@ -11,13 +11,15 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.TourController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
 
 /**
- * TourReportDialog:
+ * poiReportDialog:
  *
  * @author Rilind Gashi
  * @license MIT
@@ -25,22 +27,22 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
 
 public class PoiReportDialog extends DialogFragment {
 
-    private TourController tourController;
-    private Tour tour;
+    private PoiController poiController;
+    private Poi poi;
 
-    private static final String TAG = "TourRatingDialog";
+    private static final String TAG = "poiRatingDialog";
     private ImageButton buttonSave, buttonCancel;
     private RadioButton rbHarassment, rbViolence, rbHatespeech, rbSpam, rbOther, rbNudity;
 
     private ViolationTypeDao violationTypeDao = ViolationTypeDao.getInstance();
 
 
-    public PoiReportDialog newInstance(Tour tour, TourController tourController) {
+    public PoiReportDialog newInstance(Poi poi, PoiController poiController) {
         PoiReportDialog fragment = new PoiReportDialog();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        this.tour = tour;
-        this.tourController = tourController;
+        this.poi = poi;
+        this.poiController = poiController;
         //this.violationTypeDao = ViolationTypeDao.getInstance();
         return fragment;
     }
@@ -53,24 +55,24 @@ public class PoiReportDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_report_tour, container, false);
+        View view = inflater.inflate(R.layout.dialog_report_poi, container, false);
 
-        buttonCancel = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
-        buttonSave = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
-        rbHarassment = (RadioButton) view.findViewById(R.id.violationTourHarassment);
-        rbHatespeech = (RadioButton) view.findViewById(R.id.violationTourHateSpeech);
-        rbNudity = (RadioButton) view.findViewById(R.id.violationTourNudity);
-        rbOther = (RadioButton) view.findViewById(R.id.violationTourOther);
-        rbSpam = (RadioButton) view.findViewById(R.id.violationTourSpam);
-        rbViolence = (RadioButton) view.findViewById(R.id.violationTourViolence);
+        buttonCancel = (ImageButton) view.findViewById(R.id.violationPoiCancelButton);
+        buttonSave = (ImageButton) view.findViewById(R.id.violationPoiSaveButton);
+        rbHarassment = (RadioButton) view.findViewById(R.id.violationPoiHarassment);
+        rbHatespeech = (RadioButton) view.findViewById(R.id.violationPoiHateSpeech);
+        rbNudity = (RadioButton) view.findViewById(R.id.violationPoiNudity);
+        rbOther = (RadioButton) view.findViewById(R.id.violationPoiOther);
+        rbSpam = (RadioButton) view.findViewById(R.id.violationPoiSpam);
+        rbViolence = (RadioButton) view.findViewById(R.id.violationPoiViolence);
 
         buttonCancel.setOnClickListener(v -> getDialog().dismiss());
-        buttonSave.setOnClickListener(v -> reportTour());
+        buttonSave.setOnClickListener(v -> reportPoi());
 
         return view;
     }
 
-    private void reportTour(){
+    private void reportPoi(){
         String violationName = null;
         if(rbHarassment.isChecked()) violationName = rbHarassment.getText().toString();
         else if(rbHatespeech.isChecked()) violationName = rbHatespeech.getText().toString();
@@ -82,9 +84,18 @@ public class PoiReportDialog extends DialogFragment {
         ViolationType violationType = violationTypeDao.getViolationTypebyName(violationName);
 
 
-        tourController.reportViolation(tourController.new Violation(this.tour.getTour_id(), violationType));
-        getDialog().dismiss();
-        Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.report_submit), Toast.LENGTH_SHORT).show();
+        poiController.reportViolation(poiController.new Violation(this.poi.getPoi_id(), violationType), controllerEvent -> {
+            switch (controllerEvent.getType()){
+                case OK:
+                    getDialog().dismiss();
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.report_submit), Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    getDialog().dismiss();
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

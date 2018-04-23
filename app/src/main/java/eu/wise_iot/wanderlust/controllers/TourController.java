@@ -47,7 +47,12 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
+import eu.wise_iot.wanderlust.services.DifficultyTypeService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.ViolationService;
 import io.objectbox.Property;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 /**
@@ -422,9 +427,22 @@ public class TourController {
         return regionDao.find();
     }
 
-    public void reportViolation(Violation violation){
+    public void reportViolation(Violation violation, final FragmentHandler handler){
+        Call<Violation> call = ServiceGenerator.createService(ViolationService.class).sendTourViolation(violation);
+        call.enqueue(new Callback<Violation>() {
+            @Override
+            public void onResponse(Call<Violation> call, retrofit2.Response<Violation> response) {
+                if (response.isSuccessful())
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                else
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+            }
 
-
+            @Override
+            public void onFailure(Call<Violation> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
     }
     public class Violation{
         long tour_id;

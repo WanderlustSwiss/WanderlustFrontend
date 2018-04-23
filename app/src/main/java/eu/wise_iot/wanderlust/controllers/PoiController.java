@@ -13,6 +13,10 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.ViolationService;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 /**
@@ -156,11 +160,30 @@ public class PoiController {
             return null;
         }
     }
+
+    public void reportViolation(PoiController.Violation violation, final FragmentHandler handler) {
+        Call<PoiController.Violation> call = ServiceGenerator.createService(ViolationService.class).sendPoiViolation(violation);
+        call.enqueue(new Callback<PoiController.Violation>() {
+            @Override
+            public void onResponse(Call<PoiController.Violation> call, retrofit2.Response<PoiController.Violation> response) {
+                if (response.isSuccessful())
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                else
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+            }
+
+            @Override
+            public void onFailure(Call<PoiController.Violation> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+
     public class Violation{
         long poi_id;
         ViolationType violationType;
 
-        Violation(long poi_id, ViolationType violationType){
+        public Violation(long poi_id, ViolationType violationType){
             this.poi_id = poi_id;
             this.violationType = violationType;
         }
