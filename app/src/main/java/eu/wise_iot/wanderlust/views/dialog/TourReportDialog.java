@@ -1,24 +1,17 @@
 package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DialogFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.RatingBar;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
@@ -62,8 +55,8 @@ public class TourReportDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_report_tour, container, false);
 
-        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_canel_rate_button);
-        buttonSave = (ImageButton) view.findViewById(R.id.rate_save_button);
+        buttonCancel = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
+        buttonSave = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
         rbHarassment = (RadioButton) view.findViewById(R.id.violationTourHarassment);
         rbHatespeech = (RadioButton) view.findViewById(R.id.violationTourHateSpeech);
         rbNudity = (RadioButton) view.findViewById(R.id.violationTourNudity);

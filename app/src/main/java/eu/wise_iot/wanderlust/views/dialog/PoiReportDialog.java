@@ -55,8 +55,8 @@ public class PoiReportDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_report_tour, container, false);
 
-        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_canel_rate_button);
-        buttonSave = (ImageButton) view.findViewById(R.id.rate_save_button);
+        buttonCancel = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
+        buttonSave = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
         rbHarassment = (RadioButton) view.findViewById(R.id.violationTourHarassment);
         rbHatespeech = (RadioButton) view.findViewById(R.id.violationTourHateSpeech);
         rbNudity = (RadioButton) view.findViewById(R.id.violationTourNudity);
