@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/primary_main</item>
         <item name="colorPrimaryDark">@color/heading_icon_unselected</item>
         <item name="colorAccent">@color/primary_main</item>
+        <item name="android:statusBarColor">@color/primary_second</item>
     </style>
 
     <!-- TEXT STYLES: HEADER -->
