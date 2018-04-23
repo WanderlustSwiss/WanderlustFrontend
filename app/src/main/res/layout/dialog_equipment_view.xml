@@ -7,50 +7,43 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@color/primary_main">
+        android:layout_height="140dp"
+        android:background="@color/background_pale">
 
-        <com.jsibbold.zoomage.ZoomageView
+        <ImageView
             android:id="@+id/equipment_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:adjustViewBounds="true"
-            app:zoomage_animateOnReset="true"
-            app:zoomage_autoCenter="true"
-            app:zoomage_autoResetMode="NEVER"
-            app:zoomage_maxScale="6"
-            app:zoomage_minScale="1"
-            app:zoomage_restrictBounds="true"
-            app:zoomage_translatable="true"
-            app:zoomage_zoomable="true" />
+            android:layout_marginTop="12dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentStart="true"
+            />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/content_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_main">
+        android:background="@color/background_pale">
 
         <RelativeLayout
-            android:id="@+id/poi_background_container"
+            android:id="@+id/equipment_background_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="@color/primary_main"
+            android:background="@color/background_pale"
             android:padding="12dp">
 
             <TextView
                 android:id="@+id/equipmentTitleTextView"
-                style="@style/h1.Light"
+                style="@style/h1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
 
             <TextView
                 android:id="@+id/equipmentDescriptionTextView"
-                style="@style/p.Light"
+                style="@style/p"
                 android:layout_below="@id/equipmentTitleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/go_to_shop_string"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_worldwide_white_32dp"
+                    android:src="@drawable/ic_worldwide_black_32dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginLeft="12dp"/>
 
@@ -79,7 +72,7 @@
                     android:layout_below="@id/equipmentDescriptionTextView"
                     android:layout_marginLeft="32dp"
                     android:layout_marginTop="3dp"
-                    style="@style/p.Light"/>
+                    style="@style/p"/>
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
