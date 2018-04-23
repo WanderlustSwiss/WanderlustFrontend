@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -203,8 +204,20 @@ public class TourFragment extends Fragment {
                 drawChart();
             }
         });
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) actionBar.hide();
+
         return view;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) actionBar.show();
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -391,7 +404,7 @@ public class TourFragment extends Fragment {
      */
     private void setupActionListeners() {
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
-        backbutton.setOnClickListener((View v) -> showTourView());
+        backbutton.setOnClickListener((View v) -> getFragmentManager().popBackStack());
         favButton.setOnClickListener((View v) -> toggleFavorite());
         tourSavedButton.setOnClickListener((View v) -> toggleSaved());
         tourRating.setOnTouchListener((View v, MotionEvent e) -> {
@@ -740,19 +753,6 @@ public class TourFragment extends Fragment {
                 .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                 .addToBackStack(Constants.MAP_FRAGMENT)
                 .commit();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-
-    }
-    private void showTourView(){
-
-        Fragment tourOverviewFragment = getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT);
-        if(tourOverviewFragment != null) {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
-                    .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
-                    .commit();
-            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-        }
     }
 
     /**
