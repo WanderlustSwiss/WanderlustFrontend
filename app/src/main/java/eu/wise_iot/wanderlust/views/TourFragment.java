@@ -722,7 +722,7 @@ public class TourFragment extends Fragment {
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
 
-        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
+        roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent));
 
 
         //Disable my location
