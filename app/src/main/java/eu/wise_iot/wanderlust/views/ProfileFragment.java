@@ -35,7 +35,7 @@ import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileTripListAdapter;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
-import eu.wise_iot.wanderlust.views.dialog.TourFragmentDialog;
+import eu.wise_iot.wanderlust.views.dialog.TourDialog;
 
 /**
  * Fragment which represents the UI of the profile of a user.
@@ -229,7 +229,7 @@ public class ProfileFragment extends Fragment {
                                 Tour tour = (Tour) listView.getItemAtPosition(position);
 
 
-                                TourFragmentDialog tourFragmentDialog = TourFragmentDialog.newInstance(tour);
+                                TourDialog tourDialog = TourDialog.newInstance(tour);
                                 Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
                                 if(oldTourFragment != null) {
                                     getFragmentManager().beginTransaction()
@@ -237,7 +237,7 @@ public class ProfileFragment extends Fragment {
                                             .commit();
                                 }
                                 getFragmentManager().beginTransaction()
-                                                    .add(R.id.content_frame, tourFragmentDialog, Constants.TOUR_FRAGMENT)
+                                                    .add(R.id.content_frame, tourDialog, Constants.TOUR_FRAGMENT)
                                                     .addToBackStack(Constants.TOUR_FRAGMENT)
                                                     .commit();
                             }
@@ -298,7 +298,7 @@ public class ProfileFragment extends Fragment {
             listView.setOnItemClickListener((parent, view1, position, id) -> {
                 Tour tour = (Tour) listView.getItemAtPosition(position);
 
-                TourFragmentDialog tourFragmentDialog = TourFragmentDialog.newInstance(tour);
+                TourDialog tourDialog = TourDialog.newInstance(tour);
                 Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
                 if(oldTourFragment != null) {
                     getFragmentManager().beginTransaction()
@@ -306,7 +306,7 @@ public class ProfileFragment extends Fragment {
                             .commit();
                 }
                 getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame, tourFragmentDialog, Constants.TOUR_FRAGMENT)
+                                    .add(R.id.content_frame, tourDialog, Constants.TOUR_FRAGMENT)
                                     .addToBackStack(Constants.TOUR_FRAGMENT)
                                     .commit();
             });
@@ -379,7 +379,7 @@ public class ProfileFragment extends Fragment {
             listView.setAdapter(adapter);
             listView.setOnItemClickListener((parent, view1, position, id) -> {
                 Tour tour = (Tour) listView.getItemAtPosition(position);
-                TourFragmentDialog tourFragmentDialog = TourFragmentDialog.newInstance(tour);
+                TourDialog tourDialog = TourDialog.newInstance(tour);
                 Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
                 if(oldTourFragment != null) {
                     getFragmentManager().beginTransaction()
@@ -387,7 +387,7 @@ public class ProfileFragment extends Fragment {
                             .commit();
                 }
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, tourFragmentDialog, Constants.TOUR_FRAGMENT)
+                        .add(R.id.content_frame, tourDialog, Constants.TOUR_FRAGMENT)
                         .addToBackStack(Constants.TOUR_FRAGMENT)
                         .commit();
             });

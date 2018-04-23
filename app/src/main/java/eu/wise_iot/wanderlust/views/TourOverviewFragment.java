@@ -35,7 +35,7 @@ import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
-import eu.wise_iot.wanderlust.views.dialog.TourFragmentDialog;
+import eu.wise_iot.wanderlust.views.dialog.TourDialog;
 
 
 /**
@@ -367,7 +367,7 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
-                TourFragmentDialog tourFragmentDialog = TourFragmentDialog.newInstance(tour);
+                TourDialog tourDialog = TourDialog.newInstance(tour);
                 Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
                 if(oldTourFragment != null) {
                     getFragmentManager().beginTransaction()
@@ -375,7 +375,7 @@ public class TourOverviewFragment extends Fragment {
                             .commit();
                 }
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, tourFragmentDialog, Constants.TOUR_FRAGMENT)
+                        .add(R.id.content_frame, tourDialog, Constants.TOUR_FRAGMENT)
                         .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
                         .commit();
                 ((AppCompatActivity) getActivity()).getSupportActionBar().show();

@@ -82,7 +82,7 @@ import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
  * @author Alexander Weinbeck, Rilind Gashi, Baris Demirci, Simon Kaspar
  * @license MIT
  */
-public class TourFragmentDialog extends DialogFragment {
+public class TourDialog extends DialogFragment {
     private static final String TAG = "TourOverviewFragment";
     private static Tour tour;
     private static TourController tourController;
@@ -145,7 +145,7 @@ public class TourFragmentDialog extends DialogFragment {
 
     private XYPlot plot;
 
-    public TourFragmentDialog() {
+    public TourDialog() {
         // Required empty public constructor
     }
 
@@ -153,12 +153,12 @@ public class TourFragmentDialog extends DialogFragment {
     /**
      * Static instance constructor.
      *
-     * @return Fragment: TourFragmentDialog
+     * @return Fragment: TourDialog
      */
-    public static TourFragmentDialog newInstance(Tour paramTour) {
+    public static TourDialog newInstance(Tour paramTour) {
 
         Bundle args = new Bundle();
-        TourFragmentDialog fragment = new TourFragmentDialog();
+        TourDialog fragment = new TourDialog();
         fragment.setArguments(args);
         tour = paramTour;
         tourController = new TourController(tour);
@@ -317,8 +317,8 @@ public class TourFragmentDialog extends DialogFragment {
             switch (controllerEvent.getType()) {
                 case OK:
                     Log.d(TAG, "got equipment for tour");
-                    TourFragmentDialog.this.listEquipment.clear();
-                    TourFragmentDialog.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
+                    TourDialog.this.listEquipment.clear();
+                    TourDialog.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
                     getActivity().runOnUiThread(() -> adapterEquip.notifyDataSetChanged());
                     break;
                 default:

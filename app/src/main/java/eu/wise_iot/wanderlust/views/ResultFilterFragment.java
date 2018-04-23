@@ -25,7 +25,7 @@ import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ResultFilterRVAdapter;
-import eu.wise_iot.wanderlust.views.dialog.TourFragmentDialog;
+import eu.wise_iot.wanderlust.views.dialog.TourDialog;
 
 /**
  * Fragment that contains the filtering functionality for all tours
@@ -161,9 +161,9 @@ public class ResultFilterFragment extends Fragment {
      */
     protected void onItemClickImages(View view, Tour tour) {
         Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
-        TourFragmentDialog tourFragmentDialog = TourFragmentDialog.newInstance(tour);
+        TourDialog tourDialog = TourDialog.newInstance(tour);
         getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, tourFragmentDialog, Constants.TOUR_FRAGMENT)
+                .add(R.id.content_frame, tourDialog, Constants.TOUR_FRAGMENT)
                 .addToBackStack(Constants.TOUR_FRAGMENT)
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
