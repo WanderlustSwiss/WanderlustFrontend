@@ -153,6 +153,7 @@
     <string name="poi_type_restaurant">Restaurant</string>
     <string name="poi_type_view">Aussicht</string>
     <string name="poi_type_nature">Natur</string>
+    <string name="title_poi_type_selection">POI-Layer</string>
     <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
     <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
     <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>

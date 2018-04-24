@@ -174,7 +174,6 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        poiTypeSelection = (LinearLayout) view.findViewById(R.id.poiTypeSelection);
         initMap(view);
         initOverlays();
         initMapController();
@@ -595,10 +594,12 @@ public class MapFragment extends Fragment {
         // register behavior on clicked
         layerButton.setOnClickListener(view1 -> {
             if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+               /*
                 NestedScrollView layout = (NestedScrollView) view.findViewById(R.id.bottom_sheet);
                 ViewGroup.LayoutParams params = layout.getLayoutParams();
                 //params.height = 600;
                 layout.setLayoutParams(params);
+                */
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             } else {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -636,6 +637,51 @@ public class MapFragment extends Fragment {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
+    }
+
+    private void showPoiRestaurantOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        //mapOverlays.showPoiRestaurantLayer(showOverlay);
+        if (showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+    private void showPoiNatureOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        //mapOverlays.showPoiNatureLayer(showOverlay);
+        if (showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+    private void showPoiViewOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        //mapOverlays.showPoiViewLayer(showOverlay);
+        if (showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+    private void showPoiWarningOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        //mapOverlays.showPoiWarningLayer(showOverlay);
+        if (showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
     }
 
     private void showPoiOverlay(boolean showOverlay) {

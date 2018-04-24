@@ -136,13 +136,6 @@
             android:layout_marginTop="16dp"
             android:padding="12dp" />
 
-        <ImageButton
-            android:id="@+id/reportPoiButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:src="@drawable/ic_report_problem_black_24dp" />
-
         <TextView
             android:id="@+id/title_occupation"
             style="@style/p"
@@ -233,7 +226,13 @@
 
             </TableRow>
         </TableLayout>
-
+        <ImageButton
+            android:id="@+id/reportPoiButton"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_report_problem_black_24dp" />
     </RelativeLayout>
 
 </LinearLayout>
