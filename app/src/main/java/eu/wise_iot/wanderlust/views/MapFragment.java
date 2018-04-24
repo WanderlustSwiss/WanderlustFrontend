@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.database.MatrixCursor;
 import android.graphics.Rect;
 import android.location.LocationManager;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
@@ -32,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,6 +83,7 @@ import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 public class MapFragment extends Fragment {
     private static final String TAG = "MapFragment";
 
+    private LinearLayout poiTypeSelection;
     public static String photoPath;
     private static String imageFileName;
     private static DatabaseController databaseController;
@@ -167,6 +171,7 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        poiTypeSelection = (LinearLayout) view.findViewById(R.id.poiTypeSelection);
         initMap(view);
         initOverlays();
         initMapController();
@@ -341,7 +346,6 @@ public class MapFragment extends Fragment {
         inflater.inflate(R.menu.map_fragment_layer_menu, menu);
 
         // initSearchView(menu);
-
     }
 
     /**
@@ -574,7 +578,6 @@ public class MapFragment extends Fragment {
      */
     private void initLayerButton(View view) {
         layerButton = (ImageButton) view.findViewById(R.id.layerButton);
-
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
 
@@ -585,6 +588,10 @@ public class MapFragment extends Fragment {
         // register behavior on clicked
         layerButton.setOnClickListener(view1 -> {
             if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                NestedScrollView layout = (NestedScrollView) view.findViewById(R.id.bottom_sheet);
+                ViewGroup.LayoutParams params = layout.getLayoutParams();
+                //params.height = 600;
+                layout.setLayoutParams(params);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             } else {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -599,7 +606,6 @@ public class MapFragment extends Fragment {
 
         sacHutLayerButton = (ImageButton) view.findViewById(R.id.public_sac_layer_button);
         showSacHutOverlay(false);
-
 
         publicTransportLayerButton.setOnClickListener(v -> {
             boolean toggleLayer = !publicTransportLayerButton.isSelected();
