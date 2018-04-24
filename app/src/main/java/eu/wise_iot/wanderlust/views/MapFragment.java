@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.database.MatrixCursor;
 import android.graphics.Rect;
 import android.location.LocationManager;
+import android.media.Image;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -104,6 +105,7 @@ public class MapFragment extends Fragment {
     private ImageButton staliteTypeButton;
     private ImageButton defaultTypeButton;
     private ImageButton terrainTypeButton;
+    private ImageButton ibPoiWarningsLayer, ibPoiNatureLayer, ibPoiRestaurantLayer, ibPoiViewLayer;
     private View bottomSheet;
     private SearchView searchView;
     private MapController searchMapController;
@@ -174,6 +176,37 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        ibPoiNatureLayer = (ImageButton) view.findViewById(R.id.poiTypesNature);
+        ibPoiRestaurantLayer = (ImageButton) view.findViewById(R.id.poiTypesRestaurant);
+        ibPoiViewLayer = (ImageButton) view.findViewById(R.id.poiTypesView);
+        ibPoiWarningsLayer = (ImageButton) view.findViewById(R.id.poiTypesWarning);
+
+        ibPoiWarningsLayer.setSelected(true);
+        ibPoiNatureLayer.setSelected(true);
+        ibPoiRestaurantLayer.setSelected(true);
+        ibPoiViewLayer.setSelected(true);
+        ibPoiWarningsLayer.setSelected(true);
+
+        ibPoiWarningsLayer.setOnClickListener(v -> {
+            if(ibPoiWarningsLayer.isSelected()){
+                mapOverlays.setPoiWarningActive(false);
+                ibPoiWarningsLayer.setImageResource(R.drawable.ic_train_white_40dp);
+                ibPoiWarningsLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+                ibPoiWarningsLayer.setSelected(false);
+            } else {
+                mapOverlays.setPoiWarningActive(true);
+                ibPoiWarningsLayer.setImageResource(R.drawable.ic_train_black_40dp);
+                ibPoiWarningsLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+                ibPoiWarningsLayer.setSelected(true);
+            }
+
+            //mapOverlays.setPoiNatureActive(ibPoiNatureLayer.getTag() == "active");
+            mapOverlays.setPoiWarningActive(ibPoiWarningsLayer.isSelected());
+            //mapOverlays.setPoiRestaurantActive(ibPoiRestaurantLayer.getTag() == "active");
+            //mapOverlays.setPoiViewActive(ibPoiViewLayer.getTag() == "active");
+            //showPoiOverlay(!poiLayerButton.isSelected());
+        });
+
         initMap(view);
         initOverlays();
         initMapController();
@@ -204,7 +237,6 @@ public class MapFragment extends Fragment {
         createTourButton = (ImageButton) view.findViewById(R.id.createTourButton);
         creatingTourInformation = (TextView) view.findViewById(R.id.createTourInformation);
         createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
-
 
         createTourButton.setOnClickListener(view1 -> {
             if (!isMyServiceRunning(CreateTourBackgroundTask.class)) {
@@ -487,6 +519,7 @@ public class MapFragment extends Fragment {
                 && lastKnownLocation.getLongitude() != 0) {
             mapOverlays.addPositionMarker(lastKnownLocation);
         }
+
     }
 
     /**

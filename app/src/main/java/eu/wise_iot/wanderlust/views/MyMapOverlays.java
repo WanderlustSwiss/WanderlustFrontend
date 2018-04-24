@@ -38,6 +38,7 @@ import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PublicTransportPoint;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
@@ -54,6 +55,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private final MapView mapView;
     private Polyline currentTour;
     private final MapController searchMapController;
+    private boolean poiNatureActive, poiViewActive, poiRestaurantActive, poiWarningActive;
 
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiHashtagOverlay;
@@ -199,6 +201,18 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     }
 
+    public void setPoiNatureActive(boolean value){
+        this.poiNatureActive = value;
+    }
+    public void setPoiWarningActive(boolean value){
+        this.poiWarningActive = value;
+    }
+    public void setPoiViewActive(boolean value){
+        this.poiViewActive = value;
+    }
+    public void setPoiRestaurantActive(boolean value){
+        this.poiRestaurantActive = value;
+    }
     /**
      * Creates an OverlayItem from a poi with item considering the poi type
      */
@@ -247,6 +261,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public void addPoiToOverlay(Poi poi) {
         OverlayItem overlayItem = poiToOverlayItem(poi);
         poiOverlay.addItem(overlayItem);
+
     }
 
     /**
