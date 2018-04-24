@@ -4,6 +4,7 @@ package eu.wise_iot.wanderlust.controllers;
 import android.content.Context;
 
 import java.io.File;
+
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;

@@ -19,6 +19,8 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -60,6 +62,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> publicTransportOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> sacHutOverlay;
+    private CompassOverlay compassOverlay;
     private Marker positionMarker;
     private Marker focusedPositionMarker;
     private ArrayList<Polyline> borderLines;
@@ -75,14 +78,22 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         this.activity = activity;
         this.mapView = mapView;
         this.currentTour = null;
+
         initPoiOverlay();
-        //populatePoiOverlay();
         mapView.getOverlays().add(poiOverlay);
         mapView.getOverlays().add(poiHashtagOverlay);
 
         initScaleBarOverlay();
         initMyLocationNewOverlay();
-//        initGpxTourlistOverlay();
+        initCompassOverlay();
+    }
+
+
+    private void initCompassOverlay(){
+        compassOverlay = new CompassOverlay(activity, mapView);
+        compassOverlay.enableCompass();
+        compassOverlay.setCompassCenter(30,  80);
+        mapView.getOverlays().add(compassOverlay);
     }
 
     /**
