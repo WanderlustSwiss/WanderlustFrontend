@@ -329,6 +329,7 @@ public class PoiViewDialog extends DialogFragment {
      * report the current poi for violation
      */
     private void reportPoi(){
-        
+        PoiReportDialog dialog = new PoiReportDialog().newInstance(currentPoi, controller);
+        dialog.show(getFragmentManager(), Constants.REPORT_POI_DIALOG);
     }
 }

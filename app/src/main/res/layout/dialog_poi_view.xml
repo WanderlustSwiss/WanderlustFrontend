@@ -136,6 +136,13 @@
             android:layout_marginTop="16dp"
             android:padding="12dp" />
 
+        <ImageButton
+            android:id="@+id/reportPoiButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/ic_report_problem_black_24dp" />
+
         <TextView
             android:id="@+id/title_occupation"
             style="@style/p"
@@ -159,74 +166,63 @@
                 android:id="@+id/table_row_3"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:gravity="center">
+                android:gravity="center"
+                android:padding="12dp">
 
                 <TextView
                     android:id="@+id/occupation_jan"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_january">
-                </TextView>
+                    android:text="@string/short_january"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_feb"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_february">
-                </TextView>
+                    android:text="@string/short_february"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_mär"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_march">
-                </TextView>
+                    android:text="@string/short_march"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_apr"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_april">
-                </TextView>
+                    android:text="@string/short_april"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_mai"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_mai">
-                </TextView>
+                    android:text="@string/short_mai"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_jun"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_june">
-                </TextView>
+                    android:text="@string/short_june"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_jul"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_july">
-                </TextView>
+                    android:text="@string/short_july"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_aug"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_august">
-                </TextView>
+                    android:text="@string/short_august"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_sep"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_september">
-                </TextView>
+                    android:text="@string/short_september"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_okt"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_october">
-                </TextView>
+                    android:text="@string/short_october"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_nov"
                     style="@style/sac_occupation_table"
-                    android:text="@string/short_november">
-                </TextView>
+                    android:text="@string/short_november"></TextView>
 
                 <TextView
                     android:id="@+id/occupation_dez"
@@ -234,17 +230,10 @@
                     android:text="@string/short_december">
 
                 </TextView>
+
             </TableRow>
         </TableLayout>
-    </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/reportPoiButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:background="@null"
-        android:layout_marginBottom="5dp"
-        android:src="@drawable/ic_report_problem_black_24dp" />
+    </RelativeLayout>
 
 </LinearLayout>

@@ -427,11 +427,11 @@ public class TourController {
         return regionDao.find();
     }
 
-    public void reportViolation(Violation violation, final FragmentHandler handler){
-        Call<Violation> call = ServiceGenerator.createService(ViolationService.class).sendTourViolation(violation);
-        call.enqueue(new Callback<Violation>() {
+    public void reportViolation(TourController.Violation violation, final FragmentHandler handler){
+        Call<Void> call = ServiceGenerator.createService(ViolationService.class).sendTourViolation(violation);
+        call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Violation> call, retrofit2.Response<Violation> response) {
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful())
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 else
@@ -439,18 +439,29 @@ public class TourController {
             }
 
             @Override
-            public void onFailure(Call<Violation> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
+
+    /**
+     * represents a tour violation
+     * structure needs to be kept like this for retrofit
+     * @author Alexander Weinbeck
+     * @license MIT
+     */
     public class Violation{
-        long tour_id;
-        long violationType_id;
+        int tour_id;
+        int type;
+
+        public Violation(){
+
+        }
 
         public Violation(long tour_id, long violationType_id){
-            this.tour_id = tour_id;
-            this.violationType_id = violationType_id;
+            this.tour_id = (int)tour_id;
+            this.type = (int)violationType_id;
         }
     }
 }

@@ -14,7 +14,7 @@ import retrofit2.http.POST;
  */
 public interface ViolationService {
     @POST("violation/poi")
-    Call<PoiController.Violation> sendPoiViolation(@Body PoiController.Violation violation);
+    Call<Void> sendPoiViolation(@Body PoiController.Violation violation);
     @POST("violation/tour")
-    Call<TourController.Violation> sendTourViolation(@Body TourController.Violation violation);
+    Call<Void> sendTourViolation(@Body TourController.Violation violation);
 }

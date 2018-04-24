@@ -83,7 +83,6 @@ public class TourReportDialog extends DialogFragment {
         else if(rbViolence.isChecked()) violationName = rbViolence.getTag().toString();
         else if(violationName == null) violationName = "other";
 
-
         ViolationType violationType = violationTypeDao.getViolationTypebyName(violationName);
 
         tourController.reportViolation(tourController.new Violation(this.tour.getTour_id(), violationType.getViolationt_id()), controllerEvent -> {

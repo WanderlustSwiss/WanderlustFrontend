@@ -43,6 +43,7 @@
 
             <RadioButton
                 android:id="@+id/violationPoiNudity"
+                android:tag="nudity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_nudity"
@@ -50,36 +51,42 @@
 
             <RadioButton
                 android:id="@+id/violationPoiViolence"
+                android:tag="violence"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_violence" />
 
             <RadioButton
                 android:id="@+id/violationPoiHarassment"
+                android:tag="harassment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_harassment" />
 
             <RadioButton
                 android:id="@+id/violationPoiSuicide"
+                android:tag="suicide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_suicide" />
 
             <RadioButton
                 android:id="@+id/violationPoiSpam"
+                android:tag="spam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_spam" />
 
             <RadioButton
                 android:id="@+id/violationPoiHateSpeech"
+                android:tag="hate speech"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_hatespeech" />
 
             <RadioButton
                 android:id="@+id/violationPoiOther"
+                android:tag="other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/violation_other" />

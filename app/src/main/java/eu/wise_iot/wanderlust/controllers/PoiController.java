@@ -56,7 +56,6 @@ public class PoiController {
         return poiTypeDao.findOne(PoiType_.poit_id, poit_id);
     }
 
-
     /**
      * saves a newly generated poi into the database
      *
@@ -162,10 +161,10 @@ public class PoiController {
     }
 
     public void reportViolation(PoiController.Violation violation, final FragmentHandler handler) {
-        Call<PoiController.Violation> call = ServiceGenerator.createService(ViolationService.class).sendPoiViolation(violation);
-        call.enqueue(new Callback<PoiController.Violation>() {
+        Call<Void> call = ServiceGenerator.createService(ViolationService.class).sendPoiViolation(violation);
+        call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<PoiController.Violation> call, retrofit2.Response<PoiController.Violation> response) {
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
                 if (response.isSuccessful())
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 else
@@ -173,20 +172,27 @@ public class PoiController {
             }
 
             @Override
-            public void onFailure(Call<PoiController.Violation> call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
 
+    /**
+     * represents a poi violation
+     * structure needs to be kept like this for retrofit
+     * @author Alexander Weinbeck
+     * @license MIT
+     */
     public class Violation{
-        long poi_id;
-        ViolationType violationType;
+        int poi_id;
+        int type;
 
-        public Violation(long poi_id, ViolationType violationType){
-            this.poi_id = poi_id;
-            this.violationType = violationType;
+        public Violation(){
+        }
+        public Violation(long poi_id, long violationType_id){
+            this.poi_id = (int)poi_id;
+            this.type = (int)violationType_id;
         }
     }
-
 }
