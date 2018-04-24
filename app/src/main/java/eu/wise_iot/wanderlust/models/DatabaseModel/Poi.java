@@ -229,6 +229,7 @@ public class Poi extends AbstractModel {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
+
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {
         @Override
         public List<ImageInfo> convertToEntityProperty(String databaseValue) {

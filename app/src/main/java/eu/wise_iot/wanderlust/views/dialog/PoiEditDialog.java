@@ -18,6 +18,7 @@ import android.widget.Toast;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
+import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -26,9 +27,11 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
 
@@ -53,6 +56,7 @@ public class PoiEditDialog extends DialogFragment {
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
     private PoiController controller;
+    private ImageController imageController;
     private boolean isNewPoi;
     private boolean publish;
     private FragmentHandler poiPhotoUploadHandler;
@@ -95,6 +99,7 @@ public class PoiEditDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         controller = new PoiController();
+        imageController = ImageController.getInstance();
         context = getActivity();
 
         Bundle args = getArguments();
@@ -224,9 +229,9 @@ public class PoiEditDialog extends DialogFragment {
 
                 controller.saveNewPoi(this.poi, poiHandler);
             } else {
+                File poiImage = new File(this.poi.getImageById(1).getLocalPath());
                 if (publish) {
-                    //TODO only uploads first image
-                    controller.uploadImage(new File(this.poi.getImageById(1).getLocalPath()), this.poi, controllerEvent -> {
+                    controller.uploadImage(poiImage, poi, controllerEvent -> {
                         switch (controllerEvent.getType()) {
                             case OK:
                                 controller.updatePoi(poi, poiHandler);

@@ -90,7 +90,6 @@ public class MapFragment extends Fragment {
     private int zoomLevel;
     private GeoPoint centerOfMap;
     private GeoPoint lastKnownLocation;
-    //private MapView mapView;
     private WanderlustMapView mapView;
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
@@ -101,7 +100,6 @@ public class MapFragment extends Fragment {
     private ImageButton defaultTypeButton;
     private ImageButton terrainTypeButton;
     private View bottomSheet;
-    private SearchView searchView;
     private MapController searchMapController;
     private static Polyline polyline;
 
@@ -154,7 +152,6 @@ public class MapFragment extends Fragment {
         setHasOptionsMenu(true);
         loadPreferences();
         getActivity().setTitle("");
-
 
         // For search View
         final String[] from = new String[]{"hashTag"};
@@ -426,11 +423,6 @@ public class MapFragment extends Fragment {
      */
     private void initMap(View view) {
         mapView = (WanderlustMapView) view.findViewById(R.id.mapView);
-        //https://osm.rrze.fau.de/
-//        ITileSource tileSource = new XYTileSource("RRZE",
-//                0, 19, 512, ".png",
-//                new String[] { "http://osm.rrze.fau.de/osmhd/" });
-
         ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
                 new String[]{"https://opentopomap.org/"});
         mapView.setTileSource(tileSource);
@@ -553,6 +545,7 @@ public class MapFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.msg_camera_no_gps, Toast.LENGTH_SHORT).show();
                 takePicture();
             } else {
+
                 mapOverlays.getMyLocationNewOverlay().enableMyLocation();
                 Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
                 mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {

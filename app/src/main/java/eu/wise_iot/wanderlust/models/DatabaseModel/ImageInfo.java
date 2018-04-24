@@ -13,7 +13,6 @@ public class ImageInfo {
     }
 
     public ImageInfo(long id, String name, String localDir){
-        // Todo: Refactor id
         this.id = id;
         this.name = name;
         this.localDir = localDir;
