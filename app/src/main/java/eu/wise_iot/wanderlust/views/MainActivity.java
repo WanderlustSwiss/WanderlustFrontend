@@ -95,23 +95,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 return;
             }
-            loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
-                User logInUser = (User) controllerEvent.getModel();
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        setupDrawerHeader(logInUser);
-                        MapFragment mapFragment = MapFragment.newInstance();
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                                .commit();
-                        break;
-                    default:
-                        StartupLoginFragment loginFragment = new StartupLoginFragment();
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
-                                .commit();
-                }
-            });
+            if (user.getAccountType().equals("instagram")){
+                Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
+                if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                        .commit();
+            }else{
+                loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
+                    User logInUser = (User) controllerEvent.getModel();
+                    switch (controllerEvent.getType()) {
+                        case OK:
+                            setupDrawerHeader(logInUser);
+                            MapFragment mapFragment = MapFragment.newInstance();
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                    .commit();
+                            break;
+                        default:
+                            StartupLoginFragment loginFragment = new StartupLoginFragment();
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
+                                    .commit();
+                    }
+                });
+            }
         }
     }
 

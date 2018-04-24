@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
@@ -31,6 +33,7 @@ public class TourRatingDialog extends DialogFragment {
     private static TourController controller;
     private static Tour tour;
     private static RatingBar ratingBar;
+    private static TextView tourRatingInNumbers;
 
     private ImageButton[] starButtonCollection = new ImageButton[5];
 
@@ -54,11 +57,13 @@ public class TourRatingDialog extends DialogFragment {
     private int countRatedStars = 0;
 
     public static TourRatingDialog newInstance(Tour paramTour, TourController tourController,
-                                               RatingBar paramRatingBar) {
+                                               RatingBar paramRatingBar,
+                                               TextView paramTourRatingInNumbers) {
         TourRatingDialog fragment = new TourRatingDialog();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         ratingBar = paramRatingBar;
+        tourRatingInNumbers = paramTourRatingInNumbers;
         tour = paramTour;
         controller = tourController;
         return fragment;
@@ -108,7 +113,11 @@ public class TourRatingDialog extends DialogFragment {
                     controller.getRating(tour, controllerEvent1 -> {
                         switch (controllerEvent1.getType()) {
                             case OK:
-                                ratingBar.setRating((float) controllerEvent1.getModel());
+
+                                float rateAvg = (float) controllerEvent1.getModel();
+                                float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateAvg * 2) / 2.0));
+                                tourRatingInNumbers.setText(rateAvgRound + "");
+                                ratingBar.setRating(rateAvgRound);
                         }
                     });
                 }

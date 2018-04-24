@@ -401,7 +401,7 @@ public class TourFragment extends Fragment {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
                     TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
-                            tourRating);
+                            tourRating, tourRatingInNumbers);
                     dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();

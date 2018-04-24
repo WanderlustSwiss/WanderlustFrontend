@@ -20,6 +20,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.UserService;
 import eu.wise_iot.wanderlust.views.MainActivity;
 import okhttp3.Headers;
 import retrofit2.Call;
@@ -57,7 +58,6 @@ public class LoginController {
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
 
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
         MainActivity.activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         String resolution = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
@@ -72,8 +72,8 @@ public class LoginController {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-                    initAppData();
                     User updatedUser = response.body();
+                    initAppData();
                     User internalUser = userDao.getUser();
                     if (internalUser == null){
                         updatedUser.setInternalId(0);
@@ -96,7 +96,40 @@ public class LoginController {
             }
         });
     }
+    public void logInInstagram(String cookie, final FragmentHandler handler){
+        ArrayList<String> cookieList = new ArrayList<>();
+        cookieList.add(cookie);
+        LoginUser.setCookies(cookieList);
 
+        UserService service = ServiceGenerator.createService(UserService.class);
+        Call<User> call = service.retrieveUser();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()){
+                    User updatedUser = response.body();
+                    initAppData();
+                    User internalUser = userDao.getUser();
+                    if (internalUser == null){
+                        updatedUser.setInternalId(0);
+                        UserDao.getInstance().removeAll();
+                    }else{
+                        updatedUser.setInternalId(internalUser.getInternalId());
+                    }
+
+                    userDao.update(updatedUser);
+                    getProfile(handler, updatedUser);
+                }else{
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+
+    }
     private void getProfile(FragmentHandler handler, User user){
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
         Call<Profile> call = service.retrieveProfile();
