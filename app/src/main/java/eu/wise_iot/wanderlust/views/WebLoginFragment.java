@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.regex.Matcher;
@@ -45,6 +48,7 @@ public class WebLoginFragment extends Fragment  {
 
     private Context context;
     private WebView webview;
+    private LinearLayout instagramContainer;
     private final String target_url;
     private LoginUser loginUser;
     private final LoginController loginController;
@@ -120,9 +124,11 @@ public class WebLoginFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_web_login, container, false);
+        instagramContainer = (LinearLayout) view.findViewById(R.id.web_login_instagram_layout);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         webview = (WebView) view.findViewById(R.id.web_login);
+        webview.setBackgroundColor(getResources().getColor(R.color.primary_main));
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setAppCacheEnabled(true);
@@ -132,6 +138,7 @@ public class WebLoginFragment extends Fragment  {
 
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                instagramContainer.setVisibility(View.GONE);
                 String webUrl = webview.getUrl();
                 String cookies = CookieManager.getInstance().getCookie(url);
                 if (webUrl.contains("instagram?code=")){
