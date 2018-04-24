@@ -11,7 +11,7 @@
     android:clickable="true">
 
     <ImageView
-        android:id="@+id/tour_image"
+        android:id="@+id/tourOVTourImage"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:scaleType="centerInside"/>
@@ -37,7 +37,7 @@
                 android:showDividers="middle">
 
                 <TextView
-                    android:id="@+id/tour_title"
+                    android:id="@+id/tourOVTourTitle"
                     style="@style/p"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -56,18 +56,18 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/imageDistance"
+                        android:id="@+id/tourOVImageDistance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_directions_walk_black_24dp" />
 
                     <TextView
-                        android:id="@+id/tour_distance"
+                        android:id="@+id/tourOVTourDistance"
                         style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/imageDistance"
+                        android:layout_toRightOf="@id/tourOVImageDistance"
                         android:paddingLeft="12dp" />
                 </RelativeLayout>
 
@@ -81,18 +81,18 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/imageTime"
+                        android:id="@+id/tourOVImageTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_timer_black_24dp" />
 
                     <TextView
-                        android:id="@+id/tourTime"
+                        android:id="@+id/tourOVTourTime"
                         style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/imageTime"
+                        android:layout_toRightOf="@id/tourOVImageTime"
                         android:paddingLeft="12dp" />
                 </RelativeLayout>
 
@@ -106,18 +106,18 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/imageDifficulty"
+                        android:id="@+id/tourOVImageDifficulty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_fiber_manual_record_black_24dp" />
 
                     <TextView
-                        android:id="@+id/tour_difficulty"
+                        android:id="@+id/tourOVTourDifficulty"
                         style="@style/p"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/imageDifficulty"
+                        android:layout_toRightOf="@id/tourOVImageDifficulty"
                         android:paddingLeft="12dp" />
                 </RelativeLayout>
             </LinearLayout>
@@ -129,7 +129,7 @@
                 android:layout_marginStart="6dp">
 
                 <ImageButton
-                    android:id="@+id/favoriteButton"
+                    android:id="@+id/tourOVFavoriteButton"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@null"
@@ -142,7 +142,7 @@
                     android:layout_weight="1" />
 
                 <ImageButton
-                    android:id="@+id/saveButton"
+                    android:id="@+id/tourOVSaveButton"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@null"
@@ -155,7 +155,7 @@
                     android:layout_weight="1" />
 
                 <ImageButton
-                    android:id="@+id/shareButton"
+                    android:id="@+id/tourOVShareButton"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@null"

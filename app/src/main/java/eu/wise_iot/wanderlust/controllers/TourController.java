@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
@@ -24,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -33,16 +36,23 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
+import eu.wise_iot.wanderlust.services.DifficultyTypeService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.ViolationService;
 import io.objectbox.Property;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 /**
@@ -77,6 +87,7 @@ public class TourController {
     private CommunityTourDao communityTourDao;
     private DifficultyTypeDao difficultyTypeDao;
     private RegionDao regionDao;
+    private RecentTourDao recentTourDao;
     private ImageController imageController;
 
     private static final String TAG = "Tourcontroller";
@@ -91,9 +102,13 @@ public class TourController {
         ratingDao = RatingDao.getInstance();
         imageController = ImageController.getInstance();
         regionDao = RegionDao.getInstance();
+        recentTourDao = RecentTourDao.getInstance();
     }
 
 
+    public void addRecentTour(Tour tour){
+        recentTourDao.create(tour);
+    }
     /**
      * True if Favorite is set, otherwise false
      */
@@ -368,6 +383,7 @@ public class TourController {
         return dt.toString(decodef);
     }
 
+
     public long getAscent() {
         return tour.getAscent();
     }
@@ -411,5 +427,42 @@ public class TourController {
         return regionDao.find();
     }
 
+    public void reportViolation(TourController.Violation violation, final FragmentHandler handler){
+        Call<Void> call = ServiceGenerator.createService(ViolationService.class).sendTourViolation(violation);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful())
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                else
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+
+    /**
+     * represents a tour violation
+     * structure needs to be kept like this for retrofit
+     * @author Alexander Weinbeck
+     * @license MIT
+     */
+    public class Violation{
+        int tour_id;
+        int type;
+
+        public Violation(){
+
+        }
+
+        public Violation(long tour_id, long violationType_id){
+            this.tour_id = (int)tour_id;
+            this.type = (int)violationType_id;
+        }
+    }
 }
 

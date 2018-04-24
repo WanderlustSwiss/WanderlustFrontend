@@ -53,24 +53,14 @@ public class PoiViewDialog extends DialogFragment {
     //Assume there is only 1 PoiViewDialog
     private static Poi currentPoi;
     private Activity context;
-    private ImageView poiImage;
-    private ImageView displayModeImage;
-    private TextView typeTextView;
-    private TextView elevationTextView;
-    private TextView titleTextView;
-    private TextView dateTextView;
-    private TextView descriptionTextView;
-    private ImageButton closeDialogButton;
-    private ImageButton editPoiButton;
-    private ImageButton deletePoiButton;
-    private ImageButton sharePoiButton;
+    private ImageView poiImage, displayModeImage;
+    private TextView typeTextView, elevationTextView, titleTextView, dateTextView, descriptionTextView;
+    private ImageButton closeDialogButton, editPoiButton, deletePoiButton, sharePoiButton, reportPoiButton;
     private PoiController controller;
     private ImageController imageController;
     private TextView occupationTitleSac;
     private TableLayout sacOccupation;
     private Map<String, Integer> monthIds = new HashMap<>();
-
-
     /**
      * Create a PoiViewDialog from a Poi object
      *
@@ -139,6 +129,7 @@ public class PoiViewDialog extends DialogFragment {
         sharePoiButton = (ImageButton) view.findViewById(R.id.poi_share_button);
         sacOccupation = (TableLayout) view.findViewById(R.id.tableLayout_occupation_sac);
         occupationTitleSac = (TextView) view.findViewById(R.id.title_occupation);
+        reportPoiButton = (ImageButton) view.findViewById(R.id.reportPoiButton);
         // default not visible
         sacOccupation.setVisibility(View.GONE);
         occupationTitleSac.setVisibility(View.GONE);
@@ -160,6 +151,7 @@ public class PoiViewDialog extends DialogFragment {
     private void initActionControls() {
 
         sharePoiButton.setOnClickListener(v -> shareImage());
+        reportPoiButton.setOnClickListener(v -> reportPoi());
 
         closeDialogButton.setOnClickListener(v -> {
             // dismisses the current dialog view
@@ -329,8 +321,6 @@ public class PoiViewDialog extends DialogFragment {
         return editedDescription.substring(0, lasIndex);
     }
 
-
-
     private void initMonthTableString() {
         monthIds.put("jan", R.id.occupation_jan);
         monthIds.put("feb", R.id.occupation_feb);
@@ -346,4 +336,11 @@ public class PoiViewDialog extends DialogFragment {
         monthIds.put("dez", R.id.occupation_dez);
     }
 
+    /**
+     * report the current poi for violation
+     */
+    private void reportPoi(){
+        PoiReportDialog dialog = new PoiReportDialog().newInstance(currentPoi, controller);
+        dialog.show(getFragmentManager(), Constants.REPORT_POI_DIALOG);
+    }
 }

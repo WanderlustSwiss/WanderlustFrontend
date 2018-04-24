@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -27,8 +28,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.datatype.Duration;
-
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ImageController;
@@ -49,12 +48,13 @@ import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 public class TourOverviewFragment extends Fragment {
     private static final String TAG = "TourOverviewFragment";
     private Context context;
-    private ToursOverviewRVAdapter adapterRoutes, adapterFavs;
+    private ToursOverviewRVAdapter adapterRoutes, adapterFavs, adapterRecent;
     private List<Tour> listTours;
     private final List<Tour> favTours = new ArrayList<>();
-    private RecyclerView rvTours, rvFavorites;
-    private ProgressBar pbTours, pbFavorites;
-    private TextView tvToursAllPlaceholder, tvToursFavoritePlaceholder;
+    private final List<Tour> recentTours = new ArrayList<>();
+    private RecyclerView rvTours, rvFavorites, rvRecent;
+    private ProgressBar pbTours, pbFavorites, pbRecent;
+    private TextView tvToursAllPlaceholder, tvToursFavoritePlaceholder, tvToursRecentPlaceholder;
     private TourOverviewController toc;
     private int currentPage = 0;
     private ImageController imageController;
@@ -155,7 +155,6 @@ public class TourOverviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tour_overview, container, false);
 
         tvToursAllPlaceholder = (TextView) view.findViewById(R.id.tvToursAllPlaceholder);
-        tvToursFavoritePlaceholder = (TextView) view.findViewById(R.id.tvToursFavoritePlaceholder);
         // set up the RecyclerView Tours
         rvTours = (RecyclerView) view.findViewById(R.id.rvTouren);
         pbTours = (ProgressBar) view.findViewById(R.id.pbTouren);
@@ -169,6 +168,7 @@ public class TourOverviewFragment extends Fragment {
         itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
         rvTours.addItemDecoration(itemDecorator);
 
+        tvToursFavoritePlaceholder = (TextView) view.findViewById(R.id.tvToursFavoritePlaceholder);
         // set up the RecyclerView favorites
         rvFavorites = (RecyclerView) view.findViewById(R.id.rvFavorites);
         pbFavorites = (ProgressBar) view.findViewById(R.id.pbFavorites);
@@ -177,6 +177,31 @@ public class TourOverviewFragment extends Fragment {
         adapterFavs = new ToursOverviewRVAdapter(context, favTours);
         adapterFavs.setClickListener(this::onItemClickImages);
         rvFavorites.setAdapter(adapterFavs);
+
+        tvToursRecentPlaceholder = (TextView) view.findViewById(R.id.tvToursRecentPlaceholder);
+        // set up the RecyclerView favorites
+        rvRecent = (RecyclerView) view.findViewById(R.id.rvRecent);
+        pbRecent = (ProgressBar) view.findViewById(R.id.pbRecent);
+        LinearLayoutManager horizontalLayoutManager3 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        rvRecent.setLayoutManager(horizontalLayoutManager3);
+        adapterRecent = new ToursOverviewRVAdapter(context, recentTours);
+        adapterRecent.setClickListener(this::onItemClickImages);
+        rvRecent.setAdapter(adapterRecent);
+
+        recentTours.clear();
+        recentTours.addAll(toc.getRecentTours());
+        getDataFromServer(recentTours);
+        adapterRecent.notifyDataSetChanged();
+
+        if(adapterRecent.getItemCount() > 0) {
+            rvRecent.setVisibility(View.VISIBLE);
+            tvToursRecentPlaceholder.setVisibility(View.GONE);
+            pbRecent.setVisibility(View.GONE);
+        } else {
+            rvRecent.setVisibility(View.GONE);
+            tvToursRecentPlaceholder.setVisibility(View.VISIBLE);
+            pbRecent.setVisibility(View.GONE);
+        }
 
         //get all tours
         toc.getAllTours(currentPage, event -> {
@@ -218,7 +243,7 @@ public class TourOverviewFragment extends Fragment {
                 case OK:
                     Log.d(TAG, "refresh Favorites");
                     List<Tour> list = (List<Tour>) controllerEvent.getModel();
-
+                    TourOverviewFragment.this.favTours.clear();
                     for (Tour tour : list)
                         for (ImageInfo imageInfo : tour.getImagePaths())
                             imageInfo.setLocalDir(imageController.getTourFolder());
@@ -284,9 +309,9 @@ public class TourOverviewFragment extends Fragment {
 
     private void onItemClickImages(View view, Tour tour) {
         switch (view.getId()) {
-            case R.id.favoriteButton:
+            case R.id.tourOVFavoriteButton:
                 Log.d(TAG,"Tour Favorite Clicked and event triggered ");
-                ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.favoriteButton);
+                ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.tourOVFavoriteButton);
                 Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
                 long favId = toc.getTourFavoriteId(tour.getTour_id());
                 if(favId != -1) {
@@ -303,6 +328,7 @@ public class TourOverviewFragment extends Fragment {
                                 //notify observer of adapters
                                 adapterFavs.notifyDataSetChanged();
                                 adapterRoutes.notifyDataSetChanged();
+                                adapterRecent.notifyDataSetChanged();
                                 if(adapterFavs.getItemCount() > 0) {
                                     rvFavorites.setVisibility(View.VISIBLE);
                                     tvToursFavoritePlaceholder.setVisibility(View.GONE);
@@ -330,6 +356,7 @@ public class TourOverviewFragment extends Fragment {
                                 //notify adapter of dataset change
                                 adapterRoutes.notifyDataSetChanged();
                                 adapterFavs.notifyDataSetChanged();
+                                adapterRecent.notifyDataSetChanged();
                                 if(adapterFavs.getItemCount() > 0) {
                                     rvFavorites.setVisibility(View.VISIBLE);
                                     tvToursFavoritePlaceholder.setVisibility(View.GONE);
@@ -347,8 +374,8 @@ public class TourOverviewFragment extends Fragment {
                     });
                 }
                 break;
-            case R.id.saveButton:
-                ImageButton ibSave = (ImageButton) view.findViewById(R.id.saveButton);
+            case R.id.tourOVSaveButton:
+                ImageButton ibSave = (ImageButton) view.findViewById(R.id.tourOVSaveButton);
                 TourController controller = new TourController(tour);
                 Log.d("SAVE", "klickt...");
                 boolean saved = controller.isSaved();
@@ -357,14 +384,24 @@ public class TourOverviewFragment extends Fragment {
                     boolean unset = controller.unsetSaved();
                     if(unset){
                         ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        adapterRoutes.notifyDataSetChanged();
+                        adapterFavs.notifyDataSetChanged();
+                        adapterRecent.notifyDataSetChanged();
                     }
                 }else{
                     Log.d("SAVED", "nicht saved");
                     boolean set = controller.setSaved();
                     if(set){
                         ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                        adapterRoutes.notifyDataSetChanged();
+                        adapterFavs.notifyDataSetChanged();
+                        adapterRecent.notifyDataSetChanged();
                     }
                 }
+                break;
+            case R.id.tourOVShareButton:
+                Log.d(TAG,"Tour share");
+                shareTour(tour);
                 break;
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
@@ -381,8 +418,19 @@ public class TourOverviewFragment extends Fragment {
                         .commit();
                 ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                 break;
-
             //the same can be applied to other components in Row_Layout.xml
         }
+    }
+    /**
+     * shares the tour with other apps
+     */
+    private void shareTour(Tour tour){
+        //TODO check what @ will be used
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        String description = tour.getDescription() + getResources().getString(R.string.app_domain);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, description);
+        shareIntent.putExtra(Intent.EXTRA_TITLE, tour.getTitle());
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, tour.getTitle());
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
     }
 }

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
@@ -17,6 +16,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -41,6 +41,7 @@ public class LoginController {
     private final EquipmentController equipmentController;
     private final RegionDao regionDao;
     private final DifficultyTypeDao difficultyTypeDao;
+    private final ViolationTypeDao violationTypeDao;
     /**
      * Create a login contoller
      */
@@ -53,6 +54,7 @@ public class LoginController {
         equipmentController = EquipmentController.getInstance();
         regionDao = RegionDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
+        violationTypeDao = ViolationTypeDao.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
@@ -189,8 +191,9 @@ public class LoginController {
         databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
         weatherController.initKeys();
         equipmentController.initEquipment();
-        regionDao.retrive();
-        difficultyTypeDao.retrive();
+        regionDao.retrieve();
+        difficultyTypeDao.retrieve();
+        violationTypeDao.retrieveAllViolationTypes();
     }
 }
 

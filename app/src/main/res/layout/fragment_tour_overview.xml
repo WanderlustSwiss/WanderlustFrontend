@@ -15,6 +15,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
+            android:text="@string/recentTours"
+            android:padding="12dp"
+            android:textSize="30sp" />
+        <TextView
+            android:id="@+id/tvToursRecentPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:text="@string/tour_filter_noresult"/>
+        <ProgressBar
+            android:id="@+id/pbRecent"
+            style="?android:progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvRecent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:foregroundTint="@color/black"
             android:text="@string/tours"
             android:padding="12dp"

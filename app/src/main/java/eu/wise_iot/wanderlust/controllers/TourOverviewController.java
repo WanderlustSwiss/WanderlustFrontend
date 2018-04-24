@@ -2,11 +2,14 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.util.Log;
 
+import java.util.List;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
 /**
@@ -21,6 +24,7 @@ public class TourOverviewController {
     private static final String TAG = "TourOverviewController";
     private final UserTourDao userTourDao;
     private FavoriteDao favoriteDao;
+    private RecentTourDao recentTourDao;
     private final DifficultyTypeDao difficultyType;
     private final ImageController imageController;
 
@@ -30,6 +34,7 @@ public class TourOverviewController {
         favoriteDao = FavoriteDao.getInstance();
         difficultyType = DifficultyTypeDao.getInstance();
         imageController = ImageController.getInstance();
+        recentTourDao = RecentTourDao.getInstance();
     }
 
     /**
@@ -47,6 +52,14 @@ public class TourOverviewController {
      */
     public void getAllFavoriteTours(FragmentHandler handler) {
         favoriteDao.retrieveAllFavoriteTours(handler);
+    }
+
+    /**
+     * get all Favorites for the view
+     * @param handler
+     */
+    public List<Tour> getRecentTours() {
+        return recentTourDao.retrieveAll();
     }
     /**
      * get all tours out of db

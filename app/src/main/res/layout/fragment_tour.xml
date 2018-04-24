@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/tour_image"
+                    android:id="@+id/tourOVTourImage"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:scaleType="centerInside"
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/tour_title"
+                    android:id="@+id/tourOVTourTitle"
                     style="@style/h1.Light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -141,6 +141,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:src="@drawable/ic_reply_white_24dp" />
+
                 </LinearLayout>
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
@@ -165,7 +166,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tour_distance"
+                        android:id="@+id/tourOVTourDistance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -208,7 +209,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tour_difficulty"
+                    android:id="@+id/tourOVTourDifficulty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="5dp"
@@ -463,5 +464,14 @@
 
             </LinearLayout>
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/report_tour_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@null"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/ic_report_problem_black_24dp" />
     </LinearLayout>
 </ScrollView>

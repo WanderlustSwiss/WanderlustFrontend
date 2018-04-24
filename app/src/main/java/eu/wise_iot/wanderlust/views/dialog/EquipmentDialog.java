@@ -85,7 +85,7 @@ public class EquipmentDialog extends DialogFragment{
     }
 
     public void linkToOnlineShop(){
-        //String url = equipment.getUrl();
+        //String url = equipment.getAdLink();
         String url = "http://www.wanderlust-app.ch";
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));

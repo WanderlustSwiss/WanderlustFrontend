@@ -43,7 +43,7 @@
             android:layout_marginBottom="8dp">
 
             <EditText
-                android:id="@+id/tour_title"
+                android:id="@+id/tourOVTourTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/poi_fragment_textview_title"
@@ -73,7 +73,7 @@
             android:paddingTop="16dp" />
 
         <Spinner
-            android:id="@+id/tour_difficulty"
+            android:id="@+id/tourOVTourDifficulty"
             style="@style/default_spinner"
             android:entries="@array/dialog_difficulties"
             android:paddingTop="16dp" />

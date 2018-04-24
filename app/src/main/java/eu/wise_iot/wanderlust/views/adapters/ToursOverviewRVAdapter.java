@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,12 +11,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
@@ -26,7 +23,6 @@ import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
-import eu.wise_iot.wanderlust.views.MainActivity;
 
 
 /**
@@ -196,19 +192,20 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            tvDistance = (TextView) itemView.findViewById(R.id.tour_distance);
-            tvDifficulty = (TextView) itemView.findViewById(R.id.tour_difficulty);
-            tvTitle = (TextView) itemView.findViewById(R.id.tour_title);
-            tvTime = (TextView) itemView.findViewById(R.id.tourTime);
-            tvImage = (ImageView) itemView.findViewById(R.id.tour_image);
-            tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.imageDifficulty);
-            ibFavorite = (ImageButton) itemView.findViewById(R.id.favoriteButton);
-            ibSave = (ImageButton) itemView.findViewById(R.id.saveButton);
-            ibShare = (ImageButton) itemView.findViewById(R.id.shareButton);
+            tvDistance = (TextView) itemView.findViewById(R.id.tourOVTourDistance);
+            tvDifficulty = (TextView) itemView.findViewById(R.id.tourOVTourDifficulty);
+            tvTitle = (TextView) itemView.findViewById(R.id.tourOVTourTitle);
+            tvTime = (TextView) itemView.findViewById(R.id.tourOVTourTime);
+            tvImage = (ImageView) itemView.findViewById(R.id.tourOVTourImage);
+            tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.tourOVImageDifficulty);
+            ibFavorite = (ImageButton) itemView.findViewById(R.id.tourOVFavoriteButton);
+            ibSave = (ImageButton) itemView.findViewById(R.id.tourOVSaveButton);
+            ibShare = (ImageButton) itemView.findViewById(R.id.tourOVShareButton);
 
             itemView.setOnClickListener(this);
             ibFavorite.setOnClickListener(this);
             ibSave.setOnClickListener(this);
+            ibShare.setOnClickListener(this);
         }
 
         /**

@@ -4,9 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -76,6 +78,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.EquipmentDialog;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
+import eu.wise_iot.wanderlust.views.dialog.TourReportDialog;
 
 /**
  * TourController:
@@ -89,56 +92,20 @@ public class TourFragment extends Fragment {
     private static TourController tourController;
     private static EquipmentController equipmentController;
     private Context context;
-    private static Polyline polyline;
-
-    private ImageView imageViewTourImage;
-    private ImageButton favButton;
-    private ImageButton tourSavedButton;
-    private ImageButton tourSharedButton;
-    private ImageButton backbutton;
-    private TextView tourRegion;
-    private TextView tourTitle;
-    private TextView tourExecutionDate;
-    private TextView textViewTourDistance;
-    private TextView textViewAscend;
-    private TextView textViewDuration;
-    private TextView textViewDescend;
-    private TextView textViewDifficulty;
+    private ImageView imageViewTourImage, firstWeatherIcon, secondWeatherIcon, thirdWeatherIcon, forthWeatherIcon, fifthWeatherIcon;
+    private ImageButton favButton, tourSavedButton, tourSharedButton, tourReportButton, backbutton, tourDescriptionToggler;
+    private TextView selectedDay, tourRegion, tourTitle, tourExecutionDate, textViewTourDistance, textViewAscend, textViewDuration, textViewDescend, textViewDifficulty,
+                     firstTimePoint, secondTimePoint, thirdTimePoint, forthTimePoint, fifthTimePoint, tourRatingInNumbers,
+                     firstWeatherDegree, secondWeatherDegree, thirdWeatherDegree, forthWeatherDegree, fifthWeatherDegree;
     private ExpandableTextView tourDescriptionTextView;
-    private ImageButton tourDescriptionToggler;
 
-    private Button goToMapButton;
-
-    //weather related controlls
+    private Button goToMapButton, selectDayButton;
+    //weather related controls
     private static WeatherController weatherController;
     private List<Weather> weatherList;
-    private Button selectDayButton;
-    private TextView selectedDay;
     private DateTime selectedDateTime;
     private LinearLayout weatherInfos;
-
-    private ImageView firstWeatherIcon;
-    private ImageView secondWeatherIcon;
-    private ImageView thirdWeatherIcon;
-    private ImageView forthWeatherIcon;
-    private ImageView fifthWeatherIcon;
-
-    private TextView firstWeatherDegree;
-    private TextView secondWeatherDegree;
-    private TextView thirdWeatherDegree;
-    private TextView forthWeatherDegree;
-    private TextView fifthWeatherDegree;
-
-    private TextView firstTimePoint;
-    private TextView secondTimePoint;
-    private TextView thirdTimePoint;
-    private TextView forthTimePoint;
-    private TextView fifthTimePoint;
-
-    private TextView tourRatingInNumbers;
     private RatingBar tourRating;
-
-    private Favorite favorite;
     private boolean isFavoriteUpdate;
 
     private EquipmentRVAdapter adapterEquip;
@@ -213,20 +180,20 @@ public class TourFragment extends Fragment {
         setupActionListeners();
     }
     private void initializeControls(View view) {
-        imageViewTourImage = (ImageView) view.findViewById(R.id.tour_image);
+        imageViewTourImage = (ImageView) view.findViewById(R.id.tourOVTourImage);
         favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
 
         tourRegion = (TextView) view.findViewById(R.id.tour_region);
-        tourTitle = (TextView) view.findViewById(R.id.tour_title);
+        tourTitle = (TextView) view.findViewById(R.id.tourOVTourTitle);
         tourExecutionDate = (TextView) view.findViewById(R.id.tour_execution_date);
         tourSavedButton = (ImageButton) view.findViewById(R.id.save_tour_button);
         tourSharedButton = (ImageButton) view.findViewById(R.id.share_tour_button);
         backbutton = (ImageButton) view.findViewById(R.id.tour_back_button);
-        textViewTourDistance = (TextView) view.findViewById(R.id.tour_distance);
+        textViewTourDistance = (TextView) view.findViewById(R.id.tourOVTourDistance);
         textViewAscend = (TextView) view.findViewById(R.id.tour_ascend);
         textViewDuration = (TextView) view.findViewById(R.id.tour_duration);
         textViewDescend = (TextView) view.findViewById(R.id.tour_descend);
-        textViewDifficulty = (TextView) view.findViewById(R.id.tour_difficulty);
+        textViewDifficulty = (TextView) view.findViewById(R.id.tourOVTourDifficulty);
 
         tourDescriptionTextView = (ExpandableTextView) view.findViewById(R.id.tour_description);
         tourDescriptionToggler = (ImageButton) view.findViewById(R.id.tour_descrition_toggler);
@@ -258,6 +225,8 @@ public class TourFragment extends Fragment {
         forthTimePoint = (TextView) view.findViewById(R.id.timeForthPoint);
         fifthTimePoint = (TextView) view.findViewById(R.id.timeFifthPoint);
 
+        tourReportButton = (ImageButton) view.findViewById(R.id.report_tour_button);
+
         long difficulty = tourController.getLevel();
         Drawable drawable;
         if (difficulty >= 6)
@@ -276,13 +245,10 @@ public class TourFragment extends Fragment {
                 PorterDuff.Mode.SRC_ATOP);
 
 
-        tourController.getRating(tour, new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        tourRating.setRating((float) controllerEvent.getModel());
-                }
+        tourController.getRating(tour, controllerEvent -> {
+            switch (controllerEvent.getType()) {
+                case OK:
+                    tourRating.setRating((float) controllerEvent.getModel());
             }
         });
 
@@ -391,6 +357,8 @@ public class TourFragment extends Fragment {
      *
      */
     private void setupActionListeners() {
+        tourSharedButton.setOnClickListener((View v) -> shareTour());
+        tourReportButton.setOnClickListener((View v) -> reportTour());
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
         backbutton.setOnClickListener((View v) -> showTourView());
         favButton.setOnClickListener((View v) -> toggleFavorite());
@@ -715,6 +683,9 @@ public class TourFragment extends Fragment {
     }
 
     public void showMapWithTour() {
+        //handle recent tours
+        tourController.addRecentTour(this.tour);
+
         if (tourController.getPolyline() == null) {
             return;
         }
@@ -756,6 +727,22 @@ public class TourFragment extends Fragment {
         }
     }
 
+    /**
+     * shares the tour with other apps
+     */
+    private void shareTour(){
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        String description = tour.getDescription() + getResources().getString(R.string.app_domain);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, description);
+        shareIntent.putExtra(Intent.EXTRA_TITLE, tour.getTitle());
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, tour.getTitle());
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
+    }
+
+    private void reportTour(){
+        TourReportDialog dialog = new TourReportDialog().newInstance(tour, tourController);
+        dialog.show(getFragmentManager(), Constants.REPORT_TOUR_DIALOG);
+    }
     /**
      * handles click in Recyclerview of equipment
      *
