@@ -162,6 +162,8 @@ public class PoiEditDialog extends DialogFragment {
         }
     }
 
+
+
     /**
      * initializes the actions of the mode (private / public) spinner, which sets the current mode of the poi in case of changing of the user
      */

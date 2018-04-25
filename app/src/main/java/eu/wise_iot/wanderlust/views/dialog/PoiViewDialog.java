@@ -8,11 +8,13 @@ import android.net.Uri;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +48,6 @@ public class PoiViewDialog extends DialogFragment {
     private Activity context;
     private ImageView poiImage;
     private TextView typeTextView;
-    private TextView elevationTextView;
     private TextView titleTextView;
     private TextView dateTextView;
     private TextView descriptionTextView;
@@ -121,7 +122,6 @@ public class PoiViewDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_poi_view, container, false);
         poiImage = (ImageView) view.findViewById(R.id.poi_image);
         typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
-        elevationTextView = (TextView) view.findViewById(R.id.poi_elevation_text_view);
         titleTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
         dateTextView = (TextView) view.findViewById(R.id.poi_date_text_view);
         descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
@@ -174,11 +174,12 @@ public class PoiViewDialog extends DialogFragment {
             }
         });
 
-        privateModeButton.setOnClickListener(v -> Toast.makeText(context, "Poi ist privat und nur für dich sichtbar", Toast.LENGTH_LONG).show());
+        privateModeButton.setOnClickListener(v -> Toast.makeText(context, getString(R.string.poi_mode_is_private), Toast.LENGTH_LONG).show());
     }
 
     private void fillOutPoiView(View view) {
         if (currentPoi.getType() >= 0) {
+
             controller.getImages(currentPoi, controllerEvent -> {
                 List<File> images = (List<File>) controllerEvent.getModel();
                 if (images.size() > 0) {
@@ -191,29 +192,34 @@ public class PoiViewDialog extends DialogFragment {
             Picasso.with(context).load(images.get(0).getPath()).fit().centerCrop().into(poiImage);
         }
 
-        if (currentPoi.isPublic()) {
-            privateModeButton.setVisibility(View.GONE);
-        }
+        if (currentPoi.isPublic()) privateModeButton.setVisibility(View.GONE);
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
         String[] geoObjectTypeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_geoobject_type);
 
 
+        String poiType;
+
         if(currentPoi.getType() >= 0){
-            typeTextView.setText(typeValues[(int) currentPoi.getType()]);
+            poiType = typeValues[(int) currentPoi.getType()];
         } else {
-            typeTextView.setText(geoObjectTypeValues[(-1 * (int) currentPoi.getType()) -1]);
+            poiType = geoObjectTypeValues[(-1 * (int) currentPoi.getType()) -1];
             sharePoiButton.setVisibility(View.GONE);
         }
         String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
-        elevationTextView.setText(elevationText);
+        String typeText = String.format("%s (%s)", poiType, elevationText);
+        typeTextView.setText(typeText);
 
         titleTextView.setText(currentPoi.getTitle());
 
+        // only show date text view if poi is a sac hut
         if(currentPoi.getType() >= 0){
             dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
+        } else {
+            dateTextView.setVisibility(View.GONE);
         }
 
+        // TODO: can be removed after separating sac from poi view
         if (currentPoi.getType() == Constants.TYPE_SAC) {
             String description = showSacOccupation(currentPoi.getDescription(), view);
             currentPoi.setDescription(description);

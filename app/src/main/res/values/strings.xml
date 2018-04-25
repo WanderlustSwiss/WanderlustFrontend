@@ -167,6 +167,7 @@
     <string name="message_add_title">Bitte Titel hinzufügen</string>
     <string name="meter_above_sea_level_abbreviation">m ü. M.</string>
     <string name="share_title_poi">Teilen</string>
+    <string name="poi_mode_is_private">Poi ist privat und nur für dich sichtbar</string>
 
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>
