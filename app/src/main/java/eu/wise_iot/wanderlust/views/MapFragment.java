@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -42,7 +41,6 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,20 +50,13 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.CreateTourBackgroundTask;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
-import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
-import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
-import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 import eu.wise_iot.wanderlust.views.dialog.CreateTourDialog;
@@ -236,6 +227,12 @@ public class MapFragment extends Fragment {
                     informationBottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
+    }
+
+    public void closeBottomSheet(View view) {
+        View bottomSheet = view.findViewById(R.id.bottom_sheet);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
     private void initMapTypeButton(View view) {
@@ -581,6 +578,7 @@ public class MapFragment extends Fragment {
      */
     private void initLayerButton(View view) {
         layerButton = (ImageButton) view.findViewById(R.id.layerButton);
+        ImageButton closeBottomSheetButton = (ImageButton) view.findViewById(R.id.btn_close_bottom_sheet);
 
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
@@ -597,6 +595,7 @@ public class MapFragment extends Fragment {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
+        closeBottomSheetButton.setOnClickListener(view1 -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
 
         poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
         showPoiOverlay(true);
