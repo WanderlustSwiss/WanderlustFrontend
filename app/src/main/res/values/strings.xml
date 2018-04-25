@@ -203,5 +203,6 @@
     <string name="start">Start</string>
     <string name="end">Ende</string>
     <string name="temperature_abbrevation">°C</string>
+    <string name="profileEditChangesApplied">Änderungen übernommen.</string>
 
 </resources>

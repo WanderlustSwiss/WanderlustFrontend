@@ -25,8 +25,11 @@ import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
@@ -140,8 +143,20 @@ public class ProfileFragment extends Fragment {
      */
     public void setProfileStats(){
         nickname.setText(profileController.getNickName());
-        amountScore.setText(String.format(Locale.GERMANY, "%1d",
-                profileController.getScore()));
+        profileController.getScore(new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        Profile profile = (Profile) controllerEvent.getModel();
+                        amountScore.setText(String.format(Locale.GERMAN,"%1d" ,profile.getScore()));
+                        break;
+                    default:
+                        Toast.makeText(getActivity(), "failllll", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
         amountTours.setText(String.format(Locale.GERMANY, "%1d",
                 profileController.getAmountTours()));
         amountPOI.setText(String.format(Locale.GERMANY, "%1d",

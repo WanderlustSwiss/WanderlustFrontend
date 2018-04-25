@@ -1,7 +1,10 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.app.FragmentManager;
+import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -9,7 +12,15 @@ import com.google.gson.reflect.TypeToken;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.tileprovider.MapTileProviderBase;
+import org.osmdroid.tileprovider.cachemanager.CacheManager;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Polyline;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -23,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -36,6 +48,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
+import eu.wise_iot.wanderlust.views.WanderlustMapView;
 import io.objectbox.Property;
 
 
@@ -84,6 +97,7 @@ public class TourController {
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         ratingDao = RatingDao.getInstance();
         imageController = ImageController.getInstance();
+
     }
 
 
@@ -123,6 +137,95 @@ public class TourController {
             }
         }
         return false;
+    }
+
+    public void setSaved(FragmentHandler handler,Context context ,FragmentManager fragmentManager){
+        userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        Tour data = (Tour) controllerEvent.getModel();
+                        tour.setPolyline(data.getPolyline());
+                        communityTourDao.create(tour);
+
+                        ArrayList<GeoPoint> points = PolyLineEncoder.decode(getPolyline(), 10);
+                        Road road = new Road(points);
+                        Polyline polyline = RoadManager.buildRoadOverlay(road);
+                        polyline.setColor(R.color.highlight_main_transparent75);
+
+                        WanderlustMapView mapView = new WanderlustMapView(context);
+                        mapView.getOverlayManager().add(polyline);
+
+                        MapTileProviderBase providerBase = mapView.getTileProvider();
+
+                        Log.d("OOFFLIINE2", providerBase.getTileSource().toString());
+                        ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
+                                new String[]{"https://opentopomap.org/"});
+                        mapView.setTileSource(tileSource);
+
+                        double north = -9000;
+                        double south = 9000;
+                        double east = -9000;
+                        double west = 9000;
+
+                        for(GeoPoint geoPoint : points){
+                            if(geoPoint.getLatitude() > north)
+                                north = geoPoint.getLatitude();
+                            if(geoPoint.getLatitude() < south)
+                                south = geoPoint.getLatitude();
+                            if(geoPoint.getLongitude() > east)
+                                east = geoPoint.getLongitude();
+                            if(geoPoint.getLongitude() < west)
+                                west = geoPoint.getLongitude();
+                        }
+
+                        BoundingBox boundingBox = new BoundingBox(north, east, south, west);
+
+                        CacheManager manager = new CacheManager(mapView);
+                        if(manager != null){
+                            Log.d("OOFFLIINE", "exists");
+                        }else{
+                            Log.d("OOFFFLIIINE", "doesnt exists");
+                        }
+
+                        manager.downloadAreaAsync(context, boundingBox, 10, 20, new CacheManager.CacheManagerCallback() {
+                            @Override
+                            public void onTaskComplete() {
+                                Toast.makeText(context, "Download done.", Toast.LENGTH_SHORT).show();
+                                Log.d("OFFFFLINE", "done");
+                            }
+
+                            @Override
+                            public void updateProgress(int progress, int currentZoomLevel, int zoomMin, int zoomMax) {
+
+                            }
+
+                            @Override
+                            public void downloadStarted() {
+                                Log.d("OFFFLINE", "started..");
+                            }
+
+                            @Override
+                            public void setPossibleTilesInArea(int total) {
+
+                            }
+
+                            @Override
+                            public void onTaskFailed(int errors) {
+                                Toast.makeText(context, String.valueOf(errors), Toast.LENGTH_SHORT).show();
+                                Log.d("OOFFFLIINEE", "failed");
+                            }
+                        });
+
+                        Log.d(TAG, "Is saved");
+                        handler.onResponse(new ControllerEvent(EventType.OK));
+                        break;
+                    default:
+                        handler.onResponse(new ControllerEvent(EventType.CONFLICT));
+                }
+            }
+        });
     }
 
     public boolean setSaved(){

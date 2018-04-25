@@ -44,10 +44,8 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
@@ -111,7 +109,6 @@ public class MapFragment extends Fragment {
      * @return Fragment: MapFragment
      */
     public static MapFragment newInstance() {
-
         Bundle args = new Bundle();
         databaseController = DatabaseController.getInstance();
         MapFragment fragment = new MapFragment();
@@ -134,7 +131,6 @@ public class MapFragment extends Fragment {
         setHasOptionsMenu(true);
         loadPreferences();
         getActivity().setTitle("");
-
 
         // For search View
         final String[] from = new String[]{"hashTag"};
@@ -382,7 +378,6 @@ public class MapFragment extends Fragment {
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
         mapView.setMultiTouchControls(true);
-
     }
 
     /**
@@ -858,5 +853,6 @@ public class MapFragment extends Fragment {
             informationBottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
     }
+
 }
 

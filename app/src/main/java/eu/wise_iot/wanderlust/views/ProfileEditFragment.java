@@ -37,9 +37,7 @@ import java.io.File;
 import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 
@@ -161,12 +159,12 @@ public class ProfileEditFragment extends Fragment {
                     switch (type) {
                         case OK:
                             ((MainActivity) getActivity()).updateEmailAdress(newMail);
-                            Toast.makeText(getActivity(), R.string.msg_email_edit_successful,
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Email wurde geändert.");
                             break;
                         default:
                             Toast.makeText(getActivity(), R.string.err_msg_error_occured,
                                     Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Fehler: " + type.toString());
                             break;
                     }
                 });
@@ -176,24 +174,28 @@ public class ProfileEditFragment extends Fragment {
 
                     switch (type) {
                         case OK:
-                            Toast.makeText(getActivity(),
-                                    getString(R.string.msg_difficulty_level_changed_to_1) + " " + difficulty + " " + getString(R.string.msg_difficulty_level_changed_to_2),
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Difficulty wurde geändert.");
                             break;
 
                         default:
                             Toast.makeText(getActivity(), R.string.err_msg_error_occured,
                                     Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Fehler: " + type.toString());
                             break;
                     }
                 });
+                Toast.makeText(getActivity(), R.string.profileEditChangesApplied, Toast.LENGTH_SHORT).show();
+                ProfileFragment fragment = ProfileFragment.newInstance();
+                getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, fragment)
+                                    .commit();
                 return true;
 
             case R.id.cancelIcon:
                 //back to profile
                 Toast.makeText(getActivity(), R.string.msg_no_changes_done,
                         Toast.LENGTH_SHORT).show();
-                ProfileFragment profileFragment = new ProfileFragment();
+                ProfileFragment profileFragment = ProfileFragment.newInstance();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, profileFragment)
                         .commit();

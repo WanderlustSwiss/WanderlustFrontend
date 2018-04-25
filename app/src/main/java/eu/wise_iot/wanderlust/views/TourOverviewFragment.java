@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -269,20 +270,26 @@ public class TourOverviewFragment extends Fragment {
                     case R.id.saveButton:
                         ImageButton ibSave = (ImageButton) view.findViewById(R.id.saveButton);
                         TourController controller = new TourController(tour);
-                        Log.d("SAVE", "klickt...");
                         boolean saved = controller.isSaved();
                         if(saved){
-                            Log.d("SAVE", "saved");
                             boolean unset = controller.unsetSaved();
                             if(unset){
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                             }
                         }else{
-                            Log.d("SAVED", "nicht saved");
-                            boolean set = controller.setSaved();
-                            if(set){
-                                ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
-                            }
+                            controller.setSaved(new FragmentHandler() {
+                                @Override
+                                public void onResponse(ControllerEvent controllerEvent) {
+                                    switch (controllerEvent.getType()){
+                                        case OK:
+                                            ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                                            break;
+                                        default:
+                                            Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                                            break;
+                                    }
+                                }
+                            },context ,getFragmentManager());
                         }
                         break;
                     default:

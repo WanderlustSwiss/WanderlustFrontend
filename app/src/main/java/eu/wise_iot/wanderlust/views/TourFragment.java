@@ -365,7 +365,7 @@ public class TourFragment extends Fragment {
         if(tourController.isSaved()){
             tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
         }else{
-            tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+            tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.white));
         }
 
         // TODO: add tour region here
@@ -734,14 +734,16 @@ public class TourFragment extends Fragment {
         // fixme: color does not get adjusted (only #f00)
         roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
-
         getFragmentManager().beginTransaction()
                 .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                 .addToBackStack(Constants.MAP_FRAGMENT)
                 .commit();
+
+
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
     }
+
     private void showTourView(){
         getFragmentManager().beginTransaction()
                 .add(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
