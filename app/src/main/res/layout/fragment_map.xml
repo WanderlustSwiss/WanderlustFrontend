@@ -282,21 +282,24 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:text="@string/sac_house" />
-
                 </LinearLayout>
-
-
             </LinearLayout>
 
-            <View
+            <TextView
+                android:id="@+id/titlePoiTypeSelection"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/background_two_and_inactive" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="24dp"
+                android:paddingTop="24dp"
+                android:text="@string/title_poi_type_selection"
+                android:textColor="@color/heading_icon"
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:id="@+id/poiTypeSelection"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -306,9 +309,9 @@
                     android:padding="16dp">
 
                     <ImageButton
-                        android:id="@+id/poiTypesWarning"
+                        android:id="@+id/poiTypesRestArea"
                         style="@style/PoiButton"
-                        android:src="@drawable/ic_home_black_40dp_white" />
+                        android:src="@drawable/ic_local_parking_white_40dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -328,7 +331,7 @@
                     <ImageButton
                         android:id="@+id/poiTypesRestaurant"
                         style="@style/PoiButton"
-                        android:src="@drawable/ic_poi_selected_24dp" />
+                        android:src="@drawable/ic_restaurant_white_40dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -348,7 +351,7 @@
                     <ImageButton
                         android:id="@+id/poiTypesView"
                         style="@style/PoiButton"
-                        android:src="@drawable/ic_train_white_40dp" />
+                        android:src="@drawable/ic_terrain_white_40dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -366,9 +369,9 @@
                     android:padding="16dp">
 
                     <ImageButton
-                        android:id="@+id/poiTypesNature"
+                        android:id="@+id/poiTypeFloraFauna"
                         style="@style/PoiButton"
-                        android:src="@drawable/ic_home_black_40dp_white" />
+                        android:src="@drawable/ic_local_florist_white_40dp" />
 
                     <TextView
                         android:layout_width="match_parent"

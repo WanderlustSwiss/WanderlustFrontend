@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.DisplayMetrics;
@@ -35,7 +34,6 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseListener;
 import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
@@ -56,6 +54,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private final MapView mapView;
     private Polyline currentTour;
     private final MapController searchMapController;
+    private boolean poiFloraFaunaActive, poiViewActive, poiRestaurantActive, poiRestAreaActive;
 
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiHashtagOverlay;
@@ -210,6 +209,18 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     }
 
+    public void setPoiFloraFaunaActive(boolean value){
+        this.poiFloraFaunaActive = value;
+    }
+    public void setPoiRestAreaActive(boolean value){
+        this.poiRestAreaActive = value;
+    }
+    public void setPoiViewActive(boolean value){
+        this.poiViewActive = value;
+    }
+    public void setPoiRestaurantActive(boolean value){
+        this.poiRestaurantActive = value;
+    }
     /**
      * Creates an OverlayItem from a poi with item considering the poi type
      */
@@ -254,10 +265,19 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     /**
      * Adds a poi on the mapview regular MapOverlay
+     * only adds poi if subcategory is selected in frontend
      */
     public void addPoiToOverlay(Poi poi) {
         OverlayItem overlayItem = poiToOverlayItem(poi);
-        poiOverlay.addItem(overlayItem);
+
+        //TODO get by type id or name -> define in constants?
+        //PoiTypeDao.getInstance().findOne(PoiType_.poit_id,poi.getType()).getName();
+
+        if(this.poiViewActive && poi.getType() == Constants.TYPE_VIEW
+                || this.poiRestaurantActive && poi.getType() == Constants.TYPE_RESTAURANT
+                || this.poiRestAreaActive && poi.getType() == Constants.TYPE_REST_AREA
+                || this.poiFloraFaunaActive && poi.getType() == Constants.TYPE_FLORA_FAUNA)
+            poiOverlay.addItem(overlayItem);
     }
 
     /**

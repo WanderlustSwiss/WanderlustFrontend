@@ -6,14 +6,12 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.MatrixCursor;
 import android.graphics.Rect;
 import android.location.LocationManager;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
@@ -21,7 +19,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
@@ -45,7 +42,6 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,20 +51,13 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.constants.Defaults;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.CreateTourBackgroundTask;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
-import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
-import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.models.DatabaseModel.HashtagResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
-import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.Old.Camera;
 import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 import eu.wise_iot.wanderlust.views.dialog.CreateTourDialog;
@@ -103,6 +92,7 @@ public class MapFragment extends Fragment {
     private ImageButton staliteTypeButton;
     private ImageButton defaultTypeButton;
     private ImageButton terrainTypeButton;
+    private ImageButton ibPoiRestAreaLayer, ibPoiFloraFaunaLayer, ibPoiRestaurantLayer, ibPoiViewLayer;
     private View bottomSheet;
     private MapController searchMapController;
     private static Polyline polyline;
@@ -171,11 +161,17 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        poiTypeSelection = (LinearLayout) view.findViewById(R.id.poiTypeSelection);
+        ibPoiFloraFaunaLayer = (ImageButton) view.findViewById(R.id.poiTypeFloraFauna);
+        ibPoiRestaurantLayer = (ImageButton) view.findViewById(R.id.poiTypesRestaurant);
+        ibPoiViewLayer = (ImageButton) view.findViewById(R.id.poiTypesView);
+        ibPoiRestAreaLayer = (ImageButton) view.findViewById(R.id.poiTypesRestArea);
+
         initMap(view);
         initOverlays();
         initMapController();
+        initPoiTypeButtons();
         databaseController.register(mapOverlays);
+
         if (polyline != null) setTour(polyline);
         return view;
     }
@@ -202,7 +198,6 @@ public class MapFragment extends Fragment {
         createTourButton = (ImageButton) view.findViewById(R.id.createTourButton);
         creatingTourInformation = (TextView) view.findViewById(R.id.createTourInformation);
         createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
-
 
         createTourButton.setOnClickListener(view1 -> {
             if (!isMyServiceRunning(CreateTourBackgroundTask.class)) {
@@ -239,7 +234,115 @@ public class MapFragment extends Fragment {
             }
         });
     }
+    private void initPoiTypeButtons(){
+        if(sharedPreferences.getBoolean(Constants.POITYPE_RESTAREA_ACTIVE,true)){
+            mapOverlays.setPoiRestAreaActive(true);
+            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_white_40dp);
+            ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+            ibPoiRestAreaLayer.setSelected(true);
+        } else {
+            mapOverlays.setPoiRestAreaActive(false);
+            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_black_40dp);
+            ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+            ibPoiRestAreaLayer.setSelected(false);
+        }
+        if(sharedPreferences.getBoolean(Constants.POITYPE_FLORAFAUNA_ACTIVE,true)){
+            mapOverlays.setPoiRestAreaActive(true);
+            ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_white_40dp);
+            ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+            ibPoiFloraFaunaLayer.setSelected(true);
+        } else {
+            mapOverlays.setPoiRestAreaActive(false);
+            ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_black_40dp);
+            ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+            ibPoiFloraFaunaLayer.setSelected(false);
+        }
+        if(sharedPreferences.getBoolean(Constants.POITYPE_RESTAURANT_ACTIVE,true)){
+            mapOverlays.setPoiRestAreaActive(true);
+            ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_white_40dp);
+            ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+            ibPoiRestaurantLayer.setSelected(true);
+        } else {
+            mapOverlays.setPoiRestAreaActive(false);
+            ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_black_40dp);
+            ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+            ibPoiRestaurantLayer.setSelected(false);
+        }
+        if(sharedPreferences.getBoolean(Constants.POITYPE_VIEW_ACTIVE,true)){
+            mapOverlays.setPoiRestAreaActive(true);
+            ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_white_40dp);
+            ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+            ibPoiViewLayer.setSelected(true);
+        } else {
+            mapOverlays.setPoiRestAreaActive(false);
+            ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_black_40dp);
+            ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+            ibPoiViewLayer.setSelected(false);
+        }
 
+
+        ibPoiRestAreaLayer.setOnClickListener(v -> {
+            if(ibPoiRestAreaLayer.isSelected()){
+                mapOverlays.setPoiRestAreaActive(false);
+                ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_black_40dp);
+                ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+                ibPoiRestAreaLayer.setSelected(false);
+            } else {
+                mapOverlays.setPoiRestAreaActive(true);
+                ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_white_40dp);
+                ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+                ibPoiRestAreaLayer.setSelected(true);
+            }
+
+            mapOverlays.setPoiRestAreaActive(ibPoiRestAreaLayer.isSelected());
+        });
+        ibPoiFloraFaunaLayer.setOnClickListener(v -> {
+            if(ibPoiFloraFaunaLayer.isSelected()){
+                mapOverlays.setPoiRestAreaActive(false);
+                ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_black_40dp);
+                ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+                ibPoiFloraFaunaLayer.setSelected(false);
+            } else {
+                mapOverlays.setPoiRestAreaActive(true);
+                ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_white_40dp);
+                ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+                ibPoiFloraFaunaLayer.setSelected(true);
+            }
+
+            mapOverlays.setPoiFloraFaunaActive(ibPoiFloraFaunaLayer.isSelected());
+        });
+        ibPoiRestaurantLayer.setOnClickListener(v -> {
+            if(ibPoiRestaurantLayer.isSelected()){
+                mapOverlays.setPoiRestAreaActive(false);
+                ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_black_40dp);
+                ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+                ibPoiRestaurantLayer.setSelected(false);
+            } else {
+                mapOverlays.setPoiRestAreaActive(true);
+                ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_white_40dp);
+                ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+                ibPoiRestaurantLayer.setSelected(true);
+            }
+
+            mapOverlays.setPoiRestaurantActive(ibPoiRestaurantLayer.isSelected());
+        });
+        ibPoiViewLayer.setOnClickListener(v -> {
+            if(ibPoiViewLayer.isSelected()){
+                mapOverlays.setPoiRestAreaActive(false);
+                ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_black_40dp);
+                ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+                ibPoiViewLayer.setSelected(false);
+            } else {
+                mapOverlays.setPoiRestAreaActive(true);
+                ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_white_40dp);
+                ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+                ibPoiViewLayer.setSelected(true);
+            }
+
+            mapOverlays.setPoiViewActive(ibPoiViewLayer.isSelected());
+        });
+
+    }
     private void initMapTypeButton(View view) {
         staliteTypeButton = (ImageButton) view.findViewById(R.id.map_satelite_type);
         defaultTypeButton = (ImageButton) view.findViewById(R.id.map_default_type);
@@ -416,6 +519,11 @@ public class MapFragment extends Fragment {
         editor.putLong(Constants.LAST_POS_LAT, Double.doubleToLongBits(lastKnownLocation.getLatitude()));
         editor.putLong(Constants.LAST_POS_LON, Double.doubleToLongBits(lastKnownLocation.getLongitude()));
         editor.putBoolean(Constants.MY_LOCATION_ENABLED, myLocationIsEnabled);
+        //poitypeselection
+        editor.putBoolean(Constants.POITYPE_RESTAURANT_ACTIVE,ibPoiRestaurantLayer.isSelected());
+        editor.putBoolean(Constants.POITYPE_FLORAFAUNA_ACTIVE,ibPoiFloraFaunaLayer.isSelected());
+        editor.putBoolean(Constants.POITYPE_RESTAREA_ACTIVE,ibPoiRestAreaLayer.isSelected());
+        editor.putBoolean(Constants.POITYPE_VIEW_ACTIVE,ibPoiViewLayer.isSelected());
         editor.apply();
     }
 
@@ -480,6 +588,7 @@ public class MapFragment extends Fragment {
                 && lastKnownLocation.getLongitude() != 0) {
             mapOverlays.addPositionMarker(lastKnownLocation);
         }
+
     }
 
     /**
@@ -588,10 +697,12 @@ public class MapFragment extends Fragment {
         // register behavior on clicked
         layerButton.setOnClickListener(view1 -> {
             if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+               /*
                 NestedScrollView layout = (NestedScrollView) view.findViewById(R.id.bottom_sheet);
                 ViewGroup.LayoutParams params = layout.getLayoutParams();
                 //params.height = 600;
                 layout.setLayoutParams(params);
+                */
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             } else {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -629,6 +740,51 @@ public class MapFragment extends Fragment {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
+    }
+
+    private void showPoiRestaurantOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        //mapOverlays.showPoiRestaurantLayer(showOverlay);
+        if (showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+    private void showPoiNatureOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        //mapOverlays.showPoiNatureLayer(showOverlay);
+        if (showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+    private void showPoiViewOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        //mapOverlays.showPoiViewLayer(showOverlay);
+        if (showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
+    }
+    private void showPoiWarningOverlay(boolean showOverlay) {
+        poiLayerButton.setSelected(showOverlay);
+        //mapOverlays.showPoiWarningLayer(showOverlay);
+        if (showOverlay) {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
+            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
     }
 
     private void showPoiOverlay(boolean showOverlay) {
