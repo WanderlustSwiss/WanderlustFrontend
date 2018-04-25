@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -27,11 +28,7 @@ import java.util.Map;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -48,7 +45,6 @@ public class PoiViewDialog extends DialogFragment {
     private static Poi currentPoi;
     private Activity context;
     private ImageView poiImage;
-    private ImageView displayModeImage;
     private TextView typeTextView;
     private TextView elevationTextView;
     private TextView titleTextView;
@@ -58,6 +54,8 @@ public class PoiViewDialog extends DialogFragment {
     private ImageButton editPoiButton;
     private ImageButton deletePoiButton;
     private ImageButton sharePoiButton;
+    private ImageButton privateModeButton;
+
     private PoiController controller;
     private TextView occupationTitleSac;
     private TableLayout sacOccupation;
@@ -122,7 +120,6 @@ public class PoiViewDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_poi_view, container, false);
         poiImage = (ImageView) view.findViewById(R.id.poi_image);
-        displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
         typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
         elevationTextView = (TextView) view.findViewById(R.id.poi_elevation_text_view);
         titleTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
@@ -134,6 +131,7 @@ public class PoiViewDialog extends DialogFragment {
         sharePoiButton = (ImageButton) view.findViewById(R.id.poi_share_button);
         sacOccupation = (TableLayout) view.findViewById(R.id.tableLayout_occupation_sac);
         occupationTitleSac = (TextView) view.findViewById(R.id.title_occupation);
+        privateModeButton = (ImageButton) view.findViewById(R.id.poi_mode_private_image);
         // default not visible
         sacOccupation.setVisibility(View.GONE);
         occupationTitleSac.setVisibility(View.GONE);
@@ -175,6 +173,8 @@ public class PoiViewDialog extends DialogFragment {
                 dismiss();
             }
         });
+
+        privateModeButton.setOnClickListener(v -> Toast.makeText(context, "Poi ist privat und nur für dich sichtbar", Toast.LENGTH_LONG).show());
     }
 
     private void fillOutPoiView(View view) {
@@ -191,11 +191,9 @@ public class PoiViewDialog extends DialogFragment {
             Picasso.with(context).load(images.get(0).getPath()).fit().centerCrop().into(poiImage);
         }
 
-        // todo: add better image to display that poi is private (ask Hristian how)
-        if (!currentPoi.isPublic()) {
-            Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().placeholder(R.drawable.progress_animation).into(displayModeImage);
+        if (currentPoi.isPublic()) {
+            privateModeButton.setVisibility(View.GONE);
         }
-
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
         String[] geoObjectTypeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_geoobject_type);

@@ -94,8 +94,10 @@
 
     <style name="FloatingActionButton.Mini.Light">
         <item name="backgroundTint">@color/background_main</item>
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
+    </style>
+
+    <style name="FloatingActionButton.Mini.Red">
+        <item name="backgroundTint">@color/highlight_second</item>
     </style>
 
     <style name="PoiButton" parent="Widget.Design.FloatingActionButton">

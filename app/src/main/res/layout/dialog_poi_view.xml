@@ -25,14 +25,6 @@
             app:zoomage_translatable="true"
             app:zoomage_zoomable="true" />
 
-        <ImageView
-            android:id="@+id/poi_mode_private_image"
-            android:layout_width="96dp"
-            android:layout_height="36dp"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:contentDescription="@null" />
-
         <ImageButton
             android:id="@+id/poi_close_dialog_button"
             android:layout_width="wrap_content"
@@ -41,7 +33,15 @@
             android:layout_alignParentTop="true"
             android:background="@android:color/transparent"
             android:padding="16dp"
-            android:src="@drawable/ic_arrow_back_white_24dp" />
+            android:src="@drawable/ic_close_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/poi_mode_private_image"
+            android:layout_alignParentTop="true"
+            android:layout_margin="12dp"
+            style="@style/FloatingActionButton.Mini.Red"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_visibility_off_white_24dp" />
     </RelativeLayout>
 
     <RelativeLayout
