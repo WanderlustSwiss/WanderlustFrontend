@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Fragment;
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.database.MatrixCursor;
 import android.graphics.Rect;
 import android.location.LocationManager;
@@ -78,31 +80,20 @@ public class MapFragment extends Fragment {
     private static DatabaseController databaseController;
     // preferences and default settings
     private SharedPreferences sharedPreferences;
-    private boolean locationTogglerHasBeenClicked;
-    private boolean myLocationIsEnabled;
+    private boolean locationTogglerHasBeenClicked, myLocationIsEnabled;
     private int zoomLevel;
-    private GeoPoint centerOfMap;
-    private GeoPoint lastKnownLocation;
+    private GeoPoint centerOfMap, lastKnownLocation;
     //private MapView mapView;
     private WanderlustMapView mapView;
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
-    private ImageButton locationToggler;
-    private ImageButton cameraButton;
-    private ImageButton layerButton;
-    private ImageButton staliteTypeButton;
-    private ImageButton defaultTypeButton;
-    private ImageButton terrainTypeButton;
-    private ImageButton ibPoiRestAreaLayer, ibPoiFloraFaunaLayer, ibPoiRestaurantLayer, ibPoiViewLayer;
+    private ImageButton ibLocationToggler, cameraButton, layerButton, staliteTypeButton, defaultTypeButton, terrainTypeButton,
+                        //bottom sheet
+                        ibPoiRestAreaLayer, ibPoiFloraFaunaLayer, ibPoiRestaurantLayer, ibPoiViewLayer,
+                                ibPoiLayer, ibPublicTransportLayer, ibSacHutLayer;
     private View bottomSheet;
-    private SearchView searchView;
     private MapController searchMapController;
     private static Polyline polyline;
-
-    // bottom sheet
-    private ImageButton poiLayerButton;
-    private ImageButton publicTransportLayerButton;
-    private ImageButton sacHutLayerButton;
 
     // Search suggetstion
     private List<HashtagResult> hashTagSearchSuggestions = new ArrayList<>();
@@ -164,15 +155,11 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        ibPoiFloraFaunaLayer = (ImageButton) view.findViewById(R.id.poiTypeFloraFauna);
-        ibPoiRestaurantLayer = (ImageButton) view.findViewById(R.id.poiTypesRestaurant);
-        ibPoiViewLayer = (ImageButton) view.findViewById(R.id.poiTypesView);
-        ibPoiRestAreaLayer = (ImageButton) view.findViewById(R.id.poiTypesRestArea);
-
         initMap(view);
         initOverlays();
         initMapController();
-        initPoiTypeButtons();
+        initLayerButton(view);
+        initPoiTypeButtons(view);
         databaseController.register(mapOverlays);
 
         if (polyline != null) setTour(polyline);
@@ -237,112 +224,123 @@ public class MapFragment extends Fragment {
             }
         });
     }
-    private void initPoiTypeButtons(){
-        if(sharedPreferences.getBoolean(Constants.POITYPE_RESTAREA_ACTIVE,true)){
-            mapOverlays.setPoiRestAreaActive(true);
-            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_white_40dp);
-            ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
-            ibPoiRestAreaLayer.setSelected(true);
-        } else {
-            mapOverlays.setPoiRestAreaActive(false);
-            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_black_40dp);
-            ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
-            ibPoiRestAreaLayer.setSelected(false);
-        }
-        if(sharedPreferences.getBoolean(Constants.POITYPE_FLORAFAUNA_ACTIVE,true)){
-            mapOverlays.setPoiRestAreaActive(true);
-            ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_white_40dp);
-            ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
-            ibPoiFloraFaunaLayer.setSelected(true);
-        } else {
-            mapOverlays.setPoiRestAreaActive(false);
-            ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_black_40dp);
-            ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
-            ibPoiFloraFaunaLayer.setSelected(false);
-        }
-        if(sharedPreferences.getBoolean(Constants.POITYPE_RESTAURANT_ACTIVE,true)){
-            mapOverlays.setPoiRestAreaActive(true);
-            ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_white_40dp);
-            ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
-            ibPoiRestaurantLayer.setSelected(true);
-        } else {
-            mapOverlays.setPoiRestAreaActive(false);
-            ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_black_40dp);
-            ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
-            ibPoiRestaurantLayer.setSelected(false);
-        }
-        if(sharedPreferences.getBoolean(Constants.POITYPE_VIEW_ACTIVE,true)){
-            mapOverlays.setPoiRestAreaActive(true);
-            ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_white_40dp);
-            ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
-            ibPoiViewLayer.setSelected(true);
-        } else {
-            mapOverlays.setPoiRestAreaActive(false);
-            ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_black_40dp);
-            ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
-            ibPoiViewLayer.setSelected(false);
-        }
+    private void initPoiTypeButtons(View view){
+        ibPoiFloraFaunaLayer = (ImageButton) view.findViewById(R.id.poiTypeFloraFauna);
+        ibPoiRestaurantLayer = (ImageButton) view.findViewById(R.id.poiTypesRestaurant);
+        ibPoiViewLayer = (ImageButton) view.findViewById(R.id.poiTypesView);
+        ibPoiRestAreaLayer = (ImageButton) view.findViewById(R.id.poiTypesRestArea);
+        poiTypeSelection = (LinearLayout) view.findViewById(R.id.poiTypeSelection);
 
+        LayoutTransition transition = new LayoutTransition();
+        transition.setAnimateParentHierarchy(false);
+        poiTypeSelection.setLayoutTransition(transition);
+
+        if(ibPoiLayer.isSelected()) poiTypeSelection.setVisibility(View.VISIBLE);
+        else poiTypeSelection.setVisibility(View.GONE);
+
+        boolean restAreaActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_RESTAREA_ACTIVE,true);
+        boolean viewActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_VIEW_ACTIVE,true);
+        boolean restaurantActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_RESTAURANT_ACTIVE,true);
+        boolean floraFaunaActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_FLORAFAUNA_ACTIVE,true);
+
+        ColorStateList mainColor = this.getActivity().getResources().getColorStateList(R.color.primary_main);
+        ColorStateList whiteColor = this.getActivity().getResources().getColorStateList(R.color.white);
+
+        if(restAreaActive){
+            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_white_40dp);
+            ibPoiRestAreaLayer.setBackgroundTintList(mainColor);
+        } else {
+            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_black_40dp);
+            ibPoiRestAreaLayer.setBackgroundTintList(whiteColor);
+        }
+        mapOverlays.setPoiRestAreaActive(restAreaActive);
+        ibPoiRestAreaLayer.setSelected(restAreaActive);
+
+        if(floraFaunaActive){
+            ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_white_40dp);
+            ibPoiFloraFaunaLayer.setBackgroundTintList(mainColor);
+        } else {
+            ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_black_40dp);
+            ibPoiFloraFaunaLayer.setBackgroundTintList(whiteColor);
+        }
+        mapOverlays.setPoiFloraFaunaActive(floraFaunaActive);
+        ibPoiFloraFaunaLayer.setSelected(floraFaunaActive);
+
+        if(restaurantActive){
+            ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_white_40dp);
+            ibPoiRestaurantLayer.setBackgroundTintList(mainColor);
+        } else {
+            ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_black_40dp);
+            ibPoiRestaurantLayer.setBackgroundTintList(whiteColor);
+        }
+        mapOverlays.setPoiRestAreaActive(restaurantActive);
+        ibPoiRestaurantLayer.setSelected(restaurantActive);
+
+        if(viewActive){
+            ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_white_40dp);
+            ibPoiViewLayer.setBackgroundTintList(mainColor);
+        } else {
+            ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_black_40dp);
+            ibPoiViewLayer.setBackgroundTintList(whiteColor);
+        }
+        mapOverlays.setPoiViewActive(viewActive);
+        ibPoiViewLayer.setSelected(viewActive);
 
         ibPoiRestAreaLayer.setOnClickListener(v -> {
             if(ibPoiRestAreaLayer.isSelected()){
-                mapOverlays.setPoiRestAreaActive(false);
                 ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_black_40dp);
-                ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+                ibPoiRestAreaLayer.setBackgroundTintList(whiteColor);
                 ibPoiRestAreaLayer.setSelected(false);
             } else {
-                mapOverlays.setPoiRestAreaActive(true);
                 ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_white_40dp);
-                ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+                ibPoiRestAreaLayer.setBackgroundTintList(mainColor);
                 ibPoiRestAreaLayer.setSelected(true);
             }
-
             mapOverlays.setPoiRestAreaActive(ibPoiRestAreaLayer.isSelected());
+            mapOverlays.showPoiLayer(true);
+            mapOverlays.refreshPoiLayer();
         });
         ibPoiFloraFaunaLayer.setOnClickListener(v -> {
             if(ibPoiFloraFaunaLayer.isSelected()){
-                mapOverlays.setPoiRestAreaActive(false);
                 ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_black_40dp);
-                ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+                ibPoiFloraFaunaLayer.setBackgroundTintList(whiteColor);
                 ibPoiFloraFaunaLayer.setSelected(false);
             } else {
-                mapOverlays.setPoiRestAreaActive(true);
                 ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_white_40dp);
-                ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+                ibPoiFloraFaunaLayer.setBackgroundTintList(mainColor);
                 ibPoiFloraFaunaLayer.setSelected(true);
             }
-
             mapOverlays.setPoiFloraFaunaActive(ibPoiFloraFaunaLayer.isSelected());
+            mapOverlays.showPoiLayer(true);
+            mapOverlays.refreshPoiLayer();
         });
         ibPoiRestaurantLayer.setOnClickListener(v -> {
             if(ibPoiRestaurantLayer.isSelected()){
-                mapOverlays.setPoiRestAreaActive(false);
                 ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_black_40dp);
-                ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+                ibPoiRestaurantLayer.setBackgroundTintList(whiteColor);
                 ibPoiRestaurantLayer.setSelected(false);
             } else {
-                mapOverlays.setPoiRestAreaActive(true);
                 ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_white_40dp);
-                ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+                ibPoiRestaurantLayer.setBackgroundTintList(mainColor);
                 ibPoiRestaurantLayer.setSelected(true);
             }
-
             mapOverlays.setPoiRestaurantActive(ibPoiRestaurantLayer.isSelected());
+            mapOverlays.showPoiLayer(true);
+            mapOverlays.refreshPoiLayer();
         });
         ibPoiViewLayer.setOnClickListener(v -> {
             if(ibPoiViewLayer.isSelected()){
-                mapOverlays.setPoiRestAreaActive(false);
                 ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_black_40dp);
-                ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+                ibPoiViewLayer.setBackgroundTintList(whiteColor);
                 ibPoiViewLayer.setSelected(false);
             } else {
-                mapOverlays.setPoiRestAreaActive(true);
                 ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_white_40dp);
-                ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+                ibPoiViewLayer.setBackgroundTintList(mainColor);
                 ibPoiViewLayer.setSelected(true);
             }
-
             mapOverlays.setPoiViewActive(ibPoiViewLayer.isSelected());
+            mapOverlays.showPoiLayer(true);
+            mapOverlays.refreshPoiLayer();
         });
 
     }
@@ -450,8 +448,7 @@ public class MapFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear(); // makes sure that the menu was not inflated yet
         inflater.inflate(R.menu.map_fragment_layer_menu, menu);
-
-        // initSearchView(menu);
+        //initSearchView(menu);
     }
 
     /**
@@ -476,7 +473,6 @@ public class MapFragment extends Fragment {
             file.delete();
         }
     }
-
 
     public void setTour(Polyline polyline) {
         mapOverlays.setTour(polyline);
@@ -504,8 +500,9 @@ public class MapFragment extends Fragment {
         double lastLocationLat = Double.longBitsToDouble(sharedPreferences.getLong(Constants.LAST_POS_LAT, 0));
         double lastLocationLon = Double.longBitsToDouble(sharedPreferences.getLong(Constants.LAST_POS_LON, 0));
         lastKnownLocation = new GeoPoint(lastLocationLat, lastLocationLon);
-        locationTogglerHasBeenClicked = sharedPreferences.getBoolean(Constants.BUTTON_LOCATION_CLICKED, false);
-        myLocationIsEnabled = sharedPreferences.getBoolean(Constants.MY_LOCATION_ENABLED, myLocationIsEnabled);
+        locationTogglerHasBeenClicked = sharedPreferences.getBoolean(Constants.PREFERENCE_BUTTON_LOCATION_CLICKED, false);
+        myLocationIsEnabled = sharedPreferences.getBoolean(Constants.PREFERENCE_MY_LOCATION_ENABLED, myLocationIsEnabled);
+
     }
 
     /**
@@ -521,12 +518,15 @@ public class MapFragment extends Fragment {
         editor.putLong(Constants.LAST_MAP_CENTER_LON, Double.doubleToRawLongBits(lastMapCenterLon));
         editor.putLong(Constants.LAST_POS_LAT, Double.doubleToLongBits(lastKnownLocation.getLatitude()));
         editor.putLong(Constants.LAST_POS_LON, Double.doubleToLongBits(lastKnownLocation.getLongitude()));
-        editor.putBoolean(Constants.MY_LOCATION_ENABLED, myLocationIsEnabled);
-        //poitypeselection
-        editor.putBoolean(Constants.POITYPE_RESTAURANT_ACTIVE,ibPoiRestaurantLayer.isSelected());
-        editor.putBoolean(Constants.POITYPE_FLORAFAUNA_ACTIVE,ibPoiFloraFaunaLayer.isSelected());
-        editor.putBoolean(Constants.POITYPE_RESTAREA_ACTIVE,ibPoiRestAreaLayer.isSelected());
-        editor.putBoolean(Constants.POITYPE_VIEW_ACTIVE,ibPoiViewLayer.isSelected());
+        editor.putBoolean(Constants.PREFERENCE_MY_LOCATION_ENABLED, myLocationIsEnabled);
+        //poitype selection
+        editor.putBoolean(Constants.PREFERENCE_POITYPE_RESTAURANT_ACTIVE, ibPoiRestaurantLayer.isSelected());
+        editor.putBoolean(Constants.PREFERENCE_POITYPE_FLORAFAUNA_ACTIVE, ibPoiFloraFaunaLayer.isSelected());
+        editor.putBoolean(Constants.PREFERENCE_POITYPE_RESTAREA_ACTIVE, ibPoiRestAreaLayer.isSelected());
+        editor.putBoolean(Constants.PREFERENCE_POITYPE_VIEW_ACTIVE, ibPoiViewLayer.isSelected());
+        editor.putBoolean(Constants.PREFERENCE_POI_LAYER_ACTIVE, ibPoiLayer.isSelected());
+        editor.putBoolean(Constants.PREFERENCE_PUBLICTRANSPORT_LAYER_ACTIVE, ibPublicTransportLayer.isSelected());
+        editor.putBoolean(Constants.PREFERENCE_SAC_LAYER_ACTIVE, ibSacHutLayer.isSelected());
         editor.apply();
     }
 
@@ -551,7 +551,6 @@ public class MapFragment extends Fragment {
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
         mapView.setMultiTouchControls(true);
-
     }
 
     /**
@@ -605,40 +604,40 @@ public class MapFragment extends Fragment {
      * @param view View: view of current fragment
      */
     private void initLocationToggler(View view) {
-        locationToggler = (ImageButton) view.findViewById(R.id.locationButton);
+        ibLocationToggler = (ImageButton) view.findViewById(R.id.locationButton);
         displayMyLocationOnMap(myLocationIsEnabled);
 
         if (myLocationIsEnabled) {
             centerMapOnCurrentPosition();
-            locationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
+            ibLocationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
         } else {
-            locationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
+            ibLocationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
         }
 
         //register behavior on touched
-        StyleBehavior.buttonEffectOnTouched(locationToggler);
+        StyleBehavior.buttonEffectOnTouched(ibLocationToggler);
         //toggle listener
-        locationToggler.setOnClickListener(v -> {
+        ibLocationToggler.setOnClickListener(v -> {
             if (myLocationIsEnabled) {
                 // toggle to disabled
                 myLocationIsEnabled = false;
                 displayMyLocationOnMap(false);
 
-                locationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
+                ibLocationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
                 Toast.makeText(getActivity(), R.string.msg_follow_mode_disabled, Toast.LENGTH_SHORT).show();
             } else {
                 // toggle to enabled
                 myLocationIsEnabled = true;
                 displayMyLocationOnMap(true);
 
-                locationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
+                ibLocationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
                 Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
                 centerMapOnCurrentPosition();
             }
         });
 
         //long click listener
-        locationToggler.setOnLongClickListener(view1 -> {
+        ibLocationToggler.setOnLongClickListener(view1 -> {
             Toast.makeText(getActivity(), R.string.msg_map_centered_on_long_click, Toast.LENGTH_SHORT).show();
             centerMapOnCurrentPosition();
             return true;
@@ -716,98 +715,52 @@ public class MapFragment extends Fragment {
             }
         });
 
-        poiLayerButton = (ImageButton) view.findViewById(R.id.poi_layer_button);
-        showPoiOverlay(true);
-
-        publicTransportLayerButton = (ImageButton) view.findViewById(R.id.public_transport_layer_button);
-        showPublicTransportOverlay(false);
-
-        sacHutLayerButton = (ImageButton) view.findViewById(R.id.public_sac_layer_button);
-        showSacHutOverlay(false);
-
-        publicTransportLayerButton.setOnClickListener(v -> {
-            boolean toggleLayer = !publicTransportLayerButton.isSelected();
-            showPublicTransportOverlay(toggleLayer);
-        });
-
-
-        poiLayerButton.setOnClickListener(v -> {
-            boolean toggleLayer = !poiLayerButton.isSelected();
-            showPoiOverlay(toggleLayer);
-        });
-
-        sacHutLayerButton.setOnClickListener(v -> {
-            boolean toggleLayer = !sacHutLayerButton.isSelected();
-            showSacHutOverlay(toggleLayer);
-        });
-
-
-        mapView.setOnClickListener(v -> {
-            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        ibPoiLayer = (ImageButton) view.findViewById(R.id.poi_layer_button);
+        boolean poiLayerActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POI_LAYER_ACTIVE,true);
+        ibPoiLayer.setSelected(poiLayerActive);
+        showPoiOverlay(poiLayerActive);
+        ibPoiLayer.setOnClickListener(v -> {
+            showPoiOverlay(!ibPoiLayer.isSelected());
+            if(ibPoiLayer.isSelected()){
+                poiTypeSelection.setVisibility(View.VISIBLE);
+            } else {
+                poiTypeSelection.setVisibility(View.GONE);
             }
         });
-    }
 
-    private void showPoiRestaurantOverlay(boolean showOverlay) {
-        poiLayerButton.setSelected(showOverlay);
-        //mapOverlays.showPoiRestaurantLayer(showOverlay);
-        if (showOverlay) {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
-        } else {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
-        }
-    }
-    private void showPoiNatureOverlay(boolean showOverlay) {
-        poiLayerButton.setSelected(showOverlay);
-        //mapOverlays.showPoiNatureLayer(showOverlay);
-        if (showOverlay) {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
-        } else {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
-        }
-    }
-    private void showPoiViewOverlay(boolean showOverlay) {
-        poiLayerButton.setSelected(showOverlay);
-        //mapOverlays.showPoiViewLayer(showOverlay);
-        if (showOverlay) {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
-        } else {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
-        }
-    }
-    private void showPoiWarningOverlay(boolean showOverlay) {
-        poiLayerButton.setSelected(showOverlay);
-        //mapOverlays.showPoiWarningLayer(showOverlay);
-        if (showOverlay) {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
-        } else {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
-        }
+        boolean publicLayerActive = sharedPreferences.getBoolean(Constants.PREFERENCE_PUBLICTRANSPORT_LAYER_ACTIVE,true);
+        ibPublicTransportLayer = (ImageButton) view.findViewById(R.id.public_transport_layer_button);
+        ibPublicTransportLayer.setSelected(publicLayerActive);
+        showPublicTransportOverlay(publicLayerActive);
+        ibPublicTransportLayer.setOnClickListener(v -> showPublicTransportOverlay(!ibPublicTransportLayer.isSelected()));
+
+        ibSacHutLayer = (ImageButton) view.findViewById(R.id.public_sac_layer_button);
+        boolean sacHutLayerActive = sharedPreferences.getBoolean(Constants.PREFERENCE_SAC_LAYER_ACTIVE,true);
+        ibSacHutLayer.setSelected(sacHutLayerActive);
+        showSacHutOverlay(sacHutLayerActive);
+        ibSacHutLayer.setOnClickListener(v -> showSacHutOverlay(!ibSacHutLayer.isSelected()));
+
+        mapView.setOnClickListener(v -> {
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        });
     }
 
     private void showPoiOverlay(boolean showOverlay) {
-        poiLayerButton.setSelected(showOverlay);
+        ibPoiLayer.setSelected(showOverlay);
         mapOverlays.showPoiLayer(showOverlay);
         if (showOverlay) {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_selected_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+            ibPoiLayer.setImageResource(R.drawable.ic_poi_selected_24dp);
+            ibPoiLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
-            poiLayerButton.setImageResource(R.drawable.ic_poi_black_24dp);
-            poiLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+            ibPoiLayer.setImageResource(R.drawable.ic_poi_black_24dp);
+            ibPoiLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
     }
 
     private void showSacHutOverlay(boolean showOverlay) {
-        sacHutLayerButton.setSelected(showOverlay);
+        ibSacHutLayer.setSelected(showOverlay);
 
         BoundingBox boundingBox = mapView.getProjection().getBoundingBox();
         GeoPoint point1 = new GeoPoint(boundingBox.getLatNorth(), boundingBox.getLonWest());
@@ -819,11 +772,11 @@ public class MapFragment extends Fragment {
         mapView.setSacHutEnabledEnabled(showOverlay);
 
         if (showOverlay) {
-            sacHutLayerButton.setImageResource(R.drawable.ic_home_black_40dp_white);
-            sacHutLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+            ibSacHutLayer.setImageResource(R.drawable.ic_home_black_40dp_white);
+            ibSacHutLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
-            sacHutLayerButton.setImageResource(R.drawable.ic_home_black_40dp_black);
-            sacHutLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+            ibSacHutLayer.setImageResource(R.drawable.ic_home_black_40dp_black);
+            ibSacHutLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
     }
 
@@ -832,15 +785,15 @@ public class MapFragment extends Fragment {
      * Shows the public transport overlay and changes the icon in the dialog
      */
     private void showPublicTransportOverlay(boolean showPublicTransportOverlay) {
-        publicTransportLayerButton.setSelected(showPublicTransportOverlay);
+        ibPublicTransportLayer.setSelected(showPublicTransportOverlay);
         mapView.setPublicTransportEnabled(showPublicTransportOverlay);
         mapOverlays.showPublicTransportLayer(showPublicTransportOverlay, (GeoPoint) mapView.getMapCenter());
         if (showPublicTransportOverlay) {
-            publicTransportLayerButton.setImageResource(R.drawable.ic_train_white_40dp);
-            publicTransportLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+            ibPublicTransportLayer.setImageResource(R.drawable.ic_train_white_40dp);
+            ibPublicTransportLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
-            publicTransportLayerButton.setImageResource(R.drawable.ic_train_black_40dp);
-            publicTransportLayerButton.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+            ibPublicTransportLayer.setImageResource(R.drawable.ic_train_black_40dp);
+            ibPublicTransportLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
     }
 
@@ -878,7 +831,7 @@ public class MapFragment extends Fragment {
             mapOverlays.getMyLocationNewOverlay().enableFollowLocation();
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(Constants.BUTTON_LOCATION_CLICKED, true);
+            editor.putBoolean(Constants.PREFERENCE_BUTTON_LOCATION_CLICKED, true);
             locationTogglerHasBeenClicked = true;
             editor.apply();
         }

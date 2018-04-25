@@ -285,105 +285,107 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/titlePoiTypeSelection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingLeft="24dp"
-                android:paddingTop="24dp"
-                android:text="@string/title_poi_type_selection"
-                android:textColor="@color/heading_icon"
-                android:textSize="15sp" />
-
             <LinearLayout
                 android:id="@+id/poiTypeSelection"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/titlePoiTypeSelection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="24dp"
+                    android:paddingTop="24dp"
+                    android:text="@string/title_poi_type_selection"
+                    android:textColor="@color/heading_icon"
+                    android:textSize="15sp" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/poiTypesRestArea"
-                        style="@style/PoiButton"
-                        android:src="@drawable/ic_local_parking_white_40dp" />
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:text="@string/poi_type_warning" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                </LinearLayout>
+                        <ImageButton
+                            android:id="@+id/poiTypesRestArea"
+                            style="@style/PoiButton"
+                            android:src="@drawable/ic_local_parking_white_40dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:text="@string/poi_type_restarea" />
 
-                    <ImageButton
-                        android:id="@+id/poiTypesRestaurant"
-                        style="@style/PoiButton"
-                        android:src="@drawable/ic_restaurant_white_40dp" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/poi_type_restaurant" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <ImageButton
-                        android:id="@+id/poiTypesView"
-                        style="@style/PoiButton"
-                        android:src="@drawable/ic_terrain_white_40dp" />
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:text="@string/poi_type_view" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                </LinearLayout>
+                        <ImageButton
+                            android:id="@+id/poiTypesRestaurant"
+                            style="@style/PoiButton"
+                            android:src="@drawable/ic_restaurant_white_40dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/poi_type_restaurant" />
 
-                    <ImageButton
-                        android:id="@+id/poiTypeFloraFauna"
-                        style="@style/PoiButton"
-                        android:src="@drawable/ic_local_florist_white_40dp" />
+                    </LinearLayout>
 
-                    <TextView
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:text="@string/poi_type_nature" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
+                        <ImageButton
+                            android:id="@+id/poiTypesView"
+                            style="@style/PoiButton"
+                            android:src="@drawable/ic_terrain_white_40dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:text="@string/poi_type_view" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <ImageButton
+                            android:id="@+id/poiTypeFloraFauna"
+                            style="@style/PoiButton"
+                            android:src="@drawable/ic_local_florist_white_40dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:text="@string/poi_type_nature" />
+                    </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

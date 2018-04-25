@@ -112,9 +112,8 @@ public class FavoriteDao extends DatabaseObjectAbstract{
     /**
      * Insert a favorite into the database
      *
-     * @param handler
      */
-    public void retrieveAllFavorites(final FragmentHandler handler) {
+    public void retrieveAllFavorites() {
         Call<List<Favorite>> call = service.retrievAllFavorites();
         call.enqueue(new Callback<List<Favorite>>() {
             @Override
@@ -126,17 +125,13 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                         favorite.setInternal_id(0);
                         favoriteBox.put(favorite);
                     }
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
-                } else
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
             }
             @Override
             public void onFailure(Call<List<Favorite>> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
-
     /**
      * delete a favorite in the database
      *

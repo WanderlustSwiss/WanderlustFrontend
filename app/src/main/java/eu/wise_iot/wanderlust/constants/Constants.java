@@ -44,11 +44,6 @@ public interface Constants {
     String CREATE_TOUR_DIALOG = "CreateTourDialog";
     String CONFIRM_DELETE_POI_DIALOG = "YesNoDialog";
 
-    String POITYPE_RESTAURANT_ACTIVE = "PoiTypeRestaurantActive";
-    String POITYPE_FLORAFAUNA_ACTIVE = "PoiTypeFloraFaunaActive";
-    String POITYPE_RESTAREA_ACTIVE = "PoiTypeRestareaActive";
-    String POITYPE_VIEW_ACTIVE = "PoiTypeViewActive";
-
     /* PHOTO INTENT */
     String IMAGE_FILE_NAME = "imageFileName";
     String IMAGE_PATH = "imagePath";
@@ -67,8 +62,16 @@ public interface Constants {
     String CLICKED_TOUR = "clicked_tour";
 
     /* PREFERENCES */
-    String MY_LOCATION_ENABLED = "buttonLocationToggler";
-    String BUTTON_LOCATION_CLICKED = "buttonLocationFirstClick";
+    String PREFERENCE_MY_LOCATION_ENABLED = "buttonLocationToggler";
+    String PREFERENCE_BUTTON_LOCATION_CLICKED = "buttonLocationFirstClick";
+    String PREFERENCE_POITYPE_RESTAURANT_ACTIVE = "PoiTypeRestaurantActive";
+    String PREFERENCE_POITYPE_FLORAFAUNA_ACTIVE = "PoiTypeFloraFaunaActive";
+    String PREFERENCE_POITYPE_RESTAREA_ACTIVE = "PoiTypeRestareaActive";
+    String PREFERENCE_POITYPE_VIEW_ACTIVE = "PoiTypeViewActive";
+    String PREFERENCE_POI_LAYER_ACTIVE = "PoiTypeViewActive";
+    String PREFERENCE_SAC_LAYER_ACTIVE = "PoiTypeViewActive";
+    String PREFERENCE_PUBLICTRANSPORT_LAYER_ACTIVE = "PoiTypeViewActive";
+
 
     /* INTENTS */
     int TAKE_PHOTO = 1;

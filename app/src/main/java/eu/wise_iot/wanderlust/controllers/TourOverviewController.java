@@ -77,14 +77,7 @@ public class TourOverviewController {
         userTourDao.downloadImage(tourID, image_id, handler);
     }
     /**
-     * get all Favorites
-     *
-     */
-    public void downloadFavorites(FragmentHandler handler) {
-        favoriteDao.retrieveAllFavorites(handler);
-    }
-    /**
-     * get all Favorites
+     * set Favorite
      *
      */
     public void setFavorite(Tour tour, FragmentHandler handler) {

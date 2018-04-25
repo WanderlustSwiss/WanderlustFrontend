@@ -135,7 +135,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                         case OK:
                             Poi poi = (Poi) event.getModel();
 
-
                             FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
                             // make sure that no other dialog is running
                             Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
@@ -215,31 +214,18 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      */
     private OverlayItem poiToOverlayItem(Poi poi) {
         Drawable drawable;
-        boolean hasImage = poi.getImageCount() > 0;
         switch ((int) poi.getType()) {
             case Constants.TYPE_VIEW:
-                if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.poi_sight);
-                else
-                    drawable = activity.getResources().getDrawable(R.drawable.poi_sight_no_img);
+                drawable = activity.getResources().getDrawable(R.drawable.poi_sight);
                 break;
             case Constants.TYPE_RESTAURANT:
-                if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.poi_resaurant);
-                else
-                    drawable = activity.getResources().getDrawable(R.drawable.poi_resaurant_no_img);
+                drawable = activity.getResources().getDrawable(R.drawable.poi_resaurant);
                 break;
             case Constants.TYPE_REST_AREA:
-                if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.poi_resting);
-                else
-                    drawable = activity.getResources().getDrawable(R.drawable.poi_resting_no_img);
+                drawable = activity.getResources().getDrawable(R.drawable.poi_resting);
                 break;
             case Constants.TYPE_FLORA_FAUNA:
-                if (hasImage)
-                    drawable = activity.getResources().getDrawable(R.drawable.poi_fauna_flora);
-                else
-                    drawable = activity.getResources().getDrawable(R.drawable.poi_fauna_flora_no_img);
+                drawable = activity.getResources().getDrawable(R.drawable.poi_fauna_flora);
                 break;
             default:
                 drawable = activity.getResources().getDrawable(R.drawable.poi_error);
@@ -257,16 +243,14 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      * only adds poi if subcategory is selected in frontend
      */
     public void addPoiToOverlay(Poi poi) {
-        OverlayItem overlayItem = poiToOverlayItem(poi);
-
-        //TODO get by type id or name -> define in constants?
-        //PoiTypeDao.getInstance().findOne(PoiType_.poit_id,poi.getType()).getName();
-
-        if(this.poiViewActive && poi.getType() == Constants.TYPE_VIEW
-                || this.poiRestaurantActive && poi.getType() == Constants.TYPE_RESTAURANT
-                || this.poiRestAreaActive && poi.getType() == Constants.TYPE_REST_AREA
-                || this.poiFloraFaunaActive && poi.getType() == Constants.TYPE_FLORA_FAUNA)
-            poiOverlay.addItem(overlayItem);
+        if(this.poiViewActive && (poi.getType() == Constants.TYPE_VIEW))
+            poiOverlay.addItem(poiToOverlayItem(poi));
+        else if(this.poiRestaurantActive && (poi.getType() == Constants.TYPE_RESTAURANT))
+            poiOverlay.addItem(poiToOverlayItem(poi));
+        else if (this.poiRestAreaActive && (poi.getType() == Constants.TYPE_REST_AREA))
+            poiOverlay.addItem(poiToOverlayItem(poi));
+        else if (this.poiFloraFaunaActive && (poi.getType() == Constants.TYPE_FLORA_FAUNA))
+            poiOverlay.addItem(poiToOverlayItem(poi));
     }
 
     /**
@@ -299,7 +283,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      * them to the map overlay
      */
     public void populatePoiOverlay() {
-
         poiOverlay.removeAllItems();
         List<Poi> pois = PoiDao.getInstance().find();
         for (Poi poi : pois) {
@@ -328,6 +311,21 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             mapView.getOverlays().remove(poiOverlay);
         }
         mapView.invalidate();
+    }
+
+    /**
+     * Triggers the refresh of Poi layer
+     *
+     */
+    void refreshPoiLayer() {
+        this.populatePoiOverlay();
+        mapView.invalidate();
+        /*
+        mapView.getOverlays().remove(poiOverlay);
+        mapView.invalidate();
+        mapView.getOverlays().add(poiOverlay);
+        mapView.invalidate();
+        */
     }
 
     /**

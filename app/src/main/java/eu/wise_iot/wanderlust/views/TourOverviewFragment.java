@@ -112,16 +112,6 @@ public class TourOverviewFragment extends Fragment {
      * @param tours
      */
     private void getDataFromServer(List<Tour> tours){
-        //get given favorites
-        toc.downloadFavorites(controllerEvent -> {
-            switch (controllerEvent.getType()) {
-                case OK:
-                    Log.d(TAG, "Server response getting favorites: " + controllerEvent.getType().name());
-                    break;
-                default:
-                    Log.d(TAG, "Download favorites: Server response ERROR: " + controllerEvent.getType().name());
-            }
-        });
         //get thumbnail for each tour
         for(Tour ut : tours){
             try {

@@ -13,6 +13,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
@@ -42,6 +43,7 @@ public class LoginController {
     private final RegionDao regionDao;
     private final DifficultyTypeDao difficultyTypeDao;
     private final ViolationTypeDao violationTypeDao;
+    private final FavoriteDao favoriteDao;
     /**
      * Create a login contoller
      */
@@ -55,6 +57,7 @@ public class LoginController {
         regionDao = RegionDao.getInstance();
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         violationTypeDao = ViolationTypeDao.getInstance();
+        favoriteDao = FavoriteDao.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
@@ -194,6 +197,7 @@ public class LoginController {
         regionDao.retrieve();
         difficultyTypeDao.retrieve();
         violationTypeDao.retrieveAllViolationTypes();
+        favoriteDao.retrieveAllFavorites();
     }
 }
 
