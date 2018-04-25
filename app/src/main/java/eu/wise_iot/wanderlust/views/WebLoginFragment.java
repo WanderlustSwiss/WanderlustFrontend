@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -135,7 +137,15 @@ public class WebLoginFragment extends Fragment  {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setSupportMultipleWindows(true);
         webview.setWebViewClient(new WebViewClient() {
-
+            public void onReceivedHttpError(WebView view, WebResourceRequest request,
+                                            WebResourceResponse errorResponse){
+                Fragment loginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                if (loginFragment == null) loginFragment = StartupLoginFragment.newInstance();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
+                        .commit();
+                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+            }
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 instagramContainer.setVisibility(View.GONE);
