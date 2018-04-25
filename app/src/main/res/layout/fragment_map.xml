@@ -309,9 +309,9 @@
                     android:padding="16dp">
 
                     <ImageButton
-                        android:id="@+id/poiTypesWarning"
+                        android:id="@+id/poiTypesRestArea"
                         style="@style/PoiButton"
-                        android:src="@drawable/ic_home_black_40dp_white" />
+                        android:src="@drawable/ic_local_parking_white_40dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -331,7 +331,7 @@
                     <ImageButton
                         android:id="@+id/poiTypesRestaurant"
                         style="@style/PoiButton"
-                        android:src="@drawable/ic_poi_selected_24dp" />
+                        android:src="@drawable/ic_restaurant_white_40dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -351,7 +351,7 @@
                     <ImageButton
                         android:id="@+id/poiTypesView"
                         style="@style/PoiButton"
-                        android:src="@drawable/ic_train_white_40dp" />
+                        android:src="@drawable/ic_terrain_white_40dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -369,9 +369,9 @@
                     android:padding="16dp">
 
                     <ImageButton
-                        android:id="@+id/poiTypesNature"
+                        android:id="@+id/poiTypeFloraFauna"
                         style="@style/PoiButton"
-                        android:src="@drawable/ic_home_black_40dp_white" />
+                        android:src="@drawable/ic_local_florist_white_40dp" />
 
                     <TextView
                         android:layout_width="match_parent"

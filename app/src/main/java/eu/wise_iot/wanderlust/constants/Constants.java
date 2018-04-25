@@ -8,7 +8,7 @@ package eu.wise_iot.wanderlust.constants;
  */
 public interface Constants {
 
-    // new types
+    // POI new types
     int TYPE_VIEW = 1;
     int TYPE_RESTAURANT = 2;
     int TYPE_REST_AREA = 3;
@@ -43,6 +43,11 @@ public interface Constants {
     String REPORT_POI_DIALOG = "PoiReportDialog";
     String CREATE_TOUR_DIALOG = "CreateTourDialog";
     String CONFIRM_DELETE_POI_DIALOG = "YesNoDialog";
+
+    String POITYPE_RESTAURANT_ACTIVE = "PoiTypeRestaurantActive";
+    String POITYPE_FLORAFAUNA_ACTIVE = "PoiTypeFloraFaunaActive";
+    String POITYPE_RESTAREA_ACTIVE = "PoiTypeRestareaActive";
+    String POITYPE_VIEW_ACTIVE = "PoiTypeViewActive";
 
     /* PHOTO INTENT */
     String IMAGE_FILE_NAME = "imageFileName";
