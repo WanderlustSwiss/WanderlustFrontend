@@ -11,12 +11,16 @@ public class RotationGestureDetector {
     private float fX, fY, sX, sY;
     private int ptrID1, ptrID2;
     private float mAngle;
-    private float lastAngle = 0;
+    private static float lastAngle = 0;
 
     private OnRotationGestureListener mListener;
 
     public float getAngle() {
         return mAngle + lastAngle;
+    }
+
+    public static void setAngle(float angle){
+        lastAngle = angle;
     }
 
     public RotationGestureDetector(OnRotationGestureListener listener){

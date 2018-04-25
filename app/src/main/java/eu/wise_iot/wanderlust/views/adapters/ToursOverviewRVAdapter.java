@@ -122,21 +122,9 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
             File image = images.get(0);
+            Picasso.with(context).invalidate(image);
             Picasso.with(context).load(image).fit().centerCrop().noFade()
                     .placeholder(R.drawable.progress_animation).into(holder.tvImage);
-
-//            Picasso.Builder builder = new Picasso.Builder(context);
-//            builder.listener(new Picasso.Listener()
-//            {
-//                @Override
-//                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-//                {
-//                    exception.printStackTrace(); //TODO update to newer Picasso library https://github.com/square/picasso/issues/364
-//                }
-//            });
-//            builder.build().load(image).fit().centerCrop().into(holder.tvImage);
-
-            Picasso.with(context).load(image).fit().centerCrop().into(holder.tvImage);
             Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
         } else {
             Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()

@@ -33,9 +33,10 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
     private BottomSheetBehavior bottomSheetBehavior;
     private View bottomSheet;
 
+    private WanderlustCompassOverlay wanderlustCompassOverlay;
+
     private final ArrayList<MotionEventListener<WanderlustMapView>> motionEventListenerList = new ArrayList<>();
 
-    private float lastAngle = 0;
     public void setBottomSheetClosingComponents(View bottomSheet, BottomSheetBehavior bottomSheetBehavior) {
         this.bottomSheet = bottomSheet;
         this.bottomSheetBehavior = bottomSheetBehavior;
@@ -132,7 +133,13 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
     @Override
     public void OnRotation(RotationGestureDetector rotationDetector) {
         float angle = rotationDetector.getAngle();
+        wanderlustCompassOverlay.setLastKnownAngle(angle);
         this.setMapOrientation(-angle);
         Log.d("RotationGestureDetector", "Rotation: " + Float.toString(angle));
+    }
+
+
+    public void setWanderlustCompassOverlay(WanderlustCompassOverlay wanderlustCompassOverlay) {
+        this.wanderlustCompassOverlay = wanderlustCompassOverlay;
     }
 }

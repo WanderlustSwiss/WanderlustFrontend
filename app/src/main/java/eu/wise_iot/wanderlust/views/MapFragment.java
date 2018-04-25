@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.MatrixCursor;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -190,7 +192,6 @@ public class MapFragment extends Fragment {
         initMapTypeButton(view);
         initInformationBottomSheet(view);
         initCreatingTourControlls(view);
-
     }
 
     private void initCreatingTourControlls(View view) {
@@ -319,7 +320,6 @@ public class MapFragment extends Fragment {
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
             Log.e(TAG, "A request for the whole tour is sent and start tracking on map again.");
         }
-
     }
 
     @Override
@@ -426,7 +426,6 @@ public class MapFragment extends Fragment {
         ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
                 new String[]{"https://opentopomap.org/"});
         mapView.setTileSource(tileSource);
-
 
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
@@ -574,7 +573,11 @@ public class MapFragment extends Fragment {
      */
     private void initLayerButton(View view) {
         layerButton = (ImageButton) view.findViewById(R.id.layerButton);
-
+        layerButton.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            int[] pos = new int[2];
+            layerButton.getLocationOnScreen(pos);
+            mapOverlays.setCompassPos(pos[0]+layerButton.getWidth()/2, pos[1]+layerButton.getHeight()*1.5f);
+        });
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
 

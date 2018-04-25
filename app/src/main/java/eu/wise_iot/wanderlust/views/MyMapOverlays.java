@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
@@ -21,6 +22,7 @@ import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -53,7 +55,7 @@ import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 public class MyMapOverlays implements Serializable, DatabaseListener {
     private static final String TAG = "MyMapOverlays";
     private final Activity activity;
-    private final MapView mapView;
+    private final WanderlustMapView mapView;
     private Polyline currentTour;
     private final MapController searchMapController;
 
@@ -62,7 +64,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> publicTransportOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> sacHutOverlay;
-    private CompassOverlay compassOverlay;
+    private WanderlustCompassOverlay compassOverlay;
+    private RotationGestureOverlay rotationGestureOverlay;
     private Marker positionMarker;
     private Marker focusedPositionMarker;
     private ArrayList<Polyline> borderLines;
@@ -72,7 +75,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private ArrayList<Polyline> trackingTourOverlay;
 
 
-    public MyMapOverlays(Activity activity, MapView mapView, MapController searchMapController, MapFragment fragment) {
+    public MyMapOverlays(Activity activity, WanderlustMapView mapView, MapController searchMapController, MapFragment fragment) {
         this.mapFragment = fragment;
         this.searchMapController = searchMapController;
         this.activity = activity;
@@ -88,12 +91,17 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         initCompassOverlay();
     }
 
-
     private void initCompassOverlay(){
-        compassOverlay = new CompassOverlay(activity, mapView);
+        compassOverlay = new WanderlustCompassOverlay(activity, mapView);
         compassOverlay.enableCompass();
-        compassOverlay.setCompassCenter(30,  80);
+        //compassOverlay.setCompassCenter(350,  180);
+        setCompassPos(350, 180);
         mapView.getOverlays().add(compassOverlay);
+        mapView.setWanderlustCompassOverlay(compassOverlay);
+    }
+
+    public void setCompassPos(float x, float y){
+        compassOverlay.setCompassCenter(x, y);
     }
 
     /**
@@ -248,7 +256,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         OverlayItem overlayItem = new OverlayItem(Long.toString(poi.getPoi_id()), poi.getTitle(),
                 poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
 
-        overlayItem.setMarker(drawable);
+        overlayItem.setMarker(drawable);;
         return overlayItem;
     }
 
