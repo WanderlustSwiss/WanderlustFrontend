@@ -108,7 +108,7 @@
 
 
     <!-- REGISTRATION -->
-    <string name="registration_name">Nickname</string>
+    <string name="registration_name">Benutzernamen</string>
     <string name="registration_email">E-Mail</string>
     <string name="registration_password">Passwort</string>
     <string name="registration_password_repeat">Passwort wiederholen</string>
@@ -126,7 +126,7 @@
 
 
     <!-- LOGIN -->
-    <string name="login_nickname_email">Nickname / E-Mail</string>
+    <string name="login_nickname_email">Benutzernamen / E-Mail</string>
     <string name="login_password">Passwort</string>
     <string name="login_login">Login</string>
     <string name="login_failure">Login fehlgeschlagen</string>

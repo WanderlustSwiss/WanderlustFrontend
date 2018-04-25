@@ -144,7 +144,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
         btnLogin = (Button) view.findViewById(R.id.btn_signin);
         nicknameEmailTextfield = (EditText) view.findViewById(R.id.input_nickname_email);
         nicknameEmailLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_nickname_email);
-        nicknameEmailLayout.setErrorEnabled(true);
 //        signInButtonGoogle = (SignInButton) view.findViewById(R.id.sign_in_button);
         redirectToRegistration = (TextView) view.findViewById(R.id.link_registration);
         forgotPassword = (TextView) view.findViewById(R.id.login_forgetPassword);
