@@ -43,6 +43,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 
@@ -303,41 +304,35 @@ public class ProfileEditFragment extends Fragment {
         galleryIntent.putExtra("aspectX", 1);
         galleryIntent.putExtra("aspectY", 1);
         galleryIntent.putExtra("scale", true);
-
         if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(galleryIntent, 1000);
         }
     }
 
     private void onActionResultGallery(Intent data) {
-        Bundle extras = data.getExtras();
-        if(extras != null){
 
-            Bitmap bitmapImage = (Bitmap) extras.get("data");
+        Uri returnUri = data.getData();
 
-            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-            Uri returnUri = getImageUri(getActivity().getApplicationContext(), bitmapImage);
-
-            try {
-                bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
-                if (bitmapImage != null) {
-                    profileController.setProfilePicture(bitmapImage, controllerEvent -> {
-                        if (controllerEvent.getType() == EventType.OK) {
-                            setupAvatar();
-                        } else {
-                            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            } catch (IOException e) {
-                Log.d(TAG, e.getMessage());
-            }
-        } else {
-            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
-                    Toast.LENGTH_SHORT).show();
+        if (returnUri == null) {
+            Bundle extras = data.getExtras();
+            returnUri = getImageUri(getActivity().getApplicationContext(), (Bitmap) extras.get("data"));
         }
-
+        try {
+            Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+            bitmapImage = ImageController.getInstance().resize(bitmapImage, 170);
+            if (bitmapImage != null) {
+                profileController.setProfilePicture(bitmapImage, controllerEvent -> {
+                    if (controllerEvent.getType() == EventType.OK) {
+                        setupAvatar();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.err_msg_error_occured,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
+        }
     }
 
     private void setupAvatar() {

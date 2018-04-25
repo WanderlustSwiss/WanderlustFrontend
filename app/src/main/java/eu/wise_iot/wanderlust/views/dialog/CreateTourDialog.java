@@ -45,6 +45,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
@@ -347,33 +348,32 @@ public class CreateTourDialog extends DialogFragment {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
 
-        galleryIntent.putExtra("crop", "false");
-        galleryIntent.putExtra("outputFormat",
-                Bitmap.CompressFormat.JPEG.toString());
-
         if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(Intent.createChooser(galleryIntent, "Complete action using"), 1212);
         }
     }
 
     private void onActionResultGallery(Intent data) {
-        Bundle extras = data.getExtras();
 
-        if (extras != null) {
-            imageBitmap = (Bitmap) extras.get("data");
+        Uri returnUri = data.getData();
 
-            returnUri = getImageUri(getActivity().getApplicationContext(), imageBitmap);
-            realPath = getRealPathFromURI(returnUri);
-
-
-            if (imageBitmap != null) {
-                tourImageDisplay.setImageBitmap(imageBitmap);
-            }
-
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
-                    Toast.LENGTH_SHORT).show();
+        if (returnUri == null) {
+            Bundle extras = data.getExtras();
+            returnUri = getImageUri(getActivity().getApplicationContext(), (Bitmap) extras.get("data"));
         }
+
+        try {
+            imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+            imageBitmap = ImageController.getInstance().resize(imageBitmap, 1024);
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
+        }
+
+        if (imageBitmap != null) {
+            tourImageDisplay.setImageBitmap(imageBitmap);
+        }
+
+
 
     }
 

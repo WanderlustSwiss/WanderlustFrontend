@@ -137,4 +137,18 @@ public class ImageController {
         }
         return imgFileOrig;
     }
+
+    public Bitmap resize(Bitmap b, int destWidth){
+        int origWidth = b.getWidth();
+        int origHeight = b.getHeight();
+
+        if(origWidth > destWidth){
+            int destHeight = origHeight/( origWidth / destWidth ) ;
+            Bitmap b2 = Bitmap.createScaledBitmap(b, destWidth, destHeight, false);
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            b2.compress(Bitmap.CompressFormat.JPEG,80 , outStream);
+            return b2;
+        }
+        return b;
+    }
 }

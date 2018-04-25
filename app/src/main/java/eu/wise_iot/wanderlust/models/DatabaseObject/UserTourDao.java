@@ -324,8 +324,8 @@ public class UserTourDao extends DatabaseObjectAbstract {
 //                      internalPoi.addImageId((byte) imageInfo.getId());
 //                      poiBox.put(internalPoi);
 //                      handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalPoi));
-
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                        call.cancel();
 
                     } else {
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
