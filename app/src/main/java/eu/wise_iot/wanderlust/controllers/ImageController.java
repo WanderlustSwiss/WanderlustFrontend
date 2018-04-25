@@ -2,8 +2,11 @@ package eu.wise_iot.wanderlust.controllers;
 
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -150,5 +153,23 @@ public class ImageController {
             return b2;
         }
         return b;
+    }
+
+
+    /*
+    https://stackoverflow.com/questions/12369138/disable-android-image-auto-rotate
+     */
+    public int getOrientation(Uri selectedImage) {
+        int orientation = 0;
+        final String[] projection = new String[]{MediaStore.Images.Media.ORIENTATION};
+        final Cursor cursor = CONTEXT.getContentResolver().query(selectedImage, projection, null, null, null);
+        if(cursor != null) {
+            final int orientationColumnIndex = cursor.getColumnIndex(MediaStore.Images.Media.ORIENTATION);
+            if(cursor.moveToFirst()) {
+                orientation = cursor.isNull(orientationColumnIndex) ? 0 : cursor.getInt(orientationColumnIndex);
+            }
+            cursor.close();
+        }
+        return orientation;
     }
 }

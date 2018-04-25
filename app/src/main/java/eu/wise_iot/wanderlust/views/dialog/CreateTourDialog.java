@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.io.BufferedOutputStream;
@@ -99,6 +101,8 @@ public class CreateTourDialog extends DialogFragment {
     private Uri returnUri;
     private String realPath;
 
+    private ImageController imageController;
+
 
     /**
      * Create a NEW tour dialog to create tour without further information
@@ -134,6 +138,7 @@ public class CreateTourDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         tourController = new TourController(this.tour);
         mapController = new MapController(this);
+        imageController = ImageController.getInstance();
         regions = tourController.getAllRegions();
         regionNames = new ArrayList<>();
 
@@ -362,15 +367,27 @@ public class CreateTourDialog extends DialogFragment {
             returnUri = getImageUri(getActivity().getApplicationContext(), (Bitmap) extras.get("data"));
         }
 
+        realPath = getRealPathFromURI(returnUri);
+        File image = new File(realPath);
         try {
             imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
-            imageBitmap = ImageController.getInstance().resize(imageBitmap, 1024);
+            imageBitmap = imageController.resize(imageBitmap, 1024);
+            if(image.length() > 500_000 * 8){
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, new FileOutputStream(image));
+                if(image.length() > 500_000 * 8){
+                    //Still to high quality
+                    Toast.makeText(getActivity(), R.string.image_upload_failed, Toast.LENGTH_SHORT).show();
+                }
+            }
         } catch (IOException e) {
             Log.d(TAG, e.getMessage());
         }
 
         if (imageBitmap != null) {
-            tourImageDisplay.setImageBitmap(imageBitmap);
+            Picasso.with(getActivity().getApplicationContext())
+                    .load(returnUri)
+                    .rotate(imageController.getOrientation(returnUri))
+                    .into(tourImageDisplay);
         }
 
 
@@ -384,7 +401,7 @@ public class CreateTourDialog extends DialogFragment {
         return Uri.parse(path);
     }
 
-    public String getRealPathFromURI(Uri uri) {
+    private String getRealPathFromURI(Uri uri) {
         Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
