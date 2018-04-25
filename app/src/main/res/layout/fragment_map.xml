@@ -81,13 +81,7 @@
             android:layout_marginTop="16dp"
             android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/createTourButton"
-                style="@style/FloatingActionButton.Light"
-                android:layout_marginBottom="16dp"
-                android:visibility="gone"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_library_add_grey_24dp" />
+
 
             <ImageButton
                 android:id="@+id/locationButton"
@@ -97,12 +91,29 @@
                 android:src="@drawable/ic_my_location_disabled_black_24dp" />
 
 
-            <ImageButton
-                android:id="@+id/takePictureButton"
-                style="@style/FloatingActionButton"
-                android:layout_gravity="center_horizontal|center"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_camera_white_24dp" />
+            <com.github.clans.fab.FloatingActionMenu
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/takePictureButton"
+                    style="@style/FloatingActionButton"
+                    android:layout_gravity="center_horizontal|center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_camera_white_24dp" />
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/createTourButton"
+                    style="@style/FloatingActionButton.Light"
+                    android:layout_marginBottom="16dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_library_add_grey_24dp" />
+
+            </com.github.clans.fab.FloatingActionMenu>
         </LinearLayout>
     </FrameLayout>
 

@@ -1,10 +1,21 @@
 package eu.wise_iot.wanderlust.views.dialog;
 
+import android.Manifest;
 import android.app.DialogFragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +24,18 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -35,6 +53,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * CreateTour:
  *
@@ -44,6 +64,11 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 public class CreateTourDialog extends DialogFragment {
     private static final String TAG = "CreateTourDialog";
     private FragmentHandler<Trip> createTourhandler;
+    private FragmentHandler<Trip> uploadPhotoHandler;
+    private FragmentHandler<Tour> getCreatedTourHandler;
+    private FragmentHandler<Trip> saveTourLocalHandler;
+    private String photoPath;
+
     private ArrayList<GeoPoint> trackedTour;
     private List<Region> regions;
     private List<String> regionNames;
@@ -60,13 +85,19 @@ public class CreateTourDialog extends DialogFragment {
     private CheckBox springCheckBox;
     private CheckBox winterCheckBox;
 
-
+    private ImageView tourImageDisplay;
+    private AppCompatButton uploadImageBtn;
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
     private TourController tourController;
     private MapController mapController;
     private boolean isNewTour;
     private boolean publish;
+
+    private Bitmap imageBitmap;
+    private Uri returnUri;
+    private String realPath;
+
 
     /**
      * Create a NEW tour dialog to create tour without further information
@@ -123,12 +154,41 @@ public class CreateTourDialog extends DialogFragment {
 
         createTourhandler = controllerEvent -> {
             if (controllerEvent.getType() == EventType.OK) {
+                Trip trip = controllerEvent.getModel();
+                tourController.getTourById(trip.getTour(), getCreatedTourHandler);
+            } else {
+                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        uploadPhotoHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
                 Toast.makeText(getActivity(), R.string.create_tour_saved, Toast.LENGTH_SHORT).show();
                 dismiss();
             } else {
                 Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
             }
         };
+
+        getCreatedTourHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                Tour currentTour = controllerEvent.getModel();
+                currentTour.setInternal_id(0);
+                tourController.addTour(saveTourLocalHandler, currentTour);
+            } else {
+                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        saveTourLocalHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                tourController.uploadImage(new File(realPath), uploadPhotoHandler);
+            } else {
+                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+
     }
 
     @Override
@@ -141,20 +201,32 @@ public class CreateTourDialog extends DialogFragment {
         publicSpinner = (Spinner) view.findViewById(R.id.tour_is_public);
         difficultySpinner = (Spinner) view.findViewById(R.id.tour_difficulty);
         buttonSave = (ImageButton) view.findViewById(R.id.tour_save_button);
+        uploadImageBtn = (AppCompatButton) view.findViewById(R.id.upload_image_btn);
         buttonCancel = (ImageButton) view.findViewById(R.id.tour_return_button);
         regionSpinner = (Spinner) view.findViewById(R.id.tour_region);
         winterCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_winter);
         summerCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_summer);
         fallCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_fall);
         springCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_spring);
+        tourImageDisplay = (ImageView) view.findViewById(R.id.tour_image);
 
-
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, regionNames);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, regionNames);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         regionSpinner.setAdapter(spinnerArrayAdapter);
 
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 1212:
+                    onActionResultGallery(data);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -177,6 +249,11 @@ public class CreateTourDialog extends DialogFragment {
 
             if (tour.getTitle().isEmpty()) {
                 titleTextLayout.setError(getString(R.string.message_add_title));
+                return;
+            }
+
+            if (imageBitmap == null) {
+                Toast.makeText(getActivity(), R.string.create_tour_photo_required, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -223,6 +300,16 @@ public class CreateTourDialog extends DialogFragment {
             }
 
         });
+
+        uploadImageBtn.setOnClickListener(v -> {
+            if (ActivityCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -254,5 +341,53 @@ public class CreateTourDialog extends DialogFragment {
                 }
             }
         });
+    }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
+
+        galleryIntent.putExtra("crop", "false");
+        galleryIntent.putExtra("outputFormat",
+                Bitmap.CompressFormat.JPEG.toString());
+
+        if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(Intent.createChooser(galleryIntent, "Complete action using"), 1212);
+        }
+    }
+
+    private void onActionResultGallery(Intent data) {
+        Bundle extras = data.getExtras();
+
+        if (extras != null) {
+            imageBitmap = (Bitmap) extras.get("data");
+
+            returnUri = getImageUri(getActivity().getApplicationContext(), imageBitmap);
+            realPath = getRealPathFromURI(returnUri);
+
+
+            if (imageBitmap != null) {
+                tourImageDisplay.setImageBitmap(imageBitmap);
+            }
+
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 }

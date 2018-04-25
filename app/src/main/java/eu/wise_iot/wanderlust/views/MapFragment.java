@@ -13,8 +13,12 @@ import android.content.SharedPreferences;
 import android.database.MatrixCursor;
 import android.graphics.Rect;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.BaseColumns;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
@@ -34,6 +38,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.clans.fab.FloatingActionButton;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.MapTile;
@@ -71,6 +77,8 @@ import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 import eu.wise_iot.wanderlust.views.dialog.CreateTourDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 
+import static android.content.Context.POWER_SERVICE;
+
 /**
  * MapFragment: The Fragment that contains the map view, map functionality and buttons.
  *
@@ -95,7 +103,7 @@ public class MapFragment extends Fragment {
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
     private ImageButton locationToggler;
-    private ImageButton cameraButton;
+    private FloatingActionButton cameraButton;
     private ImageButton layerButton;
     private ImageButton staliteTypeButton;
     private ImageButton defaultTypeButton;
@@ -120,7 +128,7 @@ public class MapFragment extends Fragment {
     private TextView informationBottomSheetString;
 
     // GPS Creating Tour
-    private ImageButton createTourButton;
+    private FloatingActionButton createTourButton;
     private TextView creatingTourInformation;
     private Intent createTourIntent;
 
@@ -197,16 +205,24 @@ public class MapFragment extends Fragment {
     }
 
     private void initCreatingTourControlls(View view) {
-        createTourButton = (ImageButton) view.findViewById(R.id.createTourButton);
+        createTourButton = (FloatingActionButton) view.findViewById(R.id.createTourButton);
         creatingTourInformation = (TextView) view.findViewById(R.id.createTourInformation);
         createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
+
+        if (isMyServiceRunning(CreateTourBackgroundTask.class)) {
+            createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
+            creatingTourInformation.setVisibility(View.VISIBLE);
+        }
 
 
         createTourButton.setOnClickListener(view1 -> {
             if (!isMyServiceRunning(CreateTourBackgroundTask.class)) {
-                startTourTracking();
-                createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
-                creatingTourInformation.setVisibility(View.VISIBLE);
+                if (startTourTracking()) {
+                    createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
+                    creatingTourInformation.setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(getActivity(), R.string.create_tour_need_whitelist, Toast.LENGTH_SHORT).show();
+                }
             } else {
                 new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.create_tour_save_tour)
@@ -538,7 +554,7 @@ public class MapFragment extends Fragment {
      * @param view View: view of current fragment
      */
     private void initCameraButton(View view) {
-        cameraButton = (ImageButton) view.findViewById(R.id.takePictureButton);
+        cameraButton = (FloatingActionButton) view.findViewById(R.id.takePictureButton);
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(cameraButton);
 
@@ -919,10 +935,19 @@ public class MapFragment extends Fragment {
 
     /************************************************* Tour Tracking ***************************************************/
 
-    private void startTourTracking() {
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(createTourReceiver, new IntentFilter(Constants.CREATE_TOUR_INTENT));
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateTrackingOverlayReceiver, new IntentFilter(Constants.CREATE_TOUR_UPDATE_MYOVERLAY));
-        getActivity().startService(createTourIntent);
+    private boolean startTourTracking() {
+        PowerManager pm = (PowerManager) getActivity().getSystemService(POWER_SERVICE);
+
+        if (pm != null && pm.isPowerSaveMode() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            Toast.makeText(getActivity(), R.string.create_tour_disable_battery_save_mode, Toast.LENGTH_LONG).show();
+            return false;
+        } else {
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(createTourReceiver, new IntentFilter(Constants.CREATE_TOUR_INTENT));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateTrackingOverlayReceiver, new IntentFilter(Constants.CREATE_TOUR_UPDATE_MYOVERLAY));
+            getActivity().startService(createTourIntent);
+            return true;
+        }
+
     }
 
     private void stoptTourTracking() {

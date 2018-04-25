@@ -89,8 +89,12 @@ public class TripDao extends DatabaseObjectAbstract {
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
-                if (response.isSuccessful()) {
-                //    routeBox.put((Trip) trip);
+                if (response.isSuccessful() && response.body() != null) {
+                    Trip trip = (Trip) response.body();
+                    long remoteTripId = trip.getTrip_id();
+                    trip.setTrip_id(0);
+                    routeBox.put((Trip) response.body());
+                    trip.setTrip_id(remoteTripId);
                     handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code())));

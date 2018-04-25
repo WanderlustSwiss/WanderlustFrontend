@@ -252,5 +252,9 @@
     <string name="short_october">Okt</string>
     <string name="short_november">Nov</string>
     <string name="short_december">Dez</string>
+    <string name="create_tour_need_whitelist">Fürs Tracking bitte Wanderlust als Ausnahme hinzufügen</string>
+    <string name="create_tour_upload_image">Upload Image</string>
+    <string name="create_tour_photo_required">Foto muss hinzugefügt werden</string>
+    <string name="create_tour_disable_battery_save_mode">Fürs Erstellen einer Tour muss der Batteriesparmodus deaktiviert werden.</string>
 
 </resources>

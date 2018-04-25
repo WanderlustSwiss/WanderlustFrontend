@@ -102,6 +102,10 @@ public class TourController {
         return fav != null;
     }
 
+    public void getTourById(long id, FragmentHandler handler){
+        userTourDao.retrieve(id, handler);
+    }
+
     /**
      * set favorite
      *
@@ -409,6 +413,15 @@ public class TourController {
 
     public List<Region> getAllRegions(){
         return regionDao.find();
+    }
+
+    public void uploadImage(File origiFile, FragmentHandler handler){
+        UserTourDao.getInstance().uploadImage(origiFile, tour,  handler);
+    }
+
+    public void addTour(FragmentHandler handler, Tour newTour){
+        this.tour = newTour;
+        userTourDao.create(newTour, handler);
     }
 
 }
