@@ -47,7 +47,7 @@ public class EquipmentController {
         return CONTEXT != null ? EquipmentController.Holder.INSTANCE : null;
     }
 
-    private EquipmentController() {
+    public EquipmentController() {
         service = ServiceGenerator.createService(EquipmentService.class);
         imageController = ImageController.getInstance();
         weatherController = WeatherController.getInstance();

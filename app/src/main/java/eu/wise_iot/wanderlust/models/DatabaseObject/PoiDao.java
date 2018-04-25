@@ -231,13 +231,12 @@ public class PoiDao extends DatabaseObjectAbstract {
                 });
             } else {
                 Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
-                int newId = internalPoi.getImageCount() + 1;
-                String name = internalPoi.getPoi_id() + "-" + newId + ".jpg";
-                ImageInfo newImage = new ImageInfo(newId, name, imageController.getPoiFolder());
+                String name = internalPoi.getPoi_id() + "-1.jpg";
+                ImageInfo newImage = new ImageInfo(1, name, imageController.getPoiFolder());
                 imageController.save(file, newImage);
                 internalPoi.addImagePath(newImage);
                 poiBox.put(internalPoi);
-                handler.onResponse(new ControllerEvent(EventType.OK, internalPoi));
+                handler.onResponse(new ControllerEvent(EventType.OK, poi));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -373,7 +372,7 @@ public class PoiDao extends DatabaseObjectAbstract {
             public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
                 if (response.isSuccessful()) {
                     for (Poi poi : response.body()) {
-                        if (poi.isPublic()) {
+                        //if (poi.isPublic()) {
                             poi.setInternal_id(0);
                             Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
                             if(internalPoi == null){
@@ -390,8 +389,7 @@ public class PoiDao extends DatabaseObjectAbstract {
                                 poiBox.remove(internalPoi.getInternal_id());
                             }
                             poiBox.put(poi);
-
-                        }
+                        //}
                     }
 
                 }

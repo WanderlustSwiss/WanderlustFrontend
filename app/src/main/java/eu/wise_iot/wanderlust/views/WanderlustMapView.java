@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -18,18 +19,21 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.MotionEventListener;
 
-public class WanderlustMapView extends MapView {
+public class WanderlustMapView extends MapView implements RotationGestureDetector.OnRotationGestureListener {
 
     private GeoPoint centerOfPublicTransportOverlay = new GeoPoint(0.0, 0.0);
 
     private boolean publicTransportEnabled;
     private boolean sacHutEnabled;
 
+    RotationGestureDetector rotationGestureDetector = new RotationGestureDetector(this);
     private MyMapOverlays mapOverlays;
 
     // Layer BottomSheet
     private BottomSheetBehavior bottomSheetBehavior;
     private View bottomSheet;
+
+    private WanderlustCompassOverlay wanderlustCompassOverlay;
 
     private final ArrayList<MotionEventListener<WanderlustMapView>> motionEventListenerList = new ArrayList<>();
 
@@ -118,5 +122,24 @@ public class WanderlustMapView extends MapView {
 
 
         return result;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        rotationGestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void OnRotation(RotationGestureDetector rotationDetector) {
+        float angle = rotationDetector.getAngle();
+        wanderlustCompassOverlay.setLastKnownAngle(angle);
+        this.setMapOrientation(-angle);
+        Log.d("RotationGestureDetector", "Rotation: " + Float.toString(angle));
+    }
+
+
+    public void setWanderlustCompassOverlay(WanderlustCompassOverlay wanderlustCompassOverlay) {
+        this.wanderlustCompassOverlay = wanderlustCompassOverlay;
     }
 }

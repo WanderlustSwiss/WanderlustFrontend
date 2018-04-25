@@ -12,6 +12,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.database.MatrixCursor;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -84,6 +86,7 @@ public class MapFragment extends Fragment {
     private int zoomLevel;
     private GeoPoint centerOfMap, lastKnownLocation;
     //private MapView mapView;
+
     private WanderlustMapView mapView;
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
@@ -140,7 +143,6 @@ public class MapFragment extends Fragment {
         loadPreferences();
         getActivity().setTitle("");
 
-
         // For search View
         final String[] from = new String[]{"hashTag"};
         final int[] to = new int[]{android.R.id.text1};
@@ -181,7 +183,6 @@ public class MapFragment extends Fragment {
         initMapTypeButton(view);
         initInformationBottomSheet(view);
         initCreatingTourControlls(view);
-
     }
 
     private void initCreatingTourControlls(View view) {
@@ -428,7 +429,6 @@ public class MapFragment extends Fragment {
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
             Log.e(TAG, "A request for the whole tour is sent and start tracking on map again.");
         }
-
     }
 
     @Override
@@ -538,15 +538,9 @@ public class MapFragment extends Fragment {
      */
     private void initMap(View view) {
         mapView = (WanderlustMapView) view.findViewById(R.id.mapView);
-        //https://osm.rrze.fau.de/
-//        ITileSource tileSource = new XYTileSource("RRZE",
-//                0, 19, 512, ".png",
-//                new String[] { "http://osm.rrze.fau.de/osmhd/" });
-
         ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
                 new String[]{"https://opentopomap.org/"});
         mapView.setTileSource(tileSource);
-
 
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
@@ -665,6 +659,7 @@ public class MapFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.msg_camera_no_gps, Toast.LENGTH_SHORT).show();
                 takePicture();
             } else {
+
                 mapOverlays.getMyLocationNewOverlay().enableMyLocation();
                 Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
                 mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
@@ -693,6 +688,11 @@ public class MapFragment extends Fragment {
      */
     private void initLayerButton(View view) {
         layerButton = (ImageButton) view.findViewById(R.id.layerButton);
+        layerButton.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            int[] pos = new int[2];
+            layerButton.getLocationOnScreen(pos);
+            mapOverlays.setCompassPos(pos[0]+layerButton.getWidth()/2, pos[1]+layerButton.getHeight()*1.5f);
+        });
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
 

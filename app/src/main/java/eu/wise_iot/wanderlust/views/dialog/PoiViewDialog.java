@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -29,12 +30,17 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
+import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 /**
  * PoiViewDialog:
@@ -51,6 +57,7 @@ public class PoiViewDialog extends DialogFragment {
     private TextView typeTextView, elevationTextView, titleTextView, dateTextView, descriptionTextView;
     private ImageButton closeDialogButton, editPoiButton, deletePoiButton, sharePoiButton, reportPoiButton;
     private PoiController controller;
+    private ImageController imageController;
     private TextView occupationTitleSac;
     private TableLayout sacOccupation;
     private Map<String, Integer> monthIds = new HashMap<>();
@@ -96,9 +103,7 @@ public class PoiViewDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         context = getActivity();
         controller = new PoiController();
-
-        Bundle args = getArguments();
-        long poiId = args.getLong(Constants.POI_ID);
+        imageController = ImageController.getInstance();
         setRetainInstance(true);
     }
 
@@ -172,9 +177,16 @@ public class PoiViewDialog extends DialogFragment {
     private void fillOutPoiView(View view) {
         if (currentPoi.getType() >= 0) {
             controller.getImages(currentPoi, controllerEvent -> {
-                List<File> images = (List<File>) controllerEvent.getModel();
-                if (images.size() > 0) {
-                    Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                if (currentPoi.isPublic()){
+                    Picasso handler = imageController.getPicassoHandler(context);
+                    String url = ServiceGenerator.API_BASE_URL + "/poi/" + currentPoi.getPoi_id() + "/img/1";
+                    handler.load(url).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+
+                } else {
+                    List<File> images = (List<File>) controllerEvent.getModel();
+                    if (images.size() > 0) {
+                        Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                    }
                 }
             });
         } else {
@@ -183,7 +195,6 @@ public class PoiViewDialog extends DialogFragment {
             Picasso.with(context).load(images.get(0).getPath()).fit().centerCrop().into(poiImage);
         }
 
-        // todo: add better image to display that poi is private (ask Hristian how)
         if (!currentPoi.isPublic()) {
             Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().placeholder(R.drawable.progress_animation).into(displayModeImage);
         }

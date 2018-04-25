@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.util.List;
+
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -20,6 +22,7 @@ public class Equipment extends AbstractModel {
     int type;
     String name;
     String description;
+    String url;
     byte[] seasons;
     byte[] weather;
     int minTemperature;
@@ -63,6 +66,13 @@ public class Equipment extends AbstractModel {
         return imagePath;
     }
 
+    public ImageInfo getImageById(long id){
+        if(imagePath.getId() == id){
+            return imagePath;
+        }
+        return null;
+    }
+
     public void setInternal_id(long internal_id) {
         this.internal_id = internal_id;
     }
@@ -77,6 +87,10 @@ public class Equipment extends AbstractModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public void setDescription(String description) {
@@ -121,6 +135,10 @@ public class Equipment extends AbstractModel {
 
     public String getName() {
         return name;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getDescription() {

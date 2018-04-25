@@ -1,9 +1,13 @@
 package eu.wise_iot.wanderlust.controllers;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -14,7 +18,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
+import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class ImageController {
     private static String TAG = "ImageController";
@@ -37,7 +45,7 @@ public class ImageController {
     private final String[] FOLDERS;
     private final int standardWidth;
 
-    private ImageController(){
+    public ImageController(){
         picturesDir = CONTEXT.getApplicationContext().getApplicationContext().getExternalFilesDir("pictures").getAbsolutePath();
         FOLDERS = new String[4];
         FOLDERS[0] = "poi";
@@ -136,5 +144,22 @@ public class ImageController {
             return f;
         }
         return imgFileOrig;
+    }
+
+    public Picasso getPicassoHandler(Activity context){
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request newRequest = chain.request().newBuilder()
+                            .addHeader("Cookie", LoginUser.getCookies().get(0))
+                            .build();
+                    return chain.proceed(newRequest);
+                })
+                .build();
+
+        Picasso picasso = new Picasso.Builder(context)
+                .downloader(new OkHttp3Downloader(client))
+                .build();
+
+        return picasso;
     }
 }

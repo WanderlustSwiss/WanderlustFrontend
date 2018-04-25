@@ -120,6 +120,9 @@ dependencies {
 
     //Range seek bar
     compile 'com.crystal:crystalrangeseekbar:1.1.3'
+
+    //Client for Picasso
+    compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
 }
 
 //the following sets the required permissions for API 23+ devices and AVDs

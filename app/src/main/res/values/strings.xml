@@ -45,6 +45,7 @@
     <string name="tour_distance">Distanz (KM)</string>
     <string name="tour_duration">Dauer (Stunden)</string>
     <string name="tour_filter_noresult">Keine Touren gefunden</string>
+    <string name="go_to_shop_string">Zum Onlineshop</string>
 
     <!-- VIOATION RELATED STRINGS -->
     <string name="violation_nudity">Entblössung</string>
