@@ -411,4 +411,13 @@ public class PoiDao extends DatabaseObjectAbstract {
         poiBox.removeAll();
     }
 
+    public void removeNonUserPois(long userId){
+            List<Poi> userPois = poiBox.find(Poi_.user, userId);
+            for (Poi p : userPois){
+                p.setInternal_id(0);
+            }
+            poiBox.removeAll();
+            poiBox.put(userPois);
+    }
+
 }

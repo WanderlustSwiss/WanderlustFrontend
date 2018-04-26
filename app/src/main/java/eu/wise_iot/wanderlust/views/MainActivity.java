@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageController.createInstance(getApplicationContext());
         WeatherController.createInstance(getApplicationContext());
         EquipmentController.createInstance(getApplicationContext());
-        PoiDao.getInstance().removeAll();
         loginController = new LoginController();
 
         this.registerReceiver(
