@@ -638,7 +638,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 if (controllerEvent.getType() == EventType.OK) {
                     sacList = controllerEvent.getModel();
 
-                    Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_home_black_24dp_white);
+                    Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_home_24dp_blue);
                     sacHutOverlay.removeAllItems();
 
                     for (GeoObject sacHut : controllerEvent.getModel()) {
