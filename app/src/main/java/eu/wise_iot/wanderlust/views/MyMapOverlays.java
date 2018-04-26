@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.util.DisplayMetrics;
@@ -11,8 +13,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
+import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
@@ -57,6 +62,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private Polyline currentTour;
     private final MapController searchMapController;
     private boolean poiFloraFaunaActive, poiViewActive, poiRestaurantActive, poiRestAreaActive;
+    private PoiController poiController;
 
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiHashtagOverlay;
@@ -80,6 +86,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         this.activity = activity;
         this.mapView = mapView;
         this.currentTour = null;
+        this.poiController = new PoiController();
 
         initPoiOverlay();
         mapView.getOverlays().add(poiOverlay);
@@ -182,6 +189,58 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         poiHashtagOverlay = new ItemizedOverlayWithFocus<>(activity, poiHashtagList, listener);
     }
 
+    private void makeClusteringGreatAgain(){
+        RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(activity.getApplicationContext());
+        //Drawable poiIcon = getResources().getDrawable(R.drawable.marker_poi_default);
+
+        for (Poi myPoi : poiController.getAllPois()){
+            POI poi = poiController.convertPoiToOSMDroidPOI(myPoi);
+            Marker poiMarker = new Marker(mapView);
+            poiMarker.setTitle(poi.mType);
+            poiMarker.setSnippet(poi.mDescription);
+            poiMarker.setPosition(poi.mLocation);
+            switch (Integer.parseInt(poi.mCategory)) {
+                case Constants.TYPE_VIEW:
+                    poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_sight));
+                    break;
+                case Constants.TYPE_RESTAURANT:
+                    poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resaurant));
+                    break;
+                case Constants.TYPE_REST_AREA:
+                    poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resting));
+                    break;
+                case Constants.TYPE_FLORA_FAUNA:
+                    poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_fauna_flora));
+                    break;
+                default:
+                    poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_error));
+            }
+            poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+                    // make sure that no other dialog is running
+                    Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
+                    if (prevFragment != null)
+                        fragmentTransaction.remove(prevFragment);
+                    fragmentTransaction.addToBackStack(null);
+
+                    PoiViewDialog dialogFragment = PoiViewDialog.newInstance(myPoi);
+                    dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
+                    return true;
+                }
+            });
+            poiMarkers.add(poiMarker);
+        }
+
+
+        Drawable clusterIconD = activity.getResources().getDrawable(R.drawable.marker_cluster);
+        Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
+        poiMarkers.setIcon(clusterIcon);
+        mapView.getOverlays().add(poiMarkers);
+        showPoiLayer(true);
+    }
+
 //    private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
 //        GpxParser gpxParser = new GpxParser(activity);
 //        List<TrackPoint> gpxList = gpxParser.getTrackPointList(R.raw.gpx1);
@@ -231,9 +290,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     /**
      * Creates an OverlayItem from a poi with item considering the poi type
      */
-    private OverlayItem poiToOverlayItem(Poi poi) {
+    private OverlayItem poiToOverlayItem(POI poi) {
         Drawable drawable;
-        switch ((int) poi.getType()) {
+        switch (Integer.parseInt(poi.mCategory)) {
             case Constants.TYPE_VIEW:
                 drawable = activity.getResources().getDrawable(R.drawable.poi_sight);
                 break;
@@ -250,8 +309,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 drawable = activity.getResources().getDrawable(R.drawable.poi_error);
         }
 
-        OverlayItem overlayItem = new OverlayItem(Long.toString(poi.getPoi_id()), poi.getTitle(),
-                poi.getDescription(), new GeoPoint(poi.getLatitude(), poi.getLongitude()));
+        OverlayItem overlayItem = new OverlayItem(Long.toString(poi.mId), poi.mType,
+                poi.mDescription, poi.mLocation);
 
         overlayItem.setMarker(drawable);;
         return overlayItem;
@@ -261,21 +320,25 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      * Adds a poi on the mapview regular MapOverlay
      * only adds poi if subcategory is selected in frontend
      */
-    public void addPoiToOverlay(Poi poi) {
-        if(this.poiViewActive && (poi.getType() == Constants.TYPE_VIEW))
+    public void addPoiToOverlay(Poi paramPoi) {
+        /*
+        POI poi = poiController.convertPoiToOSMDroidPOI(paramPoi);
+        if(this.poiViewActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_VIEW))
             poiOverlay.addItem(poiToOverlayItem(poi));
-        else if(this.poiRestaurantActive && (poi.getType() == Constants.TYPE_RESTAURANT))
+        else if(this.poiRestaurantActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_RESTAURANT))
             poiOverlay.addItem(poiToOverlayItem(poi));
-        else if (this.poiRestAreaActive && (poi.getType() == Constants.TYPE_REST_AREA))
+        else if (this.poiRestAreaActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_REST_AREA))
             poiOverlay.addItem(poiToOverlayItem(poi));
-        else if (this.poiFloraFaunaActive && (poi.getType() == Constants.TYPE_FLORA_FAUNA))
+        else if (this.poiFloraFaunaActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_FLORA_FAUNA))
             poiOverlay.addItem(poiToOverlayItem(poi));
+        */
     }
 
     /**
      * Adds a poi to the mapview to the hashtagPoiOverlay
      */
-    public void addPoiToHashtagOverlay(Poi poi) {
+    public void addPoiToHashtagOverlay(Poi paramPoi) {
+        POI poi = poiController.convertPoiToOSMDroidPOI(paramPoi);
         OverlayItem overlayItem = poiToOverlayItem(poi);
         poiHashtagOverlay.addItem(overlayItem);
     }
@@ -417,8 +480,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     @Override
     public void update(DatabaseEvent event) {
-
-        if (event.getType() == DatabaseEvent.SyncType.POIAREA) {
+        /*if (event.getType() == DatabaseEvent.SyncType.POIAREA) {
             populatePoiOverlay();
         } else if (event.getType() == DatabaseEvent.SyncType.SINGLEPOI) {
             //More efficient, Stamm approves
@@ -439,12 +501,14 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             for (int i = 0; i < poiOverlay.size(); i++) {
                 if (Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()) {
                     poiOverlay.removeItem(i);
-                    addPoiToOverlay(poi);
+                    //addPoiToOverlay(poi);
                     break;
                 }
             }
             mapView.invalidate();
-        }
+        }*/
+        makeClusteringGreatAgain();
+        mapView.invalidate();
     }
 
     /**

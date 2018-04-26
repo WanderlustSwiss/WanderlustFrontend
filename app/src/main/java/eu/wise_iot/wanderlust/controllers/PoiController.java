@@ -3,6 +3,9 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
 
+import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.util.GeoPoint;
+
 import java.io.File;
 
 import java.util.List;
@@ -92,6 +95,21 @@ public class PoiController {
         poiDao.addImage(image, poi, handler);
     }
 
+
+    public POI convertPoiToOSMDroidPOI(Poi poi) {
+        POI retPOI = new POI((int) poi.getInternal_id());
+        retPOI.mId = poi.getPoi_id();
+        retPOI.mLocation = new GeoPoint(poi.getLatitude(), poi.getLongitude());
+        retPOI.mCategory = String.valueOf(poi.getType());
+        retPOI.mType = poi.getTitle();
+        retPOI.mDescription = poi.getDescription();
+
+        return  retPOI;
+    }
+
+    public List<Poi> getAllPois(){
+        return poiDao.find();
+    }
 
     /**
      * Returns all images in the event as List<File>
