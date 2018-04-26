@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,10 +152,12 @@ public class ProfileFragment extends Fragment {
                 switch (controllerEvent.getType()){
                     case OK:
                         Profile profile = (Profile) controllerEvent.getModel();
-                        amountScore.setText(String.format(Locale.GERMAN,"%1d" ,profile.getScore()));
+                        int score = ((Profile) controllerEvent.getModel()).getScore();
+                        amountScore.setText(String.format(Locale.GERMAN,"%1d" ,score));
+                        Log.d("SCORE",  String.valueOf(score));
                         break;
                     default:
-                        Toast.makeText(getActivity(), "failllll", Toast.LENGTH_SHORT).show();
+                        Log.d("SCORE",  "Could not load Score");
                         break;
                 }
             }

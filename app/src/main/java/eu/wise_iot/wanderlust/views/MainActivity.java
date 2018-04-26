@@ -42,10 +42,8 @@ import java.util.TimeZone;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
@@ -70,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView username;
     private TextView email;
     private ImageView userProfileImage;
+    private View header;
     private LoginController loginController;
 
     @Override
@@ -105,75 +104,60 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 return;
             }
-            if (user.getAccountType().equals("instagram")){
+
+            if (user.getAccountType().equals("instagram")) {
+
                 Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
                 if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                        .add(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
                         .commit();
             }else{
+
                 loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
-                    User logInUser = (User) controllerEvent.getModel();
+                    User logtInUser = (User) controllerEvent.getModel();
                     switch (controllerEvent.getType()) {
                         case OK:
-                            setupDrawerHeader(logInUser);
+                            setupDrawerHeader(logtInUser);
+
+                            //set last login
+                            DateTime now = new DateTime();
+                            DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
+                            now = now.withZone(timeZone);
+                            DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+                            String lastLoginNow = fmt.print(now);
+                            logtInUser.setLastLogin(lastLoginNow);
+                            UserDao.getInstance().update(logtInUser);
+
                             MapFragment mapFragment = MapFragment.newInstance();
                             getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                    .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                                     .commit();
                             break;
                         default:
-                            StartupLoginFragment loginFragment = new StartupLoginFragment();
-                            getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
-                                    .commit();
+
+                            DateTime lastLogin = DateTime.parse(user.getLastLogin());
+                            DateTime timerLimit = new DateTime();
+                            timerLimit = timerLimit.minusDays(1);
+                            Log.d(TAG, "Last login: " + lastLogin);
+
+                            if(lastLogin.isAfter(timerLimit)){
+                                MapFragment fragment = MapFragment.newInstance();
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.content_frame,fragment, Constants.MAP_FRAGMENT)
+                                        .commit();
+                                setupDrawerHeader(user);
+
+
+                            }else {
+                                StartupLoginFragment loginFragment = new StartupLoginFragment();
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.content_frame, loginFragment)
+                                        .commit();
+                            }
                     }
                 });
             }
-
-            loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
-                User logtInUser = (User) controllerEvent.getModel();
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        setupDrawerHeader(logtInUser);
-                        //set last login
-                        DateTime now = new DateTime();
-                        DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
-                        now = now.withZone(timeZone);
-                        DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-                        String lastLoginNow = fmt.print(now);
-                        Log.d("TIME", lastLoginNow + "setz login");
-                        logtInUser.setLastLogin(lastLoginNow);
-                        UserDao.getInstance().update(logtInUser);
-
-                        MapFragment mapFragment = MapFragment.newInstance();
-                        getFragmentManager().beginTransaction()
-                                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                                .commit();
-                        break;
-                    default:
-
-                        DateTime lastLogin = DateTime.parse(user.getLastLogin());
-                        DateTime timerLimit = new DateTime();
-                        timerLimit = timerLimit.minusDays(1);
-                        Log.d("TIME", lastLogin.toString() + "hole login");
-
-                        if(lastLogin.isAfter(timerLimit)){
-                            setupDrawerHeader(user);
-                            MapFragment fragment = MapFragment.newInstance();
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame,fragment, Constants.MAP_FRAGMENT)
-                                    .commit();
-                            Log.d("TIME", "stimmt..");
-                        }else {
-                            Log.d("TIME", "stimmt nicht..");
-                            StartupLoginFragment loginFragment = new StartupLoginFragment();
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame, loginFragment)
-                                    .commit();
-                        }
-                }
-            });
         }
     }
 
@@ -181,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
     }
+
 
     @Override
     protected void onStart() {
@@ -197,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawer.addDrawerListener(toggle);
@@ -204,6 +190,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        header = navigationView.getHeaderView(0);
+
+        getSupportActionBar().show();
     }
 
     /**
@@ -321,11 +311,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void setupDrawerHeader(User user){
 
-        username = (TextView) findViewById(R.id.user_name);
-        email = (TextView) findViewById(R.id.user_mail_address);
-        userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+        username = (TextView) header.findViewById(R.id.user_name);
+        email = (TextView) header.findViewById(R.id.user_mail_address);
+        userProfileImage = (ImageView) header.findViewById(R.id.user_profile_image);
 
-        userProfileImage.setOnClickListener((View v) -> {
+        userProfileImage.setOnClickListener(view -> {
             Fragment fragment = null;
             String fragmentTag = null;
             fragment = ProfileFragment.newInstance();

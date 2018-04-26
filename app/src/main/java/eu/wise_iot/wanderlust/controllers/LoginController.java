@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
@@ -161,6 +160,10 @@ public class LoginController {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
+    }
+
+    public User getAvailableUser(){
+        return userDao.getUser();
     }
 
     public void logout(FragmentHandler handler) {

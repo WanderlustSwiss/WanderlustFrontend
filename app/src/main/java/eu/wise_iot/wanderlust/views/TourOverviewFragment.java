@@ -22,16 +22,15 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoCache;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.datatype.Duration;
-
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
@@ -119,7 +118,7 @@ public class TourOverviewFragment extends Fragment {
     private static void getDataFromServer(List<Tour> tours){
         TourOverviewController toc = new TourOverviewController();
         //get given favorites
-        toc.downloadDifficultyTypes();
+
         toc.downloadFavorites(controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
@@ -357,20 +356,25 @@ public class TourOverviewFragment extends Fragment {
             case R.id.saveButton:
                 ImageButton ibSave = (ImageButton) view.findViewById(R.id.saveButton);
                 TourController controller = new TourController(tour);
-                Log.d("SAVE", "klickt...");
                 boolean saved = controller.isSaved();
                 if(saved){
-                    Log.d("SAVE", "saved");
                     boolean unset = controller.unsetSaved();
                     if(unset){
                         ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                     }
                 }else{
-                    Log.d("SAVED", "nicht saved");
-                    boolean set = controller.setSaved();
-                    if(set){
-                        ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
-                    }
+                    controller.setSaved(new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            switch (controllerEvent.getType()){
+                                case OK:
+                                    ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                                    break;
+                                default:
+                                    Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
                 break;
             case R.id.tour_rv_item:

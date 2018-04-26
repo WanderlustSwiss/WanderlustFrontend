@@ -159,8 +159,6 @@ public class TourFragment extends Fragment {
 
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
-        mapFragment = new MapFragment();
-        tourOverviewFragment = new TourOverviewFragment();
         fragment.setArguments(args);
         tour = paramTour;
         tourController = new TourController(tour);
@@ -661,10 +659,18 @@ public class TourFragment extends Fragment {
                 tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
             }
         }else{
-            boolean saved = tourController.setSaved();
-            if(saved){
-                tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
-            }
+            tourController.setSaved(new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    switch (controllerEvent.getType()){
+                        case OK:
+                            tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                            break;
+                        default:
+                            Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 

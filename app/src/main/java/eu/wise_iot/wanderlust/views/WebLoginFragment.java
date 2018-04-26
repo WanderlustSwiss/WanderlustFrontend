@@ -3,9 +3,8 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -15,19 +14,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
+import java.util.TimeZone;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -37,6 +37,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 /**
@@ -78,6 +79,16 @@ public class WebLoginFragment extends Fragment  {
                                 .commit();
                     } else {
 
+                        //set last login
+                        DateTime now = new DateTime();
+                        DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
+                        now = now.withZone(timeZone);
+                        DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+                        String lastLoginNow = fmt.print(now);
+                        user.setLastLogin(lastLoginNow);
+                        UserDao.getInstance().update(user);
+
+                        ((MainActivity)getActivity()).setupDrawerHeader(user);
                         Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
                         if (mapFragment == null) mapFragment = MapFragment.newInstance();
                         getFragmentManager().beginTransaction()
@@ -136,34 +147,65 @@ public class WebLoginFragment extends Fragment  {
         webSettings.setAppCacheEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setSupportMultipleWindows(true);
-        webview.setWebViewClient(new WebViewClient() {
-            public void onReceivedHttpError(WebView view, WebResourceRequest request,
-                                            WebResourceResponse errorResponse){
-                Fragment loginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
-                if (loginFragment == null) loginFragment = StartupLoginFragment.newInstance();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
-                        .commit();
-                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-            }
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                instagramContainer.setVisibility(View.GONE);
-                String webUrl = webview.getUrl();
-                String cookies = CookieManager.getInstance().getCookie(url);
-                if (webUrl.contains("instagram?code=")){
-                    loginController.logInInstagram(cookies, fragmentHandler);
+        if (isNetworkAvailable()) {
+            webview.setWebViewClient(new WebViewClient() {
+                public void onReceivedHttpError(WebView view, WebResourceRequest request,
+                                                WebResourceResponse errorResponse) {
+
+                    Fragment loginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                    if (loginFragment == null) loginFragment = StartupLoginFragment.newInstance();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
+                            .commit();
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                 }
+
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    instagramContainer.setVisibility(View.GONE);
+                    String webUrl = webview.getUrl();
+                    String cookies = CookieManager.getInstance().getCookie(url);
+                    if (webUrl.contains("instagram?code=")) {
+                        loginController.logInInstagram(cookies, fragmentHandler);
+                    }
+                }
+            });
+            webview.loadUrl(target_url);
+        } else {
+            User user = loginController.getAvailableUser();
+            DateTime lastLogin = DateTime.parse(user.getLastLogin());
+            DateTime timerLimit = new DateTime();
+            timerLimit = timerLimit.minusDays(1);
+            Log.d(TAG, "Last login: " + lastLogin);
+
+            if (lastLogin.isAfter(timerLimit)) {
+                ((MainActivity)getActivity()).setupDrawerHeader(user);
+                MapFragment fragment = MapFragment.newInstance();
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, fragment, Constants.MAP_FRAGMENT)
+                        .commit();
+                ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+            } else {
+                StartupLoginFragment loginFragment = new StartupLoginFragment();
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, loginFragment)
+                        .commit();
             }
-        });
-        webview.loadUrl(target_url);
+        }
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated (View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
     }
-}
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+}
 
