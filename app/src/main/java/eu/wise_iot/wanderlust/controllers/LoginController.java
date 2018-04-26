@@ -14,6 +14,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
@@ -83,6 +84,7 @@ public class LoginController {
                     }
                     updatedUser.setPassword(user.getPassword());
 
+                    PoiDao.getInstance().removeNonUserPois(userDao.getUser().getUser_id());
                     userDao.update(updatedUser);
                     getProfile(handler, updatedUser);
                 } else {
