@@ -117,10 +117,10 @@ public class TourFragment extends Fragment {
     /**
      * Static instance constructor.
      *
+     * @param paramTour tour from touroverview
      * @return Fragment: TourFragment
      */
     public static TourFragment newInstance(Tour paramTour) {
-
         Bundle args = new Bundle();
         TourFragment fragment = new TourFragment();
         fragment.setArguments(args);
@@ -132,9 +132,6 @@ public class TourFragment extends Fragment {
     }
 
 
-    /**
-     * @param savedInstanceState
-     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -262,9 +259,6 @@ public class TourFragment extends Fragment {
         rvEquipment.addItemDecoration(itemDecorator);
     }
 
-    /**
-     * @param tour
-     */
     private void setupEquipment(Tour tour) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
@@ -274,8 +268,7 @@ public class TourFragment extends Fragment {
 
         Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
         Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
-        //TODO add recommended method for getting equipment
-        //listEquipment = tourController.getEquipmentOfTour(this.tour);
+
         equipmentController.retrieveRecommendedEquipment(tour, selectedDateTime, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
@@ -291,9 +284,6 @@ public class TourFragment extends Fragment {
         });
     }
 
-    /**
-     *
-     */
     private void fillControls() {
         List<File> images = tourController.getImages();
         Log.d("Debug", "Images size:" + images.size());
@@ -349,9 +339,6 @@ public class TourFragment extends Fragment {
         textViewDifficulty.setText(tourController.getDifficultyMark());
     }
 
-    /**
-     *
-     */
     private void setupActionListeners() {
         tourSharedButton.setOnClickListener((View v) -> shareTour());
         tourReportButton.setOnClickListener((View v) -> reportTour());
@@ -451,7 +438,6 @@ public class TourFragment extends Fragment {
     }
 
     private void setupWeather() {
-
         weatherController.getWeatherFromTour(tour, selectedDateTime, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
@@ -583,9 +569,6 @@ public class TourFragment extends Fragment {
         }
     }
 
-    /**
-     *
-     */
     private void toggleFavorite() {
         if (isFavoriteUpdate) {
             return;
@@ -740,7 +723,7 @@ public class TourFragment extends Fragment {
         dialog.show(getFragmentManager(), Constants.REPORT_TOUR_DIALOG);
     }
     /**
-     * handles click in Recyclerview of equipment
+     * handles click in recyclerview of equipment
      *
      * @param view
      * @param parEquipment

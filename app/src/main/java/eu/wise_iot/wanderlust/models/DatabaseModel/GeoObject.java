@@ -28,6 +28,7 @@ public class GeoObject {
     private String sourceName;
     private String imageLink;
 
+
     public String getTitle() {
         return title;
     }

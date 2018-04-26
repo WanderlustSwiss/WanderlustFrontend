@@ -23,10 +23,10 @@ import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 
 
 /**
- * MyAdapter:
  * provides adapter for recyclerview which is used to show equipment needed on a equipment
  *
  * @author Alexander Weinbeck
+ * @license MIT
  */
 public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.ViewHolder> {
 

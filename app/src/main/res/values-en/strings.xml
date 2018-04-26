@@ -1,35 +1,276 @@
 <resources>
 
     <!-- GENERAL STRINGS -->
-
+    <string name="app_name">Wanderlust</string>
+    <string name="app_domain"> #wanderlustapp</string>
     <!-- WELCOME FRAGMENT -->
-
+    <string name="msg_welcome_header">Welcome and thank you for testing the wanderlust-app 1.0 Release!</string>
+    <!--TODO?
+    <string name="msg_welcome_text1">Bei dieser Version geht es vorerst darum Eindrücke zu sammeln und so schöne und weniger schöne Orte sichtbar zu machen. Bilder hingegen werden vorerst nur lokal bei dir abgespeichert. Wenn du sie mir aber (mit dem Original-Namen) zuschickst, kann ich sie beim nächsten Release hinzufügen.</string>
+    <string name="msg_welcome_text2">Weiter geht es darum mit dir zu testen, ob diese App brauchbar ist. Funktionieren die Knöpfe? Bekommst du zu viele oder zu wenige Infos? Für jegliche Arten von Feedbacks sind wir sehr dankbar.</string>
+    <string name="msg_welcome_text3">Greetings,\nthe Wanderlust-Team</string>
+        -->
     <!-- MANUAL FRAGMENT -->
+    <string name="msg_manual_header">User Manual</string>
+    <string name="msg_manual_p1_header">My Position</string>
+    <string name="msg_manual_p1_text1">The «MyLocation-Button» serves you with two possible actions:</string>
+    <string name="msg_manual_p1_text2">– Short Click: You can indicate your current position on the map. Warning: The battery usage is increased!</string>
+    <string name="msg_manual_p1_text3">– Long Click: Center position on map</string>
+    <string name="msg_manual_p2_header">Make photo</string>
+    <string name="msg_manual_p2_text">With this button you can make phots and save an impression-icon on the map. You have three different impression variations:</string>
+    <string name="msg_manual_p3_header">Positive impressions</string>
+    <string name="msg_manual_p3_text">Here positive impressions being saved. Beautyful mountains, big trees, nice Chalets – whatever you like!</string>
+    <string name="msg_manual_p4_header">Negative impressions</string>
+    <string name="msg_manual_p4_text">A current line is directly above the hiking track or you can permanently hear the highway? A good time for a negative hint.</string>
+    <string name="msg_manual_p5_header">Warning hints</string>
+    <string name="msg_manual_p5_text">Is the bridge broken or is the track way more dangerous than expected? You should consider doing a warning hint.</string>
 
     <!-- DISCLAIMER FRAGMENT -->
+    <string name="disclaimer_header">About Wanderlust</string>
+    <string name="disclaimer_text1">MIT License</string>
+    <string name="disclaimer_text2">© 2017 Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Meier, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov &amp; Alexander Weinbeck</string>
+    <string name="disclaimer_text3">Die Software wird ohne jede ausdrückliche oder implizierte Garantie bereitgestellt, einschliesslich der Garantie zur Benutzung für den Vorgesehenen oder einem bestimmten Zweck sowie jeglicher Rechtsverletzung, jedoch nicht darauf beschränkt. In keinem Fall sind die Autoren oder Copyrightinhaber für jeglichen Schaden oder sonstige Ansprüche haftbar zu machen, ob infolge der Erfüllung eines Vertrages, eines Deliktes oder anders im Zusammenhang mit der Software oder sonstiger Verwendung der Software entstanden.</string>
 
 
     <!-- MENU RELATED STRINGS -->
+    <string name="drawer_open">Open Menu</string>
+    <string name="drawer_close">Close Menu</string>
 
 
     <!-- TOUR RELATED STRINGS -->
+    <string name="tour_button_show_map">Start</string>
+    <string name="tour_equipment">Equipment</string>
+    <string name="tour_region">Region</string>
+    <string name="tour_difficulty">Difficulty</string>
+    <string name="tour_name">Name</string>
+    <string name="tour_distance">Distance (KM)</string>
+    <string name="tour_duration">Duration (Stunden)</string>
+    <string name="tour_filter_noresult">No tour found</string>
+    <string name="go_to_shop_string">Go to the Onlineshop</string>
 
+    <!-- VIOATION RELATED STRINGS -->
+    <string name="violation_nudity">Nudity</string>
+    <string name="violation_violence">Violence</string>
+    <string name="violation_harassment">Harassment</string>
+    <string name="violation_suicide">Suicide</string>
+    <string name="violation_spam">Spam</string>
+    <string name="violation_hatespeech">Hatespeech</string>
+    <string name="violation_other">Other</string>
+    <string name="report_submit">Thank you for your report</string>
+
+    <!-- FILTER RELATED STRINGS -->
+    <string name="filter_search">Search</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
+    <string name="dialog_feedback_description_edit_hint">Description</string>
     <string-array name="dialog_feedback_spinner_mode">
-        <item>öffentlich</item>
-        <item>nur für mich</item>
+        <item>public</item>
+        <item>only for me</item>
+    </string-array>
+    <string-array name="dialog_feedback_spinner_type">
+        <item></item>
+        <item>View</item>
+        <item>Restaurant</item>
+        <item>Rest Area</item>
+        <item>Flora / Fauna</item>
+    </string-array>
+    <string-array name="dialog_difficulties">
+        <item>T1</item>
+        <item>T2</item>
+        <item>T3</item>
+        <item>T4</item>
+        <item>T5</item>
+        <item>T6</item>
+    </string-array>
+
+    <string-array name="dialog_feedback_spinner_geoobject_type">
+        <item>SAC</item>
     </string-array>
 
 
     <!-- USER MESSAGES -->
+    <string name="msg_picture_not_saved">Photo could not be saved</string>
+    <string name="msg_no_action_defined">No action defined until now</string>
+    <string name="msg_no_internet">Failure: No internet connection could have been established</string>
 
+    <string name="msg_not_saved">not saved</string>
+    <string name="msg_camera_about_to_start">Camera will be opened</string>
+    <string name="msg_camera_no_gps">GPS deactivated! Impressions will not be saved</string>
+    <string name="msg_follow_mode_enabled">Tracking mode active!\n(increased battery usage!)</string>
+    <string name="msg_follow_mode_disabled">Tracking mode deactivated\n(Battery-saving mode)</string>
+    <string name="msg_map_centered_on_long_click">Map will be centered</string>
+<!--
+    <string name="msg_last_known_position_marker">Das ist deine letzte bekannte Position. \n\nDu willst deine jetzige Position? Klicke den «MyLocation»-Button:\n- kurzer Klick: verfolgen an/aus\n- langer Klick: Karte zentrieren</string>
+-->
 
     <!-- ERROR MESSAGES -->
 
-
     <!-- USER ACTIONS -->
+    <string name="action_foreward">weiter</string>
+    <string name="menu_map">Karte</string>
+    <string name="menu_tours">Touren</string>
+    <string name="menu_profile">Profil</string>
+    <string name="logout">Logout</string>
+    <string name="menu_title_other">Anderes</string>
+    <string name="action_search">suchen</string>
+
+    <string name="tours">Touren</string>
+    <string name="favourites">Favoriten</string>
+    <string name="recentTours">Kürzlich</string>
+    <string name="saved">Gespeichert</string>
+    <string name="pois">POIs</string>
+
 
     <!-- REGISTRATION -->
+    <string name="registration_name">Nickname</string>
+    <string name="registration_email">E-Mail</string>
+    <string name="registration_password">Passwort</string>
+    <string name="registration_password_repeat">Passwort wiederholen</string>
+    <string name="registration_account_exist">Bereits registriert? Login</string>
+    <string name="registration_create_account">Account erstellen</string>
+    <string name="registration_password_required">Ein Passwort wird benötigt</string>
+    <string name="registration_password_no_match">Passwort stimmt nicht überein</string>
+    <string name="registration_username_required">Ein Name wird benötigt</string>
+    <string name="registration_email_required">E-Mail-Adresse wird benötigt</string>
+    <string name="registration_nickname_mail_used">Benutzernamen oder E-Mail-Adresse wird bereits verwendet</string>
+    <string name="registration_email_invalid">Ungültige E-Mail-Adresse</string>
+    <string name="registration_password_invalid">Minimum 8 Buchstaben und mindestens 1 Nummer</string>
+    <string name="registration_connection_error">Verbindung mit Server nicht möglich</string>
+    <string name="registration_insert_email_address">E-Mail-Adresse eingeben</string>
+
+
+    <!-- LOGIN -->
+    <string name="login_nickname_email">Nickname / E-Mail</string>
+    <string name="login_password">Passwort</string>
+    <string name="login_login">Login</string>
+    <string name="login_failure">Login fehlgeschlagen</string>
+    <string name="login_need_registration">Neuen Account erstellen</string>
+    <string name="login_forgot_password">Passwort vergessen?</string>
+
+
+    <!-- POI -->
+    <string name="poi_fragment_textview_title">Titel</string>
+    <string name="layer_poi">POI-Layer</string>
+    <string name="poi_type_restarea">Rast</string>
+    <string name="poi_type_restaurant">Restaurant</string>
+    <string name="poi_type_view">Aussicht</string>
+    <string name="poi_type_nature">Fauna</string>
+    <string name="title_poi_type_selection">POI-Layer</string>
+    <string name="poi_fragment_success_delete">POI wurde erfolgreich gelöscht</string>
+    <string name="poi_fragment_fail_delete">POI löschen fehlgeschlagen</string>
+    <string name="poi_successful_saving">POI wurde erfolgreich gespeichert</string>
+    <string name="forgot_password_btn">Passwort zurücksetzen</string>
+    <string name="forgot_password_reset_mail_success">Eine E-Mail fürs Zurücksetzen des Passwortes wurde erfolgreich versendet</string>
+    <string name="forgot_password_reset_mail_fail">Fehler beim zurücksetzen des Passwortes</string>
+    <string name="forgot_password_link_login">Zurück zum Login</string>
+    <string name="registration_email_confirmation">Eine E-Mail wurde verschickt. Bitte bestätigen vor dem einloggen</string>
+
+
+    <!-- Map Type -->
+    <string name="map_type_terrain">Terrain</string>
+    <string name="map_type_default">Standard</string>
+    <string name="map_type_satelite">Satellit</string>
+    <string name="map_type_types">Kartentypen</string>
+
+    <!-- Map Layers -->
+    <string name="map_layer_layers">Layer</string>
+    <string name="map_nothing_found">Kein Resultat gefunden</string>
+
+    <!-- Tour Fragment -->
+    <string name="tour_elevation_chart_title">Höhenprofil</string>
+    <string name="tour_elevation_chart_range">Höhenmeter</string>
+    <string name="tour_elevation_chart_domain">Distanz</string>
+
+    <string name="message_confirm_delete_poi">Willst du den POI wirklich löschen?</string>
+    <string name="image_upload_failed">Upload von Bild fehlgeschlagen</string>
+    <string name="message_add_title">Bitte Titel hinzufügen</string>
+    <string name="meter_above_sea_level_abbreviation">m ü. M.</string>
+    <string name="share_title_poi">Teilen</string>
+    <string name="share_title_tour">Teilen</string>
+
+    <string name="hikingpreference">Wander-Schwierigkeit</string>
+    <string name="changeProfilePicture">Bild ändern</string>
+    <string name="email_hint">E-Mail</string>
+    <string name="msg_hello">Hallo</string>
+    <string name="msg_email_edit_successful">E-Mail wurde erfolgreich geändert</string>
+    <string name="err_msg_error_occured">Ein Fehler ist aufgetreten…</string>
+    <string name="msg_difficulty_level_changed_to_1">Schwierigkeits-Level auf</string>
+    <string name="msg_difficulty_level_changed_to_2">geändert</string>
+    <string name="msg_no_changes_done">Keine Änderungen vorgenommen</string>
+    <string name="meter_abbreviation">m</string>
+    <string name="logout_successful">Logout erfolgreich</string>
+    <string name="logout_failed">Logout fehlgeschlagen</string>
+    <string name="msg_available_in_next_feature">Dieses Feature wird in einem späteren Release verfügbar sein</string>
+    <string name="profile_edit">Profil bearbeiten</string>
+    <string name="profile_edit_delete_image">Aktuelles Foto entfernen</string>
+    <string name="profile_edit_open_gallery">Aus Bibliothek auswählen</string>
+    <string name="title_poi">POI</string>
+    <string name="title_tours">Touren</string>
+    <string name="title_score">Score</string>
+    <string name="wetter">Wetter</string>
+    <string name="choose_hiking_day_button">anderen Wandertag auswählen</string>
+    <string name="keine_wetterdaten">Keine Wetterdaten zu diesem Tag</string>
+    <string name="wanderung_beginn">Wanderung am:</string>
+    <string name="wetterNach">Nach:</string>
+    <string name="connection_fail">Verbindung fehlgeschlagen</string>
+    <string name="no_favorites">Keine Favoriten</string>
+    <string name="no_tours">Keine Touren</string>
+    <string name="no_pois">Keine POI\'s</string>
+    <string name="no_saved">Keine Touren gespeichert</string>
+    <string name="public_transport">ÖV</string>
+    <string name="hashtag_search_nothing_found">Im aktuellen Kartenausschnitt wurden keine Resultate gefunden</string>
+    <string name="sac_house">SAC</string>
+    <string name="sac_occupation_bewartet">Bewartet:</string>
+    <string name="already_rated">Du hast die Tour bereits bewerted</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="manual_welcome">Willkommen bei Wanderlust! Hier eine kurze Anleitung über die Funktionen, die dich erwarten.</string>
+    <string name="manual_header">Wanderlust-Anleitung</string>
+    <string name="manual_finish_text1">Jetzt weisst du alles, was es über die Wanderlust-App zu wissen gibt.</string>
+    <string name="manual_finish_text2">Klicke auf <b>los geh\'s</b> um das Abenteuer zu starten!</string>
+    <string name="manual_poi_header">POI (Point of Interest)</string>
+    <string name="manual_poi_text">Mit dem POI-Button kannst du eindrückliche Orte fotografieren und den POI entweder nur privat für dich speichern oder ihn mit der Community teilen.</string>
+    <string name="manual_header_search">Suche</string>
+    <string name="manual_search_text">Die Suche ermöglicht dir nach Orten, Regionen oder Wanderwegen zu suchen.</string>
+    <string name="manual_filter_header">Toursuche filtern</string>
+    <string name="manual_filter_text">Filtere deine Suchresultate nach Eigenschaften wie Distanz, Schwierigkeit, Region und vielem mehr.</string>
+    <string name="manual_profile_header">Profil</string>
+    <string name="manual_profile_text">In deinem Profil kannst du deine persönlichen Daten sowie deine Favoriten, deine erstellten Touren, deine POIs und deine gesichterten Routen verwalten.</string>
+    <string name="manual_dashboard_header">Tourendashboard</string>
+    <string name="manual_dashboard_text">Inspiriere dich von den von anderen Usern erfassten Touren und stöbere durch unsere Datenbank.</string>
+    <string name="msg_lets_go">los geht\'s!</string>
+    <string name="menu_manual">Handbuch</string>
+    <string name="o_clock">Uhr</string>
+    <string name="start">Start</string>
+    <string name="end">Ende</string>
+    <string name="temperature_abbrevation">°C</string>
+    <string name="create_tour_information">Tour wird aufgenommen. Bitte GPS nicht ausschalten.</string>
+
+    <!--- Seasons -->
+    <string name="summer">Sommer</string>
+    <string name="winter">Winter</string>
+    <string name="fall">Herbst</string>
+    <string name="spring">Frühling</string>
+
+    <string name="create_tour_stop_recording_request">Soll das Tracking wirklich beendet werden?</string>
+    <string name="create_tour_save_tour">Tour Speichern</string>
+    <string name="create_tour_tracking_tour">Tracking tour...</string>
+    <string name="create_tour_saved">Die Tour wurde erfolgreich gespeichert</string>
+    <string name="create_tour_nothing_tracked">Dummy Touren können nicht gespeichert werden</string>
+    <string name="create_tour_no_seasons">Tour kann ohne Jahreszeit nicht gespeichert werden</string>
+    <string name="create_tour_not_save_tour">Wollen Sie wirklich ohne zu speichern fortfahren. Die aufgenommene Tour wird nicht mehr verfügbar sein</string>
+    <string name="create_tour_not_saved">Tour nicht gespeichert</string>
+    <string name="short_january">Jan</string>
+    <string name="short_february">Feb</string>
+    <string name="short_march">Mar</string>
+    <string name="short_april">Apr</string>
+    <string name="short_mai">Mai</string>
+    <string name="short_june">Jun</string>
+    <string name="short_july">Jul</string>
+    <string name="short_august">Aug</string>
+    <string name="short_september">Sep</string>
+    <string name="short_october">Okt</string>
+    <string name="short_november">Nov</string>
+    <string name="short_december">Dez</string>
 
 </resources>

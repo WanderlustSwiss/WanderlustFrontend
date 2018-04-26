@@ -46,8 +46,6 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
         this.motionEventListenerList.add(motionEventListener);
     }
 
-
-
     public WanderlustMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
