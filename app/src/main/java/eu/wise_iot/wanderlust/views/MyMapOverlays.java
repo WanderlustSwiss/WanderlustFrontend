@@ -417,7 +417,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     @Override
     public void update(DatabaseEvent event) {
-
         if (event.getType() == DatabaseEvent.SyncType.POIAREA) {
             populatePoiOverlay();
         } else if (event.getType() == DatabaseEvent.SyncType.SINGLEPOI) {
