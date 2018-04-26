@@ -69,6 +69,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private ItemizedOverlayWithFocus<OverlayItem> poiOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> publicTransportOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> sacHutOverlay;
+    private RadiusMarkerClusterer poiMarkers;
     private WanderlustCompassOverlay compassOverlay;
     private RotationGestureOverlay rotationGestureOverlay;
     private Marker positionMarker;
@@ -95,6 +96,15 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         initScaleBarOverlay();
         initMyLocationNewOverlay();
         initCompassOverlay();
+        initClusteringOverlay();
+    }
+
+    private void initClusteringOverlay(){
+        poiMarkers = new RadiusMarkerClusterer(activity.getApplicationContext());
+        Drawable clusterIconD = activity.getResources().getDrawable(R.drawable.marker_cluster);
+        Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
+        poiMarkers.setIcon(clusterIcon);
+        mapView.getOverlays().add(poiMarkers);
     }
 
     private void initCompassOverlay(){
@@ -190,9 +200,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
     private void makeClusteringGreatAgain(){
-        RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(activity.getApplicationContext());
-        //Drawable poiIcon = getResources().getDrawable(R.drawable.marker_poi_default);
-
+        
+        poiMarkers.getItems().clear();
         for (Poi myPoi : poiController.getAllPois()){
             POI poi = poiController.convertPoiToOSMDroidPOI(myPoi);
             Marker poiMarker = new Marker(mapView);
@@ -232,12 +241,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             });
             poiMarkers.add(poiMarker);
         }
-
-
-        Drawable clusterIconD = activity.getResources().getDrawable(R.drawable.marker_cluster);
-        Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
-        poiMarkers.setIcon(clusterIcon);
-        mapView.getOverlays().add(poiMarkers);
         showPoiLayer(true);
     }
 
@@ -354,7 +357,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             positionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
             positionMarker.setTitle(activity.getString(R.string.msg_last_known_position_marker));
 
-            mapView.getOverlays().add(positionMarker);
+            if(!mapView.getOverlays().contains(positionMarker)) {
+                mapView.getOverlays().add(positionMarker);
+            }
             mapView.invalidate();
         }
     }
@@ -446,7 +451,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                             overlayItem.setMarker(drawable);
                             publicTransportOverlay.addItem(overlayItem);
                         }
-                        mapView.getOverlays().add(publicTransportOverlay);
+                        if(!mapView.getOverlays().contains(publicTransportOverlay)) {
+                            mapView.getOverlays().add(publicTransportOverlay);
+                        }
                     }
                     mapView.invalidate();
                 });
@@ -541,7 +548,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             focusedPositionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
             focusedPositionMarker.setTitle(activity.getString(R.string.msg_last_known_position_marker));
 
-            mapView.getOverlays().add(focusedPositionMarker);
+            if(!mapView.getOverlays().contains(focusedPositionMarker)) {
+                mapView.getOverlays().add(focusedPositionMarker);
+            }
             mapView.invalidate();
         }
     }
@@ -643,7 +652,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                         overlayItem.setMarker(drawable);
                         sacHutOverlay.addItem(overlayItem);
                     }
-                    mapView.getOverlays().add(sacHutOverlay);
+                    if(!mapView.getOverlays().contains(sacHutOverlay)) {
+                        mapView.getOverlays().add(sacHutOverlay);
+                    }
                 } else {
                     Toast.makeText(activity, R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
                 }

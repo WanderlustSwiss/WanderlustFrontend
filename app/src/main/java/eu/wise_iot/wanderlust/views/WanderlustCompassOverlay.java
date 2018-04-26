@@ -25,7 +25,6 @@ public class WanderlustCompassOverlay extends CompassOverlay {
 
     public WanderlustCompassOverlay(Context context, MapView mapView) {
         super(context, mapView);
-        //timerThread = new Thread(new TimerThreadRunnable());
     }
 
     @Override
@@ -79,6 +78,7 @@ public class WanderlustCompassOverlay extends CompassOverlay {
                     ex.printStackTrace();
                 }
             });
+            timerThread.setName("Compass");
             timerThread.start();
         }
         return false;
