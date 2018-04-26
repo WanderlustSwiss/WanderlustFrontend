@@ -3,15 +3,18 @@ package eu.wise_iot.wanderlust.views;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -40,6 +43,7 @@ import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
+import eu.wise_iot.wanderlust.controllers.OfflineQueueController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -76,6 +80,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         WeatherController.createInstance(getApplicationContext());
         EquipmentController.createInstance(getApplicationContext());
         loginController = new LoginController();
+
+        this.registerReceiver(
+                new OfflineQueueController.NetworkChangeReceiver(),
+                new IntentFilter(
+                        ConnectivityManager.CONNECTIVITY_ACTION));
 
         if (preferences.getBoolean("firstTimeOpened", true)) {
             // start welcome screen
@@ -160,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || fragment instanceof StartupLoginFragment
                 || fragment instanceof MapFragment
                 || fragment instanceof StartupResetPasswordFragment) {
-        } else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -181,7 +190,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_map) {
             fragmentTag = Constants.MAP_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
-            if (fragment == null) fragment = MapFragment.newInstance(); //create if not available yet
+            if (fragment == null)
+                fragment = MapFragment.newInstance(); //create if not available yet
 
         } else if (id == R.id.nav_tours) {
             fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
@@ -199,9 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTag = Constants.USER_GUIDE_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
             if (fragment == null) fragment = UserGuideFragment.newInstance();
-        }
-
-        else if (id == R.id.logout) {
+        } else if (id == R.id.logout) {
             loginController.logout(controllerEvent -> {
                 switch (controllerEvent.getType()) {
                     case OK:
@@ -221,7 +229,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return true;
     }
-    private void switchFragment(Fragment fragment, String fragmentTag){
+
+    private void switchFragment(Fragment fragment, String fragmentTag) {
         if (fragment != null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, fragment, fragmentTag)
@@ -235,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
+
     /**
      * Checks if device has granted permissions to access location manager and permissions to
      * write on storage. Requires API Level >= 23
@@ -255,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void setupDrawerHeader(User user){
+    public void setupDrawerHeader(User user) {
         username = (TextView) findViewById(R.id.user_name);
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
@@ -267,30 +277,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTag = Constants.PROFILE_FRAGMENT;
             switchFragment(fragment, fragmentTag);
         });
-        
+
         username.setText(user.getNickname());
         email.setText(user.getEmail());
 
         updateProfileImage(loginController.getProfileImage());
     }
-    public void updateProfileImage(File image){
-        if (userProfileImage == null){
+
+    public void updateProfileImage(File image) {
+        if (userProfileImage == null) {
             userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
         }
-        if (image != null){
+        if (image != null) {
             Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
-        }else{
+        } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             userProfileImage.setImageDrawable(drawable);
         }
     }
-    public void updateEmailAdress(String newEmail){
+
+    public void updateEmailAdress(String newEmail) {
         email.setText(newEmail);
     }
 
-    public void updateNickname(String newNickname){
+    public void updateNickname(String newNickname) {
         username.setText(newNickname);
     }
 

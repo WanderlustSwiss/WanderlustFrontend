@@ -423,6 +423,9 @@ public class TourController {
         this.tour = newTour;
         userTourDao.create(newTour, handler);
     }
+    public void updateTour(FragmentHandler handler){
+        userTourDao.update((int) this.tour.getTour_id() ,this.tour, handler);
+    }
 
 }
 

@@ -27,6 +27,10 @@ public class Trip extends AbstractModel {
         this.user = user;
     }
 
+    public Trip(){
+
+    }
+
     public long getTrip_id() {
         return trip_id;
     }

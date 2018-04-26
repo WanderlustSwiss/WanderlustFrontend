@@ -140,11 +140,6 @@ public class CreateTourBackgroundTask extends Service {
         LocalBroadcastManager.getInstance(this).registerReceiver(wholeTourRequiredReceiver, new IntentFilter(Constants.CREATE_TOUR_WHOLE_ROUTE_REQUIRED));
 
 
-        track.add(new GeoPoint(46.925, 8.329));
-        track.add(new GeoPoint(46.926, 8.333));
-        track.add(new GeoPoint(46.92, 8.299));
-
-
         try {
             mLocationManager.requestLocationUpdates(
                     getProviderName(), LOCATION_INTERVAL, LOCATION_DISTANCE,
