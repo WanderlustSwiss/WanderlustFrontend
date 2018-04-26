@@ -84,7 +84,7 @@ import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
  * @license MIT
  */
 public class TourFragment extends Fragment {
-    private static final String TAG = "TourOverviewFragment";
+    private static final String TAG = "TourFragment";
     private static Tour tour;
     private static TourController tourController;
     private static EquipmentController equipmentController;
@@ -300,7 +300,6 @@ public class TourFragment extends Fragment {
 
         //equipment section
         RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
-        rvEquipment.setPadding(5, 5, 5, 5);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvEquipment.setLayoutManager(horizontalLayoutManager);
         adapterEquip = new EquipmentRVAdapter(context, listEquipment);

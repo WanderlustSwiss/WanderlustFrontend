@@ -424,7 +424,12 @@
                         android:text="@string/choose_hiking_day_button" />
                 </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -434,6 +439,7 @@
                 <TextView
                     android:id="@+id/equipmentDescription"
                     style="@style/h2"
+                    android:padding="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tour_equipment" />
@@ -443,7 +449,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -453,6 +464,7 @@
                 <TextView
                     android:id="@+id/tourElevationTitle"
                     style="@style/h2"
+                    android:padding="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tour_elevation_chart_title" />
@@ -462,7 +474,6 @@
                     style="@style/Plot"
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
-
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
