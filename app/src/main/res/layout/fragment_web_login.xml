@@ -12,7 +12,7 @@
 
     </WebView>
     <LinearLayout
-        android:id="@+id/web_login_instagram_layout"
+        android:id="@+id/web_login_provider_layout"
         android:layout_width="200dp"
         android:layout_height="100dp"
         android:orientation="vertical"
@@ -21,19 +21,17 @@
         android:layout_centerVertical="true">
 
         <ImageView
-            android:id="@+id/web_login_instagram_image"
+            android:id="@+id/web_login_provider_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/instagram" />
+            android:layout_gravity="center"/>
 
         <TextView
-            android:id="@+id/web_login_instagram_text"
+            android:id="@+id/web_login_provider_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textAlignment="center"
-            android:textColor="@color/white"
-            android:text="@string/login_instagram_progress" />
+            android:textColor="@color/white"/>
     </LinearLayout>
 </RelativeLayout>

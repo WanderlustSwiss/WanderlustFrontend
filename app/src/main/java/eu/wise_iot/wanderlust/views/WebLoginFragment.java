@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -19,7 +20,9 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
@@ -47,13 +50,50 @@ import eu.wise_iot.wanderlust.services.ServiceGenerator;
  * @license MIT
  */
 public class WebLoginFragment extends Fragment  {
-    private static final String TAG = "WebLoginFragment";
+    public enum LoginProvider {
+        INSTAGRAM(
+                "/auth/login/instagram",
+                "instagram?code=",
+                R.drawable.instagram,
+                R.string.login_instagram_progress),
+        FACEBOOK(
+                "/auth/login/facebook",
+                "facebook?code=",
+                R.drawable.facebook,
+                R.string.login_facebook_progress);
 
+        private final String path;
+        private final String pattern;
+        private final int loadDrawableId;
+        private final int loadStringId;
+
+        LoginProvider(String path, String pattern, int loadDrawableId, int loadStringId){
+            this.path = path;
+            this.pattern = pattern;
+            this.loadDrawableId = loadDrawableId;
+            this.loadStringId = loadStringId;
+        }
+        String getPath(){
+            return path;
+        }
+        String getPattern(){
+            return pattern;
+        }
+        int getLoadDrawableId(){
+            return loadDrawableId;
+        }
+        int getLoadStringId(){
+            return loadStringId;
+        }
+    }
+    private static final String TAG = "WebLoginFragment";
+    private static LoginProvider provider;
     private Context context;
     private WebView webview;
+    private ImageView loadDrawable;
+    private TextView loadString;
     private LinearLayout instagramContainer;
     private final String target_url;
-    private LoginUser loginUser;
     private final LoginController loginController;
     private final FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
@@ -110,12 +150,13 @@ public class WebLoginFragment extends Fragment  {
      * Create a standard login fragment
      */
     public WebLoginFragment() {
-        this.target_url = ServiceGenerator.API_BASE_URL + "/auth/login/instagram";
+        this.target_url = ServiceGenerator.API_BASE_URL + provider.getPath();
         this.loginController = new LoginController();
     }
 
-    public static WebLoginFragment newInstance() {
+    public static WebLoginFragment newInstance(LoginProvider prov) {
         Bundle args = new Bundle();
+        provider = prov;
         WebLoginFragment fragment = new WebLoginFragment();
         fragment.setArguments(args);
         return fragment;
@@ -137,7 +178,11 @@ public class WebLoginFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_web_login, container, false);
-        instagramContainer = (LinearLayout) view.findViewById(R.id.web_login_instagram_layout);
+        instagramContainer = (LinearLayout) view.findViewById(R.id.web_login_provider_layout);
+        loadDrawable = (ImageView) view.findViewById(R.id.web_login_provider_image);
+        loadString = (TextView) view.findViewById(R.id.web_login_provider_text);
+        loadDrawable.setImageDrawable(getResources().getDrawable(provider.loadDrawableId));
+        loadString.setText(getResources().getString(provider.loadStringId));
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         webview = (WebView) view.findViewById(R.id.web_login);
@@ -165,7 +210,7 @@ public class WebLoginFragment extends Fragment  {
                     instagramContainer.setVisibility(View.GONE);
                     String webUrl = webview.getUrl();
                     String cookies = CookieManager.getInstance().getCookie(url);
-                    if (webUrl.contains("instagram?code=")) {
+                    if (webUrl.contains(provider.getPattern())) {
                         loginController.logInInstagram(cookies, fragmentHandler);
                     }
                 }

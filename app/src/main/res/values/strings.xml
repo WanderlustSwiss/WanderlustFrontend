@@ -133,7 +133,9 @@
     <string name="login_need_registration">Neuen Account erstellen</string>
     <string name="login_forgot_password">Passwort vergessen?</string>
     <string name="login_instagram">Anmelden mit Instagram</string>
+    <string name="login_facebook">Anmelden mit Facebook</string>
     <string name="login_instagram_progress">Anmelden mit Instagram</string>
+    <string name="login_facebook_progress">Anmelden mit Facebook</string>
 
 
     <!-- POI -->
