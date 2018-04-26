@@ -5,27 +5,24 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.widget.Toast;
 
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -135,9 +132,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public void setTour(Polyline polyline) {
         if (this.currentTour == null) {
             this.currentTour = polyline;
-            this.currentTour.setWidth(10);
+            this.currentTour.setWidth(25);
             Context context = DatabaseController.getMainContext();
-            this.currentTour.setColor(context.getResources().getColor(R.color.highlight_main_transparent75));
+            this.currentTour.setColor(context.getResources().getColor(R.color.highlight_main_transparent));
             mapView.getOverlays().add(this.currentTour);
         } else {
             this.currentTour = polyline;
@@ -149,10 +146,26 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         // create location provider and add network provider to the already included gps provider
         GpsMyLocationProvider locationProvider = new GpsMyLocationProvider(activity);
         locationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
-        Log.i(TAG, "Location sources: " + locationProvider.getLocationSources());
 
         myLocationNewOverlay = new MyLocationNewOverlay(locationProvider, mapView);
+        Bitmap personIcon = getBitmapFromVectorDrawable(activity, R.drawable.ic_my_geo_location);
+//        Bitmap personIcon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.geo_location);
+//        Bitmap scaledIcon = personIcon.createScaledBitmap(personIcon, 100, 100, true);
+
+        myLocationNewOverlay.setPersonIcon(personIcon);
         mapView.getOverlays().add(myLocationNewOverlay);
+    }
+
+    private Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        drawable = (DrawableCompat.wrap(drawable)).mutate();
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     private void initPoiOverlay() {
@@ -224,20 +237,17 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 default:
                     poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_error));
             }
-            poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
-                    // make sure that no other dialog is running
-                    Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
-                    if (prevFragment != null)
-                        fragmentTransaction.remove(prevFragment);
-                    fragmentTransaction.addToBackStack(null);
+            poiMarker.setOnMarkerClickListener((marker, mapView) -> {
+                FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+                // make sure that no other dialog is running
+                Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
+                if (prevFragment != null)
+                    fragmentTransaction.remove(prevFragment);
+                fragmentTransaction.addToBackStack(null);
 
-                    PoiViewDialog dialogFragment = PoiViewDialog.newInstance(myPoi);
-                    dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
-                    return true;
-                }
+                PoiViewDialog dialogFragment = PoiViewDialog.newInstance(myPoi);
+                dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
+                return true;
             });
             poiMarkers.add(poiMarker);
         }
@@ -355,7 +365,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             positionMarker.setIcon(drawable);
             positionMarker.setPosition(geoPoint);
             positionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-            positionMarker.setTitle(activity.getString(R.string.msg_last_known_position_marker));
 
             if(!mapView.getOverlays().contains(positionMarker)) {
                 mapView.getOverlays().add(positionMarker);
@@ -487,7 +496,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     @Override
     public void update(DatabaseEvent event) {
-
         /*if (event.getType() == DatabaseEvent.SyncType.POIAREA) {
             populatePoiOverlay();
         } else if (event.getType() == DatabaseEvent.SyncType.SINGLEPOI) {
@@ -576,7 +584,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         Polyline polyline = new Polyline();
 
         polyline.setPoints(geoPoints);
-        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent));
 
         borderLines.add(polyline);
 
@@ -687,7 +695,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         Polyline polyline = new Polyline();
         trackingTourPoints.add(geoPoint);
         polyline.setPoints(this.trackingTourPoints);
-        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent));
         trackingTourOverlay.add(polyline);
         mapView.getOverlays().add(polyline);
         mapView.invalidate();
@@ -716,7 +724,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
         Polyline polyline = new Polyline();
         polyline.setPoints(this.trackingTourPoints);
-        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent75));
+        polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent));
         trackingTourOverlay.add(polyline);
         mapView.getOverlays().add(polyline);
         mapView.invalidate();

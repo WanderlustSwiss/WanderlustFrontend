@@ -344,6 +344,12 @@ public class MapFragment extends Fragment {
             mapOverlays.refreshPoiLayer();
         });
     }
+
+    public void closeBottomSheet(View view) {
+        View bottomSheet = view.findViewById(R.id.bottom_sheet);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
     private void initMapTypeButton(View view) {
         staliteTypeButton = (ImageButton) view.findViewById(R.id.map_satelite_type);
         defaultTypeButton = (ImageButton) view.findViewById(R.id.map_default_type);
@@ -692,6 +698,8 @@ public class MapFragment extends Fragment {
             layerButton.getLocationOnScreen(pos);
             mapOverlays.setCompassPos(pos[0]+layerButton.getWidth()/2, pos[1]+layerButton.getHeight()*1.5f);
         });
+        ImageButton closeBottomSheetButton = (ImageButton) view.findViewById(R.id.btn_close_bottom_sheet);
+
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(layerButton);
 
@@ -713,6 +721,7 @@ public class MapFragment extends Fragment {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
+        closeBottomSheetButton.setOnClickListener(view1 -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
 
         ibPoiLayer = (ImageButton) view.findViewById(R.id.poi_layer_button);
         boolean poiLayerActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POI_LAYER_ACTIVE,true);
@@ -845,6 +854,7 @@ public class MapFragment extends Fragment {
         GeoPoint myLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
         if (showMyLocation) {
             mapOverlays.removePositionMarker();
+
             mapOverlays.getMyLocationNewOverlay().enableMyLocation();
         } else {
             mapOverlays.addPositionMarker(myLocation);

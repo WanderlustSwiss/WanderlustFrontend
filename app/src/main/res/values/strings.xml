@@ -121,7 +121,7 @@
 
 
     <!-- REGISTRATION -->
-    <string name="registration_name">Nickname</string>
+    <string name="registration_name">Benutzernamen</string>
     <string name="registration_email">E-Mail</string>
     <string name="registration_password">Passwort</string>
     <string name="registration_password_repeat">Passwort wiederholen</string>
@@ -139,7 +139,7 @@
 
 
     <!-- LOGIN -->
-    <string name="login_nickname_email">Nickname / E-Mail</string>
+    <string name="login_nickname_email">Benutzernamen / E-Mail</string>
     <string name="login_password">Passwort</string>
     <string name="login_login">Login</string>
     <string name="login_failure">Login fehlgeschlagen</string>
@@ -185,7 +185,9 @@
     <string name="message_add_title">Bitte Titel hinzufügen</string>
     <string name="meter_above_sea_level_abbreviation">m ü. M.</string>
     <string name="share_title_poi">Teilen</string>
+
     <string name="share_title_tour">Teilen</string>
+    <string name="poi_mode_is_private">Poi ist privat und nur für dich sichtbar</string>
 
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>
