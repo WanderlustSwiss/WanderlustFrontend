@@ -175,11 +175,6 @@ public class TourController {
 
     }
 
-    //Todo: Tour should be a parameter
-    public void getRating(Tour tour, FragmentHandler handler) {
-        ratingDao.retrieve(tour.getTour_id(), handler);
-    }
-
 
     public void getRating(FragmentHandler handler) {
         ratingDao.retrieve(tour.getTour_id(), handler);

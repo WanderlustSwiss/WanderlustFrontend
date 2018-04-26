@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
+import eu.wise_iot.wanderlust.models.DatabaseModel.RatingStatistic;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 
 /**
@@ -32,6 +34,7 @@ public class TourRatingDialog extends DialogFragment {
     private static TourController controller;
     private static Tour tour;
     private static RatingBar ratingBar;
+    private static TextView ratingInNumbers;
 
     private ImageButton[] starButtonCollection = new ImageButton[5];
 
@@ -55,12 +58,13 @@ public class TourRatingDialog extends DialogFragment {
     private int countRatedStars = 0;
 
     public static TourRatingDialog newInstance(Tour paramTour, TourController tourController,
-                                               RatingBar paramRatingBar) {
+                                               RatingBar paramRatingBar, TextView paramRatingInNumbers) {
         TourRatingDialog fragment = new TourRatingDialog();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         ratingBar = paramRatingBar;
         tour = paramTour;
+        ratingInNumbers = paramRatingInNumbers;
         controller = tourController;
         return fragment;
     }
@@ -106,16 +110,20 @@ public class TourRatingDialog extends DialogFragment {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
                     getDialog().dismiss();
-                    String comment = titleEditText.getText().toString();
+                    /*String comment = titleEditText.getText().toString();
                     if (comment.trim().length() > 0){
                         controller.createComment(comment, controllerEvent1 -> {
                             Log.d(TAG, "Comment created");
                         });
                     }
-                    controller.getRating(tour, controllerEvent1 -> {
+                    */
+                    controller.getRating(controllerEvent1 -> {
                         switch (controllerEvent1.getType()) {
                             case OK:
-                                ratingBar.setRating((float) controllerEvent1.getModel());
+                                RatingStatistic rateStat = (RatingStatistic) controllerEvent1.getModel();
+                                float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateStat.getRateAvg() * 2) / 2.0));
+                                ratingInNumbers.setText(Float.toString(rateAvgRound));
+                                ratingBar.setRating(rateStat.getRateAvg());
                         }
                     });
                 }

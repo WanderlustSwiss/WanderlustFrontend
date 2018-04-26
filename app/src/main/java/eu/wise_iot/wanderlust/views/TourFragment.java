@@ -73,6 +73,7 @@ import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
+import eu.wise_iot.wanderlust.models.DatabaseModel.RatingStatistic;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
@@ -332,16 +333,6 @@ public class TourFragment extends Fragment {
                 PorterDuff.Mode.SRC_ATOP);
 
 
-        tourController.getRating(tour, new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        tourRating.setRating((float) controllerEvent.getModel());
-                }
-            }
-        });
-
         //equipment section
         RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
         rvEquipment.setPadding(5, 5, 5, 5);
@@ -421,9 +412,10 @@ public class TourFragment extends Fragment {
 
         tourController.getRating(controllerEvent -> {
            if (controllerEvent.getType() == EventType.OK){
-               float rateAvg = (float) controllerEvent.getModel();
-
-               float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateAvg * 2) / 2.0));
+               RatingStatistic rateStat = (RatingStatistic) controllerEvent.getModel();
+               float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateStat.getRateAvg() * 2) / 2.0));
+               //TODO: Implement linking to GUI
+               tourRating.setRating(rateStat.getRateAvg());
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
                tourRatingInNumbers.setText("0");
@@ -458,7 +450,7 @@ public class TourFragment extends Fragment {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
                     TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
-                            tourRating);
+                            tourRating, tourRatingInNumbers);
                     dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();

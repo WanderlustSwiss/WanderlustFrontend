@@ -3,7 +3,7 @@ package eu.wise_iot.wanderlust.services;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
-import eu.wise_iot.wanderlust.models.DatabaseModel.RatingAVG;
+import eu.wise_iot.wanderlust.models.DatabaseModel.RatingStatistic;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -20,14 +20,9 @@ import retrofit2.http.Path;
  */
 
 public interface RatingService {
-    @GET("Rating/tour")
-    Call<List<Tour>> retrievAllRatingTours();
 
     @GET("Rating/{id}")
-    Call<RatingAVG> retrieveRating(@Path("id") long id);
-
-    @GET("Rating")
-    Call<List<Rating>> retrievAllRatings();
+    Call<RatingStatistic> retrieveRating(@Path("id") long id);
 
     @POST("Rating")
     Call<Rating> createRating(@Body Rating rating);
