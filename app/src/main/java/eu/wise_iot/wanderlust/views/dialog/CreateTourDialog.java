@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.io.BufferedOutputStream;
@@ -45,6 +48,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
@@ -99,6 +103,8 @@ public class CreateTourDialog extends DialogFragment {
     private Uri returnUri;
     private String realPath;
 
+    private ImageController imageController;
+
 
     /**
      * Create a NEW tour dialog to create tour without further information
@@ -134,6 +140,7 @@ public class CreateTourDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         tourController = new TourController(this.tour);
         mapController = new MapController(this);
+        imageController = ImageController.getInstance();
         regions = tourController.getAllRegions();
         regionNames = new ArrayList<>();
 
@@ -359,47 +366,41 @@ public class CreateTourDialog extends DialogFragment {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
 
-        galleryIntent.putExtra("crop", "false");
-        galleryIntent.putExtra("outputFormat",
-                Bitmap.CompressFormat.JPEG.toString());
-
         if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(Intent.createChooser(galleryIntent, "Complete action using"), 1212);
         }
     }
 
     private void onActionResultGallery(Intent data) {
-        Bundle extras = data.getExtras();
 
-        if (extras != null) {
-            imageBitmap = (Bitmap) extras.get("data");
+        Uri returnUri = data.getData();
 
-            returnUri = getImageUri(getActivity().getApplicationContext(), imageBitmap);
-            realPath = getRealPathFromURI(returnUri);
-
-
-            if (imageBitmap != null) {
-                tourImageDisplay.setImageBitmap(imageBitmap);
-            }
-
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
-                    Toast.LENGTH_SHORT).show();
+        if (returnUri == null) {
+            Bundle extras = data.getExtras();
+            returnUri = imageController.getImageUri(getActivity().getApplicationContext(), (Bitmap) extras.get("data"));
         }
 
-    }
+        realPath = imageController.getRealPathFromURI(returnUri, getActivity());
+        File image = new File(realPath);
+        try {
+            imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+            imageController.setAndSaveCorrectOrientation(imageBitmap, returnUri, image);
+            imageBitmap = imageController.resize(imageBitmap, 1024);
+            if(image.length() > 500_000){
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, new FileOutputStream(image));
+                if(image.length() > 500_000){
+                    //Still to high quality
+                    Toast.makeText(getActivity(), R.string.image_upload_failed, Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
+        }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
+        if (imageBitmap != null) {
+            Picasso.with(getActivity().getApplicationContext())
+                    .load(returnUri)
+                    .into(tourImageDisplay);
+        }
     }
 }
