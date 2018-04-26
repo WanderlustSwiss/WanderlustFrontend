@@ -271,7 +271,7 @@ public class CreateTourDialog extends DialogFragment {
                 return;
             }
 
-            if (imageBitmap == null) {
+            if (realPath == null) {
                 Toast.makeText(getActivity(), R.string.create_tour_photo_required, Toast.LENGTH_SHORT).show();
                 return;
             }

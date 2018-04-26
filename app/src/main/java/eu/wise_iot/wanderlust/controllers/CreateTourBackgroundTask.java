@@ -37,8 +37,8 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 public class CreateTourBackgroundTask extends Service {
     private static final String TAG = "CreateTourContoller";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 3000;
-    private static final float LOCATION_DISTANCE = 0f;
+    private static final int LOCATION_INTERVAL = 8000;
+    private static final float LOCATION_DISTANCE = 13f;
     private ArrayList<GeoPoint> track = new ArrayList<>();
     private boolean wholeRouteRequired = false;
 
@@ -156,6 +156,7 @@ public class CreateTourBackgroundTask extends Service {
      * Starts the Background Task in Foreground (visible for user) so that the user can see that a tour is recording and so that the system doesn't kill the long living background task.
      */
     private void startForeground() {
+
 
         PendingIntent contentIntent;
         contentIntent = PendingIntent.getActivity(this, 0,

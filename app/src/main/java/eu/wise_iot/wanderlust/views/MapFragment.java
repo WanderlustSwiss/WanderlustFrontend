@@ -997,7 +997,7 @@ public class MapFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             Bundle args = intent.getBundleExtra(Constants.CREATE_TOUR_BUNDLE);
             ArrayList<GeoPoint> track = (ArrayList<GeoPoint>) args.getSerializable(Constants.CREATE_TOUR_TRACK);
-            if (track != null && track.size() > 1) {
+            if (validateCreatedTour(track)) {
                 openCreateTourDialog(track);
             } else {
                 Toast.makeText(getActivity(), R.string.create_tour_nothing_tracked, Toast.LENGTH_SHORT).show();
@@ -1007,6 +1007,23 @@ public class MapFragment extends Fragment {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(updateTrackingOverlayReceiver);
         }
     };
+
+    private boolean validateCreatedTour(ArrayList<GeoPoint> track) {
+        if(track == null){
+            return false;
+        }
+
+        int maxDistanceBetweenTwoPoints = 0;
+
+        for(int i=1; i< track.size() -1 ; i++){
+            if(track.get(i).distanceTo(track.get(i + 1)) > maxDistanceBetweenTwoPoints){
+                maxDistanceBetweenTwoPoints = track.get(i).distanceTo(track.get(i + 1));
+            }
+
+        }
+
+        return track.size() < 6000 & track.size() > 30 && maxDistanceBetweenTwoPoints < 250;
+    }
 
     private BroadcastReceiver updateTrackingOverlayReceiver = new BroadcastReceiver() {
         @Override
