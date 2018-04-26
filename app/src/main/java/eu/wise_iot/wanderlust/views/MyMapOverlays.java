@@ -215,28 +215,22 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 default:
                     poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_error));
             }
-            poiMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
-                    // make sure that no other dialog is running
-                    Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
-                    if (prevFragment != null)
-                        fragmentTransaction.remove(prevFragment);
-                    fragmentTransaction.addToBackStack(null);
+            poiMarker.setOnMarkerClickListener((marker, mapView) -> {
+                FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+                // make sure that no other dialog is running
+                Fragment prevFragment = activity.getFragmentManager().findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
+                if (prevFragment != null)
+                    fragmentTransaction.remove(prevFragment);
+                fragmentTransaction.addToBackStack(null);
 
-                    PoiViewDialog dialogFragment = PoiViewDialog.newInstance(myPoi);
-                    dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
-                    return true;
-                }
+                PoiViewDialog dialogFragment = PoiViewDialog.newInstance(myPoi);
+                dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
+                return true;
             });
             poiMarkers.add(poiMarker);
         }
 
-
-        Drawable clusterIconD = activity.getResources().getDrawable(R.drawable.marker_cluster);
-        Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
-        poiMarkers.setIcon(clusterIcon);
+        poiMarkers.setIcon(((BitmapDrawable)activity.getResources().getDrawable(R.drawable.marker_cluster)).getBitmap());
         mapView.getOverlays().add(poiMarkers);
         showPoiLayer(true);
     }
@@ -480,7 +474,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     @Override
     public void update(DatabaseEvent event) {
-
         /*if (event.getType() == DatabaseEvent.SyncType.POIAREA) {
             populatePoiOverlay();
         } else if (event.getType() == DatabaseEvent.SyncType.SINGLEPOI) {
