@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -656,24 +657,24 @@ public class TourFragment extends Fragment {
         if (tourController.isSaved()){
             boolean unsaved = tourController.unsetSaved();
             if(unsaved){
-                tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.white));
+                tourSavedButton.setColorFilter(getResources().getColor(R.color.white));
             }
         }else{
             boolean saved = tourController.setSaved();
             if(saved){
-                tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                tourSavedButton.setColorFilter(getResources().getColor(R.color.medium));
             }
         }
     }
 
     public void drawChart() {
         Number[] domainLabels = tourController.getElevationProfileXAxis();
-        Number[] series1Numbers = tourController.getElevationProfileYAxis();
+        Number[] rangeLabels = tourController.getElevationProfileYAxis();
 
-        float minElevation = Float.MAX_VALUE;
-        float maxElevation = Float.MIN_VALUE;
+        float minElevation = Integer.MAX_VALUE;
+        float maxElevation = Integer.MIN_VALUE;
 
-        for (Number elev : series1Numbers) {
+        for (Number elev : rangeLabels) {
             if (elev.floatValue() < minElevation) {
                 minElevation = elev.floatValue();
             }
@@ -685,12 +686,12 @@ public class TourFragment extends Fragment {
         // turn the above arrays into XYSeries':
         // (Y_VALS_ONLY means use the element index as the x value)
         XYSeries series1 = new SimpleXYSeries(
-                Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
+                Arrays.asList(rangeLabels), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
 
         // create formatters to use for drawing a series using LineAndPointRenderer
         // and configure them from xml:
         LineAndPointFormatter series1Format =
-                new LineAndPointFormatter(Color.DKGRAY, null, Color.LTGRAY, null);
+                new LineAndPointFormatter(getResources().getColor(R.color.black), null, getResources().getColor(R.color.heading_icon), null);
 
 
         // just for fun, add some smoothing to the lines:
@@ -703,11 +704,12 @@ public class TourFragment extends Fragment {
         plot.clear();
         plot.addSeries(series1, series1Format);
 
+        // setting labels of x-axis
         plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.BOTTOM).setFormat(new Format() {
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
                 int i = Math.round(((Number) obj).floatValue());
-                return toAppendTo.append(domainLabels[i]);
+                return toAppendTo.append(domainLabels[i].intValue() + "km");
             }
 
             @Override
@@ -716,12 +718,28 @@ public class TourFragment extends Fragment {
             }
         });
 
+        // setting labels of y-axis
+        plot.getGraph().getLineLabelStyle(XYGraphWidget.Edge.LEFT).setFormat(new Format() {
+
+            @Override
+            public StringBuffer format(Object obj, @NonNull StringBuffer toAppendTo, @NonNull FieldPosition pos) {
+                int i = Math.round(((Number) obj).intValue());
+                return toAppendTo.append(i);
+            }
+
+            @Override
+            public Object parseObject(String source, @NonNull ParsePosition pos) {
+                return null;
+            }
+        });
+
         plot.getLegend().setVisible(false);
-        float baseLine = ((minElevation - (minElevation % 100)) - 200.0f) < 0.0f ? 0.0f : minElevation - (minElevation % 100) - 200.0f;
+        float baseLine = ((minElevation - (minElevation % 100)) - 100) < 0 ? 0 : minElevation - (minElevation % 100) - 100;
         plot.setRangeLowerBoundary(baseLine, BoundaryMode.FIXED);
-        plot.setRangeUpperBoundary((maxElevation - (maxElevation % 100)) + 100.0f, BoundaryMode.FIXED);
+        plot.setRangeUpperBoundary((maxElevation - (maxElevation % 100)) + 100, BoundaryMode.FIXED);
         plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 100);
         //PanZoom.attach(plot, PanZoom.Pan.HORIZONTAL, PanZoom.Zoom.STRETCH_HORIZONTAL);
+
         plot.redraw();
     }
 

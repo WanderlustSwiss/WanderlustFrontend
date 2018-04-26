@@ -216,9 +216,10 @@
 
     <!-- Plot -->
     <style name="Plot" parent="APDefacto.Light">
-        <item name="graphMarginRight">0dp</item>
+        <item name="graphMarginRight">12dp</item>
+        <item name="graphMarginLeft">12dp</item>
 
-        <item name="lineLabelInsetLeft">21dp</item>
+        <item name="lineLabelInsetLeft">18dp</item>
         <item name="lineLabelRotationBottom">-45</item>
         <item name="lineLabelTextSizeBottom">12sp</item>
         <item name="lineLabelTextSizeLeft">12sp</item>
