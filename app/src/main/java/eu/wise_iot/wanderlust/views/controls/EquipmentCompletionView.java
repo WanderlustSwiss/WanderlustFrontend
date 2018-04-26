@@ -13,8 +13,6 @@ import com.tokenautocomplete.TokenCompleteTextView;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
-import eu.wise_iot.wanderlust.models.DatabaseObject.EquipmentDao;
 
 public class EquipmentCompletionView extends TokenCompleteTextView<Equipment> {
 

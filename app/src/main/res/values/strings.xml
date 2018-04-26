@@ -254,5 +254,6 @@
     <string name="create_tour_disable_battery_save_mode">Fürs Erstellen einer Tour muss der Batteriesparmodus deaktiviert werden.</string>
     <string name="create_tour_update_successful">Tour Update erfolgreich</string>
     <string name="in_queue">Upload wird fortgesetzt sobald mit Internet verbunden</string>
+    <string name="create_tour_extra_equipment">Zusatzequipment</string>
 
 </resources>

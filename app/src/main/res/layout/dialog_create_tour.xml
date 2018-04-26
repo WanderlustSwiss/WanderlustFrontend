@@ -117,6 +117,8 @@
         <eu.wise_iot.wanderlust.views.controls.EquipmentCompletionView
             android:id="@+id/tourkitExtraKitInput"
             android:layout_width="match_parent"
+            android:hint="@string/create_tour_extra_equipment"
+            android:layout_marginBottom="8dp"
             android:layout_height="wrap_content" />
 
         <android.support.design.widget.TextInputLayout
