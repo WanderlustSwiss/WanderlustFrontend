@@ -36,8 +36,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:background="@null"
                     android:layout_margin="24dp"
+                    android:background="@null"
                     android:src="@drawable/ic_arrow_back_white_24dp" />
 
                 <ImageButton
@@ -46,8 +46,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
-                    android:background="@null"
                     android:layout_margin="24dp"
+                    android:background="@null"
                     android:src="@drawable/ic_favorite_white_24dp" />
             </RelativeLayout>
 
@@ -462,9 +462,10 @@
                     android:layout_height="300dp" />
 
             </LinearLayout>
+
             <android.support.design.widget.TextInputLayout
-                style="@style/TextInputLayout"
                 android:id="@+id/rate_title_layout"
+                style="@style/TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp">
@@ -473,48 +474,78 @@
                     android:id="@+id/rate_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:editable="false"
                     android:hint="@string/dialog_feedback_description_edit_hint"
                     android:maxLength="200"
-                    android:paddingTop="4dp"
-                    android:editable="false"/>
+                    android:paddingTop="4dp" />
             </android.support.design.widget.TextInputLayout>
-            <ScrollView android:id="@+id/svFilteredTours"
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/tour_comment_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".views.MainActivity"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:id="@+id/tour_comment_layout"
+                <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tour_comment_progressbar"
+                    style="?android:progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tour_comment_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tour_filter_noresult" />
+
+                <TextView
+                    style="@style/h2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tour_comment_all_comments" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <ProgressBar
-                        android:id="@+id/tour_comment_progressbar"
-                        style="?android:progressBarStyle"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="70dp"
-                        xmlns:android="http://schemas.android.com/apk/res/android" />
-                    <TextView
-                        android:id="@+id/tour_comment_placeholder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="70dp"
-                        android:visibility="gone"
-                        android:text="@string/tour_filter_noresult"/>
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/tour_comment_recyclerview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="70dp"/>
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/tour_comment_rating5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/h2.Grey"
+                                android:text="5" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_rate_star_transparent_32dp" />
+
+                            <ImageView
+                                android:layout_width="100dp"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/rectangle_rounded_shape" />
+                        </LinearLayout>
+
+                    </LinearLayout>
                 </LinearLayout>
-            </ScrollView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/tour_comment_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

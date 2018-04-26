@@ -260,5 +260,6 @@
     <string name="short_october">Okt</string>
     <string name="short_november">Nov</string>
     <string name="short_december">Dez</string>
+    <string name="tour_comment_all_comments">Alle Bewertungen</string>
 
 </resources>
