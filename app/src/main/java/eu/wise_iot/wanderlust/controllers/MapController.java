@@ -47,6 +47,7 @@ import retrofit2.Callback;
 public class MapController {
     private final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
     private final String SBB_SERVICE_URL = "https://data.sbb.ch/api/records/1.0/search/";
+    private final String OPENPOI_SERVICE_URL = "http://openpois.net/poiquery.php?";
     private static final String TAG = "MapController";
     private final Fragment fragment;
 
@@ -195,6 +196,39 @@ public class MapController {
 
     }
 
+    public void searchExternalPOIGeoObjects(GeoPoint centerGeoPoint, int radius, final FragmentHandler handler) {
+        String url = OPENPOI_SERVICE_URL
+                + "lat=" + centerGeoPoint.getLatitude() +
+                "&lon=" + centerGeoPoint.getLongitude() +
+                "&radius=" + radius +
+                "&maxfeatures=25" +
+                "&format=application/json";
+
+        RequestQueue queue = Volley.newRequestQueue(fragment.getActivity());
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, response -> {
+            JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
+            JsonArray jRecords = jsonObject.get("records").getAsJsonArray();
+
+            List<PublicTransportPoint> publicTransportPoints = new ArrayList<>(jRecords.size());
+
+            for (int i = 0; i < jRecords.size(); i++) {
+                JsonObject jField = jRecords.get(i).getAsJsonObject().get("fields").getAsJsonObject();
+                String busStopDescription = jField.get("name").getAsString();
+                JsonArray jGeoPoints = jField.get("geopos").getAsJsonArray();
+                GeoPoint geoPoint = new GeoPoint(jGeoPoints.get(0).getAsDouble(), jGeoPoints.get(1).getAsDouble());
+                int id = jField.get("nummer").getAsInt();
+                PublicTransportPoint gPublicTransportPoint = new PublicTransportPoint(geoPoint, busStopDescription, id);
+                publicTransportPoints.add(gPublicTransportPoint);
+            }
+            handler.onResponse(new ControllerEvent<>(EventType.OK, publicTransportPoints));
+
+
+
+        }, error -> handler.onResponse(new ControllerEvent<List<PublicTransportPoint>>(EventType.NETWORK_ERROR)));
+
+        queue.add(stringRequest);
+
+    }
 
     public void searchPublicTransportStations(GeoPoint centerGeoPoint, int rows, int radius, final FragmentHandler handler) {
         String url = SBB_SERVICE_URL

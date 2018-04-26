@@ -710,12 +710,14 @@ public class TourFragment extends Fragment {
      * shares the tour with other apps
      */
     private void shareTour(){
-        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-        String description = tour.getDescription() + getResources().getString(R.string.app_domain);
+        Intent shareIntent = new Intent();
+        String description = tour.getDescription() + " " + getResources().getString(R.string.app_domain);
+        shareIntent.setAction(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, description);
         shareIntent.putExtra(Intent.EXTRA_TITLE, tour.getTitle());
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, tour.getTitle());
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
+        startActivity(Intent.createChooser(shareIntent, "Select an action"));
     }
 
     private void reportTour(){
