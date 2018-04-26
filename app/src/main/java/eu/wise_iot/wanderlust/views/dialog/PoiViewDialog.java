@@ -219,7 +219,7 @@ public class PoiViewDialog extends DialogFragment {
             dateTextView.setVisibility(View.GONE);
         }
 
-        // TODO: can be removed after separating sac from poi view
+        // TODO: can be removed after seperating sac from poi view
         if (currentPoi.getType() == Constants.TYPE_SAC) {
             String description = showSacOccupation(currentPoi.getDescription(), view);
             currentPoi.setDescription(description);
