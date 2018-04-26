@@ -343,7 +343,6 @@ public class MapFragment extends Fragment {
             mapOverlays.showPoiLayer(true);
             mapOverlays.refreshPoiLayer();
         });
-
     }
     private void initMapTypeButton(View view) {
         staliteTypeButton = (ImageButton) view.findViewById(R.id.map_satelite_type);

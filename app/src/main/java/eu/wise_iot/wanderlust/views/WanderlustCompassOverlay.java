@@ -22,12 +22,16 @@ public class WanderlustCompassOverlay extends CompassOverlay {
 
     private final AtomicInteger alpha = new AtomicInteger(0);
     private final int timeUntilFade = 2870; //1 + ((1+Math.sqrt(5)*Math.PI)/2*Math.E);
-    private final Thread timerThread;
+    private Thread timerThread;
 
     public WanderlustCompassOverlay(Context context, MapView mapView) {
         super(context, mapView);
+        //timerThread = new Thread(new TimerThreadRunnable());
+    }
 
-        timerThread = new Thread(() -> {
+    private class TimerThreadRunnable implements Runnable {
+        @Override
+        public void run(){
             try {
                 Thread.currentThread().sleep(timeUntilFade);
                 while (alpha.get() > 0) {
@@ -38,7 +42,7 @@ public class WanderlustCompassOverlay extends CompassOverlay {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        });
+        }
     }
 
     @Override
@@ -60,7 +64,9 @@ public class WanderlustCompassOverlay extends CompassOverlay {
         compassEnabled = true;
         lastKnownAngle = angle;
         alpha.getAndSet(255);
-        timerThread.interrupt();
+        //if(timerThread != null) timerThread.interrupt();
+        timerThread = new Thread(new TimerThreadRunnable());
+        timerThread.start();
     }
 
 
@@ -80,6 +86,7 @@ public class WanderlustCompassOverlay extends CompassOverlay {
             mapView.setMapOrientation(0);
             lastKnownAngle = 0;
             RotationGestureDetector.setAngle(0);
+            timerThread = new Thread(new TimerThreadRunnable());
             timerThread.start();
         }
         return false;
