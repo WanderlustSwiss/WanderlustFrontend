@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,8 +75,8 @@ public class TourRatingDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_rate_tour, container, false);
 
-        //titleEditText = (EditText) view.findViewById(R.id.rate_description);
-        //titleTextLayout = (TextInputLayout) view.findViewById(R.id.rate_title_layout);
+        titleEditText = (EditText) view.findViewById(R.id.rate_description);
+        titleTextLayout = (TextInputLayout) view.findViewById(R.id.rate_title_layout);
         firstStarButton = (ImageButton) view.findViewById(R.id.first_star_button);
         secondStarButton = (ImageButton) view.findViewById(R.id.second_star_button);
         thirdStarButton = (ImageButton) view.findViewById(R.id.third_star_button);
@@ -105,6 +106,12 @@ public class TourRatingDialog extends DialogFragment {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
                     getDialog().dismiss();
+                    String comment = titleEditText.getText().toString();
+                    if (comment.trim().length() > 0){
+                        controller.createComment(comment, controllerEvent1 -> {
+                            Log.d(TAG, "Comment created");
+                        });
+                    }
                     controller.getRating(tour, controllerEvent1 -> {
                         switch (controllerEvent1.getType()) {
                             case OK:

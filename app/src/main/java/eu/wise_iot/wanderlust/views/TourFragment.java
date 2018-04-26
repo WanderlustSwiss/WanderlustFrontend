@@ -26,6 +26,7 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,8 +74,11 @@ import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
+import eu.wise_iot.wanderlust.views.adapters.ResultFilterRVAdapter;
+import eu.wise_iot.wanderlust.views.adapters.TourCommentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 
 /**
@@ -83,7 +88,7 @@ import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
  * @license MIT
  */
 public class TourFragment extends Fragment {
-    private static final String TAG = "TourOverviewFragment";
+    private static final String TAG = "TourFragment";
     private static Tour tour;
     private static TourController tourController;
     private static EquipmentController equipmentController;
@@ -121,6 +126,14 @@ public class TourFragment extends Fragment {
     private ImageView thirdWeatherIcon;
     private ImageView forthWeatherIcon;
     private ImageView fifthWeatherIcon;
+
+
+    private ProgressBar commentProgressBar;
+    private RecyclerView commentRecyclerView;
+    private TextView commentPlaceholder;
+    private TourCommentRVAdapter adapterComments;
+    private List<UserComment> listUserComment;
+    private int currentPage;
 
     private TextView firstWeatherDegree;
     private TextView secondWeatherDegree;
@@ -176,7 +189,9 @@ public class TourFragment extends Fragment {
         super.onCreate(savedInstanceState);
         context = getActivity();
         tour = tourController.getCurrentTour();
+        listUserComment = new LinkedList<>();
         listEquipment = new ArrayList<>();
+        currentPage = 0;
     }
 
     @Override
@@ -269,6 +284,48 @@ public class TourFragment extends Fragment {
             drawable = context.getResources().getDrawable(R.drawable.t1);
 
         textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+        commentProgressBar = (ProgressBar) view.findViewById(R.id.tour_comment_progressbar);
+        commentRecyclerView = (RecyclerView) view.findViewById(R.id.tour_comment_recyclerview);
+        commentPlaceholder = (TextView) view.findViewById(R.id.tour_comment_placeholder);
+
+        commentRecyclerView.setPadding(5, 5, 5, 5);
+        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        commentRecyclerView.setLayoutManager(verticalLayoutManager);
+        adapterComments = new TourCommentRVAdapter(context, listUserComment);
+        commentRecyclerView.setAdapter(adapterComments);
+
+        tourController.getComments(0, event -> {
+            switch (event.getType()) {
+                case OK:
+                    //get all needed information from server db
+                    List<UserComment> list = (List<UserComment>) event.getModel();
+                    currentPage++;
+
+                    listUserComment.addAll(list);
+
+
+                    adapterComments.notifyDataSetChanged();
+                    if(adapterComments.getItemCount() > 0) {
+                        commentRecyclerView.setVisibility(View.VISIBLE);
+                        commentPlaceholder.setVisibility(View.GONE);
+                        commentProgressBar.setVisibility(View.GONE);
+                    } else {
+                        commentRecyclerView.setVisibility(View.GONE);
+                        commentPlaceholder.setVisibility(View.VISIBLE);
+                        commentProgressBar.setVisibility(View.GONE);
+                    }
+                    break;
+                case NOT_FOUND:
+                    commentRecyclerView.setVisibility(View.GONE);
+                    commentPlaceholder.setVisibility(View.VISIBLE);
+                    commentProgressBar.setVisibility(View.GONE);
+                    break;
+                default:
+                    Log.d(TAG, "Server response ERROR: " + event.getType().name());
+                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+            }
+        });
 
         Drawable tourRatingDrawable = tourRating.getProgressDrawable();
         tourRatingDrawable.setColorFilter(Color.parseColor("#FFFFFF"),

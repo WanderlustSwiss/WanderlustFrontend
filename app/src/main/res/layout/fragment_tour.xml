@@ -462,6 +462,59 @@
                     android:layout_height="300dp" />
 
             </LinearLayout>
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayout"
+                android:id="@+id/rate_title_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/rate_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/dialog_feedback_description_edit_hint"
+                    android:maxLength="200"
+                    android:paddingTop="4dp"
+                    android:editable="false"/>
+            </android.support.design.widget.TextInputLayout>
+            <ScrollView android:id="@+id/svFilteredTours"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".views.MainActivity"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/tour_comment_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ProgressBar
+                        android:id="@+id/tour_comment_progressbar"
+                        style="?android:progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="70dp"
+                        xmlns:android="http://schemas.android.com/apk/res/android" />
+                    <TextView
+                        android:id="@+id/tour_comment_placeholder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="70dp"
+                        android:visibility="gone"
+                        android:text="@string/tour_filter_noresult"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/tour_comment_recyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="70dp"/>
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
