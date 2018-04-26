@@ -136,7 +136,7 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
             List<File> imagefiles = imageController.getImages(imagepaths);
             if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
                 Picasso.with(context)
-                        .load(imagefiles.get(0))
+                        .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
                         .into(poiImage);
             } else {
                 poiImage.setImageResource(R.drawable.example_image);

@@ -34,7 +34,9 @@ public final class DatabaseController {
 
     public static DatabaseController createInstance(Context context){
 
-        BOX_STORE = MyObjectBox.builder().androidContext(context).build();
+        if(BOX_STORE == null) {
+            BOX_STORE = MyObjectBox.builder().androidContext(context).build();
+        }
         CONTEXT = context;
 
         return Holder.INSTANCE;

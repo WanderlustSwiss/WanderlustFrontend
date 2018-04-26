@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,8 +136,6 @@ public class TourFragment extends Fragment {
 
     private TextView tourRatingInNumbers;
     private RatingBar tourRating;
-    private static MapFragment mapFragment;
-    private static TourOverviewFragment tourOverviewFragment;
 
     private Favorite favorite;
     private boolean isFavoriteUpdate;
@@ -182,14 +181,17 @@ public class TourFragment extends Fragment {
         listEquipment = new ArrayList<>();
     }
 
-    /**
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
+    @Override
+    public void onPrepareOptionsMenu (Menu menu) {
+        getActivity().invalidateOptionsMenu();
+        if(menu.findItem(R.id.filterIcon) != null)
+            menu.findItem(R.id.filterIcon).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_tour, container, false);
         Calendar currentCalendar = GregorianCalendar.getInstance();
         selectedDateTime = new DateTime(currentCalendar);
@@ -352,7 +354,7 @@ public class TourFragment extends Fragment {
         } else {
             Picasso.with(context)
                     .load(R.drawable.no_image_found)
-                    .fit()
+                    .fit().centerCrop().placeholder(R.drawable.progress_animation)
                     .into(this.imageViewTourImage);
         }
 
@@ -361,6 +363,7 @@ public class TourFragment extends Fragment {
         } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
+        tourRegion.setText(getString(R.string.tour_region) + " " + tourController.getRegion());
 
         if(tourController.isSaved()){
             tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
@@ -376,7 +379,8 @@ public class TourFragment extends Fragment {
         tourController.getRating(controllerEvent -> {
            if (controllerEvent.getType() == EventType.OK){
                float rateAvg = (float) controllerEvent.getModel();
-               float rateAvgRound = Float.parseFloat(String.format("%.1f", rateAvg));
+
+               float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateAvg * 2) / 2.0));
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{
                tourRatingInNumbers.setText("0");
@@ -411,7 +415,7 @@ public class TourFragment extends Fragment {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
                     TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
-                            tourRating);
+                            tourRating, tourRatingInNumbers);
                     dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
@@ -731,11 +735,23 @@ public class TourFragment extends Fragment {
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-        // fixme: color does not get adjusted (only #f00)
+
         roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent75));
+
+
+        //Disable my location
+        getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.MY_LOCATION_ENABLED, false).apply();
+
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
+        Fragment oldMapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+        if(oldMapFragment != null) {
+            getFragmentManager().beginTransaction()
+                    .remove(oldMapFragment)
+                    .commit();
+        }
+
         getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                 .addToBackStack(Constants.MAP_FRAGMENT)
                 .commit();
 
@@ -745,11 +761,15 @@ public class TourFragment extends Fragment {
     }
 
     private void showTourView(){
-        getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
-                .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
-                .commit();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
+        Fragment tourOverviewFragment = getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT);
+        if(tourOverviewFragment != null) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, tourOverviewFragment, Constants.TOUROVERVIEW_FRAGMENT)
+                    .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
+                    .commit();
+            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        }
     }
 
     /**

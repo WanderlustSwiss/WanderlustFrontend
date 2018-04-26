@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -24,6 +26,7 @@ import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.views.MainActivity;
 
 
 /**
@@ -36,12 +39,11 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 @SuppressWarnings("JavaDoc")
 public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRVAdapter.ViewHolder> {
 
-    private List<Tour> tours = Collections.emptyList();
+    private List<Tour> tours;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private final Context context;
     private final ImageController imageController;
-
     private final FavoriteDao favoriteDao = FavoriteDao.getInstance();
     private final List<Long> favorizedTours = new ArrayList<>();
 
@@ -120,10 +122,25 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
             File image = images.get(0);
+            Picasso.with(context).load(image).fit().centerCrop().noFade()
+                    .placeholder(R.drawable.progress_animation).into(holder.tvImage);
+
+//            Picasso.Builder builder = new Picasso.Builder(context);
+//            builder.listener(new Picasso.Listener()
+//            {
+//                @Override
+//                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+//                {
+//                    exception.printStackTrace(); //TODO update to newer Picasso library https://github.com/square/picasso/issues/364
+//                }
+//            });
+//            builder.build().load(image).fit().centerCrop().into(holder.tvImage);
+
             Picasso.with(context).load(image).fit().centerCrop().into(holder.tvImage);
             Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
         } else {
-            Picasso.with(context).load(R.drawable.no_image_found).into(holder.tvImage);
+            Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
+                    .placeholder(R.drawable.progress_animation).into(holder.tvImage);
             Log.d("ToursoverviewAdapters", "Images not found");
         }
         holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
@@ -169,16 +186,9 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each tour
-        public final TextView tvDistance;
-        public final TextView tvDifficulty;
-        public final TextView tvRegion;
-        public final TextView tvTitle;
-        public final TextView tvTime;
-        public final ImageView tvImage;
-        public final ImageView tvDifficultyIcon;
-        public final ImageButton ibFavorite;
-        public final ImageButton ibSave;
-        public final ImageButton ibShare;
+        private final TextView tvDistance, tvDifficulty, tvTitle, tvTime;
+        private final ImageView tvImage, tvDifficultyIcon;
+        private final ImageButton ibFavorite, ibSave, ibShare;
 
         /**
          * copy constructor for each element which holds the view
@@ -188,7 +198,6 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
             super(itemView);
             tvDistance = (TextView) itemView.findViewById(R.id.tour_distance);
             tvDifficulty = (TextView) itemView.findViewById(R.id.tour_difficulty);
-            tvRegion = (TextView) itemView.findViewById(R.id.tour_region);
             tvTitle = (TextView) itemView.findViewById(R.id.tour_title);
             tvTime = (TextView) itemView.findViewById(R.id.tourTime);
             tvImage = (ImageView) itemView.findViewById(R.id.tour_image);

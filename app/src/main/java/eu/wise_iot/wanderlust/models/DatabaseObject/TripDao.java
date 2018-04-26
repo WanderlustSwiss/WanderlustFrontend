@@ -7,6 +7,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TripService;
@@ -32,7 +33,7 @@ public class TripDao extends DatabaseObjectAbstract {
 
     private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
-    public static TripDao getInstance(){
+    public static TripDao getInstance() {
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
@@ -80,25 +81,25 @@ public class TripDao extends DatabaseObjectAbstract {
     /**
      * insert a trip local and remote
      *
-     * @param trip
+     * @param tour a tour, from which the backend creates an trip, which can be inserted to the database
      * @param handler
      */
-    public void create(final AbstractModel trip, final FragmentHandler handler) {
-        Call<Trip> call = service.createTrip((Trip) trip);
+    public void create(final AbstractModel tour, final FragmentHandler handler) {
+        Call<Trip> call = service.createTrip((Tour) tour);
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
                 if (response.isSuccessful()) {
-                    routeBox.put((Trip) trip);
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                //    routeBox.put((Trip) trip);
+                    handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent<Trip>(EventType.NETWORK_ERROR));
             }
         });
     }

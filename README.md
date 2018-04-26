@@ -39,10 +39,10 @@ Released .apk packages: [Browse Packages](http://86.119.40.34/Frontend_Android_A
 The release tour, poi, maps and profile changes
 
 **Package**
-[wanderlust-app-0.4.0-17843.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.4.0-17843.apk)
+[wanderlust-app-0.4.0-18052.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.4.0-18052.apk)
 
 **Date**
-29.3.2018
+02.04.2018
 
 **Features**
 This release includes the following features:
@@ -64,7 +64,7 @@ The release contains tours, passwort reset, poi, change map type and profile
 [wanderlust-app-0.3.0-15897.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.3.0-15897.apk)
 
 **Date**
-25.1.2018
+25.01.2018
 
 **Features**
 This release includes the following features:

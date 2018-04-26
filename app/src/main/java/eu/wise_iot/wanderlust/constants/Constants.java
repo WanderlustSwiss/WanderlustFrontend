@@ -9,10 +9,10 @@ package eu.wise_iot.wanderlust.constants;
 public interface Constants {
 
     // new types
-    int TYPE_VIEW = 0;
-    int TYPE_RESTAURANT = 1;
-    int TYPE_REST_AREA = 2;
-    int TYPE_FLORA_FAUNA = 3;
+    int TYPE_VIEW = 1;
+    int TYPE_RESTAURANT = 2;
+    int TYPE_REST_AREA = 3;
+    int TYPE_FLORA_FAUNA = 4;
 
     // GeoObjectTypes
     long TYPE_SAC = -1;
@@ -24,16 +24,23 @@ public interface Constants {
     /* FRAGMENTS */
     String MAP_FRAGMENT = "MapFragment";
     String TOUR_FRAGMENT = "TourFragment";
+    String FILTER_FRAGMENT = "FilterFragment";
     String TOUROVERVIEW_FRAGMENT = "TourOverviewFragment";
+    String RESULT_FILTER_FRAGMENT = "ResultFilterFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
-    String LOGIN_FRAGMENT = "SartupLoginFragment";
+    String LOGIN_FRAGMENT = "StartupLoginFragment";
+    String WEB_LOGIN_FRAGMENT = "WebLoginFragment";
     String USER_GUIDE_FRAGMENT = "UserGuideFragment";
+    String REGISTRATION_FRAGMENT = "RegistrationFragment";
+    String RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment";
+    String PROFILE_EDIT_FRAGMENT = "ProfileEditFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
     String EDIT_POI_DIALOG = "PoiFeedbackDialog";
     String RATE_TOUR_DIALOG = "TourRatingDialog";
+    String CREATE_TOUR_DIALOG = "CreateTourDialog";
     String CONFIRM_DELETE_POI_DIALOG = "YesNoDialog";
 
     /* PHOTO INTENT */
@@ -60,4 +67,15 @@ public interface Constants {
     /* INTENTS */
     int TAKE_PHOTO = 1;
     int REQUEST_FOR_MULTIPLE_PERMISSIONS = 2;
+
+    /* Create Tour */
+    String CREATE_TOUR_INTENT = "gpsTrackingFinished";
+    String CREATE_TOUR_TRACK = "tourTrackGeoPoints";
+    String CREATE_TOUR_BUNDLE = "tourTrackBundle";
+    String CREATE_TOUR_UPDATE_MYOVERLAY = "tourTrackUpdateMyOverlay";
+    String CREATE_TOUR_ADDING_GEOPOINT = "tourTrackAddingGeopoint";
+    String CREATE_TOUR_ADDING_GEOPOINTS = "tourTrackAddingGeopoints";
+    String CREATE_TOUR_WHOLE_ROUTE_REQUIRED = "tourTrackWholeRouteRequired";
+    String CREATE_TOUR_IS_NEW = "tourTrackNewTOur";
+
 }

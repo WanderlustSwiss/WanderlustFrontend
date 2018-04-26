@@ -156,7 +156,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         }
                     } catch (Exception e) {
-                        Log.d(TAG, e.getMessage());
+                        Log.d(TAG, "Favorite delete failed");
                     }
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));

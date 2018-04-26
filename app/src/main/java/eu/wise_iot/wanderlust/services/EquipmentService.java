@@ -13,6 +13,11 @@ public interface EquipmentService {
     @GET("equipment/set/basic")
     Call<List<Equipment>> getEquipment();
 
-    @GET("/equipment/{id}/img")
+    @GET("equipment/set/extra")
+    Call<List<Equipment>> getExtraEquipment();
+
+    @GET("equipment/{id}/img")
     Call<ResponseBody> downloadImage(@Path("id") long id);
+
+
 }

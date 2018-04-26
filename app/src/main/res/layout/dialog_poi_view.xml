@@ -16,7 +16,6 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
             app:zoomage_animateOnReset="true"
             app:zoomage_autoCenter="true"
             app:zoomage_autoResetMode="NEVER"
@@ -138,102 +137,101 @@
             android:padding="12dp" />
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/title_occupation"
             style="@style/p"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/poi_description_text_view"
-            android:padding="12dp"
             android:layout_marginTop="4dp"
-            android:text="@string/sac_occupation_bewartet">
-        </TextView>
+            android:padding="12dp"
+            android:text="@string/sac_occupation_bewartet"
+            android:visibility="gone"></TextView>
 
         <TableLayout
             android:id="@+id/tableLayout_occupation_sac"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:layout_below="@id/title_occupation"
             android:layout_marginTop="-8dp"
-            >
+            android:visibility="gone">
 
             <TableRow
                 android:id="@+id/table_row_3"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
+                android:padding="12dp"
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/occupation_jan"
                     style="@style/sac_occupation_table"
-                    android:text="Jan">
+                    android:text="@string/short_january">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_feb"
                     style="@style/sac_occupation_table"
-                    android:text="Feb">
+                    android:text="@string/short_february">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_mär"
                     style="@style/sac_occupation_table"
-                    android:text="Mar">
+                    android:text="@string/short_march">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_apr"
                     style="@style/sac_occupation_table"
-                    android:text="Apr">
+                    android:text="@string/short_april">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_mai"
                     style="@style/sac_occupation_table"
-                    android:text="Mai">
+                    android:text="@string/short_mai">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_jun"
                     style="@style/sac_occupation_table"
-                    android:text="Jun">
+                    android:text="@string/short_june">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_jul"
                     style="@style/sac_occupation_table"
-                    android:text="Jul">
+                    android:text="@string/short_july">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_aug"
                     style="@style/sac_occupation_table"
-                    android:text="Aug">
+                    android:text="@string/short_august">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_sep"
                     style="@style/sac_occupation_table"
-                    android:text="Sep">
+                    android:text="@string/short_september">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_okt"
                     style="@style/sac_occupation_table"
-                    android:text="Okt">
+                    android:text="@string/short_october">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_nov"
                     style="@style/sac_occupation_table"
-                    android:text="Nov">
+                    android:text="@string/short_november">
                 </TextView>
 
                 <TextView
                     android:id="@+id/occupation_dez"
                     style="@style/sac_occupation_table"
-                    android:text="Dez">
+                    android:text="@string/short_december">
 
                 </TextView>
             </TableRow>

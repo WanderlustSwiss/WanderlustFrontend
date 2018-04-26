@@ -37,6 +37,8 @@ import java.io.File;
 import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
@@ -325,7 +327,7 @@ public class ProfileEditFragment extends Fragment {
         File image = profileController.getProfilePicture();
         if (image != null) {
             Picasso.with(getActivity()).invalidate(image);
-            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().into(profileImage);
+            Picasso.with(getActivity()).load(image).placeholder(R.drawable.progress_animation).transform(new CircleTransform()).fit().into(profileImage);
             ((MainActivity) getActivity()).updateProfileImage(image);
         } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);

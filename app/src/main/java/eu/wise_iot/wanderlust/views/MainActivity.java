@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,8 +42,10 @@ import java.util.TimeZone;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
@@ -102,6 +105,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 return;
             }
+            if (user.getAccountType().equals("instagram")){
+                Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
+                if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                        .commit();
+            }else{
+                loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
+                    User logInUser = (User) controllerEvent.getModel();
+                    switch (controllerEvent.getType()) {
+                        case OK:
+                            setupDrawerHeader(logInUser);
+                            MapFragment mapFragment = MapFragment.newInstance();
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                    .commit();
+                            break;
+                        default:
+                            StartupLoginFragment loginFragment = new StartupLoginFragment();
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
+                                    .commit();
+                    }
+                });
+            }
 
             loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
                 User logtInUser = (User) controllerEvent.getModel();
@@ -147,6 +175,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -209,21 +242,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // MAIN FRAGMENTS
         if (id == R.id.nav_map) {
-            fragment = MapFragment.newInstance();
             fragmentTag = Constants.MAP_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = MapFragment.newInstance(); //create if not available yet
+
         } else if (id == R.id.nav_tours) {
-            fragment = TourOverviewFragment.newInstance();
             fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = TourOverviewFragment.newInstance();
         } else if (id == R.id.nav_profile) {
-            fragment = ProfileFragment.newInstance();
             fragmentTag = Constants.PROFILE_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = ProfileFragment.newInstance();
         }
 
         // OTHER FRAGMENTS
 
         else if (id == R.id.setup_guide) {
-            fragment = UserGuideFragment.newInstance();
             fragmentTag = Constants.USER_GUIDE_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = UserGuideFragment.newInstance();
         }
 
         else if (id == R.id.logout) {
@@ -237,10 +275,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
                 }
             });
-            fragment = new StartupLoginFragment();
             fragmentTag = Constants.LOGIN_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = StartupLoginFragment.newInstance();
         }
 
+        switchFragment(fragment, fragmentTag);
+
+        return true;
+    }
+    private void switchFragment(Fragment fragment, String fragmentTag){
         if (fragment != null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, fragment, fragmentTag)
@@ -253,9 +297,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
-
-        return true;
     }
 
     /**
@@ -283,7 +324,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         username = (TextView) findViewById(R.id.user_name);
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
-        
+
+        userProfileImage.setOnClickListener((View v) -> {
+            Fragment fragment = null;
+            String fragmentTag = null;
+            fragment = ProfileFragment.newInstance();
+            fragmentTag = Constants.PROFILE_FRAGMENT;
+            switchFragment(fragment, fragmentTag);
+        });
+
         username.setText(user.getNickname());
         email.setText(user.getEmail());
 
@@ -294,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
         }
         if (image != null){
-            Picasso.with(activity).load(image).transform(new CircleTransform()).fit().into(userProfileImage);
+            Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
         }else{
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);

@@ -37,7 +37,7 @@ public class TourOverviewController {
      * @param handler
      * @param page
      */
-    public void getAllTours(FragmentHandler handler, int page) {
+    public void getAllTours(int page, FragmentHandler handler) {
         userTourDao.retrieveAll(handler, page);
     }
 
@@ -69,13 +69,6 @@ public class TourOverviewController {
      */
     public void downloadFavorites(FragmentHandler handler) {
         favoriteDao.retrieveAllFavorites(handler);
-    }
-    /**
-     * get all difficulty types
-     *
-     */
-    public void downloadDifficultyTypes() {
-        difficultyType.retrive();
     }
     /**
      * get all Favorites

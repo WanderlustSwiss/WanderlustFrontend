@@ -29,7 +29,9 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -180,18 +182,18 @@ public class PoiViewDialog extends DialogFragment {
             controller.getImages(currentPoi, controllerEvent -> {
                 List<File> images = (List<File>) controllerEvent.getModel();
                 if (images.size() > 0) {
-                    Picasso.with(context).load(images.get(0)).fit().into(poiImage);
+                    Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
                 }
             });
         } else {
             List<File> images = new ArrayList<>();
             images.add(new File(currentPoi.getImagePaths().get(0).getPath()));
-            Picasso.with(context).load(images.get(0).getPath()).into(poiImage);
+            Picasso.with(context).load(images.get(0).getPath()).fit().centerCrop().into(poiImage);
         }
 
-
+        // todo: add better image to display that poi is private (ask Hristian how)
         if (!currentPoi.isPublic()) {
-            Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
+            Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().placeholder(R.drawable.progress_animation).into(displayModeImage);
         }
 
 
@@ -209,6 +211,7 @@ public class PoiViewDialog extends DialogFragment {
         elevationTextView.setText(elevationText);
 
         titleTextView.setText(currentPoi.getTitle());
+
         if(currentPoi.getType() >= 0){
             dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
         }

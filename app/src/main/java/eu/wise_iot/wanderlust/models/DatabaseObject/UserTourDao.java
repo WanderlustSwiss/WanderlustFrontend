@@ -12,10 +12,13 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourKitEquipment;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TourService;
+import eu.wise_iot.wanderlust.views.FilterFragment;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -268,6 +271,39 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
         });
     }
+    /**
+     * get all usertours out of the remote database by filter
+     *
+     * @param handler
+     */
+    public void retrieveAllFiltered(final FragmentHandler handler, int page, int distanceS, int distanceE, int durationS, int durationE, String regionIDs, String title, String difficulties) {
+        Call<List<Tour>> call = service.retrieveAllFilteredTours(page, distanceS, distanceE, durationS, durationE, regionIDs, title, difficulties);
+        call.enqueue(new Callback<List<Tour>>() {
+            @Override
+            public void onResponse(Call<List<Tour>> call, Response<List<Tour>> response) {
+                if (response.isSuccessful()) {
+                    List<Tour> tours = response.body();
+                    for (Tour tour : tours) {
+                        for (ImageInfo imageInfo : tour.getImagePaths()) {
+                            String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
+                            imageInfo.setName(name);
+                            imageInfo.setId(tour.getTour_id());
+                            imageInfo.setLocalDir(imageController.getTourFolder());
+                        }
+                    }
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                }
+                else{
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Tour>> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
 
     /**
      * add an image to the db
@@ -371,6 +407,25 @@ public class UserTourDao extends DatabaseObjectAbstract {
             return routeBox.getAll();
         else
             return null;
+    }
+
+    public void getExtraEquipment(long id, FragmentHandler handler){
+        Call<List<TourKitEquipment>> call = service.retrieveExtraEquipment(id);
+        call.enqueue(new Callback<List<TourKitEquipment>>() {
+            @Override
+            public void onResponse(Call<List<TourKitEquipment>> call, Response<List<TourKitEquipment>> response) {
+                if(response.isSuccessful()){
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TourKitEquipment>> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
     }
 
     /**
