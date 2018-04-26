@@ -106,9 +106,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             if (user.getAccountType().equals("instagram")) {
-
                 Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
-                if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance();
+                if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance(
+                        WebLoginFragment.LoginProvider.INSTAGRAM);
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                        .commit();
+            }else if (user.getAccountType().equals("facebook")){
+                Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
+                if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance(
+                        WebLoginFragment.LoginProvider.FACEBOOK);
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
                         .commit();

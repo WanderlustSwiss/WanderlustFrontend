@@ -48,6 +48,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     private Context context;
     private Button btnLogin;
     private Button btnInstagram;
+    private Button btnFacebook;
     private EditText nicknameEmailTextfield;
     private EditText passwordTextfield;
     private TextInputLayout nicknameEmailLayout;
@@ -142,7 +143,8 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_startup_login, container, false);
         btnLogin = (Button) view.findViewById(R.id.btn_signin);
-        btnInstagram = (Button) view.findViewById(R.id.web_login_instagramm_button);
+        btnInstagram = (Button) view.findViewById(R.id.web_login_instagram_button);
+        btnFacebook = (Button) view.findViewById(R.id.web_login_facebook_button);
         nicknameEmailTextfield = (EditText) view.findViewById(R.id.input_nickname_email);
         nicknameEmailLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_nickname_email);
         nicknameEmailLayout.setErrorEnabled(true);
@@ -203,7 +205,16 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
         });
         btnInstagram.setOnClickListener(v -> {
             Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
-            if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance();
+            if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance(
+                    WebLoginFragment.LoginProvider.INSTAGRAM);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                    .commit();
+        });
+        btnFacebook.setOnClickListener(v -> {
+            Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
+            if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance(
+                    WebLoginFragment.LoginProvider.FACEBOOK);
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
                     .commit();
