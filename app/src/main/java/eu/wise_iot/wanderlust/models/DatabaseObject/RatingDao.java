@@ -9,7 +9,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
-import eu.wise_iot.wanderlust.models.DatabaseModel.RatingAVG;
+import eu.wise_iot.wanderlust.models.DatabaseModel.RatingStatistic;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.services.RatingService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -108,22 +108,22 @@ public class RatingDao extends DatabaseObjectAbstract{
     }
 
     public void retrieve(long id, final FragmentHandler handler) {
-        Call<RatingAVG> call = service.retrieveRating(id);
-        call.enqueue(new Callback<RatingAVG>() {
+        Call<RatingStatistic> call = service.retrieveRating(id);
+        call.enqueue(new Callback<RatingStatistic>() {
             @Override
-            public void onResponse(Call<RatingAVG> call, Response<RatingAVG> response) {
+            public void onResponse(Call<RatingStatistic> call, Response<RatingStatistic> response) {
                 if (response.isSuccessful()) {
-                    RatingAVG ratingAVG = response.body();
+                    RatingStatistic ratingStats = response.body();
                     //RatingBox.put(backendRating);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),
-                            ratingAVG.getRateAvg()));
+                            ratingStats));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
-            public void onFailure(Call<RatingAVG> call, Throwable t) {
+            public void onFailure(Call<RatingStatistic> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
