@@ -3,10 +3,6 @@
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
     <!-- WELCOME FRAGMENT -->
-    <string name="msg_welcome_header">Willkommen und danke, dass du das Release 0.1 von Wanderlust testen willst!</string>
-    <string name="msg_welcome_text1">Bei dieser Version geht es vorerst darum Eindrücke zu sammeln und so schöne und weniger schöne Orte sichtbar zu machen. Bilder hingegen werden vorerst nur lokal bei dir abgespeichert. Wenn du sie mir aber (mit dem Original-Namen) zuschickst, kann ich sie beim nächsten Release hinzufügen.</string>
-    <string name="msg_welcome_text2">Weiter geht es darum mit dir zu testen, ob diese App brauchbar ist. Funktionieren die Knöpfe? Bekommst du zu viele oder zu wenige Infos? Für jegliche Arten von Feedbacks sind wir sehr dankbar.</string>
-    <string name="msg_welcome_text3">Es grüsst,\ndas Wanderlust-Team</string>
 
     <!-- MANUAL FRAGMENT -->
     <string name="msg_manual_header">Bedienungsanleitung</string>
@@ -83,11 +79,11 @@
     <string name="msg_not_saved">nicht gespeichert</string>
     <string name="msg_camera_about_to_start">Kamera wird geöffnet</string>
     <string name="msg_camera_no_gps">GPS deaktiviert! Eindrücke werden nicht gespeichert</string>
-    <string name="msg_follow_mode_enabled">Verfolgunsmodus aktiv\n(erhöhter Batterieverbrauch!)</string>
+    <string name="msg_follow_mode_enabled">Verfolgunsmodus aktiv (erhöhter Batterieverbrauch!)</string>
     <string name="msg_follow_mode_disabled">Verfolgunsmodus deaktiviert\n(Batterie-Sparmodus)</string>
     <string name="msg_map_centered_on_long_click">Karte wird zentriert</string>
 
-    <string name="msg_last_known_position_marker">Das ist deine letzte bekannte Position. \n\nDu willst deine jetzige Position? Klicke den «MyLocation»-Button:\n- kurzer Klick: verfolgen an/aus\n- langer Klick: Karte zentrieren</string>
+    <string name="msg_last_known_position_marker">Das ist deine letzte bekannte Position.   Du willst deine jetzige Position? Klicke den «MyLocation»-Button: - kurzer Klick: verfolgen an/aus - langer Klick: Karte zentrieren</string>
 
 
     <!-- ERROR MESSAGES -->

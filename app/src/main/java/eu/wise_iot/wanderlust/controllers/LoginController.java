@@ -191,6 +191,7 @@ public class LoginController {
         databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
         weatherController.initKeys();
         equipmentController.initEquipment();
+        equipmentController.initExtraEquipment();
         regionDao.retrive();
         difficultyTypeDao.retrive();
     }

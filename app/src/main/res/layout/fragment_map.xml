@@ -109,8 +109,9 @@
                     android:id="@+id/createTourButton"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
+                    android:paddingBottom="0dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_library_add_grey_24dp"
+                    android:src="@drawable/ic_track_start_3"
                     app:fab_colorNormal="@color/primary_main" />
 
             </com.github.clans.fab.FloatingActionMenu>

@@ -46,20 +46,25 @@ import java.util.function.Consumer;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
+import eu.wise_iot.wanderlust.controllers.TourKitController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
+import eu.wise_iot.wanderlust.views.controls.EquipmentCompletionView;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
+/** tourkitExtraKitInput
  * CreateTour:
  *
  * @author Joshua Meier
@@ -69,10 +74,10 @@ public class CreateTourDialog extends DialogFragment {
     private static final String TAG = "CreateTourDialog";
     private FragmentHandler<Trip> createTourhandler;
     private FragmentHandler<Trip> uploadPhotoHandler;
+    private FragmentHandler<TourKit> tourKitHandler;
     private FragmentHandler<Tour> getCreatedTourHandler;
     private FragmentHandler<Trip> saveTourLocalHandler;
     private FragmentHandler<Tour> updateTourHandler;
-    private String photoPath;
 
     private ArrayList<GeoPoint> trackedTour;
     private List<Region> regions;
@@ -100,10 +105,14 @@ public class CreateTourDialog extends DialogFragment {
     private boolean publish;
 
     private Bitmap imageBitmap;
-    private Uri returnUri;
     private String realPath;
+    private EquipmentCompletionView extraTourKitInput;
+
 
     private ImageController imageController;
+    private EquipmentController equipmentController;
+    private TourKitController tourKitController;
+
 
 
     /**
@@ -140,7 +149,9 @@ public class CreateTourDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         tourController = new TourController(this.tour);
         mapController = new MapController(this);
+        tourKitController = TourKitController.createInstance(getActivity());
         imageController = ImageController.getInstance();
+        equipmentController = EquipmentController.createInstance(getActivity());
         regions = tourController.getAllRegions();
         regionNames = new ArrayList<>();
 
@@ -174,7 +185,17 @@ public class CreateTourDialog extends DialogFragment {
                 Toast.makeText(getActivity(), R.string.create_tour_saved, Toast.LENGTH_SHORT).show();
                 dismiss();
             } else {
-                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.image_upload_failed, Toast.LENGTH_SHORT).show();
+                dismiss();
+            }
+        };
+
+
+        tourKitHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                Log.e(TAG, "Tour Kit ID " + controllerEvent.getModel() + " erfolgreich gespeichert");
+            } else {
+                Log.e(TAG, "Tour Kit ID " + controllerEvent.getModel() + " NICHT gespeichert");
             }
         };
 
@@ -183,6 +204,12 @@ public class CreateTourDialog extends DialogFragment {
                 Tour currentTour = controllerEvent.getModel();
                 currentTour.setInternal_id(0);
                 tourController.addTour(saveTourLocalHandler, currentTour);
+                for(Equipment eq : extraTourKitInput.getObjects()){
+                    TourKit tourKit = new TourKit(0, 0, currentTour.getTour_id(), eq.getEquip_id());
+                    tourKitController.addEquipmentToTour(tourKit, tourKitHandler);
+                }
+
+
             } else {
                 Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
             }
@@ -228,11 +255,17 @@ public class CreateTourDialog extends DialogFragment {
         fallCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_fall);
         springCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_spring);
         tourImageDisplay = (ImageView) view.findViewById(R.id.tour_image);
+        extraTourKitInput = (EquipmentCompletionView)view.findViewById(R.id.tourkitExtraKitInput);
+
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, regionNames);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         regionSpinner.setAdapter(spinnerArrayAdapter);
 
+        extraTourKitInput.setThreshold(1);
+        extraTourKitInput.allowDuplicates(false);
+        ArrayAdapter<Equipment> equipmentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, equipmentController.getExtraEquipmentList());
+        extraTourKitInput.setAdapter(equipmentAdapter);
 
         return view;
     }

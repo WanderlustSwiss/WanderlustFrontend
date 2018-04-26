@@ -238,7 +238,9 @@ public class MapFragment extends Fragment {
         {
             if (!isMyServiceRunning(CreateTourBackgroundTask.class)) {
                 if (startTourTracking()) {
-                    createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
+                    createTourButton.setImageResource(R.drawable.ic_track_stop_3);
+                    createTourButton.setColorNormalResId(R.color.highlight_main);
+
                     creatingTourInformation.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(getActivity(), R.string.create_tour_need_whitelist, Toast.LENGTH_SHORT).show();
@@ -972,7 +974,8 @@ public class MapFragment extends Fragment {
 
     private void stoptTourTracking() {
         getActivity().stopService(createTourIntent);
-        createTourButton.setImageResource(R.drawable.ic_library_add_grey_24dp);
+        createTourButton.setImageResource(R.drawable.ic_track_start_3);
+        createTourButton.setColorNormalResId(R.color.primary_main);
         creatingTourInformation.setVisibility(View.GONE);
     }
 
