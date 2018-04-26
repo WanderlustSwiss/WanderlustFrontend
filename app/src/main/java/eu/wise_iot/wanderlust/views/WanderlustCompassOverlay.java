@@ -28,22 +28,6 @@ public class WanderlustCompassOverlay extends CompassOverlay {
         //timerThread = new Thread(new TimerThreadRunnable());
     }
 
-    private class TimerThreadRunnable implements Runnable {
-        @Override
-        public void run(){
-            try {
-                Thread.currentThread().sleep(timeUntilFade);
-                while (alpha.get() > 0) {
-                    alpha.getAndAdd(-5);
-                    Thread.currentThread().sleep(20);
-                }
-                alpha.set(0);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     protected void drawCompass(Canvas canvas, float bearing, Rect screenRect) {
         try {
@@ -63,9 +47,7 @@ public class WanderlustCompassOverlay extends CompassOverlay {
         compassEnabled = true;
         lastKnownAngle = angle;
         alpha.getAndSet(255);
-        //if(timerThread != null) timerThread.interrupt();
-        timerThread = new Thread(new TimerThreadRunnable());
-        timerThread.start();
+        if(timerThread != null) timerThread.interrupt();
     }
 
 
@@ -85,7 +67,18 @@ public class WanderlustCompassOverlay extends CompassOverlay {
             mapView.setMapOrientation(0);
             lastKnownAngle = 0;
             RotationGestureDetector.setAngle(0);
-            timerThread = new Thread(new TimerThreadRunnable());
+            timerThread = new Thread(() -> {
+                try {
+                    Thread.currentThread().sleep(timeUntilFade);
+                    while (alpha.get() > 0) {
+                        alpha.getAndAdd(-5);
+                        Thread.currentThread().sleep(20);
+                    }
+                    alpha.set(0);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            });
             timerThread.start();
         }
         return false;
