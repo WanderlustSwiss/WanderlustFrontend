@@ -82,7 +82,7 @@ public class MapFragment extends Fragment {
     private static DatabaseController databaseController;
     // preferences and default settings
     private SharedPreferences sharedPreferences;
-    private boolean locationTogglerHasBeenClicked, myLocationIsEnabled;
+    private boolean locationTogglerHasBeenClicked, myLocationIsEnabled, restAreaActive, viewActive, restaurantActive, floraFaunaActive;
     private int zoomLevel;
     private GeoPoint centerOfMap, lastKnownLocation;
     //private MapView mapView;
@@ -238,11 +238,6 @@ public class MapFragment extends Fragment {
 
         if(ibPoiLayer.isSelected()) poiTypeSelection.setVisibility(View.VISIBLE);
         else poiTypeSelection.setVisibility(View.GONE);
-
-        boolean restAreaActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_RESTAREA_ACTIVE,true);
-        boolean viewActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_VIEW_ACTIVE,true);
-        boolean restaurantActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_RESTAURANT_ACTIVE,true);
-        boolean floraFaunaActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_FLORAFAUNA_ACTIVE,true);
 
         ColorStateList mainColor = this.getActivity().getResources().getColorStateList(R.color.primary_main);
         ColorStateList whiteColor = this.getActivity().getResources().getColorStateList(R.color.white);
@@ -507,7 +502,10 @@ public class MapFragment extends Fragment {
         lastKnownLocation = new GeoPoint(lastLocationLat, lastLocationLon);
         locationTogglerHasBeenClicked = sharedPreferences.getBoolean(Constants.PREFERENCE_BUTTON_LOCATION_CLICKED, false);
         myLocationIsEnabled = sharedPreferences.getBoolean(Constants.PREFERENCE_MY_LOCATION_ENABLED, myLocationIsEnabled);
-
+        restAreaActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_RESTAREA_ACTIVE,true);
+        viewActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_VIEW_ACTIVE,true);
+        restaurantActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_RESTAURANT_ACTIVE,true);
+        floraFaunaActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POITYPE_FLORAFAUNA_ACTIVE,true);
     }
 
     /**
@@ -576,6 +574,10 @@ public class MapFragment extends Fragment {
                 return d / 100;
             }
         });
+        mapOverlays.setPoiRestAreaActive(restAreaActive);
+        mapOverlays.setPoiFloraFaunaActive(floraFaunaActive);
+        mapOverlays.setPoiRestaurantActive(restaurantActive);
+        mapOverlays.setPoiViewActive(viewActive);
         mapView.setMapOverlays(this.mapOverlays);
         mapController.setCenter(centerOfMap);
         if (zoomLevel > 20 || zoomLevel < 1)
