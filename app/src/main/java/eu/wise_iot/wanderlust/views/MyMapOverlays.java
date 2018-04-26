@@ -4,8 +4,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.location.LocationManager;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
@@ -112,10 +120,26 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         // create location provider and add network provider to the already included gps provider
         GpsMyLocationProvider locationProvider = new GpsMyLocationProvider(activity);
         locationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
-        Log.i(TAG, "Location sources: " + locationProvider.getLocationSources());
 
         myLocationNewOverlay = new MyLocationNewOverlay(locationProvider, mapView);
+        Bitmap personIcon = getBitmapFromVectorDrawable(activity, R.drawable.ic_my_geo_location);
+//        Bitmap personIcon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.geo_location);
+//        Bitmap scaledIcon = personIcon.createScaledBitmap(personIcon, 100, 100, true);
+
+        myLocationNewOverlay.setPersonIcon(personIcon);
         mapView.getOverlays().add(myLocationNewOverlay);
+    }
+
+    private Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        drawable = (DrawableCompat.wrap(drawable)).mutate();
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     private void initPoiOverlay() {
@@ -264,7 +288,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             positionMarker.setIcon(drawable);
             positionMarker.setPosition(geoPoint);
             positionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-            positionMarker.setTitle(activity.getString(R.string.msg_last_known_position_marker));
 
             mapView.getOverlays().add(positionMarker);
             mapView.invalidate();

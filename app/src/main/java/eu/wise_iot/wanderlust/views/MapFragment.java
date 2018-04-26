@@ -730,6 +730,7 @@ public class MapFragment extends Fragment {
         GeoPoint myLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
         if (showMyLocation) {
             mapOverlays.removePositionMarker();
+
             mapOverlays.getMyLocationNewOverlay().enableMyLocation();
         } else {
             mapOverlays.addPositionMarker(myLocation);
