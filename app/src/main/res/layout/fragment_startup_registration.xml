@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="96dp"
+        android:layout_marginTop="48dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
@@ -33,7 +33,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/registration_name"
-                android:nextFocusDown="@+id/input_mail" />
+                android:nextFocusDown="@+id/input_mail"
+                android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -48,7 +49,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/registration_email"
-                android:inputType="text" />
+                android:inputType="text"
+                android:maxLines="1" />
+
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -64,7 +67,9 @@
                 android:layout_marginBottom="0dp"
                 android:layout_marginTop="0dp"
                 android:hint="@string/registration_password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:maxLines="1" />
+
         </android.support.design.widget.TextInputLayout>
 
         <!-- Repeat Password Input -->
@@ -79,7 +84,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/registration_password_repeat"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:maxLines="1" />
+
         </android.support.design.widget.TextInputLayout>
 
         <!-- Signup Button -->

@@ -112,25 +112,43 @@
         android:layout_height="wrap_content"
         android:background="@color/background_main"
         app:behavior_hideable="true"
+        android:padding="8dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
         <LinearLayout
             android:id="@+id/innerBottomSheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:divider="@drawable/divider_vertical"
+            android:showDividers="middle">
 
-            <TextView
-                android:id="@+id/link_login"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="24dp"
-                android:paddingTop="24dp"
-                android:text="@string/map_layer_layers"
-                android:textColor="@color/heading_icon"
-                android:textSize="15sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/link_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/map_layer_layers"
+                    style="@style/p.Grey"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"/>
+
+                <ImageButton
+                    android:id="@+id/btn_close_bottom_sheet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:padding="4dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_close_grey_24dp"/>
+
+            </RelativeLayout>
 
             <LinearLayout
+                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -223,13 +241,15 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:divider="@drawable/divider_horizontal"
+                android:showDividers="middle">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:gravity="center">
 
                     <ImageButton
                         android:id="@+id/poi_layer_button"
@@ -237,19 +257,18 @@
                         android:src="@drawable/ic_poi_selected_24dp" />
 
                     <TextView
+                        android:layout_below="@id/poi_layer_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="6dp"
                         android:text="@string/layer_poi" />
-
-                </LinearLayout>
-
+                </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:gravity="center">
 
                     <ImageButton
                         android:id="@+id/public_transport_layer_button"
@@ -257,19 +276,17 @@
                         android:src="@drawable/ic_train_white_40dp" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
+                        android:layout_marginTop="6dp"
                         android:text="@string/public_transport" />
-
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:gravity="center">
 
                     <ImageButton
                         android:id="@+id/public_sac_layer_button"
@@ -277,18 +294,21 @@
                         android:src="@drawable/ic_home_black_40dp_white" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
+                        android:layout_marginTop="6dp"
                         android:text="@string/sac_house" />
                 </LinearLayout>
             </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/background_two_and_inactive" />
             <LinearLayout
                 android:id="@+id/poiTypeSelection"
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/titlePoiTypeSelection"
@@ -299,30 +319,41 @@
                     android:paddingTop="24dp"
                     android:text="@string/title_poi_type_selection"
                     android:textColor="@color/heading_icon"
-                    android:textSize="15sp" />
+                    android:textSize="15sp" />"
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:text="@string/map_type_types"
+                    style="@style/p.Grey"
+                    android:orientation="horizontal"/>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:divider="@drawable/divider_horizontal"
+                        android:showDividers="middle">
 
-                        <ImageButton
-                            android:id="@+id/poiTypesRestArea"
-                            style="@style/PoiButton"
-                            android:src="@drawable/ic_local_parking_white_40dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:gravity="center"
-                            android:text="@string/poi_type_restarea" />
+                            android:orientation="vertical">
+
+                            <ImageButton
+                                android:id="@+id/poiTypesRestArea"
+                                style="@style/PoiButton"
+                                android:src="@drawable/ic_local_parking_white_40dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center"
+                                android:text="@string/poi_type_restarea" />
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -331,6 +362,7 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:padding="16dp">
+
 
                         <ImageButton
                             android:id="@+id/poiTypesRestaurant"
@@ -382,7 +414,6 @@
                             android:gravity="center"
                             android:text="@string/poi_type_nature" />
                     </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
@@ -397,14 +428,11 @@
 
         <TextView
             android:id="@+id/public_transport_station_name"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="24dp"
-            android:paddingLeft="24dp"
-            android:paddingTop="24dp"
+            android:padding="24dp"
             android:text="@string/map_layer_layers"
-            android:textColor="@color/black"
-            android:textSize="21sp" />
+            style="@style/h1" />
 
     </android.support.v4.widget.NestedScrollView>
 

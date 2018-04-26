@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/primary_main</item>
         <item name="colorPrimaryDark">@color/heading_icon_unselected</item>
         <item name="colorAccent">@color/primary_main</item>
+        <item name="android:statusBarColor">@color/primary_second</item>
     </style>
 
     <!-- TEXT STYLES: HEADER -->
@@ -83,7 +84,7 @@
     </style>
 
     <style name="FloatingActionButton.Light">
-        <item name="backgroundTint">@color/background_pale</item>
+        <item name="backgroundTint">@color/background_main</item>
     </style>
 
     <style name="FloatingActionButton.Mini">
@@ -92,9 +93,11 @@
     </style>
 
     <style name="FloatingActionButton.Mini.Light">
-        <item name="backgroundTint">@color/background_pale</item>
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="backgroundTint">@color/background_main</item>
+    </style>
+
+    <style name="FloatingActionButton.Mini.Red">
+        <item name="backgroundTint">@color/highlight_second</item>
     </style>
 
     <style name="PoiButton" parent="Widget.Design.FloatingActionButton">
@@ -213,9 +216,10 @@
 
     <!-- Plot -->
     <style name="Plot" parent="APDefacto.Light">
-        <item name="graphMarginRight">0dp</item>
+        <item name="graphMarginRight">12dp</item>
+        <item name="graphMarginLeft">12dp</item>
 
-        <item name="lineLabelInsetLeft">21dp</item>
+        <item name="lineLabelInsetLeft">18dp</item>
         <item name="lineLabelRotationBottom">-45</item>
         <item name="lineLabelTextSizeBottom">12sp</item>
         <item name="lineLabelTextSizeLeft">12sp</item>

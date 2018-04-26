@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="52dp"
     android:background="@color/background_main"
     android:orientation="vertical">
 
@@ -37,7 +36,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:background="@null"
-                    android:layout_margin="24dp"
+                    android:padding="16dp"
                     android:src="@drawable/ic_arrow_back_white_24dp" />
 
                 <ImageButton
@@ -47,7 +46,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
                     android:background="@null"
-                    android:layout_margin="24dp"
+                    android:padding="16dp"
                     android:src="@drawable/ic_favorite_white_24dp" />
             </RelativeLayout>
 
@@ -64,6 +63,9 @@
                 android:textAllCaps="true"
                 android:textAppearance="@style/p.Small"
                 android:textColor="@color/primary_second"
+                android:stateListAnimator="@null"
+                android:elevation="5dp"
+                android:translationZ="5dp"
                 app:layout_constraintBottom_toBottomOf="@id/imageContainer"
                 app:layout_constraintRight_toRightOf="@id/imageContainer"
                 app:layout_constraintTop_toBottomOf="@id/imageContainer" />
@@ -423,7 +425,12 @@
                         android:text="@string/choose_hiking_day_button" />
                 </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -433,6 +440,8 @@
                 <TextView
                     android:id="@+id/equipmentDescription"
                     style="@style/h2"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tour_equipment" />
@@ -442,7 +451,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -452,6 +466,8 @@
                 <TextView
                     android:id="@+id/tourElevationTitle"
                     style="@style/h2"
+                    android:paddingLeft="12dp"
+                    android:paddingTop="12dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tour_elevation_chart_title" />
@@ -461,7 +477,6 @@
                     style="@style/Plot"
                     android:layout_width="match_parent"
                     android:layout_height="300dp" />
-
             </LinearLayout>
         </LinearLayout>
 
