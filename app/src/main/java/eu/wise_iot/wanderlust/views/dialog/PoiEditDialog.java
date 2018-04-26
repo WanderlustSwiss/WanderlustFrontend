@@ -21,12 +21,14 @@ import java.io.File;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.AddPoiCommand;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
+import eu.wise_iot.wanderlust.controllers.OfflineQueueController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -56,6 +58,7 @@ public class PoiEditDialog extends DialogFragment {
     private boolean isNewPoi;
     private boolean publish;
     private FragmentHandler poiPhotoUploadHandler;
+    private OfflineQueueController offlineQueueController;
 
     /**
      * Create EditPoit dialog, which is used for CREATING a Poi
@@ -96,6 +99,7 @@ public class PoiEditDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         controller = new PoiController();
         context = getActivity();
+        offlineQueueController = OfflineQueueController.getInstance();
 
         Bundle args = getArguments();
         double lat = args.getDouble(Constants.LAST_POS_LAT);
@@ -126,6 +130,12 @@ public class PoiEditDialog extends DialogFragment {
                         controller.uploadImage(new File(MapFragment.photoPath), poi, poiPhotoUploadHandler);
                     }
                     Toast.makeText(getActivity(), R.string.poi_successful_saving, Toast.LENGTH_LONG).show();
+                    dismiss();
+                    break;
+                case NETWORK_ERROR:
+                    AddPoiCommand cmd = new AddPoiCommand(this.poi, new File(MapFragment.photoPath));
+                    offlineQueueController.addCommand(cmd);
+                    Toast.makeText(context, R.string.in_queue, Toast.LENGTH_SHORT).show();
                     dismiss();
                     break;
                 default:

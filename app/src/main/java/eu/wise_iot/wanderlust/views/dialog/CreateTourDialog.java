@@ -67,6 +67,7 @@ public class CreateTourDialog extends DialogFragment {
     private FragmentHandler<Trip> uploadPhotoHandler;
     private FragmentHandler<Tour> getCreatedTourHandler;
     private FragmentHandler<Trip> saveTourLocalHandler;
+    private FragmentHandler<Tour> updateTourHandler;
     private String photoPath;
 
     private ArrayList<GeoPoint> trackedTour;
@@ -188,6 +189,17 @@ public class CreateTourDialog extends DialogFragment {
             }
         };
 
+        updateTourHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                Toast.makeText(getActivity(), R.string.create_tour_update_successful, Toast.LENGTH_SHORT).show();
+                dismiss();
+            } else {
+                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+
+
 
     }
 
@@ -281,7 +293,7 @@ public class CreateTourDialog extends DialogFragment {
             if (isNewTour) {
                 tourController.createTour(createTourhandler);
             } else {
-                // Todo: Edit the selected tour
+                this.tourController.updateTour(updateTourHandler);
             }
         });
 

@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.MapTile;
@@ -131,7 +132,8 @@ public class MapFragment extends Fragment {
     private FloatingActionButton createTourButton;
     private TextView creatingTourInformation;
     private Intent createTourIntent;
-
+    private FloatingActionMenu floatingActionMenu;
+    private boolean floatingActionMenuExpanded = false;
 
     /**
      * Static instance constructor.
@@ -208,6 +210,22 @@ public class MapFragment extends Fragment {
         createTourButton = (FloatingActionButton) view.findViewById(R.id.createTourButton);
         creatingTourInformation = (TextView) view.findViewById(R.id.createTourInformation);
         createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
+        floatingActionMenu = (FloatingActionMenu) view.findViewById(R.id.menu_floating_button);
+
+        floatingActionMenu.setIconAnimated(false);
+        floatingActionMenu.setOnMenuButtonClickListener(view1 -> {
+            if (floatingActionMenu.isOpened()) {
+                floatingActionMenu.setMenuButtonColorNormalResId(R.color.primary_main);
+                floatingActionMenu.close(true);
+                floatingActionMenu.getMenuIconView().setImageResource(R.drawable.ic_add_white_24dp);
+            }
+            else {
+                floatingActionMenu.setMenuButtonColorNormalResId(R.color.white);
+                floatingActionMenu.open(true);
+                floatingActionMenu.getMenuIconView().setImageResource(R.drawable.ic_arrow_downward_black_24dp);
+            }
+
+        });
 
         if (isMyServiceRunning(CreateTourBackgroundTask.class)) {
             createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
@@ -215,7 +233,9 @@ public class MapFragment extends Fragment {
         }
 
 
-        createTourButton.setOnClickListener(view1 -> {
+        createTourButton.setOnClickListener(view1 ->
+
+        {
             if (!isMyServiceRunning(CreateTourBackgroundTask.class)) {
                 if (startTourTracking()) {
                     createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
@@ -465,7 +485,7 @@ public class MapFragment extends Fragment {
         mapController = mapView.getController();
         mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            //Gefährlich aber legit
+//Gefährlich aber legit
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 WanderlustMapView map = (WanderlustMapView) v;
 
@@ -938,7 +958,7 @@ public class MapFragment extends Fragment {
     private boolean startTourTracking() {
         PowerManager pm = (PowerManager) getActivity().getSystemService(POWER_SERVICE);
 
-        if (pm != null && pm.isPowerSaveMode() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+        if (pm != null && pm.isPowerSaveMode() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Toast.makeText(getActivity(), R.string.create_tour_disable_battery_save_mode, Toast.LENGTH_LONG).show();
             return false;
         } else {
