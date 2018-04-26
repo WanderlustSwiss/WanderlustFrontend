@@ -1,7 +1,9 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -131,18 +133,28 @@ public class TourController {
         return false;
     }
 
-    public void setSaved(FragmentHandler handler){
+    public void setSaved(Context context, FragmentHandler handler){
         userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
             @Override
             public void onResponse(ControllerEvent controllerEvent) {
                 switch (controllerEvent.getType()){
                     case OK:
+                        //download in cache
                         Tour data = (Tour) controllerEvent.getModel();
-                        tour.setPolyline(data.getPolyline());
-                        communityTourDao.create(tour);
+                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data);
+                        boolean downloadable = cacheHandler.downloadMap();
 
-                        Log.d(TAG, "Is saved");
-                        handler.onResponse(new ControllerEvent(EventType.OK));
+                        //save tour in local db
+                        if(downloadable){
+                            tour.setPolyline(data.getPolyline());
+                            communityTourDao.create(tour);
+                            Log.d(TAG, "Is saved");
+                            handler.onResponse(new ControllerEvent(EventType.OK));
+                        }else{
+                            handler.onResponse(new ControllerEvent(EventType.NOT_FOUND));
+                            Toast.makeText(context, "Kartenspeicher ist voll, löschen Sie Touren um Platz zu schaffen",
+                                                                        Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     default:
                         handler.onResponse(new ControllerEvent(EventType.CONFLICT));
@@ -157,10 +169,27 @@ public class TourController {
         return true;
     }
 
-    public boolean unsetSaved(){
-        communityTourDao.delete(tour);
-        Log.d(TAG, "Is deleted");
-        return true;
+    public void unsetSaved(Context context, FragmentHandler fragmentHandler){
+        userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        Tour data = (Tour) controllerEvent.getModel();
+                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data);
+                        boolean deleted = cacheHandler.deleteMap();
+                        if(deleted) {
+                            communityTourDao.delete(data);
+                            fragmentHandler.onResponse(new ControllerEvent(EventType.OK));
+                            Log.d(TAG, "Is deleted");
+                        }else{
+                            fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
+                        }
+                    default:
+                        fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
+                }
+            }
+        });
     }
 
     public boolean setRating(Tour tour, int starRating, FragmentHandler handler){

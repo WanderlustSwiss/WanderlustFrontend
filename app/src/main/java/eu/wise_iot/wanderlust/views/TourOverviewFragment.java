@@ -358,12 +358,21 @@ public class TourOverviewFragment extends Fragment {
                 TourController controller = new TourController(tour);
                 boolean saved = controller.isSaved();
                 if(saved){
-                    boolean unset = controller.unsetSaved();
-                    if(unset){
-                        ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
-                    }
+                    controller.unsetSaved(context, new FragmentHandler() {
+                        @Override
+                        public void onResponse(ControllerEvent controllerEvent) {
+                            switch (controllerEvent.getType()){
+                                case OK:
+                                    ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                                    break;
+                                default:
+                                    Log.d(TAG , "failed");
+                            }
+                        }
+                    });
+
                 }else{
-                    controller.setSaved(new FragmentHandler() {
+                    controller.setSaved(context ,new FragmentHandler() {
                         @Override
                         public void onResponse(ControllerEvent controllerEvent) {
                             switch (controllerEvent.getType()){
@@ -371,7 +380,7 @@ public class TourOverviewFragment extends Fragment {
                                     ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
                                     break;
                                 default:
-                                    Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "failed");
                             }
                         }
                     });

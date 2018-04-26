@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -85,6 +86,7 @@ public class WanderlustMapView extends MapView {
                 centerOfPublicTransportOverlay = new GeoPoint(0.0, 0.0);
             }
 
+            Log.d("ZOOOOOOOOM", String.valueOf(getZoomLevel()));
 
             // Update SAC Hut Overlay
             if (sacHutEnabled) {

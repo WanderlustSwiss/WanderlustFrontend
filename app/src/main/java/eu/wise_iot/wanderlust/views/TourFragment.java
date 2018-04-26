@@ -654,12 +654,19 @@ public class TourFragment extends Fragment {
 
     private void toggleSaved(){
         if (tourController.isSaved()){
-            boolean unsaved = tourController.unsetSaved();
-            if(unsaved){
-                tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
-            }
+            tourController.unsetSaved(context, new FragmentHandler() {
+                @Override
+                public void onResponse(ControllerEvent controllerEvent) {
+                    switch (controllerEvent.getType()){
+                        case OK:
+                            tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                            break;
+                        default:
+                    }
+                }
+            });
         }else{
-            tourController.setSaved(new FragmentHandler() {
+            tourController.setSaved(context ,new FragmentHandler() {
                 @Override
                 public void onResponse(ControllerEvent controllerEvent) {
                     switch (controllerEvent.getType()){

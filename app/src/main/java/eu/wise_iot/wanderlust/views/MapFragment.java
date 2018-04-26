@@ -40,6 +40,7 @@ import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.io.File;
@@ -247,6 +248,7 @@ public class MapFragment extends Fragment {
                             + mImageFilenameEnding;
                 }
             });
+
             defaultTypeButton.setBackground(null);
             terrainTypeButton.setBackground(null);
             staliteTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));
@@ -985,5 +987,8 @@ public class MapFragment extends Fragment {
         return false;
     }
 
+    public MapView getMapView(){
+        return mapView;
+    }
 
 }
