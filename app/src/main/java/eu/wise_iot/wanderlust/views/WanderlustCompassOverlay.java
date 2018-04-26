@@ -14,10 +14,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class WanderlustCompassOverlay extends CompassOverlay {
 
-    private float lastKnownAngle = 0;
     private static final float OFFSET = 120;
-    private float compassCenterX;
-    private float compassCenterY;
+    private float lastKnownAngle = 0;
+    private float compassCenterX, compassCenterY;
     private boolean compassEnabled = false;
 
     private final AtomicInteger alpha = new AtomicInteger(0);
