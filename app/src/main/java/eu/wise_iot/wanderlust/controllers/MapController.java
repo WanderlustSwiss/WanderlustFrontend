@@ -195,6 +195,7 @@ public class MapController {
 
     }
 
+
     public void searchPublicTransportStations(GeoPoint centerGeoPoint, int rows, int radius, final FragmentHandler handler) {
         String url = SBB_SERVICE_URL
                 + "?dataset=didok-liste"

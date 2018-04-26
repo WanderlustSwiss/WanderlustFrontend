@@ -7,7 +7,7 @@ public class GeoObject {
     public GeoObject() {
     }
 
-    public GeoObject(String title, String description, float latitude, float longitude, int elevation, String sourceLink, String sourceName, String imageLink) {
+    public GeoObject(String title, String description, float latitude, float longitude, int elevation, String sourceLink, String sourceName, String imageLink, int type) {
         this.title = title;
         this.description = description;
         this.latitude = latitude;
@@ -17,6 +17,7 @@ public class GeoObject {
         this.sourceLink = sourceLink;
         this.sourceName = sourceName;
         this.imageLink = imageLink;
+        this.type = type;
     }
 
     private String title;
@@ -27,6 +28,7 @@ public class GeoObject {
     private String sourceLink;
     private String sourceName;
     private String imageLink;
+    private int type;
 
 
     public String getTitle() {
