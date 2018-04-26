@@ -2,6 +2,9 @@ package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -26,6 +29,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
@@ -123,7 +127,12 @@ public class PoiEditDialog extends DialogFragment {
                     if (isNewPoi) {
                         poi = (Poi) event.getModel();
                         //Poi image has to be uploaded after the poi is saved
-                        controller.uploadImage(new File(MapFragment.photoPath), poi, poiPhotoUploadHandler);
+                        String imagePath = MapFragment.photoPath;
+                        Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
+                        Uri uri = ImageController.getInstance().getImageUri(getActivity(), imageBitmap);
+                        ImageController.getInstance().setAndSaveCorrectOrientation(imageBitmap, uri, new File(imagePath));
+
+                        controller.uploadImage(new File(imagePath), poi, poiPhotoUploadHandler);
                     }
                     Toast.makeText(getActivity(), R.string.poi_successful_saving, Toast.LENGTH_LONG).show();
                     dismiss();

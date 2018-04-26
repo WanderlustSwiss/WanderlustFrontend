@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -364,17 +365,18 @@ public class CreateTourDialog extends DialogFragment {
 
         if (returnUri == null) {
             Bundle extras = data.getExtras();
-            returnUri = getImageUri(getActivity().getApplicationContext(), (Bitmap) extras.get("data"));
+            returnUri = imageController.getImageUri(getActivity().getApplicationContext(), (Bitmap) extras.get("data"));
         }
 
-        realPath = getRealPathFromURI(returnUri);
+        realPath = imageController.getRealPathFromURI(returnUri, getActivity());
         File image = new File(realPath);
         try {
             imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+            imageController.setAndSaveCorrectOrientation(imageBitmap, returnUri, image);
             imageBitmap = imageController.resize(imageBitmap, 1024);
-            if(image.length() > 500_000 * 8){
+            if(image.length() > 500_000){
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, new FileOutputStream(image));
-                if(image.length() > 500_000 * 8){
+                if(image.length() > 500_000){
                     //Still to high quality
                     Toast.makeText(getActivity(), R.string.image_upload_failed, Toast.LENGTH_SHORT).show();
                 }
@@ -386,25 +388,7 @@ public class CreateTourDialog extends DialogFragment {
         if (imageBitmap != null) {
             Picasso.with(getActivity().getApplicationContext())
                     .load(returnUri)
-                    .rotate(imageController.getOrientation(returnUri))
                     .into(tourImageDisplay);
         }
-
-
-
-    }
-
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
-    private String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
     }
 }

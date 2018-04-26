@@ -1,16 +1,20 @@
 package eu.wise_iot.wanderlust.controllers;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -159,7 +163,7 @@ public class ImageController {
     /*
     https://stackoverflow.com/questions/12369138/disable-android-image-auto-rotate
      */
-    public int getOrientation(Uri selectedImage) {
+    public void setAndSaveCorrectOrientation(Bitmap imageBitmap, Uri selectedImage, File path) {
         int orientation = 0;
         final String[] projection = new String[]{MediaStore.Images.Media.ORIENTATION};
         final Cursor cursor = CONTEXT.getContentResolver().query(selectedImage, projection, null, null, null);
@@ -170,6 +174,29 @@ public class ImageController {
             }
             cursor.close();
         }
-        return orientation;
+        if(orientation == 0) return;
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(orientation);
+        imageBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), matrix, false);
+        try {
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(path));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri, Activity activity) {
+        Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 }

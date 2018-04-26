@@ -77,11 +77,14 @@ public class ProfileEditFragment extends Fragment {
     private CheckBox[] checkBoxes;
     private long difficulty;
 
+    private ImageController imageController;
+
     private final ProfileController profileController;
 
     public ProfileEditFragment() {
         // Required empty public constructor
         profileController = new ProfileController();
+        imageController = ImageController.getInstance();
     }
 
     public static ProfileEditFragment newInstance() {
@@ -319,6 +322,12 @@ public class ProfileEditFragment extends Fragment {
         }
         try {
             Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+
+            String path = imageController.getRealPathFromURI(returnUri, getActivity());
+            Bitmap imageBitmap = BitmapFactory.decodeFile(path);
+            Uri uri = imageController.getImageUri(getActivity(), imageBitmap);
+            ImageController.getInstance().setAndSaveCorrectOrientation(imageBitmap, uri, new File(path));
+
             bitmapImage = ImageController.getInstance().resize(bitmapImage, 170);
             if (bitmapImage != null) {
                 profileController.setProfilePicture(bitmapImage, controllerEvent -> {
