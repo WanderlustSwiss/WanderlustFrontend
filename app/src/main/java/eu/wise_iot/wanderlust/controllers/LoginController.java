@@ -1,9 +1,11 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.app.Fragment;
 import android.os.Build;
 import android.util.DisplayMetrics;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.MainActivity;
 import okhttp3.Headers;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -91,7 +94,6 @@ public class LoginController {
                     }
                     updatedUser.setPassword(user.getPassword());
 
-                    PoiDao.getInstance().removeNonUserPois(userDao.getUser().getUser_id());
                     userDao.update(updatedUser);
                     initAppData();
                     getProfile(handler, updatedUser);
@@ -127,7 +129,7 @@ public class LoginController {
                         updatedProfile.setInternal_id(internalProfile.getInternal_id());
                         profileDao.update(updatedProfile);
                     }
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), user));
+                    downloadProfileImage(updatedProfile, user, handler);
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
@@ -135,6 +137,32 @@ public class LoginController {
 
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+
+    public void downloadProfileImage(Profile profile, User user, FragmentHandler handler){
+        ProfileService service = ServiceGenerator.createService(ProfileService.class);
+        Call<ResponseBody> imageCall = service.downloadImage();
+        imageCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()) {
+                    try {
+                        imageController.save(response.body().byteStream(),profile.getImagePath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), user));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
