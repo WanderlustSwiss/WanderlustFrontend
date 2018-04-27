@@ -100,15 +100,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (controllerEvent.getType()) {
                     case OK:
                         setupDrawerHeader(logInUser);
-                        // TODO: remove following code and uncomment code after
-                        ProfileFragment profileFragment = ProfileFragment.newInstance();
+                        MapFragment mapFragment = MapFragment.newInstance();
                         getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, profileFragment, Constants.MAP_FRAGMENT)
+                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                                 .commit();
-//                        MapFragment mapFragment = MapFragment.newInstance();
-//                        getFragmentManager().beginTransaction()
-//                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-//                                .commit();
                         break;
                     default:
                         StartupLoginFragment loginFragment = new StartupLoginFragment();
