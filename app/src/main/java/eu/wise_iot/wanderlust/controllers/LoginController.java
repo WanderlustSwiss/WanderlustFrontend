@@ -91,7 +91,7 @@ public class LoginController {
                     }
                     updatedUser.setPassword(user.getPassword());
 
-                    PoiDao.getInstance().removeNonUserPois(userDao.getUser().getUser_id());
+                    PoiDao.getInstance().removeNonUserPois(updatedUser.getUser_id());
                     userDao.update(updatedUser);
                     initAppData();
                     getProfile(handler, updatedUser);

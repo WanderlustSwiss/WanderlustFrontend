@@ -14,12 +14,10 @@ import android.content.res.ColorStateList;
 import android.database.MatrixCursor;
 import android.graphics.Rect;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.BaseColumns;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
@@ -357,7 +355,6 @@ public class MapFragment extends Fragment {
                 ibPoiRestaurantLayer.setSelected(true);
             }
             mapOverlays.setPoiRestaurantActive(ibPoiRestaurantLayer.isSelected());
-            //mapOverlays.showPoiLayer(true);
             mapOverlays.refreshPoiLayer();
         });
         ibPoiViewLayer.setOnClickListener(v -> {
@@ -371,7 +368,6 @@ public class MapFragment extends Fragment {
                 ibPoiViewLayer.setSelected(true);
             }
             mapOverlays.setPoiViewActive(ibPoiViewLayer.isSelected());
-            //mapOverlays.showPoiLayer(true);
             mapOverlays.refreshPoiLayer();
         });
     }
@@ -594,7 +590,7 @@ public class MapFragment extends Fragment {
         mapController = mapView.getController();
         mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-//Gefährlich aber legit
+            //Gefährlich aber legit
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 WanderlustMapView map = (WanderlustMapView) v;
 
@@ -706,12 +702,9 @@ public class MapFragment extends Fragment {
 
                 mapOverlays.getMyLocationNewOverlay().enableMyLocation();
                 Toast.makeText(getActivity(), R.string.msg_camera_about_to_start, Toast.LENGTH_SHORT).show();
-                mapOverlays.getMyLocationNewOverlay().runOnFirstFix(new Runnable() {
-                    @Override
-                    public void run() {
-                        lastKnownLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
-                        takePicture();
-                    }
+                mapOverlays.getMyLocationNewOverlay().runOnFirstFix(() -> {
+                    lastKnownLocation = mapOverlays.getMyLocationNewOverlay().getMyLocation();
+                    takePicture();
                 });
             }
         });

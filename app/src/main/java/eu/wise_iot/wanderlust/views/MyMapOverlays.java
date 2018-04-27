@@ -43,7 +43,6 @@ import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PublicTransportPoint;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
 /**
@@ -215,14 +214,14 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      *
      */
     private void makeClusteringGreatAgain(){
-        //poiMarkers.getItems().clear();
         mapView.getOverlays().remove(poiMarkers);
         mapView.invalidate();
-        //temporary
+
         poiMarkers = new RadiusMarkerClusterer(activity.getApplicationContext());
         Drawable clusterIconD = activity.getResources().getDrawable(R.drawable.marker_cluster);
         Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
         poiMarkers.setIcon(clusterIcon);
+
 
         for (Poi myPoi : poiController.getPoiCache()){
             POI poi = poiController.convertPoiToOSMDroidPOI(myPoi);
@@ -275,7 +274,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         }
         mapView.getOverlays().add(poiMarkers);
         mapView.invalidate();
-        //showPoiLayer(true);
     }
 
     /**
@@ -293,38 +291,18 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.invalidate();
     }
 
-//    private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
-//        GpxParser gpxParser = new GpxParser(activity);
-//        List<TrackPoint> gpxList = gpxParser.getTrackPointList(R.raw.gpx1);
-//        ArrayList<GeoPoint> geoPointList = new ArrayList<>();
-//
-//        for (TrackPoint model : gpxList) {
-//            GeoPoint newPoint = new GeoPoint(model.getLatitude(), model.getLongitude());
-//            geoPointList.add(newPoint);
-//        }
-//
-//        RoadManager roadManager = new OSRMRoadManager(activity);
-//        Road road = roadManager.getRoad(geoPointList);
-//        Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
-//        mapView.getOverlays().add(roadOverlay);
-//        mapView.invalidate();
-//    }
-
-
     /**
      * Updates the Hashtag Poi layer
      *
      * @param poiList the list with poi to be added in the layer
      */
     public void updateHashtagPoiLayer(List<Poi> poiList) {
-
         poiHashtagOverlay.removeAllItems();
         for (Poi poi : poiList) {
             addPoiToHashtagOverlay(poi);
         }
         mapView.invalidate();
         showPoiHashtagLayer(true);
-
     }
 
     public void setPoiFloraFaunaActive(boolean value){
@@ -369,25 +347,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
     /**
-     * Adds a poi on the mapview regular MapOverlay
-     * only adds poi if subcategory is selected in frontend
-     */
-    /*
-    public void addPoiToOverlay(Poi paramPoi) {
-
-        POI poi = poiController.convertPoiToOSMDroidPOI(paramPoi);
-        if(this.poiViewActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_VIEW))
-            poiOverlay.addItem(poiToOverlayItem(poi));
-        else if(this.poiRestaurantActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_RESTAURANT))
-            poiOverlay.addItem(poiToOverlayItem(poi));
-        else if (this.poiRestAreaActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_REST_AREA))
-            poiOverlay.addItem(poiToOverlayItem(poi));
-        else if (this.poiFloraFaunaActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_FLORA_FAUNA))
-            poiOverlay.addItem(poiToOverlayItem(poi));
-
-    }
-    */
-    /**
      * Adds a poi to the mapview to the hashtagPoiOverlay
      */
     public void addPoiToHashtagOverlay(Poi paramPoi) {
@@ -400,7 +359,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     public void addPositionMarker(GeoPoint geoPoint) {
         if (geoPoint != null) {
             Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
-
             positionMarker = new Marker(mapView);
             positionMarker.setIcon(drawable);
             positionMarker.setPosition(geoPoint);
@@ -412,45 +370,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             mapView.invalidate();
         }
     }
-
-
-    /**
-     * Take all pois from the database and add
-     * them to the map overlay
-     */
-    /*
-    public void populatePoiOverlay() {
-        poiOverlay.removeAllItems();
-
-        List<Poi> pois = poiController.getPoiCache();
-        for (Poi poi : pois) {
-            addPoiToOverlay(poi);
-        }
-        mapView.invalidate();
-    }
-    */
     public void removePositionMarker() {
         mapView.getOverlays().remove(positionMarker);
     }
-
-
-    /**
-     * Triggers the loading of Poi layer
-     *
-     * @param setVisible display or hide layer
-     */
-
-//    void showPoiLayer(boolean setVisible) {
-//        showPoiHashtagLayer(false);
-//        if (setVisible) {
-//            if (!mapView.getOverlays().contains(poiOverlay)) {
-//                mapView.getOverlays().add(poiOverlay);
-//            }
-//        } else {
-//            mapView.getOverlays().remove(poiOverlay);
-//        }
-//        mapView.invalidate();
-//    }
 
     /**
      * Triggers the refresh of Poi layer
