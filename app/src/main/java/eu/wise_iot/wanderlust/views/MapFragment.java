@@ -329,7 +329,7 @@ public class MapFragment extends Fragment {
                 ibPoiRestAreaLayer.setSelected(true);
             }
             mapOverlays.setPoiRestAreaActive(ibPoiRestAreaLayer.isSelected());
-            mapOverlays.showPoiLayer(true);
+            //mapOverlays.showPoiLayer(true);
             mapOverlays.refreshPoiLayer();
         });
         ibPoiFloraFaunaLayer.setOnClickListener(v -> {
@@ -343,7 +343,7 @@ public class MapFragment extends Fragment {
                 ibPoiFloraFaunaLayer.setSelected(true);
             }
             mapOverlays.setPoiFloraFaunaActive(ibPoiFloraFaunaLayer.isSelected());
-            mapOverlays.showPoiLayer(true);
+            //mapOverlays.showPoiLayer(true);
             mapOverlays.refreshPoiLayer();
         });
         ibPoiRestaurantLayer.setOnClickListener(v -> {
@@ -357,7 +357,7 @@ public class MapFragment extends Fragment {
                 ibPoiRestaurantLayer.setSelected(true);
             }
             mapOverlays.setPoiRestaurantActive(ibPoiRestaurantLayer.isSelected());
-            mapOverlays.showPoiLayer(true);
+            //mapOverlays.showPoiLayer(true);
             mapOverlays.refreshPoiLayer();
         });
         ibPoiViewLayer.setOnClickListener(v -> {
@@ -371,7 +371,7 @@ public class MapFragment extends Fragment {
                 ibPoiViewLayer.setSelected(true);
             }
             mapOverlays.setPoiViewActive(ibPoiViewLayer.isSelected());
-            mapOverlays.showPoiLayer(true);
+            //mapOverlays.showPoiLayer(true);
             mapOverlays.refreshPoiLayer();
         });
     }
@@ -796,7 +796,9 @@ public class MapFragment extends Fragment {
 
     private void showPoiOverlay(boolean showOverlay) {
         ibPoiLayer.setSelected(showOverlay);
-        mapOverlays.showPoiLayer(showOverlay);
+
+        if(!showOverlay) mapOverlays.disablePoiLayer();
+        else mapOverlays.showPoiLayer();
         if (showOverlay) {
             ibPoiLayer.setImageResource(R.drawable.ic_poi_white_24dp);
             ibPoiLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));

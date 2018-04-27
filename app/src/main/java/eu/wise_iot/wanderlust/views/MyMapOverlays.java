@@ -97,11 +97,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
     private void initClusteringOverlay(){
-        poiMarkers = new RadiusMarkerClusterer(activity.getApplicationContext());
-        Drawable clusterIconD = activity.getResources().getDrawable(R.drawable.marker_cluster);
-        Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
-        poiMarkers.setIcon(clusterIcon);
-        mapView.getOverlays().add(poiMarkers);
+        makeClusteringGreatAgain();
     }
 
     private void initCompassOverlay(){
@@ -170,6 +166,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     private void initPoiOverlay() {
         // add items with on click listener plus define actions for clicks
+
         List<OverlayItem> poiList = new ArrayList<>();
         List<OverlayItem> poiHashtagList = new ArrayList<>();
 
@@ -210,11 +207,23 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
         poiOverlay = new ItemizedOverlayWithFocus<>(activity, poiList, listener);
         poiHashtagOverlay = new ItemizedOverlayWithFocus<>(activity, poiHashtagList, listener);
+
     }
 
+    /**
+     * provides clustering for all poi icons on the map
+     *
+     */
     private void makeClusteringGreatAgain(){
-        
-        poiMarkers.getItems().clear();
+        //poiMarkers.getItems().clear();
+        mapView.getOverlays().remove(poiMarkers);
+        mapView.invalidate();
+        //temporary
+        poiMarkers = new RadiusMarkerClusterer(activity.getApplicationContext());
+        Drawable clusterIconD = activity.getResources().getDrawable(R.drawable.marker_cluster);
+        Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
+        poiMarkers.setIcon(clusterIcon);
+
         for (Poi myPoi : poiController.getPoiCache()){
             POI poi = poiController.convertPoiToOSMDroidPOI(myPoi);
             Marker poiMarker = new Marker(mapView);
@@ -223,20 +232,34 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             poiMarker.setPosition(poi.mLocation);
             switch (Integer.parseInt(poi.mCategory)) {
                 case Constants.TYPE_VIEW:
-                    poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_sight));
+                    if(this.poiViewActive){
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_sight));
+                        poiMarkers.add(poiMarker);
+                    }
                     break;
                 case Constants.TYPE_RESTAURANT:
-                    poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resaurant));
+                    if(this.poiRestaurantActive) {
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resaurant));
+                        poiMarkers.add(poiMarker);
+                    }
                     break;
                 case Constants.TYPE_REST_AREA:
-                    poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resting));
+                    if(this.poiRestAreaActive){
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resting));
+                        poiMarkers.add(poiMarker);
+                    }
                     break;
                 case Constants.TYPE_FLORA_FAUNA:
-                    poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_fauna_flora));
+                    if(this.poiFloraFaunaActive){
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_fauna_flora));
+                        poiMarkers.add(poiMarker);
+                    }
                     break;
                 default:
                     poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_error));
+                    poiMarkers.add(poiMarker);
             }
+
             poiMarker.setOnMarkerClickListener((marker, mapView) -> {
                 FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
                 // make sure that no other dialog is running
@@ -249,9 +272,25 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 dialogFragment.show(fragmentTransaction, Constants.DISPLAY_FEEDBACK_DIALOG);
                 return true;
             });
-            poiMarkers.add(poiMarker);
         }
-        showPoiLayer(true);
+        mapView.getOverlays().add(poiMarkers);
+        mapView.invalidate();
+        //showPoiLayer(true);
+    }
+
+    /**
+     * disable poi layer
+     */
+    public void disablePoiLayer(){
+        mapView.getOverlays().remove(poiMarkers);
+        mapView.invalidate();
+    }
+    /**
+     * show poi layer
+     */
+    public void showPoiLayer(){
+        mapView.getOverlays().add(poiMarkers);
+        mapView.invalidate();
     }
 
 //    private void initGpxTourlistOverlay() { // FIXME: overlay not working yet -> enable drawing routes!
@@ -325,7 +364,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         OverlayItem overlayItem = new OverlayItem(Long.toString(poi.mId), poi.mType,
                 poi.mDescription, poi.mLocation);
 
-        overlayItem.setMarker(drawable);;
+        overlayItem.setMarker(drawable);
         return overlayItem;
     }
 
@@ -333,8 +372,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      * Adds a poi on the mapview regular MapOverlay
      * only adds poi if subcategory is selected in frontend
      */
+    /*
     public void addPoiToOverlay(Poi paramPoi) {
-        /*
+
         POI poi = poiController.convertPoiToOSMDroidPOI(paramPoi);
         if(this.poiViewActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_VIEW))
             poiOverlay.addItem(poiToOverlayItem(poi));
@@ -344,9 +384,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             poiOverlay.addItem(poiToOverlayItem(poi));
         else if (this.poiFloraFaunaActive && (Integer.parseInt(poi.mCategory) == Constants.TYPE_FLORA_FAUNA))
             poiOverlay.addItem(poiToOverlayItem(poi));
-        */
-    }
 
+    }
+    */
     /**
      * Adds a poi to the mapview to the hashtagPoiOverlay
      */
@@ -378,6 +418,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      * Take all pois from the database and add
      * them to the map overlay
      */
+    /*
     public void populatePoiOverlay() {
         poiOverlay.removeAllItems();
 
@@ -387,7 +428,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         }
         mapView.invalidate();
     }
-
+    */
     public void removePositionMarker() {
         mapView.getOverlays().remove(positionMarker);
     }
@@ -398,31 +439,25 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      *
      * @param setVisible display or hide layer
      */
-    void showPoiLayer(boolean setVisible) {
-        showPoiHashtagLayer(false);
-        if (setVisible) {
-            if (!mapView.getOverlays().contains(poiOverlay)) {
-                mapView.getOverlays().add(poiOverlay);
-            }
-        } else {
-            mapView.getOverlays().remove(poiOverlay);
-        }
-        mapView.invalidate();
-    }
+
+//    void showPoiLayer(boolean setVisible) {
+//        showPoiHashtagLayer(false);
+//        if (setVisible) {
+//            if (!mapView.getOverlays().contains(poiOverlay)) {
+//                mapView.getOverlays().add(poiOverlay);
+//            }
+//        } else {
+//            mapView.getOverlays().remove(poiOverlay);
+//        }
+//        mapView.invalidate();
+//    }
 
     /**
      * Triggers the refresh of Poi layer
      *
      */
     void refreshPoiLayer() {
-        this.populatePoiOverlay();
-        mapView.invalidate();
-        /*
-        mapView.getOverlays().remove(poiOverlay);
-        mapView.invalidate();
-        mapView.getOverlays().add(poiOverlay);
-        mapView.invalidate();
-        */
+        makeClusteringGreatAgain();
     }
 
     /**
@@ -649,7 +684,6 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         }
 
         if (setVisible) {
-
             searchMapController.searchSac(geoPoint1, geoPoint2, controllerEvent -> {
                 if (controllerEvent.getType() == EventType.OK) {
                     sacList = controllerEvent.getModel();
