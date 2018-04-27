@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.MapCacheHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.ProfileFragment;
@@ -131,6 +132,8 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
             
             deleteIcon.setOnClickListener(e -> {
                 profileFragment.getProfileController().deleteCommunityTour(communityTour);
+                MapCacheHandler handler = new MapCacheHandler(context, communityTour);
+                handler.deleteMap();
                 View v = profileFragment.getView();
                 profileFragment.setupSaved(v);
             });

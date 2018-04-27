@@ -268,7 +268,8 @@ public class ProfileFragment extends Fragment {
                     }
                     break;
                 default:
-                    Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                    list = null;
+                    listView.setAdapter(null);
                     break;
             }
         });
@@ -332,7 +333,6 @@ public class ProfileFragment extends Fragment {
 
             list = null;
             listView.setAdapter(null);
-            Toast.makeText(getActivity(), R.string.no_tours, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -368,7 +368,6 @@ public class ProfileFragment extends Fragment {
 
             list = null;
             listView.setAdapter(null);
-            Toast.makeText(getActivity(), R.string.no_pois, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -413,7 +412,6 @@ public class ProfileFragment extends Fragment {
 
             list = null;
             listView.setAdapter(null);
-            Toast.makeText(getActivity(), R.string.no_saved, Toast.LENGTH_SHORT).show();
         }
     }
 

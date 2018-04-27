@@ -38,6 +38,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -102,9 +103,9 @@ public class WebLoginFragment extends Fragment  {
             switch (eventType) {
                 case OK:
                     Log.d(TAG, getActivity() != null ? "nicht null" : "null");
-                    SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences preferences = context.getPreferences(Context.MODE_PRIVATE);
                     User user = (User) event.getModel();
-                    ((MainActivity) getActivity()).setupDrawerHeader(user);
+                    ((MainActivity) context).setupDrawerHeader(user);
                     if(preferences.getBoolean("firstTimeOpened", true)) {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putBoolean("firstTimeOpened", false); // save that app has been opened
@@ -117,6 +118,7 @@ public class WebLoginFragment extends Fragment  {
                                 .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
                                 .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
                                 .commit();
+
                     } else {
 
                         //set last login
@@ -139,7 +141,8 @@ public class WebLoginFragment extends Fragment  {
 
                     break;
                 default:
-                    Toast.makeText(getActivity(), eventType.toString(), Toast.LENGTH_LONG).show();
+                    Log.d("ERRROR", eventType.toString());
+                    Toast.makeText(context, eventType.toString(), Toast.LENGTH_LONG).show();
                     break;
             }
         }
@@ -192,10 +195,16 @@ public class WebLoginFragment extends Fragment  {
         webSettings.setAppCacheEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setSupportMultipleWindows(true);
+        LoginUser emptyUser = new LoginUser(null, null);
+        loginController.setDeviceInfo(emptyUser);
+        String deviceParams = emptyUser.getDeviceStatisticsUrl();
+        String urlWithParams = target_url + deviceParams;
         if (isNetworkAvailable()) {
             webview.setWebViewClient(new WebViewClient() {
                 public void onReceivedHttpError(WebView view, WebResourceRequest request,
                                                 WebResourceResponse errorRyesponse) {
+
+                    Log.d("ERROR" , "Name: " + errorRyesponse.toString() + "/ Code: " + errorRyesponse.getStatusCode());
 
                     Fragment loginFragment = context.getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
                     if (loginFragment == null) loginFragment = StartupLoginFragment.newInstance();
@@ -207,15 +216,16 @@ public class WebLoginFragment extends Fragment  {
 
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
+                    LoginUser.clearCookies();
                     instagramContainer.setVisibility(View.GONE);
                     String webUrl = webview.getUrl();
                     String cookies = CookieManager.getInstance().getCookie(url);
                     if (webUrl.contains(provider.getPattern())) {
-                        loginController.logInInstagram(cookies, fragmentHandler);
+                        loginController.logInWithExternalProvider(cookies, fragmentHandler);
                     }
                 }
             });
-            webview.loadUrl(target_url);
+            webview.loadUrl(urlWithParams);
         } else {
             User user = loginController.getAvailableUser();
             DateTime lastLogin = DateTime.parse(user.getLastLogin());

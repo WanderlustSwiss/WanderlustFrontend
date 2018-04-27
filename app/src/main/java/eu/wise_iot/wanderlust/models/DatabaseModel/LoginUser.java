@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class LoginUser {
@@ -42,5 +44,19 @@ public class LoginUser {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getDeviceStatisticsUrl(){
+        try {
+            String osVersionString = "osVersion=" + URLEncoder.encode(osVersion, "UTF-8");
+            String deviceModelString = "deviceModel=" + URLEncoder.encode(deviceModel, "UTF-8");
+            String resolutionString = "resolution=" + URLEncoder.encode(resolution, "UTF-8");
+            String serialNumberString = "serialNumber=" + URLEncoder.encode(serialNumber, "UTF-8");
+
+            return "?" + osVersionString + "&" + deviceModelString + "&"
+                    + resolutionString + "&" + serialNumberString;
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
     }
 }
