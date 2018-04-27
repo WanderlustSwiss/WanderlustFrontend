@@ -165,6 +165,7 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+        createTourButton = (FloatingActionButton) view.findViewById(R.id.createTourButton);
         initMap(view);
         initOverlays();
         initMapController();
@@ -194,7 +195,6 @@ public class MapFragment extends Fragment {
     }
 
     private void initCreatingTourControlls(View view) {
-        createTourButton = (FloatingActionButton) view.findViewById(R.id.createTourButton);
         creatingTourInformation = (TextView) view.findViewById(R.id.createTourInformation);
         createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
         floatingActionMenu = (FloatingActionMenu) view.findViewById(R.id.menu_floating_button);
@@ -622,6 +622,7 @@ public class MapFragment extends Fragment {
         } else {
             ibLocationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
         }
+        createTourButton.setEnabled(myLocationIsEnabled);
 
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(ibLocationToggler);
@@ -643,6 +644,7 @@ public class MapFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
                 centerMapOnCurrentPosition();
             }
+            createTourButton.setEnabled(myLocationIsEnabled);
         });
 
         //long click listener

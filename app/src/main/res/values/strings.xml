@@ -92,7 +92,7 @@
     <string name="msg_camera_about_to_start">Kamera wird geöffnet</string>
     <string name="msg_camera_no_gps">GPS deaktiviert! Eindrücke werden nicht gespeichert</string>
     <string name="msg_follow_mode_enabled">Verfolgunsmodus aktiv (erhöhter Batterieverbrauch!)</string>
-    <string name="msg_follow_mode_disabled">Verfolgunsmodus deaktiviert\n(Batterie-Sparmodus)</string>
+    <string name="msg_follow_mode_disabled">Verfolgunsmodus deaktiviert\n(Batterie-Sparmodus). Keine Tourerfassung möglich</string>
     <string name="msg_map_centered_on_long_click">Karte wird zentriert</string>
 
     <string name="msg_last_known_position_marker">Das ist deine letzte bekannte Position.   Du willst deine jetzige Position? Klicke den «MyLocation»-Button: - kurzer Klick: verfolgen an/aus - langer Klick: Karte zentrieren</string>
