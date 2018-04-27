@@ -88,7 +88,7 @@ public class RecentTourDao extends DatabaseObjectAbstract {
      * @param tour
      */
     public void create(final Tour tour) {
-        if(recentTourBox.find(Tour_.tour_id, tour.getTour_id()).contains(tour)) return;
+        if(findOne(Tour_.tour_id, tour.getTour_id()) != null) return;
         if(recentTourBox.count() > 5) recentTourBox.remove(recentTourBox.count() - 1);
         recentTourBox.put(tour);
     }
