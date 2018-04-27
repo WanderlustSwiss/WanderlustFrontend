@@ -195,7 +195,7 @@ public class PoiDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Poi> call, Response<Poi> response) {
                 if (response.isSuccessful()) {
-                    poiBox.remove(poi);
+                    poiBox.remove(find(Poi_.poi_id, poi.getPoi_id()));
                     for(ImageInfo imageInfo : poi.getImagePaths()){
                         new File(imageInfo.getLocalPath()).delete();
                     }
