@@ -19,9 +19,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
@@ -37,6 +35,7 @@ import eu.wise_iot.wanderlust.views.ProfileFragment;
 public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
+    private TextView description;
 
     private ImageView tripImage;
     private ImageView favIcon;
@@ -114,20 +113,23 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_favorites, parent, false);
 
         //look up the view for elements
-        title = (TextView) convertView.findViewById(R.id.ListFavTitle);
-        tripImage = (ImageView) convertView.findViewById(R.id.ListFavImageView);
-        favIcon = (ImageView) convertView.findViewById(R.id.ListFavIcon);
+        title = (TextView) convertView.findViewById(R.id.list_fav_title);
+        description = (TextView) convertView.findViewById(R.id.list_fav_description);
+        tripImage = (ImageView) convertView.findViewById(R.id.list_fav_image_view);
+        favIcon = (ImageView) convertView.findViewById(R.id.list_fav_icon);
 
         //set data
         if (fav != null) {
-            String t = StringUtils.abbreviate(fav.getTitle(), 30);
-            title.setText(t);
+            title.setText(fav.getTitle());
+            description.setText(fav.getDescription());
 
             List<ImageInfo> imageinfos = fav.getImagePaths();
             List<File> imagefiles = imageController.getImages(imageinfos);
             if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
                 Picasso.with(context)
                         .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
+                        .fit()
+                        .centerCrop()
                         .into(tripImage);
             } else {
                 tripImage.setImageResource(R.drawable.example_image);

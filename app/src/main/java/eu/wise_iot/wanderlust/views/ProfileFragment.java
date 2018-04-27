@@ -218,7 +218,7 @@ public class ProfileFragment extends Fragment {
                         ProfileFavoritesListAdapter adapter =
                                 new ProfileFavoritesListAdapter(getActivity(),
                                         R.layout.fragment_profile_list_favorites,
-                                        R.id.ListFavTitle,
+                                        R.id.list_fav_title,
                                         list, fragment);
 
                         listView.setAdapter(adapter);
