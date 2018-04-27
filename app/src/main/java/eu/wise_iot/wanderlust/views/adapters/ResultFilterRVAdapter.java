@@ -94,7 +94,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
 
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
-        holder.tvRegion.setText(resultFilterController.getRegionbyID(tour.getRegion(),this.context));
+        holder.tvRegion.setText(context.getString(R.string.tour_region) + " " + resultFilterController.getRegionbyID(tour.getRegion(),this.context));
 
         holder.tvDescending.setText(tour.getDescent() + " m");
         holder.tvAscending.setText(tour.getAscent() + " m");
