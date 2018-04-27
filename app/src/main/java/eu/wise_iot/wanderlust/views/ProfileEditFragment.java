@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -41,6 +43,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 
@@ -74,11 +77,14 @@ public class ProfileEditFragment extends Fragment {
     private CheckBox[] checkBoxes;
     private long difficulty;
 
+    private ImageController imageController;
+
     private final ProfileController profileController;
 
     public ProfileEditFragment() {
         // Required empty public constructor
         profileController = new ProfileController();
+        imageController = ImageController.getInstance();
     }
 
     public static ProfileEditFragment newInstance() {
@@ -204,16 +210,18 @@ public class ProfileEditFragment extends Fragment {
         emailTextfield.setText(profileController.getEmail());
         return true;
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            switch (requestCode){
+            switch (requestCode) {
                 case 1000:
                     onActionResultGallery(data);
                     break;
             }
         }
     }
+
     private void setupCurrentInfo(View view) {
         setupAvatar();
         buttonOpenGallery.setText(R.string.profile_edit_open_gallery);
@@ -221,7 +229,8 @@ public class ProfileEditFragment extends Fragment {
         buttonDeleteImage.setTextColor(Color.RED);
         emailTextfield.setText(profileController.getEmail());
     }
-    private void setupActionListener(){
+
+    private void setupActionListener() {
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -239,16 +248,16 @@ public class ProfileEditFragment extends Fragment {
                 if (profileController.getProfilePicture() == null) {
                     openGallery();
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }else{
+                } else {
                     profileController.deleteProfilePicture(controllerEvent -> {
                         EventType type = controllerEvent.getType();
-                        if (type == EventType.OK){
+                        if (type == EventType.OK) {
                             openGallery();
                         }
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     });
                 }
-            }else{
+            } else {
                 Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
                         Toast.LENGTH_SHORT).show();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -258,12 +267,13 @@ public class ProfileEditFragment extends Fragment {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             profileController.deleteProfilePicture(controllerEvent -> {
                 EventType type = controllerEvent.getType();
-                if (type == EventType.OK){
+                if (type == EventType.OK) {
                     setupAvatar();
                 }
             });
         });
     }
+
     private void setupDifficulty(View view) {
         //setup current difficulty level
         difficulty = profileController.getDifficulty();
@@ -287,7 +297,7 @@ public class ProfileEditFragment extends Fragment {
 
     }
 
-    private void openGallery(){
+    private void openGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
 
@@ -297,21 +307,33 @@ public class ProfileEditFragment extends Fragment {
         galleryIntent.putExtra("aspectX", 1);
         galleryIntent.putExtra("aspectY", 1);
         galleryIntent.putExtra("scale", true);
-
         if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(galleryIntent, 1000);
         }
     }
-    private void onActionResultGallery(Intent data){
+
+    private void onActionResultGallery(Intent data) {
+
         Uri returnUri = data.getData();
-        Bitmap bitmapImage;
+
+        if (returnUri == null) {
+            Bundle extras = data.getExtras();
+            returnUri = getImageUri(getActivity().getApplicationContext(), (Bitmap) extras.get("data"));
+        }
         try {
-            bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
-            if (bitmapImage != null){
+            Bitmap bitmapImage = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+
+            String path = imageController.getRealPathFromURI(returnUri, getActivity());
+            Bitmap imageBitmap = BitmapFactory.decodeFile(path);
+            Uri uri = imageController.getImageUri(getActivity(), imageBitmap);
+            ImageController.getInstance().setAndSaveCorrectOrientation(imageBitmap, uri, new File(path));
+
+            bitmapImage = ImageController.getInstance().resize(bitmapImage, 170);
+            if (bitmapImage != null) {
                 profileController.setProfilePicture(bitmapImage, controllerEvent -> {
-                    if (controllerEvent.getType() == EventType.OK){
+                    if (controllerEvent.getType() == EventType.OK) {
                         setupAvatar();
-                    }else{
+                    } else {
                         Toast.makeText(getActivity(), R.string.err_msg_error_occured,
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -321,6 +343,7 @@ public class ProfileEditFragment extends Fragment {
             Log.d(TAG, e.getMessage());
         }
     }
+
     private void setupAvatar() {
         File image = profileController.getProfilePicture();
         if (image != null) {
@@ -334,5 +357,12 @@ public class ProfileEditFragment extends Fragment {
             profileImage.setImageDrawable(drawable);
             ((MainActivity) getActivity()).updateProfileImage(image);
         }
+    }
+
+    private Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 }

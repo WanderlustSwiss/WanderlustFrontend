@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -46,7 +47,7 @@
                 style="@style/p.Small.Light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-24dp"
+                android:layout_marginTop="-24.1dp"
                 android:background="@color/highlight_main"
                 android:gravity="center"
                 android:padding="4dp"
@@ -80,28 +81,52 @@
             android:layout_marginTop="16dp"
             android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/createTourButton"
-                style="@style/FloatingActionButton.Light"
-                android:layout_marginBottom="16dp"
+
+            <com.github.clans.fab.FloatingActionMenu
+                android:id="@+id/menu_floating_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_margin="0dp"
+                android:layout_marginBottom="-30dp"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_library_add_grey_24dp"
-                android:visibility="gone" />
+                android:elevation="5dp"
+                android:padding="15dp"
+                android:paddingBottom="0dp"
+                fab:menu_buttonSpacing="1dp"
+                fab:menu_colorNormal="@color/primary_main"
+                fab:menu_fab_hide_animation="@null"
+                fab:menu_fab_show_animation="@null">
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/takePictureButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center_horizontal|center"
+                    android:layout_marginLeft="30dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_camera_white_24dp"
+                    app:fab_colorNormal="@color/primary_main" />
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/createTourButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:paddingBottom="0dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_track_start_3"
+                    app:fab_colorNormal="@color/primary_main" />
+
+            </com.github.clans.fab.FloatingActionMenu>
 
             <ImageButton
                 android:id="@+id/locationButton"
                 style="@style/FloatingActionButton.Light"
+                android:layout_margin="20dp"
+                android:layout_marginTop="-20dp"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_my_location_disabled_black_24dp" />
 
-
-            <ImageButton
-                android:id="@+id/takePictureButton"
-                style="@style/FloatingActionButton"
-                android:layout_gravity="center_horizontal|center"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_camera_white_24dp" />
         </LinearLayout>
     </FrameLayout>
 

@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+import java.io.Serializable;
+
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -12,7 +14,7 @@ import io.objectbox.annotation.Id;
  */
 
 @Entity
-public class Equipment extends AbstractModel {
+public class Equipment extends AbstractModel implements Serializable {
 
     @Id
     long internal_id;
@@ -166,4 +168,7 @@ public class Equipment extends AbstractModel {
     public long getRouteKit() {
         return routeKit;
     }
+
+    @Override
+    public String toString() { return name; }
 }

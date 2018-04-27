@@ -124,6 +124,12 @@ dependencies {
     //Client for Picasso
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
 
+    // Expandable Fab Button
+    compile 'com.github.clans:fab:1.6.4'
+
+    // Internetchecker
+    compile 'com.treebo:internetavailabilitychecker:1.0.1'
+
 }
 
 //the following sets the required permissions for API 23+ devices and AVDs

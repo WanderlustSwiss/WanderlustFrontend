@@ -82,13 +82,17 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param tour a tour, from which the backend creates an trip, which can be inserted to the database
      * @param handler
      */
-    public void create(final AbstractModel tour, final FragmentHandler handler) {
-        Call<Trip> call = service.createTrip((Tour) tour);
+    public void create(final Tour tour, final FragmentHandler handler) {
+        Call<Trip> call = service.createTrip(tour);
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
-                if (response.isSuccessful()) {
-                //    routeBox.put((Trip) trip);
+                if (response.isSuccessful() && response.body() != null) {
+                    Trip trip = response.body();
+                    long remoteTripId = trip.getTrip_id();
+                    trip.setTrip_id(0);
+                    routeBox.put(response.body());
+                    trip.setTrip_id(remoteTripId);
                     handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code())));

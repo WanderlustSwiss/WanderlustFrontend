@@ -117,6 +117,10 @@ public class TourController {
         return fav != null;
     }
 
+    public void getTourById(long id, FragmentHandler handler){
+        userTourDao.retrieve(id, handler);
+    }
+
     /**
      * set favorite
      *
@@ -464,5 +468,17 @@ public class TourController {
             this.type = (int)violationType_id;
         }
     }
+    public void uploadImage(File origiFile, FragmentHandler handler){
+        UserTourDao.getInstance().uploadImage(origiFile, tour,  handler);
+    }
+
+    public void addTour(FragmentHandler handler, Tour newTour){
+        this.tour = newTour;
+        userTourDao.create(newTour, handler);
+    }
+    public void updateTour(FragmentHandler handler){
+        userTourDao.update((int) this.tour.getTour_id() ,this.tour, handler);
+    }
+
 }
 

@@ -14,8 +14,12 @@ import android.content.res.ColorStateList;
 import android.database.MatrixCursor;
 import android.graphics.Rect;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.BaseColumns;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.content.LocalBroadcastManager;
@@ -36,6 +40,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.MapTile;
@@ -66,6 +73,8 @@ import eu.wise_iot.wanderlust.views.animations.StyleBehavior;
 import eu.wise_iot.wanderlust.views.dialog.CreateTourDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 
+import static android.content.Context.POWER_SERVICE;
+
 /**
  * MapFragment: The Fragment that contains the map view, map functionality and buttons.
  *
@@ -92,7 +101,7 @@ public class MapFragment extends Fragment {
     private ImageButton ibLocationToggler, cameraButton, layerButton, staliteTypeButton, defaultTypeButton, terrainTypeButton,
                         //bottom sheet
                         ibPoiRestAreaLayer, ibPoiFloraFaunaLayer, ibPoiRestaurantLayer, ibPoiViewLayer,
-                                ibPoiLayer, ibPublicTransportLayer, ibSacHutLayer;
+                        ibPoiLayer, ibPublicTransportLayer, ibSacHutLayer;
     private View bottomSheet;
     private MapController searchMapController;
     private static Polyline polyline;
@@ -107,10 +116,11 @@ public class MapFragment extends Fragment {
     private TextView informationBottomSheetString;
 
     // GPS Creating Tour
-    private ImageButton createTourButton;
+    private FloatingActionButton createTourButton;
     private TextView creatingTourInformation;
     private Intent createTourIntent;
-
+    private FloatingActionMenu floatingActionMenu;
+    private boolean floatingActionMenuExpanded = false;
 
     /**
      * Static instance constructor.
@@ -185,15 +195,42 @@ public class MapFragment extends Fragment {
     }
 
     private void initCreatingTourControlls(View view) {
-        createTourButton = (ImageButton) view.findViewById(R.id.createTourButton);
+        createTourButton = (FloatingActionButton) view.findViewById(R.id.createTourButton);
         creatingTourInformation = (TextView) view.findViewById(R.id.createTourInformation);
         createTourIntent = new Intent(getActivity(), CreateTourBackgroundTask.class);
+        floatingActionMenu = (FloatingActionMenu) view.findViewById(R.id.menu_floating_button);
+
+        floatingActionMenu.setIconAnimated(false);
+        floatingActionMenu.setOnMenuButtonClickListener(view1 -> {
+            if (floatingActionMenu.isOpened()) {
+                floatingActionMenu.setMenuButtonColorNormalResId(R.color.primary_main);
+                floatingActionMenu.close(true);
+                floatingActionMenu.getMenuIconView().setImageResource(R.drawable.ic_add_white_24dp);
+            }
+            else {
+                floatingActionMenu.setMenuButtonColorNormalResId(R.color.white);
+                floatingActionMenu.open(true);
+                floatingActionMenu.getMenuIconView().setImageResource(R.drawable.ic_arrow_downward_black_24dp);
+            }
+
+        });
+
+        if (isMyServiceRunning(CreateTourBackgroundTask.class)) {
+            createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
+            creatingTourInformation.setVisibility(View.VISIBLE);
+        }
 
         createTourButton.setOnClickListener(view1 -> {
+
             if (!isMyServiceRunning(CreateTourBackgroundTask.class)) {
-                startTourTracking();
-                createTourButton.setImageResource(R.drawable.ic_stop_red_24dp);
-                creatingTourInformation.setVisibility(View.VISIBLE);
+                if (startTourTracking()) {
+                    createTourButton.setImageResource(R.drawable.ic_track_stop_3);
+                    createTourButton.setColorNormalResId(R.color.highlight_main);
+
+                    creatingTourInformation.setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(getActivity(), R.string.create_tour_need_whitelist, Toast.LENGTH_SHORT).show();
+                }
             } else {
                 new AlertDialog.Builder(getActivity())
                         .setTitle(R.string.create_tour_save_tour)
@@ -557,7 +594,7 @@ public class MapFragment extends Fragment {
         mapController = mapView.getController();
         mapView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            //Gefährlich aber legit
+//Gefährlich aber legit
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 WanderlustMapView map = (WanderlustMapView) v;
 
@@ -651,7 +688,7 @@ public class MapFragment extends Fragment {
      * @param view View: view of current fragment
      */
     private void initCameraButton(View view) {
-        cameraButton = (ImageButton) view.findViewById(R.id.takePictureButton);
+        cameraButton = (FloatingActionButton) view.findViewById(R.id.takePictureButton);
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(cameraButton);
 
@@ -1045,15 +1082,25 @@ public class MapFragment extends Fragment {
 
     /************************************************* Tour Tracking ***************************************************/
 
-    private void startTourTracking() {
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(createTourReceiver, new IntentFilter(Constants.CREATE_TOUR_INTENT));
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateTrackingOverlayReceiver, new IntentFilter(Constants.CREATE_TOUR_UPDATE_MYOVERLAY));
-        getActivity().startService(createTourIntent);
+    private boolean startTourTracking() {
+        PowerManager pm = (PowerManager) getActivity().getSystemService(POWER_SERVICE);
+
+        if (pm != null && pm.isPowerSaveMode() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Toast.makeText(getActivity(), R.string.create_tour_disable_battery_save_mode, Toast.LENGTH_LONG).show();
+            return false;
+        } else {
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(createTourReceiver, new IntentFilter(Constants.CREATE_TOUR_INTENT));
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(updateTrackingOverlayReceiver, new IntentFilter(Constants.CREATE_TOUR_UPDATE_MYOVERLAY));
+            getActivity().startService(createTourIntent);
+            return true;
+        }
+
     }
 
     private void stoptTourTracking() {
         getActivity().stopService(createTourIntent);
-        createTourButton.setImageResource(R.drawable.ic_library_add_grey_24dp);
+        createTourButton.setImageResource(R.drawable.ic_track_start_3);
+        createTourButton.setColorNormalResId(R.color.primary_main);
         creatingTourInformation.setVisibility(View.GONE);
     }
 
@@ -1078,7 +1125,7 @@ public class MapFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             Bundle args = intent.getBundleExtra(Constants.CREATE_TOUR_BUNDLE);
             ArrayList<GeoPoint> track = (ArrayList<GeoPoint>) args.getSerializable(Constants.CREATE_TOUR_TRACK);
-            if (track != null && track.size() > 1) {
+            if (validateCreatedTour(track)) {
                 openCreateTourDialog(track);
             } else {
                 Toast.makeText(getActivity(), R.string.create_tour_nothing_tracked, Toast.LENGTH_SHORT).show();
@@ -1088,6 +1135,23 @@ public class MapFragment extends Fragment {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(updateTrackingOverlayReceiver);
         }
     };
+
+    private boolean validateCreatedTour(ArrayList<GeoPoint> track) {
+        if(track == null){
+            return false;
+        }
+
+        int maxDistanceBetweenTwoPoints = 0;
+
+        for(int i=1; i< track.size() -1 ; i++){
+            if(track.get(i).distanceTo(track.get(i + 1)) > maxDistanceBetweenTwoPoints){
+                maxDistanceBetweenTwoPoints = track.get(i).distanceTo(track.get(i + 1));
+            }
+
+        }
+
+        return track.size() < 6000 & track.size() > 30 && maxDistanceBetweenTwoPoints < 250;
+    }
 
     private BroadcastReceiver updateTrackingOverlayReceiver = new BroadcastReceiver() {
         @Override

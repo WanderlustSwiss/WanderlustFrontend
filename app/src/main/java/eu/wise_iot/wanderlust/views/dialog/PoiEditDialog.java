@@ -2,6 +2,9 @@ package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -22,6 +25,7 @@ import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.AddPoiCommand;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
@@ -29,6 +33,7 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.MapController;
+import eu.wise_iot.wanderlust.controllers.OfflineQueueController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
@@ -60,6 +65,7 @@ public class PoiEditDialog extends DialogFragment {
     private boolean isNewPoi;
     private boolean publish;
     private FragmentHandler poiPhotoUploadHandler;
+    private OfflineQueueController offlineQueueController;
 
     /**
      * Create EditPoit dialog, which is used for CREATING a Poi
@@ -101,6 +107,7 @@ public class PoiEditDialog extends DialogFragment {
         controller = new PoiController();
         imageController = ImageController.getInstance();
         context = getActivity();
+        offlineQueueController = OfflineQueueController.getInstance();
 
         Bundle args = getArguments();
         double lat = args.getDouble(Constants.LAST_POS_LAT);
@@ -128,9 +135,20 @@ public class PoiEditDialog extends DialogFragment {
                     if (isNewPoi) {
                         poi = (Poi) event.getModel();
                         //Poi image has to be uploaded after the poi is saved
-                        controller.uploadImage(new File(MapFragment.photoPath), poi, poiPhotoUploadHandler);
+                        String imagePath = MapFragment.photoPath;
+                        Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
+                        Uri uri = ImageController.getInstance().getImageUri(getActivity(), imageBitmap);
+                        ImageController.getInstance().setAndSaveCorrectOrientation(imageBitmap, uri, new File(imagePath));
+
+                        controller.uploadImage(new File(imagePath), poi, poiPhotoUploadHandler);
                     }
                     Toast.makeText(getActivity(), R.string.poi_successful_saving, Toast.LENGTH_LONG).show();
+                    dismiss();
+                    break;
+                case NETWORK_ERROR:
+                    AddPoiCommand cmd = new AddPoiCommand(this.poi, new File(MapFragment.photoPath));
+                    offlineQueueController.addCommand(cmd);
+                    Toast.makeText(context, R.string.in_queue, Toast.LENGTH_SHORT).show();
                     dismiss();
                     break;
                 default:

@@ -21,6 +21,7 @@ public class ServiceGenerator {
     // public static final String API_BASE_URL = "http://10.0.2.2:1337";
     // public static final String API_BASE_URL = "http://192.168.1.101:1337";
     public static final String API_BASE_URL = "http://86.119.40.34:8080";
+
     private static Retrofit service;
 
     /**

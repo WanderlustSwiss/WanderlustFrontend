@@ -91,6 +91,7 @@ public class LoginController {
                     }
                     updatedUser.setPassword(user.getPassword());
 
+                    PoiDao.getInstance().removeNonUserPois(userDao.getUser().getUser_id());
                     userDao.update(updatedUser);
                     initAppData();
                     getProfile(handler, updatedUser);
@@ -205,7 +206,7 @@ public class LoginController {
         favoriteDao.retrieveAllFavorites();
         poiDao.removeNonUserPois(userDao.getUser().getUser_id());
         poiDao.retrieveUserPois();
-
+        equipmentController.initExtraEquipment();
     }
 }
 

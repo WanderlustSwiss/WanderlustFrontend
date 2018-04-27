@@ -29,7 +29,6 @@ public class Tour extends AbstractModel {
     long tour_id;
     String title;
     String description;
-    String imagePath;
     String polyline;
     String elevation;
     String createdAt;
@@ -52,14 +51,13 @@ public class Tour extends AbstractModel {
     List<ImageInfo> imagePaths;
 
     public Tour(long internal_id, long tour_id, String title, String description,
-                String imagePath, String polyline, String elevation, long duration, long distance,
+                String polyline, String elevation, long duration, long distance,
                 long ascent, long descent, long difficulty, boolean editable,
                 String updatedAt, String createdAt, long region, boolean isPublic, List<String> seasons) {
         this.internal_id = internal_id;
         this.tour_id = tour_id;
         this.title = title;
         this.description = description;
-        this.imagePath = imagePath;
         this.polyline = polyline;
         this.elevation = elevation;
         this.duration = duration;
@@ -98,6 +96,15 @@ public class Tour extends AbstractModel {
 
     public List<ImageInfo> getImagePaths() {
         return imagePaths;
+    }
+
+    public void addImagePath(ImageInfo imageInfo){
+        imagePaths.add(imageInfo);
+    }
+
+
+    public int getImageCount() {
+        return imagePaths.size();
     }
 
     public ImageInfo getImageById(long id) {
@@ -139,14 +146,6 @@ public class Tour extends AbstractModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
     }
 
     public String getPolyline() {

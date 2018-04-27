@@ -1,10 +1,22 @@
 package eu.wise_iot.wanderlust.views.dialog;
 
+import android.Manifest;
 import android.app.DialogFragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,28 +24,42 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import org.osmdroid.util.GeoPoint;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
+import eu.wise_iot.wanderlust.controllers.TourKitController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
+import eu.wise_iot.wanderlust.views.controls.EquipmentCompletionView;
 
-/**
+import static android.app.Activity.RESULT_OK;
+
+/** tourkitExtraKitInput
  * CreateTour:
  *
  * @author Joshua Meier
@@ -42,6 +68,12 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 public class CreateTourDialog extends DialogFragment {
     private static final String TAG = "CreateTourDialog";
     private FragmentHandler<Trip> createTourhandler;
+    private FragmentHandler<Trip> uploadPhotoHandler;
+    private FragmentHandler<TourKit> tourKitHandler;
+    private FragmentHandler<Tour> getCreatedTourHandler;
+    private FragmentHandler<Trip> saveTourLocalHandler;
+    private FragmentHandler<Tour> updateTourHandler;
+
     private ArrayList<GeoPoint> trackedTour;
     private List<Region> regions;
     private List<String> regionNames;
@@ -58,13 +90,25 @@ public class CreateTourDialog extends DialogFragment {
     private CheckBox springCheckBox;
     private CheckBox winterCheckBox;
 
-
+    private ImageView tourImageDisplay;
+    private AppCompatButton uploadImageBtn;
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
     private TourController tourController;
     private MapController mapController;
     private boolean isNewTour;
     private boolean publish;
+
+    private Bitmap imageBitmap;
+    private String realPath;
+    private EquipmentCompletionView extraTourKitInput;
+
+
+    private ImageController imageController;
+    private EquipmentController equipmentController;
+    private TourKitController tourKitController;
+
+
 
     /**
      * Create a NEW tour dialog to create tour without further information
@@ -100,6 +144,9 @@ public class CreateTourDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         tourController = new TourController(this.tour);
         mapController = new MapController(this);
+        tourKitController = TourKitController.createInstance(getActivity());
+        imageController = ImageController.getInstance();
+        equipmentController = EquipmentController.createInstance(getActivity());
         regions = tourController.getAllRegions();
         regionNames = new ArrayList<>();
 
@@ -121,12 +168,68 @@ public class CreateTourDialog extends DialogFragment {
 
         createTourhandler = controllerEvent -> {
             if (controllerEvent.getType() == EventType.OK) {
+                Trip trip = controllerEvent.getModel();
+                tourController.getTourById(trip.getTour(), getCreatedTourHandler);
+            } else {
+                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        uploadPhotoHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
                 Toast.makeText(getActivity(), R.string.create_tour_saved, Toast.LENGTH_SHORT).show();
+                dismiss();
+            } else {
+                Toast.makeText(getActivity(), R.string.image_upload_failed, Toast.LENGTH_SHORT).show();
+                dismiss();
+            }
+        };
+
+
+        tourKitHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                Log.e(TAG, "Tour Kit ID " + controllerEvent.getModel() + " erfolgreich gespeichert");
+            } else {
+                Log.e(TAG, "Tour Kit ID " + controllerEvent.getModel() + " NICHT gespeichert");
+            }
+        };
+
+        getCreatedTourHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                Tour currentTour = controllerEvent.getModel();
+                currentTour.setInternal_id(0);
+                tourController.addTour(saveTourLocalHandler, currentTour);
+                for(Equipment eq : extraTourKitInput.getObjects()){
+                    TourKit tourKit = new TourKit(0, 0, currentTour.getTour_id(), eq.getEquip_id());
+                    tourKitController.addEquipmentToTour(tourKit, tourKitHandler);
+                }
+
+
+            } else {
+                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        saveTourLocalHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                tourController.uploadImage(new File(realPath), uploadPhotoHandler);
+            } else {
+                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        updateTourHandler = controllerEvent -> {
+            if (controllerEvent.getType() == EventType.OK) {
+                Toast.makeText(getActivity(), R.string.create_tour_update_successful, Toast.LENGTH_SHORT).show();
                 dismiss();
             } else {
                 Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
             }
         };
+
+
+
+
     }
 
     @Override
@@ -139,20 +242,38 @@ public class CreateTourDialog extends DialogFragment {
         publicSpinner = (Spinner) view.findViewById(R.id.tour_is_public);
         difficultySpinner = (Spinner) view.findViewById(R.id.tourOVTourDifficulty);
         buttonSave = (ImageButton) view.findViewById(R.id.tour_save_button);
+        uploadImageBtn = (AppCompatButton) view.findViewById(R.id.upload_image_btn);
         buttonCancel = (ImageButton) view.findViewById(R.id.tour_return_button);
         regionSpinner = (Spinner) view.findViewById(R.id.tour_region);
         winterCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_winter);
         summerCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_summer);
         fallCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_fall);
         springCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_spring);
+        tourImageDisplay = (ImageView) view.findViewById(R.id.tour_image);
+        extraTourKitInput = (EquipmentCompletionView)view.findViewById(R.id.tourkitExtraKitInput);
 
 
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, regionNames);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, regionNames);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         regionSpinner.setAdapter(spinnerArrayAdapter);
 
+        extraTourKitInput.setThreshold(1);
+        extraTourKitInput.allowDuplicates(false);
+        ArrayAdapter<Equipment> equipmentAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, equipmentController.getExtraEquipmentList());
+        extraTourKitInput.setAdapter(equipmentAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 1212:
+                    onActionResultGallery(data);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -175,6 +296,11 @@ public class CreateTourDialog extends DialogFragment {
 
             if (tour.getTitle().isEmpty()) {
                 titleTextLayout.setError(getString(R.string.message_add_title));
+                return;
+            }
+
+            if (realPath == null) {
+                Toast.makeText(getActivity(), R.string.create_tour_photo_required, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -202,7 +328,7 @@ public class CreateTourDialog extends DialogFragment {
             if (isNewTour) {
                 tourController.createTour(createTourhandler);
             } else {
-                // Todo: Edit the selected tour
+                this.tourController.updateTour(updateTourHandler);
             }
         });
 
@@ -220,6 +346,16 @@ public class CreateTourDialog extends DialogFragment {
                 dismiss();
             }
 
+        });
+
+        uploadImageBtn.setOnClickListener(v -> {
+            if (ActivityCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
+                        Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -252,5 +388,47 @@ public class CreateTourDialog extends DialogFragment {
                 }
             }
         });
+    }
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
+
+        if (galleryIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(Intent.createChooser(galleryIntent, "Complete action using"), 1212);
+        }
+    }
+
+    private void onActionResultGallery(Intent data) {
+
+        Uri returnUri = data.getData();
+
+        if (returnUri == null) {
+            Bundle extras = data.getExtras();
+            returnUri = imageController.getImageUri(getActivity().getApplicationContext(), (Bitmap) extras.get("data"));
+        }
+
+        realPath = imageController.getRealPathFromURI(returnUri, getActivity());
+        File image = new File(realPath);
+        try {
+            imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), returnUri);
+            imageController.setAndSaveCorrectOrientation(imageBitmap, returnUri, image);
+            imageBitmap = imageController.resize(imageBitmap, 1024);
+            if(image.length() > 500_000){
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 80, new FileOutputStream(image));
+                if(image.length() > 500_000){
+                    //Still to high quality
+                    Toast.makeText(getActivity(), R.string.image_upload_failed, Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
+        }
+
+        if (imageBitmap != null) {
+            Picasso.with(getActivity().getApplicationContext())
+                    .load(returnUri)
+                    .into(tourImageDisplay);
+        }
     }
 }

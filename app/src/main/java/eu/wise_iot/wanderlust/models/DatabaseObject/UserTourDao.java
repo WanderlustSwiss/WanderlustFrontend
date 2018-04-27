@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,14 +15,21 @@ import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKitEquipment;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
+import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TourService;
 import eu.wise_iot.wanderlust.views.FilterFragment;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -91,28 +99,14 @@ public class UserTourDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * insert a usertour local and remote
-     * @param usertour
+     * insert a usertour local
+     * @param userTour
      * @param handler
      */
-//    public void create(final AbstractModel usertour, final FragmentHandler handler){
-//        Call<Tour> call = service.createUserTour((UserTour)usertour);
-//        call.enqueue(new Callback<UserTour>() {
-//            @Override
-//            public void onResponse(Call<UserTour> call, Response<UserTour> response) {
-//                if(response.isSuccessful()){
-//                    routeBox.put((UserTour)usertour);
-//                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),response.body()));
-//                } else {
-//                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), null));
-//                }
-//            }
-//            @Override
-//            public void onFailure(Call<UserTour> call, Throwable t) {
-//                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR,null));
-//            }
-//        });
-//    }
+    public void create(final AbstractModel userTour, final FragmentHandler handler){
+        routeBox.put((Tour) userTour);
+        handler.onResponse(new ControllerEvent(EventType.OK));
+    }
 
     /**
      * get usertour out of the remote database by entity
@@ -330,8 +324,8 @@ public class UserTourDao extends DatabaseObjectAbstract {
 //                      internalPoi.addImageId((byte) imageInfo.getId());
 //                      poiBox.put(internalPoi);
 //                      handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), internalPoi));
-
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                        call.cancel();
 
                     } else {
                         handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
@@ -479,5 +473,61 @@ public class UserTourDao extends DatabaseObjectAbstract {
      */
     public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
         routeBox.remove(findOne(searchedColumn, searchPattern));
+    }
+
+
+    /**
+     * add an image to the db
+     *
+     * @param file the File to be uploaded
+     * @param tour
+     */
+    public void uploadImage(final File file, final Tour tour, final FragmentHandler handler) {
+        try {
+            if (tour.isPublic()) {
+                //Upload image to backend
+                TourService service = ServiceGenerator.createService(TourService.class);
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+                Call<ImageInfo> call = service.uploadImage((int) tour.getTour_id(), body);
+                call.enqueue(new Callback<ImageInfo>() {
+                    @Override
+                    public void onResponse(Call<ImageInfo> call, Response<ImageInfo> response) {
+                        if (response.isSuccessful()) {
+                            try {
+                                Tour currentTour = findOne(Tour_.internal_id, tour.getInternal_id());
+                                ImageInfo imageInfo = response.body();
+                                imageInfo.setName(tour.getTour_id() + "-" + imageInfo.getId() + ".jpg");
+                                imageInfo.setLocalDir(imageController.getTourFolder());
+                                imageController.save(file, imageInfo);
+                                currentTour.addImagePath(imageInfo);
+                                routeBox.put(currentTour);
+                                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), currentTour));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ImageInfo> call, Throwable t) {
+                        handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+                    }
+                });
+            } else {
+                Tour currentTour = findOne(Poi_.poi_id, tour.getTour_id());
+                int newId = currentTour.getImageCount() + 1;
+                String name = currentTour.getTour_id() + "-" + newId + ".jpg";
+                ImageInfo newImage = new ImageInfo(newId, name, imageController.getTourFolder());
+                imageController.save(file, newImage);
+                currentTour.addImagePath(newImage);
+                routeBox.put(currentTour);
+                handler.onResponse(new ControllerEvent(EventType.OK, currentTour));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

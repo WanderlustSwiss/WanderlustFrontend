@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -10,11 +11,14 @@ import android.content.IntentFilter;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.osmdroid.util.GeoPoint;
@@ -33,11 +37,10 @@ import eu.wise_iot.wanderlust.views.MainActivity;
 public class CreateTourBackgroundTask extends Service {
     private static final String TAG = "CreateTourContoller";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 3000;
-    private static final float LOCATION_DISTANCE = 10f;
+    private static final int LOCATION_INTERVAL = 8000;
+    private static final float LOCATION_DISTANCE = 13f;
     private ArrayList<GeoPoint> track = new ArrayList<>();
     private boolean wholeRouteRequired = false;
-    private PowerManager.WakeLock cpuWakeLock;
 
     private class LocationListener implements android.location.LocationListener {
 
@@ -79,9 +82,9 @@ public class CreateTourBackgroundTask extends Service {
         }
 
         /**
-         * Time difference threshold set for 15 seconds (after 15 seconds bad signal, just take the point).
+         * Time difference threshold set for 12 seconds (after 12 seconds bad signal, just take the point).
          */
-        static final int TIME_DIFFERENCE_THRESHOLD = 15 * 1000;
+        static final int TIME_DIFFERENCE_THRESHOLD = 12 * 1000;
 
         /**
          * Decide if new location is better than older by following some basic criteria.
@@ -132,11 +135,6 @@ public class CreateTourBackgroundTask extends Service {
     public void onCreate() {
         Log.e(TAG, "onCreate");
 
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        cpuWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                "gps_service");
-        cpuWakeLock.acquire();
-
         initializeLocationManager();
         startForeground();
         LocalBroadcastManager.getInstance(this).registerReceiver(wholeTourRequiredReceiver, new IntentFilter(Constants.CREATE_TOUR_WHOLE_ROUTE_REQUIRED));
@@ -151,24 +149,35 @@ public class CreateTourBackgroundTask extends Service {
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "network provider does not exist, " + ex.getMessage());
         }
+
     }
 
     /**
      * Starts the Background Task in Foreground (visible for user) so that the user can see that a tour is recording and so that the system doesn't kill the long living background task.
      */
     private void startForeground() {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
 
-        Notification notification = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.create_tour_tracking_tour))
-                .setContentIntent(pendingIntent).build();
+        PendingIntent contentIntent;
+        contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class), 0);
 
-        startForeground(1337, notification);
+        NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setColor(this.getResources().getColor(R.color.ap_white))
+                        .setContentTitle(getString(R.string.app_name))
+                        .setOngoing(true)
+                        .setAutoCancel(false)
+                        .setContentText(getString(R.string.create_tour_tracking_tour));
+
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(1818, mBuilder.build());
+
+        Notification notification = mBuilder.build();
+        startForeground(1818, notification);
     }
 
     @Override
@@ -183,8 +192,6 @@ public class CreateTourBackgroundTask extends Service {
             }
         }
         sendLocationBroadcastTrackingFinished();
-        if (cpuWakeLock.isHeld())
-            cpuWakeLock.release();
     }
 
     /**
@@ -255,8 +262,8 @@ public class CreateTourBackgroundTask extends Service {
                 .getSystemService(Context.LOCATION_SERVICE);
 
         Criteria criteria = new Criteria();
-        criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
-        criteria.setAccuracy(Criteria.ACCURACY_MEDIUM);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
         criteria.setSpeedRequired(true);
         criteria.setAltitudeRequired(false);
         criteria.setBearingRequired(false);

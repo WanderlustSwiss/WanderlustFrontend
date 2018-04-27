@@ -222,7 +222,6 @@ public class MapController {
             handler.onResponse(new ControllerEvent<>(EventType.OK, publicTransportPoints));
 
 
-
         }, error -> handler.onResponse(new ControllerEvent<List<PublicTransportPoint>>(EventType.NETWORK_ERROR)));
 
         queue.add(stringRequest);
@@ -252,13 +251,13 @@ public class MapController {
     /**
      * Search address by coodinates
      *
-     * @param latitude     Latitude
-     * @param longitude    Longitude
-     * @param maxResults   The number of results requested within the query
-     * @param handler      The fragment handler, which deals with the response
+     * @param latitude   Latitude
+     * @param longitude  Longitude
+     * @param maxResults The number of results requested within the query
+     * @param handler    The fragment handler, which deals with the response
      */
     public void searchCoordinates(double latitude, double longitude,
-                                  int maxResults, final FragmentHandler handler){
+                                  int maxResults, final FragmentHandler handler) {
         try {
             String url = NOMINATIM_SERVICE_URL
                     + "search?"
@@ -273,35 +272,36 @@ public class MapController {
                 JsonParser parser = new JsonParser();
                 JsonElement json = parser.parse(response);
                 JsonArray jResults = json.getAsJsonArray();
-          //      JsonObject jsonObject = new Gson().fromJson(response, JsonArray.class);
-           //     JsonArray jResults = jsonObject.getAsJsonArray();
-                JsonObject jResult = jResults.get(0).getAsJsonObject();
-                AddressPoint gAddress = new AddressPoint();
-                JsonObject jAddress = jResult.get("address").getAsJsonObject();
+                //      JsonObject jsonObject = new Gson().fromJson(response, JsonArray.class);
+                //     JsonArray jResults = jsonObject.getAsJsonArray();
+                if (jResults.size() > 0) {
+                    JsonObject jResult = jResults.get(0).getAsJsonObject();
+                    AddressPoint gAddress = new AddressPoint();
+                    JsonObject jAddress = jResult.get("address").getAsJsonObject();
 
-                if (jAddress.has("path")) {
-                    gAddress.setName(jAddress.get("path").getAsString());
-                }else{
-                    if (jAddress.has("suburb")) {
-                        gAddress.setName(jAddress.get("suburb").getAsString());
+                    if (jAddress.has("path")) {
+                        gAddress.setName(jAddress.get("path").getAsString());
+                    } else {
+                        if (jAddress.has("suburb")) {
+                            gAddress.setName(jAddress.get("suburb").getAsString());
+                        }
                     }
-                }
-                if (jAddress.has("city")) {
-                    gAddress.setCity(jAddress.get("city").getAsString());
-                }
+                    if (jAddress.has("city")) {
+                        gAddress.setCity(jAddress.get("city").getAsString());
+                    }
 
-                if(jAddress.has("state")){
-                    gAddress.setState(jAddress.get("state").getAsString());
+                    if (jAddress.has("state")) {
+                        gAddress.setState(jAddress.get("state").getAsString());
+                    }
+
+                    handler.onResponse(new ControllerEvent<>(EventType.OK, gAddress));
                 }
-
-                handler.onResponse(new ControllerEvent<>(EventType.OK, gAddress));
-
 
 
             }, error -> handler.onResponse(new ControllerEvent<AddressPoint>(EventType.NETWORK_ERROR)));
 
             queue.add(stringRequest);
-        }catch(IOException ex){
+        } catch (IOException ex) {
             handler.onResponse(new ControllerEvent<AddressPoint>(EventType.NETWORK_ERROR));
         }
 

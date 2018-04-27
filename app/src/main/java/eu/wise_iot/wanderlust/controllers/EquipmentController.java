@@ -25,8 +25,11 @@ import retrofit2.Response;
 public class EquipmentController {
     private final EquipmentService service;
     private List<Equipment> equipmentList;
+    private List<Equipment> extraEquipmentList;
+
     private int typeCount;
     private volatile boolean equipmentInitiated;
+    private volatile boolean extraEquipmentInitiated = false;
     private volatile boolean imagesDownloaded;
     private final ImageController imageController;
     private final WeatherController weatherController;
@@ -55,6 +58,10 @@ public class EquipmentController {
 
     public List<Equipment> getEquipmentList() {
         return equipmentInitiated ? equipmentList : new ArrayList<>();
+    }
+
+    public List<Equipment> getExtraEquipmentList() {
+        return extraEquipmentInitiated ? extraEquipmentList : new ArrayList<>();
     }
 
     public int getTypeCount() {
@@ -103,6 +110,57 @@ public class EquipmentController {
 
             @Override
             public void onFailure(Call<List<Equipment>> call, Throwable t) {
+            }
+        });
+
+    }
+
+    public void initExtraEquipment() {
+        Call<List<Equipment>> call = service.getExtraEquipment();
+        call.enqueue(new Callback<List<Equipment>>() {
+            @Override
+            public void onResponse(Call<List<Equipment>> call, Response<List<Equipment>> response) {
+                if (response.isSuccessful()) {
+                    extraEquipmentList = response.body();
+                    typeCount = 0;
+
+                    if(extraEquipmentList == null)
+                        return;
+
+                    for (Equipment equipment : extraEquipmentList) {
+                        if (equipment.getType() > typeCount) {
+                            typeCount = equipment.getType();
+                        }
+                        if(equipment.getImagePath() == null) continue;
+                        equipment.getImagePath().setLocalDir(imageController.getEquipmentFolder());
+                        Call<ResponseBody> imageCall = service.downloadImage(equipment.getEquip_id());
+                        imageCall.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if(response.isSuccessful()) {
+                                    try {
+                                        imageController.save(response.body().byteStream(), equipment.getImagePath());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
+
+
+                    }
+                    extraEquipmentInitiated = true;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Equipment>> call, Throwable t) {
+                int x = 3;
             }
         });
 
