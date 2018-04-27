@@ -4,23 +4,30 @@ package eu.wise_iot.wanderlust.controllers;
 import android.content.Context;
 
 import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.ViolationService;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -32,11 +39,14 @@ import retrofit2.Callback;
  */
 public class PoiController {
 
+
     private final PoiTypeDao poiTypeDao;
     private final PoiDao poiDao;
     private final UserDao userDao;
     private final ImageController imageController;
     private final Context context;
+    private final PoiService poiService;
+    private static List<Poi> poiCache = new LinkedList<>();
 
     public PoiController(){
         poiTypeDao = PoiTypeDao.getInstance();
@@ -44,6 +54,7 @@ public class PoiController {
         userDao = UserDao.getInstance();
         imageController = ImageController.getInstance();
         context = DatabaseController.getMainContext();
+        poiService = ServiceGenerator.createService(PoiService.class);
     }
 
     /**
@@ -82,6 +93,10 @@ public class PoiController {
      */
     public void getPoiById(long id, FragmentHandler handler) {
         poiDao.retrieve(id, handler);
+    }
+
+    public Poi getLocalPoi(long id){
+        return poiDao.findOne(Poi_.poi_id, id);
     }
 
     /**
@@ -213,5 +228,30 @@ public class PoiController {
             this.poi_id = (int)poi_id;
             this.type = (int)violationType_id;
         }
+    }
+
+
+    public void loadPoiByArea(BoundingBox box) {
+        Call<List<Poi>> call = poiService.retrievePoisByArea(
+                box.getLatNorth(), box.getLonWest(), box.getLatSouth(), box.getLonEast());
+        call.enqueue(new Callback<List<Poi>>() {
+            @Override
+            public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
+                if (response.isSuccessful()) {
+                    poiCache.clear();
+                    poiCache.addAll(response.body());
+                }
+                DatabaseController.getInstance().syncPoisDone();
+            }
+
+            @Override
+            public void onFailure(Call<List<Poi>> call, Throwable t) {
+                DatabaseController.getInstance().syncPoisDone();
+            }
+        });
+    }
+
+    public List<Poi> getPoiCache() {
+        return poiCache;
     }
 }

@@ -57,6 +57,7 @@ public class PoiViewDialog extends DialogFragment {
     private TextView occupationTitleSac;
     private TableLayout sacOccupation;
     private Map<String, Integer> monthIds = new HashMap<>();
+    private static PoiController poiController;
     /**
      * Create a PoiViewDialog from a Poi object
      *
@@ -70,6 +71,7 @@ public class PoiViewDialog extends DialogFragment {
         Bundle args = new Bundle();
         args.putLong(Constants.POI_ID, poiId);
         dialog.setArguments(args);
+        poiController = new PoiController();
         return dialog;
     }
 
@@ -174,19 +176,19 @@ public class PoiViewDialog extends DialogFragment {
     private void fillOutPoiView(View view) {
         if (currentPoi.getType() >= 0) {
 
-            controller.getImages(currentPoi, controllerEvent -> {
-                if (currentPoi.isPublic()){
-                    Picasso handler = imageController.getPicassoHandler(context);
-                    String url = ServiceGenerator.API_BASE_URL + "/poi/" + currentPoi.getPoi_id() + "/img/1";
-                    handler.load(url).fit().placeholder(R.drawable.progress_animation).into(poiImage);
 
-                } else {
-                    List<File> images = (List<File>) controllerEvent.getModel();
-                    if (images.size() > 0) {
-                        Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
-                    }
+            if (currentPoi.isPublic()) {
+                Picasso handler = imageController.getPicassoHandler(context);
+                String url = ServiceGenerator.API_BASE_URL + "/poi/" + currentPoi.getPoi_id() + "/img/1";
+                handler.load(url).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+            } else {
+
+                Poi localPoi = poiController.getLocalPoi(currentPoi.getPoi_id());
+                List<File> images = imageController.getImages(localPoi.getImagePaths());
+                if(images.size() != 0) {
+                    Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
                 }
-            });
+            }
         } else {
             List<File> images = new ArrayList<>();
             images.add(new File(currentPoi.getImagePaths().get(0).getPath()));

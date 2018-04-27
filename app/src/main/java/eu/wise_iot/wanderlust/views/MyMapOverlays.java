@@ -215,7 +215,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private void makeClusteringGreatAgain(){
         
         poiMarkers.getItems().clear();
-        for (Poi myPoi : poiController.getAllPois()){
+        for (Poi myPoi : poiController.getPoiCache()){
             POI poi = poiController.convertPoiToOSMDroidPOI(myPoi);
             Marker poiMarker = new Marker(mapView);
             poiMarker.setTitle(poi.mType);
@@ -380,7 +380,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      */
     public void populatePoiOverlay() {
         poiOverlay.removeAllItems();
-        List<Poi> pois = PoiDao.getInstance().find();
+
+        List<Poi> pois = poiController.getPoiCache();
         for (Poi poi : pois) {
             addPoiToOverlay(poi);
         }
@@ -496,33 +497,36 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
     @Override
     public void update(DatabaseEvent event) {
-        /*if (event.getType() == DatabaseEvent.SyncType.POIAREA) {
-            populatePoiOverlay();
-        } else if (event.getType() == DatabaseEvent.SyncType.SINGLEPOI) {
-            //More efficient, Stamm approves
-            Poi poi = (Poi) event.getObj();
-            addPoiToOverlay(poi);
-            mapView.invalidate();
-        } else if (event.getType() == DatabaseEvent.SyncType.DELETESINGLEPOI) {
-            Poi poi = (Poi) event.getObj();
-            for (int i = 0; i < poiOverlay.size(); i++) {
-                if (Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()) {
-                    poiOverlay.removeItem(i);
-                    break;
-                }
-            }
-            mapView.invalidate();
-        } else if (event.getType() == DatabaseEvent.SyncType.EDITSINGLEPOI) {
-            Poi poi = (Poi) event.getObj();
-            for (int i = 0; i < poiOverlay.size(); i++) {
-                if (Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()) {
-                    poiOverlay.removeItem(i);
-                    //addPoiToOverlay(poi);
-                    break;
-                }
-            }
-            mapView.invalidate();
-        }*/
+//        if (event.getType() == DatabaseEvent.SyncType.POIAREA) {
+//            populatePoiOverlay();
+//        }
+//        } else if (event.getType() == DatabaseEvent.SyncType.SINGLEPOI) {
+//            //More efficient, Stamm approves
+//            Poi poi = (Poi) event.getObj();
+//            addPoiToOverlay(poi);
+//            mapView.invalidate();
+//        } else if (event.getType() == DatabaseEvent.SyncType.DELETESINGLEPOI) {
+//            Poi poi = (Poi) event.getObj();
+//            for (int i = 0; i < poiOverlay.size(); i++) {
+//                if (Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()) {
+//                    poiOverlay.removeItem(i);
+//                    break;
+//                }
+//            }
+//            mapView.invalidate();
+//        } else if (event.getType() == DatabaseEvent.SyncType.EDITSINGLEPOI) {
+//            Poi poi = (Poi) event.getObj();
+//            for (int i = 0; i < poiOverlay.size(); i++) {
+//                if (Long.parseLong(poiOverlay.getItem(i).getUid()) == poi.getPoi_id()) {
+//                    poiOverlay.removeItem(i);
+//                    //addPoiToOverlay(poi);
+//                    break;
+//                }
+//            }
+//            mapView.invalidate();
+//        }
+//
+
         makeClusteringGreatAgain();
         mapView.invalidate();
     }

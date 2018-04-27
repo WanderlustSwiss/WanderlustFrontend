@@ -14,6 +14,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
@@ -44,6 +45,7 @@ public class LoginController {
     private final DifficultyTypeDao difficultyTypeDao;
     private final ViolationTypeDao violationTypeDao;
     private final FavoriteDao favoriteDao;
+    private final PoiDao poiDao;
     /**
      * Create a login contoller
      */
@@ -58,6 +60,7 @@ public class LoginController {
         difficultyTypeDao = DifficultyTypeDao.getInstance();
         violationTypeDao = ViolationTypeDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
+        poiDao = PoiDao.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
@@ -77,7 +80,7 @@ public class LoginController {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-                    initAppData();
+
                     User updatedUser = response.body();
                     User internalUser = userDao.getUser();
                     if (internalUser == null){
@@ -89,6 +92,7 @@ public class LoginController {
                     updatedUser.setPassword(user.getPassword());
 
                     userDao.update(updatedUser);
+                    initAppData();
                     getProfile(handler, updatedUser);
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
@@ -191,6 +195,7 @@ public class LoginController {
      * This Method is used to download all app data like (equipment, poi types etc.) when login
      */
     private void initAppData(){
+
         databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
         weatherController.initKeys();
         equipmentController.initEquipment();
@@ -198,6 +203,9 @@ public class LoginController {
         difficultyTypeDao.retrieve();
         violationTypeDao.retrieveAllViolationTypes();
         favoriteDao.retrieveAllFavorites();
+        poiDao.removeNonUserPois(userDao.getUser().getUser_id());
+        poiDao.retrieveUserPois();
+
     }
 }
 
