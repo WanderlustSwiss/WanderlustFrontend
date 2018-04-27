@@ -1,9 +1,9 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -38,7 +38,6 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -88,7 +87,7 @@ public class WebLoginFragment extends Fragment  {
     }
     private static final String TAG = "WebLoginFragment";
     private static LoginProvider provider;
-    private Context context;
+    private Activity context;
     private WebView webview;
     private ImageView loadDrawable;
     private TextView loadString;
@@ -102,6 +101,7 @@ public class WebLoginFragment extends Fragment  {
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
+                    Log.d(TAG, getActivity() != null ? "nicht null" : "null");
                     SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
                     User user = (User) event.getModel();
                     ((MainActivity) getActivity()).setupDrawerHeader(user);
@@ -139,7 +139,7 @@ public class WebLoginFragment extends Fragment  {
 
                     break;
                 default:
-                    Toast.makeText(context, eventType.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), eventType.toString(), Toast.LENGTH_LONG).show();
                     break;
             }
         }
@@ -167,7 +167,6 @@ public class WebLoginFragment extends Fragment  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -177,6 +176,7 @@ public class WebLoginFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_web_login, container, false);
         instagramContainer = (LinearLayout) view.findViewById(R.id.web_login_provider_layout);
         loadDrawable = (ImageView) view.findViewById(R.id.web_login_provider_image);
@@ -195,14 +195,14 @@ public class WebLoginFragment extends Fragment  {
         if (isNetworkAvailable()) {
             webview.setWebViewClient(new WebViewClient() {
                 public void onReceivedHttpError(WebView view, WebResourceRequest request,
-                                                WebResourceResponse errorResponse) {
+                                                WebResourceResponse errorRyesponse) {
 
-                    Fragment loginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                    Fragment loginFragment = context.getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
                     if (loginFragment == null) loginFragment = StartupLoginFragment.newInstance();
-                    getFragmentManager().beginTransaction()
+                    context.getFragmentManager().beginTransaction()
                             .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
                             .commit();
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    ((AppCompatActivity) context).getSupportActionBar().show();
                 }
 
                 public void onPageFinished(WebView view, String url) {
@@ -224,15 +224,15 @@ public class WebLoginFragment extends Fragment  {
             Log.d(TAG, "Last login: " + lastLogin);
 
             if (lastLogin.isAfter(timerLimit)) {
-                ((MainActivity)getActivity()).setupDrawerHeader(user);
+                ((MainActivity)context).setupDrawerHeader(user);
                 MapFragment fragment = MapFragment.newInstance();
-                getFragmentManager().beginTransaction()
+                context.getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, fragment, Constants.MAP_FRAGMENT)
                         .commit();
-                ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+                ((AppCompatActivity)context).getSupportActionBar().show();
             } else {
                 StartupLoginFragment loginFragment = new StartupLoginFragment();
-                getFragmentManager().beginTransaction()
+                context.getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, loginFragment)
                         .commit();
             }
