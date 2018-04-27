@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -68,12 +69,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "MainActivity";
     public static BoxStore boxStore;
     public static Activity activity;
+    private static BroadcastReceiver broadcastReceiver;
 
     private TextView username;
     private TextView email;
     private ImageView userProfileImage;
     private View header;
     private LoginController loginController;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +92,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         WeatherController.createInstance(getApplicationContext());
         EquipmentController.createInstance(getApplicationContext());
         loginController = new LoginController();
+        broadcastReceiver = new OfflineQueueController.NetworkChangeReceiver();
 
         this.registerReceiver(
-                new OfflineQueueController.NetworkChangeReceiver(),
+                broadcastReceiver,
                 new IntentFilter(
                         ConnectivityManager.CONNECTIVITY_ACTION));
 
@@ -179,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
+
     }
 
 

@@ -75,6 +75,11 @@ public class EquipmentDialog extends DialogFragment{
         titleTextView.setText(equipment.getName());
         descriptionTextView.setText(equipment.getDescription());
 
+        if(equipment.getName().equals("Bargeld")){
+            linkToOnlineShopButtonIcon.setVisibility(View.INVISIBLE);
+            linkToOnlineShopButtonText.setVisibility(View.INVISIBLE);
+        }
+
         return view;
     }
 

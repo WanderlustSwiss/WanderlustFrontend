@@ -27,7 +27,7 @@ public class EquipmentController {
     private List<Equipment> equipmentList;
     private List<Equipment> extraEquipmentList;
 
-    private int typeCount;
+    private volatile int typeCount;
     private volatile boolean equipmentInitiated;
     private volatile boolean extraEquipmentInitiated = false;
     private volatile boolean imagesDownloaded;
@@ -122,15 +122,11 @@ public class EquipmentController {
             public void onResponse(Call<List<Equipment>> call, Response<List<Equipment>> response) {
                 if (response.isSuccessful()) {
                     extraEquipmentList = response.body();
-                    typeCount = 0;
 
                     if(extraEquipmentList == null)
                         return;
 
                     for (Equipment equipment : extraEquipmentList) {
-                        if (equipment.getType() > typeCount) {
-                            typeCount = equipment.getType();
-                        }
                         if(equipment.getImagePath() == null) continue;
                         equipment.getImagePath().setLocalDir(imageController.getEquipmentFolder());
                         Call<ResponseBody> imageCall = service.downloadImage(equipment.getEquip_id());
@@ -298,8 +294,17 @@ public class EquipmentController {
                         switch (controllerEventExtraEquipment.getType()){
                             case OK:
                                 List<TourKitEquipment> extraEquipment = (List<TourKitEquipment>) controllerEventExtraEquipment.getModel();
+                                List<Equipment> extraEquipmentLocal = getExtraEquipmentList();
+
+
                                 for(TourKitEquipment tourKitEquipment : extraEquipment){
-                                    recEquipmentList.add(tourKitEquipment.getEquipment());
+                                    long id = tourKitEquipment.getEquipment().getEquip_id();
+                                    for(Equipment equipmentExtra : extraEquipmentLocal){
+                                        if(equipmentExtra.getEquip_id() == id){
+                                            recEquipmentList.add(equipmentExtra);
+                                            break;
+                                        }
+                                    }
                                 }
                                 handler.onResponse(new ControllerEvent(EventType.OK, recEquipmentList));
                                 break;
