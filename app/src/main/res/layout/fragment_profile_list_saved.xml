@@ -1,39 +1,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:background="@color/background_main">
+    android:background="@color/background_main"
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/ListSavedImageView"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="25dp"
         android:src="@color/heading_icon_unselected" />
 
     <LinearLayout
         android:id="@+id/ListSavedInfo"
-        android:layout_width="150dp"
-        android:layout_height="75dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_toLeftOf="@id/ListSavedIcon"
         android:layout_toRightOf="@id/ListSavedImageView"
-        android:orientation="vertical"
-        android:paddingTop="10dp">
-
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/ListSavedTitle"
+            style="@style/h2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="20sp" />
+            android:ellipsize="end"
+            android:maxLines="1" />
 
-        <!--<TextView
-            android:id="@+id/ListSavedDescription"
+        <TextView
+            android:id="@+id/list_saved_description"
+            style="@style/p.Grey"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />-->
+            android:ellipsize="end"
+            android:maxLines="1" />
 
     </LinearLayout>
 
@@ -41,11 +43,9 @@
         android:id="@+id/ListSavedIcon"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="40dp"
-        android:layout_toRightOf="@id/ListSavedInfo"
-        android:src="@drawable/ic_delete_black_24dp"
-        />
-
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_delete_black_24dp" />
 
 </RelativeLayout>

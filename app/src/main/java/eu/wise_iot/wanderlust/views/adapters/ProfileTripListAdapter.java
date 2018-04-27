@@ -35,6 +35,7 @@ import eu.wise_iot.wanderlust.views.ProfileFragment;
 public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
+    private TextView description;
 
     private ImageView tripImage;
     private ImageView editIcon;
@@ -114,6 +115,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListTourTitle);
+        description = (TextView) convertView.findViewById(R.id.list_saved_description);
 
         tripImage = (ImageView) convertView.findViewById(R.id.ListTourImageView);
         editIcon = (ImageView) convertView.findViewById(R.id.ListTourEdit);
@@ -121,14 +123,16 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
 
         //set data
         if (tour != null) {
-            String t = StringUtils.abbreviate(tour.getTitle(), 30);
-            title.setText(t);
+            title.setText(tour.getTitle());
+            description.setText(tour.getDescription());
 
             List<ImageInfo> imageinfos = tour.getImagePaths();
             List<File> imagefiles = imageController.getImages(imageinfos);
             if(!imagefiles.isEmpty() && imagefiles.get(0).length() != 0){
                 Picasso.with(context)
                         .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
+                        .fit()
+                        .centerCrop()
                         .into(tripImage);
             }else{
                 tripImage.setImageResource(R.drawable.example_image);

@@ -72,7 +72,6 @@ public class ResultFilterFragment extends Fragment {
         rvToursFiltered = (RecyclerView) rootView.findViewById(R.id.rvFilteredTours);
         tvToursFilteredPlaceholder = (TextView) rootView.findViewById(R.id.tvToursFilteredPlaceholder);
 
-        rvToursFiltered.setPadding(5, 5, 5, 5);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         rvToursFiltered.setLayoutManager(verticalLayoutManager);
         adapterRoutes = new ResultFilterRVAdapter(context, listFilteredTours);

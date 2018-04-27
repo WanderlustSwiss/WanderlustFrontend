@@ -122,7 +122,7 @@ public class ProfileFragment extends Fragment {
             Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(profilePicture);
             ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
         }else{
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             profilePicture.setImageDrawable(drawable);
@@ -236,7 +236,7 @@ public class ProfileFragment extends Fragment {
                         ProfileFavoritesListAdapter adapter =
                                 new ProfileFavoritesListAdapter(getActivity(),
                                         R.layout.fragment_profile_list_favorites,
-                                        R.id.ListFavTitle,
+                                        R.id.list_fav_title,
                                         list, fragment);
 
                         listView.setAdapter(adapter);

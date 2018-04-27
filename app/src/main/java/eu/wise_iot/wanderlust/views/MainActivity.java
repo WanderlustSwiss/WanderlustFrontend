@@ -275,7 +275,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTag = Constants.USER_GUIDE_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
             if (fragment == null) fragment = UserGuideFragment.newInstance();
-        } else if (id == R.id.logout) {
+        } else if (id == R.id.disclaimer) {
+            fragmentTag = Constants.DISCLAIMER_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = DisclaimerFragment.newInstance();
+        }
+
+        else if (id == R.id.logout) {
             loginController.logout(controllerEvent -> {
                 switch (controllerEvent.getType()) {
                     case OK:
@@ -356,8 +362,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (image != null) {
             Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
-        } else {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        }else{
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             userProfileImage.setImageDrawable(drawable);
