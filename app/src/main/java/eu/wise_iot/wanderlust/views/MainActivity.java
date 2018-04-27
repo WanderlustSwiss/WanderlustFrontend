@@ -100,10 +100,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (controllerEvent.getType()) {
                     case OK:
                         setupDrawerHeader(logInUser);
-                        MapFragment mapFragment = MapFragment.newInstance();
+                        // TODO: remove following code and uncomment code after
+                        ProfileFragment profileFragment = ProfileFragment.newInstance();
                         getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                .replace(R.id.content_frame, profileFragment, Constants.MAP_FRAGMENT)
                                 .commit();
+//                        MapFragment mapFragment = MapFragment.newInstance();
+//                        getFragmentManager().beginTransaction()
+//                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+//                                .commit();
                         break;
                     default:
                         StartupLoginFragment loginFragment = new StartupLoginFragment();
@@ -281,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (image != null){
             Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
         }else{
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             userProfileImage.setImageDrawable(drawable);

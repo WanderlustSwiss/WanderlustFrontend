@@ -328,7 +328,7 @@ public class ProfileEditFragment extends Fragment {
             Picasso.with(getActivity()).load(image).placeholder(R.drawable.progress_animation).transform(new CircleTransform()).fit().into(profileImage);
             ((MainActivity) getActivity()).updateProfileImage(image);
         } else {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             profileImage.setImageDrawable(drawable);

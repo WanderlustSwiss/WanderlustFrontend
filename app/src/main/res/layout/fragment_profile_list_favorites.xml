@@ -8,13 +8,12 @@
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="25dp"
         android:src="@color/heading_icon_unselected" />
 
     <LinearLayout
         android:id="@+id/ListFavInfo"
-        android:layout_width="150dp"
-        android:layout_height="75dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/ListFavImageView"
@@ -24,11 +23,10 @@
 
         <TextView
             android:id="@+id/ListFavTitle"
-            android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            />
+            android:layout_marginTop="4dp"
+            android:textSize="20sp" />
 
         <!--<TextView
             android:id="@+id/ListFavDescription"
@@ -45,8 +43,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/ListFavInfo"
-        android:src="@drawable/ic_favorite_black_24dp"
-        />
+        android:src="@drawable/ic_favorite_black_24dp" />
 
 
 </RelativeLayout>
