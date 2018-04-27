@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,11 +57,7 @@ public class LoginController {
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        MainActivity.activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        String resolution = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
-        user.setDeviceStatistics(Integer.toString(Build.VERSION.SDK_INT),Build.MODEL, resolution, android.os.Build.SERIAL);
+        setDeviceInfo(user);
 
         LoginService service = ServiceGenerator.createService(LoginService.class);
         Call<User> call = service.basicLogin(user);
@@ -95,10 +92,12 @@ public class LoginController {
             }
         });
     }
-    public void logInInstagram(String cookie, final FragmentHandler handler){
+
+    public void logInWithExternalProvider(String cookie, final FragmentHandler handler){
         ArrayList<String> cookieList = new ArrayList<>();
         cookieList.add(cookie);
         LoginUser.setCookies(cookieList);
+        Log.d("COOKIE", cookie);
 
         UserService service = ServiceGenerator.createService(UserService.class);
         Call<User> call = service.retrieveUser();
@@ -227,6 +226,13 @@ public class LoginController {
         equipmentController.initEquipment();
         regionDao.retrive();
         difficultyTypeDao.retrive();
+    }
+
+    public void setDeviceInfo(LoginUser user){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        MainActivity.activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        String resolution = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+        user.setDeviceStatistics(Integer.toString(Build.VERSION.SDK_INT),Build.MODEL, resolution, android.os.Build.SERIAL);
     }
 }
 

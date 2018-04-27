@@ -27,6 +27,7 @@ public class MapCacheHandler {
     private Context context;
     private Tour tour;
     private MapView mapView;
+    private int progressPercentage = 10;
 
     public MapCacheHandler(Context context, Tour tour){
         this.context = context;
@@ -70,7 +71,6 @@ public class MapCacheHandler {
         if(cacheManager.currentCacheUsage() < cacheLimit){
 
             int max = cacheManager.possibleTilesInArea(boundingBox, 10, 20);
-
             int notificationID = 900;
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -78,11 +78,12 @@ public class MapCacheHandler {
             Notification.Builder notificationBuilder = new Notification.Builder(context.getApplicationContext());
             notificationBuilder.setOngoing(true)
                                .setSmallIcon(R.mipmap.ic_launcher)
-                               .setContentTitle("Tour: " + tour.getTitle() + " wird gespeichert.")
+                               .setContentTitle(tour.getTitle() + " wird heruntergeladen..")
                                .setProgress(max, 0, false)
-                               .setContentText("herunterladen..");
+                               .setAutoCancel(true);
 
             Notification notification = notificationBuilder.build();
+            notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
             notificationManager.notify(notificationID, notification);
 
             cacheManager.downloadAreaAsync(context, boundingBox, 10, 20, new CacheManager.CacheManagerCallback() {
@@ -94,10 +95,15 @@ public class MapCacheHandler {
 
                 @Override
                 public void updateProgress(int progress, int currentZoomLevel, int zoomMin, int zoomMax) {
-                    notificationBuilder.setProgress(max, progress, false);
-                    Notification notification = notificationBuilder.build();
-                    notification.flags = Notification.FLAG_AUTO_CANCEL;
-                    notificationManager.notify(notificationID, notification);
+
+                    int step = (max / 100);
+                    if(progress == step * progressPercentage){
+                        notificationBuilder.setProgress(max, progress, false);
+                        Notification notification = notificationBuilder.build();
+                        notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
+                        notificationManager.notify(notificationID, notification);
+                        progressPercentage += 10;
+                    }
                 }
 
                 @Override
@@ -107,7 +113,6 @@ public class MapCacheHandler {
 
                 @Override
                 public void setPossibleTilesInArea(int total) {
-
                 }
 
                 @Override
@@ -177,9 +182,7 @@ public class MapCacheHandler {
             public void onTaskFailed(int errors) {
                 Log.d(TAG, "Tour deleted, Cache Usage/Capacity:" + String.valueOf(
                         cacheManager.currentCacheUsage()) + "/" + String.valueOf(cacheManager.cacheCapacity()));
-
             }
-
         });
 
         return true;
