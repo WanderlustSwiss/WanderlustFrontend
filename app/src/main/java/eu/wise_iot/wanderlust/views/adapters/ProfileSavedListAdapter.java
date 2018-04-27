@@ -117,7 +117,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
         //set data
         if (communityTour != null) {
             String t = StringUtils.abbreviate(communityTour.getTitle(), 30);
-            title.setText(t);
+            title.setText(communityTour.getTitle());
 
             List<ImageInfo> imageinfos = communityTour.getImagePaths();
             List<File> imagefiles = imageController.getImages(imageinfos);
