@@ -462,21 +462,6 @@ public class MapFragment extends Fragment {
     }
 
     /**
-     * Generates a options menu in the toolbar and inflates it. Menu is specific for this Fragment and is
-     * only shown in this toolbar.
-     *
-     * @param menu     Menu: options menu
-     * @param inflater MenuInflater: menu inflater of options menu
-     */
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear(); // makes sure that the menu was not inflated yet
-        inflater.inflate(R.menu.map_fragment_layer_menu, menu);
-        //initSearchView(menu);
-    }
-
-    /**
      * Receive the result from a previous call to startActivityForResult(Intent, int)
      *
      * @param requestCode int: The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
@@ -902,112 +887,128 @@ public class MapFragment extends Fragment {
         PoiEditDialog dialog = PoiEditDialog.newInstance(imageFileName, lastKnownLocation);
         dialog.show(fragmentTransaction, Constants.EDIT_POI_DIALOG);
     }
+    /**
+     * Generates a options menu in the toolbar and inflates it. Menu is specific for this Fragment and is
+     * only shown in this toolbar.
+     *
+     * @param menu     Menu: options menu
+     * @param inflater MenuInflater: menu inflater of options menu
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear(); // makes sure that the menu was not inflated yet
+        inflater.inflate(R.menu.map_fragment_layer_menu, menu);
+        //initSearchView(menu);
+    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        SearchView searchView = (SearchView) MenuItemCompat
-                .getActionView(menu.findItem(R.id.action_search));
-        searchView.setSuggestionsAdapter(mAdapter);
-        searchView.setIconifiedByDefault(false);
-        // Getting selected (clicked) item suggestion
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionClick(int position) {
-                triggerHashtagSearch(position, null);
-                return true;
-            }
-
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                triggerHashtagSearch(position, null);
-                return true;
-            }
-        });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                if (s.startsWith("#")) {
-                    triggerHashtagSearch(-1, s.substring(1));
-                } else {
-                    callSearch(s);
+        //getActivity().invalidateOptionsMenu();
+        if(menu.findItem(R.id.action_search) != null) {
+            SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+            searchView.setSuggestionsAdapter(mAdapter);
+            searchView.setIconifiedByDefault(false);
+            // Getting selected (clicked) item suggestion
+            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                @Override
+                public boolean onSuggestionClick(int position) {
+                    triggerHashtagSearch(position, null);
+                    return true;
                 }
-                return true;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.trim().startsWith("#") && s.length() >= 2) {
-                    mapView.setHashTagEnabled(true);
-                    searchMapController.suggestHashtags(s.substring(1), controllerEvent -> {
-                        if (controllerEvent.getModel() != null && controllerEvent.getModel().size() != 0) {
-                            hashTagSearchSuggestions = controllerEvent.getModel();
-                        } else {
+                @Override
+                public boolean onSuggestionSelect(int position) {
+                    triggerHashtagSearch(position, null);
+                    return true;
+                }
+            });
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    if (s.startsWith("#")) {
+                        triggerHashtagSearch(-1, s.substring(1));
+                    } else {
+                        callSearch(s);
+                    }
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.trim().startsWith("#") && s.length() >= 2) {
+                        mapView.setHashTagEnabled(true);
+                        searchMapController.suggestHashtags(s.substring(1), controllerEvent -> {
+                            if (controllerEvent.getModel() != null && controllerEvent.getModel().size() != 0) {
+                                hashTagSearchSuggestions = controllerEvent.getModel();
+                            } else {
+                                hashTagSearchSuggestions.clear();
+                            }
+                            populateAdapter(s.substring(1));
+
+                        });
+                    } else {
+                        mapView.setHashTagEnabled(false);
+                        DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
+                        if (hashTagSearchSuggestions != null) {
                             hashTagSearchSuggestions.clear();
                         }
-                        populateAdapter(s.substring(1));
-
-                    });
-                } else {
-                    mapView.setHashTagEnabled(false);
-                    DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
-                    if (hashTagSearchSuggestions != null) {
-                        hashTagSearchSuggestions.clear();
-                    }
-                    if (s.length() >= 1) {
-                        populateAdapter(s.substring(1));
-                    }
-                }
-                return true;
-            }
-
-            public void callSearch(String query) {
-                try {
-                    searchMapController.searchPlace(query, 1, controllerEvent -> {
-                        List<MapSearchResult> resultList = (List<MapSearchResult>) controllerEvent.getModel();
-                        if (!resultList.isEmpty()) {
-                            MapSearchResult firstResult = resultList.get(0);
-                            GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
-                            if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
-                                mapOverlays.clearPolylines();
-
-                                double minLat = 9999;
-                                double maxLat = -9999;
-                                double minLong = 9999;
-                                double maxLong = -9999;
-
-                                for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
-                                    mapOverlays.addPolyline(polygon);
-
-                                    for (GeoPoint point : polygon) {
-                                        if (point.getLatitude() < minLat)
-                                            minLat = point.getLatitude();
-                                        if (point.getLatitude() > maxLat)
-                                            maxLat = point.getLatitude();
-                                        if (point.getLongitude() < minLong)
-                                            minLong = point.getLongitude();
-                                        if (point.getLongitude() > maxLong)
-                                            maxLong = point.getLongitude();
-                                    }
-                                }
-
-                                BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
-                                mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
-                            } else {
-                                mapController.setZoom(Defaults.ZOOM_SEARCH);
-                                mapController.animateTo(geoPoint);
-                                mapOverlays.addFocusedPositionMarker(geoPoint);
-                            }
-                        } else {
-                            Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                        if (s.length() >= 1) {
+                            populateAdapter(s.substring(1));
                         }
-                    });
-                } catch (IOException e) {
-                    Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
                 }
-                searchView.clearFocus();
-            }
-        });
+
+                public void callSearch(String query) {
+                    try {
+                        searchMapController.searchPlace(query, 1, controllerEvent -> {
+                            List<MapSearchResult> resultList = (List<MapSearchResult>) controllerEvent.getModel();
+                            if (!resultList.isEmpty()) {
+                                MapSearchResult firstResult = resultList.get(0);
+                                GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
+                                if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
+                                    mapOverlays.clearPolylines();
+
+                                    double minLat = 9999;
+                                    double maxLat = -9999;
+                                    double minLong = 9999;
+                                    double maxLong = -9999;
+
+                                    for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
+                                        mapOverlays.addPolyline(polygon);
+
+                                        for (GeoPoint point : polygon) {
+                                            if (point.getLatitude() < minLat)
+                                                minLat = point.getLatitude();
+                                            if (point.getLatitude() > maxLat)
+                                                maxLat = point.getLatitude();
+                                            if (point.getLongitude() < minLong)
+                                                minLong = point.getLongitude();
+                                            if (point.getLongitude() > maxLong)
+                                                maxLong = point.getLongitude();
+                                        }
+                                    }
+
+                                    BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
+                                    mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
+                                } else {
+                                    mapController.setZoom(Defaults.ZOOM_SEARCH);
+                                    mapController.animateTo(geoPoint);
+                                    mapOverlays.addFocusedPositionMarker(geoPoint);
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } catch (IOException e) {
+                        Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                    }
+                    searchView.clearFocus();
+                }
+            });
+        }
     }
 
 
