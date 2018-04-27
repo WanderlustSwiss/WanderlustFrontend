@@ -83,6 +83,7 @@ public class OfflineQueueController {
             if (status) {
                 if (!offlineQueueController.isRunning()) {
                     offlineQueueController.executeCommands();
+
                 }
             }
         }
