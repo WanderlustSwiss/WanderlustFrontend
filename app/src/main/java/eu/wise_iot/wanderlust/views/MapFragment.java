@@ -344,6 +344,7 @@ public class MapFragment extends Fragment {
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
+
     private void initMapTypeButton(View view) {
         staliteTypeButton = (ImageButton) view.findViewById(R.id.map_satelite_type);
         defaultTypeButton = (ImageButton) view.findViewById(R.id.map_default_type);
@@ -544,8 +545,6 @@ public class MapFragment extends Fragment {
         mapView = (WanderlustMapView) view.findViewById(R.id.mapView);
         ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
                 new String[]{"https://opentopomap.org/"});
-        mapView.setTileSource(tileSource);
-
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
         mapView.setMultiTouchControls(true);
