@@ -93,6 +93,7 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
      * @param communityTour
      */
     public void create(final AbstractModel communityTour){
+
         communityTourBox.put((Tour) communityTour);
     }
 

@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.controllers;
 import android.app.Fragment;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.UserService;
 import eu.wise_iot.wanderlust.views.MainActivity;
 import okhttp3.Headers;
 import okhttp3.ResponseBody;
@@ -67,12 +69,7 @@ public class LoginController {
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
-
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        MainActivity.activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        String resolution = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
-        user.setDeviceStatistics(Integer.toString(Build.VERSION.SDK_INT),Build.MODEL, resolution, android.os.Build.SERIAL);
+        setDeviceInfo(user);
 
         LoginService service = ServiceGenerator.createService(LoginService.class);
         Call<User> call = service.basicLogin(user);
@@ -83,7 +80,6 @@ public class LoginController {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-
                     User updatedUser = response.body();
                     User internalUser = userDao.getUser();
                     if (internalUser == null){
@@ -93,7 +89,6 @@ public class LoginController {
                         updatedUser.setInternalId(internalUser.getInternalId());
                     }
                     updatedUser.setPassword(user.getPassword());
-
                     userDao.update(updatedUser);
                     initAppData();
                     getProfile(handler, updatedUser);
@@ -109,6 +104,40 @@ public class LoginController {
         });
     }
 
+    public void logInWithExternalProvider(String cookie, final FragmentHandler handler){
+        ArrayList<String> cookieList = new ArrayList<>();
+        cookieList.add(cookie);
+        LoginUser.setCookies(cookieList);
+        Log.d("COOKIE", cookie);
+
+        UserService service = ServiceGenerator.createService(UserService.class);
+        Call<User> call = service.retrieveUser();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()){
+                    User updatedUser = response.body();
+                    User internalUser = userDao.getUser();
+                    if (internalUser == null){
+                        updatedUser.setInternalId(0);
+                        UserDao.getInstance().removeAll();
+                    }else{
+                        updatedUser.setInternalId(internalUser.getInternalId());
+                    }
+                    userDao.update(updatedUser);
+                    initAppData();
+                    getProfile(handler, updatedUser);
+                }else{
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+
+    }
     private void getProfile(FragmentHandler handler, User user){
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
         Call<Profile> call = service.retrieveProfile();
@@ -142,15 +171,15 @@ public class LoginController {
         });
     }
 
-    public void downloadProfileImage(Profile profile, User user, FragmentHandler handler){
+    public void downloadProfileImage(Profile profile, User user, FragmentHandler handler) {
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
         Call<ResponseBody> imageCall = service.downloadImage();
         imageCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     try {
-                        imageController.save(response.body().byteStream(),profile.getImagePath());
+                        imageController.save(response.body().byteStream(), profile.getImagePath());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -166,6 +195,10 @@ public class LoginController {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
+    }
+
+    public User getAvailableUser(){
+        return userDao.getUser();
     }
 
     public void logout(FragmentHandler handler) {
@@ -235,6 +268,13 @@ public class LoginController {
         poiDao.removeNonUserPois(userDao.getUser().getUser_id());
         poiDao.retrieveUserPois();
         equipmentController.initExtraEquipment();
+    }
+
+    public void setDeviceInfo(LoginUser user){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        MainActivity.activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        String resolution = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+        user.setDeviceStatistics(Integer.toString(Build.VERSION.SDK_INT),Build.MODEL, resolution, android.os.Build.SERIAL);
     }
 }
 

@@ -3,7 +3,7 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 public class ImageInfo {
     public long id;
     public String path;
-    public String localDir;
+    public volatile String localDir;
     public String name;
 
     public ImageInfo(){}

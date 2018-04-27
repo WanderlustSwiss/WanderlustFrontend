@@ -142,6 +142,8 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
                 poiImage.setImageResource(R.drawable.example_image);
             }
 
+            profileFragment.setProfileStats();
+
             //listeners for deleting and editing
             editIcon.setOnClickListener(e -> {
                 PoiEditDialog editDialog = PoiEditDialog.newInstance(poi);
@@ -156,6 +158,7 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
                         getContext(), poiController, poi, context.getString(R.string.message_confirm_delete_poi));
                 deleteDialog.setupForProfileList(profileFragment);
                 deleteDialog.show(profileFragment.getFragmentManager(), Constants.CONFIRM_DELETE_POI_DIALOG);
+                profileFragment.setProfileStats();
             });
 
         }

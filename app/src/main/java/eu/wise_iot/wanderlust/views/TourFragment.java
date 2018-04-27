@@ -65,8 +65,10 @@ import java.util.Locale;
 import at.blogc.android.views.ExpandableTextView;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
@@ -77,6 +79,8 @@ import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.EquipmentDialog;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 import eu.wise_iot.wanderlust.views.dialog.TourReportDialog;
+
+import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
  * TourController:
@@ -162,7 +166,7 @@ public class TourFragment extends Fragment {
         selectedDateTime = DateTime.now();
         initializeControls(view);
         tourController.loadGeoData(controllerEvent -> {
-            if (controllerEvent.getType() == EventType.OK) {
+            if (controllerEvent.getType() == OK) {
                 tour = (Tour) controllerEvent.getModel();
                 setupEquipment(tour);
                 setupWeather();
@@ -189,6 +193,10 @@ public class TourFragment extends Fragment {
         fillControls();
         setupActionListeners();
     }
+
+    /**
+     * @param view
+     */
     private void initializeControls(View view) {
         imageViewTourImage = (ImageView) view.findViewById(R.id.tourOVTourImage);
         favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
@@ -336,10 +344,13 @@ public class TourFragment extends Fragment {
             tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.white));
         }
 
+        // TODO: add tour region here
+//        tourRegion.setText("Region <Namen>");
+
         tourTitle.setText(tourController.getTitle());
 
         tourController.getRating(controllerEvent -> {
-           if (controllerEvent.getType() == EventType.OK){
+           if (controllerEvent.getType() == OK){
                float rateAvg = (float) controllerEvent.getModel();
 
                float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateAvg * 2) / 2.0));
@@ -379,7 +390,7 @@ public class TourFragment extends Fragment {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
                     TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
-                            tourRating);
+                            tourRating, tourRatingInNumbers);
                     dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
@@ -620,15 +631,24 @@ public class TourFragment extends Fragment {
 
     private void toggleSaved(){
         if (tourController.isSaved()){
-            boolean unsaved = tourController.unsetSaved();
-            if(unsaved){
-                tourSavedButton.setColorFilter(getResources().getColor(R.color.white));
-            }
+            tourController.unsetSaved(context, controllerEvent -> {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        break;
+                    default:
+                }
+            });
         }else{
-            boolean saved = tourController.setSaved();
-            if(saved){
-                tourSavedButton.setColorFilter(getResources().getColor(R.color.medium));
-            }
+            tourController.setSaved(context , controllerEvent -> {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                        break;
+                    default:
+                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -738,6 +758,9 @@ public class TourFragment extends Fragment {
                 .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                 .addToBackStack(Constants.MAP_FRAGMENT)
                 .commit();
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
     }
 
     /**

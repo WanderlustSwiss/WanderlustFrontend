@@ -1,15 +1,14 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
-
-import org.joda.time.DateTime;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.osmdroid.util.GeoPoint;
@@ -36,7 +35,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
@@ -44,6 +42,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
@@ -112,7 +111,7 @@ public class TourController {
     /**
      * True if Favorite is set, otherwise false
      */
-    public boolean isFavorite() {
+    public boolean isFavorite(){
         Favorite fav = favoriteDao.findOne(Favorite_.tour, tour.getTour_id());
         return fav != null;
     }
@@ -123,21 +122,19 @@ public class TourController {
 
     /**
      * set favorite
-     *
      * @param handler Fragment handler
      */
-    public void setFavorite(FragmentHandler handler) {
+    public void setFavorite(FragmentHandler handler){
         favoriteDao.create(tour, handler);
     }
 
     /**
      * unset favorite
-     *
      * @param handler Fragment handler
      */
-    public boolean unsetFavorite(FragmentHandler handler) {
+    public boolean unsetFavorite(FragmentHandler handler){
         Favorite fav = favoriteDao.findOne(Favorite_.tour, tour.getTour_id());
-        if (fav != null) {
+        if (fav != null){
             favoriteDao.delete(fav.getFav_id(), handler);
             return true;
         }
@@ -153,20 +150,67 @@ public class TourController {
         return false;
     }
 
+    public void setSaved(Context context, FragmentHandler handler){
+        userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        //download in cache
+                        Tour data = (Tour) controllerEvent.getModel();
+                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data);
+                        boolean downloadable = cacheHandler.downloadMap();
+
+                        //save tour in local db
+                        if(downloadable){
+                            tour.setPolyline(data.getPolyline());
+                            communityTourDao.create(tour);
+                            Log.d(TAG, "Is saved");
+                            handler.onResponse(new ControllerEvent(EventType.OK));
+                        }else{
+                            handler.onResponse(new ControllerEvent(EventType.NOT_FOUND));
+                            Toast.makeText(context, "Kartenspeicher ist voll, löschen Sie Touren um Platz zu schaffen",
+                                                                        Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    default:
+                        handler.onResponse(new ControllerEvent(EventType.CONFLICT));
+                }
+            }
+        });
+    }
+
     public boolean setSaved(){
         communityTourDao.create(tour);
         Log.d(TAG, "Is saved");
         return true;
     }
 
-    public boolean unsetSaved(){
-        communityTourDao.delete(tour);
-        Log.d(TAG, "Is deleted");
-        return true;
+    public void unsetSaved(Context context, FragmentHandler fragmentHandler){
+        userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
+            @Override
+            public void onResponse(ControllerEvent controllerEvent) {
+                switch (controllerEvent.getType()){
+                    case OK:
+                        Tour data = (Tour) controllerEvent.getModel();
+                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data);
+                        boolean deleted = cacheHandler.deleteMap();
+                        if(deleted) {
+                            communityTourDao.delete(data);
+                            fragmentHandler.onResponse(new ControllerEvent(EventType.OK));
+                            Log.d(TAG, "Is deleted");
+                        }else{
+                            fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
+                        }
+                    default:
+                        fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
+                }
+            }
+        });
     }
 
-    public boolean setRating(Tour tour, int starRating, FragmentHandler handler) {
-        if (starRating > 0) {
+    public boolean setRating(Tour tour, int starRating, FragmentHandler handler){
+        if(starRating > 0){
             Rating tourRating = new Rating(0, 0, starRating, tour.getTour_id(),
                     userDao.getUser().getUser_id());
             ratingDao.create(tourRating, handler);
@@ -175,11 +219,11 @@ public class TourController {
         return false;
     }
 
-    public long alreadyRated(long tour_id) {
+    public long alreadyRated(long tour_id){
         Property property = Rating_.tour;
         Rating rating = null;
         rating = ratingDao.findOne(property, tour_id, userDao.getUser().getUser_id());
-        if (rating != null)
+        if(rating != null)
             return rating.getRate();
         else
             return 0;
@@ -187,12 +231,10 @@ public class TourController {
     }
 
     //Todo: Tour should be a parameter
-    public void getRating(Tour tour, FragmentHandler handler) {
+    public void getRating(Tour tour, FragmentHandler handler){
         ratingDao.retrieve(tour.getTour_id(), handler);
     }
-
-
-    public void getRating(FragmentHandler handler) {
+    public void getRating(FragmentHandler handler){
         ratingDao.retrieve(tour.getTour_id(), handler);
     }
 
@@ -260,13 +302,12 @@ public class TourController {
 
     /**
      * Calculate duration string from absolut minute value
-     *
      * @return string with format HH h MM min
      */
-    public String getDurationString() {
-        if (tour != null) {
+    public String getDurationString(){
+        if (tour != null){
             return convertToStringDuration(tour.getDuration());
-        } else {
+        }else{
             return convertToStringDuration(0);
         }
     }
@@ -277,10 +318,10 @@ public class TourController {
      * @param point n/5th point on a tour
      * @return string with format HH h MM min
      */
-    public String getDurationStringSpecificPoint(long point) {
-        if (tour != null) {
+    public String getDurationStringSpecificPoint(long point){
+        if(tour != null){
             return convertToStringDuration((tour.getDuration() * point) / 5);
-        } else {
+        }else{
             return convertToStringDuration(0);
         }
     }
@@ -290,10 +331,10 @@ public class TourController {
      *
      * @return string with format 0.9 km
      */
-    public String getDistanceString() {
-        if (tour != null) {
+    public String getDistanceString(){
+        if (tour != null){
             return convertToStringDistance(tour.getDistance());
-        } else {
+        }else{
             return convertToStringDistance(0);
         }
     }
@@ -303,10 +344,10 @@ public class TourController {
      *
      * @return long value in meter
      */
-    public long getDistance() {
-        if (tour != null) {
+    public long getDistance(){
+        if (tour != null){
             return tour.getDistance();
-        } else {
+        }else{
             return 0;
         }
     }
@@ -316,11 +357,11 @@ public class TourController {
      *
      * @return mark
      */
-    public String getDifficultyMark() {
-        DifficultyType difficultyType = difficultyTypeDao.findOne(DifficultyType_.difft_id, tour.getDifficulty());
-        if (difficultyType == null) {
+    public String getDifficultyMark(){
+        DifficultyType difficultyType =  difficultyTypeDao.findOne(DifficultyType_.difft_id, tour.getDifficulty());
+        if (difficultyType == null){
             return "T1";
-        } else {
+        }else{
             return difficultyType.getMark();
         }
     }
@@ -330,11 +371,11 @@ public class TourController {
      *
      * @return level
      */
-    public long getLevel() {
-        DifficultyType difficultyType = difficultyTypeDao.findOne(DifficultyType_.difft_id, tour.getDifficulty());
-        if (difficultyType == null) {
+    public long getLevel(){
+        DifficultyType difficultyType =  difficultyTypeDao.findOne(DifficultyType_.difft_id, tour.getDifficulty());
+        if (difficultyType == null){
             return 1L;
-        } else {
+        }else{
             return difficultyType.getLevel();
         }
     }
@@ -359,13 +400,12 @@ public class TourController {
             BufferedReader br = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
             StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = br.readLine()) != null) {
+            while((line = br.readLine()) != null) {
                 line = line.replaceAll("\"", "");
                 sb.append(line);
             }
             Gson gson = new Gson();
-            Type type = new TypeToken<float[]>() {
-            }.getType();
+            Type type = new TypeToken<float[]>() {}.getType();
             br.close();
             return gson.fromJson(sb.toString(), type);
         } catch (IOException e) {
@@ -408,7 +448,7 @@ public class TourController {
         return tour.getPolyline();
     }
 
-    public List<File> getImages() {
+    public List<File> getImages(){
         return imageController.getImages(tour.getImagePaths());
     }
 

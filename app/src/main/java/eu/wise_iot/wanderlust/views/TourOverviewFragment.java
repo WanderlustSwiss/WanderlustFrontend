@@ -30,12 +30,16 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
+
+import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 
 /**
@@ -69,7 +73,11 @@ public class TourOverviewFragment extends Fragment {
         toc = new TourOverviewController();
         setHasOptionsMenu(true);
     }
-
+    /**
+     * Static instance constructor.
+     *
+     * @return Fragment: TourOverviewFragment
+     */
     public static TourOverviewFragment newInstance() {
         Bundle args = new Bundle();
         TourOverviewFragment fragment = new TourOverviewFragment();
@@ -111,11 +119,13 @@ public class TourOverviewFragment extends Fragment {
      * retrieve all images from the database
      * @param tours
      */
-    private void getDataFromServer(List<Tour> tours){
+
+    private static void getDataFromServer(List<Tour> tours){
+        TourOverviewController tourOverviewController = new TourOverviewController();
         //get thumbnail for each tour
         for(Tour ut : tours){
             try {
-                toc.downloadThumbnail(ut.getTour_id(), 1, controllerEvent -> {
+                tourOverviewController.downloadThumbnail(ut.getTour_id(), 1, controllerEvent -> {
                     switch (controllerEvent.getType()) {
                         case OK:
                             Log.d(TAG, "Server response thumbnail downloading: " + controllerEvent.getType().name());
@@ -367,26 +377,28 @@ public class TourOverviewFragment extends Fragment {
             case R.id.tourOVSaveButton:
                 ImageButton ibSave = (ImageButton) view.findViewById(R.id.tourOVSaveButton);
                 TourController controller = new TourController(tour);
-                Log.d("SAVE", "klickt...");
                 boolean saved = controller.isSaved();
                 if(saved){
-                    Log.d("SAVE", "saved");
-                    boolean unset = controller.unsetSaved();
-                    if(unset){
-                        ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
-                        adapterRoutes.notifyDataSetChanged();
-                        adapterFavs.notifyDataSetChanged();
-                        adapterRecent.notifyDataSetChanged();
-                    }
+                    controller.unsetSaved(context, controllerEvent -> {
+                        switch (controllerEvent.getType()){
+                            case OK:
+                                ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                                break;
+                            default:
+                                Log.d(TAG , "failed");
+                        }
+                    });
+
                 }else{
-                    Log.d("SAVED", "nicht saved");
-                    boolean set = controller.setSaved();
-                    if(set){
-                        ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
-                        adapterRoutes.notifyDataSetChanged();
-                        adapterFavs.notifyDataSetChanged();
-                        adapterRecent.notifyDataSetChanged();
-                    }
+                    controller.setSaved(context , controllerEvent -> {
+                        switch (controllerEvent.getType()){
+                            case OK:
+                                ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                                break;
+                            default:
+                                Log.d(TAG, "failed");
+                        }
+                    });
                 }
                 break;
             case R.id.tourOVShareButton:
@@ -415,7 +427,6 @@ public class TourOverviewFragment extends Fragment {
      * shares the tour with other apps
      */
     private void shareTour(Tour tour){
-        //TODO check what @ will be used
         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
         String description = tour.getDescription() + getResources().getString(R.string.app_domain);
         shareIntent.putExtra(Intent.EXTRA_TEXT, description);

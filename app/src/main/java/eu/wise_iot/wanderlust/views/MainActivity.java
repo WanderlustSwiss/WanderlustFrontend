@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -31,16 +32,22 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.controllers.OfflineQueueController;
@@ -62,11 +69,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "MainActivity";
     public static BoxStore boxStore;
     public static Activity activity;
+    private static BroadcastReceiver broadcastReceiver;
 
     private TextView username;
     private TextView email;
     private ImageView userProfileImage;
+    private View header;
     private LoginController loginController;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,58 +86,108 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         setupNavigation();
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        JodaTimeAndroid.init(this);
         DatabaseController.createInstance(getApplicationContext());
         ImageController.createInstance(getApplicationContext());
         WeatherController.createInstance(getApplicationContext());
         EquipmentController.createInstance(getApplicationContext());
         loginController = new LoginController();
+        broadcastReceiver = new OfflineQueueController.NetworkChangeReceiver();
 
         this.registerReceiver(
-                new OfflineQueueController.NetworkChangeReceiver(),
+                broadcastReceiver,
                 new IntentFilter(
                         ConnectivityManager.CONNECTIVITY_ACTION));
 
         if (preferences.getBoolean("firstTimeOpened", true)) {
             // start welcome screen
-            StartupRegistrationFragment registrationFragment = StartupRegistrationFragment.newInstance();
+            StartupRegistrationFragment registrationFragment = new StartupRegistrationFragment();
             getFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, registrationFragment, Constants.REGISTRATION_FRAGMENT)
+                    .add(R.id.content_frame, registrationFragment)
                     .commit();
 
             // else try to login
         } else {
+
             User user = UserDao.getInstance().getUser();
             if (user == null) {
-                StartupLoginFragment loginFragment = StartupLoginFragment.newInstance();
+                StartupLoginFragment loginFragment = new StartupLoginFragment();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
+                        .add(R.id.content_frame, loginFragment)
                         .commit();
                 return;
             }
-            loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
-                User logInUser = (User) controllerEvent.getModel();
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        setupDrawerHeader(logInUser);
-                        MapFragment mapFragment = MapFragment.newInstance();
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                                .commit();
-                        break;
-                    default:
-                        StartupLoginFragment loginFragment = new StartupLoginFragment();
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, loginFragment, Constants.LOGIN_FRAGMENT)
-                                .commit();
-                }
-            });
+
+            if (user.getAccountType().equals("instagram")) {
+                Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
+                if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance(
+                        WebLoginFragment.LoginProvider.INSTAGRAM);
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                        .commit();
+            }else if (user.getAccountType().equals("facebook")){
+                Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
+                if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance(
+                        WebLoginFragment.LoginProvider.FACEBOOK);
+                getFragmentManager().beginTransaction()
+                        .add(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                        .commit();
+            }else{
+
+                loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
+                    User logtInUser = (User) controllerEvent.getModel();
+                    switch (controllerEvent.getType()) {
+                        case OK:
+                            setupDrawerHeader(logtInUser);
+
+                            //set last login
+                            DateTime now = new DateTime();
+                            DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
+                            now = now.withZone(timeZone);
+                            DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+                            String lastLoginNow = fmt.print(now);
+                            logtInUser.setLastLogin(lastLoginNow);
+                            UserDao.getInstance().update(logtInUser);
+
+                            MapFragment mapFragment = MapFragment.newInstance();
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                    .commit();
+                            break;
+                        default:
+
+                            DateTime lastLogin = DateTime.parse(user.getLastLogin());
+                            DateTime timerLimit = new DateTime();
+                            timerLimit = timerLimit.minusDays(1);
+                            Log.d(TAG, "Last login: " + lastLogin);
+
+                            if(lastLogin.isAfter(timerLimit)){
+                                MapFragment fragment = MapFragment.newInstance();
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.content_frame,fragment, Constants.MAP_FRAGMENT)
+                                        .commit();
+                                setupDrawerHeader(user);
+
+
+                            }else {
+                                StartupLoginFragment loginFragment = new StartupLoginFragment();
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.content_frame, loginFragment)
+                                        .commit();
+                            }
+                    }
+                });
+            }
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
+
     }
+
 
     @Override
     protected void onStart() {
@@ -143,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawer.addDrawerListener(toggle);
@@ -150,6 +212,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        header = navigationView.getHeaderView(0);
+
+        getSupportActionBar().show();
     }
 
     /**
@@ -270,7 +336,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
 
-        userProfileImage.setOnClickListener((View v) -> {
+        username = (TextView) header.findViewById(R.id.user_name);
+        email = (TextView) header.findViewById(R.id.user_mail_address);
+        userProfileImage = (ImageView) header.findViewById(R.id.user_profile_image);
+
+        userProfileImage.setOnClickListener(view -> {
             Fragment fragment = null;
             String fragmentTag = null;
             fragment = ProfileFragment.newInstance();
