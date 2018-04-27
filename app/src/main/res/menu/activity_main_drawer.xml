@@ -20,7 +20,9 @@
             <item
                 android:id="@+id/setup_guide"
                 android:title="@string/menu_manual" />
-
+            <item
+                android:id="@+id/disclaimer"
+                android:title="@string/menu_disclaimer" />
             <item
                 android:id="@+id/logout"
                 android:title="@string/logout" />

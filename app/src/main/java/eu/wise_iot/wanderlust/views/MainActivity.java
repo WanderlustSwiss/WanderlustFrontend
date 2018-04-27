@@ -200,6 +200,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTag = Constants.USER_GUIDE_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
             if (fragment == null) fragment = UserGuideFragment.newInstance();
+        } else if (id == R.id.disclaimer) {
+            fragmentTag = Constants.DISCLAIMER_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = DisclaimerFragment.newInstance();
         }
 
         else if (id == R.id.logout) {

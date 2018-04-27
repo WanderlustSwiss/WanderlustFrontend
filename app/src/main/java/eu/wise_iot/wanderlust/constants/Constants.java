@@ -33,6 +33,7 @@ public interface Constants {
     String REGISTRATION_FRAGMENT = "RegistrationFragment";
     String RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment";
     String PROFILE_EDIT_FRAGMENT = "ProfileEditFragment";
+    String DISCLAIMER_FRAGMENT = "DisclaimerFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";

@@ -1,45 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/background_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@null" />
-
     <LinearLayout
-        style="@style/transparent_container"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/divider_vertical"
+        android:gravity="center"
+        android:layout_marginTop="48dp"
+        android:orientation="vertical"
+        android:padding="48dp"
+        android:showDividers="middle">
 
         <TextView
-            android:id="@+id/disclaimer_header"
             style="@style/h2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/disclaimer_header" />
 
         <TextView
-            android:id="@+id/disclaimer_text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/disclaimer_text1" />
-
-        <TextView
-            android:id="@+id/disclaimer_text2"
+            style="@style/p"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/disclaimer_text2" />
 
         <TextView
-            android:id="@+id/disclaimer_text3"
+            style="@style/p"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/disclaimer_text3" />
 
+        <TextView
+            style="@style/p"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/disclaimer_authors" />
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/temp_logo" />
+
+        <TextView
+            style="@style/p.Small.Grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/disclaimer_mit_header" />
+
+        <TextView
+            style="@style/p.Small.Grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/disclaimer_mit_text"
+            android:layout_marginBottom="24dp"/>
     </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>
