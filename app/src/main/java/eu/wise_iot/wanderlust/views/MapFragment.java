@@ -938,6 +938,7 @@ public class MapFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.trim().startsWith("#") && s.length() >= 2) {
+                    mapView.setHashTagEnabled(true);
                     searchMapController.suggestHashtags(s.substring(1), controllerEvent -> {
                         if (controllerEvent.getModel() != null && controllerEvent.getModel().size() != 0) {
                             hashTagSearchSuggestions = controllerEvent.getModel();
@@ -948,6 +949,8 @@ public class MapFragment extends Fragment {
 
                     });
                 } else {
+                    mapView.setHashTagEnabled(false);
+                    DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
                     if (hashTagSearchSuggestions != null) {
                         hashTagSearchSuggestions.clear();
                     }

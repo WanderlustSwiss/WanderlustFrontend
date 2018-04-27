@@ -297,12 +297,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
      * @param poiList the list with poi to be added in the layer
      */
     public void updateHashtagPoiLayer(List<Poi> poiList) {
-        poiHashtagOverlay.removeAllItems();
-        for (Poi poi : poiList) {
-            addPoiToHashtagOverlay(poi);
-        }
-        mapView.invalidate();
-        showPoiHashtagLayer(true);
+        poiController.getPoiCache().clear();
+        poiController.getPoiCache().addAll(poiList);
+        makeClusteringGreatAgain();
     }
 
     public void setPoiFloraFaunaActive(boolean value){

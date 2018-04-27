@@ -25,6 +25,7 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
 
     private boolean publicTransportEnabled;
     private boolean sacHutEnabled;
+    private boolean hashTagEnabled;
 
     RotationGestureDetector rotationGestureDetector = new RotationGestureDetector(this);
     private MyMapOverlays mapOverlays;
@@ -60,6 +61,10 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
         this.publicTransportEnabled = publicTransportEnabled;
     }
 
+    public void setHashTagEnabled(boolean hashTagEnabled){
+        this.hashTagEnabled = hashTagEnabled;
+    }
+
     public void setSacHutEnabledEnabled(boolean sacHutEnabled) {
         this.sacHutEnabled = sacHutEnabled;
     }
@@ -74,7 +79,9 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
         boolean result = super.dispatchTouchEvent(event);
         if (event.getAction() == MotionEvent.ACTION_UP) {
 
-            DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, this.getProjection().getBoundingBox()));
+            if(!hashTagEnabled) {
+                DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, this.getProjection().getBoundingBox()));
+            }
 
             // Update public transport
             if (getZoomLevel() > 14 && publicTransportEnabled) {
