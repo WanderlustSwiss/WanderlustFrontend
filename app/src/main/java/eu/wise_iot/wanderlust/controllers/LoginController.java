@@ -148,6 +148,9 @@ public class LoginController {
                     Profile internalProfile = profileDao.findOne(Profile_.profile_id, user.getProfile());
                     Profile updatedProfile = response.body();
                     if (internalProfile == null){
+                        if(updatedProfile.getImagePath() != null)
+                            updatedProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
+
                         profileDao.removeAll();
                         updatedProfile.setInternal_id(0);
                         profileDao.create(updatedProfile);
@@ -180,6 +183,8 @@ public class LoginController {
                 if (response.isSuccessful()) {
                     try {
                         imageController.save(response.body().byteStream(), profile.getImagePath());
+                        profile.getImagePath().setLocalDir(imageController.getProfileFolder());
+                        profileDao.update(profile);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

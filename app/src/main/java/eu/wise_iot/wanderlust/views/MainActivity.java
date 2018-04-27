@@ -336,10 +336,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
 
-        username = (TextView) header.findViewById(R.id.user_name);
-        email = (TextView) header.findViewById(R.id.user_mail_address);
-        userProfileImage = (ImageView) header.findViewById(R.id.user_profile_image);
-
         userProfileImage.setOnClickListener(view -> {
             Fragment fragment = null;
             String fragmentTag = null;
