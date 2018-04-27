@@ -46,6 +46,7 @@ import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.TilesOverlay;
 
 import java.io.File;
 import java.io.IOException;
@@ -379,6 +380,8 @@ public class MapFragment extends Fragment {
             ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
                     new String[]{"https://opentopomap.org/"});
             mapView.setTileSource(tileSource);
+            TilesOverlay stuff = mapView.getOverlayManager().getTilesOverlay();
+            //stuff.setOvershootTileCache(stuff.getOvershootTileCache()*2);
             staliteTypeButton.setBackground(null);
             terrainTypeButton.setBackground(null);
             defaultTypeButton.setBackground(getActivity().getDrawable(R.drawable.outline_selected_item_colored));

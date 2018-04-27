@@ -64,6 +64,8 @@ public final class DatabaseController {
     private boolean syncingPois;
     private Date lastSync;
 
+    private final PoiController poiController;
+
     private final LinkedList<DownloadedImage> downloadedImages;
     private long cacheSize;
 
@@ -75,6 +77,7 @@ public final class DatabaseController {
 
         listeners = new ArrayList<>();
         downloadedImages = new LinkedList<>();
+        poiController = new PoiController();
     }
 
 
@@ -97,7 +100,8 @@ public final class DatabaseController {
                 if (!syncingPois) {
                     syncingPois = true;
                     BoundingBox box = (BoundingBox) event.getObj();
-                    PoiDao.getInstance().syncPois(box);
+                    poiController.loadPoiByArea(box);
+                    //PoiDao.getInstance().syncPois(box);
                 }
                 break;
             default:
