@@ -46,6 +46,6 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_delete_white_24dp" />
+        android:src="@drawable/ic_delete_black_24dp" />
 
 </RelativeLayout>
