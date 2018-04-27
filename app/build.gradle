@@ -123,6 +123,12 @@ dependencies {
 
     //Client for Picasso
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+
+    //MapsForge
+    compile 'org.mapsforge:mapsforge-map-android:0.8.0'
+    compile 'org.mapsforge:mapsforge-map:0.8.0'
+    compile 'org.mapsforge:mapsforge-themes:0.8.0'
+    compile "org.osmdroid:osmdroid-mapsforge:6.0.1@aar"
 }
 
 //the following sets the required permissions for API 23+ devices and AVDs
