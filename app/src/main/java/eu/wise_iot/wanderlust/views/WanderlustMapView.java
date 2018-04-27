@@ -89,6 +89,7 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
                 centerOfPublicTransportOverlay = new GeoPoint(0.0, 0.0);
             }
 
+            Log.d("ZOOOOOOOOM", String.valueOf(getZoomLevel()));
 
             // Update SAC Hut Overlay
             if (sacHutEnabled) {

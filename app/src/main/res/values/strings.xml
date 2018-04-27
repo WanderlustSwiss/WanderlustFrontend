@@ -141,6 +141,10 @@
     <string name="login_failure">Login fehlgeschlagen</string>
     <string name="login_need_registration">Neuen Account erstellen</string>
     <string name="login_forgot_password">Passwort vergessen?</string>
+    <string name="login_instagram">Anmelden mit Instagram</string>
+    <string name="login_facebook">Anmelden mit Facebook</string>
+    <string name="login_instagram_progress">Anmelden mit Instagram</string>
+    <string name="login_facebook_progress">Anmelden mit Facebook</string>
 
 
     <!-- POI -->
@@ -269,6 +273,7 @@
     <string name="short_october">Okt</string>
     <string name="short_november">Nov</string>
     <string name="short_december">Dez</string>
+
     <string name="create_tour_need_whitelist">Fürs Tracking bitte Wanderlust als Ausnahme hinzufügen</string>
     <string name="create_tour_upload_image">Upload Image</string>
     <string name="create_tour_photo_required">Foto muss hinzugefügt werden</string>
@@ -276,5 +281,6 @@
     <string name="create_tour_update_successful">Tour Update erfolgreich</string>
     <string name="in_queue">Upload wird fortgesetzt sobald mit Internet verbunden</string>
     <string name="create_tour_extra_equipment">Zusatzequipment</string>
+    <string name="profileEditChangesApplied">Änderungen übernommen.</string>
 
 </resources>

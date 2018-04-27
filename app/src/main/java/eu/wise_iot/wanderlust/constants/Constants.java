@@ -29,6 +29,7 @@ public interface Constants {
     String RESULT_FILTER_FRAGMENT = "ResultFilterFragment";
     String PROFILE_FRAGMENT = "ProfileFragment";
     String LOGIN_FRAGMENT = "StartupLoginFragment";
+    String WEB_LOGIN_FRAGMENT = "WebLoginFragment";
     String USER_GUIDE_FRAGMENT = "UserGuideFragment";
     String REGISTRATION_FRAGMENT = "RegistrationFragment";
     String RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment";
