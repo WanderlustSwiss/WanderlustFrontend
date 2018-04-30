@@ -31,14 +31,14 @@ public class UserDao extends DatabaseObjectAbstract {
         private static final UserDao INSTANCE = new UserDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static UserDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static UserService service;
-    public Box<User> userBox;
+    public final Box<User> userBox;
 
     /**
      * Constructor.
@@ -215,13 +215,11 @@ public class UserDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return User who match to the search pattern in the searched columns
      */
-    public User findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public User findOne(Property searchedColumn, String searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public User findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public User findOne(Property searchedColumn, long searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -232,13 +230,11 @@ public class UserDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<User> which contains the users, who match to the search pattern in the searched columns
      */
-    public List<User> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<User> find(Property searchedColumn, String searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<User> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<User> find(Property searchedColumn, long searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 

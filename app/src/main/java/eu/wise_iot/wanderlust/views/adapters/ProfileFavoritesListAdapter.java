@@ -7,12 +7,24 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.TourController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
  * Adapter for the profile UI. Represents all favorites in a custom list view
@@ -20,7 +32,7 @@ import eu.wise_iot.wanderlust.R;
  * @author Baris Demirci
  * @license MIT
  */
-public class ProfileFavoritesListAdapter extends ArrayAdapter {
+public class ProfileFavoritesListAdapter extends ArrayAdapter<Tour> {
 
     private TextView title;
     private TextView description;
@@ -28,17 +40,16 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter {
     private ImageView tripImage;
     private ImageView favIcon;
 
-    private Context context;
-    private int resource;
-    private int textResource;
-    private List objects;
+    private final Context context;
 
-    public ProfileFavoritesListAdapter(Context context, int resource, int textResource, List objects) {
+    private final ProfileFragment profileFragment;
+    private final ImageController imageController;
+
+    public ProfileFavoritesListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
-        this.resource = resource;
-        this.textResource = textResource;
-        this.objects = objects;
+        this.profileFragment = fragment;
+        this.imageController = ImageController.getInstance();
     }
 
     /**
@@ -58,7 +69,7 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter {
      * @return favorite at position
      */
     @Override
-    public Object getItem(int position) {
+    public Tour getItem(int position) {
         return super.getItem(position);
     }
 
@@ -69,7 +80,7 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter {
      * @return position of the favorite
      */
     @Override
-    public int getPosition(Object item) {
+    public int getPosition(Tour item) {
         return super.getPosition(item);
     }
 
@@ -96,29 +107,49 @@ public class ProfileFavoritesListAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
         //get the item for this row
-        //TODO: as soon favorite entity is defined, replace all "object" references with entity
-        Object fav = (String) getItem(position);
-
+        Tour fav = getItem(position);
+        TourController tourController = new TourController(fav);
         //inflate the row layout
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_favorites, parent, false);
 
         //look up the view for elements
-        title = (TextView) convertView.findViewById(R.id.ListFavTitle);
-        description = (TextView) convertView.findViewById(R.id.ListFavDescription);
-
-        tripImage = (ImageView) convertView.findViewById(R.id.ListFavImageView);
-        favIcon = (ImageView) convertView.findViewById(R.id.ListFavIcon);
+        title = (TextView) convertView.findViewById(R.id.list_fav_title);
+        description = (TextView) convertView.findViewById(R.id.list_fav_description);
+        tripImage = (ImageView) convertView.findViewById(R.id.list_fav_image_view);
+        favIcon = (ImageView) convertView.findViewById(R.id.list_fav_icon);
 
         //set data
-        //TODO: set data from entity
-        title.setText("No title");
-        description.setText("No description");
+        if (fav != null) {
+            title.setText(fav.getTitle());
+            description.setText(fav.getDescription());
 
-        tripImage.setImageResource(R.drawable.example_image);
+            List<ImageInfo> imageinfos = fav.getImagePaths();
+            List<File> imagefiles = imageController.getImages(imageinfos);
+            if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
+                Picasso.with(context)
+                        .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
+                        .fit()
+                        .centerCrop()
+                        .into(tripImage);
+            } else {
+                tripImage.setImageResource(R.drawable.example_image);
+            }
 
-        //set listeners
-        //TODO: implement listeners for favorite icon as well click listener for elements
+            favIcon.setOnClickListener(e -> tourController.unsetFavorite(controllerEvent -> {
+                EventType type = controllerEvent.getType();
+                switch (type) {
+                    case OK:
+                        View v = profileFragment.getView();
+                        profileFragment.setupFavorites(v);
+                        break;
+                    default:
+                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }));
 
+        }
         return convertView;
     }
 }
+

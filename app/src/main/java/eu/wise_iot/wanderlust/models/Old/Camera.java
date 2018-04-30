@@ -2,6 +2,9 @@ package eu.wise_iot.wanderlust.models.Old;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -10,12 +13,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.views.MapFragment;
 
 /**
@@ -32,7 +37,6 @@ public class Camera {
     private String imagePath;
     private String imageName;
     private File photoFile;
-    private Uri imageUri;
 
     public Camera(Activity activity, MapFragment fragment) {
         this.activity = activity;
@@ -57,7 +61,7 @@ public class Camera {
             }
             if (photoFile != null && activity != null) {
                 // FileProvider is needed for targetSDKVersion >= 24
-                imageUri = FileProvider.getUriForFile(this.activity, "eu.wise_iot.wanderlust.models.Old.Camera", photoFile);
+                Uri imageUri = FileProvider.getUriForFile(this.activity, "eu.wise_iot.wanderlust.models.Old.Camera", photoFile);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 mapFragment.startActivityForResult(takePictureIntent, Constants.TAKE_PHOTO);
@@ -84,13 +88,17 @@ public class Camera {
         imageName = image.getName();
         imagePath = image.getAbsolutePath();
         photoFile = image;
+
         return image;
     }
 
     private void addPictureToGallery() {
+
+
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(Uri.fromFile(photoFile));
         activity.sendBroadcast(mediaScanIntent);
+
     }
 
     public String getImageName() {

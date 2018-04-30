@@ -1,8 +1,12 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.app.Fragment;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,13 +15,20 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ProfileService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.UserService;
 import eu.wise_iot.wanderlust.views.MainActivity;
 import okhttp3.Headers;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,9 +40,17 @@ import retrofit2.Response;
  */
 public class LoginController {
 
-    private UserDao userDao;
-    private ProfileDao profileDao;
-    private DatabaseController databaseController;
+    private final UserDao userDao;
+    private final ProfileDao profileDao;
+    private final DatabaseController databaseController;
+    private final ImageController imageController;
+    private final WeatherController weatherController;
+    private final EquipmentController equipmentController;
+    private final RegionDao regionDao;
+    private final DifficultyTypeDao difficultyTypeDao;
+    private final ViolationTypeDao violationTypeDao;
+    private final FavoriteDao favoriteDao;
+    private final PoiDao poiDao;
     /**
      * Create a login contoller
      */
@@ -39,28 +58,28 @@ public class LoginController {
         userDao = UserDao.getInstance();
         profileDao = ProfileDao.getInstance();
         databaseController = DatabaseController.getInstance();
+        imageController = ImageController.getInstance();
+        weatherController = WeatherController.getInstance();
+        equipmentController = EquipmentController.getInstance();
+        regionDao = RegionDao.getInstance();
+        difficultyTypeDao = DifficultyTypeDao.getInstance();
+        violationTypeDao = ViolationTypeDao.getInstance();
+        favoriteDao = FavoriteDao.getInstance();
+        poiDao = PoiDao.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
-
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        MainActivity.activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        String resolution = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
-        user.setDeviceStatistics(Integer.toString(Build.VERSION.SDK_INT),Build.MODEL, resolution, android.os.Build.SERIAL);
+        setDeviceInfo(user);
 
         LoginService service = ServiceGenerator.createService(LoginService.class);
         Call<User> call = service.basicLogin(user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && !LoginUser.getCookies().isEmpty()) {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
                     LoginUser.setCookies((ArrayList<String>) headerMapList.get("Set-Cookie"));
-
-                    databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
-
                     User updatedUser = response.body();
                     User internalUser = userDao.getUser();
                     if (internalUser == null){
@@ -71,6 +90,7 @@ public class LoginController {
                     }
                     updatedUser.setPassword(user.getPassword());
                     userDao.update(updatedUser);
+                    initAppData();
                     getProfile(handler, updatedUser);
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
@@ -84,6 +104,40 @@ public class LoginController {
         });
     }
 
+    public void logInWithExternalProvider(String cookie, final FragmentHandler handler){
+        ArrayList<String> cookieList = new ArrayList<>();
+        cookieList.add(cookie);
+        LoginUser.setCookies(cookieList);
+        Log.d("COOKIE", cookie);
+
+        UserService service = ServiceGenerator.createService(UserService.class);
+        Call<User> call = service.retrieveUser();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()){
+                    User updatedUser = response.body();
+                    User internalUser = userDao.getUser();
+                    if (internalUser == null){
+                        updatedUser.setInternalId(0);
+                        UserDao.getInstance().removeAll();
+                    }else{
+                        updatedUser.setInternalId(internalUser.getInternalId());
+                    }
+                    userDao.update(updatedUser);
+                    initAppData();
+                    getProfile(handler, updatedUser);
+                }else{
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+
+    }
     private void getProfile(FragmentHandler handler, User user){
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
         Call<Profile> call = service.retrieveProfile();
@@ -91,21 +145,23 @@ public class LoginController {
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if(response.isSuccessful()){
+                    Profile internalProfile = profileDao.findOne(Profile_.profile_id, user.getProfile());
+                    Profile updatedProfile = response.body();
+                    if (internalProfile == null){
+                        if(updatedProfile.getImagePath() != null)
+                            updatedProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
 
-                    try {
-                        Profile internalProfile = profileDao.findOne(Profile_.profile_id, user.getProfile());
-                        Profile updatedProfile = response.body();
-                        if (internalProfile == null){
-                            profileDao.removeAll();
-                            updatedProfile.setInternal_id(0);
-                        }else{
-                            updatedProfile.setInternal_id(internalProfile.getInternal_id());
+                        profileDao.removeAll();
+                        updatedProfile.setInternal_id(0);
+                        profileDao.create(updatedProfile);
+                    }else{
+                        if (updatedProfile.getImagePath() != null){
+                            updatedProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
                         }
+                        updatedProfile.setInternal_id(internalProfile.getInternal_id());
                         profileDao.update(updatedProfile);
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        e.printStackTrace();
                     }
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), user));
+                    downloadProfileImage(updatedProfile, user, handler);
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
@@ -116,6 +172,38 @@ public class LoginController {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
+    }
+
+    public void downloadProfileImage(Profile profile, User user, FragmentHandler handler) {
+        ProfileService service = ServiceGenerator.createService(ProfileService.class);
+        Call<ResponseBody> imageCall = service.downloadImage();
+        imageCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        imageController.save(response.body().byteStream(), profile.getImagePath());
+                        profile.getImagePath().setLocalDir(imageController.getProfileFolder());
+                        profileDao.update(profile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), user));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+
+    public User getAvailableUser(){
+        return userDao.getUser();
     }
 
     public void logout(FragmentHandler handler) {
@@ -151,7 +239,13 @@ public class LoginController {
             }
         });
     }
-
+    public File getProfileImage(){
+        Profile profile = profileDao.getProfile();
+        if (profile != null && profile.getImagePath() != null){
+            return imageController.getImage(profile.getImagePath());
+        }
+        return null;
+    }
     public class EmailBody {
         private String email;
 
@@ -162,6 +256,30 @@ public class LoginController {
         public String getEmail() {
             return email;
         }
+    }
+
+    /**
+     * This Method is used to download all app data like (equipment, poi types etc.) when login
+     */
+    private void initAppData(){
+
+        databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
+        weatherController.initKeys();
+        equipmentController.initEquipment();
+        regionDao.retrieve();
+        difficultyTypeDao.retrieve();
+        violationTypeDao.retrieveAllViolationTypes();
+        favoriteDao.retrieveAllFavorites();
+        poiDao.removeNonUserPois(userDao.getUser().getUser_id());
+        poiDao.retrieveUserPois();
+        equipmentController.initExtraEquipment();
+    }
+
+    public void setDeviceInfo(LoginUser user){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        MainActivity.activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        String resolution = displayMetrics.widthPixels + "x" + displayMetrics.heightPixels;
+        user.setDeviceStatistics(Integer.toString(Build.VERSION.SDK_INT),Build.MODEL, resolution, android.os.Build.SERIAL);
     }
 }
 

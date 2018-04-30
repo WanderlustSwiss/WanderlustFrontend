@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,22 +37,34 @@ public class StartupResetPasswordFragment extends Fragment {
     private TextInputLayout textInputForgotPassword;
     private TextView redirectToLogin;
 
-    private LoginController loginController;
+    private final LoginController loginController;
 
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,5}$", Pattern.CASE_INSENSITIVE);
 
 
-    private FragmentHandler fragmentHandler = new FragmentHandler() {
+    public StartupResetPasswordFragment() {
+        loginController = new LoginController();
+    }
+
+    public static StartupResetPasswordFragment newInstance() {
+        Bundle args = new Bundle();
+        StartupResetPasswordFragment fragment = new StartupResetPasswordFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private final FragmentHandler fragmentHandler = new FragmentHandler() {
         @Override
         public void onResponse(ControllerEvent event) {
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
                     Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
-                    SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
+                    Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                    if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
                     getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, sartupLoginFragment, Constants.LOGIN_FRAGMENT)
+                            .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                             .commit();
 
                     break;
@@ -62,19 +75,16 @@ public class StartupResetPasswordFragment extends Fragment {
         }
     };
 
-    public StartupResetPasswordFragment() {
-        loginController = new LoginController();
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if(actionBar != null){
-                actionBar.hide();
-            }
         context = getActivity();
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
     }
 
     @Override
@@ -104,14 +114,12 @@ public class StartupResetPasswordFragment extends Fragment {
             }
         });
 
-        redirectToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, sartupLoginFragment)
-                        .commit();
-            }
+        redirectToLogin.setOnClickListener(v -> {
+            Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+            if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+                    .commit();
         });
     }
 

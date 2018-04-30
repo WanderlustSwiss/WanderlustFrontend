@@ -1,17 +1,33 @@
 package eu.wise_iot.wanderlust.controllers;
 
 
+import android.content.Context;
+
+import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.util.BoundingBox;
+import org.osmdroid.util.GeoPoint;
+
 import java.io.File;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.services.PoiService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.services.ViolationService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -23,16 +39,22 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
  */
 public class PoiController {
 
-    private PoiTypeDao poiTypeDao;
-    private PoiDao poiDao;
-    private UserDao userDao;
-    private ImageController imageController;
+
+    private final PoiTypeDao poiTypeDao;
+    private final PoiDao poiDao;
+    private final UserDao userDao;
+    private final ImageController imageController;
+    private final Context context;
+    private final PoiService poiService;
+    private static List<Poi> poiCache = new LinkedList<>();
 
     public PoiController(){
         poiTypeDao = PoiTypeDao.getInstance();
         poiDao = PoiDao.getInstance();
         userDao = UserDao.getInstance();
         imageController = ImageController.getInstance();
+        context = DatabaseController.getMainContext();
+        poiService = ServiceGenerator.createService(PoiService.class);
     }
 
     /**
@@ -46,13 +68,8 @@ public class PoiController {
      * @return a specific poi type
      */
     public PoiType getType(long poit_id) {
-        try {
-            return poiTypeDao.findOne(PoiType_.poit_id, poit_id);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            return null;
-        }
+        return poiTypeDao.findOne(PoiType_.poit_id, poit_id);
     }
-
 
     /**
      * saves a newly generated poi into the database
@@ -78,6 +95,10 @@ public class PoiController {
         poiDao.retrieve(id, handler);
     }
 
+    public Poi getLocalPoi(long id){
+        return poiDao.findOne(Poi_.poi_id, id);
+    }
+
     /**
      * Adds an image to a existing poi and saves it in the database
      *
@@ -89,6 +110,21 @@ public class PoiController {
         poiDao.addImage(image, poi, handler);
     }
 
+
+    public POI convertPoiToOSMDroidPOI(Poi poi) {
+        POI retPOI = new POI((int) poi.getInternal_id());
+        retPOI.mId = poi.getPoi_id();
+        retPOI.mLocation = new GeoPoint(poi.getLatitude(), poi.getLongitude());
+        retPOI.mCategory = String.valueOf(poi.getType());
+        retPOI.mType = poi.getTitle();
+        retPOI.mDescription = poi.getDescription();
+
+        return  retPOI;
+    }
+
+    public List<Poi> getAllPois(){
+        return poiDao.find();
+    }
 
     /**
      * Returns all images in the event as List<File>
@@ -103,7 +139,7 @@ public class PoiController {
             //Download images if necessary
             GetImagesTask imagesTask = new GetImagesTask();
             //CAREFUL asynchron task, will fire the handler
-            imagesTask.execute(new ImagesTaskParameters(poi.getPoi_id(), poi.getImagePaths(), "poi", handler));
+            imagesTask.execute(new ImagesTaskParameters(poi.getPoi_id(), poi.getImagePaths(), imageController.getPoiFolder(), handler));
         } else {
             //Images should be local
             List<File> images = imageController.getImages(poi.getImagePaths());
@@ -145,7 +181,77 @@ public class PoiController {
     }
 
 
+    /**
+     * Shares image on instagram
+     *
+     */
+    public File getImageToShare(Poi poi) {
+        List<File> images = imageController.getImages(poi.getImagePaths());
+        if (images != null && images.size() > 0){
+            return images.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    public void reportViolation(PoiController.Violation violation, final FragmentHandler handler) {
+        Call<Void> call = ServiceGenerator.createService(ViolationService.class).sendPoiViolation(violation);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful())
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                else
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+
+    /**
+     * represents a poi violation
+     * structure needs to be kept like this for retrofit
+     * @author Alexander Weinbeck
+     * @license MIT
+     */
+    public class Violation{
+        int poi_id;
+        int type;
+
+        public Violation(){
+        }
+        public Violation(long poi_id, long violationType_id){
+            this.poi_id = (int)poi_id;
+            this.type = (int)violationType_id;
+        }
+    }
 
 
+    public void loadPoiByArea(BoundingBox box) {
+        Call<List<Poi>> call = poiService.retrievePoisByArea(
+                box.getLatNorth(), box.getLonWest(), box.getLatSouth(), box.getLonEast());
+        call.enqueue(new Callback<List<Poi>>() {
+            @Override
+            public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
+                if (response.isSuccessful()) {
+                    poiCache.clear();
+                    poiCache.addAll(response.body());
+                }
+                DatabaseController.getInstance().syncPoisDone();
+            }
 
+            @Override
+            public void onFailure(Call<List<Poi>> call, Throwable t) {
+                DatabaseController.getInstance().syncPoisDone();
+            }
+        });
+    }
+
+    public List<Poi> getPoiCache() {
+        return poiCache;
+    }
 }

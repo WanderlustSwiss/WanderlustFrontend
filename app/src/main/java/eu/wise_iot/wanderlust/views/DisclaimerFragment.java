@@ -26,11 +26,10 @@ public class DisclaimerFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_disclaimer, container, false);
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ImageView backgroundImage = (ImageView) view.findViewById(R.id.background_image);
-        Picasso.with(getActivity()).load(R.drawable.image_bg_disclaimer).fit().centerCrop().into(backgroundImage);
+    public static DisclaimerFragment newInstance() {
+        Bundle args = new Bundle();
+        DisclaimerFragment fragment = new DisclaimerFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 }

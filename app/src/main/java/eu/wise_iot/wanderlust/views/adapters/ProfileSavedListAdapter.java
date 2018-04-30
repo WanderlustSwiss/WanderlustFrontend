@@ -8,12 +8,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.MapCacheHandler;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
  * Adapter for the profile UI. Represents all saved tours in a custom list view
@@ -29,17 +38,16 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
     private ImageView tripImage;
     private ImageView deleteIcon;
 
-    private Context context;
-    private int resource;
-    private int textResource;
-    private List objects;
+    private final Context context;
 
-    public ProfileSavedListAdapter(Context context, int resource, int textResource, List objects) {
+    private final ImageController imageController;
+    private final ProfileFragment profileFragment;
+
+    public ProfileSavedListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
-        this.resource = resource;
-        this.textResource = textResource;
-        this.objects = objects;
+        this.imageController = ImageController.getInstance();
+        this.profileFragment = fragment;
     }
 
     /**
@@ -104,7 +112,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListSavedTitle);
-        description = (TextView) convertView.findViewById(R.id.ListSavedDescription);
+        description = (TextView) convertView.findViewById(R.id.list_saved_description);
 
         tripImage = (ImageView) convertView.findViewById(R.id.ListSavedImageView);
         deleteIcon = (ImageView) convertView.findViewById(R.id.ListSavedIcon);
@@ -114,13 +122,26 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
             title.setText(communityTour.getTitle());
             description.setText(communityTour.getDescription());
 
-            //TODO: set the image
-            tripImage.setImageResource(R.drawable.example_image);
+            List<ImageInfo> imageinfos = communityTour.getImagePaths();
+            List<File> imagefiles = imageController.getImages(imageinfos);
+            if(!imagefiles.isEmpty() && imagefiles.get(0).length() > 0){
+                Picasso.with(context)
+                        .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
+                        .fit()
+                        .centerCrop()
+                        .into(tripImage);
+            }else{
+                tripImage.setImageResource(R.drawable.example_image);
+            }
+            
+            deleteIcon.setOnClickListener(e -> {
+                profileFragment.getProfileController().deleteCommunityTour(communityTour);
+                MapCacheHandler handler = new MapCacheHandler(context, communityTour);
+                handler.deleteMap();
+                View v = profileFragment.getView();
+                profileFragment.setupSaved(v);
+            });
         }
-
-        //set listeners
-        //TODO: implement listener for delete icon and click listener for element
-
         return convertView;
     }
 }

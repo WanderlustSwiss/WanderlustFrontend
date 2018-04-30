@@ -19,14 +19,14 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
         private static final DifficultyTypeDao INSTANCE = new DifficultyTypeDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static DifficultyTypeDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static DifficultyTypeService service;
-    private Box<DifficultyType> difficultyTypeBox;
+    private final Box<DifficultyType> difficultyTypeBox;
 
     /**
      * Constructor.
@@ -40,7 +40,7 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
     /**
      * Update all difficulty types in the database.
      */
-    public void retrive() {
+    public void retrieve() {
         Call<List<DifficultyType>> call = service.retrieveAllDifficultyTypes();
         call.enqueue(new Callback<List<DifficultyType>>() {
             @Override
@@ -76,11 +76,11 @@ public class DifficultyTypeDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return DifficultyType which match to the search pattern in the searched columns
      */
-    public DifficultyType findOne(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public DifficultyType findOne(Property searchedColumn, String searchPattern) {
         return difficultyTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public DifficultyType findOne(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public DifficultyType findOne(Property searchedColumn, long searchPattern) {
         return difficultyTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 }

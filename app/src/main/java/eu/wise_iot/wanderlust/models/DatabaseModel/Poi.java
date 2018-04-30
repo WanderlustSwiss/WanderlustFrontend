@@ -34,6 +34,7 @@ public class Poi extends AbstractModel {
     String title;
     String description;
     String createdAt;
+    String updatedAt;
 
     @Convert(converter = imageInfoConverter.class, dbType = String.class)
     List<ImageInfo> imagePaths;
@@ -48,7 +49,7 @@ public class Poi extends AbstractModel {
 
     public Poi(long poi_id, String name, String description, float longitude,
                float latitude, float elevation, int rate, long user, int type, boolean isPublic,
-               List<ImageInfo> imagePaths) {
+               List<ImageInfo> imagePaths, String updatedAt, String createdAt) {
         this.poi_id = poi_id;
         this.title = name;
         this.description = description;
@@ -60,6 +61,8 @@ public class Poi extends AbstractModel {
         this.type = type;
         this.isPublic = isPublic;
         this.imagePaths = imagePaths;
+        this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
     }
 
     public Poi() {
@@ -209,6 +212,22 @@ public class Poi extends AbstractModel {
 
     public void setElevation(float elevation) {
         this.elevation = elevation;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {

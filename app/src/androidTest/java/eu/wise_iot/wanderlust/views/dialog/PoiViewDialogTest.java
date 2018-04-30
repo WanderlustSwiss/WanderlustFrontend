@@ -37,7 +37,7 @@ public class PoiViewDialogTest {
     private View view;
 
     private Poi poi = new Poi(1, "name of poi", "description of poi", null, 2,
-            3, 1000, 0, 1, 0, true, 0);
+            3, 1000, 0, 1, 0, true, 0, "", "");
 
 
     @Before

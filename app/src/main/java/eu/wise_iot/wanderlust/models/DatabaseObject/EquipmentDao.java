@@ -1,15 +1,20 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
+import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
+import eu.wise_iot.wanderlust.services.EquipmentService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
-import io.objectbox.query.Query;
-import io.objectbox.query.QueryBuilder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * EquipmentDao
@@ -23,57 +28,44 @@ public class EquipmentDao extends DatabaseObjectAbstract {
         private static final EquipmentDao INSTANCE = new EquipmentDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static EquipmentDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
-    private Property columnProperty;
-    private Box<Equipment> equipmentBox;
-    private Query<Equipment> equipmentQuery;
-    private QueryBuilder<Equipment> equipmentQueryBuilder;
+    private final Box<Equipment> equipmentBox;
+    public static EquipmentService service;
+
 
     /**
      * Constructor.
      */
-
     private EquipmentDao() {
         equipmentBox = BOXSTORE.boxFor(Equipment.class);
-        equipmentQueryBuilder = equipmentBox.query();
+        service = ServiceGenerator.createService(EquipmentService.class);
     }
 
-    public long count() {
-        return equipmentBox.count();
-    }
 
-    public long count(String searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        Field searchedField = Equipment.class.getDeclaredField(searchedColumn);
-        searchedField.setAccessible(true);
+    public void retrieveEquipment(FragmentHandler handler){
+        Call<List<Equipment>> call = service.getEquipment();
+        call.enqueue(new Callback<List<Equipment>>() {
+            @Override
+            public void onResponse(Call<List<Equipment>> call, Response<List<Equipment>> response) {
+                if (response.isSuccessful()) {
+                    equipmentBox.removeAll();
+                    equipmentBox.put(response.body());
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
 
-        columnProperty = (Property) searchedField.get(Equipment.class);
-        equipmentQueryBuilder.equal(columnProperty, searchPattern);
-        equipmentQuery = equipmentQueryBuilder.build();
-        return equipmentQuery.find().size();
-    }
-
-    /**
-     * Update an existing difficulty in the database.
-     *
-     * @param equipment (required).
-     */
-    public Equipment update(Equipment equipment) {
-        equipmentBox.put(equipment);
-        return equipment;
-    }
-
-    /**
-     * Insert an equipment into the database.
-     *
-     * @param equipment (required).
-     */
-    public void create(Equipment equipment) {
-        equipmentBox.put(equipment);
+            @Override
+            public void onFailure(Call<List<Equipment>> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
     }
 
     /**
@@ -92,13 +84,11 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Equipment which match to the search pattern in the searched columns
      */
-    public Equipment findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Equipment findOne(Property searchedColumn, String searchPattern) {
         return equipmentBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Equipment findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Equipment findOne(Property searchedColumn, long searchPattern) {
         return equipmentBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -109,22 +99,16 @@ public class EquipmentDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Equipment> which contains the equipments, which match to the search pattern in the searched columns
      */
-    public List<Equipment> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Equipment> find(Property searchedColumn, String searchPattern) {
         return equipmentBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Equipment> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Equipment> find(Property searchedColumn, long searchPattern) {
         return equipmentBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
     public List<Equipment> find(Property searchedColumn, boolean searchPattern) {
         return equipmentBox.query().equal(searchedColumn, searchPattern).build().find();
-    }
-
-    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
-        equipmentBox.remove(findOne(searchedColumn, searchPattern));
     }
 
     public void deleteAll() {

@@ -20,7 +20,7 @@ import retrofit2.http.Path;
 
 public interface FavoriteService {
     @GET("favorite/tour")
-    Call<List<Tour>> retrievAllFavoriteTours();
+    Call<List<Tour>> retrieveAllFavoriteTours();
 
     @GET("favorite/{id}")
     Call<Favorite> retrieveFavorite(@Path("id") long id);

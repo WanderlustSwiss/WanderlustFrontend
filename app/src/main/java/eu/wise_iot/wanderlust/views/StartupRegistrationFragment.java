@@ -5,7 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +21,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
-/*
+/**
  * Registration Fragment which handles front end inputs of the user
  * @author Joshua
  * @license MIT
@@ -52,7 +54,7 @@ public class StartupRegistrationFragment extends Fragment {
     private TextInputLayout passwordRepeatLayout;
 
 
-    private RegistrationController registrationController;
+    private final RegistrationController registrationController;
 
 
     /**
@@ -62,14 +64,22 @@ public class StartupRegistrationFragment extends Fragment {
         this.registrationController = new RegistrationController();
     }
 
+    public static StartupRegistrationFragment newInstance() {
+        Bundle args = new Bundle();
+        StartupRegistrationFragment fragment = new StartupRegistrationFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        }
         context = getActivity();
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
     }
 
     @Override
@@ -94,63 +104,56 @@ public class StartupRegistrationFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initActionControls();
-
     }
 
     /**
      * initializes the actions of all controlls of the fragment
      */
     private void initActionControls() {
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                User user = new User(0
-                        , nickNameTextfield.getText().toString()
-                        , eMailTextfield.getText().toString()
-                        , passwordTextfield.getText().toString()
-                        , 0, true, true, "", "");
-                if (validateInput(user)) {
-                    //get response
-                    registrationController.registerUser(user, new FragmentHandler() {
-                        @Override
-                        public void onResponse(ControllerEvent controllerEvent) {
-                            EventType eventType = controllerEvent.getType();
-                            switch (eventType) {
-                                case OK:
-                                    Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
-                                    SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
-                                    getFragmentManager().beginTransaction()
-                                            .add(R.id.content_frame, sartupLoginFragment)
-                                            .commit();
+        btnRegister.setOnClickListener(v -> {
+            User user = new User(0
+                    , nickNameTextfield.getText().toString()
+                    , eMailTextfield.getText().toString()
+                    , passwordTextfield.getText().toString()
+                    , 0, true, true, "", "");
+            if (validateInput(user)) {
 
-                                    // create profile for user if registration succesful
-                                    Profile profile = new Profile(0, user.getProfile(),
-                                            (byte) 1, 0, 2, "",
-                                                        "de", user.getUser_id(), 0);
-                                    break;
-                                case CONFLICT:
-                                    Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
-                                    break;
-                                default:
-                                    Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-                // hide soft keyboard after button was clicked
-                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(btnRegister.getApplicationWindowToken(), 0);
+                btnRegister.setEnabled(false);
+
+                //get response
+                registrationController.registerUser(user, controllerEvent -> {
+                    btnRegister.setEnabled(true);
+                    EventType eventType = controllerEvent.getType();
+                    switch (eventType) {
+                        case OK:
+                            ((MainActivity) getActivity()).setupDrawerHeader(user);
+                            Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
+                            Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                            if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+                                    .commit();
+                            break;
+                        case CONFLICT:
+                            Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
+                            break;
+                        default:
+                            Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
+                    }
+                });
             }
+            // hide soft keyboard after button was clicked
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(btnRegister.getApplicationWindowToken(), 0);
         });
 
-        redirectToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SartupLoginFragment sartupLoginFragment = new SartupLoginFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, sartupLoginFragment)
-                        .commit();
-            }
+        redirectToLogin.setOnClickListener(v -> {
+
+            Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+            if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+                    .commit();
         });
     }
 
@@ -218,5 +221,6 @@ public class StartupRegistrationFragment extends Fragment {
     private boolean validatePassword(String password) {
         return password.matches(VALID_PASSWORTD_REGX);
     }
+
 
 }

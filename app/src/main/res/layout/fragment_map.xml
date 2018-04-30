@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -42,6 +42,18 @@
                     android:layout_marginTop="16dp" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/createTourInformation"
+                style="@style/p.Small.Light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-24.1dp"
+                android:background="@color/highlight_main"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="@string/create_tour_information"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,20 +81,52 @@
             android:layout_marginTop="16dp"
             android:orientation="vertical">
 
+
+            <com.github.clans.fab.FloatingActionMenu
+                android:id="@+id/menu_floating_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_margin="0dp"
+                android:layout_marginBottom="-30dp"
+                android:contentDescription="@null"
+                android:elevation="5dp"
+                android:padding="15dp"
+                android:paddingBottom="0dp"
+                fab:menu_buttonSpacing="1dp"
+                fab:menu_colorNormal="@color/primary_main"
+                fab:menu_fab_hide_animation="@null"
+                fab:menu_fab_show_animation="@null">
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/takePictureButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center_horizontal|center"
+                    android:layout_marginLeft="30dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_camera_white_24dp"
+                    app:fab_colorNormal="@color/primary_main" />
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/createTourButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:paddingBottom="0dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_track_start_3"
+                    app:fab_colorNormal="@color/primary_main" />
+
+            </com.github.clans.fab.FloatingActionMenu>
+
             <ImageButton
                 android:id="@+id/locationButton"
                 style="@style/FloatingActionButton.Light"
+                android:layout_margin="20dp"
+                android:layout_marginTop="-20dp"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_my_location_disabled_black_24dp" />
 
-
-            <ImageButton
-                android:id="@+id/takePictureButton"
-                style="@style/FloatingActionButton"
-                android:layout_gravity="center_horizontal|center"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_camera_white_24dp" />
         </LinearLayout>
     </FrameLayout>
 
@@ -91,47 +135,118 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background_main"
+        android:paddingBottom="12dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         app:behavior_hideable="true"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
         <LinearLayout
+            android:id="@+id/innerBottomSheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/link_login"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="24dp"
-                android:paddingTop="24dp"
-                android:text="@string/map_layer_layers"
-                android:textColor="@color/heading_icon"
-                android:textSize="15sp" />
+            android:divider="@drawable/divider_vertical"
+            android:orientation="vertical"
+            android:showDividers="middle">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/link_login"
+                        style="@style/p.Grey"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:paddingBottom="8dp"
+                        android:text="@string/map_type_types" />
+
+                    <ImageButton
+                        android:id="@+id/btn_close_bottom_sheet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_close_grey_24dp" />
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="24dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/poi_layer_button"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent" />
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <ImageButton
+                            android:id="@+id/map_default_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:background="@android:color/transparent"
+                            android:cropToPadding="true"
+                            android:padding="3dp"
+                            android:src="@drawable/map_default" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/map_type_default" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/layer_poi" />
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
+                        <ImageButton
+                            android:id="@+id/map_satelite_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:cropToPadding="true"
+                            android:padding="3dp"
+                            android:src="@drawable/map_satelite" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/map_type_satelite" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/map_terrain_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="70dp"
+                            android:cropToPadding="true"
+                            android:padding="3dp"
+                            android:src="@drawable/map_terrain" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/map_type_terrain" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
@@ -140,96 +255,199 @@
                 android:layout_height="1dp"
                 android:background="@color/background_two_and_inactive" />
 
-            <TextView
-                android:id="@+id/title_map_type"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="24dp"
-                android:paddingTop="24dp"
-                android:text="@string/map_type_types"
-                android:textColor="@color/heading_icon"
-                android:textSize="15sp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:padding="24dp">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/title_map_type"
+                    style="@style/p.Grey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
+                    android:paddingBottom="8dp"
+                    android:text="@string/map_layer_layers" />
 
-                    <ImageButton
-                        android:id="@+id/map_default_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:padding="3dp"
-                        android:src="@drawable/map_default" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="3dp"
-                        android:text="@string/map_type_default" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
+                        <ImageButton
+                            android:id="@+id/poi_layer_button"
+                            style="@style/PoiButton" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/layer_poi" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/public_transport_layer_button"
+                            style="@style/PoiButton" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/public_transport" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/public_sac_layer_button"
+                            style="@style/PoiButton" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/sac_house" />
+                    </LinearLayout>
                 </LinearLayout>
+            </LinearLayout>
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/background_two_and_inactive" />
 
-                <LinearLayout
+            <LinearLayout
+                android:id="@+id/poiTypeSelection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titlePoiTypeSelection"
+                    style="@style/p.Grey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/map_satelite_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="3dp"
-                        android:src="@drawable/map_satelite" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="3dp"
-                        android:text="@string/map_type_satelite" />
-                </LinearLayout>
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:paddingBottom="8dp"
+                    android:text="@string/title_poi_type_selection" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical">
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/map_terrain_type"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:padding="3dp"
-                        android:src="@drawable/map_terrain" />
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <ImageButton
+                            android:id="@+id/poiTypesRestArea"
+                            style="@style/PoiButton" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/poi_type_restarea" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="3dp"
-                        android:text="@string/map_type_terrain" />
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/poiTypesRestaurant"
+                            style="@style/PoiButton" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/poi_type_restaurant" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/poiTypesView"
+                            style="@style/PoiButton" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/poi_type_view" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/poiTypeFloraFauna"
+                            style="@style/PoiButton" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/poi_type_nature" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet_public_transport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_main"
+        app:behavior_hideable="true"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <TextView
+            android:id="@+id/public_transport_station_name"
+            style="@style/h1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:text="@string/map_layer_layers" />
+
+    </android.support.v4.widget.NestedScrollView>
+
 </android.support.design.widget.CoordinatorLayout>

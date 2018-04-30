@@ -1,11 +1,15 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
+import android.util.Log;
+
+import java.util.List;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
 /**
@@ -17,10 +21,12 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
  */
 public class TourOverviewController {
 
-    private UserTourDao userTourDao;
+    private static final String TAG = "TourOverviewController";
+    private final UserTourDao userTourDao;
     private FavoriteDao favoriteDao;
-    private DifficultyTypeDao difficultyType;
-    private ImageController imageController;
+    private RecentTourDao recentTourDao;
+    private final DifficultyTypeDao difficultyType;
+    private final ImageController imageController;
 
     public TourOverviewController(){
         userTourDao = UserTourDao.getInstance();
@@ -28,23 +34,33 @@ public class TourOverviewController {
         favoriteDao = FavoriteDao.getInstance();
         difficultyType = DifficultyTypeDao.getInstance();
         imageController = ImageController.getInstance();
+        recentTourDao = RecentTourDao.getInstance();
     }
 
     /**
      * get all required data for the view
      * @param handler
+     * @param page
      */
-    public void getAllTours(FragmentHandler handler) {
-        userTourDao.retrieveAll(handler);
+    public void getAllTours(int page, FragmentHandler handler) {
+        userTourDao.retrieveAll(handler, page);
     }
+
     /**
      * get all Favorites for the view
      * @param handler
      */
-//    public static void getAllFavorites(FragmentHandler handler) {
-//        UserTourDao userTourDao = new UserTourDao();
-//        userTourDao.retrieveAll(handler);
-//    }
+    public void getAllFavoriteTours(FragmentHandler handler) {
+        favoriteDao.retrieveAllFavoriteTours(handler);
+    }
+
+    /**
+     * get all Favorites for the view
+     * @param handler
+     */
+    public List<Tour> getRecentTours() {
+        return recentTourDao.retrieveAll();
+    }
     /**
      * get all tours out of db
      *
@@ -61,21 +77,7 @@ public class TourOverviewController {
         userTourDao.downloadImage(tourID, image_id, handler);
     }
     /**
-     * get all Favorites
-     *
-     */
-    public void downloadFavorites(FragmentHandler handler) {
-        favoriteDao.retrievAllFavorites(handler);
-    }
-    /**
-     * get all difficulty types
-     *
-     */
-    public void downloadDifficultyTypes() {
-        difficultyType.retrive();
-    }
-    /**
-     * get all Favorites
+     * set Favorite
      *
      */
     public void setFavorite(Tour tour, FragmentHandler handler) {
@@ -93,7 +95,9 @@ public class TourOverviewController {
         try {
             Favorite fav = favoriteDao.findOne(Favorite_.tour, id);
             if(fav != null) return fav.getFav_id();
-        } catch (Exception e){}
+        } catch (Exception e){
+            Log.d(TAG, e.getMessage());
+        }
         return -1;
     }
 }

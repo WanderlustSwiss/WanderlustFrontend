@@ -11,7 +11,7 @@ import io.objectbox.BoxStore;
 import io.objectbox.Property;
 
 /**
- * TourDao:
+ * CommunityTourDao:
  *
  * @author Rilind Gashi, Alexander Weinbeck, Simon Kaspar
  * @license MIT
@@ -23,12 +23,12 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
         private static final CommunityTourDao INSTANCE = new CommunityTourDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static CommunityTourDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
-    private Box<Tour> communityTourBox;
+    private final Box<Tour> communityTourBox;
 
     /**
      * Constructor.
@@ -88,6 +88,16 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
     }
 
     /**
+     * insert community tour only local
+     *
+     * @param communityTour
+     */
+    public void create(final AbstractModel communityTour){
+
+        communityTourBox.put((Tour) communityTour);
+    }
+
+    /**
      * get communityTour with specific id
      *
      * @param id
@@ -97,26 +107,17 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
     }
 
     /**
-     * get all communityTours out of the remote database
-     */
-    public List<Tour> retrieveAll() {
-        return communityTourBox.getAll();
-    }
-
-    /**
      * Searching for a single route with a search pattern in a column.
      *
      * @param searchedColumn (required) the column in which the searchPattern should be looked for.
      * @param searchPattern  (required) contain the search pattern.
      * @return Tour which match to the search pattern in the searched columns
      */
-    public Tour findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Tour findOne(Property searchedColumn, String searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public Tour findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public Tour findOne(Property searchedColumn, long searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -128,13 +129,11 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
      * @return List<Tour> which contains the equipements,
      * which match to the search pattern in the searched columns
      */
-    public List<Tour> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Tour> find(Property searchedColumn, String searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public List<Tour> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public List<Tour> find(Property searchedColumn, long searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
@@ -162,4 +161,14 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
             throws NoSuchFieldException, IllegalAccessException {
         communityTourBox.remove(findOne(searchedColumn, searchPattern));
     }
+
+    public void delete(Tour communityTour){
+        List<Tour> list = communityTourBox.getAll();
+        for(Tour t : list){
+            if(t.getTour_id() == communityTour.getTour_id()){
+                communityTourBox.remove(t);
+            }
+        }
+    }
+
 }

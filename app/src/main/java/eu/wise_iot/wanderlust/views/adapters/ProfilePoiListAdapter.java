@@ -8,12 +8,26 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.views.ProfileFragment;
+import eu.wise_iot.wanderlust.views.dialog.ConfirmDeletePoiDialog;
+import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
+
+
 
 /**
  * Adapter for the profile UI. Represents all poi's in a custom list view
@@ -30,18 +44,22 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
     private ImageView editIcon;
     private ImageView deleteIcon;
 
-    private Context context;
-    private int resource;
-    private int textResource;
-    private List objects;
+    private final Context context;
 
-    public ProfilePoiListAdapter(Context context, int resource, int textResource, List objects) {
+    private final PoiController poiController;
+    private final ImageController imageController;
+
+    private final ProfileFragment profileFragment;
+
+    public ProfilePoiListAdapter(Context context, int resource, int textResource, List objects, ProfileFragment fragment) {
         super(context, resource, textResource, objects);
         this.context = context;
-        this.resource = resource;
-        this.textResource = textResource;
-        this.objects = objects;
+        this.profileFragment = fragment;
+        poiController = new PoiController();
+        imageController = ImageController.getInstance();
     }
+
+
 
     /**
      * Gets amount of poi's in list view
@@ -116,13 +134,44 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
             title.setText(poi.getTitle());
             description.setText(poi.getDescription());
 
-            //TODO: set image
-            poiImage.setImageResource(R.drawable.example_image);
-        }
+            List<ImageInfo> imagepaths = poi.getImagePaths();
+            for(ImageInfo info : imagepaths){
+                info.setLocalDir(imageController.getProfileFolder());
+            }
+            List<File> imagefiles = imageController.getImages(imagepaths);
+            if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
+                Picasso.with(context)
+                        .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
+                        .fit()
+                        .centerCrop()
+                        .into(poiImage);
+            } else {
+                poiImage.setImageResource(R.drawable.example_image);
+            }
 
-        //set listeners
-        //TODO: implement listeners for delete and edit icon, as well click listener for element
+            profileFragment.setProfileStats();
+
+            //listeners for deleting and editing
+            editIcon.setOnClickListener(e -> {
+                PoiEditDialog editDialog = PoiEditDialog.newInstance(poi);
+                if (editDialog != null) {
+                    editDialog.show(profileFragment.getFragmentManager(), Constants.EDIT_POI_DIALOG);
+                }
+            });
+
+
+            deleteIcon.setOnClickListener(e -> {
+                ConfirmDeletePoiDialog deleteDialog = ConfirmDeletePoiDialog.newInstance(
+                        getContext(), poiController, poi, context.getString(R.string.message_confirm_delete_poi));
+                deleteDialog.setupForProfileList(profileFragment);
+                deleteDialog.show(profileFragment.getFragmentManager(), Constants.CONFIRM_DELETE_POI_DIALOG);
+                profileFragment.setProfileStats();
+            });
+
+        }
 
         return convertView;
     }
+
+
 }

@@ -2,9 +2,13 @@ package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +21,22 @@ import android.widget.Toast;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
+import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.AddPoiCommand;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.MapController;
+import eu.wise_iot.wanderlust.controllers.OfflineQueueController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
 
@@ -40,6 +51,7 @@ public class PoiEditDialog extends DialogFragment {
     private FragmentHandler poiHandler;
     private Context context;
     private Poi poi;
+    private MapController mapController;
     private GeoPoint lastKnownLocation;
     private EditText titleEditText;
     private TextInputLayout titleTextLayout;
@@ -49,9 +61,11 @@ public class PoiEditDialog extends DialogFragment {
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
     private PoiController controller;
+    private ImageController imageController;
     private boolean isNewPoi;
     private boolean publish;
     private FragmentHandler poiPhotoUploadHandler;
+    private OfflineQueueController offlineQueueController;
 
     /**
      * Create EditPoit dialog, which is used for CREATING a Poi
@@ -67,6 +81,7 @@ public class PoiEditDialog extends DialogFragment {
         args.putDouble(Constants.LAST_POS_LON, lastKnownLocation.getLongitude());
         args.putBoolean(Constants.POI_IS_NEW, true);
         fragment.poi = new Poi();
+        fragment.mapController = new MapController(fragment);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,6 +93,7 @@ public class PoiEditDialog extends DialogFragment {
      */
     public static PoiEditDialog newInstance(Poi poi) {
         PoiEditDialog fragment = new PoiEditDialog();
+
         Bundle args = new Bundle();
         fragment.poi = poi;
         args.putBoolean(Constants.POI_IS_NEW, false);
@@ -89,7 +105,9 @@ public class PoiEditDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         controller = new PoiController();
+        imageController = ImageController.getInstance();
         context = getActivity();
+        offlineQueueController = OfflineQueueController.getInstance();
 
         Bundle args = getArguments();
         double lat = args.getDouble(Constants.LAST_POS_LAT);
@@ -117,9 +135,20 @@ public class PoiEditDialog extends DialogFragment {
                     if (isNewPoi) {
                         poi = (Poi) event.getModel();
                         //Poi image has to be uploaded after the poi is saved
-                        controller.uploadImage(new File(MapFragment.photoPath), poi, poiPhotoUploadHandler);
+                        String imagePath = MapFragment.photoPath;
+                        Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
+                        Uri uri = ImageController.getInstance().getImageUri(getActivity(), imageBitmap);
+                        ImageController.getInstance().setAndSaveCorrectOrientation(imageBitmap, uri, new File(imagePath));
+
+                        controller.uploadImage(new File(imagePath), poi, poiPhotoUploadHandler);
                     }
                     Toast.makeText(getActivity(), R.string.poi_successful_saving, Toast.LENGTH_LONG).show();
+                    dismiss();
+                    break;
+                case NETWORK_ERROR:
+                    AddPoiCommand cmd = new AddPoiCommand(this.poi, new File(MapFragment.photoPath));
+                    offlineQueueController.addCommand(cmd);
+                    Toast.makeText(context, R.string.in_queue, Toast.LENGTH_SHORT).show();
                     dismiss();
                     break;
                 default:
@@ -151,8 +180,12 @@ public class PoiEditDialog extends DialogFragment {
         initActionControls();
         if (!isNewPoi) {
             fillInDataFromExistingPoi();
+        }else{
+            fillInDataFromAddress();
         }
     }
+
+
 
     /**
      * initializes the actions of the mode (private / public) spinner, which sets the current mode of the poi in case of changing of the user
@@ -216,18 +249,15 @@ public class PoiEditDialog extends DialogFragment {
 
                 controller.saveNewPoi(this.poi, poiHandler);
             } else {
+                File poiImage = new File(this.poi.getImageById(1).getLocalPath());
                 if (publish) {
-                    //TODO only uploads first image
-                    controller.uploadImage(new File(this.poi.getImageById(1).getPath()), this.poi, new FragmentHandler() {
-                        @Override
-                        public void onResponse(ControllerEvent controllerEvent) {
-                            switch (controllerEvent.getType()) {
-                                case OK:
-                                    controller.updatePoi(poi, poiHandler);
-                                    break;
-                                default:
-                                    poiHandler.onResponse(new ControllerEvent(EventType.getTypeByCode(500)));
-                            }
+                    controller.uploadImage(poiImage, poi, controllerEvent -> {
+                        switch (controllerEvent.getType()) {
+                            case OK:
+                                controller.updatePoi(poi, poiHandler);
+                                break;
+                            default:
+                                poiHandler.onResponse(new ControllerEvent(EventType.getTypeByCode(500)));
                         }
                     });
                 } else {
@@ -251,5 +281,19 @@ public class PoiEditDialog extends DialogFragment {
         } else {
             modeSpinner.setSelection(1); // private
         }
+    }
+
+    /**
+     * Prefills all data from address
+     */
+    private void fillInDataFromAddress(){
+        mapController.searchCoordinates(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),1, controllerEvent -> {
+            AddressPoint addressPoint = (AddressPoint) controllerEvent.getModel();
+            if (addressPoint != null &&
+                    addressPoint.getCity() != null && addressPoint.getName() != null){
+                Log.d(TAG, addressPoint.getName());
+                titleEditText.setText(addressPoint.getName() + ", " + addressPoint.getCity());
+            }
+        });
     }
 }

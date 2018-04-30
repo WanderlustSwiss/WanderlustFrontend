@@ -3,10 +3,8 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.lang.reflect.Type;
 
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -28,7 +26,6 @@ public class Profile extends AbstractModel {
     ImageInfo imagePath;
 
     long profile_id;
-    byte imageId;
     int score;
     int sex;
     String birthday;
@@ -36,10 +33,9 @@ public class Profile extends AbstractModel {
     long user;
     long difficulty;
 
-    public Profile(long internal_id, long profile_id, byte imageId, int score, int sex, String birthday, String language, long user, long difficulty) {
+    public Profile(long internal_id, long profile_id, int score, int sex, String birthday, String language, long user, long difficulty) {
         this.internal_id = internal_id;
         this.profile_id = profile_id;
-        this.imageId = imageId;
         this.score = score;
         this.sex = sex;
         this.birthday = birthday;
@@ -51,7 +47,6 @@ public class Profile extends AbstractModel {
     public Profile() {
         this.internal_id = 0;
         this.profile_id = 1;
-        this.imageId = 1;
         this.score = 0;
         this.birthday = "01.01.1990";
         this.language = "Deutsch";
@@ -65,14 +60,6 @@ public class Profile extends AbstractModel {
 
     public void setInternal_id(long internal_id) {
         this.internal_id = internal_id;
-    }
-
-    public byte getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(byte imageId) {
-        this.imageId = imageId;
     }
 
     public String getLanguage() {
@@ -131,25 +118,12 @@ public class Profile extends AbstractModel {
         this.sex = sex;
     }
 
-    public boolean removeImageId(byte id) {
-        if (imageId == id) {
-            imageId = 0;
-            return true;
-        }
-        return false;
-    }
-
-    public File getImageById(byte imageId) {
-        if (imageId == imageId) {
-            String name = profile_id + "-" + imageId + ".jpg";
-            return new File(DatabaseController.getMainContext().getApplicationInfo().dataDir +
-                    "/files/" + name);
-        }
-        return null;
-    }
-
     public ImageInfo getImagePath() {
         return imagePath;
+    }
+
+    public void setImagePath(ImageInfo imagePath) {
+        this.imagePath = imagePath;
     }
 
     public static class imageInfoConverter implements PropertyConverter<ImageInfo, String> {
@@ -175,23 +149,6 @@ public class Profile extends AbstractModel {
             return gson.toJson(entityProperty, type);
         }
     }
-
-    public class ImageInfo {
-        long id;
-        String name;
-        String path;
-
-        public ImageInfo(long id, String name, String path) {
-            this.id = id;
-            this.name = name;
-            this.path = path;
-        }
-
-        public long getId() {
-            return id;
-        }
-    }
-
 
 }
 

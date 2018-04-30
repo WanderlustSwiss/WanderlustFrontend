@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.services;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -11,7 +12,6 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
 
 /**
  * ProfileService:
@@ -35,13 +35,12 @@ public interface ProfileService {
 
     @Multipart
     @POST("profile/img")
-    Call<Profile.ImageInfo> uploadImage(@Part MultipartBody.Part image);
+    Call<ImageInfo> uploadImage(@Part MultipartBody.Part image);
 
     @DELETE("profile/img")
-    Call<Profile.ImageInfo> deleteImage();
+    Call<ImageInfo> deleteImage();
 
     @GET("profile/img")
     Call<ResponseBody> downloadImage();
-
 
 }
