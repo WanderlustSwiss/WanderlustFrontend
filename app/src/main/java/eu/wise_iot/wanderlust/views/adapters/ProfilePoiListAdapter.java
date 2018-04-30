@@ -135,6 +135,9 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
             description.setText(poi.getDescription());
 
             List<ImageInfo> imagepaths = poi.getImagePaths();
+            for(ImageInfo info : imagepaths){
+                info.setLocalDir(imageController.getProfileFolder());
+            }
             List<File> imagefiles = imageController.getImages(imagepaths);
             if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
                 Picasso.with(context)
