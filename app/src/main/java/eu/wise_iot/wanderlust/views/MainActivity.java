@@ -304,10 +304,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void switchFragment(Fragment fragment, String fragmentTag) {
         if (fragment != null) {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, fragment, fragmentTag)
-                    .addToBackStack(null)
-                    .commit();
+            if(fragment.isAdded()){
+                getFragmentManager().beginTransaction().show(fragment);
+            } else {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, fragment, fragmentTag)
+                        .addToBackStack(null)
+                        .commit();
+            }
         } else {
             Log.e(TAG, "Error in creating fragment");
             Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
