@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.app.Fragment;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -180,6 +179,7 @@ public class LoginController {
                 if (response.isSuccessful()) {
                     try {
                         imageController.save(response.body().byteStream(), profile.getImagePath());
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

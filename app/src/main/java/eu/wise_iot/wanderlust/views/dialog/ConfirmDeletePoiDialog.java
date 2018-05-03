@@ -94,7 +94,6 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
                         if(profileFragment != null){
                             View vw = profileFragment.getView();
                             profileFragment.setupPOIs(vw);
-                            profileFragment.setProfileStats();
                         }
                         dismiss();
                         break;

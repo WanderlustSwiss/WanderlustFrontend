@@ -35,7 +35,6 @@ public class MapCacheHandler {
         mapView = new MapView(context);
     }
 
-
     public boolean downloadMap(){
         ArrayList<GeoPoint> geoPoints = (ArrayList<GeoPoint>) tour.getGeoPoints();
 
