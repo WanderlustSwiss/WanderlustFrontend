@@ -17,7 +17,7 @@
             style="@style/h2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/disclaimer_header" />
+            android:text="@string/menu_disclaimer" />
 
         <TextView
             style="@style/p"
@@ -33,6 +33,7 @@
 
         <TextView
             style="@style/p"
+            android:id="@+id/authors_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/disclaimer_authors" />

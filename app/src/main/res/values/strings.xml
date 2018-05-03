@@ -21,11 +21,11 @@
     <string name="msg_manual_p5_text">Ist die Brücke weggebrochen oder ist der Weg viel gefährlicher als erwartet? Dann sollte aus Sicherheitsgründen ein Warnhinweis gemacht werden.</string>
 
     <!-- DISCLAIMER FRAGMENT -->
-    <string name="disclaimer_header">Über Wanderlust</string>
-    <string name="disclaimer_authors">© 2017 Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Meier, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov &amp; Alexander Weinbeck</string>
+    <string name="disclaimer_copy_wright">©</string>
+    <string name="disclaimer_authors">Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Meier, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov &amp; Alexander Weinbeck</string>
     <string name="disclaimer_text2">Die Software benötigt für diverse Features Internet. Der Benutzer ist selbst verantwortlich die benötigten Informationen für internetfreie Zonen vorgänging zu beschaffen.</string>
-    <string name="disclaimer_text3">Die Autoren oder Copyrightinhaber übernehmen keine Haftung für Schäden, welche durch einen leeren Akku enstehen. DerBenutzer ist selbst verantwortlich die benötigten Informationen zu beschaffen um die Wanderung auch ohne Wanderlust fortzufahen.</string>
-    <string name="disclaimer_mit_header">MIT LIZENZ</string>
+    <string name="disclaimer_text3">Die Autoren oder Copyrightinhaber übernehmen keine Haftung für Schäden, welche durch einen leeren Akku enstehen. Der Benutzer ist selbst verantwortlich die benötigten Informationen zu beschaffen um die Wanderung auch ohne Wanderlust fortzufahen.</string>
+    <string name="disclaimer_mit_header">MIT Lizenz</string>
     <string name="disclaimer_mit_text">Die Software wird ohne jede ausdrückliche oder implizierte Garantie bereitgestellt, einschliesslich der Garantie zur Benutzung für den Vorgesehenen oder einem bestimmten Zweck sowie jeglicher Rechtsverletzung, jedoch nicht darauf beschränkt. In keinem Fall sind die Autoren oder Copyrightinhaber für jeglichen Schaden oder sonstige Ansprüche haftbar zu machen, ob infolge der Erfüllung eines Vertrages, eines Deliktes oder anders im Zusammenhang mit der Software oder sonstiger Verwendung der Software entstanden.</string>
 
 
