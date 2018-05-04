@@ -55,12 +55,12 @@ public class WebLoginFragment extends Fragment  {
                 "/auth/login/instagram",
                 "instagram?code=",
                 R.drawable.instagram,
-                R.string.login_instagram_progress),
+                R.string.login_instagram),
         FACEBOOK(
                 "/auth/login/facebook",
                 "facebook?code=",
                 R.drawable.facebook,
-                R.string.login_facebook_progress);
+                R.string.login_facebook);
 
         private final String path;
         private final String pattern;

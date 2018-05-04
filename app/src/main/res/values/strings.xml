@@ -53,7 +53,7 @@
     <string name="violation_spam">Spam</string>
     <string name="violation_hatespeech">Rufmord</string>
     <string name="violation_other">Andere</string>
-    <string name="report_submit">Vielen Dank für Ihre Einreichung</string>
+    <string name="report_submit">Vielen Dank für deine Einreichung</string>
 
     <!-- FILTER RELATED STRINGS -->
     <string name="filter_search">Filter anwenden</string>
@@ -95,9 +95,6 @@
     <string name="msg_follow_mode_enabled">Verfolgunsmodus aktiv (erhöhter Batterieverbrauch!)</string>
     <string name="msg_follow_mode_disabled">Verfolgunsmodus deaktiviert\n(Batterie-Sparmodus). Keine Tourerfassung möglich</string>
     <string name="msg_map_centered_on_long_click">Karte wird zentriert</string>
-
-    <string name="msg_last_known_position_marker">Das ist deine letzte bekannte Position.   Du willst deine jetzige Position? Klicke den «MyLocation»-Button: - kurzer Klick: verfolgen an/aus - langer Klick: Karte zentrieren</string>
-
 
     <!-- ERROR MESSAGES -->
 
@@ -145,8 +142,6 @@
     <string name="login_forgot_password">Passwort vergessen?</string>
     <string name="login_instagram">Anmelden mit Instagram</string>
     <string name="login_facebook">Anmelden mit Facebook</string>
-    <string name="login_instagram_progress">Anmelden mit Instagram</string>
-    <string name="login_facebook_progress">Anmelden mit Facebook</string>
 
 
     <!-- POI -->
@@ -212,7 +207,7 @@
     <string name="title_score">Score</string>
     <string name="wetter">Wetter</string>
     <string name="choose_hiking_day_button">anderen Wandertag auswählen</string>
-    <string name="keine_wetterdaten">Keine Wetterdaten zu diesem Tag</string>
+    <string name="keine_wetterdaten">Keine Wetterdaten zu diesem Tag verfügbar</string>
     <string name="wanderung_beginn">Wanderung am:</string>
     <string name="wetterNach">Nach:</string>
     <string name="connection_fail">Verbindung fehlgeschlagen</string>
@@ -247,7 +242,7 @@
     <string name="start">Start</string>
     <string name="end">Ende</string>
     <string name="temperature_abbrevation">°C</string>
-    <string name="create_tour_information">Tour wird aufgenommen. Bitte GPS nicht ausschalten.</string>
+    <string name="create_tour_information">Tour wird aufgenommen. Bitte GPS nicht ausschalten</string>
 
     <!--- Seasons -->
     <string name="summer">Sommer</string>
@@ -257,11 +252,11 @@
 
     <string name="create_tour_stop_recording_request">Soll das Tracking wirklich beendet werden?</string>
     <string name="create_tour_save_tour">Tour Speichern</string>
-    <string name="create_tour_tracking_tour">Tracking tour...</string>
+    <string name="create_tour_tracking_tour">Tracking tour…</string>
     <string name="create_tour_saved">Die Tour wurde erfolgreich gespeichert</string>
-    <string name="create_tour_nothing_tracked">Dummy Touren können nicht gespeichert werden</string>
+    <string name="create_tour_nothing_tracked">Leere Touren können nicht gespeichert werden</string>
     <string name="create_tour_no_seasons">Tour kann ohne Jahreszeit nicht gespeichert werden</string>
-    <string name="create_tour_not_save_tour">Wollen Sie wirklich ohne zu speichern fortfahren. Die aufgenommene Tour wird nicht mehr verfügbar sein</string>
+    <string name="create_tour_not_save_tour">Willst du wirklich ohne zu speichern fortfahren? Die aufgenommene Tour wird nicht mehr verfügbar sein</string>
     <string name="create_tour_not_saved">Tour nicht gespeichert</string>
     <string name="short_january">Jan</string>
     <string name="short_february">Feb</string>
@@ -279,10 +274,10 @@
     <string name="create_tour_need_whitelist">Fürs Tracking bitte Wanderlust als Ausnahme hinzufügen</string>
     <string name="create_tour_upload_image">Upload Image</string>
     <string name="create_tour_photo_required">Foto muss hinzugefügt werden</string>
-    <string name="create_tour_disable_battery_save_mode">Fürs Erstellen einer Tour muss der Batteriesparmodus deaktiviert werden.</string>
+    <string name="create_tour_disable_battery_save_mode">Fürs Erstellen einer Tour muss der Batteriesparmodus deaktiviert werden</string>
     <string name="create_tour_update_successful">Tour Update erfolgreich</string>
-    <string name="in_queue">Upload wird fortgesetzt sobald mit Internet verbunden</string>
+    <string name="in_queue">Upload wird fortgesetzt sobald wieder eine Verbindung zum Internet besteht</string>
     <string name="create_tour_extra_equipment">Zusatzequipment</string>
-    <string name="profileEditChangesApplied">Änderungen übernommen.</string>
-
+    <string name="profileEditChangesApplied">Änderungen übernommen</string>
+    <string name="msg_last_known_position_marker">Das ist deine zuletzt bekannte Position</string>
 </resources>
