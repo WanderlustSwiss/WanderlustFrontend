@@ -65,7 +65,6 @@
         <item>nur für mich</item>
     </string-array>
     <string-array name="dialog_feedback_spinner_type">
-        <item></item>
         <item>Aussichtspunkt</item>
         <item>Restaurant</item>
         <item>Rastplatz</item>
@@ -190,7 +189,7 @@
     <string name="share_title_poi">Teilen</string>
 
     <string name="share_title_tour">Teilen</string>
-    <string name="poi_mode_is_private">Poi ist privat und nur für dich sichtbar</string>
+    <string name="poi_mode_is_private">Dieser POI ist privat und nur für dich sichtbar</string>
 
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>
@@ -219,7 +218,7 @@
     <string name="connection_fail">Verbindung fehlgeschlagen</string>
     <string name="no_favorites">Keine Favoriten</string>
     <string name="no_tours">Keine Touren</string>
-    <string name="no_pois">Keine POI\'s</string>
+    <string name="no_pois">Keine POIs</string>
     <string name="no_saved">Keine Touren gespeichert</string>
     <string name="public_transport">ÖV</string>
     <string name="hashtag_search_nothing_found">Im aktuellen Kartenausschnitt wurden keine Resultate gefunden</string>
