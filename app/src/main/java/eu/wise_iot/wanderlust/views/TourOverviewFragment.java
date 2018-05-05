@@ -30,16 +30,12 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
-
-import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 
 /**
@@ -59,7 +55,7 @@ public class TourOverviewFragment extends Fragment {
     private RecyclerView rvTours, rvFavorites, rvRecent;
     private ProgressBar pbTours, pbFavorites, pbRecent;
     private TextView tvToursAllPlaceholder, tvToursFavoritePlaceholder, tvToursRecentPlaceholder;
-    private TourOverviewController toc;
+    private TourOverviewController tourOverviewController;
     private int currentPage = 0;
     private ImageController imageController;
 
@@ -70,7 +66,7 @@ public class TourOverviewFragment extends Fragment {
         context = getActivity().getApplicationContext();
         imageController = ImageController.getInstance();
         listTours = new LinkedList<>();
-        toc = new TourOverviewController();
+        tourOverviewController = new TourOverviewController();
         setHasOptionsMenu(true);
     }
     /**
@@ -190,7 +186,7 @@ public class TourOverviewFragment extends Fragment {
         rvRecent.setAdapter(adapterRecent);
 
         recentTours.clear();
-        recentTours.addAll(toc.getRecentTours());
+        recentTours.addAll(tourOverviewController.getRecentTours());
         getDataFromServer(recentTours);
         adapterRecent.notifyDataSetChanged();
 
@@ -205,7 +201,7 @@ public class TourOverviewFragment extends Fragment {
         }
 
         //get all tours
-        toc.getAllTours(currentPage, event -> {
+        tourOverviewController.getAllTours(currentPage, event -> {
             switch (event.getType()) {
                 case OK:
                     //get all needed information from server db
@@ -239,7 +235,7 @@ public class TourOverviewFragment extends Fragment {
         });
 
         //get favorized tours
-        toc.getAllFavoriteTours(controllerEvent -> {
+        tourOverviewController.getAllFavoriteTours(controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
                     Log.d(TAG, "refresh Favorites");
@@ -280,7 +276,7 @@ public class TourOverviewFragment extends Fragment {
                         int position = offset / myCellWidth;
                         Log.d(TAG, "Position=" + position + " " + myCellWidth + " " + offset );
                         if (20 < (position - (25*(currentPage-1)))) {
-                            toc.getAllTours(currentPage, controllerEvent -> {
+                            tourOverviewController.getAllTours(currentPage, controllerEvent -> {
                                 switch (controllerEvent.getType()) {
                                     case OK:
                                         LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
@@ -314,9 +310,9 @@ public class TourOverviewFragment extends Fragment {
                 Log.d(TAG,"Tour Favorite Clicked and event triggered ");
                 ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.tourOVFavoriteButton);
                 Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
-                long favId = toc.getTourFavoriteId(tour.getTour_id());
+                long favId = tourOverviewController.getTourFavoriteId(tour.getTour_id());
                 if(favId != -1) {
-                    toc.deleteFavorite(favId, controllerEvent -> {
+                    tourOverviewController.deleteFavorite(favId, controllerEvent -> {
                         switch (controllerEvent.getType()) {
                             case OK:
                                 //favorizedTours.remove(tour.getTour_id());
@@ -347,7 +343,7 @@ public class TourOverviewFragment extends Fragment {
                     });
                 } else {
                     Log.d(TAG, "favorite gets favored: " + tour.getTour_id());
-                    toc.setFavorite(tour, controllerEvent -> {
+                    tourOverviewController.setFavorite(tour, controllerEvent -> {
                         switch (controllerEvent.getType()){
                             case OK:
                                 Log.d("Touroverview rv", "favorite succesfully added " + tour.getTour_id());
@@ -408,6 +404,10 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
+//                if(!tourOverviewController.checkIfExists(tour)) {
+//                    //Toast.makeText(TAG,R.string.about_message,Toast.LENGTH_SHORT);
+//                    break;
+//                }
                 TourFragment tourFragment = TourFragment.newInstance(tour);
                 Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
                 if(oldTourFragment != null) {

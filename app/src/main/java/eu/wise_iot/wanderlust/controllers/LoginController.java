@@ -19,8 +19,10 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ProfileService;
@@ -33,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/*
+/**
  * Login Controller which handles the login of the user
  * @author Joshua
  * @license MIT
@@ -51,6 +53,7 @@ public class LoginController {
     private final ViolationTypeDao violationTypeDao;
     private final FavoriteDao favoriteDao;
     private final PoiDao poiDao;
+    private final RecentTourDao recentTourDao;
     /**
      * Create a login contoller
      */
@@ -66,6 +69,7 @@ public class LoginController {
         violationTypeDao = ViolationTypeDao.getInstance();
         favoriteDao = FavoriteDao.getInstance();
         poiDao = PoiDao.getInstance();
+        recentTourDao = RecentTourDao.getInstance();
     }
 
     public void logIn(LoginUser user, final FragmentHandler handler) {
@@ -273,6 +277,7 @@ public class LoginController {
         poiDao.removeNonUserPois(userDao.getUser().getUser_id());
         poiDao.retrieveUserPois();
         equipmentController.initExtraEquipment();
+        recentTourDao.updateRecentTours();
     }
 
     public void setDeviceInfo(LoginUser user){
