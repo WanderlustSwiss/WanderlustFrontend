@@ -404,22 +404,36 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
-//                if(!tourOverviewController.checkIfExists(tour)) {
-//                    //Toast.makeText(TAG,R.string.about_message,Toast.LENGTH_SHORT);
-//                    break;
-//                }
-                TourFragment tourFragment = TourFragment.newInstance(tour);
-                Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
-                if(oldTourFragment != null) {
+/*
+                TODO: FIX when tour clicked check if existing
+                ProcessingFragment processingFragment = ProcessingFragment.newInstance();
+                Fragment oldProcessingFragment = getFragmentManager().findFragmentByTag(Constants.PROCESSING_FRAGMENT);
+                if(oldProcessingFragment != null) {
                     getFragmentManager().beginTransaction()
-                            .remove(oldTourFragment)
+                            .remove(oldProcessingFragment)
                             .commit();
                 }
                 getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                        .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
+                        .add(R.id.content_frame, processingFragment, Constants.PROCESSING_FRAGMENT)
                         .commit();
-                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
+                if(tourOverviewController.checkIfTourExists(tour)) {
+                    */
+                    TourFragment tourFragment = TourFragment.newInstance(tour);
+                    Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
+                    if (oldTourFragment != null) {
+                        getFragmentManager().beginTransaction()
+                                .remove(oldTourFragment)
+                                .commit();
+                    }
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                            .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
+                            .commit();
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                /*} else {
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.tour_not_existing), Toast.LENGTH_SHORT);
+                }*/
                 break;
             //the same can be applied to other components in Row_Layout.xml
         }

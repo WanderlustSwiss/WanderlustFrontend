@@ -263,10 +263,9 @@ public class LoginController {
     }
 
     /**
-     * This Method is used to download all app data like (equipment, poi types etc.) when login
+     * This Method is used to download all app data like (equipment, poi types etc.) when login is performed
      */
     private void initAppData(){
-
         databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
         weatherController.initKeys();
         equipmentController.initEquipment();
@@ -277,7 +276,7 @@ public class LoginController {
         poiDao.removeNonUserPois(userDao.getUser().getUser_id());
         poiDao.retrieveUserPois();
         equipmentController.initExtraEquipment();
-        recentTourDao.updateRecentTours();
+        recentTourDao.updateRecentToursOnStartup();
     }
 
     public void setDeviceInfo(LoginUser user){

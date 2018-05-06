@@ -1,6 +1,8 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
@@ -37,7 +39,7 @@ public class RecentTourDao extends DatabaseObjectAbstract {
     }
     private final Box<Tour> recentTourBox;
 
-    UserTourDao userTourDao = UserTourDao.getInstance();
+    public final UserTourDao userTourDao = UserTourDao.getInstance();
 
 
     private RecentTourDao() {
@@ -87,13 +89,12 @@ public class RecentTourDao extends DatabaseObjectAbstract {
         recentTourBox.put(recentTour);
         return recentTour;
     }
+
     /**
-     * get all Favorites for the view
-     * @return list of recent tours
+     * update the given recent tours on startup
      */
-    public void updateRecentTours() {
+    public void updateRecentToursOnStartup() {
         try {
-            // CountDownLatch countDownLatch = new CountDownLatch(recentTourDao.find().size());
             for(Tour tour : this.find()) {
                 new Thread(() -> {
                     try {
@@ -101,20 +102,18 @@ public class RecentTourDao extends DatabaseObjectAbstract {
                             switch (controllerEvent.getType()) {
                                 case OK:
                                     d("RECENTTOUR UPDATE","OK");
-                                    // countDownLatch.countDown();
                                     break;
                                 case NOT_FOUND:
                                     d("RECENTTOUR UPDATE","NOT FOUND");
                                     this.remove(tour);
-                                    //countDownLatch.countDown();
+                                    break;
+                                default:
                             }
                         });
                     } catch (Exception e){
                         d("RECENTTOUR UPDATE","EXCEPTION THROWN IN THREAD");
-                        //countDownLatch.countDown();
                     }
                 }).start();
-                //countDownLatch.await();
             }
         } catch(Exception e){
             d("FAILURE","EXCEPTION THROWN IN METHOD");

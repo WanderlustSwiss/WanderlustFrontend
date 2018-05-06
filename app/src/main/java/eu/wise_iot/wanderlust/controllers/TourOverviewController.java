@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
@@ -85,6 +86,35 @@ public class TourOverviewController {
      */
     public void deleteFavorite(long favorite_id, FragmentHandler handler) {
         favoriteDao.delete(favorite_id,handler);
+    }
+    public boolean checkIfTourExists(Tour tour){
+        final AtomicBoolean exists = new AtomicBoolean(false);
+        try {
+            CountDownLatch countDownLatchThread = new CountDownLatch(1);
+            userTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
+                switch (controllerEvent.getType()) {
+                    case OK:
+                        exists.set(true);
+                        d("RECENTTOUR UPDATE2", "OK");
+                        countDownLatchThread.countDown();
+                        break;
+                    case NOT_FOUND:
+                        exists.set(false);
+                        d("RECENTTOUR UPDATE2", "NOT FOUND");
+                        recentTourDao.remove(tour);
+                        countDownLatchThread.countDown();
+                        break;
+                    default:
+                        exists.set(false);
+                        countDownLatchThread.countDown();
+                }
+            });
+            countDownLatchThread.await();
+            return exists.get();
+        } catch (Exception e){
+
+        }
+        return exists.get();
     }
 
     public long getTourFavoriteId(long id){

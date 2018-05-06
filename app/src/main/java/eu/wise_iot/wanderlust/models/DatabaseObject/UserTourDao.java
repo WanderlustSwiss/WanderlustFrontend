@@ -456,8 +456,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 

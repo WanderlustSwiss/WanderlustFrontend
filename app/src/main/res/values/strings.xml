@@ -35,6 +35,7 @@
 
 
     <!-- TOUR RELATED STRINGS -->
+    <string name="tour_not_existing">Tour existiert nicht mehr, da sie gelöscht wurde</string>
     <string name="tour_button_show_map">Start</string>
     <string name="tour_equipment">Ausrüstung</string>
     <string name="tour_region">Region</string>
