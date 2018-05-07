@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoCache;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -121,7 +120,6 @@ public class TourOverviewFragment extends Fragment {
      * retrieve all images from the database
      * @param tours
      */
-
     private static void getDataFromServer(List<Tour> tours){
         TourOverviewController tourOverviewController = new TourOverviewController();
         //get thumbnail for each tour
@@ -410,32 +408,23 @@ public class TourOverviewFragment extends Fragment {
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
 
-                AsyncHTTP asyncHTTP = new AsyncHTTP(tour, getActivity());
-                asyncHTTP.execute();
-
-                /*
-                new Thread(() -> {
-                    tourOverviewController.checkIfTourExists(tour);
-                });
-                */
-
+                AsyncCheckTourExists asyncCheckTourExists = new AsyncCheckTourExists(tour, getActivity());
+                asyncCheckTourExists.execute();
                 break;
-            //the same can be applied to other components in Row_Layout.xml
         }
 
     }
 
     /**
-     * handles async backend request when requesting a tour
+     * handles async backend request for requesting a tour
      */
-    class AsyncHTTP extends AsyncTask<Void, Void, Void>
-    {
+    private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
         ProgressDialog pdLoading;
         private Tour tour;
         private Activity activity;
         private Integer responseCode;
 
-        AsyncHTTP(Tour tour, Activity activity){
+        AsyncCheckTourExists(Tour tour, Activity activity){
             this.tour = tour;
             this.activity = activity;
             pdLoading = new ProgressDialog(this.activity);
@@ -443,30 +432,15 @@ public class TourOverviewFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            //show processing fragment
-            /*
-            ProcessingFragment processingFragment = ProcessingFragment.newInstance();
-            Fragment oldProcessingFragment = getFragmentManager().findFragmentByTag(Constants.PROCESSING_FRAGMENT);
-            if(oldProcessingFragment != null) {
-                getFragmentManager().beginTransaction()
-                        .remove(oldProcessingFragment)
-                        .commit();
-            }
-            getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, processingFragment, Constants.PROCESSING_FRAGMENT)
-                    .commit();
-            */
             //this method will be running on UI thread
-           pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
-           pdLoading.show();
+            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
+            pdLoading.show();
         }
         @Override
         protected Void doInBackground(Void... params) {
             this.responseCode = tourOverviewController.checkIfTourExists(tour);
             return null;
         }
-
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
@@ -508,7 +482,6 @@ public class TourOverviewFragment extends Fragment {
 
             if (pdLoading.isShowing()) pdLoading.dismiss();
         }
-
     }
     /**
      * shares the tour with other apps

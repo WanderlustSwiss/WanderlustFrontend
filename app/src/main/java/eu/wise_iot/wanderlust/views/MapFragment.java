@@ -235,9 +235,7 @@ public class MapFragment extends Fragment {
                         .setTitle(R.string.create_tour_save_tour)
                         .setMessage(R.string.create_tour_stop_recording_request)
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> {
-                            stoptTourTracking();
-                        })
+                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> stoptTourTracking())
                         .setNegativeButton(android.R.string.no, null).show();
             }
         });
@@ -734,6 +732,13 @@ public class MapFragment extends Fragment {
 
         ibPoiLayer = (ImageButton) view.findViewById(R.id.poi_layer_button);
         boolean poiLayerActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POI_LAYER_ACTIVE,true);
+        if (poiLayerActive) {
+            ibPoiLayer.setImageResource(R.drawable.ic_poi_white_24dp);
+            ibPoiLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            ibPoiLayer.setImageResource(R.drawable.ic_poi_black_24dp);
+            ibPoiLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
         ibPoiLayer.setSelected(poiLayerActive);
         showPoiOverlay(poiLayerActive);
 
