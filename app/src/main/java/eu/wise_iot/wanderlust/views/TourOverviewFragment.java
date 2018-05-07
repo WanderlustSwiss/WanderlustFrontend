@@ -1,8 +1,11 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,12 +27,14 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoCache;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
@@ -404,21 +409,70 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
-/*
-                TODO: FIX when tour clicked check if existing
-                ProcessingFragment processingFragment = ProcessingFragment.newInstance();
-                Fragment oldProcessingFragment = getFragmentManager().findFragmentByTag(Constants.PROCESSING_FRAGMENT);
-                if(oldProcessingFragment != null) {
-                    getFragmentManager().beginTransaction()
-                            .remove(oldProcessingFragment)
-                            .commit();
-                }
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, processingFragment, Constants.PROCESSING_FRAGMENT)
-                        .commit();
 
-                if(tourOverviewController.checkIfTourExists(tour)) {
-                    */
+                AsyncHTTP asyncHTTP = new AsyncHTTP(tour, getActivity());
+                asyncHTTP.execute();
+
+                /*
+                new Thread(() -> {
+                    tourOverviewController.checkIfTourExists(tour);
+                });
+                */
+
+                break;
+            //the same can be applied to other components in Row_Layout.xml
+        }
+
+    }
+
+    /**
+     * handles async backend request when requesting a tour
+     */
+    class AsyncHTTP extends AsyncTask<Void, Void, Void>
+    {
+        ProgressDialog pdLoading;
+        private Tour tour;
+        private Activity activity;
+        private Integer responseCode;
+
+        AsyncHTTP(Tour tour, Activity activity){
+            this.tour = tour;
+            this.activity = activity;
+            pdLoading = new ProgressDialog(this.activity);
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //show processing fragment
+            /*
+            ProcessingFragment processingFragment = ProcessingFragment.newInstance();
+            Fragment oldProcessingFragment = getFragmentManager().findFragmentByTag(Constants.PROCESSING_FRAGMENT);
+            if(oldProcessingFragment != null) {
+                getFragmentManager().beginTransaction()
+                        .remove(oldProcessingFragment)
+                        .commit();
+            }
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, processingFragment, Constants.PROCESSING_FRAGMENT)
+                    .commit();
+            */
+            //this method will be running on UI thread
+           pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
+           pdLoading.show();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            this.responseCode = tourOverviewController.checkIfTourExists(tour);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            switch(EventType.getTypeByCode(responseCode)) {
+                case OK:
+                    Log.d(TAG,"Server Response arrived -> OK Tour was found");
                     TourFragment tourFragment = TourFragment.newInstance(tour);
                     Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
                     if (oldTourFragment != null) {
@@ -431,12 +485,30 @@ public class TourOverviewFragment extends Fragment {
                             .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
                             .commit();
                     ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-                /*} else {
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.tour_not_existing), Toast.LENGTH_SHORT);
-                }*/
-                break;
-            //the same can be applied to other components in Row_Layout.xml
+                    break;
+                case NOT_FOUND:
+                    Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
+                    recentTours.remove(tour);
+                    adapterRecent.notifyDataSetChanged();
+                    tourOverviewController.removeRecentTour(tour);
+                    break;
+                case SERVER_ERROR:
+                    Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
+                    break;
+                case NETWORK_ERROR:
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                    Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                    break;
+                default:
+                    Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+            }
+
+            if (pdLoading.isShowing()) pdLoading.dismiss();
         }
+
     }
     /**
      * shares the tour with other apps

@@ -1,5 +1,11 @@
 <resources>
 
+    <!-- SERVER RELATED STRINGS -->
+    <string name="msg_server_error_get_tour">Serverfehler! Konnte Tour nicht abrufen</string>
+    <string name="msg_tour_not_existing">Tour existiert nicht mehr, da sie gelöscht wurde</string>
+    <string name="msg_processing_open_tour">Lade Tour...</string>
+    <string name="msg_general_error">Etwas ist schiefgelaufen...</string>
+
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
     <string name="app_domain"> #wanderlustapp</string>
@@ -35,7 +41,6 @@
 
 
     <!-- TOUR RELATED STRINGS -->
-    <string name="tour_not_existing">Tour existiert nicht mehr, da sie gelöscht wurde</string>
     <string name="tour_button_show_map">Start</string>
     <string name="tour_equipment">Ausrüstung</string>
     <string name="tour_region">Region</string>

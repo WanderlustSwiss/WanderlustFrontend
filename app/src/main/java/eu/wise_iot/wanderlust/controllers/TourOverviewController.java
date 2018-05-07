@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
@@ -15,6 +16,8 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
 import static android.util.Log.d;
+import static eu.wise_iot.wanderlust.controllers.EventType.NETWORK_ERROR;
+import static eu.wise_iot.wanderlust.controllers.EventType.NOT_FOUND;
 import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
@@ -66,6 +69,14 @@ public class TourOverviewController {
     public List<Tour> getRecentTours() {
         return recentTourDao.find();
     }
+
+    /**
+     * get all Favorites for the view
+     * @return list of recent tours
+     */
+    public void removeRecentTour(Tour tour) {
+        recentTourDao.remove(tour);
+    }
     /**
      * get thumbnail of each tour
      *
@@ -87,34 +98,21 @@ public class TourOverviewController {
     public void deleteFavorite(long favorite_id, FragmentHandler handler) {
         favoriteDao.delete(favorite_id,handler);
     }
-    public boolean checkIfTourExists(Tour tour){
-        final AtomicBoolean exists = new AtomicBoolean(false);
+    public Integer checkIfTourExists(Tour tour){
+        final AtomicInteger responseCode = new AtomicInteger(0);
         try {
             CountDownLatch countDownLatchThread = new CountDownLatch(1);
             userTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        exists.set(true);
-                        d("RECENTTOUR UPDATE2", "OK");
-                        countDownLatchThread.countDown();
-                        break;
-                    case NOT_FOUND:
-                        exists.set(false);
-                        d("RECENTTOUR UPDATE2", "NOT FOUND");
-                        recentTourDao.remove(tour);
-                        countDownLatchThread.countDown();
-                        break;
-                    default:
-                        exists.set(false);
-                        countDownLatchThread.countDown();
-                }
+                responseCode.set(controllerEvent.getType().code);
+                countDownLatchThread.countDown();
+
             });
             countDownLatchThread.await();
-            return exists.get();
+            return responseCode.get();
         } catch (Exception e){
-
+            Log.d(TAG,"failure while processing request");
         }
-        return exists.get();
+        return responseCode.get();
     }
 
     public long getTourFavoriteId(long id){
