@@ -260,11 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment = MapFragment.newInstance(); //create if not available yet
 
         } else if (id == R.id.nav_tours) {
-            fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
-            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
-
             fragment = TourOverviewFragment.newInstance();
-
         } else if (id == R.id.nav_profile) {
             fragmentTag = Constants.PROFILE_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
