@@ -262,7 +262,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_tours) {
             fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
-            if (fragment == null) fragment = TourOverviewFragment.newInstance();
+
+            fragment = TourOverviewFragment.newInstance();
+
         } else if (id == R.id.nav_profile) {
             fragmentTag = Constants.PROFILE_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
