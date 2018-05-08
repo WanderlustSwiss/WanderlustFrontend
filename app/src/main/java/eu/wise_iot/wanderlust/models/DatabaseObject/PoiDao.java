@@ -79,7 +79,10 @@ public class PoiDao extends DatabaseObjectAbstract {
                     Poi newPoi = response.body();
                     newPoi.setInternal_id(0);
                     poiBox.put(newPoi);
+                    poiController.getPoiCache().add(newPoi);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), newPoi));
+                    DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI));
+
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
@@ -210,7 +213,6 @@ public class PoiDao extends DatabaseObjectAbstract {
                         new File(imageInfo.getLocalPath()).delete();
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
-                    DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.DELETESINGLEPOI, response.body()));
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }

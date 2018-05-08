@@ -177,6 +177,8 @@ public class PoiController {
      * @param handler
      */
     public void deletePoi(Poi poi, FragmentHandler handler) {
+        poiCache.remove(poi);
+        DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.DELETESINGLEPOI));
         poiDao.delete(poi, handler);
     }
 
