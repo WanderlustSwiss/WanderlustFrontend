@@ -12,11 +12,14 @@ import android.location.LocationManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
@@ -360,6 +363,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             positionMarker.setIcon(drawable);
             positionMarker.setPosition(geoPoint);
             positionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+            positionMarker.setOnMarkerClickListener((marker, mapView) -> true);
 
             if(!mapView.getOverlays().contains(positionMarker)) {
                 mapView.getOverlays().add(positionMarker);
@@ -509,6 +513,12 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
 
             focusedPositionMarker = new Marker(mapView);
+            focusedPositionMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    return true;
+                }
+            });
             focusedPositionMarker.setIcon(drawable);
             focusedPositionMarker.setPosition(geoPoint);
             focusedPositionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
