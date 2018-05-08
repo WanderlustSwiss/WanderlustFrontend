@@ -49,6 +49,7 @@
     <string name="tour_distance">Distanz (km)</string>
     <string name="tour_duration">Dauer (Stunden)</string>
     <string name="tour_filter_noresult">Keine Touren gefunden</string>
+    <string name="tour_filter_no_internet">Keine Internetverbindung konnte augebaut werden</string>
     <string name="go_to_shop_string">Zum Onlineshop</string>
 
     <!-- VIOATION RELATED STRINGS -->

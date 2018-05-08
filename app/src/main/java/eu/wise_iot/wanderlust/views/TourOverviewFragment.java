@@ -227,13 +227,25 @@ public class TourOverviewFragment extends Fragment {
                         pbTours.setVisibility(View.GONE);
                     } else {
                         rvTours.setVisibility(View.GONE);
+                        tvToursAllPlaceholder.setText(getResources().getText(R.string.tour_filter_noresult));
                         tvToursAllPlaceholder.setVisibility(View.VISIBLE);
                         pbTours.setVisibility(View.GONE);
                     }
                     break;
+                case NETWORK_ERROR:
+                    if(adapterFavs.getItemCount() > 0) {
+                        rvTours.setVisibility(View.VISIBLE);
+                        tvToursAllPlaceholder.setVisibility(View.GONE);
+                        pbTours.setVisibility(View.GONE);
+                    } else {
+                        rvTours.setVisibility(View.GONE);
+                        tvToursAllPlaceholder.setText(getResources().getText(R.string.tour_filter_no_internet));
+                        tvToursAllPlaceholder.setVisibility(View.VISIBLE);
+                        pbTours.setVisibility(View.GONE);
+                    }
                 default:
                     Log.d(TAG, "Server response ERROR: " + event.getType().name());
-                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+
             }
         });
 
@@ -259,12 +271,24 @@ public class TourOverviewFragment extends Fragment {
                         pbFavorites.setVisibility(View.GONE);
                     } else {
                         rvFavorites.setVisibility(View.GONE);
+                        tvToursFavoritePlaceholder.setText(getResources().getText(R.string.tour_filter_noresult));
+                        tvToursFavoritePlaceholder.setVisibility(View.VISIBLE);
+                        pbFavorites.setVisibility(View.GONE);
+                    }
+                    break;
+                case NETWORK_ERROR:
+                    if(adapterFavs.getItemCount() > 0) {
+                        rvFavorites.setVisibility(View.VISIBLE);
+                        tvToursFavoritePlaceholder.setVisibility(View.GONE);
+                        pbFavorites.setVisibility(View.GONE);
+                    } else {
+                        rvFavorites.setVisibility(View.GONE);
+                        tvToursFavoritePlaceholder.setText(getResources().getText(R.string.tour_filter_no_internet));
                         tvToursFavoritePlaceholder.setVisibility(View.VISIBLE);
                         pbFavorites.setVisibility(View.GONE);
                     }
                 default:
                     Log.d("ERROR", "failed to get Favorites");
-                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
             }
         });
 

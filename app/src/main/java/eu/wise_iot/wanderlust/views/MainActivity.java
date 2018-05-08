@@ -135,10 +135,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }else{
 
                 loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
-                    User logtInUser = (User) controllerEvent.getModel();
+                    User loggedInUser = (User) controllerEvent.getModel();
                     switch (controllerEvent.getType()) {
                         case OK:
-                            setupDrawerHeader(logtInUser);
+                            setupDrawerHeader(loggedInUser);
 
                             //set last login
                             DateTime now = new DateTime();
@@ -146,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             now = now.withZone(timeZone);
                             DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
                             String lastLoginNow = fmt.print(now);
-                            logtInUser.setLastLogin(lastLoginNow);
-                            UserDao.getInstance().update(logtInUser);
+                            loggedInUser.setLastLogin(lastLoginNow);
+                            UserDao.getInstance().update(loggedInUser);
 
                             MapFragment mapFragment = MapFragment.newInstance();
                             getFragmentManager().beginTransaction()
@@ -155,21 +155,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     .commit();
                             break;
                         default:
-
                             DateTime lastLogin = DateTime.parse(user.getLastLogin());
                             DateTime timerLimit = new DateTime();
                             timerLimit = timerLimit.minusDays(1);
                             Log.d(TAG, "Last login: " + lastLogin);
 
                             if(lastLogin.isAfter(timerLimit)){
+                                runOnUiThread(() -> setupDrawerHeader(user));
                                 MapFragment fragment = MapFragment.newInstance();
                                 getFragmentManager().beginTransaction()
                                         .add(R.id.content_frame,fragment, Constants.MAP_FRAGMENT)
                                         .commit();
-                                setupDrawerHeader(user);
-
-
-                            }else {
+                            } else {
                                 StartupLoginFragment loginFragment = new StartupLoginFragment();
                                 getFragmentManager().beginTransaction()
                                         .add(R.id.content_frame, loginFragment)
@@ -342,13 +339,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setupDrawerHeader(User user) {
         username = (TextView) findViewById(R.id.user_name);
         email = (TextView) findViewById(R.id.user_mail_address);
-        userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+        userProfileImage = (ImageView) this.findViewById(R.id.user_profile_image);
 
         userProfileImage.setOnClickListener(view -> {
-            Fragment fragment = null;
-            String fragmentTag = null;
-            fragment = ProfileFragment.newInstance();
-            fragmentTag = Constants.PROFILE_FRAGMENT;
+            Fragment fragment = ProfileFragment.newInstance();
+            String fragmentTag = Constants.PROFILE_FRAGMENT;
             switchFragment(fragment, fragmentTag);
         });
 
@@ -364,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (image != null) {
             Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
-        }else{
+        } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);

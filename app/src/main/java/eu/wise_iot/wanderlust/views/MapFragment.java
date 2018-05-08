@@ -492,7 +492,6 @@ public class MapFragment extends Fragment {
     /**
      * Loads user preferences of map settings in shared preferences
      */
-
     private void loadPreferences() {
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         double defaultMapCenterLat = Defaults.GEO_POINT_CENTER_OF_SWITZERLAND.getLatitude();
@@ -716,17 +715,10 @@ public class MapFragment extends Fragment {
 
         // register behavior on clicked
         layerButton.setOnClickListener(view1 -> {
-            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-               /*
-                NestedScrollView layout = (NestedScrollView) view.findViewById(R.id.bottom_sheet);
-                ViewGroup.LayoutParams params = layout.getLayoutParams();
-                //params.height = 600;
-                layout.setLayoutParams(params);
-                */
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN)
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            } else {
+            else
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            }
         });
         closeBottomSheetButton.setOnClickListener(view1 -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
 
@@ -1095,8 +1087,6 @@ public class MapFragment extends Fragment {
         }
 
     }
-
-
 
     private void stoptTourTracking() {
         getActivity().stopService(createTourIntent);
