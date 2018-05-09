@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -14,6 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
@@ -22,6 +26,8 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.FilterController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
+import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
+import eu.wise_iot.wanderlust.views.dialog.TourRatingDialogFilter;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -39,6 +45,8 @@ public class FilterFragment extends Fragment {
     private AutoCompleteTextView tiName;
     private CheckBox cbT1, cbT2, cbT3, cbT4, cbT5, cbT6;
     private FilterController filterController;
+    private TextView tourRatingInNumbers;
+    private RatingBar ratingBar;
 
     public static FilterFragment newInstance() {
         Bundle args = new Bundle();
@@ -81,7 +89,18 @@ public class FilterFragment extends Fragment {
             return true;
         });
 
-        rsbDistance = (RangeSeekBar)view.findViewById(R.id.rsbDistance);
+        tourRatingInNumbers = (TextView) view.findViewById(R.id.tourRatingNumbers);
+        ratingBar = (RatingBar) view.findViewById(R.id.tourRatingFilter);
+
+        ratingBar.setOnTouchListener((View v, MotionEvent e) -> {
+            if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                TourRatingDialogFilter dialog = new TourRatingDialogFilter().newInstance(filterController, ratingBar);
+                dialog.show(getFragmentManager(), Constants.RATE_TOUR_FILTER_DIALOG);
+            }
+            return true;
+        });
+
+        rsbDistance = (RangeSeekBar) view.findViewById(R.id.rsbDistance);
         rsbDuration = (RangeSeekBar) view.findViewById(R.id.rsbDuration);
         btnSearch = (Button)view.findViewById(R.id.btnSearch);
         tiName = (AutoCompleteTextView)view.findViewById(R.id.tiTourNameInput);
@@ -116,6 +135,7 @@ public class FilterFragment extends Fragment {
         setting.distanceE = ((int)rsbDistance.getSelectedMaxValue() * 1000);
         setting.durationS = ((int)rsbDuration.getSelectedMinValue() * 60);
         setting.durationE = ((int)rsbDuration.getSelectedMaxValue() * 60);
+        setting.rating = ratingBar.getRating();
 
         //build query for regions
         StringBuilder sb = new StringBuilder();
@@ -140,5 +160,6 @@ public class FilterFragment extends Fragment {
         boolean cbT1, cbT2, cbT3, cbT4, cbT5, cbT6;
         String name, region;
         int distanceS, distanceE, durationS, durationE;
+        float rating;
     }
 }

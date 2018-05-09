@@ -130,9 +130,10 @@ public class ResultFilterFragment extends Fragment {
                                                     Log.d(TAG,"Server response ERROR: " + controllerEvent.getType().name());
                                                     break;
                                             }
-                                        },settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
+                                        },settingsSet.rating, settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
                                                 settingsSet.durationE, settingsSet.region,
-                                                settingsSet.name, resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
+                                                settingsSet.name,
+                                                resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
                                     }
                                     Log.d(TAG,"Scroll idle");
                                     break;
@@ -146,7 +147,7 @@ public class ResultFilterFragment extends Fragment {
 
                     break;
             }
-        }, settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
+        },settingsSet.rating, settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
                 settingsSet.durationE, settingsSet.region,
                 settingsSet.name, resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
 

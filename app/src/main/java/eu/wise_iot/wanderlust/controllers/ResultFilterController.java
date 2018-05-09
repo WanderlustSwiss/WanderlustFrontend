@@ -44,8 +44,8 @@ public class ResultFilterController {
         imageController = ImageController.getInstance();
     }
 
-    public void getFilteredTours(FragmentHandler handler, int distanceS, int distanceE, int page, int durationS, int durationE, String regionID, String title, String difficulties) {
-        userTourDao.retrieveAllFiltered(handler, page, distanceS, distanceE, durationS, durationE, regionID, title, difficulties);
+    public void getFilteredTours(FragmentHandler handler, float rating, int distanceS, int distanceE, int page, int durationS, int durationE, String regionID, String title, String difficulties) {
+        userTourDao.retrieveAllFiltered(handler, rating, page, distanceS, distanceE, durationS, durationE, regionID, title, difficulties);
     }
 
     public int getRegionIdByString(String region) {

@@ -94,6 +94,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginController = new LoginController();
         broadcastReceiver = new OfflineQueueController.NetworkChangeReceiver();
 
+        username = (TextView) findViewById(R.id.user_name);
+        email = (TextView) findViewById(R.id.user_mail_address);
+        userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+
         this.registerReceiver(
                 broadcastReceiver,
                 new IntentFilter(
@@ -161,11 +165,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Log.d(TAG, "Last login: " + lastLogin);
 
                             if(lastLogin.isAfter(timerLimit)){
-                                runOnUiThread(() -> setupDrawerHeader(user));
                                 MapFragment fragment = MapFragment.newInstance();
                                 getFragmentManager().beginTransaction()
                                         .add(R.id.content_frame,fragment, Constants.MAP_FRAGMENT)
                                         .commit();
+                                //TODO FIX NPE if no connection
+                                //setupDrawerHeader(user);
                             } else {
                                 StartupLoginFragment loginFragment = new StartupLoginFragment();
                                 getFragmentManager().beginTransaction()
@@ -337,9 +342,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setupDrawerHeader(User user) {
-        username = (TextView) findViewById(R.id.user_name);
-        email = (TextView) findViewById(R.id.user_mail_address);
-        userProfileImage = (ImageView) this.findViewById(R.id.user_profile_image);
+       // username = (TextView) findViewById(R.id.user_name);
+       // email = (TextView) findViewById(R.id.user_mail_address);
+       // userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
 
         userProfileImage.setOnClickListener(view -> {
             Fragment fragment = ProfileFragment.newInstance();

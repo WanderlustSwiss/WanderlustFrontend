@@ -42,6 +42,7 @@ public interface Constants {
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
     String EDIT_POI_DIALOG = "PoiFeedbackDialog";
     String RATE_TOUR_DIALOG = "TourRatingDialog";
+    String RATE_TOUR_FILTER_DIALOG = "RateTourFilterDialog";
     String EQUIPMENT_DIALOG = "EquipmentDialog";
     String REPORT_TOUR_DIALOG = "TourReportDialog";
     String REPORT_POI_DIALOG = "PoiReportDialog";
