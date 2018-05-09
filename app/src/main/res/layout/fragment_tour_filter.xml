@@ -292,20 +292,26 @@
                     rsb:valuesAboveThumbs="true" />
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/background_two_and_inactive" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="12dp">
                 <TextView
                     android:id="@+id/tourRatingNumbers"
-                    style="@style/p.Light"
-                    android:layout_width="wrap_content"
+                    style="@style/p"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="8dp" />
+                    android:text="@string/tour_rating" />
 
                 <RatingBar
                     android:id="@+id/tourRatingFilter"
-                    style="?android:attr/ratingBarStyleSmall"
+                    style="?android:attr/ratingBarStyleIndicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/background_main" />
