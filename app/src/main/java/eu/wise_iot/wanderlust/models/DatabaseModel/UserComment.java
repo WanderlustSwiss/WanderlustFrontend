@@ -7,13 +7,16 @@ public class UserComment {
     private String updatedAt;
     private String createdAt;
     private String nickname;
+    private long tour;
 
-    public UserComment(long com_id, String text, String updatedAt, String createdAt, String nickname) {
+    public UserComment(long com_id, String text, String updatedAt,
+                       String createdAt, String nickname, long tour) {
         this.com_id = com_id;
         this.text = text;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
         this.nickname = nickname;
+        this.tour = tour;
     }
     public long getCom_id() {
         return com_id;
@@ -53,5 +56,13 @@ public class UserComment {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public long getTour() {
+        return tour;
+    }
+
+    public void setTour(long tour) {
+        this.tour = tour;
     }
 }

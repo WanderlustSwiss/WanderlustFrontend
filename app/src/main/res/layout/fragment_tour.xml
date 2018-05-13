@@ -463,34 +463,12 @@
 
             </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/rate_title_layout"
-                style="@style/TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <EditText
-                    android:id="@+id/rate_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:hint="@string/dialog_feedback_description_edit_hint"
-                    android:maxLength="200"
-                    android:paddingTop="4dp" />
-            </android.support.design.widget.TextInputLayout>
-
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/tour_comment_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/h2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tour_comment_all_comments" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -524,8 +502,8 @@
                                 android:src="@drawable/ic_rate_star_transparent_32dp" />
 
                             <ImageView
-                                android:layout_width="100dp"
                                 android:id="@+id/tourCommentRating5"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/rectangle_rounded_shape" />
                         </LinearLayout>
@@ -666,6 +644,43 @@
                     android:isIndicator="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+                <TextView
+                    style="@style/h2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tour_comment_all_comments" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/tour_comment_send"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:text="Send Icon" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/tour_comment_textinput"
+                        style="@style/TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="8dp"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="250">
+
+                        <EditText
+                            android:id="@+id/tour_comment_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="true"
+                            android:hint="@string/dialog_feedback_description_edit_hint"
+                            android:maxLength="250"
+                            android:paddingTop="4dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
 
                 <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/tour_comment_progressbar"
@@ -677,7 +692,7 @@
                     android:id="@+id/tour_comment_placeholder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tour_filter_noresult" />
+                    android:text="@string/tour_comment_noresult" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/tour_comment_recyclerview"

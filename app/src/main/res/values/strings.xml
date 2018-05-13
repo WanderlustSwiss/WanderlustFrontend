@@ -179,6 +179,9 @@
     <string name="tour_comment_days">Tage</string>
     <string name="tour_comment_weeks">Wochen</string>
     <string name="tour_comment_year">Jahr</string>
+    <string name="tour_comment_all_comments">Alle Kommentare</string>
+    <string name="tour_comment_noresult">Keine Kommentare</string>
+    <string name="tour_comment_description">Was sind deine Erfahrungen mit der Tour?</string>
 
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>
@@ -189,6 +192,7 @@
     <string name="msg_difficulty_level_changed_to_1">Schwierigkeits-Level auf</string>
     <string name="msg_difficulty_level_changed_to_2">geändert</string>
     <string name="msg_no_changes_done">Keine Änderungen vorgenommen</string>
+    <string name="msg_comment_create_successfull">Kommetar wurde erstellt</string>
     <string name="meter_abbreviation">m</string>
     <string name="logout_successful">Logout erfolgreich</string>
     <string name="logout_failed">Logout fehlgeschlagen</string>
@@ -264,6 +268,5 @@
     <string name="short_october">Okt</string>
     <string name="short_november">Nov</string>
     <string name="short_december">Dez</string>
-    <string name="tour_comment_all_comments">Alle Bewertungen</string>
 
 </resources>

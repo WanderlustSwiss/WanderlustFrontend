@@ -176,8 +176,8 @@ public class TourController {
     }
 
 
-    public void getRating(FragmentHandler handler) {
-        ratingDao.retrieve(tour.getTour_id(), handler);
+    public void getTourRating(FragmentHandler handler) {
+        ratingDao.retrieveTour(tour.getTour_id(), handler);
     }
 
     public String getRegion() {
@@ -324,7 +324,8 @@ public class TourController {
     }
 
     public void createComment(String comment, FragmentHandler handler){
-        Call<UserComment> call = commentService.createTourComment(tour.getTour_id(), comment);
+        Call<UserComment> call = commentService.createTourComment(new UserComment(0,
+                comment,null, null, null, tour.getTour_id()));
         call.enqueue(new Callback<UserComment>() {
             @Override
             public void onResponse(Call<UserComment> call, Response<UserComment> response) {

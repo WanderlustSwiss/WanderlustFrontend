@@ -21,8 +21,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,23 +66,22 @@ import java.util.Locale;
 import at.blogc.android.views.ExpandableTextView;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
-import eu.wise_iot.wanderlust.models.DatabaseModel.RatingStatistic;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
-import eu.wise_iot.wanderlust.views.adapters.ResultFilterRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.TourCommentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * TourController:
@@ -162,6 +163,8 @@ public class TourFragment extends Fragment {
     private RatingBar rbTourCommentAverageRating, rbCommentUserSpecificRating;
     private TextView tvTourCommentAverageRating, tourCommentRatingCount;
     private ImageView tourCommentRating1, tourCommentRating2, tourCommentRating3, tourCommentRating4, tourCommentRating5;
+    private Button sendCommentButton;
+    private EditText commentText;
 
     public TourFragment() {
         // Required empty public constructor
@@ -289,6 +292,9 @@ public class TourFragment extends Fragment {
         forthTimePoint = (TextView) view.findViewById(R.id.timeForthPoint);
         fifthTimePoint = (TextView) view.findViewById(R.id.timeFifthPoint);
 
+        sendCommentButton = (Button) view.findViewById(R.id.tour_comment_send);
+        commentText = (EditText) view.findViewById(R.id.tour_comment_description);
+
         long difficulty = tourController.getLevel();
         Drawable drawable;
         if (difficulty >= 6)
@@ -302,6 +308,28 @@ public class TourFragment extends Fragment {
 
         textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 
+
+        Drawable tourRatingDrawable = tourRating.getProgressDrawable();
+        tourRatingDrawable.setColorFilter(Color.parseColor("#FFFFFF"),
+                PorterDuff.Mode.SRC_ATOP);
+
+        setupRVComments(view);
+        setupRVEquipment(view);
+    }
+    private void setupRVEquipment(View view){
+        RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
+        rvEquipment.setPadding(5, 5, 5, 5);
+        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        rvEquipment.setLayoutManager(horizontalLayoutManager);
+        adapterEquip = new EquipmentRVAdapter(context, listEquipment);
+        adapterEquip.setClickListener(this::onItemClickImages);
+        rvEquipment.setAdapter(adapterEquip);
+
+        DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
+        rvEquipment.addItemDecoration(itemDecorator);
+    }
+    private void setupRVComments(View view){
         commentProgressBar = (ProgressBar) view.findViewById(R.id.tour_comment_progressbar);
         commentRecyclerView = (RecyclerView) view.findViewById(R.id.tour_comment_recyclerview);
         commentPlaceholder = (TextView) view.findViewById(R.id.tour_comment_placeholder);
@@ -318,9 +346,7 @@ public class TourFragment extends Fragment {
                     //get all needed information from server db
                     List<UserComment> list = (List<UserComment>) event.getModel();
                     currentPage++;
-
                     listUserComment.addAll(list);
-
                     adapterComments.notifyDataSetChanged();
                     if(adapterComments.getItemCount() > 0) {
                         commentRecyclerView.setVisibility(View.VISIBLE);
@@ -342,26 +368,7 @@ public class TourFragment extends Fragment {
                     Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
             }
         });
-
-        Drawable tourRatingDrawable = tourRating.getProgressDrawable();
-        tourRatingDrawable.setColorFilter(Color.parseColor("#FFFFFF"),
-                PorterDuff.Mode.SRC_ATOP);
-
-
-        //equipment section
-        RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
-        rvEquipment.setPadding(5, 5, 5, 5);
-        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        rvEquipment.setLayoutManager(horizontalLayoutManager);
-        adapterEquip = new EquipmentRVAdapter(context, listEquipment);
-        adapterEquip.setClickListener(this::onItemClickImages);
-        rvEquipment.setAdapter(adapterEquip);
-
-        DividerItemDecoration itemDecorator = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
-        rvEquipment.addItemDecoration(itemDecorator);
     }
-
     /**
      * @param tour
      */
@@ -425,36 +432,11 @@ public class TourFragment extends Fragment {
 
         tourTitle.setText(tourController.getTitle());
 
-        tourController.getRating(controllerEvent -> {
+        tourController.getTourRating(controllerEvent -> {
            if (controllerEvent.getType() == EventType.OK){
-               RatingStatistic rateStat = (RatingStatistic) controllerEvent.getModel();
-               float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateStat.getRateAvg() * 2) / 2.0));
-               //TODO: Implement linking to GUI
-               //TODO: Set user specific rating here (X)
-               //rbCommentUserSpecificRating.setRating(X);
-               //TODO: Set number of 1 to 5 Star rates (replace X) with width 0 - 100dp
-//               tourCommentRating1.getLayoutParams().width = X;
-//               tourCommentRating2.getLayoutParams().width = X;
-//               tourCommentRating3.getLayoutParams().width = X;
-//               tourCommentRating4.getLayoutParams().width = X;
-//               tourCommentRating5.getLayoutParams().width = X;
-               //refresh layout
-               tourCommentRating1.requestLayout();
-               tourCommentRating2.requestLayout();
-               tourCommentRating3.requestLayout();
-               tourCommentRating4.requestLayout();
-               tourCommentRating5.requestLayout();
-
-
-               rbTourCommentAverageRating.setRating(rateStat.getRateAvg());
-               //TODO set amaount of rates here -> is getRateTotal returning the needed value?
-               tourCommentRatingCount.setText(String.valueOf(rateStat.getRateTotal()) + " " + getResources().getString(R.string.tour_comment_rating_count));
-               tvTourCommentAverageRating.setText(String.valueOf(rateStat.getRateAvg()));
-
-               tourRating.setRating(rateStat.getRateAvg());
-               tourRatingInNumbers.setText(rateAvgRound + "");
+               updateRating((TourRate) controllerEvent.getModel());
            }else{
-               tourRatingInNumbers.setText("0");
+               updateRating(null);
            }
         });
 
@@ -479,14 +461,12 @@ public class TourFragment extends Fragment {
         backbutton.setOnClickListener((View v) -> showTourView());
         favButton.setOnClickListener((View v) -> toggleFavorite());
         tourSavedButton.setOnClickListener((View v) -> toggleSaved());
+        sendCommentButton.setOnClickListener((View v) -> createComment());
         tourRating.setOnTouchListener((View v, MotionEvent e) -> {
-            //setOnTouchListener creates two MotionEvents and without if-Statement, it would
-            //open the dialog twice even if android doc says that you cant open two dialogs at the
-            //same time .... fuck yeah android
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
                     TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,
-                            tourRating, tourRatingInNumbers);
+                            this);
                     dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
@@ -522,7 +502,42 @@ public class TourFragment extends Fragment {
             textView.toggle();
         });
     }
-
+    private void createComment(){
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        tourController.createComment(commentText.getText().toString(), (controllerEvent) -> {
+            Toast.makeText(this.context,getResources().getText(R.string.msg_comment_create_successfull), Toast.LENGTH_SHORT);
+            tourController.getComments(0, event -> {
+                switch (event.getType()) {
+                    case OK:
+                        commentText.getText().clear();
+                        List<UserComment> list = (List<UserComment>) event.getModel();
+                        currentPage++;
+                        listUserComment.clear();
+                        listUserComment.addAll(list);
+                        adapterComments.notifyDataSetChanged();
+                        if(adapterComments.getItemCount() > 0) {
+                            commentRecyclerView.setVisibility(View.VISIBLE);
+                            commentPlaceholder.setVisibility(View.GONE);
+                            commentProgressBar.setVisibility(View.GONE);
+                        } else {
+                            commentRecyclerView.setVisibility(View.GONE);
+                            commentPlaceholder.setVisibility(View.VISIBLE);
+                            commentProgressBar.setVisibility(View.GONE);
+                        }
+                        break;
+                    case NOT_FOUND:
+                        commentRecyclerView.setVisibility(View.GONE);
+                        commentPlaceholder.setVisibility(View.VISIBLE);
+                        commentProgressBar.setVisibility(View.GONE);
+                        break;
+                    default:
+                        Log.d(TAG, "Server response ERROR: " + event.getType().name());
+                        Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+                }
+            });
+        });
+    }
     /**
      * Method sets up listeners for TimePickerDialog and DatePickerDialog which are needed to
      * save selected DateTime to aquire the weather objects to the specific route and date/time
@@ -569,7 +584,6 @@ public class TourFragment extends Fragment {
             dialog.show();
         });
     }
-
     private void setupWeather() {
 
         weatherController.getWeatherFromTour(tour, selectedDateTime, controllerEvent -> {
@@ -738,7 +752,40 @@ public class TourFragment extends Fragment {
             }
         }
     }
+    public void updateRating(TourRate tourRate){
+        if (tourRate != null){
+            ImageView[] tourCommentRatings = {tourCommentRating1, tourCommentRating2,
+                    tourCommentRating3, tourCommentRating4, tourCommentRating5};
+            final float scale = context.getResources().getDisplayMetrics().density;
+            float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(tourRate.getRateAvg() * 2) / 2.0));
 
+            float deltaDPSize = 100 / tourRate.getRateTotal();
+            int c = 0;
+            for (Integer rateValue : tourRate.getRateByValue()){
+                int width = Math.round(rateValue * deltaDPSize);
+                tourCommentRatings[c++].getLayoutParams().width = (int) (width * scale + 0.5f);
+            }
+            //refresh layout
+            tourCommentRating1.requestLayout();
+            tourCommentRating2.requestLayout();
+            tourCommentRating3.requestLayout();
+            tourCommentRating4.requestLayout();
+            tourCommentRating5.requestLayout();
+
+            rbCommentUserSpecificRating.setRating(tourRate.getUserRate());
+
+            rbTourCommentAverageRating.setRating(tourRate.getRateAvg());
+
+            tourCommentRatingCount.setText(String.valueOf(tourRate.getRateTotal()) + " " + getResources().getString(R.string.tour_comment_rating_count));
+            tvTourCommentAverageRating.setText(String.valueOf(rateAvgRound));
+            tourRatingInNumbers.setText(String.valueOf(rateAvgRound));
+            tourRating.setRating(rateAvgRound);
+        }else{
+            tvTourCommentAverageRating.setText("0.0");
+            tvTourCommentAverageRating.setText("0.0");
+            tourRatingInNumbers.setText("0");
+        }
+    }
     public void drawChart() {
         Number[] domainLabels = tourController.getElevationProfileXAxis();
         Number[] series1Numbers = tourController.getElevationProfileYAxis();

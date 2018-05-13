@@ -21,8 +21,8 @@ import retrofit2.http.Query;
  * @author Simon Kaspar
  */
 public interface CommentService {
-    @POST("comment/{tour_id}")
-    Call<UserComment> createTourComment(@Path("tour_id") long tour_id, @Body String comment);
+    @POST("comment/")
+    Call<UserComment> createTourComment(@Body UserComment userComment);
 
     @GET("comment/{tour_id}")
     Call<List<UserComment>> retrieveTourComments(@Path("tour_id") long tour_id, @Query("page") int page);
