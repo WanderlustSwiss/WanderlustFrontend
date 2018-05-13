@@ -8,15 +8,17 @@ public class UserComment {
     private String createdAt;
     private String nickname;
     private long tour;
+    private long user;
 
     public UserComment(long com_id, String text, String updatedAt,
-                       String createdAt, String nickname, long tour) {
+                       String createdAt, String nickname, long tour, long user) {
         this.com_id = com_id;
         this.text = text;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
         this.nickname = nickname;
         this.tour = tour;
+        this.user = user;
     }
     public long getCom_id() {
         return com_id;
@@ -64,5 +66,13 @@ public class UserComment {
 
     public void setTour(long tour) {
         this.tour = tour;
+    }
+
+    public long getUser() {
+        return user;
+    }
+
+    public void setUser(long user) {
+        this.user = user;
     }
 }

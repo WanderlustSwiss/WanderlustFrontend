@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.controllers;
 
+import android.app.FragmentManager;
 import android.util.Base64;
 import android.util.Log;
 
@@ -322,10 +323,27 @@ public class TourController {
             return difficultyType.getLevel();
         }
     }
+    public void deleteComment(UserComment userComment, FragmentHandler handler){
+        Call<UserComment> call = commentService.deleteComment(userComment.getCom_id());
+        call.enqueue(new Callback<UserComment>() {
+            @Override
+            public void onResponse(Call<UserComment> call, Response<UserComment> response) {
+                if (response.isSuccessful()) {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
 
+            @Override
+            public void onFailure(Call<UserComment> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
     public void createComment(String comment, FragmentHandler handler){
         Call<UserComment> call = commentService.createTourComment(new UserComment(0,
-                comment,null, null, null, tour.getTour_id()));
+                comment,null, null, null, tour.getTour_id(), 0));
         call.enqueue(new Callback<UserComment>() {
             @Override
             public void onResponse(Call<UserComment> call, Response<UserComment> response) {

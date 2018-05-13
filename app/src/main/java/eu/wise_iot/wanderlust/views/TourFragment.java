@@ -337,37 +337,10 @@ public class TourFragment extends Fragment {
         commentRecyclerView.setPadding(5, 5, 5, 5);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         commentRecyclerView.setLayoutManager(verticalLayoutManager);
-        adapterComments = new TourCommentRVAdapter(context, listUserComment);
+        adapterComments = new TourCommentRVAdapter(context, listUserComment, this);
         commentRecyclerView.setAdapter(adapterComments);
 
-        tourController.getComments(0, event -> {
-            switch (event.getType()) {
-                case OK:
-                    //get all needed information from server db
-                    List<UserComment> list = (List<UserComment>) event.getModel();
-                    currentPage++;
-                    listUserComment.addAll(list);
-                    adapterComments.notifyDataSetChanged();
-                    if(adapterComments.getItemCount() > 0) {
-                        commentRecyclerView.setVisibility(View.VISIBLE);
-                        commentPlaceholder.setVisibility(View.GONE);
-                        commentProgressBar.setVisibility(View.GONE);
-                    } else {
-                        commentRecyclerView.setVisibility(View.GONE);
-                        commentPlaceholder.setVisibility(View.VISIBLE);
-                        commentProgressBar.setVisibility(View.GONE);
-                    }
-                    break;
-                case NOT_FOUND:
-                    commentRecyclerView.setVisibility(View.GONE);
-                    commentPlaceholder.setVisibility(View.VISIBLE);
-                    commentProgressBar.setVisibility(View.GONE);
-                    break;
-                default:
-                    Log.d(TAG, "Server response ERROR: " + event.getType().name());
-                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
-            }
-        });
+        updateRVComments(false);
     }
     /**
      * @param tour
@@ -502,40 +475,53 @@ public class TourFragment extends Fragment {
             textView.toggle();
         });
     }
+    public void deleteComment(UserComment userComment){
+        tourController.deleteComment(userComment, event -> {
+            if (event.getType() == EventType.OK){
+                listUserComment.remove(userComment);
+                adapterComments.notifyDataSetChanged();
+            }else{
+                Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+            }
+        });
+    }
     private void createComment(){
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         tourController.createComment(commentText.getText().toString(), (controllerEvent) -> {
             Toast.makeText(this.context,getResources().getText(R.string.msg_comment_create_successfull), Toast.LENGTH_SHORT);
-            tourController.getComments(0, event -> {
-                switch (event.getType()) {
-                    case OK:
-                        commentText.getText().clear();
-                        List<UserComment> list = (List<UserComment>) event.getModel();
-                        currentPage++;
-                        listUserComment.clear();
-                        listUserComment.addAll(list);
-                        adapterComments.notifyDataSetChanged();
-                        if(adapterComments.getItemCount() > 0) {
-                            commentRecyclerView.setVisibility(View.VISIBLE);
-                            commentPlaceholder.setVisibility(View.GONE);
-                            commentProgressBar.setVisibility(View.GONE);
-                        } else {
-                            commentRecyclerView.setVisibility(View.GONE);
-                            commentPlaceholder.setVisibility(View.VISIBLE);
-                            commentProgressBar.setVisibility(View.GONE);
-                        }
-                        break;
-                    case NOT_FOUND:
+            updateRVComments(true);
+        });
+    }
+    private void updateRVComments(boolean doClear){
+        tourController.getComments(0, event -> {
+            switch (event.getType()) {
+                case OK:
+                    commentText.getText().clear();
+                    List<UserComment> list = (List<UserComment>) event.getModel();
+                    currentPage++;
+                    if (doClear) listUserComment.clear();
+                    listUserComment.addAll(list);
+                    adapterComments.notifyDataSetChanged();
+                    if(adapterComments.getItemCount() > 0) {
+                        commentRecyclerView.setVisibility(View.VISIBLE);
+                        commentPlaceholder.setVisibility(View.GONE);
+                        commentProgressBar.setVisibility(View.GONE);
+                    } else {
                         commentRecyclerView.setVisibility(View.GONE);
                         commentPlaceholder.setVisibility(View.VISIBLE);
                         commentProgressBar.setVisibility(View.GONE);
-                        break;
-                    default:
-                        Log.d(TAG, "Server response ERROR: " + event.getType().name());
-                        Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
-                }
-            });
+                    }
+                    break;
+                case NOT_FOUND:
+                    commentRecyclerView.setVisibility(View.GONE);
+                    commentPlaceholder.setVisibility(View.VISIBLE);
+                    commentProgressBar.setVisibility(View.GONE);
+                    break;
+                default:
+                    Log.d(TAG, "Server response ERROR: " + event.getType().name());
+                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+            }
         });
     }
     /**

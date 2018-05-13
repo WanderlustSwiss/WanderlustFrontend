@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -19,7 +20,10 @@ import java.util.List;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.views.TourFragment;
 
 
 /**
@@ -32,19 +36,27 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdapter.ViewHolder> {
     private List<UserComment> comments  = Collections.emptyList();
     private final LayoutInflater mInflater;
+    private final UserDao userDao;
+    private final TourFragment fragment;
+    private User user;
     public ItemClickListener mClickListener;
     private final Context context;
 
     /**
      * data is passed into the constructor, here as a Tour
      * @param context
-     * @param parUserComments
+     * @param paramUserComments
+     * @param paramFragment
      */
-    public TourCommentRVAdapter(Context context, List<UserComment> parUserComments) {
+    public TourCommentRVAdapter(Context context, List<UserComment> paramUserComments,
+                                TourFragment paramFragment) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
-        if (parUserComments == null) parUserComments = new ArrayList<>();
-        this.comments = parUserComments;
+        this.userDao = UserDao.getInstance();
+        this.fragment = paramFragment;
+        if (paramUserComments == null) paramUserComments = new ArrayList<>();
+        this.user = userDao.getUser();
+        this.comments = paramUserComments;
     }
 
     /**
@@ -66,15 +78,23 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        //TODO Set Tag correctly
-        Log.d("ToursRecyclerview", "starting set properties");
-        //set properties for each element
         UserComment userComment = this.comments.get(position);
 
         holder.tvNickname.setText(userComment.getNickname());
         holder.tvText.setText(userComment.getText());
         holder.tvUpdatedAt.setText(convertToTimeString(userComment.getUpdatedAt()));
+
+        if (userComment.getUser() == user.getUser_id()){
+            holder.tvDelete.setEnabled(true);
+            holder.tvDelete.setVisibility(View.VISIBLE);
+        }else{
+            holder.tvDelete.setEnabled(false);
+            holder.tvDelete.setVisibility(View.GONE);
+        }
+
+        holder.tvDelete.setOnClickListener((View v) -> fragment.deleteComment(userComment));
     }
+
 
     /**
      * return total number of rows
@@ -145,6 +165,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView tvUpdatedAt, tvText, tvNickname;
+        private final Button tvDelete;
 
         /**
          * copy constructor for each element which holds the view
@@ -155,7 +176,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
             tvNickname = (TextView) itemView.findViewById(R.id.tour_comment_nickname);
             tvText = (TextView) itemView.findViewById(R.id.tour_comment_text);
             tvUpdatedAt = (TextView) itemView.findViewById(R.id.tour_comment_updatedat);
-
+            tvDelete = (Button) itemView.findViewById(R.id.tour_comment_delete);
             itemView.setOnClickListener(this);
         }
 
