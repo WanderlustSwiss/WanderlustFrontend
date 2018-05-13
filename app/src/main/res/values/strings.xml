@@ -47,6 +47,7 @@
 
     <string name="tour_comment_your_rating">Deine Bewertung</string>
     <string name="tour_comment_average">Durchschnittliche Bewertung</string>
+    <string name="tour_comment_rating_count">Bewertungen</string>
 
     <!-- FILTER RELATED STRINGS -->
     <string name="filter_search">Suchen</string>

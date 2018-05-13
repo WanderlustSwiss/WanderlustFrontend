@@ -159,6 +159,10 @@ public class TourFragment extends Fragment {
 
     private XYPlot plot;
 
+    private RatingBar rbTourCommentAverageRating, rbCommentUserSpecificRating;
+    private TextView tvTourCommentAverageRating, tourCommentRatingCount;
+    private ImageView tourCommentRating1, tourCommentRating2, tourCommentRating3, tourCommentRating4, tourCommentRating5;
+
     public TourFragment() {
         // Required empty public constructor
     }
@@ -227,8 +231,20 @@ public class TourFragment extends Fragment {
         fillControls();
         setupActionListeners();
     }
+
     private void initializeControls(View view) {
+        rbTourCommentAverageRating = (RatingBar) view.findViewById(R.id.rbTourCommentAverageRating);
+        tvTourCommentAverageRating = (TextView) view.findViewById(R.id.tvTourCommentAverageRating);
+        tourCommentRatingCount = (TextView) view.findViewById(R.id.tourCommentRatingCount);
+        tourCommentRating1 = (ImageView) view.findViewById(R.id.tourCommentRating1);
+        tourCommentRating2 = (ImageView) view.findViewById(R.id.tourCommentRating2);
+        tourCommentRating3 = (ImageView) view.findViewById(R.id.tourCommentRating3);
+        tourCommentRating4 = (ImageView) view.findViewById(R.id.tourCommentRating4);
+        tourCommentRating5 = (ImageView) view.findViewById(R.id.tourCommentRating5);
+        rbCommentUserSpecificRating = (RatingBar) view.findViewById(R.id.rbCommentUserSpecificRating);
+
         imageViewTourImage = (ImageView) view.findViewById(R.id.tour_image);
+
         favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
 
         tourRegion = (TextView) view.findViewById(R.id.tour_region);
@@ -304,7 +320,6 @@ public class TourFragment extends Fragment {
                     currentPage++;
 
                     listUserComment.addAll(list);
-
 
                     adapterComments.notifyDataSetChanged();
                     if(adapterComments.getItemCount() > 0) {
@@ -415,6 +430,27 @@ public class TourFragment extends Fragment {
                RatingStatistic rateStat = (RatingStatistic) controllerEvent.getModel();
                float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateStat.getRateAvg() * 2) / 2.0));
                //TODO: Implement linking to GUI
+               //TODO: Set user specific rating here (X)
+               //rbCommentUserSpecificRating.setRating(X);
+               //TODO: Set number of 1 to 5 Star rates (replace X) with width 0 - 100dp
+//               tourCommentRating1.getLayoutParams().width = X;
+//               tourCommentRating2.getLayoutParams().width = X;
+//               tourCommentRating3.getLayoutParams().width = X;
+//               tourCommentRating4.getLayoutParams().width = X;
+//               tourCommentRating5.getLayoutParams().width = X;
+               //refresh layout
+               tourCommentRating1.requestLayout();
+               tourCommentRating2.requestLayout();
+               tourCommentRating3.requestLayout();
+               tourCommentRating4.requestLayout();
+               tourCommentRating5.requestLayout();
+
+
+               rbTourCommentAverageRating.setRating(rateStat.getRateAvg());
+               //TODO set amaount of rates here -> is getRateTotal returning the needed value?
+               tourCommentRatingCount.setText(String.valueOf(rateStat.getRateTotal()) + " " + getResources().getString(R.string.tour_comment_rating_count));
+               tvTourCommentAverageRating.setText(String.valueOf(rateStat.getRateAvg()));
+
                tourRating.setRating(rateStat.getRateAvg());
                tourRatingInNumbers.setText(rateAvgRound + "");
            }else{

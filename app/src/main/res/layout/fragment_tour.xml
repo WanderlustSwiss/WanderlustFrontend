@@ -495,12 +495,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:weightSum="2"
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:paddingBottom="5dp"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -523,6 +525,7 @@
 
                             <ImageView
                                 android:layout_width="100dp"
+                                android:id="@+id/tourCommentRating5"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/rectangle_rounded_shape" />
                         </LinearLayout>
@@ -546,7 +549,8 @@
                                 android:src="@drawable/ic_rate_star_transparent_32dp" />
 
                             <ImageView
-                                android:layout_width="100dp"
+                                android:layout_width="5dp"
+                                android:id="@+id/tourCommentRating4"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/rectangle_rounded_shape" />
                         </LinearLayout>
@@ -569,7 +573,8 @@
                                 android:src="@drawable/ic_rate_star_transparent_32dp" />
 
                             <ImageView
-                                android:layout_width="100dp"
+                                android:layout_width="5dp"
+                                android:id="@+id/tourCommentRating3"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/rectangle_rounded_shape" />
                         </LinearLayout>
@@ -592,7 +597,8 @@
                                 android:src="@drawable/ic_rate_star_transparent_32dp" />
 
                             <ImageView
-                                android:layout_width="100dp"
+                                android:layout_width="5dp"
+                                android:id="@+id/tourCommentRating2"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/rectangle_rounded_shape" />
                         </LinearLayout>
@@ -615,29 +621,36 @@
                                 android:src="@drawable/ic_rate_star_transparent_32dp" />
 
                             <ImageView
-                                android:layout_width="100dp"
+                                android:layout_width="5dp"
+                                android:id="@+id/tourCommentRating1"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/rectangle_rounded_shape" />
                         </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:layout_weight="1"
                         android:layout_gravity="center">
                         <TextView
-                            android:id="@+id/tourCommentAverageRating"
+                            android:id="@+id/tvTourCommentAverageRating"
                             android:text="0.00"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"/>
+                        <!-- TODO: set correct size -->
                         <RatingBar
+                            android:id="@+id/rbTourCommentAverageRating"
+                            android:isIndicator="true"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"/>
                         <TextView
                             android:id="@+id/tourCommentRatingCount"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"/>
 
                     </LinearLayout>
 
@@ -649,6 +662,8 @@
                     android:layout_height="wrap_content" />
 
                 <RatingBar
+                    android:id="@+id/rbCommentUserSpecificRating"
+                    android:isIndicator="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

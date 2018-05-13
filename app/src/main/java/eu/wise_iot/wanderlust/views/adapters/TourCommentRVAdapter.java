@@ -66,6 +66,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        //TODO Set Tag correctly
         Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
         UserComment userComment = this.comments.get(position);
