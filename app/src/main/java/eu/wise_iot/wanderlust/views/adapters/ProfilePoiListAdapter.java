@@ -23,6 +23,8 @@ import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.views.MainActivity;
 import eu.wise_iot.wanderlust.views.ProfileFragment;
 import eu.wise_iot.wanderlust.views.dialog.ConfirmDeletePoiDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
@@ -134,19 +136,16 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
             title.setText(poi.getTitle());
             description.setText(poi.getDescription());
 
-            List<ImageInfo> imagepaths = poi.getImagePaths();
-            for(ImageInfo info : imagepaths){
-                info.setLocalDir(imageController.getProfileFolder());
-            }
-            List<File> imagefiles = imageController.getImages(imagepaths);
-            if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
-                Picasso.with(context)
-                        .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
-                        .fit()
-                        .centerCrop()
-                        .into(poiImage);
-            } else {
-                poiImage.setImageResource(R.drawable.example_image);
+            if (poi.isPublic()) {
+                Picasso handler = imageController.getPicassoHandler(MainActivity.activity);
+                String url = ServiceGenerator.API_BASE_URL + "/poi/" + poi.getPoi_id() + "/img/1";
+                handler.load(url).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+            } else{
+                Poi localPoi = poiController.getLocalPoi(poi.getPoi_id());
+                List<File> images = imageController.getImages(localPoi.getImagePaths());
+                if (images.size() != 0) {
+                    Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                }
             }
 
             profileFragment.setProfileStats();

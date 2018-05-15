@@ -411,19 +411,22 @@ public class TourFragment extends Fragment {
     private void setupExpandableTextView(ExpandableTextView textView, ImageButton toggler) {
         textView.setInterpolator(new OvershootInterpolator());
 
-        // TODO: add method to check if text if line count <= 3 -> then hide toggler. Problem: lineCount() is always 0
-        Log.d(TAG, "text count: " + textView.getLineCount());
-
-        toggler.setOnClickListener(v -> {
-            Drawable arrowDown = getActivity().getDrawable(R.drawable.ic_keyboard_arrow_down_black_24dp);
-            Drawable arrowUp = getActivity().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
-
-            if (textView.isExpanded()) {
-                toggler.setBackground(arrowDown);
+        textView.post(() -> {
+            if(textView.getLineCount() < textView.getMaxLines()){
+                toggler.setVisibility(View.GONE);
             } else {
-                toggler.setBackground(arrowUp);
+                toggler.setOnClickListener(v -> {
+                    Drawable arrowDown = getActivity().getDrawable(R.drawable.ic_keyboard_arrow_down_black_24dp);
+                    Drawable arrowUp = getActivity().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+
+                    if (textView.isExpanded()) {
+                        toggler.setBackground(arrowDown);
+                    } else {
+                        toggler.setBackground(arrowUp);
+                    }
+                    textView.toggle();
+                });
             }
-            textView.toggle();
         });
     }
 
