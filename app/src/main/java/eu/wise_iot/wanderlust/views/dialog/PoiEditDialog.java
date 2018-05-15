@@ -287,6 +287,7 @@ public class PoiEditDialog extends DialogFragment {
      * Prefills all data from address
      */
     private void fillInDataFromAddress(){
+        typeSpinner.setSelection(1);
         mapController.searchCoordinates(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),1, controllerEvent -> {
             AddressPoint addressPoint = (AddressPoint) controllerEvent.getModel();
             if (addressPoint != null &&
