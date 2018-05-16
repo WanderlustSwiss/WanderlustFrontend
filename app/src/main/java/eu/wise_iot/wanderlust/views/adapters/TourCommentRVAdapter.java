@@ -2,11 +2,10 @@ package eu.wise_iot.wanderlust.views.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -18,8 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.TourController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
@@ -120,26 +117,34 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
         String before = context.getResources().getString(R.string.tour_comment_before);
         if (passedSeconds < 60){
             String timeMarker = context.getResources().getString(R.string.tour_comment_seconds);
-            return before + " " + passedSeconds + timeMarker;
+            return before + " " + passedSeconds + " " + timeMarker;
         }else if (passedSeconds >= 60 && passedSeconds < 3600){
             passedSeconds = passedSeconds / 60;
             String timeMarker = context.getResources().getString(R.string.tour_comment_minutes);
-            return before + " " + passedSeconds + timeMarker;
+            return before + " " + passedSeconds + " " + timeMarker;
         }else if (passedSeconds >= 3600 && passedSeconds < (3600 * 24)){
             passedSeconds = passedSeconds / 3600;
-            String timeMarker = context.getResources().getString(R.string.tour_comment_houres);
+            String timeMarker;
+            if (passedSeconds == 1) timeMarker = context.getResources().getString(R.string.tour_comment_hour);
+            else timeMarker = context.getResources().getString(R.string.tour_comment_houres);
             return before + " " + passedSeconds + " " + timeMarker;
         }else if (passedSeconds >= (3600 * 24) && passedSeconds < (3600 * 24 * 7)){
             passedSeconds = passedSeconds / (3600 * 24);
-            String timeMarker = context.getResources().getString(R.string.tour_comment_days);
+            String timeMarker;
+            if (passedSeconds == 1) timeMarker = context.getResources().getString(R.string.tour_comment_day);
+            else timeMarker = context.getResources().getString(R.string.tour_comment_days);
             return before + " " + passedSeconds + " " + timeMarker;
         } else if (passedSeconds >= (3600 * 24 * 7) && passedSeconds < (3600 * 24 * 365)){
             passedSeconds = passedSeconds / (3600 * 24 * 7);
-            String timeMarker = context.getResources().getString(R.string.tour_comment_weeks);
+            String timeMarker;
+            if (passedSeconds == 1) timeMarker = context.getResources().getString(R.string.tour_comment_week);
+            else timeMarker = context.getResources().getString(R.string.tour_comment_weeks);
             return before + " " + passedSeconds + " " + timeMarker;
         } else {
             passedSeconds = passedSeconds / (3600 * 24 * 365);
-            String timeMarker = context.getResources().getString(R.string.tour_comment_year);
+            String timeMarker;
+            if (passedSeconds == 1) timeMarker = context.getResources().getString(R.string.tour_comment_year);
+            else timeMarker = context.getResources().getString(R.string.tour_comment_years);
             return before + " " + passedSeconds + " " + timeMarker;
         }
     }
@@ -165,7 +170,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView tvUpdatedAt, tvText, tvNickname;
-        private final Button tvDelete;
+        private final ImageButton tvDelete;
 
         /**
          * copy constructor for each element which holds the view
@@ -176,7 +181,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
             tvNickname = (TextView) itemView.findViewById(R.id.tour_comment_nickname);
             tvText = (TextView) itemView.findViewById(R.id.tour_comment_text);
             tvUpdatedAt = (TextView) itemView.findViewById(R.id.tour_comment_updatedat);
-            tvDelete = (Button) itemView.findViewById(R.id.tour_comment_delete);
+            tvDelete = (ImageButton) itemView.findViewById(R.id.tour_comment_delete);
             itemView.setOnClickListener(this);
         }
 

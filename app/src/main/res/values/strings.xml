@@ -177,10 +177,14 @@
     <string name="tour_comment_before">vor</string>
     <string name="tour_comment_seconds">Sek</string>
     <string name="tour_comment_minutes">Min</string>
+    <string name="tour_comment_hour">Stunde</string>
     <string name="tour_comment_houres">Stunden</string>
-    <string name="tour_comment_days">Tage</string>
+    <string name="tour_comment_day">Tag</string>
+    <string name="tour_comment_days">Tagen</string>
+    <string name="tour_comment_week">Woche</string>
     <string name="tour_comment_weeks">Wochen</string>
     <string name="tour_comment_year">Jahr</string>
+    <string name="tour_comment_years">Jahren</string>
     <string name="tour_comment_all_comments">Alle Kommentare</string>
     <string name="tour_comment_noresult">Keine Kommentare</string>
     <string name="tour_comment_description">Was sind deine Erfahrungen mit der Tour?</string>
