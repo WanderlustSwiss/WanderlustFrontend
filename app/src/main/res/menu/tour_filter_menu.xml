@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="eu.wise_iot.wanderlust.views.ProfileEditFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/filterIcon"
-        android:icon="@drawable/ic_filter_icon"
+        android:icon="@drawable/ic_tune_white_24dp"
         android:title=""
         app:showAsAction="always" />
 </menu>

@@ -109,6 +109,7 @@ public class TourOverviewFragment extends Fragment {
                 if(filterFragment == null) filterFragment = FilterFragment.newInstance();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, filterFragment, Constants.FILTER_FRAGMENT)
+                        .addToBackStack(Constants.FILTER_FRAGMENT)
                         .commit();
                 break;
         }

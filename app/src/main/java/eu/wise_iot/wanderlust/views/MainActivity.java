@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -54,7 +53,6 @@ import eu.wise_iot.wanderlust.controllers.OfflineQueueController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import io.objectbox.BoxStore;
@@ -275,7 +273,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragmentTag = Constants.USER_GUIDE_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
             if (fragment == null) fragment = UserGuideFragment.newInstance();
-        } else if (id == R.id.logout) {
+        } else if (id == R.id.disclaimer) {
+            fragmentTag = Constants.DISCLAIMER_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = DisclaimerFragment.newInstance();
+        }
+
+        else if (id == R.id.logout) {
             loginController.logout(controllerEvent -> {
                 switch (controllerEvent.getType()) {
                     case OK:
@@ -298,10 +302,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void switchFragment(Fragment fragment, String fragmentTag) {
         if (fragment != null) {
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, fragment, fragmentTag)
-                    .addToBackStack(null)
-                    .commit();
+            if(fragment.isAdded()){
+                getFragmentManager().beginTransaction().show(fragment);
+            } else {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.content_frame, fragment, fragmentTag)
+                        .addToBackStack(null)
+                        .commit();
+            }
         } else {
             Log.e(TAG, "Error in creating fragment");
             Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
@@ -336,10 +344,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
 
-        username = (TextView) header.findViewById(R.id.user_name);
-        email = (TextView) header.findViewById(R.id.user_mail_address);
-        userProfileImage = (ImageView) header.findViewById(R.id.user_profile_image);
-
         userProfileImage.setOnClickListener(view -> {
             Fragment fragment = null;
             String fragmentTag = null;
@@ -360,8 +364,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (image != null) {
             Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
-        } else {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+        }else{
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             userProfileImage.setImageDrawable(drawable);

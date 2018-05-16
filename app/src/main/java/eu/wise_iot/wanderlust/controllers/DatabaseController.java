@@ -122,7 +122,6 @@ public final class DatabaseController {
 
 
     public void addDownloadedImages(List<DownloadedImage> images) {
-
         for (DownloadedImage image : images) {
             downloadedImages.add(image);
             cacheSize += image.getSize();

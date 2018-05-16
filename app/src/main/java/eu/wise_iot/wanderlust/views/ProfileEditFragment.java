@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
@@ -193,7 +194,7 @@ public class ProfileEditFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.profileEditChangesApplied, Toast.LENGTH_SHORT).show();
                 ProfileFragment fragment = ProfileFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, fragment)
+                                    .replace(R.id.content_frame, fragment, Constants.PROFILE_FRAGMENT)
                                     .commit();
                 return true;
 
@@ -203,7 +204,7 @@ public class ProfileEditFragment extends Fragment {
                         Toast.LENGTH_SHORT).show();
                 ProfileFragment profileFragment = ProfileFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, profileFragment)
+                        .replace(R.id.content_frame, profileFragment, Constants.PROFILE_FRAGMENT)
                         .commit();
                 return true;
         }
@@ -351,7 +352,7 @@ public class ProfileEditFragment extends Fragment {
             Picasso.with(getActivity()).load(image).placeholder(R.drawable.progress_animation).transform(new CircleTransform()).fit().into(profileImage);
             ((MainActivity) getActivity()).updateProfileImage(image);
         } else {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             profileImage.setImageDrawable(drawable);

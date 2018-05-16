@@ -48,6 +48,8 @@ import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
  */
 public class ProfileFragment extends Fragment {
 
+    private static final String TAG = "ProfileFragment";
+
     private ImageView profilePicture;
     private Button editProfile;
 
@@ -122,7 +124,7 @@ public class ProfileFragment extends Fragment {
             Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(profilePicture);
             ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
         }else{
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.images);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
             profilePicture.setImageDrawable(drawable);
@@ -236,7 +238,7 @@ public class ProfileFragment extends Fragment {
                         ProfileFavoritesListAdapter adapter =
                                 new ProfileFavoritesListAdapter(getActivity(),
                                         R.layout.fragment_profile_list_favorites,
-                                        R.id.ListFavTitle,
+                                        R.id.list_fav_title,
                                         list, fragment);
 
                         listView.setAdapter(adapter);
@@ -361,7 +363,7 @@ public class ProfileFragment extends Fragment {
             listView.setOnItemClickListener((parent, view1, position, id) -> {
                 Poi poi = (Poi) listView.getItemAtPosition(position);
                 PoiViewDialog viewDialog = PoiViewDialog.newInstance(poi);
-                viewDialog.show(getFragmentManager(), "POI");
+                viewDialog.show(getFragmentManager(), Constants.DISPLAY_FEEDBACK_DIALOG);
             });
 
         } else {
