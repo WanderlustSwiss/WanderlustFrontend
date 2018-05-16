@@ -241,11 +241,9 @@
 
     <style name="RatingBar" parent="Widget.AppCompat.RatingBar">
         <item name="android:progressTint">@color/medium</item>
-        <item name="android:colorPrimary">@color/ap_transparent</item>
     </style>
 
     <style name="RatingBar.Small" parent="Widget.AppCompat.RatingBar.Small">
         <item name="android:progressTint">@color/medium</item>
-        <item name="android:colorPrimary">@color/ap_transparent</item>
     </style>
 </resources>

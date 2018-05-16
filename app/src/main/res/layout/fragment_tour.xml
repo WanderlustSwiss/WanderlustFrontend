@@ -682,6 +682,24 @@
                 android:isIndicator="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/background_two_and_inactive" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="12dp">
+
+            <TextView
+                style="@style/p"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tour_comment_all_comments" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -715,26 +733,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_send_blue_32dp"
                     android:background="@null"/>
-
             </RelativeLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:background="@color/background_two_and_inactive" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="12dp">
-
-            <TextView
-                style="@style/p"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tour_comment_all_comments" />
 
             <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/tour_comment_progressbar"
