@@ -553,7 +553,6 @@ public class TourFragment extends Fragment {
         tourController.getComments(commentPage, event -> {
             switch (event.getType()) {
                 case OK:
-                    commentPage++;
                     commentText.getText().clear();
                     List<UserComment> list = (List<UserComment>) event.getModel();
                     currentPage++;
