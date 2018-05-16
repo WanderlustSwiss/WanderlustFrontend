@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -759,10 +760,22 @@ public class TourFragment extends Fragment {
             tourCommentRating5.requestLayout();
 
             rbCommentUserSpecificRating.setRating(tourRate.getUserRate());
+            Drawable progress = rbCommentUserSpecificRating.getProgressDrawable();
+            DrawableCompat.setTint(progress, Color.RED);
 
             rbTourCommentAverageRating.setRating(tourRate.getRateAvg());
 
-            tourCommentRatingCount.setText(String.valueOf(tourRate.getRateTotal()) + " " + getResources().getString(R.string.tour_comment_rating_count));
+            String tourComment;
+            int ratingCount = tourRate.getRateTotal();
+            if(ratingCount == 0) {
+                tourComment = getResources().getString(R.string.tour_comment_no_ratings);
+            } else if (ratingCount == 1) {
+                tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_rating);
+            } else {
+                tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_ratings);
+            }
+            tourCommentRatingCount.setText(tourComment);
+
             tvTourCommentAverageRating.setText(String.valueOf(rateAvgRound));
             tourRatingInNumbers.setText(String.valueOf(rateAvgRound));
             tourRating.setRating(rateAvgRound);

@@ -47,13 +47,15 @@
 
     <string name="tour_comment_your_rating">Deine Bewertung</string>
     <string name="tour_comment_average">Durchschnittliche Bewertung</string>
-    <string name="tour_comment_rating_count">Bewertungen</string>
+    <string name="tour_comment_no_ratings">Noch keine Bewertungen</string>
+    <string name="tour_comment_rating">Bewertung</string>
+    <string name="tour_comment_ratings">Bewertungen</string>
 
     <!-- FILTER RELATED STRINGS -->
     <string name="filter_search">Suchen</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
-    <string name="dialog_feedback_description_edit_hint">Kommentar</string>
+    <string name="dialog_feedback_description_edit_hint">Schreibe einen Kommentar zu dieser Tour</string>
     <string-array name="dialog_feedback_spinner_mode">
         <item>öffentlich</item>
         <item>nur für mich</item>
@@ -268,5 +270,6 @@
     <string name="short_october">Okt</string>
     <string name="short_november">Nov</string>
     <string name="short_december">Dez</string>
+    <string name="rating">Bewertung</string>
 
 </resources>

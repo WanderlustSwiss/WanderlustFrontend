@@ -12,6 +12,302 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="12dp"
+            android:divider="@drawable/divider_vertical"
+            android:showDividers="middle">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rating"
+                style="@style/p"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:divider="@drawable/divider_vertical_s"
+                    android:showDividers="middle">
+
+                    <LinearLayout
+                        android:id="@+id/tour_comment_rating5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:divider="@drawable/divider_horizontal_s"
+                        android:showDividers="middle">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/p.Grey"
+                            android:layout_margin="0dp"
+                            android:text="5" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_rate_star_transparent_20dp" />
+
+                        <ImageView
+                            android:id="@+id/tourCommentRating5"
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/rectangle_rounded_shape" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/tour_comment_rating4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:divider="@drawable/divider_horizontal_s"
+                        android:showDividers="middle">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/p.Grey"
+                            android:layout_margin="0dp"
+                            android:text="4" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_rate_star_transparent_20dp" />
+
+                        <ImageView
+                            android:layout_width="5dp"
+                            android:id="@+id/tourCommentRating4"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/rectangle_rounded_shape" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/tour_comment_rating3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:divider="@drawable/divider_horizontal_s"
+                        android:showDividers="middle">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/p.Grey"
+                            android:layout_margin="0dp"
+                            android:text="3" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_rate_star_transparent_20dp" />
+
+                        <ImageView
+                            android:layout_width="5dp"
+                            android:id="@+id/tourCommentRating3"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/rectangle_rounded_shape" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/tour_comment_rating2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:divider="@drawable/divider_horizontal_s"
+                        android:showDividers="middle">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="0dp"
+                            style="@style/p.Grey"
+                            android:text="2" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_rate_star_transparent_20dp" />
+
+                        <ImageView
+                            android:layout_width="5dp"
+                            android:id="@+id/tourCommentRating2"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/rectangle_rounded_shape" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/tour_comment_rating1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:divider="@drawable/divider_horizontal_s"
+                        android:showDividers="middle">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="0dp"
+                            style="@style/p.Grey"
+                            android:text="1" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_rate_star_transparent_20dp" />
+
+                        <ImageView
+                            android:layout_width="5dp"
+                            android:id="@+id/tourCommentRating1"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/rectangle_rounded_shape" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:id="@+id/tvTourCommentAverageRating"
+                        android:text="0.0"
+                        android:textSize="80sp"
+                        android:textColor="@color/medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:includeFontPadding="false"
+                        android:layout_marginTop="-15dp"/>
+                    <RatingBar
+                        android:id="@+id/rbTourCommentAverageRating"
+                        android:isIndicator="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        style="@style/RatingBar.Small"/>
+                    <TextView
+                        android:id="@+id/tourCommentRatingCount"
+                        style="@style/p.Small.Grey"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/background_two_and_inactive" />
+
+            <TextView
+                android:text="@string/tour_comment_your_rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <RatingBar
+                android:id="@+id/rbCommentUserSpecificRating"
+                style="@style/RatingBar"
+                android:layout_gravity="center_horizontal"
+                android:isIndicator="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/tour_comment_textinput"
+                    style="@style/TextInputLayout"
+                    app:errorEnabled="false"
+                    app:hintEnabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_toLeftOf="@id/tour_comment_send"
+                    android:layout_height="wrap_content"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="250">
+
+                    <EditText
+                        android:id="@+id/tour_comment_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lines="2"
+                        android:hint="@string/dialog_feedback_description_edit_hint"
+                        android:maxLength="250" />
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/tour_comment_send"
+                    android:padding="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_send_blue_32dp"
+                    android:background="@null"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/background_two_and_inactive" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="12dp">
+
+            <TextView
+                style="@style/p"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tour_comment_all_comments" />
+
+            <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/tour_comment_progressbar"
+                style="?android:progressBarStyle"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tour_comment_placeholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/p.Grey"
+                android:text="@string/tour_comment_noresult" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/tour_comment_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+
+
+
+
+
+
+
+
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -145,7 +441,6 @@
             </LinearLayout>
         </android.support.constraint.ConstraintLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -222,33 +517,8 @@
             android:layout_height="wrap_content"
             android:divider="@drawable/divider_vertical"
             android:orientation="vertical"
-            android:padding="12dp"
             android:showDividers="middle">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <at.blogc.android.views.ExpandableTextView
-                    android:id="@+id/tour_description"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    app:animation_duration="500" />
-
-                <ImageButton
-                    android:id="@+id/tour_descrition_toggler"
-                    style="@style/standard_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
-                    android:padding="0dp" />
-            </LinearLayout>
+            <!-- IMPORTANT WHILE MERGING: ignore/remove padding changes in this area above while merging -->
 
 
             <LinearLayout
@@ -427,6 +697,33 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <at.blogc.android.views.ExpandableTextView
+                    android:id="@+id/tour_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    app:animation_duration="500" />
+
+                <ImageButton
+                    android:id="@+id/tour_descrition_toggler"
+                    style="@style/standard_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+                    android:padding="0dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
@@ -463,242 +760,12 @@
 
             </LinearLayout>
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/tour_comment_layout"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="1dip"
+                android:background="@color/background_two_and_inactive" />
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="2"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="5dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:id="@+id/tour_comment_rating5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/h2.Grey"
-                                android:text="5" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_rate_star_transparent_32dp" />
-
-                            <ImageView
-                                android:id="@+id/tourCommentRating5"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/rectangle_rounded_shape" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/tour_comment_rating4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/h2.Grey"
-                                android:text="4" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_rate_star_transparent_32dp" />
-
-                            <ImageView
-                                android:layout_width="5dp"
-                                android:id="@+id/tourCommentRating4"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/rectangle_rounded_shape" />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:id="@+id/tour_comment_rating3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/h2.Grey"
-                                android:text="3" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_rate_star_transparent_32dp" />
-
-                            <ImageView
-                                android:layout_width="5dp"
-                                android:id="@+id/tourCommentRating3"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/rectangle_rounded_shape" />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:id="@+id/tour_comment_rating2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/h2.Grey"
-                                android:text="2" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_rate_star_transparent_32dp" />
-
-                            <ImageView
-                                android:layout_width="5dp"
-                                android:id="@+id/tourCommentRating2"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/rectangle_rounded_shape" />
-                        </LinearLayout>
-                        <LinearLayout
-                            android:id="@+id/tour_comment_rating1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/h2.Grey"
-                                android:text="1" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_rate_star_transparent_32dp" />
-
-                            <ImageView
-                                android:layout_width="5dp"
-                                android:id="@+id/tourCommentRating1"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/rectangle_rounded_shape" />
-                        </LinearLayout>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="1"
-                        android:layout_gravity="center">
-                        <TextView
-                            android:id="@+id/tvTourCommentAverageRating"
-                            android:text="0.00"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"/>
-                        <!-- TODO: set correct size -->
-                        <RatingBar
-                            android:id="@+id/rbTourCommentAverageRating"
-                            android:isIndicator="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"/>
-                        <TextView
-                            android:id="@+id/tourCommentRatingCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <TextView
-                    android:text="@string/tour_comment_your_rating"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <RatingBar
-                    android:id="@+id/rbCommentUserSpecificRating"
-                    android:isIndicator="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    style="@style/h2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tour_comment_all_comments" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/tour_comment_send"
-                        android:layout_width="70dp"
-                        android:layout_height="wrap_content"
-                        android:text="Send Icon" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/tour_comment_textinput"
-                        style="@style/TextInputLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="8dp"
-                        app:counterEnabled="true"
-                        app:counterMaxLength="250">
-
-                        <EditText
-                            android:id="@+id/tour_comment_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:editable="true"
-                            android:hint="@string/dialog_feedback_description_edit_hint"
-                            android:maxLength="250"
-                            android:paddingTop="4dp" />
-                    </android.support.design.widget.TextInputLayout>
-
-                </LinearLayout>
-
-                <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/tour_comment_progressbar"
-                    style="?android:progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/tour_comment_placeholder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tour_comment_noresult" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/tour_comment_recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

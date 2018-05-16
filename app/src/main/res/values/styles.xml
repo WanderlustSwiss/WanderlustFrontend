@@ -238,4 +238,11 @@
         <item name="rangeTitleTextColor">@color/black</item>
         <item name="legendTextColor">@color/black</item>
     </style>
+
+    <style name="RatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="colorAccent">@color/medium</item>
+    </style>
+
+    <style name="RatingBar.Small" parent="Widget.AppCompat.RatingBar.Small">
+    </style>
 </resources>
