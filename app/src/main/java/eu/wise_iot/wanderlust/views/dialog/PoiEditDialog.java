@@ -162,6 +162,7 @@ public class PoiEditDialog extends DialogFragment {
 
                     PoiViewDialog viewDialog = (PoiViewDialog) getFragmentManager()
                                                                 .findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
+                    
                     if(viewDialog != null){
                         viewDialog.onResume();
                     }
