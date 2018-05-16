@@ -33,6 +33,7 @@ import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 /**
@@ -180,17 +181,40 @@ public class PoiViewDialog extends DialogFragment {
     private void fillOutPoiView(View view) {
         if (currentPoi.getType() >= 0) {
 
+            if(currentPoi.getUser() == UserDao.getInstance().getUser().getUser_id()){
+                if(currentPoi.isPublic()){
+                    poiController.getImages(currentPoi, controllerEvent -> {
+                        switch (controllerEvent.getType()) {
+                            case OK:
+                                List<File> images = (List<File>) controllerEvent.getModel();
+                                if (images.size() != 0) {
+                                    Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                                }
+                                break;
+                            default:
 
-            if (currentPoi.isPublic()) {
-                Picasso handler = imageController.getPicassoHandler(context);
-                String url = ServiceGenerator.API_BASE_URL + "/poi/" + currentPoi.getPoi_id() + "/img/1";
-                handler.load(url).fit().placeholder(R.drawable.progress_animation).into(poiImage);
-            } else {
+                        }
+                    });
+                } else{
+                    Poi localPoi = poiController.getLocalPoi(currentPoi.getPoi_id());
+                    List<File> images = imageController.getImages(localPoi.getImagePaths());
+                    if (images.size() != 0) {
+                        Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                    }
+                }
+            }
+            else {
+                if (currentPoi.isPublic()) {
+                    Picasso handler = imageController.getPicassoHandler(context);
+                    String url = ServiceGenerator.API_BASE_URL + "/poi/" + currentPoi.getPoi_id() + "/img/1";
+                    handler.load(url).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                } else {
 
-                Poi localPoi = poiController.getLocalPoi(currentPoi.getPoi_id());
-                List<File> images = imageController.getImages(localPoi.getImagePaths());
-                if(images.size() != 0) {
-                    Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                    Poi localPoi = poiController.getLocalPoi(currentPoi.getPoi_id());
+                    List<File> images = imageController.getImages(localPoi.getImagePaths());
+                    if (images.size() != 0) {
+                        Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                    }
                 }
             }
         } else {
