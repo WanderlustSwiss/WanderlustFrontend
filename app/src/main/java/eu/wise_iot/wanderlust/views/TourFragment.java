@@ -164,7 +164,7 @@ public class TourFragment extends Fragment {
     private RatingBar rbTourCommentAverageRating, rbCommentUserSpecificRating;
     private TextView tvTourCommentAverageRating, tourCommentRatingCount;
     private ImageView tourCommentRating1, tourCommentRating2, tourCommentRating3, tourCommentRating4, tourCommentRating5;
-    private Button sendCommentButton;
+    private ImageButton sendCommentButton;
     private EditText commentText;
 
     public TourFragment() {
@@ -293,7 +293,7 @@ public class TourFragment extends Fragment {
         forthTimePoint = (TextView) view.findViewById(R.id.timeForthPoint);
         fifthTimePoint = (TextView) view.findViewById(R.id.timeFifthPoint);
 
-        sendCommentButton = (Button) view.findViewById(R.id.tour_comment_send);
+        sendCommentButton = (ImageButton) view.findViewById(R.id.tour_comment_send);
         commentText = (EditText) view.findViewById(R.id.tour_comment_description);
 
         long difficulty = tourController.getLevel();
@@ -760,9 +760,6 @@ public class TourFragment extends Fragment {
             tourCommentRating5.requestLayout();
 
             rbCommentUserSpecificRating.setRating(tourRate.getUserRate());
-            Drawable progress = rbCommentUserSpecificRating.getProgressDrawable();
-            DrawableCompat.setTint(progress, Color.RED);
-
             rbTourCommentAverageRating.setRating(tourRate.getRateAvg());
 
             String tourComment;
