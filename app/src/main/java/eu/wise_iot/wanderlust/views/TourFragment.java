@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -83,6 +85,7 @@ import eu.wise_iot.wanderlust.views.adapters.TourCommentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
+import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
  * TourController:
@@ -164,8 +167,10 @@ public class TourFragment extends Fragment {
     private RatingBar rbTourCommentAverageRating, rbCommentUserSpecificRating;
     private TextView tvTourCommentAverageRating, tourCommentRatingCount;
     private ImageView tourCommentRating1, tourCommentRating2, tourCommentRating3, tourCommentRating4, tourCommentRating5;
-    private Button sendCommentButton;
+    private AppCompatImageButton sendCommentButton;
     private EditText commentText;
+
+    private int commentPage = 0;
 
     public TourFragment() {
         // Required empty public constructor
@@ -220,7 +225,7 @@ public class TourFragment extends Fragment {
         selectedDateTime = DateTime.now();
         initializeControls(view);
         tourController.loadGeoData(controllerEvent -> {
-            if (controllerEvent.getType() == EventType.OK) {
+            if (controllerEvent.getType() == OK) {
                 tour = (Tour) controllerEvent.getModel();
                 setupEquipment(tour);
                 setupWeather();
@@ -293,7 +298,7 @@ public class TourFragment extends Fragment {
         forthTimePoint = (TextView) view.findViewById(R.id.timeForthPoint);
         fifthTimePoint = (TextView) view.findViewById(R.id.timeFifthPoint);
 
-        sendCommentButton = (Button) view.findViewById(R.id.tour_comment_send);
+        sendCommentButton = (AppCompatImageButton) view.findViewById(R.id.tour_comment_send);
         commentText = (EditText) view.findViewById(R.id.tour_comment_description);
 
         long difficulty = tourController.getLevel();
@@ -341,6 +346,56 @@ public class TourFragment extends Fragment {
         adapterComments = new TourCommentRVAdapter(context, listUserComment, this);
         commentRecyclerView.setAdapter(adapterComments);
 
+        RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        Log.d(TAG, "The RecyclerView is not scrolling");
+                        int myCellWidth = commentRecyclerView.getChildAt(0).getMeasuredWidth();
+                        final int offset = commentRecyclerView.computeVerticalScrollOffset();
+                        int position = offset / myCellWidth;
+                        Log.d(TAG, "Position=" + position + " " + myCellWidth + " " + offset );
+                        if (20 < (position - (25*(currentPage-1)))) {
+                            tourController.getComments(commentPage, event -> {
+                                switch (event.getType()) {
+                                    case OK:
+                                        commentPage++;
+                                        commentText.getText().clear();
+                                        List<UserComment> list = (List<UserComment>) event.getModel();
+                                        currentPage++;
+                                        listUserComment.addAll(list);
+                                        adapterComments.notifyDataSetChanged();
+                                        if(adapterComments.getItemCount() > 0) {
+                                            commentRecyclerView.setVisibility(View.VISIBLE);
+                                            commentPlaceholder.setVisibility(View.GONE);
+                                            commentProgressBar.setVisibility(View.GONE);
+                                        } else {
+                                            commentRecyclerView.setVisibility(View.GONE);
+                                            commentPlaceholder.setVisibility(View.VISIBLE);
+                                            commentProgressBar.setVisibility(View.GONE);
+                                        }
+                                        break;
+                                    case NOT_FOUND:
+                                        commentRecyclerView.setVisibility(View.GONE);
+                                        commentPlaceholder.setVisibility(View.VISIBLE);
+                                        commentProgressBar.setVisibility(View.GONE);
+                                        break;
+                                    default:
+                                        Log.d(TAG, "Server response ERROR: " + event.getType().name());
+                                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+                                }
+                            });
+                        }
+                        Log.d(TAG, "Scroll idle");
+                        break;
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        Log.d(TAG, "Scrolling now");
+                        break;
+                }
+            }
+        };
+        commentRecyclerView.addOnScrollListener(mScrollListener);
         updateRVComments(false);
     }
     /**
@@ -407,7 +462,7 @@ public class TourFragment extends Fragment {
         tourTitle.setText(tourController.getTitle());
 
         tourController.getTourRating(controllerEvent -> {
-           if (controllerEvent.getType() == EventType.OK){
+           if (controllerEvent.getType() == OK){
                updateRating((TourRate) controllerEvent.getModel());
            }else{
                updateRating(null);
@@ -478,7 +533,7 @@ public class TourFragment extends Fragment {
     }
     public void deleteComment(UserComment userComment){
         tourController.deleteComment(userComment, event -> {
-            if (event.getType() == EventType.OK){
+            if (event.getType() == OK){
                 listUserComment.remove(userComment);
                 adapterComments.notifyDataSetChanged();
             }else{
@@ -495,9 +550,10 @@ public class TourFragment extends Fragment {
         });
     }
     private void updateRVComments(boolean doClear){
-        tourController.getComments(0, event -> {
+        tourController.getComments(commentPage, event -> {
             switch (event.getType()) {
                 case OK:
+                    commentPage++;
                     commentText.getText().clear();
                     List<UserComment> list = (List<UserComment>) event.getModel();
                     currentPage++;
