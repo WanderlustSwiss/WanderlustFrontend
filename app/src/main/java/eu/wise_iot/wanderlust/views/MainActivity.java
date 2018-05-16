@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (preferences.getBoolean("firstTimeOpened", true)) {
             // start welcome screen
             StartupRegistrationFragment registrationFragment = new StartupRegistrationFragment();
+
             getFragmentManager().beginTransaction()
                     .add(R.id.content_frame, registrationFragment)
                     .commit();
@@ -145,38 +147,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             setupDrawerHeader(loggedInUser);
 
                             //set last login
-                            DateTime now = new DateTime();
                             DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
-                            now = now.withZone(timeZone);
+                            DateTime now = new DateTime().withZone(timeZone);
                             DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
                             String lastLoginNow = fmt.print(now);
                             loggedInUser.setLastLogin(lastLoginNow);
                             UserDao.getInstance().update(loggedInUser);
 
-                            MapFragment mapFragment = MapFragment.newInstance();
                             getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                    .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                     .commit();
                             break;
                         default:
-                            DateTime lastLogin = DateTime.parse(user.getLastLogin());
-                            DateTime timerLimit = new DateTime();
-                            timerLimit = timerLimit.minusDays(1);
-                            Log.d(TAG, "Last login: " + lastLogin);
-
-                            if(lastLogin.isAfter(timerLimit)){
-                                MapFragment fragment = MapFragment.newInstance();
+                            DateTime lastLogin2 = DateTime.parse(user.getLastLogin());
+                            Log.d(TAG, "Last login: " + lastLogin2);
+                            //check if last login is within last 24h
+                            if(lastLogin2.isAfter(new DateTime().minusDays(1))){
+                                setupDrawerHeader(user);
                                 getFragmentManager().beginTransaction()
-                                        .add(R.id.content_frame,fragment, Constants.MAP_FRAGMENT)
+                                        .add(R.id.content_frame,MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                         .commit();
-                                //TODO FIX NPE if no connection
-                                //setupDrawerHeader(user);
+
                             } else {
                                 StartupLoginFragment loginFragment = new StartupLoginFragment();
                                 getFragmentManager().beginTransaction()
                                         .add(R.id.content_frame, loginFragment)
                                         .commit();
                             }
+                            break;
                     }
                 });
             }
@@ -206,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -292,6 +291,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
                 }
             });
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             fragmentTag = Constants.LOGIN_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
             if (fragment == null) fragment = StartupLoginFragment.newInstance();
@@ -342,15 +343,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setupDrawerHeader(User user) {
-       // username = (TextView) findViewById(R.id.user_name);
-       // email = (TextView) findViewById(R.id.user_mail_address);
-       // userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+        username = (TextView) findViewById(R.id.user_name);
+        email = (TextView) findViewById(R.id.user_mail_address);
+        userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
 
-        userProfileImage.setOnClickListener(view -> {
-            Fragment fragment = ProfileFragment.newInstance();
-            String fragmentTag = Constants.PROFILE_FRAGMENT;
-            switchFragment(fragment, fragmentTag);
-        });
+        userProfileImage.setOnClickListener(view -> switchFragment(ProfileFragment.newInstance(), Constants.PROFILE_FRAGMENT));
 
         username.setText(user.getNickname());
         email.setText(user.getEmail());
