@@ -108,8 +108,14 @@
                 android:textAlignment="center" />
 
         </LinearLayout>
+        <!-- TODO IMPLEMENT IF BACKEND WORKS -->
+
         <Button
             android:id="@+id/web_login_instagram_button"
+
+            android:visibility="gone"
+
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
@@ -124,6 +130,9 @@
             />
         <Button
             android:id="@+id/web_login_facebook_button"
+
+            android:visibility="gone"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="48dp"
