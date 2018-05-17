@@ -1,5 +1,11 @@
 <resources>
 
+    <!-- SERVER RELATED STRINGS -->
+    <string name="msg_server_error_get_tour">Serverfehler! Konnte Tour nicht abrufen</string>
+    <string name="msg_tour_not_existing">Tour existiert nicht mehr, da sie gelöscht wurde</string>
+    <string name="msg_processing_open_tour">Lade Tour...</string>
+    <string name="msg_general_error">Etwas ist schiefgelaufen...</string>
+
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
     <string name="app_domain"> #wanderlustapp</string>
@@ -40,9 +46,11 @@
     <string name="tour_region">Region</string>
     <string name="tour_difficulty">Schwierigkeit</string>
     <string name="tour_name">Name</string>
+    <string name="tour_rating">Bewertung</string>
     <string name="tour_distance">Distanz (km)</string>
     <string name="tour_duration">Dauer (Stunden)</string>
     <string name="tour_filter_noresult">Keine Touren gefunden</string>
+    <string name="tour_filter_no_internet">Keine Internetverbindung konnte augebaut werden</string>
     <string name="go_to_shop_string">Zum Onlineshop</string>
 
     <!-- VIOATION RELATED STRINGS -->

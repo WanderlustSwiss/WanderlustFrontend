@@ -65,8 +65,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             //Enable LoginButton after request is complete
             btnLogin.setEnabled(true);
 
-            EventType eventType = event.getType();
-            switch (eventType) {
+            switch (event.getType()) {
                 case OK:
                     SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
                     User user = (User) event.getModel();
@@ -95,7 +94,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 
                     break;
                 default:
-                    Toast.makeText(context, eventType.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, event.getType().toString(), Toast.LENGTH_LONG).show();
                     break;
             }
         }

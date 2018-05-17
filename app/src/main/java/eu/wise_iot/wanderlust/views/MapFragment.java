@@ -20,9 +20,11 @@ import android.os.PowerManager;
 import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
@@ -120,6 +122,7 @@ public class MapFragment extends Fragment {
     private Intent createTourIntent;
     private FloatingActionMenu floatingActionMenu;
     private boolean floatingActionMenuExpanded = false;
+    private NavigationView navView;
 
     /**
      * Static instance constructor.
@@ -165,6 +168,10 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
         createTourButton = (FloatingActionButton) view.findViewById(R.id.createTourButton);
         initMap(view);
         initOverlays();
@@ -235,9 +242,7 @@ public class MapFragment extends Fragment {
                         .setTitle(R.string.create_tour_save_tour)
                         .setMessage(R.string.create_tour_stop_recording_request)
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> {
-                            stoptTourTracking();
-                        })
+                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> stoptTourTracking())
                         .setNegativeButton(android.R.string.no, null).show();
             }
         });
@@ -494,7 +499,6 @@ public class MapFragment extends Fragment {
     /**
      * Loads user preferences of map settings in shared preferences
      */
-
     private void loadPreferences() {
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         double defaultMapCenterLat = Defaults.GEO_POINT_CENTER_OF_SWITZERLAND.getLatitude();
@@ -718,22 +722,22 @@ public class MapFragment extends Fragment {
 
         // register behavior on clicked
         layerButton.setOnClickListener(view1 -> {
-            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
-               /*
-                NestedScrollView layout = (NestedScrollView) view.findViewById(R.id.bottom_sheet);
-                ViewGroup.LayoutParams params = layout.getLayoutParams();
-                //params.height = 600;
-                layout.setLayoutParams(params);
-                */
+            if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN)
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            } else {
+            else
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            }
         });
         closeBottomSheetButton.setOnClickListener(view1 -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
 
         ibPoiLayer = (ImageButton) view.findViewById(R.id.poi_layer_button);
         boolean poiLayerActive = sharedPreferences.getBoolean(Constants.PREFERENCE_POI_LAYER_ACTIVE,true);
+        if (poiLayerActive) {
+            ibPoiLayer.setImageResource(R.drawable.ic_poi_white_24dp);
+            ibPoiLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
+        } else {
+            ibPoiLayer.setImageResource(R.drawable.ic_poi_black_24dp);
+            ibPoiLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
+        }
         ibPoiLayer.setSelected(poiLayerActive);
         showPoiOverlay(poiLayerActive);
 
@@ -1090,8 +1094,6 @@ public class MapFragment extends Fragment {
         }
 
     }
-
-
 
     private void stoptTourTracking() {
         getActivity().stopService(createTourIntent);

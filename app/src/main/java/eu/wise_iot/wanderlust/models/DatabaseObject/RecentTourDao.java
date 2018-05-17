@@ -1,6 +1,8 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
@@ -10,6 +12,10 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
+
+import static android.util.Log.d;
+import static eu.wise_iot.wanderlust.controllers.EventType.NOT_FOUND;
+import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
  * RecentTourDao:
@@ -32,6 +38,8 @@ public class RecentTourDao extends DatabaseObjectAbstract {
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
     private final Box<Tour> recentTourBox;
+
+    public final UserTourDao userTourDao = UserTourDao.getInstance();
 
 
     private RecentTourDao() {
@@ -80,6 +88,44 @@ public class RecentTourDao extends DatabaseObjectAbstract {
     public Tour update(Tour recentTour) {
         recentTourBox.put(recentTour);
         return recentTour;
+    }
+
+    /**
+     * update the given recent tours on startup
+     */
+    public void updateRecentToursOnStartup() {
+        try {
+            for(Tour tour : this.find()) {
+                new Thread(() -> {
+                    try {
+                        userTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
+                            switch (controllerEvent.getType()) {
+                                case OK:
+                                    d("RECENTTOUR UPDATE","OK");
+                                    break;
+                                case NOT_FOUND:
+                                    d("RECENTTOUR UPDATE","NOT FOUND");
+                                    this.remove(tour);
+                                    break;
+                                default:
+                            }
+                        });
+                    } catch (Exception e){
+                        d("RECENTTOUR UPDATE","EXCEPTION THROWN IN THREAD");
+                    }
+                }).start();
+            }
+        } catch(Exception e){
+            d("FAILURE","EXCEPTION THROWN IN METHOD");
+        }
+    }
+    /**
+     * Remove an existing recentTour in the database.
+     *
+     * @param recentTour (required).
+     */
+    public void remove(Tour recentTour) {
+        recentTourBox.remove(recentTour);
     }
 
     /**

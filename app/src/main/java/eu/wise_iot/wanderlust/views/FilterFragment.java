@@ -2,11 +2,14 @@ package eu.wise_iot.wanderlust.views;
 
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -14,6 +17,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
@@ -22,6 +28,8 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.FilterController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
+import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
+import eu.wise_iot.wanderlust.views.dialog.TourRatingDialogFilter;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -39,6 +47,8 @@ public class FilterFragment extends Fragment {
     private AutoCompleteTextView tiName;
     private CheckBox cbT1, cbT2, cbT3, cbT4, cbT5, cbT6;
     private FilterController filterController;
+    private TextView tourRatingInNumbers;
+    private RatingBar ratingBar;
 
     public static FilterFragment newInstance() {
         Bundle args = new Bundle();
@@ -58,8 +68,38 @@ public class FilterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(
-                R.layout.fragment_tour_filter, container, false);
+        View view = inflater.inflate(R.layout.fragment_tour_filter, container, false);
+
+        tourRatingInNumbers = (TextView) view.findViewById(R.id.tourRatingNumbers);
+        ratingBar = (RatingBar) view.findViewById(R.id.tourRatingFilter);
+        rsbDistance = (RangeSeekBar) view.findViewById(R.id.rsbDistance);
+        rsbDuration = (RangeSeekBar) view.findViewById(R.id.rsbDuration);
+        btnSearch = (Button)view.findViewById(R.id.btnSearch);
+        tiName = (AutoCompleteTextView)view.findViewById(R.id.tiTourNameInput);
+        tiRegion = (RegionsCompletionView)view.findViewById(R.id.tiTourRegionInput);
+        cbT1 = (CheckBox)view.findViewById(R.id.checkboxT1);
+        cbT2 = (CheckBox)view.findViewById(R.id.checkboxT2);
+        cbT3 = (CheckBox)view.findViewById(R.id.checkboxT3);
+        cbT4 = (CheckBox)view.findViewById(R.id.checkboxT4);
+        cbT5 = (CheckBox)view.findViewById(R.id.checkboxT5);
+        cbT6 = (CheckBox)view.findViewById(R.id.checkboxT6);
+
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        cbT1.setChecked(sharedPreferences.getBoolean("filter_cbt1", true));
+        cbT2.setChecked(sharedPreferences.getBoolean("filter_cbt2", true));
+        cbT3.setChecked(sharedPreferences.getBoolean("filter_cbt3", true));
+        cbT4.setChecked(sharedPreferences.getBoolean("filter_cbt4", true));
+        cbT5.setChecked(sharedPreferences.getBoolean("filter_cbt5", true));
+        cbT6.setChecked(sharedPreferences.getBoolean("filter_cbt6", true));
+        ratingBar.setRating(sharedPreferences.getFloat("filter_rating",0.0f));
+        rsbDistance.setSelectedMaxValue(sharedPreferences.getFloat("filter_distancee",40f));
+        rsbDistance.setSelectedMinValue(sharedPreferences.getFloat("filter_distances",0.0f));
+        rsbDuration.setSelectedMaxValue(sharedPreferences.getFloat("filter_duratione",40f));
+        rsbDuration.setSelectedMinValue(sharedPreferences.getFloat("filter_durations",0.0f));
+        tiName.setText(sharedPreferences.getString("filter_name", ""));
+        tiRegion.setText(sharedPreferences.getString("filter_region", ""));
+
+        return view;
     }
 
     @Override
@@ -69,7 +109,6 @@ public class FilterFragment extends Fragment {
             menu.findItem(R.id.filterIcon).setVisible(false);
         super.onPrepareOptionsMenu(menu);
     }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -81,17 +120,15 @@ public class FilterFragment extends Fragment {
             return true;
         });
 
-        rsbDistance = (RangeSeekBar)view.findViewById(R.id.rsbDistance);
-        rsbDuration = (RangeSeekBar) view.findViewById(R.id.rsbDuration);
-        btnSearch = (Button)view.findViewById(R.id.btnSearch);
-        tiName = (AutoCompleteTextView)view.findViewById(R.id.tiTourNameInput);
-        tiRegion = (RegionsCompletionView)view.findViewById(R.id.tiTourRegionInput);
-        cbT1 = (CheckBox)view.findViewById(R.id.checkboxT1);
-        cbT2 = (CheckBox)view.findViewById(R.id.checkboxT2);
-        cbT3 = (CheckBox)view.findViewById(R.id.checkboxT3);
-        cbT4 = (CheckBox)view.findViewById(R.id.checkboxT4);
-        cbT5 = (CheckBox)view.findViewById(R.id.checkboxT5);
-        cbT6 = (CheckBox)view.findViewById(R.id.checkboxT6);
+
+
+        ratingBar.setOnTouchListener((View v, MotionEvent e) -> {
+            if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                TourRatingDialogFilter dialog = new TourRatingDialogFilter().newInstance(filterController, ratingBar);
+                dialog.show(getFragmentManager(), Constants.RATE_TOUR_FILTER_DIALOG);
+            }
+            return true;
+        });
 
         btnSearch.setOnClickListener((View v) -> performSearch());
         tiRegion.setThreshold(1);
@@ -116,6 +153,7 @@ public class FilterFragment extends Fragment {
         setting.distanceE = ((int)rsbDistance.getSelectedMaxValue() * 1000);
         setting.durationS = ((int)rsbDuration.getSelectedMinValue() * 60);
         setting.durationE = ((int)rsbDuration.getSelectedMaxValue() * 60);
+        setting.rating = ratingBar.getRating();
 
         //build query for regions
         StringBuilder sb = new StringBuilder();
@@ -124,6 +162,20 @@ public class FilterFragment extends Fragment {
         if(!sb.toString().isEmpty())sb.deleteCharAt(sb.length() - 1);
         setting.region = sb.toString();
         setting.name = tiName.getText().toString();
+        SharedPreferences.Editor editor = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
+        editor.putBoolean("filter_cbt1",setting.cbT1);
+        editor.putBoolean("filter_cbt2",setting.cbT2);
+        editor.putBoolean("filter_cbt3",setting.cbT3);
+        editor.putBoolean("filter_cbt4",setting.cbT4);
+        editor.putBoolean("filter_cbt5",setting.cbT5);
+        editor.putBoolean("filter_cbt6",setting.cbT6);
+        editor.putFloat("filter_rating",setting.rating);
+        editor.putFloat("filter_distances",(float)rsbDistance.getSelectedMinValue());
+        editor.putFloat("filter_distancee",(float)rsbDistance.getSelectedMaxValue());
+        editor.putFloat("filter_durations",(float)rsbDuration.getSelectedMinValue());
+        editor.putFloat("filter_duratione",(float)rsbDuration.getSelectedMaxValue());
+        editor.putString("filter_name", tiName.getText().toString());
+        editor.putString("filter_region", tiRegion.getText().toString());
 
         ResultFilterFragment resultFilterFragment = ResultFilterFragment.newInstance(setting);
         getFragmentManager().beginTransaction()
@@ -140,5 +192,6 @@ public class FilterFragment extends Fragment {
         boolean cbT1, cbT2, cbT3, cbT4, cbT5, cbT6;
         String name, region;
         int distanceS, distanceE, durationS, durationE;
+        float rating;
     }
 }

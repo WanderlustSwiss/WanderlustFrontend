@@ -1,8 +1,11 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,16 +33,13 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
-
-import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 
 /**
@@ -59,7 +59,7 @@ public class TourOverviewFragment extends Fragment {
     private RecyclerView rvTours, rvFavorites, rvRecent;
     private ProgressBar pbTours, pbFavorites, pbRecent;
     private TextView tvToursAllPlaceholder, tvToursFavoritePlaceholder, tvToursRecentPlaceholder;
-    private TourOverviewController toc;
+    private TourOverviewController tourOverviewController;
     private int currentPage = 0;
     private ImageController imageController;
 
@@ -70,7 +70,7 @@ public class TourOverviewFragment extends Fragment {
         context = getActivity().getApplicationContext();
         imageController = ImageController.getInstance();
         listTours = new LinkedList<>();
-        toc = new TourOverviewController();
+        tourOverviewController = new TourOverviewController();
         setHasOptionsMenu(true);
     }
     /**
@@ -120,7 +120,6 @@ public class TourOverviewFragment extends Fragment {
      * retrieve all images from the database
      * @param tours
      */
-
     private static void getDataFromServer(List<Tour> tours){
         TourOverviewController tourOverviewController = new TourOverviewController();
         //get thumbnail for each tour
@@ -190,7 +189,7 @@ public class TourOverviewFragment extends Fragment {
         rvRecent.setAdapter(adapterRecent);
 
         recentTours.clear();
-        recentTours.addAll(toc.getRecentTours());
+        recentTours.addAll(tourOverviewController.getRecentTours());
         getDataFromServer(recentTours);
         adapterRecent.notifyDataSetChanged();
 
@@ -205,7 +204,7 @@ public class TourOverviewFragment extends Fragment {
         }
 
         //get all tours
-        toc.getAllTours(currentPage, event -> {
+        tourOverviewController.getAllTours(currentPage, event -> {
             switch (event.getType()) {
                 case OK:
                     //get all needed information from server db
@@ -228,18 +227,30 @@ public class TourOverviewFragment extends Fragment {
                         pbTours.setVisibility(View.GONE);
                     } else {
                         rvTours.setVisibility(View.GONE);
+                        tvToursAllPlaceholder.setText(getResources().getText(R.string.tour_filter_noresult));
                         tvToursAllPlaceholder.setVisibility(View.VISIBLE);
                         pbTours.setVisibility(View.GONE);
                     }
                     break;
+                case NETWORK_ERROR:
+                    if(adapterFavs.getItemCount() > 0) {
+                        rvTours.setVisibility(View.VISIBLE);
+                        tvToursAllPlaceholder.setVisibility(View.GONE);
+                        pbTours.setVisibility(View.GONE);
+                    } else {
+                        rvTours.setVisibility(View.GONE);
+                        tvToursAllPlaceholder.setText(getResources().getText(R.string.tour_filter_no_internet));
+                        tvToursAllPlaceholder.setVisibility(View.VISIBLE);
+                        pbTours.setVisibility(View.GONE);
+                    }
                 default:
                     Log.d(TAG, "Server response ERROR: " + event.getType().name());
-                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+
             }
         });
 
         //get favorized tours
-        toc.getAllFavoriteTours(controllerEvent -> {
+        tourOverviewController.getAllFavoriteTours(controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
                     Log.d(TAG, "refresh Favorites");
@@ -260,12 +271,24 @@ public class TourOverviewFragment extends Fragment {
                         pbFavorites.setVisibility(View.GONE);
                     } else {
                         rvFavorites.setVisibility(View.GONE);
+                        tvToursFavoritePlaceholder.setText(getResources().getText(R.string.tour_filter_noresult));
+                        tvToursFavoritePlaceholder.setVisibility(View.VISIBLE);
+                        pbFavorites.setVisibility(View.GONE);
+                    }
+                    break;
+                case NETWORK_ERROR:
+                    if(adapterFavs.getItemCount() > 0) {
+                        rvFavorites.setVisibility(View.VISIBLE);
+                        tvToursFavoritePlaceholder.setVisibility(View.GONE);
+                        pbFavorites.setVisibility(View.GONE);
+                    } else {
+                        rvFavorites.setVisibility(View.GONE);
+                        tvToursFavoritePlaceholder.setText(getResources().getText(R.string.tour_filter_no_internet));
                         tvToursFavoritePlaceholder.setVisibility(View.VISIBLE);
                         pbFavorites.setVisibility(View.GONE);
                     }
                 default:
                     Log.d("ERROR", "failed to get Favorites");
-                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
             }
         });
 
@@ -280,7 +303,7 @@ public class TourOverviewFragment extends Fragment {
                         int position = offset / myCellWidth;
                         Log.d(TAG, "Position=" + position + " " + myCellWidth + " " + offset );
                         if (20 < (position - (25*(currentPage-1)))) {
-                            toc.getAllTours(currentPage, controllerEvent -> {
+                            tourOverviewController.getAllTours(currentPage, controllerEvent -> {
                                 switch (controllerEvent.getType()) {
                                     case OK:
                                         LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
@@ -314,9 +337,9 @@ public class TourOverviewFragment extends Fragment {
                 Log.d(TAG,"Tour Favorite Clicked and event triggered ");
                 ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.tourOVFavoriteButton);
                 Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
-                long favId = toc.getTourFavoriteId(tour.getTour_id());
+                long favId = tourOverviewController.getTourFavoriteId(tour.getTour_id());
                 if(favId != -1) {
-                    toc.deleteFavorite(favId, controllerEvent -> {
+                    tourOverviewController.deleteFavorite(favId, controllerEvent -> {
                         switch (controllerEvent.getType()) {
                             case OK:
                                 //favorizedTours.remove(tour.getTour_id());
@@ -347,7 +370,7 @@ public class TourOverviewFragment extends Fragment {
                     });
                 } else {
                     Log.d(TAG, "favorite gets favored: " + tour.getTour_id());
-                    toc.setFavorite(tour, controllerEvent -> {
+                    tourOverviewController.setFavorite(tour, controllerEvent -> {
                         switch (controllerEvent.getType()){
                             case OK:
                                 Log.d("Touroverview rv", "favorite succesfully added " + tour.getTour_id());
@@ -408,20 +431,80 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tour_rv_item:
                 Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
-                TourFragment tourFragment = TourFragment.newInstance(tour);
-                Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
-                if(oldTourFragment != null) {
-                    getFragmentManager().beginTransaction()
-                            .remove(oldTourFragment)
-                            .commit();
-                }
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                        .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
-                        .commit();
-                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
+                AsyncCheckTourExists asyncCheckTourExists = new AsyncCheckTourExists(tour, getActivity());
+                asyncCheckTourExists.execute();
                 break;
-            //the same can be applied to other components in Row_Layout.xml
+        }
+
+    }
+
+    /**
+     * handles async backend request for requesting a tour
+     */
+    private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
+        ProgressDialog pdLoading;
+        private Tour tour;
+        private Activity activity;
+        private Integer responseCode;
+
+        AsyncCheckTourExists(Tour tour, Activity activity){
+            this.tour = tour;
+            this.activity = activity;
+            pdLoading = new ProgressDialog(this.activity);
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //this method will be running on UI thread
+            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
+            pdLoading.show();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            this.responseCode = tourOverviewController.checkIfTourExists(tour);
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            switch(EventType.getTypeByCode(responseCode)) {
+                case OK:
+                    Log.d(TAG,"Server Response arrived -> OK Tour was found");
+                    TourFragment tourFragment = TourFragment.newInstance(tour);
+                    Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
+                    if (oldTourFragment != null) {
+                        getFragmentManager().beginTransaction()
+                                .remove(oldTourFragment)
+                                .commit();
+                    }
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                            .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
+                            .commit();
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    break;
+                case NOT_FOUND:
+                    Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
+                    recentTours.remove(tour);
+                    adapterRecent.notifyDataSetChanged();
+                    tourOverviewController.removeRecentTour(tour);
+                    break;
+                case SERVER_ERROR:
+                    Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
+                    break;
+                case NETWORK_ERROR:
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                    Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                    break;
+                default:
+                    Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+            }
+
+            if (pdLoading.isShowing()) pdLoading.dismiss();
         }
     }
     /**

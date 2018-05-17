@@ -35,12 +35,14 @@ public interface Constants {
     String RESET_PASSWORD_FRAGMENT = "ResetPasswordFragment";
     String PROFILE_EDIT_FRAGMENT = "ProfileEditFragment";
     String DISCLAIMER_FRAGMENT = "DisclaimerFragment";
+    String PROCESSING_FRAGMENT = "ProcessingFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
     String EDIT_POI_DIALOG = "PoiFeedbackDialog";
     String RATE_TOUR_DIALOG = "TourRatingDialog";
+    String RATE_TOUR_FILTER_DIALOG = "RateTourFilterDialog";
     String EQUIPMENT_DIALOG = "EquipmentDialog";
     String REPORT_TOUR_DIALOG = "TourReportDialog";
     String REPORT_POI_DIALOG = "PoiReportDialog";

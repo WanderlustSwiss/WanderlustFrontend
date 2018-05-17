@@ -270,8 +270,8 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @param handler
      */
-    public void retrieveAllFiltered(final FragmentHandler handler, int page, int distanceS, int distanceE, int durationS, int durationE, String regionIDs, String title, String difficulties) {
-        Call<List<Tour>> call = service.retrieveAllFilteredTours(page, distanceS, distanceE, durationS, durationE, regionIDs, title, difficulties);
+    public void retrieveAllFiltered(final FragmentHandler handler, float rating, int page, int distanceS, int distanceE, int durationS, int durationE, String regionIDs, String title, String difficulties) {
+        Call<List<Tour>> call = service.retrieveAllFilteredTours(page, rating, distanceS, distanceE, durationS, durationE, regionIDs, title, difficulties);
         call.enqueue(new Callback<List<Tour>>() {
             @Override
             public void onResponse(Call<List<Tour>> call, Response<List<Tour>> response) {
@@ -456,8 +456,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 

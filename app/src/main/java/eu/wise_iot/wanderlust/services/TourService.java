@@ -42,6 +42,7 @@ public interface TourService {
 
     @GET("tour/")
     Call<List<Tour>> retrieveAllFilteredTours(@Query("page") int page,
+                                              @Query("rate") float rating,
                                               @Query("distanceS") int distanceS,
                                               @Query("distanceE") int distanceE,
                                               @Query("durationS") int durationS,
