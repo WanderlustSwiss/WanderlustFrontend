@@ -55,11 +55,17 @@
     <string name="violation_other">Andere</string>
     <string name="report_submit">Vielen Dank für Ihre Einreichung</string>
 
+    <string name="tour_comment_your_rating">Deine Bewertung</string>
+    <string name="tour_comment_average">Durchschnittliche Bewertung</string>
+    <string name="tour_comment_no_ratings">Noch keine Bewertungen</string>
+    <string name="tour_comment_rating">Bewertung</string>
+    <string name="tour_comment_ratings">Bewertungen</string>
+
     <!-- FILTER RELATED STRINGS -->
     <string name="filter_search">Filter anwenden</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
-    <string name="dialog_feedback_description_edit_hint">Beschreibung</string>
+    <string name="dialog_feedback_description_edit_hint">Schreibe hier einen eigenen Kommentar zu dieser Tour</string>
     <string-array name="dialog_feedback_spinner_mode">
         <item>öffentlich</item>
         <item>nur für mich</item>
@@ -189,8 +195,25 @@
     <string name="meter_above_sea_level_abbreviation">m ü. M.</string>
     <string name="share_title_poi">Teilen</string>
 
+
     <string name="share_title_tour">Teilen</string>
     <string name="poi_mode_is_private">Poi ist privat und nur für dich sichtbar</string>
+
+    <string name="tour_comment_before">vor</string>
+    <string name="tour_comment_seconds">Sek</string>
+    <string name="tour_comment_minutes">Min</string>
+    <string name="tour_comment_hour">Stunde</string>
+    <string name="tour_comment_houres">Stunden</string>
+    <string name="tour_comment_day">Tag</string>
+    <string name="tour_comment_days">Tagen</string>
+    <string name="tour_comment_week">Woche</string>
+    <string name="tour_comment_weeks">Wochen</string>
+    <string name="tour_comment_year">Jahr</string>
+    <string name="tour_comment_years">Jahren</string>
+    <string name="tour_comment_all_comments">Alle Kommentare</string>
+    <string name="tour_comment_noresult">Keine Kommentare</string>
+    <string name="tour_comment_description">Was sind deine Erfahrungen mit der Tour?</string>
+>>>>>>> origin/feat_TourComments-266
 
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>
@@ -201,6 +224,7 @@
     <string name="msg_difficulty_level_changed_to_1">Schwierigkeits-Level auf</string>
     <string name="msg_difficulty_level_changed_to_2">geändert</string>
     <string name="msg_no_changes_done">Keine Änderungen vorgenommen</string>
+    <string name="msg_comment_create_successfull">Kommetar wurde erstellt</string>
     <string name="meter_abbreviation">m</string>
     <string name="logout_successful">Logout erfolgreich</string>
     <string name="logout_failed">Logout fehlgeschlagen</string>
@@ -276,6 +300,7 @@
     <string name="short_october">Okt</string>
     <string name="short_november">Nov</string>
     <string name="short_december">Dez</string>
+    <string name="rating">Bewertung</string>
 
     <string name="create_tour_need_whitelist">Fürs Tracking bitte Wanderlust als Ausnahme hinzufügen</string>
     <string name="create_tour_upload_image">Upload Image</string>

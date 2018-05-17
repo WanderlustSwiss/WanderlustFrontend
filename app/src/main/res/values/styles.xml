@@ -244,4 +244,12 @@
         <item name="rangeTitleTextColor">@color/black</item>
         <item name="legendTextColor">@color/black</item>
     </style>
+
+    <style name="RatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressTint">@color/medium</item>
+    </style>
+
+    <style name="RatingBar.Small" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="android:progressTint">@color/medium</item>
+    </style>
 </resources>

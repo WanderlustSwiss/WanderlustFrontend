@@ -19,7 +19,9 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.views.TourFragment;
 
 /**
  * TourRatingDialog:
@@ -32,8 +34,10 @@ public class TourRatingDialog extends DialogFragment {
 
     private static TourController controller;
     private static Tour tour;
+
     private static RatingBar ratingBar;
     private static TextView tourRatingInNumbers;
+    private static TourFragment tourFragment;
 
     private ImageButton[] starButtonCollection = new ImageButton[5];
 
@@ -48,8 +52,6 @@ public class TourRatingDialog extends DialogFragment {
     private FragmentHandler ratingHandler;
     private Context context;
     private Rating rating;
-    private EditText titleEditText;
-    private TextInputLayout titleTextLayout;
     private EditText descriptionEditText;
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
@@ -57,14 +59,13 @@ public class TourRatingDialog extends DialogFragment {
     private int countRatedStars = 0;
 
     public static TourRatingDialog newInstance(Tour paramTour, TourController tourController,
-                                               RatingBar paramRatingBar,
-                                               TextView paramTourRatingInNumbers) {
+                                               TourFragment paramTourFragment) {
         TourRatingDialog fragment = new TourRatingDialog();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        ratingBar = paramRatingBar;
-        tourRatingInNumbers = paramTourRatingInNumbers;
+
         tour = paramTour;
+        tourFragment = paramTourFragment;
         controller = tourController;
         return fragment;
     }
@@ -79,8 +80,6 @@ public class TourRatingDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_rate_tour, container, false);
 
-        //titleEditText = (EditText) view.findViewById(R.id.rate_description);
-        //titleTextLayout = (TextInputLayout) view.findViewById(R.id.rate_title_layout);
         firstStarButton = (ImageButton) view.findViewById(R.id.first_star_button);
         secondStarButton = (ImageButton) view.findViewById(R.id.second_star_button);
         thirdStarButton = (ImageButton) view.findViewById(R.id.third_star_button);
@@ -106,21 +105,15 @@ public class TourRatingDialog extends DialogFragment {
     public void setupListeners(){
         long rate = controller.alreadyRated(tour.getTour_id());
         if(rate == 0) {
-            buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    getDialog().dismiss();
-                    controller.getRating(tour, controllerEvent1 -> {
-                        switch (controllerEvent1.getType()) {
-                            case OK:
-
-                                float rateAvg = (float) controllerEvent1.getModel();
-                                float rateAvgRound = Float.parseFloat(String.format("%.1f", Math.round(rateAvg * 2) / 2.0));
-                                tourRatingInNumbers.setText(rateAvgRound + "");
-                                ratingBar.setRating(rateAvgRound);
-                        }
-                    });
-                }
+            buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, controllerEvent0 -> {
+                getDialog().dismiss();
+                controller.getTourRating(controllerEvent1 -> {
+                    switch (controllerEvent1.getType()) {
+                        case OK:
+                            TourRate tourRate = (TourRate) controllerEvent1.getModel();
+                            tourFragment.updateRating(tourRate);
+                    }
+                });
             }));
         }
         else{

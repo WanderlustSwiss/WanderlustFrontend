@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import android.content.Context;
+import android.app.FragmentManager;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
@@ -52,6 +54,8 @@ import eu.wise_iot.wanderlust.services.ViolationService;
 import io.objectbox.Property;
 import retrofit2.Call;
 import retrofit2.Callback;
+import eu.wise_iot.wanderlust.services.CommentService;
+import retrofit2.Response;
 
 
 /**
@@ -82,6 +86,7 @@ public class TourController {
     private RatingDao ratingDao;
     private UserDao userDao;
     private Tour tour;
+    private CommentService commentService;
     private UserTourDao userTourDao;
     private CommunityTourDao communityTourDao;
     private DifficultyTypeDao difficultyTypeDao;
@@ -102,6 +107,7 @@ public class TourController {
         imageController = ImageController.getInstance();
         regionDao = RegionDao.getInstance();
         recentTourDao = RecentTourDao.getInstance();
+        commentService = ServiceGenerator.createService(CommentService.class);
     }
 
 
@@ -234,8 +240,12 @@ public class TourController {
     public void getRating(Tour tour, FragmentHandler handler){
         ratingDao.retrieve(tour.getTour_id(), handler);
     }
-    public void getRating(FragmentHandler handler){
+    public void getRating(FragmentHandler handler) {
         ratingDao.retrieve(tour.getTour_id(), handler);
+    }
+
+    public void getTourRating(FragmentHandler handler) {
+        ratingDao.retrieveTour(tour.getTour_id(), handler);
     }
 
     public String getRegion() {
@@ -379,7 +389,61 @@ public class TourController {
             return difficultyType.getLevel();
         }
     }
+    public void deleteComment(UserComment userComment, FragmentHandler handler){
+        Call<UserComment> call = commentService.deleteComment(userComment.getCom_id());
+        call.enqueue(new Callback<UserComment>() {
+            @Override
+            public void onResponse(Call<UserComment> call, Response<UserComment> response) {
+                if (response.isSuccessful()) {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
 
+            @Override
+            public void onFailure(Call<UserComment> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+    public void createComment(String comment, FragmentHandler handler){
+        Call<UserComment> call = commentService.createTourComment(new UserComment(0,
+                comment,null, null, null, tour.getTour_id(), 0));
+        call.enqueue(new Callback<UserComment>() {
+            @Override
+            public void onResponse(Call<UserComment> call, Response<UserComment> response) {
+                if (response.isSuccessful()) {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserComment> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+    public void getComments(int page, FragmentHandler handler){
+        Call<List<UserComment>> call = commentService.retrieveTourComments(tour.getTour_id(), page);
+        call.enqueue(new Callback<List<UserComment>>() {
+            @Override
+            public void onResponse(Call<List<UserComment>> call, Response<List<UserComment>> response) {
+                if (response.isSuccessful()) {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserComment>> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
 
     /**
      * Decodes base64 and GZIP compressed JSON Array String of elevations into a float array
@@ -413,7 +477,6 @@ public class TourController {
         }
         return new float[0];
     }
-
 
     /**
      * Formats Date to string
