@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -252,23 +253,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String fragmentTag = null;
         int id = item.getItemId();
 
+        Log.d(TAG,"FRAGMENTSTACK COUNT: " + getFragmentManager().getBackStackEntryCount());
+        //clear backstack to avoid infinite stacking
+        FragmentManager fm = getFragmentManager(); // or 'getSupportFragmentManager();'
+        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) fm.popBackStack();
+
+        Log.d(TAG,"FRAGMENTSTACK COUNT: " + getFragmentManager().getBackStackEntryCount());
+
         // MAIN FRAGMENTS
         if (id == R.id.nav_map) {
             fragmentTag = Constants.MAP_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
-            if (fragment == null)
-                fragment = MapFragment.newInstance(); //create if not available yet
-
+            if (fragment == null) fragment = MapFragment.newInstance(); //create if not available yet
         } else if (id == R.id.nav_tours) {
-            fragment = TourOverviewFragment.newInstance();
+            fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
+            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+            if (fragment == null) fragment = TourOverviewFragment.newInstance();
         } else if (id == R.id.nav_profile) {
             fragmentTag = Constants.PROFILE_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);
             if (fragment == null) fragment = ProfileFragment.newInstance();
         }
-
         // OTHER FRAGMENTS
-
         else if (id == R.id.setup_guide) {
             fragmentTag = Constants.USER_GUIDE_FRAGMENT;
             fragment = getFragmentManager().findFragmentByTag(fragmentTag);

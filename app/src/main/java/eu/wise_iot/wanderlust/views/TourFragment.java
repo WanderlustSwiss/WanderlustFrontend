@@ -11,7 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -884,22 +886,22 @@ public class TourFragment extends Fragment {
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
 
         roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent));
-
-
         //Disable my location
         getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.PREFERENCE_MY_LOCATION_ENABLED, false).apply();
-
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
+        //remove the old fragment from stack
         Fragment oldMapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
         if(oldMapFragment != null) {
             getFragmentManager().beginTransaction()
                     .remove(oldMapFragment)
                     .commit();
         }
-
+        //select map in navigationview
+        NavigationView nv = (NavigationView)getActivity().findViewById(R.id.nav_view);
+        nv.getMenu().getItem(0).setChecked(true);
+        //add new fragment to stack
         getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                .addToBackStack(Constants.MAP_FRAGMENT)
+                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                 .commit();
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
