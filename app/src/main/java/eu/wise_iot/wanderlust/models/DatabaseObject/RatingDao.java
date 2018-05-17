@@ -135,7 +135,7 @@ public class RatingDao extends DatabaseObjectAbstract{
             public void onResponse(Call<Rating> call, Response<Rating> response) {
                 if (response.isSuccessful()) {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),
-                            response.body()));
+                            response.body().getRate()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }

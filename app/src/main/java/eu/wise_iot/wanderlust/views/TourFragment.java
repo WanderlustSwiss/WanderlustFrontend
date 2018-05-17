@@ -306,7 +306,7 @@ public class TourFragment extends Fragment {
         tourController.getRating(tour, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
-                    tourRating.setRating((float) controllerEvent.getModel());
+                    tourRating.setRating(((Integer)controllerEvent.getModel()).floatValue());
             }
         });
 
