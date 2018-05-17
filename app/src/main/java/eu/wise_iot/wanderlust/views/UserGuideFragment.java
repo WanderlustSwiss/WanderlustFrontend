@@ -21,7 +21,9 @@ import eu.wise_iot.wanderlust.constants.Constants;
  */
 public class UserGuideFragment extends Fragment {
 
+    private static final String TAG = "UserGuideFragment";
     private Button goToMapButton;
+
 
     public static UserGuideFragment newInstance() {
         Bundle args = new Bundle();
