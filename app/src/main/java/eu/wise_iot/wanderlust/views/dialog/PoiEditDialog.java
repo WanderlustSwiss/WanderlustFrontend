@@ -215,7 +215,7 @@ public class PoiEditDialog extends DialogFragment {
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                poi.setType(position);
+                poi.setType(position+1);
             }
 
             @Override
@@ -287,7 +287,7 @@ public class PoiEditDialog extends DialogFragment {
      * Prefills all data from address
      */
     private void fillInDataFromAddress(){
-        typeSpinner.setSelection(1);
+        typeSpinner.setSelection(0);
         mapController.searchCoordinates(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),1, controllerEvent -> {
             AddressPoint addressPoint = (AddressPoint) controllerEvent.getModel();
             if (addressPoint != null &&
