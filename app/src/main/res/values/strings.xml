@@ -302,7 +302,6 @@
     <string name="short_october">Okt</string>
     <string name="short_november">Nov</string>
     <string name="short_december">Dez</string>
-    <string name="rating">Bewertung</string>
 
     <string name="create_tour_need_whitelist">Fürs Tracking bitte Wanderlust als Ausnahme hinzufügen</string>
     <string name="create_tour_upload_image">Upload Image</string>
@@ -313,4 +312,5 @@
     <string name="create_tour_extra_equipment">Zusatzequipment</string>
     <string name="profileEditChangesApplied">Änderungen übernommen</string>
     <string name="msg_last_known_position_marker">Das ist deine zuletzt bekannte Position</string>
+    <string name="report_tour">Diese Tour melden</string>
 </resources>

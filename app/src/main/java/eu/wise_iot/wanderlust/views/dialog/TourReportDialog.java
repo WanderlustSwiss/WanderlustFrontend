@@ -70,6 +70,7 @@ public class TourReportDialog extends DialogFragment {
         buttonCancel.setOnClickListener(v -> getDialog().dismiss());
         buttonSave.setOnClickListener(v -> reportTour());
 
+
         return view;
     }
 
@@ -100,7 +101,7 @@ public class TourReportDialog extends DialogFragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        getDialog().setTitle(R.string.report_tour);
     }
 }
 
