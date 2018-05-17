@@ -29,7 +29,7 @@
             android:textAllCaps="true" />
 
         <TextView
-            android:id="@+id/tour_title"
+            android:id="@+id/tourOVTourTitle"
             style="@style/p"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
                         android:paddingRight="8dp"/>
 
                     <TextView
-                        android:id="@+id/tour_distance"
+                        android:id="@+id/tourOVTourDistance"
                         style="@style/p.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
                         android:paddingRight="8dp" />
 
                     <TextView
-                        android:id="@+id/tour_difficulty"
+                        android:id="@+id/tourOVTourDifficulty"
                         style="@style/p.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

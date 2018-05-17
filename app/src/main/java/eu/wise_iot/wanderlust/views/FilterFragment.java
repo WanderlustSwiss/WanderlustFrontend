@@ -170,10 +170,10 @@ public class FilterFragment extends Fragment {
         editor.putBoolean("filter_cbt5",setting.cbT5);
         editor.putBoolean("filter_cbt6",setting.cbT6);
         editor.putFloat("filter_rating",setting.rating);
-        editor.putFloat("filter_distances",(float)rsbDistance.getSelectedMinValue());
-        editor.putFloat("filter_distancee",(float)rsbDistance.getSelectedMaxValue());
-        editor.putFloat("filter_durations",(float)rsbDuration.getSelectedMinValue());
-        editor.putFloat("filter_duratione",(float)rsbDuration.getSelectedMaxValue());
+        editor.putFloat("filter_distances", rsbDistance.getSelectedMinValue().floatValue());
+        editor.putFloat("filter_distancee", rsbDistance.getSelectedMaxValue().floatValue());
+        editor.putFloat("filter_durations", rsbDuration.getSelectedMinValue().floatValue());
+        editor.putFloat("filter_duratione", rsbDuration.getSelectedMaxValue().floatValue());
         editor.putString("filter_name", tiName.getText().toString());
         editor.putString("filter_region", tiRegion.getText().toString());
 
