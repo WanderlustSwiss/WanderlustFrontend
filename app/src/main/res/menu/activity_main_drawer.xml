@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/grp1" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_map"
             android:title="@string/menu_map" />
@@ -15,17 +15,19 @@
             android:title="@string/menu_profile" />
     </group>
 
-    <item android:title="@string/menu_title_other">
-        <menu>
-            <item
-                android:id="@+id/setup_guide"
-                android:title="@string/menu_manual" />
-            <item
-                android:id="@+id/disclaimer"
-                android:title="@string/menu_disclaimer" />
-            <item
-                android:id="@+id/logout"
-                android:title="@string/logout" />
-        </menu>
-    </item>
+    <group android:id="@+id/grp2" android:checkableBehavior="single">
+        <item android:title="@string/menu_title_other"
+            android:checkable="false"
+            android:enabled="false">
+        </item>
+        <item
+            android:id="@+id/setup_guide"
+            android:title="@string/menu_manual" />
+        <item
+            android:id="@+id/disclaimer"
+            android:title="@string/menu_disclaimer" />
+        <item
+            android:id="@+id/logout"
+            android:title="@string/logout" />
+    </group>
 </menu>
