@@ -85,8 +85,8 @@ public class TourRatingDialog extends DialogFragment {
         thirdStarButton = (ImageButton) view.findViewById(R.id.third_star_button);
         fourthStarButton = (ImageButton) view.findViewById(R.id.fourth_star_button);
         fifthStarButton = (ImageButton) view.findViewById(R.id.fifth_star_button);
-        buttonCancel = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
-        buttonSave = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
+        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_canel_rate_button);
+        buttonSave = (ImageButton) view.findViewById(R.id.rate_save_button);
 
         starButtonCollection[0] = firstStarButton;
         starButtonCollection[1] = secondStarButton;

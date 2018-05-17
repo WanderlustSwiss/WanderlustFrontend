@@ -231,9 +231,7 @@ public class TourFragment extends Fragment {
         tourCommentRating5 = (ImageView) view.findViewById(R.id.tourCommentRating5);
         rbCommentUserSpecificRating = (RatingBar) view.findViewById(R.id.rbCommentUserSpecificRating);
 
-        //imageViewTourImage = (ImageView) view.findViewById(R.id.tourOVTourImage);
-        //TODO ask which resource is correct
-        imageViewTourImage = (ImageView) view.findViewById(R.id.tour_image);
+        imageViewTourImage = (ImageView) view.findViewById(R.id.tourOVTourImage);
 
         favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
 
