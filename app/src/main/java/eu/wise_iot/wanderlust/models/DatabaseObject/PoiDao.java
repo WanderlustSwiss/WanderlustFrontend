@@ -13,6 +13,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
@@ -45,12 +46,13 @@ public class PoiDao extends DatabaseObjectAbstract {
         private static final PoiDao INSTANCE = new PoiDao();
     }
 
-    public static PoiDao getInstance(){
+    public static PoiDao getInstance() {
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static PoiService service;
     private final Box<Poi> poiBox;
+    private final PoiController poiController = new PoiController();
 
     /**
      * constructor
@@ -126,7 +128,7 @@ public class PoiDao extends DatabaseObjectAbstract {
         });
     }
 
-    public void retrieveUserPois(){
+    public void retrieveUserPois() {
         Call<List<Poi>> call = service.retrieveAllPois();
         call.enqueue(new Callback<List<Poi>>() {
             @Override
@@ -134,11 +136,19 @@ public class PoiDao extends DatabaseObjectAbstract {
 
                 List<Poi> userPois = response.body();
 
-                for (Poi poi : userPois){
+                for (Poi poi : userPois) {
                     if (findOne(Poi_.poi_id, poi.getPoi_id()) == null) {
                         //new UserPoi
                         poi.setInternal_id(0);
                         poiBox.put(poi);
+                        poiController.getImages(poi, controllerEvent -> {
+                            switch (controllerEvent.getType()) {
+                                case OK:
+                                    break;
+                                default:
+
+                            }
+                        });
                     }
                 }
 
@@ -196,7 +206,7 @@ public class PoiDao extends DatabaseObjectAbstract {
             public void onResponse(Call<Poi> call, Response<Poi> response) {
                 if (response.isSuccessful()) {
                     poiBox.remove(find(Poi_.poi_id, poi.getPoi_id()));
-                    for(ImageInfo imageInfo : poi.getImagePaths()){
+                    for (ImageInfo imageInfo : poi.getImagePaths()) {
                         new File(imageInfo.getLocalPath()).delete();
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
@@ -399,22 +409,22 @@ public class PoiDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
                     for (Poi poi : response.body()) {
                         //if (poi.isPublic()) {
-                            poi.setInternal_id(0);
-                            Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
-                            if(internalPoi == null){
-                                //non existent localy
-                                List<ImageInfo> imageInfos = new ArrayList<>();
-                                for(ImageInfo imageInfo : poi.getImagePaths()){
-                                    String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
-                                    imageInfos.add(new ImageInfo(poi.getPoi_id(), name, imageController.getPoiFolder()));
-                                }
-                                poi.setImagePaths(imageInfos);
-                                poi.setInternal_id(0);
-                            } else {
-                                poi.setImagePaths(internalPoi.getImagePaths());
-                                poiBox.remove(internalPoi.getInternal_id());
+                        poi.setInternal_id(0);
+                        Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
+                        if (internalPoi == null) {
+                            //non existent localy
+                            List<ImageInfo> imageInfos = new ArrayList<>();
+                            for (ImageInfo imageInfo : poi.getImagePaths()) {
+                                String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
+                                imageInfos.add(new ImageInfo(poi.getPoi_id(), name, imageController.getPoiFolder()));
                             }
-                            poiBox.put(poi);
+                            poi.setImagePaths(imageInfos);
+                            poi.setInternal_id(0);
+                        } else {
+                            poi.setImagePaths(internalPoi.getImagePaths());
+                            poiBox.remove(internalPoi.getInternal_id());
+                        }
+                        poiBox.put(poi);
                         //}
                     }
 
@@ -428,6 +438,7 @@ public class PoiDao extends DatabaseObjectAbstract {
             }
         });
     }
+
     /**
      * Delete all users out of the database
      */
@@ -435,13 +446,13 @@ public class PoiDao extends DatabaseObjectAbstract {
         poiBox.removeAll();
     }
 
-    public void removeNonUserPois(long userId){
-            List<Poi> userPois = poiBox.find(Poi_.user, userId);
-            for (Poi p : userPois){
-                p.setInternal_id(0);
-            }
-            poiBox.removeAll();
-            poiBox.put(userPois);
+    public void removeNonUserPois(long userId) {
+        List<Poi> userPois = poiBox.find(Poi_.user, userId);
+        for (Poi p : userPois) {
+            p.setInternal_id(0);
+        }
+        poiBox.removeAll();
+        poiBox.put(userPois);
     }
 
 }
