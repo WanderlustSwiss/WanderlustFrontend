@@ -212,10 +212,9 @@
     <string name="tour_comment_weeks">Wochen</string>
     <string name="tour_comment_year">Jahr</string>
     <string name="tour_comment_years">Jahren</string>
-    <string name="tour_comment_all_comments">Alle Kommentare</string>
-    <string name="tour_comment_noresult">Keine Kommentare</string>
+    <string name="tour_comment_all_comments">Kommentare</string>
+    <string name="tour_comment_noresult">Noch keine Kommentare vorhanden</string>
     <string name="tour_comment_description">Was sind deine Erfahrungen mit der Tour?</string>
->>>>>>> origin/feat_TourComments-266
 
     <string name="hikingpreference">Wander-Schwierigkeit</string>
     <string name="changeProfilePicture">Bild ändern</string>
@@ -313,4 +312,5 @@
     <string name="profileEditChangesApplied">Änderungen übernommen</string>
     <string name="msg_last_known_position_marker">Das ist deine zuletzt bekannte Position</string>
     <string name="report_tour">Diese Tour melden</string>
+    <string name="report_tour_introduction">Enthält die Tour anstössige Inhalte, ist sie unnötig oder willst du sie aus einem anderen Grund melden? Hier klicken</string>
 </resources>
