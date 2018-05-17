@@ -164,7 +164,8 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param handler
      */
     public void delete(final AbstractModel trip, final FragmentHandler handler) {
-        Call<Trip> call = service.deleteTrip((Trip) trip);
+        Trip deletableTrip = (Trip) trip;
+        Call<Trip> call = service.deleteTrip((int) deletableTrip.getTrip_id());
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
