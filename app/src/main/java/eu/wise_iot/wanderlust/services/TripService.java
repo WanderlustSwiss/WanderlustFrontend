@@ -33,6 +33,6 @@ public interface TripService {
     @PUT("Trip")
     Call<Trip> updateTrip(int id, @Body Trip Trip);
 
-    @DELETE("Trip/{")
-    Call<Trip> deleteTrip(@Body Trip Trip);
+    @DELETE("trip/{id}")
+    Call<Trip> deleteTrip(@Path("id") int id);
 }

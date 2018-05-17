@@ -79,6 +79,7 @@ public class CreateTourDialog extends DialogFragment {
     private List<String> regionNames;
 
     private Tour tour;
+    private Trip currentTrip;
     private EditText titleEditText;
     private TextInputLayout titleTextLayout;
     private EditText descriptionEditText;
@@ -168,10 +169,10 @@ public class CreateTourDialog extends DialogFragment {
 
         createTourhandler = controllerEvent -> {
             if (controllerEvent.getType() == EventType.OK) {
-                Trip trip = controllerEvent.getModel();
-                tourController.getTourById(trip.getTour(), getCreatedTourHandler);
+                currentTrip = controllerEvent.getModel();
+                tourController.getTourById(currentTrip.getTour(), getCreatedTourHandler);
             } else {
-                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -180,8 +181,10 @@ public class CreateTourDialog extends DialogFragment {
                 Toast.makeText(getActivity(), R.string.create_tour_saved, Toast.LENGTH_SHORT).show();
                 dismiss();
             } else {
-                Toast.makeText(getActivity(), R.string.image_upload_failed, Toast.LENGTH_SHORT).show();
-                dismiss();
+                if(isNewTour){
+                    tourController.deleteTrip(this.currentTrip, emptyEvent -> {});
+                }
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -206,7 +209,7 @@ public class CreateTourDialog extends DialogFragment {
 
 
             } else {
-                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -214,16 +217,20 @@ public class CreateTourDialog extends DialogFragment {
             if (controllerEvent.getType() == EventType.OK) {
                 tourController.uploadImage(new File(realPath), uploadPhotoHandler);
             } else {
-                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 
         updateTourHandler = controllerEvent -> {
             if (controllerEvent.getType() == EventType.OK) {
-                Toast.makeText(getActivity(), R.string.create_tour_update_successful, Toast.LENGTH_SHORT).show();
-                dismiss();
+                if(realPath != null){
+                    tourController.uploadImage(new File(realPath), uploadPhotoHandler);
+                } else {
+                    Toast.makeText(getActivity(), R.string.create_tour_update_successful, Toast.LENGTH_SHORT).show();
+                    dismiss();
+                }
             } else {
-                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 

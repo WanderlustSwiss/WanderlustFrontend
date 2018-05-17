@@ -89,6 +89,8 @@ public class TourController {
     private Tour tour;
     private CommentService commentService;
     private UserTourDao userTourDao;
+    private TripDao tripDao;
+
     private CommunityTourDao communityTourDao;
     private DifficultyTypeDao difficultyTypeDao;
     private RegionDao regionDao;
@@ -109,6 +111,7 @@ public class TourController {
         regionDao = RegionDao.getInstance();
         recentTourDao = RecentTourDao.getInstance();
         commentService = ServiceGenerator.createService(CommentService.class);
+        tripDao = TripDao.getInstance();
     }
 
 
@@ -567,6 +570,16 @@ public class TourController {
     }
     public void updateTour(FragmentHandler handler){
         userTourDao.update((int) this.tour.getTour_id() ,this.tour, handler);
+    }
+
+    /**
+     * Deletes a trip from the database
+     *
+     * @param trip to delete
+     * @param handler defines further action
+     */
+    public void deleteTrip(Trip trip, FragmentHandler handler){
+        tripDao.delete(trip, handler);
     }
 
 }
