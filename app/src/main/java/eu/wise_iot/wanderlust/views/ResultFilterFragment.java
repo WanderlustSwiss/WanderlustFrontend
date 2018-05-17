@@ -162,7 +162,7 @@ public class ResultFilterFragment extends Fragment {
         Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
         TourFragment tourFragment = TourFragment.newInstance(tour);
         getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                .replace(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
                 .addToBackStack(Constants.TOUR_FRAGMENT)
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
