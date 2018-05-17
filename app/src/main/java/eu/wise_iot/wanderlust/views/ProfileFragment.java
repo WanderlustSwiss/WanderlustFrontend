@@ -48,6 +48,8 @@ import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
  */
 public class ProfileFragment extends Fragment {
 
+    private static final String TAG = "ProfileFragment";
+
     private ImageView profilePicture;
     private Button editProfile;
 
@@ -361,7 +363,7 @@ public class ProfileFragment extends Fragment {
             listView.setOnItemClickListener((parent, view1, position, id) -> {
                 Poi poi = (Poi) listView.getItemAtPosition(position);
                 PoiViewDialog viewDialog = PoiViewDialog.newInstance(poi);
-                viewDialog.show(getFragmentManager(), "POI");
+                viewDialog.show(getFragmentManager(), Constants.DISPLAY_FEEDBACK_DIALOG);
             });
 
         } else {

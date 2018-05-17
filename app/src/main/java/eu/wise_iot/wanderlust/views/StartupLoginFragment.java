@@ -69,7 +69,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                 case OK:
                     SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
                     User user = (User) event.getModel();
-                    ((MainActivity) getActivity()).setupDrawerHeader(user);
+                    ((MainActivity)getActivity()).setupDrawerHeader(user);
                     if(preferences.getBoolean("firstTimeOpened", true)) {
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putBoolean("firstTimeOpened", false); // save that app has been opened

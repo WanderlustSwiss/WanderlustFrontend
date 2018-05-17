@@ -21,7 +21,6 @@ import android.widget.Toast;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
-import java.io.IOException;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -36,9 +35,9 @@ import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.controllers.OfflineQueueController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
+import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
  * PoiEditDialog:
@@ -101,6 +100,17 @@ public class PoiEditDialog extends DialogFragment {
         return fragment;
     }
 
+    //added
+    public static PoiEditDialog newInstance(Poi poi, PoiViewDialog dialog) {
+        PoiEditDialog fragment = new PoiEditDialog();
+        Bundle args = new Bundle();
+        fragment.poi = poi;
+        args.putBoolean(Constants.POI_IS_NEW, false);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +153,20 @@ public class PoiEditDialog extends DialogFragment {
                         controller.uploadImage(new File(imagePath), poi, poiPhotoUploadHandler);
                     }
                     Toast.makeText(getActivity(), R.string.poi_successful_saving, Toast.LENGTH_LONG).show();
+                    fillInDataFromExistingPoi();
+
+                    ProfileFragment fragment = (ProfileFragment) getFragmentManager().findFragmentByTag("ProfileFragment");
+                    if(fragment != null){
+                        fragment.setupPOIs(fragment.getView());
+                    }
+
+                    PoiViewDialog viewDialog = (PoiViewDialog) getFragmentManager()
+                                                                .findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
+                    
+                    if(viewDialog != null){
+                        viewDialog.onResume();
+                    }
+
                     dismiss();
                     break;
                 case NETWORK_ERROR:
@@ -264,6 +288,7 @@ public class PoiEditDialog extends DialogFragment {
                     controller.updatePoi(this.poi, poiHandler);
                 }
             }
+
         });
 
         buttonCancel.setOnClickListener(view -> dismiss());

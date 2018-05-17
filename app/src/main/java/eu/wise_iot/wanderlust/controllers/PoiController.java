@@ -8,17 +8,13 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PoiType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;

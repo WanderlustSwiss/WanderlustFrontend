@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.File;
 import java.util.List;
 
@@ -161,7 +159,7 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
 
             deleteIcon.setOnClickListener(e -> {
                 ConfirmDeletePoiDialog deleteDialog = ConfirmDeletePoiDialog.newInstance(
-                        getContext(), poiController, poi, context.getString(R.string.message_confirm_delete_poi));
+                        context, poiController, poi, context.getString(R.string.message_confirm_delete_poi));
                 deleteDialog.setupForProfileList(profileFragment);
                 deleteDialog.show(profileFragment.getFragmentManager(), Constants.CONFIRM_DELETE_POI_DIALOG);
                 profileFragment.setProfileStats();
