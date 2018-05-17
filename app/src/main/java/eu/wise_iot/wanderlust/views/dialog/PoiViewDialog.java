@@ -232,7 +232,7 @@ public class PoiViewDialog extends DialogFragment {
         String poiType;
 
         if(currentPoi.getType() >= 0){
-            poiType = typeValues[(int) currentPoi.getType()];
+            poiType = typeValues[(int) currentPoi.getType() - 1];
         } else {
             poiType = geoObjectTypeValues[(-1 * (int) currentPoi.getType()) -1];
             sharePoiButton.setVisibility(View.GONE);
