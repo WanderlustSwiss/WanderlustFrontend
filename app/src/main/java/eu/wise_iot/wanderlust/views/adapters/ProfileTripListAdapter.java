@@ -11,16 +11,12 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.File;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
@@ -71,7 +67,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
      */
     @Override
     public Tour getItem(int position) {
-        return super.getItem(position);
+         return super.getItem(position);
     }
 
     /**
@@ -111,11 +107,11 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
         Tour tour = getItem(position);
 
         //inflate the row layout
-        convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_tour_poi, parent, false);
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_poi, parent, false);
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListTourTitle);
-        description = (TextView) convertView.findViewById(R.id.list_saved_description);
+        description = (TextView) convertView.findViewById(R.id.ListTourDescription);
 
         tripImage = (ImageView) convertView.findViewById(R.id.ListTourImageView);
         editIcon = (ImageView) convertView.findViewById(R.id.ListTourEdit);

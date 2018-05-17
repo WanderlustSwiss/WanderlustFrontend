@@ -13,6 +13,7 @@ import java.util.List;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -271,7 +272,7 @@ public class ProfileController {
      *
      * @return list with all saved tours
      */
-    public List<Tour> getSavedTours() {
+    public List<SavedTour> getSavedTours() {
         return communityTourDao.find();
     }
 
@@ -289,10 +290,18 @@ public class ProfileController {
      *
      * @param trip trip whose tour is requested
      * @param handler tour and response given back to handler
-     */
+
+    /*
     public void getTourToTrip(Trip trip, FragmentHandler handler) {
         userTourDao.retrieve(trip.getTour(), handler);
 
+    }*/
+    /**
+     *
+     * @return
+     */
+    public List<Tour> getUserTours(){
+        return userTourDao.find();
     }
 
     /**
@@ -310,7 +319,7 @@ public class ProfileController {
      *
      * @param communityTour to delete
      */
-    public void deleteCommunityTour(Tour communityTour){
+    public void deleteCommunityTour(SavedTour communityTour){
         communityTourDao.delete(communityTour);
     }
 

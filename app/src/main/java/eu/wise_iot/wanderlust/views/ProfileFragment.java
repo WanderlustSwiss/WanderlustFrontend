@@ -21,18 +21,17 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
+import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
@@ -61,7 +60,7 @@ public class ProfileFragment extends Fragment {
     private TabLayout tabLayout;
 
     private ListView listView;
-    private List list;
+    //private List list;
 
     private final ProfileController profileController;
 
@@ -148,20 +147,17 @@ public class ProfileFragment extends Fragment {
      */
     public void setProfileStats(){
         nickname.setText(profileController.getNickName());
-        profileController.getScore(new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                switch (controllerEvent.getType()){
-                    case OK:
-                        Profile profile = (Profile) controllerEvent.getModel();
-                        int score = ((Profile) controllerEvent.getModel()).getScore();
-                        amountScore.setText(String.format(Locale.GERMAN,"%1d" ,score));
-                        Log.d("SCORE",  String.valueOf(score));
-                        break;
-                    default:
-                        Log.d("SCORE",  "Could not load Score");
-                        break;
-                }
+        profileController.getScore(controllerEvent -> {
+            switch (controllerEvent.getType()){
+                case OK:
+                    Profile profile = (Profile) controllerEvent.getModel();
+                    int score = ((Profile) controllerEvent.getModel()).getScore();
+                    amountScore.setText(String.format(Locale.GERMAN,"%1d" ,score));
+                    Log.d("SCORE",  String.valueOf(score));
+                    break;
+                default:
+                    Log.d("SCORE",  "Could not load Score");
+                    break;
             }
         });
         amountTours.setText(String.format(Locale.GERMANY, "%1d",
@@ -230,47 +226,44 @@ public class ProfileFragment extends Fragment {
             switch (controllerEvent.getType()){
                 case OK:
 
-                    list = (List) controllerEvent.getModel();
+                    List listFavorites = (List) controllerEvent.getModel();
 
-                    if (list != null && list.size() > 0) {
+                    if (listFavorites != null && listFavorites.size() > 0) {
 
                         //set adapter
                         ProfileFavoritesListAdapter adapter =
                                 new ProfileFavoritesListAdapter(getActivity(),
                                         R.layout.fragment_profile_list_favorites,
                                         R.id.list_fav_title,
-                                        list, fragment);
+                                        listFavorites, fragment);
 
                         listView.setAdapter(adapter);
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view1, int position, long id) {
-                                Tour tour = (Tour) listView.getItemAtPosition(position);
+                        listView.setOnItemClickListener((parent, view1, position, id) -> {
+                            Tour tour = (Tour) listView.getItemAtPosition(position);
 
 
-                                TourFragment tourFragment = TourFragment.newInstance(tour);
-                                Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
-                                if(oldTourFragment != null) {
-                                    getFragmentManager().beginTransaction()
-                                            .remove(oldTourFragment)
-                                            .commit();
-                                }
+                            TourFragment tourFragment = TourFragment.newInstance(tour);
+                            Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
+                            if(oldTourFragment != null) {
                                 getFragmentManager().beginTransaction()
-                                                    .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                                                    .addToBackStack(Constants.TOUR_FRAGMENT)
-                                                    .commit();
+                                        .remove(oldTourFragment)
+                                        .commit();
                             }
+                            getFragmentManager().beginTransaction()
+                                                .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                                                .addToBackStack(Constants.TOUR_FRAGMENT)
+                                                .commit();
                         });
 
                     } else {
 
-                        list = null;
+                        listFavorites = null;
                         listView.setAdapter(null);
                         Toast.makeText(getActivity(), R.string.no_favorites, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 default:
-                    list = null;
+                    listFavorites = null;
                     listView.setAdapter(null);
                     break;
             }
@@ -283,36 +276,24 @@ public class ProfileFragment extends Fragment {
      */
     public void setupMyTours(View view) {
 
-        list = profileController.getTrips();
+        List<Tour> userTourList = profileController.getUserTours();
 
-        if(list.size() > 0 && list != null){
-            List<Trip> trips = list;
-            list.clear();
-            for(Trip trip : trips){
-                profileController.getTourToTrip(trip, controllerEvent -> {
-                    switch (controllerEvent.getType()){
-                        case OK:
-                            if(controllerEvent.getModel() != null){
-                                Tour tour = (Tour) controllerEvent.getModel();
-                                list.add(tour);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                });
-                Toast.makeText(getActivity(), String.valueOf(list.size()), Toast.LENGTH_SHORT).show();
-            }
+        List listTrip = Collections.emptyList();
+
+        if(userTourList.size() > 0 && userTourList != null){
+            //list.clear();
+            listTrip = userTourList;
+
         }
         //only if there is at least one tour
-        if (list != null && list.size() > 0) {
+        if (listTrip != null && listTrip.size() > 0) {
 
             //set adapter
             ProfileTripListAdapter adapter =
                     new ProfileTripListAdapter(getActivity(),
-                            R.layout.fragment_profile_list_tour_poi,
+                            R.layout.fragment_profile_list_tour,
                             R.id.ListTourTitle,
-                            list, this);
+                            listTrip, this);
 
             listView.setAdapter(adapter);
             listView.setOnItemClickListener((parent, view1, position, id) -> {
@@ -333,7 +314,7 @@ public class ProfileFragment extends Fragment {
 
         } else {
 
-            list = null;
+            listTrip = null;
             listView.setAdapter(null);
         }
     }
@@ -345,19 +326,19 @@ public class ProfileFragment extends Fragment {
     public void setupPOIs(View view) {
 
         List<Poi> poiList = profileController.getPois();
-
+        List listPois = Collections.emptyList();
         //only if there is at least one poi
         if (poiList != null && poiList.size() > 0) {
 
             //initialize list
-            list = poiList;
+            listPois = poiList;
 
             //set adapter
             ProfilePoiListAdapter adapter =
                     new ProfilePoiListAdapter(getActivity(),
-                            R.layout.fragment_profile_list_tour_poi,
+                            R.layout.fragment_profile_list_poi,
                             R.id.ListTourTitle,
-                            list, this);
+                            listPois, this);
 
             listView.setAdapter(adapter);
             listView.setOnItemClickListener((parent, view1, position, id) -> {
@@ -368,7 +349,7 @@ public class ProfileFragment extends Fragment {
 
         } else {
 
-            list = null;
+            listPois = null;
             listView.setAdapter(null);
         }
     }
@@ -376,28 +357,32 @@ public class ProfileFragment extends Fragment {
     /**
      * This method is invoked when the tab at position 3 is selected. Sets up the model with
      * saved tours and adapter to represent the users saved tours in a custom list view
+     * @param view
      */
     public void setupSaved(View view) {
 
-        List<Tour> communityTourList = profileController.getSavedTours();
+        List<SavedTour> communityTourList = profileController.getSavedTours();
+
+        List listSaved = Collections.emptyList();
 
         //only if there is at least one saved tour
         if (communityTourList != null && communityTourList.size() > 0) {
 
             //initialize list
-            list = communityTourList;
+            listSaved = communityTourList;
 
             //set adapter
             ProfileSavedListAdapter adapter =
                     new ProfileSavedListAdapter(getActivity(),
                             R.layout.fragment_profile_list_saved,
                             R.id.ListSavedTitle,
-                            list, this);
+                            listSaved, this);
 
             listView.setAdapter(adapter);
+
             listView.setOnItemClickListener((parent, view1, position, id) -> {
-                Tour tour = (Tour) listView.getItemAtPosition(position);
-                TourFragment tourFragment = TourFragment.newInstance(tour);
+                SavedTour tour = (SavedTour) listView.getItemAtPosition(position);
+                TourFragment tourFragment = TourFragment.newInstance(tour.toTour());
                 Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
                 if(oldTourFragment != null) {
                     getFragmentManager().beginTransaction()
@@ -412,7 +397,7 @@ public class ProfileFragment extends Fragment {
 
         } else {
 
-            list = null;
+            listSaved = null;
             listView.setAdapter(null);
         }
     }

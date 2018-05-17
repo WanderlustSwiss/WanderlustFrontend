@@ -19,7 +19,6 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.MainActivity;
@@ -119,7 +118,7 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
         Poi poi = getItem(position);
 
         //inflate the row layout
-        convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_tour_poi, parent, false);
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_poi, parent, false);
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListTourTitle);

@@ -400,10 +400,10 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tourOVSaveButton:
                 ImageButton ibSave = (ImageButton) view.findViewById(R.id.tourOVSaveButton);
-                TourController controller = new TourController(tour);
-                boolean saved = controller.isSaved();
+                TourController tourController = new TourController(tour);
+                boolean saved = tourController.isSaved();
                 if(saved){
-                    controller.unsetSaved(context, controllerEvent -> {
+                    tourController.unsetSaved(context, controllerEvent -> {
                         switch (controllerEvent.getType()){
                             case OK:
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
@@ -414,7 +414,7 @@ public class TourOverviewFragment extends Fragment {
                     });
 
                 }else{
-                    controller.setSaved(context , controllerEvent -> {
+                    tourController.setSaved(context , controllerEvent -> {
                         switch (controllerEvent.getType()){
                             case OK:
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));

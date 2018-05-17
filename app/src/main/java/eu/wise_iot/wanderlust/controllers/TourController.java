@@ -35,6 +35,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
@@ -148,7 +149,7 @@ public class TourController {
     }
 
     public boolean isSaved(){
-        for(Tour t : communityTourDao.find()){
+        for(SavedTour t : communityTourDao.find()){
             if(t.getTour_id() == tour.getTour_id()){
                 return true;
             }
@@ -157,60 +158,45 @@ public class TourController {
     }
 
     public void setSaved(Context context, FragmentHandler handler){
-        userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                switch (controllerEvent.getType()){
-                    case OK:
-                        //download in cache
-                        Tour data = (Tour) controllerEvent.getModel();
-                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data);
-                        boolean downloadable = cacheHandler.downloadMap();
+        communityTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
+            switch (controllerEvent.getType()){
+                case OK:
+                    //download in cache
+                    SavedTour data = (SavedTour) controllerEvent.getModel();
+                    MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
 
-                        //save tour in local db
-                        if(downloadable){
-                            tour.setPolyline(data.getPolyline());
-                            communityTourDao.create(tour);
-                            Log.d(TAG, "Is saved");
-                            handler.onResponse(new ControllerEvent(EventType.OK));
-                        }else{
-                            handler.onResponse(new ControllerEvent(EventType.NOT_FOUND));
-                            Toast.makeText(context, "Kartenspeicher ist voll, löschen Sie Touren um Platz zu schaffen",
-                                                                        Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    default:
-                        handler.onResponse(new ControllerEvent(EventType.CONFLICT));
-                }
+                    //save tour in local db
+                    if(cacheHandler.downloadMap()){
+                        communityTourDao.create(data);
+                        Log.d(TAG, "Is saved");
+                        handler.onResponse(new ControllerEvent(EventType.OK));
+                    }else{
+                        handler.onResponse(new ControllerEvent(EventType.NOT_FOUND));
+                        Toast.makeText(context, "Kartenspeicher ist voll, löschen Sie Touren um Platz zu schaffen",
+                                                                    Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                default:
+                    handler.onResponse(new ControllerEvent(EventType.CONFLICT));
             }
         });
     }
 
-    public boolean setSaved(){
-        communityTourDao.create(tour);
-        Log.d(TAG, "Is saved");
-        return true;
-    }
-
     public void unsetSaved(Context context, FragmentHandler fragmentHandler){
-        userTourDao.retrieve(tour.getTour_id(), new FragmentHandler() {
-            @Override
-            public void onResponse(ControllerEvent controllerEvent) {
-                switch (controllerEvent.getType()){
-                    case OK:
-                        Tour data = (Tour) controllerEvent.getModel();
-                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data);
-                        boolean deleted = cacheHandler.deleteMap();
-                        if(deleted) {
-                            communityTourDao.delete(data);
-                            fragmentHandler.onResponse(new ControllerEvent(EventType.OK));
-                            Log.d(TAG, "Is deleted");
-                        }else{
-                            fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
-                        }
-                    default:
+        communityTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
+            switch (controllerEvent.getType()){
+                case OK:
+                    SavedTour data = (SavedTour) controllerEvent.getModel();
+                    MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
+                    if(cacheHandler.deleteMap()) {
+                        communityTourDao.delete(data);
+                        fragmentHandler.onResponse(new ControllerEvent(EventType.OK));
+                        Log.d(TAG, "Is deleted");
+                    }else{
                         fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
-                }
+                    }
+                default:
+                    fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
             }
         });
     }
