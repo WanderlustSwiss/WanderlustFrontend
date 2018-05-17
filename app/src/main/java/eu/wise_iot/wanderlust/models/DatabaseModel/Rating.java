@@ -15,11 +15,11 @@ public class Rating extends AbstractModel {
     @Id
     long internal_id;
     long rat_id;
-    long rate;
+    int rate;
     long tour;
     long user;
 
-    public Rating(long internal_id, long rat_id, long rate, long tour, long user) {
+    public Rating(long internal_id, long rat_id, int rate, long tour, long user) {
         this.internal_id = internal_id;
         this.rat_id = rat_id;
         this.rate = rate;
@@ -43,11 +43,11 @@ public class Rating extends AbstractModel {
         this.rat_id = rat_id;
     }
 
-    public long getRate() {
+    public int getRate() {
         return rate;
     }
 
-    public void setRate(long rate) {
+    public void setRate(int rate) {
         this.rate = rate;
     }
 
