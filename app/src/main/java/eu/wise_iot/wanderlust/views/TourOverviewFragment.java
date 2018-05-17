@@ -105,10 +105,8 @@ public class TourOverviewFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.filterIcon:
                 Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
-                Fragment filterFragment = getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT);
-                if(filterFragment == null) filterFragment = FilterFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, filterFragment, Constants.FILTER_FRAGMENT)
+                        .replace(R.id.content_frame, FilterFragment.newInstance(), Constants.FILTER_FRAGMENT)
                         .addToBackStack(Constants.FILTER_FRAGMENT)
                         .commit();
                 break;
