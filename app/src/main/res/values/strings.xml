@@ -229,7 +229,7 @@
     <string name="msg_comment_create_successfull">Kommetar wurde erstellt</string>
     <string name="meter_abbreviation">m</string>
     <string name="logout_successful">Logout erfolgreich</string>
-    <string name="logout_failed">Logout fehlgeschlagen</string>
+    <string name="logout_failed">Logout nicht möglich, keine Internetverbindung</string>
     <string name="msg_available_in_next_feature">Dieses Feature wird in einem späteren Release verfügbar sein</string>
     <string name="profile_edit">Profil bearbeiten</string>
     <string name="profile_edit_delete_image">Aktuelles Foto entfernen</string>

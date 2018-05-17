@@ -284,21 +284,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 switch (controllerEvent.getType()) {
                     case OK:
                         LoginUser.clearCookies();
-                        Toast.makeText(getApplicationContext(), R.string.logout_successful, Toast.LENGTH_LONG).show();
+                        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                        Fragment f = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                        if (f == null) f = StartupLoginFragment.newInstance();
+                        switchFragment(f, Constants.LOGIN_FRAGMENT);
                         break;
-                    default:
+                    case NETWORK_ERROR:
                         Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
+                        break;
                 }
             });
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            fragmentTag = Constants.LOGIN_FRAGMENT;
-            fragment = getFragmentManager().findFragmentByTag(fragmentTag);
-            if (fragment == null) fragment = StartupLoginFragment.newInstance();
+            return true;
         }
 
         switchFragment(fragment, fragmentTag);
-
         return true;
     }
 
