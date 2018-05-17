@@ -79,8 +79,8 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                         if (userGuideFragment == null)userGuideFragment = UserGuideFragment.newInstance();
 
                         getFragmentManager().beginTransaction()
-                                .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
                                 .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
+                                .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
                                 .commit();
                     } else {
 
@@ -199,6 +199,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             if (startupRegistrationFragment == null)startupRegistrationFragment = StartupRegistrationFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, startupRegistrationFragment, Constants.REGISTRATION_FRAGMENT)
+                    .addToBackStack(Constants.REGISTRATION_FRAGMENT)
                     .commit();
         });
         btnInstagram.setOnClickListener(v -> {
@@ -207,6 +208,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                     WebLoginFragment.LoginProvider.INSTAGRAM);
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                    .addToBackStack(Constants.WEB_LOGIN_FRAGMENT)
                     .commit();
         });
         btnFacebook.setOnClickListener(v -> {
@@ -215,6 +217,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                     WebLoginFragment.LoginProvider.FACEBOOK);
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                    .addToBackStack(Constants.WEB_LOGIN_FRAGMENT)
                     .commit();
         });
         forgotPassword.setOnClickListener(v -> {
@@ -225,6 +228,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             if (startupResetPasswordFragment == null)startupResetPasswordFragment = StartupResetPasswordFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, startupResetPasswordFragment, Constants.RESET_PASSWORD_FRAGMENT)
+                    .addToBackStack(Constants.RESET_PASSWORD_FRAGMENT)
                     .commit();
         });
     }
