@@ -873,6 +873,9 @@ public class TourFragment extends Fragment {
         plot.redraw();
     }
 
+    /**
+     * shows the map with the drawn tour, also handles drawer selection
+     */
     public void showMapWithTour() {
         //handle recent tours
         tourController.addRecentTour(this.tour);
@@ -921,6 +924,9 @@ public class TourFragment extends Fragment {
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
     }
 
+    /**
+     * report violation on tour
+     */
     private void reportTour(){
         TourReportDialog dialog = new TourReportDialog().newInstance(tour, tourController);
         dialog.show(getFragmentManager(), Constants.REPORT_TOUR_DIALOG);
