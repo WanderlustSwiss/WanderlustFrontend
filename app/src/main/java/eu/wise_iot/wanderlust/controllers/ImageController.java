@@ -82,8 +82,10 @@ public class ImageController {
 
     public List<File> getImages(List<ImageInfo> imageInfos){
         List<File> images = new ArrayList<>();
-        for(ImageInfo imageInfo : imageInfos){
-            images.add(new File(picturesDir + "/" + imageInfo.getLocalPath()));
+        if(imageInfos != null) {
+            for (ImageInfo imageInfo : imageInfos) {
+                images.add(new File(picturesDir + "/" + imageInfo.getLocalPath()));
+            }
         }
         return images;
     }
