@@ -60,7 +60,6 @@ dependencies {
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     compile "com.splitwise:tokenautocomplete:2.0.8@aar"
 
-
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //Espresso
