@@ -27,11 +27,11 @@
     <string name="msg_manual_p5_text">Ist die Brücke weggebrochen oder ist der Weg viel gefährlicher als erwartet? Dann sollte aus Sicherheitsgründen ein Warnhinweis gemacht werden.</string>
 
     <!-- DISCLAIMER FRAGMENT -->
-    <string name="disclaimer_header">Über Wanderlust</string>
-    <string name="disclaimer_authors">© 2017 Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Meier, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov &amp; Alexander Weinbeck</string>
+    <string name="disclaimer_copy_wright">©</string>
+    <string name="disclaimer_authors">Baris Demirci, Rilind Gashi, Simon Kaspar, Joshua Meier, Tobias Rüegsegger, Fabian Schwander, Hristian Stoilov &amp; Alexander Weinbeck</string>
     <string name="disclaimer_text2">Die Software benötigt für diverse Features Internet. Der Benutzer ist selbst verantwortlich die benötigten Informationen für internetfreie Zonen vorgänging zu beschaffen.</string>
-    <string name="disclaimer_text3">Die Autoren oder Copyrightinhaber übernehmen keine Haftung für Schäden, welche durch einen leeren Akku enstehen. DerBenutzer ist selbst verantwortlich die benötigten Informationen zu beschaffen um die Wanderung auch ohne Wanderlust fortzufahen.</string>
-    <string name="disclaimer_mit_header">MIT LIZENZ</string>
+    <string name="disclaimer_text3">Die Autoren oder Copyrightinhaber übernehmen keine Haftung für Schäden, welche durch einen leeren Akku enstehen. Der Benutzer ist selbst verantwortlich die benötigten Informationen zu beschaffen um die Wanderung auch ohne Wanderlust fortzufahen.</string>
+    <string name="disclaimer_mit_header">MIT Lizenz</string>
     <string name="disclaimer_mit_text">Die Software wird ohne jede ausdrückliche oder implizierte Garantie bereitgestellt, einschliesslich der Garantie zur Benutzung für den Vorgesehenen oder einem bestimmten Zweck sowie jeglicher Rechtsverletzung, jedoch nicht darauf beschränkt. In keinem Fall sind die Autoren oder Copyrightinhaber für jeglichen Schaden oder sonstige Ansprüche haftbar zu machen, ob infolge der Erfüllung eines Vertrages, eines Deliktes oder anders im Zusammenhang mit der Software oder sonstiger Verwendung der Software entstanden.</string>
 
 
@@ -61,7 +61,7 @@
     <string name="violation_spam">Spam</string>
     <string name="violation_hatespeech">Rufmord</string>
     <string name="violation_other">Andere</string>
-    <string name="report_submit">Vielen Dank für Ihre Einreichung</string>
+    <string name="report_submit">Vielen Dank für deine Einreichung</string>
 
     <string name="tour_comment_your_rating">Deine Bewertung</string>
     <string name="tour_comment_average">Durchschnittliche Bewertung</string>
@@ -79,7 +79,6 @@
         <item>nur für mich</item>
     </string-array>
     <string-array name="dialog_feedback_spinner_type">
-        <item></item>
         <item>Aussichtspunkt</item>
         <item>Restaurant</item>
         <item>Rastplatz</item>
@@ -110,9 +109,6 @@
     <string name="msg_follow_mode_enabled">Verfolgunsmodus aktiv (erhöhter Batterieverbrauch!)</string>
     <string name="msg_follow_mode_disabled">Verfolgunsmodus deaktiviert\n(Batterie-Sparmodus). Keine Tourerfassung möglich</string>
     <string name="msg_map_centered_on_long_click">Karte wird zentriert</string>
-
-    <string name="msg_last_known_position_marker">Das ist deine letzte bekannte Position.   Du willst deine jetzige Position? Klicke den «MyLocation»-Button: - kurzer Klick: verfolgen an/aus - langer Klick: Karte zentrieren</string>
-
 
     <!-- ERROR MESSAGES -->
 
@@ -160,8 +156,6 @@
     <string name="login_forgot_password">Passwort vergessen?</string>
     <string name="login_instagram">Anmelden mit Instagram</string>
     <string name="login_facebook">Anmelden mit Facebook</string>
-    <string name="login_instagram_progress">Anmelden mit Instagram</string>
-    <string name="login_facebook_progress">Anmelden mit Facebook</string>
 
 
     <!-- POI -->
@@ -205,7 +199,7 @@
 
 
     <string name="share_title_tour">Teilen</string>
-    <string name="poi_mode_is_private">Poi ist privat und nur für dich sichtbar</string>
+    <string name="poi_mode_is_private">Dieser POI ist privat und nur für dich sichtbar</string>
 
     <string name="tour_comment_before">vor</string>
     <string name="tour_comment_seconds">Sek</string>
@@ -245,13 +239,13 @@
     <string name="title_score">Score</string>
     <string name="wetter">Wetter</string>
     <string name="choose_hiking_day_button">anderen Wandertag auswählen</string>
-    <string name="keine_wetterdaten">Keine Wetterdaten zu diesem Tag</string>
+    <string name="keine_wetterdaten">Keine Wetterdaten zu diesem Tag verfügbar</string>
     <string name="wanderung_beginn">Wanderung am:</string>
     <string name="wetterNach">Nach:</string>
     <string name="connection_fail">Verbindung fehlgeschlagen</string>
     <string name="no_favorites">Keine Favoriten</string>
     <string name="no_tours">Keine Touren</string>
-    <string name="no_pois">Keine POI\'s</string>
+    <string name="no_pois">Keine POIs</string>
     <string name="no_saved">Keine Touren gespeichert</string>
     <string name="public_transport">ÖV</string>
     <string name="hashtag_search_nothing_found">Im aktuellen Kartenausschnitt wurden keine Resultate gefunden</string>
@@ -280,7 +274,7 @@
     <string name="start">Start</string>
     <string name="end">Ende</string>
     <string name="temperature_abbrevation">°C</string>
-    <string name="create_tour_information">Tour wird aufgenommen. Bitte GPS nicht ausschalten.</string>
+    <string name="create_tour_information">Tour wird aufgenommen. Bitte GPS nicht ausschalten</string>
 
     <!--- Seasons -->
     <string name="summer">Sommer</string>
@@ -290,11 +284,11 @@
 
     <string name="create_tour_stop_recording_request">Soll das Tracking wirklich beendet werden?</string>
     <string name="create_tour_save_tour">Tour Speichern</string>
-    <string name="create_tour_tracking_tour">Tracking tour...</string>
+    <string name="create_tour_tracking_tour">Tracking tour…</string>
     <string name="create_tour_saved">Die Tour wurde erfolgreich gespeichert</string>
-    <string name="create_tour_nothing_tracked">Dummy Touren können nicht gespeichert werden</string>
+    <string name="create_tour_nothing_tracked">Leere Touren können nicht gespeichert werden</string>
     <string name="create_tour_no_seasons">Tour kann ohne Jahreszeit nicht gespeichert werden</string>
-    <string name="create_tour_not_save_tour">Wollen Sie wirklich ohne zu speichern fortfahren. Die aufgenommene Tour wird nicht mehr verfügbar sein</string>
+    <string name="create_tour_not_save_tour">Willst du wirklich ohne zu speichern fortfahren? Die aufgenommene Tour wird nicht mehr verfügbar sein</string>
     <string name="create_tour_not_saved">Tour nicht gespeichert</string>
     <string name="short_january">Jan</string>
     <string name="short_february">Feb</string>
@@ -313,10 +307,10 @@
     <string name="create_tour_need_whitelist">Fürs Tracking bitte Wanderlust als Ausnahme hinzufügen</string>
     <string name="create_tour_upload_image">Upload Image</string>
     <string name="create_tour_photo_required">Foto muss hinzugefügt werden</string>
-    <string name="create_tour_disable_battery_save_mode">Fürs Erstellen einer Tour muss der Batteriesparmodus deaktiviert werden.</string>
+    <string name="create_tour_disable_battery_save_mode">Fürs Erstellen einer Tour muss der Batteriesparmodus deaktiviert werden</string>
     <string name="create_tour_update_successful">Tour Update erfolgreich</string>
-    <string name="in_queue">Upload wird fortgesetzt sobald mit Internet verbunden</string>
+    <string name="in_queue">Upload wird fortgesetzt sobald wieder eine Verbindung zum Internet besteht</string>
     <string name="create_tour_extra_equipment">Zusatzequipment</string>
-    <string name="profileEditChangesApplied">Änderungen übernommen.</string>
-
+    <string name="profileEditChangesApplied">Änderungen übernommen</string>
+    <string name="msg_last_known_position_marker">Das ist deine zuletzt bekannte Position</string>
 </resources>

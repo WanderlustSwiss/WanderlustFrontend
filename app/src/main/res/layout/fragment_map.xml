@@ -104,7 +104,7 @@
                     android:layout_gravity="center_horizontal|center"
                     android:layout_marginLeft="30dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_camera_white_24dp"
+                    android:src="@drawable/ic_photo_camera_white_24dp"
                     app:fab_colorNormal="@color/primary_main" />
 
                 <com.github.clans.fab.FloatingActionButton

@@ -1,330 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:layout_marginTop="56dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/tools"
-        xmlns:rsb="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/filterRootLayout"
-        android:layout_width="match_parent"
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:layout_marginTop="56dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        app:ignore="NamespaceTypo">
+        android:layout_marginBottom="50dp">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:rsb="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/filterRootLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:divider="@drawable/divider_vertical_s"
-            android:orientation="vertical"
-            android:showDividers="middle">
+            android:baselineAligned="false">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:divider="@drawable/divider_vertical_s"
                 android:orientation="vertical"
-                android:layout_marginTop="12dp">
+                android:showDividers="middle">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp">
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvTourName"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/tour_name" />
+                        android:orientation="vertical"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/tiTourNameInput"
+                        <TextView
+                            android:id="@+id/tvTourName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tour_name" />
+
+                        <AutoCompleteTextView
+                            android:id="@+id/tiTourNameInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp">
+
+                        <TextView
+                            android:id="@+id/tvTourRegion"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/tour_region" />
+
+                        <eu.wise_iot.wanderlust.views.controls.RegionsCompletionView
+                            android:id="@+id/tiTourRegionInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp">
-
-                    <TextView
-                        android:id="@+id/tvTourRegion"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:text="@string/tour_region" />
-
-                    <eu.wise_iot.wanderlust.views.controls.RegionsCompletionView
-                        android:id="@+id/tiTourRegionInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:id="@+id/tourDifficulty"
-                    style="@style/p"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tour_difficulty" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:padding="12dp">
 
-                    <!--<Space-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="1dp"-->
-                    <!--android:layout_weight="1" >-->
-                    <!--</Space>-->
+                    <TextView
+                        android:id="@+id/tourDifficulty"
+                        style="@style/p"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tour_difficulty" />
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
 
-                        <CheckBox
-                            android:id="@+id/checkboxT1"
+                        <!--<Space-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="1dp"-->
+                        <!--android:layout_weight="1" >-->
+                        <!--</Space>-->
+
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_height="wrap_content">
 
-                        <TextView
+                            <CheckBox
+                                android:id="@+id/checkboxT1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/checkboxT1"
+                                android:layout_centerHorizontal="true"
+                                android:text="T1" />
+                        </RelativeLayout>
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/checkboxT1"
-                            android:layout_centerHorizontal="true"
-                            android:text="T1" />
-                    </RelativeLayout>
+                            android:layout_height="wrap_content">
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
+                            <CheckBox
+                                android:id="@+id/checkboxT2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true" />
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/checkboxT2"
+                                android:layout_centerHorizontal="true"
+                                android:text="T2" />
+                        </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
 
-                        <CheckBox
-                            android:id="@+id/checkboxT2"
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_height="wrap_content">
 
-                        <TextView
+                            <CheckBox
+                                android:id="@+id/checkboxT3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/checkboxT3"
+                                android:layout_centerHorizontal="true"
+                                android:text="T3" />
+                        </RelativeLayout>
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/checkboxT2"
-                            android:layout_centerHorizontal="true"
-                            android:text="T2" />
-                    </RelativeLayout>
+                            android:layout_height="wrap_content">
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
+                            <CheckBox
+                                android:id="@+id/checkboxT4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true" />
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/checkboxT4"
+                                android:layout_centerHorizontal="true"
+                                android:text="T4" />
+                        </RelativeLayout>
 
-                        <CheckBox
-                            android:id="@+id/checkboxT3"
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_height="wrap_content">
 
-                        <TextView
+                            <CheckBox
+                                android:id="@+id/checkboxT5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/checkboxT5"
+                                android:layout_centerHorizontal="true"
+                                android:text="T5" />
+                        </RelativeLayout>
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/checkboxT3"
-                            android:layout_centerHorizontal="true"
-                            android:text="T3" />
-                    </RelativeLayout>
+                            android:layout_height="wrap_content">
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
+                            <CheckBox
+                                android:id="@+id/checkboxT6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true" />
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/checkboxT6"
+                                android:layout_centerHorizontal="true"
+                                android:text="T6" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
 
-                        <CheckBox
-                            android:id="@+id/checkboxT4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/background_two_and_inactive" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/checkboxT4"
-                            android:layout_centerHorizontal="true"
-                            android:text="T4" />
-                    </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
+                    <TextView
+                        android:id="@+id/tourDistance"
+                        style="@style/p"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tour_distance" />
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                    <org.florescu.android.rangeseekbar.RangeSeekBar
+                        android:id="@+id/rsbDistance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        rsb:absoluteMaxValue="0"
+                        rsb:absoluteMinValue="40"
+                        rsb:textAboveThumbsColor="@color/black"
+                        rsb:valuesAboveThumbs="true" />
 
-                        <CheckBox
-                            android:id="@+id/checkboxT5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true" />
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/checkboxT5"
-                            android:layout_centerHorizontal="true"
-                            android:text="T5" />
-                    </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/background_two_and_inactive" />
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tourDuration"
+                        style="@style/p"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tour_duration" />
 
-                        <CheckBox
-                            android:id="@+id/checkboxT6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/checkboxT6"
-                            android:layout_centerHorizontal="true"
-                            android:text="T6" />
-                    </RelativeLayout>
+                    <org.florescu.android.rangeseekbar.RangeSeekBar
+                        android:id="@+id/rsbDuration"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        rsb:absoluteMaxValue="0"
+                        rsb:absoluteMinValue="10"
+                        rsb:textAboveThumbsColor="@color/black"
+                        rsb:valuesAboveThumbs="true" />
                 </LinearLayout>
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:background="@color/background_two_and_inactive" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:id="@+id/tourDistance"
-                    style="@style/p"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tour_distance" />
-
-                <org.florescu.android.rangeseekbar.RangeSeekBar
-                    android:id="@+id/rsbDistance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    rsb:absoluteMaxValue="0"
-                    rsb:absoluteMinValue="40"
-                    rsb:textAboveThumbsColor="@color/black"
-                    rsb:valuesAboveThumbs="true" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:background="@color/background_two_and_inactive" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:id="@+id/tourDuration"
-                    style="@style/p"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tour_duration" />
-
-                <org.florescu.android.rangeseekbar.RangeSeekBar
-                    android:id="@+id/rsbDuration"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    rsb:absoluteMaxValue="0"
-                    rsb:absoluteMinValue="10"
-                    rsb:textAboveThumbsColor="@color/black"
-                    rsb:valuesAboveThumbs="true" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:background="@color/background_two_and_inactive" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="12dp">
-                <TextView
-                    android:id="@+id/tourRatingNumbers"
-                    style="@style/p"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tour_rating" />
-
-                <RatingBar
-                    android:id="@+id/tourRatingFilter"
-                    style="?android:attr/ratingBarStyleIndicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/background_main" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnSearch"
-                style="@style/standard_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/filter_search" />
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
-</ScrollView>
+    <Button
+        android:id="@+id/btnSearch"
+        style="@style/standard_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/filter_search" />
+</RelativeLayout>

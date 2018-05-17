@@ -18,7 +18,7 @@ public class ServiceGenerator {
      */
     //public static final String API_BASE_URL = "https://www.cs.technik.fhnw.ch/wanderlust/";
     // Local Development Host (recommended)
-    
+
     //public static final String API_BASE_URL = "http://10.0.2.2:1337";
     //public static final String API_BASE_URL = "http://192.168.56.1";
     //public static final String API_BASE_URL = "http://192.168.178.189:1337";
