@@ -94,10 +94,11 @@ public class TourOverviewFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu (Menu menu) {
-        getActivity().invalidateOptionsMenu();
-        if(menu.findItem(R.id.filterIcon) != null)
-            menu.findItem(R.id.filterIcon).setVisible(true);
         super.onPrepareOptionsMenu(menu);
+        getActivity().invalidateOptionsMenu();
+        MenuItem menuItem = menu.findItem(R.id.filterIcon);
+        if(menuItem != null)
+            menuItem.setVisible(true);
     }
 
     @Override
@@ -105,7 +106,6 @@ public class TourOverviewFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.filterIcon:
                 Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
-
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, FilterFragment.newInstance(), Constants.FILTER_FRAGMENT)
                         .addToBackStack(Constants.FILTER_FRAGMENT)

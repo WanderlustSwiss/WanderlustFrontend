@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private LoginController loginController;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -235,6 +233,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else if (fragment != null && fragment instanceof StartupRegistrationFragment
                 || fragment instanceof StartupLoginFragment
                 || fragment instanceof MapFragment
+                || fragment instanceof TourOverviewFragment
+                || fragment instanceof ProfileFragment
+                || fragment instanceof DisclaimerFragment
+                || fragment instanceof UserGuideFragment
                 || fragment instanceof StartupResetPasswordFragment) {
         } else {
             super.onBackPressed();
@@ -324,7 +326,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         drawer.closeDrawer(GravityCompat.START);
     }
 
@@ -374,6 +375,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userProfileImage.setImageDrawable(drawable);
         }
     }
+
 
     public void updateEmailAdress(String newEmail) {
         email.setText(newEmail);
