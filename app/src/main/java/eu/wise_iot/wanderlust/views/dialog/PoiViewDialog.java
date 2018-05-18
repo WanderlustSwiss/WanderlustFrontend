@@ -237,8 +237,13 @@ public class PoiViewDialog extends DialogFragment {
             poiType = geoObjectTypeValues[(-1 * (int) currentPoi.getType()) -1];
             sharePoiButton.setVisibility(View.GONE);
         }
-        String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
-        String typeText = String.format("%s (%s)", poiType, elevationText);
+        String typeText;
+        if (Integer.MAX_VALUE != currentPoi.getElevation()){
+            String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
+            typeText = String.format("%s (%s)", poiType, elevationText);
+        }else{
+            typeText = String.format("%s", poiType);
+        }
         typeTextView.setText(typeText);
 
         titleTextView.setText(currentPoi.getTitle());
