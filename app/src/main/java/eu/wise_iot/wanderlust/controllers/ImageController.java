@@ -59,8 +59,8 @@ public class ImageController {
 
         File pictures = new File(picturesDir);
         if(!pictures.exists()) pictures.mkdir();
-        for (int i = 0; i < FOLDERS.length; i++){
-            File dir = new File(picturesDir + "/" + FOLDERS[i]);
+        for (String FOLDER : FOLDERS) {
+            File dir = new File(picturesDir + "/" + FOLDER);
             dir.mkdir();
         }
     }

@@ -93,7 +93,7 @@ public class TripDao extends DatabaseObjectAbstract {
                     trip.setTrip_id(0);
                     routeBox.put(response.body());
                     trip.setTrip_id(remoteTripId);
-                    handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code()), response.body()));
+                    handler.onResponse(new ControllerEvent<>(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code())));
                 }

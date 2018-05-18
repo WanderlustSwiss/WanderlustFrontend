@@ -511,12 +511,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
 
             focusedPositionMarker = new Marker(mapView);
-            focusedPositionMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    return true;
-                }
-            });
+            focusedPositionMarker.setOnMarkerClickListener((marker, mapView) -> true);
             focusedPositionMarker.setIcon(drawable);
             focusedPositionMarker.setPosition(geoPoint);
             focusedPositionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);

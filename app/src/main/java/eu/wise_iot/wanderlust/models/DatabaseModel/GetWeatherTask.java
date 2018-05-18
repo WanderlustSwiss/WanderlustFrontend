@@ -43,9 +43,9 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
         }
 
 
-        for (int i = 0; i < threads.length; i++) {
+        for (Thread thread : threads) {
             try {
-                threads[i].join();
+                thread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

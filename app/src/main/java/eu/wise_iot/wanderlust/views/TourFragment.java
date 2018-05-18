@@ -542,15 +542,12 @@ public class TourFragment extends Fragment {
         };
 
         //date picker listener, which triggers time picker
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
+        DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
+            selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
 
-                TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
-                        0, 0, true);
-                tdialog.show();
-            }
+            TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
+                    0, 0, true);
+            tdialog.show();
         };
 
         //button click listener to select day, which triggers date picker
@@ -581,6 +578,7 @@ public class TourFragment extends Fragment {
                 case OK:
                     weatherList = (List<Weather>) controllerEvent.getModel();
 
+                    if(getActivity() == null) return;
                     getActivity().runOnUiThread(() -> {
                         if (weatherList != null) {
                             weatherInfos.setVisibility(View.VISIBLE);
@@ -603,21 +601,21 @@ public class TourFragment extends Fragment {
      * the degrees, the icon's and the time points of the routes.
      */
     private void initializeWeather() {
-        List<ImageView> weatherIcons = new ArrayList<>();
+        final List<ImageView> weatherIcons = new ArrayList<>();
         weatherIcons.add(firstWeatherIcon);
         weatherIcons.add(secondWeatherIcon);
         weatherIcons.add(thirdWeatherIcon);
         weatherIcons.add(forthWeatherIcon);
         weatherIcons.add(fifthWeatherIcon);
 
-        List<TextView> weatherDegrees = new ArrayList<>();
+        final List<TextView> weatherDegrees = new ArrayList<>();
         weatherDegrees.add(firstWeatherDegree);
         weatherDegrees.add(secondWeatherDegree);
         weatherDegrees.add(thirdWeatherDegree);
         weatherDegrees.add(forthWeatherDegree);
         weatherDegrees.add(fifthWeatherDegree);
 
-        List<TextView> timePoints = new ArrayList<>();
+        final List<TextView> timePoints = new ArrayList<>();
         timePoints.add(firstTimePoint);
         timePoints.add(secondTimePoint);
         timePoints.add(thirdTimePoint);
@@ -630,7 +628,7 @@ public class TourFragment extends Fragment {
         if (weatherList.size() <= 5) {
             for (int i = 0; i < weatherList.size(); ++i) {
                 Weather weather = weatherList.get(i);
-
+                if(weather == null) return;
                 //set temperature
                 String temp = String.format(Locale.GERMAN, "%d", (int) weather.getTemp());
                 String degreeString = temp + getString(R.string.temperature_abbrevation);
@@ -776,12 +774,16 @@ public class TourFragment extends Fragment {
 
             String tourComment;
             int ratingCount = tourRate.getRateTotal();
-            if(ratingCount == 0) {
-                tourComment = getResources().getString(R.string.tour_comment_no_ratings);
-            } else if (ratingCount == 1) {
-                tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_rating);
-            } else {
-                tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_ratings);
+            switch (ratingCount) {
+                case 0:
+                    tourComment = getResources().getString(R.string.tour_comment_no_ratings);
+                    break;
+                case 1:
+                    tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_rating);
+                    break;
+                default:
+                    tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_ratings);
+                    break;
             }
             tourCommentRatingCount.setText(tourComment);
 
