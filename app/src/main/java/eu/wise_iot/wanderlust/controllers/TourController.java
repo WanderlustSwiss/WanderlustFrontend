@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.DifficultyType_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -167,7 +168,7 @@ public class TourController {
                     //save tour in local db
                     if(cacheHandler.downloadMap()){
                         communityTourDao.create(data);
-                        Log.d(TAG, "Is saved");
+                        //Log.d(TAG, "Is saved");
                         handler.onResponse(new ControllerEvent(EventType.OK));
                     }else{
                         handler.onResponse(new ControllerEvent(EventType.NOT_FOUND));
@@ -189,7 +190,7 @@ public class TourController {
                     MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
                     communityTourDao.delete(data);
                     fragmentHandler.onResponse(new ControllerEvent(EventType.OK));
-                    Log.d(TAG, "Is deleted");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Is deleted");
                 default:
                     fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
             }
@@ -230,7 +231,7 @@ public class TourController {
     }
 
     public String getRegion() {
-        Log.d(TAG, "Region number: " + regionDao.find().size());
+        if (BuildConfig.DEBUG) Log.d(TAG, "Region number: " + regionDao.find().size());
         Region region = regionDao.findOne(Region_.region_id, tour.getRegion());
         if (region == null) {
             return "";
