@@ -203,7 +203,7 @@ public class RatingDao extends DatabaseObjectAbstract{
         return RatingBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         RatingBox.remove(findOne(searchedColumn, searchPattern));
     }
 

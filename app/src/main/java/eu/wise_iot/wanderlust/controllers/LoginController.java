@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.app.Fragment;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,7 +21,6 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
 import eu.wise_iot.wanderlust.services.LoginService;
 import eu.wise_iot.wanderlust.services.ProfileService;

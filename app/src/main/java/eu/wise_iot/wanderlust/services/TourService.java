@@ -2,7 +2,6 @@ package eu.wise_iot.wanderlust.services;
 
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKitEquipment;

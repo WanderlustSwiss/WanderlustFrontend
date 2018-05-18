@@ -1,19 +1,13 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.ArrayList;
-
-import eu.wise_iot.wanderlust.constants.Constants;
 
 public class OfflineQueueController {
 

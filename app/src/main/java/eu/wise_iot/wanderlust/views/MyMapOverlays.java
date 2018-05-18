@@ -12,8 +12,6 @@ import android.location.LocationManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;

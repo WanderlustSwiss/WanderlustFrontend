@@ -235,7 +235,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         favoriteBox.remove(findOne(searchedColumn, searchPattern));
     }
 

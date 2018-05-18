@@ -53,8 +53,7 @@ public class UserDao extends DatabaseObjectAbstract {
         return userBox.count();
     }
 
-    public long count(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
@@ -63,8 +62,7 @@ public class UserDao extends DatabaseObjectAbstract {
      *
      * @return Total number of records
      */
-    public long count(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, long searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
@@ -245,8 +243,7 @@ public class UserDao extends DatabaseObjectAbstract {
         return userBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         userBox.remove(findOne(searchedColumn, searchPattern));
     }
 
@@ -258,7 +255,7 @@ public class UserDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void deleteByPattern(Property searchedColumn, String searchPattern) {
         User toDeleteUser = findOne(searchedColumn, searchPattern);
         userBox.remove(toDeleteUser);
         //return toDeleteUser;

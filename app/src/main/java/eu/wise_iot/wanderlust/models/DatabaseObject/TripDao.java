@@ -252,8 +252,7 @@ public class TripDao extends DatabaseObjectAbstract {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 
@@ -267,7 +266,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void deleteByPattern(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 }

@@ -45,7 +45,7 @@ public class PoiViewDialogTest {
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mainActivity = testActivity.getActivity();
         poiViewDialog = PoiViewDialog.newInstance(poi);
 

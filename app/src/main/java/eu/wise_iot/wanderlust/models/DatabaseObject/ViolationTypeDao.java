@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
-import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType_;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;

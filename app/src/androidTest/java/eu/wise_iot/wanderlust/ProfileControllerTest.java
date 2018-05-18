@@ -83,27 +83,27 @@ public class ProfileControllerTest {
 
     @Ignore
     @Test
-    public void getProfilePicture() throws Exception {
+    public void getProfilePicture() {
     }
 
     @Ignore
     @Test
-    public void getTours() throws Exception {
+    public void getTours() {
     }
 
     @Ignore
     @Test
-    public void getFavorites() throws Exception {
+    public void getFavorites() {
     }
 
     @Ignore
     @Test
-    public void getPois() throws Exception {
+    public void getPois() {
     }
 
     @Ignore
     @Test
-    public void getSavedTours() throws Exception {
+    public void getSavedTours() {
     }
 
 }

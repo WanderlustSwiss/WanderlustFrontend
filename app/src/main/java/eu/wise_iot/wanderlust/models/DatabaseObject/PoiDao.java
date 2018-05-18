@@ -17,7 +17,6 @@ import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
@@ -364,11 +363,11 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         poiBox.remove(findOne(searchedColumn, searchPattern));
     }
 
-    public void delete(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, long searchPattern) {
         poiBox.remove(findOne(searchedColumn, searchPattern));
     }
 
@@ -395,11 +394,11 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Total number of records
      */
-    public long count(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
-    public long count(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, long searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
