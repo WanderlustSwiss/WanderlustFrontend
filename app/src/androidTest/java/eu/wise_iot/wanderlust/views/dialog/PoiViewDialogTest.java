@@ -40,7 +40,7 @@ public class PoiViewDialogTest {
     private View view;
     private List<ImageInfo> list;
 
-    private Poi poi = new Poi(1, "name of poi", "description of poi",  2,
+    private final Poi poi = new Poi(1, "name of poi", "description of poi",  2,
             3, 1000, 0, 1, 0, true, list, "", "");
 
 

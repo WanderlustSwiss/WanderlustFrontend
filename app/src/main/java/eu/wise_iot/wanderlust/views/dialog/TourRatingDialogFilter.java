@@ -36,7 +36,7 @@ public class TourRatingDialogFilter extends DialogFragment {
     private static RatingBar ratingBar;
     private static TextView tourRatingInNumbers;
 
-    private ImageButton[] starButtonCollection = new ImageButton[5];
+    private final ImageButton[] starButtonCollection = new ImageButton[5];
 
     private ImageButton firstStarButton;
     private ImageButton secondStarButton;
@@ -95,7 +95,7 @@ public class TourRatingDialogFilter extends DialogFragment {
         setupListeners();
     }
 
-    public void setupListeners(){
+    private void setupListeners(){
         buttonSave.setOnClickListener(v -> {
             ratingBar.setRating(countRatedStars);
             getDialog().dismiss();

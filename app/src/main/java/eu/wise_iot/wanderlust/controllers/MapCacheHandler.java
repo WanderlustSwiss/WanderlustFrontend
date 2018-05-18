@@ -24,9 +24,9 @@ import eu.wise_iot.wanderlust.views.WanderlustMapView;
 public class MapCacheHandler {
     private static final String TAG = "MapCacheHandler";
 
-    private Context context;
-    private Tour tour;
-    private MapView mapView;
+    private final Context context;
+    private final Tour tour;
+    private final MapView mapView;
     private int progressPercentage = 10;
 
     public MapCacheHandler(Context context, Tour tour){

@@ -44,7 +44,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 public class StartupLoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "StartupLoginFragment";
 
-    public static final int REQ_CODE = 9001;
+    private static final int REQ_CODE = 9001;
     private Context context;
     private Button btnLogin;
     private Button btnInstagram;

@@ -37,7 +37,7 @@ public class ProfileTripListAdapter extends ArrayAdapter<Tour> {
     private ImageView editIcon;
     private ImageView deleteIcon;
 
-    private Context context;
+    private final Context context;
 
     private final ProfileFragment profileFragment;
     private final ImageController imageController;

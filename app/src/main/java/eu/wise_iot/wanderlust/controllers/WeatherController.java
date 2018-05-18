@@ -52,7 +52,7 @@ public class WeatherController {
         return initKeys ? weatherKeys : null;
     }
 
-    public List<SeasonsKey> getSeasonsKeys() {
+    private List<SeasonsKey> getSeasonsKeys() {
         return initKeys ? seasonsKeys : null;
     }
 

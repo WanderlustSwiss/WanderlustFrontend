@@ -169,10 +169,12 @@ public class RatingDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return Rating which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Rating findOne(Property searchedColumn, String searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Rating findOne(Property searchedColumn, long searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }

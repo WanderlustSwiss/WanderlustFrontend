@@ -15,9 +15,9 @@ public class ViolationType extends AbstractModel {
 
     @Id
     long internal_id;
-    long violationt_id;
-    String name;
-    long score;
+    final long violationt_id;
+    final String name;
+    final long score;
 
     public ViolationType(long internal_id, long violationt_id, String name, long score) {
         this.internal_id = internal_id;

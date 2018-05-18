@@ -75,7 +75,7 @@ public class ProfileEditFragment extends Fragment {
     private CheckBox[] checkBoxes;
     private long difficulty;
 
-    private ImageController imageController;
+    private final ImageController imageController;
 
     private final ProfileController profileController;
 

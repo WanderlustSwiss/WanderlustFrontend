@@ -29,9 +29,9 @@ public class ProfileControllerTest {
     @Rule
     public ActivityTestRule<MainActivity> main = new ActivityTestRule<>(MainActivity.class);
 
-    ProfileController profileController;
-    UserDao userDao;
-    ProfileDao profileDao;
+    private ProfileController profileController;
+    private UserDao userDao;
+    private ProfileDao profileDao;
 
     @Before
     public void setUp(){
@@ -54,7 +54,7 @@ public class ProfileControllerTest {
         userDao.removeAll();
         assertEquals("no user", profileController.getNickName());
     }
-
+/*
     @Test
     public void getScore(){
         assertEquals(0, profileController.getScore());
@@ -66,7 +66,7 @@ public class ProfileControllerTest {
     @Test
     public void getAmountTours(){
         assertEquals(0, profileController.getScore());
-    }
+    }*/
 
     @Test
     public void getAmountPoi(){

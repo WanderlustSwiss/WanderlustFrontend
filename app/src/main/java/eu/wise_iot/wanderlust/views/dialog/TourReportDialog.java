@@ -35,7 +35,7 @@ public class TourReportDialog extends DialogFragment {
     private ImageButton buttonSave, buttonCancel;
     private RadioButton rbHarassment, rbViolence, rbHatespeech, rbSpam, rbOther, rbNudity;
 
-    private ViolationTypeDao violationTypeDao = ViolationTypeDao.getInstance();
+    private final ViolationTypeDao violationTypeDao = ViolationTypeDao.getInstance();
 
 
     public TourReportDialog newInstance(Tour tour, TourController tourController) {

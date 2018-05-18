@@ -26,7 +26,7 @@ public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<Fi
     private FragmentHandler handler;
     @SuppressWarnings("FieldCanBeLocal")
     private ImageController imageController;
-    private List<DownloadedImage> downloadedImages = new LinkedList<>();
+    private final List<DownloadedImage> downloadedImages = new LinkedList<>();
 
     /**
      * Task which iterates over all images of a specific poi

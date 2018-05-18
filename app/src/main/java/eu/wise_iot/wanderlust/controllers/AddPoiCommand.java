@@ -8,12 +8,12 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 
 public class AddPoiCommand implements QueueCommand {
 
-    private PoiController controller;
+    private final PoiController controller;
     private Poi poi;
-    private FragmentHandler<Poi> successHandler;
+    private final FragmentHandler<Poi> successHandler;
     private int numberOfTries = 0;
-    private String TAG = "AddPoiCommand";
-    private File imagePath;
+    private final String TAG = "AddPoiCommand";
+    private final File imagePath;
 
     public AddPoiCommand(Poi poi, File imagePath) {
         controller = new PoiController();

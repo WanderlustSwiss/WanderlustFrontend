@@ -156,7 +156,7 @@ public class SavedTour extends AbstractModel {
         this.description = description;
     }
 
-    public String getPolyline() {
+    private String getPolyline() {
         return polyline;
     }
 

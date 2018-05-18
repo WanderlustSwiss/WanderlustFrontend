@@ -54,7 +54,7 @@ public class PoiViewDialog extends DialogFragment {
     private ImageController imageController;
     private TextView occupationTitleSac;
     private TableLayout sacOccupation;
-    private Map<String, Integer> monthIds = new HashMap<>();
+    private final Map<String, Integer> monthIds = new HashMap<>();
     private static PoiController poiController;
     /**
      * Create a PoiViewDialog from a Poi object

@@ -36,6 +36,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<SavedTour> {
     private TextView title;
     private TextView description;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private ImageView tripImage;
     private ImageView deleteIcon;
 

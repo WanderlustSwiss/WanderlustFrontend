@@ -38,7 +38,7 @@ public class UserDao extends DatabaseObjectAbstract {
     }
 
     private static UserService service;
-    public final Box<User> userBox;
+    private final Box<User> userBox;
 
     /**
      * Constructor.
@@ -215,6 +215,7 @@ public class UserDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return User who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public User findOne(Property searchedColumn, String searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -230,10 +231,12 @@ public class UserDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<User> which contains the users, who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<User> find(Property searchedColumn, String searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<User> find(Property searchedColumn, long searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().find();
     }

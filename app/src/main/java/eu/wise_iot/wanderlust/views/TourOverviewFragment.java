@@ -442,9 +442,9 @@ public class TourOverviewFragment extends Fragment {
      * handles async backend request for requesting a tour
      */
     private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
-        ProgressDialog pdLoading;
-        private Tour tour;
-        private Activity activity;
+        final ProgressDialog pdLoading;
+        private final Tour tour;
+        private final Activity activity;
         private Integer responseCode;
 
         AsyncCheckTourExists(Tour tour, Activity activity){
@@ -470,7 +470,6 @@ public class TourOverviewFragment extends Fragment {
             switch(EventType.getTypeByCode(responseCode)) {
                 case OK:
                     Log.d(TAG,"Server Response arrived -> OK Tour was found");
-
                     getFragmentManager().beginTransaction()
                             .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
                             .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)

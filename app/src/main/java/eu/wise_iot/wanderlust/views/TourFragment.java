@@ -797,7 +797,7 @@ public class TourFragment extends Fragment {
             tourRatingInNumbers.setText("0");
         }
     }
-    public void drawChart() {
+    private void drawChart() {
         Number[] domainLabels = tourController.getElevationProfileXAxis();
         Number[] rangeLabels = tourController.getElevationProfileYAxis();
 
@@ -876,9 +876,9 @@ public class TourFragment extends Fragment {
     /**
      * shows the map with the drawn tour, also handles drawer selection
      */
-    public void showMapWithTour() {
+    private void showMapWithTour() {
         //handle recent tours
-        tourController.addRecentTour(this.tour);
+        tourController.addRecentTour(tour);
 
         if (tourController.getPolyline() == null) {
             return;

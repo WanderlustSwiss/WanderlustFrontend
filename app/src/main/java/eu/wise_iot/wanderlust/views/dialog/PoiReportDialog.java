@@ -39,7 +39,7 @@ public class PoiReportDialog extends DialogFragment {
     private ImageButton buttonSave, buttonCancel;
     private RadioButton rbHarassment, rbViolence, rbHatespeech, rbSpam, rbOther, rbNudity;
 
-    private ViolationTypeDao violationTypeDao = ViolationTypeDao.getInstance();
+    private final ViolationTypeDao violationTypeDao = ViolationTypeDao.getInstance();
 
 
     public PoiReportDialog newInstance(Poi poi, PoiController poiController) {

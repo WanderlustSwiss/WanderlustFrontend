@@ -33,6 +33,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAdapter.ViewHolder> {
     private List<Tour> tours = Collections.emptyList();
     private final LayoutInflater mInflater;
+    @SuppressWarnings("WeakerAccess")
     public ItemClickListener mClickListener;
     private final Context context;
     private final ImageController imageController;

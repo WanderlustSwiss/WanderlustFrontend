@@ -1,10 +1,10 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
 public class ImageInfo {
-    public long id;
-    public String path;
-    public volatile String localDir;
-    public String name;
+    private long id;
+    private String path;
+    private volatile String localDir;
+    private String name;
 
     public ImageInfo(){}
 

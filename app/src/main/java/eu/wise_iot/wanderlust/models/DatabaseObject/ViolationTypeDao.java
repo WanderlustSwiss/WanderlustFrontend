@@ -94,6 +94,7 @@ public class ViolationTypeDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return ViolationType which matches the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public ViolationType findOne(Property searchedColumn, String searchPattern) {
         return violationTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }

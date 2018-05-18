@@ -61,7 +61,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private Polyline currentTour;
     private final MapController searchMapController;
     private boolean poiFloraFaunaActive, poiViewActive, poiRestaurantActive, poiRestAreaActive;
-    private PoiController poiController;
+    private final PoiController poiController;
 
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiHashtagOverlay;
@@ -534,7 +534,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     /**
      * Deletes the focused position marker
      */
-    public void removeFocusedPositionMarker() {
+    private void removeFocusedPositionMarker() {
         mapView.getOverlays().remove(focusedPositionMarker);
     }
 

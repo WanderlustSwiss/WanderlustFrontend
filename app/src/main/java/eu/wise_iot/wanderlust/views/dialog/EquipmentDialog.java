@@ -33,11 +33,11 @@ public class EquipmentDialog extends DialogFragment{
     private static Context context;
 
 
-    public TextView titleTextView;
-    public TextView descriptionTextView;
-    public ImageView equipment_imageView;
-    public ImageButton linkToOnlineShopButtonIcon;
-    public Button linkToOnlineShopButtonText;
+    private TextView titleTextView;
+    private TextView descriptionTextView;
+    private ImageView equipment_imageView;
+    private ImageButton linkToOnlineShopButtonIcon;
+    private Button linkToOnlineShopButtonText;
 
     public static EquipmentDialog newInstance(Context paramContext, Equipment paramEquipment){
         EquipmentDialog fragment = new EquipmentDialog();
@@ -89,7 +89,7 @@ public class EquipmentDialog extends DialogFragment{
         linkToOnlineShopButtonText.setOnClickListener(e ->{ linkToOnlineShop(); });
     }
 
-    public void linkToOnlineShop(){
+    private void linkToOnlineShop(){
         //String url = equipment.getAdLink();
         String url = "http://www.wanderlust-app.ch";
         Intent i = new Intent(Intent.ACTION_VIEW);

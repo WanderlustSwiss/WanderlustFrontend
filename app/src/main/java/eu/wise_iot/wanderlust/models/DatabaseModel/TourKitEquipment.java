@@ -7,7 +7,7 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
  */
 public class TourKitEquipment {
 
-    private Equipment equipment;
+    private final Equipment equipment;
 
     public TourKitEquipment(Equipment equipment) {
         this.equipment = equipment;

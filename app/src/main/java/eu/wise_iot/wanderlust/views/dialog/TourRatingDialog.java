@@ -39,7 +39,7 @@ public class TourRatingDialog extends DialogFragment {
     private static TextView tourRatingInNumbers;
     private static TourFragment tourFragment;
 
-    private ImageButton[] starButtonCollection = new ImageButton[5];
+    private final ImageButton[] starButtonCollection = new ImageButton[5];
 
     private ImageButton firstStarButton;
     private ImageButton secondStarButton;
@@ -102,7 +102,7 @@ public class TourRatingDialog extends DialogFragment {
         setupListeners();
     }
 
-    public void setupListeners(){
+    private void setupListeners(){
         long rate = controller.alreadyRated(tour.getTour_id());
         if(rate == 0) {
             buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, controllerEvent0 -> {

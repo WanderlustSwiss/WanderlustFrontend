@@ -7,7 +7,7 @@ package eu.wise_iot.wanderlust.controllers;
  */
 public class DatabaseEvent<T> {
 
-    private SyncType type;
+    private final SyncType type;
     private T obj;
 
     public DatabaseEvent(SyncType type) {

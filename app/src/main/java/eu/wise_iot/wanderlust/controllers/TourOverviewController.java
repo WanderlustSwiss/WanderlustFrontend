@@ -29,7 +29,7 @@ public class TourOverviewController {
     private static final String TAG = "TourOverviewController";
     private final UserTourDao userTourDao;
     private FavoriteDao favoriteDao;
-    private RecentTourDao recentTourDao;
+    private final RecentTourDao recentTourDao;
     private final DifficultyTypeDao difficultyType;
     private final ImageController imageController;
 

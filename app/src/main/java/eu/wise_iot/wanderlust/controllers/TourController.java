@@ -84,18 +84,18 @@ public class TourController {
     }
 
     private final FavoriteDao favoriteDao;
-    private RatingDao ratingDao;
-    private UserDao userDao;
+    private final RatingDao ratingDao;
+    private final UserDao userDao;
     private Tour tour;
-    private CommentService commentService;
-    private UserTourDao userTourDao;
-    private TripDao tripDao;
+    private final CommentService commentService;
+    private final UserTourDao userTourDao;
+    private final TripDao tripDao;
 
-    private CommunityTourDao communityTourDao;
-    private DifficultyTypeDao difficultyTypeDao;
-    private RegionDao regionDao;
-    private RecentTourDao recentTourDao;
-    private ImageController imageController;
+    private final CommunityTourDao communityTourDao;
+    private final DifficultyTypeDao difficultyTypeDao;
+    private final RegionDao regionDao;
+    private final RecentTourDao recentTourDao;
+    private final ImageController imageController;
 
     private static final String TAG = "Tourcontroller";
 

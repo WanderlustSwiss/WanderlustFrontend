@@ -178,6 +178,7 @@ public class LoginController {
         });
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void downloadProfileImage(Profile profile, User user, FragmentHandler handler) {
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
         Call<ResponseBody> imageCall = service.downloadImage();
@@ -251,7 +252,7 @@ public class LoginController {
         return null;
     }
     public class EmailBody {
-        private String email;
+        private final String email;
 
         public EmailBody(String email) {
             this.email = email;

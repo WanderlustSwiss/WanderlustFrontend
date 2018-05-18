@@ -21,7 +21,7 @@ import eu.wise_iot.wanderlust.R;
  */
 public class DisclaimerFragment extends Fragment {
 
-    TextView authorsTextView;
+    private TextView authorsTextView;
 
     public static DisclaimerFragment newInstance() {
         Bundle args = new Bundle();

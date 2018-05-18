@@ -31,8 +31,8 @@ import eu.wise_iot.wanderlust.views.MapFragment;
  */
 public class Camera {
     private static final String TAG = "Camera";
-    private Activity activity;
-    private MapFragment mapFragment;
+    private final Activity activity;
+    private final MapFragment mapFragment;
 
     private String imagePath;
     private String imageName;

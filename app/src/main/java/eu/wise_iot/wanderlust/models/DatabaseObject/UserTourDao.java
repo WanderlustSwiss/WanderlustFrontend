@@ -429,10 +429,12 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Tour which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Tour findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Tour findOne(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -444,10 +446,12 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Tour> which contains the equipements, which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<Tour> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<Tour> find(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }

@@ -207,6 +207,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return Favorite which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Favorite findOne(Property searchedColumn, String searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }

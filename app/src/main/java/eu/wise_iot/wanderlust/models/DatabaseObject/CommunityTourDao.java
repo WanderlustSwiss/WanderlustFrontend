@@ -154,6 +154,7 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Tour which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public SavedTour findOne(Property searchedColumn, String searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -170,10 +171,12 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
      * @return List<Tour> which contains the equipements,
      * which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<SavedTour> find(Property searchedColumn, String searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<SavedTour> find(Property searchedColumn, long searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().find();
     }

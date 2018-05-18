@@ -326,6 +326,7 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return User who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Poi findOne(Property searchedColumn, String searchPattern) {
         return poiBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -341,10 +342,12 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Poi> which contains the users, who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<Poi> find(Property searchedColumn, String searchPattern) {
         return poiBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<Poi> find(Property searchedColumn, long searchPattern) {
         return poiBox.query().equal(searchedColumn, searchPattern).build().find();
     }

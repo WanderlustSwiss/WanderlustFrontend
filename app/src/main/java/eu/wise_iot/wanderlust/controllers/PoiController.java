@@ -42,7 +42,7 @@ public class PoiController {
     private final ImageController imageController;
     private final Context context;
     private final PoiService poiService;
-    private static List<Poi> poiCache = new LinkedList<>();
+    private static final List<Poi> poiCache = new LinkedList<>();
 
     public PoiController(){
         poiTypeDao = PoiTypeDao.getInstance();

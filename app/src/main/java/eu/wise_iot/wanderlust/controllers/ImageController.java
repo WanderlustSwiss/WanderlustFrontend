@@ -136,7 +136,7 @@ public class ImageController {
         return resize(imgFileOrig, standardWidth);
     }
 
-    public File resize(File imgFileOrig, int destWidth) throws IOException {
+    private File resize(File imgFileOrig, int destWidth) throws IOException {
         Bitmap b = BitmapFactory.decodeFile(imgFileOrig.getAbsolutePath());
         int origWidth = b.getWidth();
         int origHeight = b.getHeight();
@@ -166,11 +166,9 @@ public class ImageController {
                 })
                 .build();
 
-        Picasso picasso = new Picasso.Builder(context)
+        return new Picasso.Builder(context)
                 .downloader(new OkHttp3Downloader(client))
                 .build();
-
-        return picasso;
     }
     public Bitmap resize(Bitmap b, int destWidth){
         int origWidth = b.getWidth();

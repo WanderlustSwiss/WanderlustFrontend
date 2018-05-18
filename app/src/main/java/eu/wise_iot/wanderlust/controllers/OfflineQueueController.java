@@ -17,9 +17,9 @@ import eu.wise_iot.wanderlust.constants.Constants;
 
 public class OfflineQueueController {
 
-    private ArrayList<QueueCommand> list = new ArrayList<>();
+    private final ArrayList<QueueCommand> list = new ArrayList<>();
     private static OfflineQueueController offlineQueueController;
-    private static String TAG = "OfflineQueueController";
+    private static final String TAG = "OfflineQueueController";
     private boolean isRunning = false;
 
     private OfflineQueueController() {
@@ -69,7 +69,7 @@ public class OfflineQueueController {
 
     public static class NetworkChangeReceiver extends BroadcastReceiver {
 
-        private OfflineQueueController offlineQueueController;
+        private final OfflineQueueController offlineQueueController;
 
         public NetworkChangeReceiver() {
             offlineQueueController = OfflineQueueController.getInstance();

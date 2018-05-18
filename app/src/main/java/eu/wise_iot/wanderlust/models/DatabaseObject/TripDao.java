@@ -221,6 +221,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Trip which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Trip findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -237,10 +238,12 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Trip> which contains the equipements, which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<Trip> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<Trip> find(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }

@@ -229,6 +229,7 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Profile who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Profile findOne(Property searchedColumn, String searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -244,10 +245,12 @@ public class ProfileDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Profile> which contains the users, who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<Profile> find(Property searchedColumn, String searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<Profile> find(Property searchedColumn, long searchPattern) {
         return profileBox.query().equal(searchedColumn, searchPattern).build().find();
     }

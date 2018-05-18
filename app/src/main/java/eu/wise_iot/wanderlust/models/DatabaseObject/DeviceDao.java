@@ -78,6 +78,7 @@ public class DeviceDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Device which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Device findOne(Property searchedColumn, String searchPattern) {
         return deviceBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -93,10 +94,12 @@ public class DeviceDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Device> which contains the users, who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<Device> find(Property searchedColumn, String searchPattern) {
         return deviceBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<Device> find(Property searchedColumn, long searchPattern) {
         return deviceBox.query().equal(searchedColumn, searchPattern).build().find();
     }

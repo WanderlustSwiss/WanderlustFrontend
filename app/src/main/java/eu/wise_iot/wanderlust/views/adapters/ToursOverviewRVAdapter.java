@@ -35,7 +35,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 @SuppressWarnings("JavaDoc")
 public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRVAdapter.ViewHolder> {
 
-    private List<Tour> tours;
+    private final List<Tour> tours;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private final Context context;
