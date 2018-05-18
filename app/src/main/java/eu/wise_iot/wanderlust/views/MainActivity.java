@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         activity = this;
         setContentView(R.layout.activity_main);
         setupNavigation();

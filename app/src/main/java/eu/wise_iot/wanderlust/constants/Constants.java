@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.constants;
 
+import eu.wise_iot.wanderlust.BuildConfig;
+
 /**
  * Constants:
  *
@@ -16,7 +18,6 @@ public interface Constants {
 
     // GeoObjectTypes
     long TYPE_SAC = -1;
-
 
     /* ACTIVITIES */
     String MAIN_ACTIVITY = "MainActivity";

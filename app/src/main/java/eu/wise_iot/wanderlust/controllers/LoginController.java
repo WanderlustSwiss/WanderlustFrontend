@@ -4,6 +4,9 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoCache;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
