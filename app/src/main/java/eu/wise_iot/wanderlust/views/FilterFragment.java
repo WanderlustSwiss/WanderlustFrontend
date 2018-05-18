@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
@@ -28,7 +27,6 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.FilterController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
-import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialogFilter;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -179,7 +177,7 @@ public class FilterFragment extends Fragment {
 
         ResultFilterFragment resultFilterFragment = ResultFilterFragment.newInstance(setting);
         getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, resultFilterFragment, Constants.RESULT_FILTER_FRAGMENT)
+                .replace(R.id.content_frame, resultFilterFragment, Constants.RESULT_FILTER_FRAGMENT)
                 .addToBackStack(Constants.RESULT_FILTER_FRAGMENT)
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
