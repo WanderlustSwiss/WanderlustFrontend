@@ -1,10 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import org.osmdroid.util.BoundingBox;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;

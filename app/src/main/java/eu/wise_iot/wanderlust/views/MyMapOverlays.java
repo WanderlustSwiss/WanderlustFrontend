@@ -17,7 +17,6 @@ import android.widget.Toast;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
@@ -611,17 +610,20 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                     sacList = controllerEvent.getModel();
 
                     Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_home_24dp_blue);
-                    sacHutOverlay.removeAllItems();
+                    if(sacHutOverlay != null) {
 
-                    for (GeoObject sacHut : controllerEvent.getModel()) {
-                        GeoPoint sacLocation = new GeoPoint(sacHut.getLatitude(), sacHut.getLongitude());
-                        int id = sacHutOverlay.size();
-                        OverlayItem overlayItem = new OverlayItem(Integer.toString(id), sacHut.getTitle(), sacHut.getTitle(), sacLocation);
-                        overlayItem.setMarker(drawable);
-                        sacHutOverlay.addItem(overlayItem);
-                    }
-                    if(!mapView.getOverlays().contains(sacHutOverlay)) {
-                        mapView.getOverlays().add(sacHutOverlay);
+                        sacHutOverlay.removeAllItems();
+
+                        for (GeoObject sacHut : controllerEvent.getModel()) {
+                            GeoPoint sacLocation = new GeoPoint(sacHut.getLatitude(), sacHut.getLongitude());
+                            int id = sacHutOverlay.size();
+                            OverlayItem overlayItem = new OverlayItem(Integer.toString(id), sacHut.getTitle(), sacHut.getTitle(), sacLocation);
+                            overlayItem.setMarker(drawable);
+                            sacHutOverlay.addItem(overlayItem);
+                        }
+                        if (!mapView.getOverlays().contains(sacHutOverlay)) {
+                            mapView.getOverlays().add(sacHutOverlay);
+                        }
                     }
                 } else {
                     Toast.makeText(activity, R.string.map_nothing_found, Toast.LENGTH_SHORT).show();

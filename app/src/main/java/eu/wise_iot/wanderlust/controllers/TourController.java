@@ -187,13 +187,9 @@ public class TourController {
                 case OK:
                     SavedTour data = (SavedTour) controllerEvent.getModel();
                     MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
-                    if(cacheHandler.deleteMap()) {
-                        communityTourDao.delete(data);
-                        fragmentHandler.onResponse(new ControllerEvent(EventType.OK));
-                        Log.d(TAG, "Is deleted");
-                    }else{
-                        fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
-                    }
+                    communityTourDao.delete(data);
+                    fragmentHandler.onResponse(new ControllerEvent(EventType.OK));
+                    Log.d(TAG, "Is deleted");
                 default:
                     fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
             }

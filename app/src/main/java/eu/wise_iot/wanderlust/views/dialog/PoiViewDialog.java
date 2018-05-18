@@ -85,7 +85,7 @@ public class PoiViewDialog extends DialogFragment {
         imageInfo.setPath(geoObject.getImageLink());
         list.add(imageInfo);
 
-        currentPoi = new Poi((long) geoObjectTypeId, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, (int) geoObjectTypeId, true, list, "", "");
+        currentPoi = new Poi(geoObjectTypeId, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, (int) geoObjectTypeId, true, list, "", "");
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         Bundle args = new Bundle();
         args.putLong(Constants.POI_ID, geoObjectTypeId);

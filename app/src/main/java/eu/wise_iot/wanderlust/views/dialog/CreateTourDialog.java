@@ -156,9 +156,10 @@ public class CreateTourDialog extends DialogFragment {
         isNewTour = args.getBoolean(Constants.CREATE_TOUR_IS_NEW);
         if (isNewTour) {
             trackedTour = (ArrayList<GeoPoint>) args.getSerializable(Constants.CREATE_TOUR_TRACK);
-            String polyline = PolyLineEncoder.encode(trackedTour, 10);
-            this.tour.setPolyline(polyline);
-
+            if(trackedTour != null) {
+                String polyline = PolyLineEncoder.encode(trackedTour, 10);
+                this.tour.setPolyline(polyline);
+            }
         }
 
         // set style
@@ -342,9 +343,7 @@ public class CreateTourDialog extends DialogFragment {
                         .setTitle(R.string.create_tour_not_saved)
                         .setMessage(R.string.create_tour_not_save_tour)
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> {
-                            dismiss();
-                        })
+                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> dismiss())
                         .setNegativeButton(android.R.string.no, null).show();
             } else {
                 dismiss();

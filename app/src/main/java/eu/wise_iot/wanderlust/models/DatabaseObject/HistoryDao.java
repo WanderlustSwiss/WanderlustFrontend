@@ -39,13 +39,11 @@ public class HistoryDao {
         return historyBox.count();
     }
 
-    public long count(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
-    public long count(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, long searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
@@ -128,14 +126,8 @@ public class HistoryDao {
         return historyBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    /*
-    TODO: return the deleted history tours
-     */
-    public History delete(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         historyBox.remove(findOne(searchedColumn, searchPattern));
-
-        return null;
     }
 
     public void deleteAll() {

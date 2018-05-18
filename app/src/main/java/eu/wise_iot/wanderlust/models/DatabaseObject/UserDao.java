@@ -80,7 +80,7 @@ public class UserDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
                     User newUser = response.body();
                     newUser.setUser_id(1);
-                    newUser.setPassword(((User) user).getPassword());
+                    newUser.setPassword(user.getPassword());
                     userBox.put(newUser);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {

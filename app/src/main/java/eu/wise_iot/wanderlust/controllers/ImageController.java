@@ -25,7 +25,6 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
-import eu.wise_iot.wanderlust.views.MainActivity;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

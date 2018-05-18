@@ -70,10 +70,6 @@ public class TourKitDao extends DatabaseObjectAbstract {
         return find(searchedColumn, searchPattern).size();
     }
 
-    public TourKit update(TourKit tourKit) {
-        return null;
-    }
-
     /**
      * Insert an user into the database.
      *

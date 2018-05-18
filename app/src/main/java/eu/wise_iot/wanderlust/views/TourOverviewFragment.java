@@ -116,31 +116,6 @@ public class TourOverviewFragment extends Fragment {
     }
 
     /**
-     * retrieve all images from the database
-     * @param tours
-     */
-    private static void getDataFromServer(List<Tour> tours){
-        TourOverviewController tourOverviewController = new TourOverviewController();
-        //get thumbnail for each tour
-        for(Tour ut : tours){
-            try {
-                tourOverviewController.downloadThumbnail(ut.getTour_id(), 1, controllerEvent -> {
-                    switch (controllerEvent.getType()) {
-                        case OK:
-                            Log.d(TAG, "Server response thumbnail downloading: " + controllerEvent.getType().name());
-                            break;
-                        default:
-                            Log.d(TAG, "Server response thumbnail ERROR: " + controllerEvent.getType().name());
-                    }
-                });
-            } catch (Exception e){
-                Log.d(TAG, "Server response ERROR: " + e.getMessage());
-            }
-        }
-
-    }
-
-    /**
      * upon view creation
      * @param inflater
      * @param container

@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -342,6 +341,7 @@ public class TourFragment extends Fragment {
     /**
      * @param tour
      */
+    @SuppressWarnings("unchecked")
     private void setupEquipment(Tour tour) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
@@ -497,6 +497,7 @@ public class TourFragment extends Fragment {
             updateRVComments(true);
         });
     }
+    @SuppressWarnings("unchecked")
     private void updateRVComments(boolean doClear){
         tourController.getComments(0, event -> {
             switch (event.getType()) {
@@ -571,8 +572,8 @@ public class TourFragment extends Fragment {
             dialog.show();
         });
     }
+    @SuppressWarnings("unchecked")
     private void setupWeather() {
-
         weatherController.getWeatherFromTour(tour, selectedDateTime, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
@@ -838,7 +839,7 @@ public class TourFragment extends Fragment {
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
                 int i = Math.round(((Number) obj).floatValue());
-                return toAppendTo.append(domainLabels[i].intValue() + "km");
+                return toAppendTo.append(domainLabels[i].intValue()).append("km");
             }
 
             @Override

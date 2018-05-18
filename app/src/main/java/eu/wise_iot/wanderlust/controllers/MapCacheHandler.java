@@ -129,7 +129,7 @@ public class MapCacheHandler {
 
     }
 
-    public boolean deleteMap(){
+    public void deleteMap(){
         ArrayList<GeoPoint> geoPoints = (ArrayList<GeoPoint>) tour.getGeoPoints();
 
         double minLat = 9999;
@@ -183,7 +183,5 @@ public class MapCacheHandler {
                         cacheManager.currentCacheUsage()) + "/" + String.valueOf(cacheManager.cacheCapacity()));
             }
         });
-
-        return true;
     }
 }
