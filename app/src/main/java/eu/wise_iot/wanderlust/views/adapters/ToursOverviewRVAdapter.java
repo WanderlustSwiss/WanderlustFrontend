@@ -123,13 +123,11 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
 
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
-//            File image = images.get(0);
-//            Picasso.with(context).invalidate(image);
             Picasso handler = imageController.getPicassoHandler(activity);
-            handler.setIndicatorsEnabled(true);
+            //handler.setIndicatorsEnabled(true);
             String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
             handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            //Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
+            Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + url);
         } else {
             Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
                     .placeholder(R.drawable.progress_animation).into(holder.tvImage);
