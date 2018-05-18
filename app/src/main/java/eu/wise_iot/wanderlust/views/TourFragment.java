@@ -904,7 +904,8 @@ public class TourFragment extends Fragment {
         nv.getMenu().getItem(0).setChecked(true);
         //add new fragment to stack
         getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                .addToBackStack(null)
                 .commit();
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();

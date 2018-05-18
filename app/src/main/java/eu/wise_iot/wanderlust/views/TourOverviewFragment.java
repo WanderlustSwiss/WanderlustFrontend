@@ -470,15 +470,9 @@ public class TourOverviewFragment extends Fragment {
             switch(EventType.getTypeByCode(responseCode)) {
                 case OK:
                     Log.d(TAG,"Server Response arrived -> OK Tour was found");
-                    TourFragment tourFragment = TourFragment.newInstance(tour);
-                    Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
-                    if (oldTourFragment != null) {
-                        getFragmentManager().beginTransaction()
-                                .remove(oldTourFragment)
-                                .commit();
-                    }
+
                     getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                            .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
                             .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
                             .commit();
                     ((AppCompatActivity) getActivity()).getSupportActionBar().show();

@@ -254,11 +254,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
         String fragmentTag = null;
         int id = item.getItemId();
-
+/*
         Log.d(TAG,"FRAGMENTSTACK COUNT: " + getFragmentManager().getBackStackEntryCount());
         //clear backstack to avoid infinite stacking
         FragmentManager fm = getFragmentManager(); // or 'getSupportFragmentManager();'
         for(int i = 0; i < fm.getBackStackEntryCount(); ++i) fm.popBackStack();
+        */
 
         Log.d(TAG,"FRAGMENTSTACK COUNT: " + getFragmentManager().getBackStackEntryCount());
 
@@ -315,6 +316,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(fragment.isAdded()){
                 getFragmentManager().beginTransaction().show(fragment);
             } else {
+                if(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT).isAdded()) {
+                    getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
+                }
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, fragment, fragmentTag)
                         .addToBackStack(null)
