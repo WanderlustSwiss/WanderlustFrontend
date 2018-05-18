@@ -341,7 +341,6 @@ public class TourFragment extends Fragment {
     /**
      * @param tour
      */
-    @SuppressWarnings("unchecked")
     private void setupEquipment(Tour tour) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
@@ -351,15 +350,14 @@ public class TourFragment extends Fragment {
 
         Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
         Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
-        //TODO add recommended method for getting equipment
-        //listEquipment = tourController.getEquipmentOfTour(this.tour);
+
         equipmentController.retrieveRecommendedEquipment(tour, selectedDateTime, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
                     Log.d(TAG, "got equipment for tour");
                     TourFragment.this.listEquipment.clear();
                     TourFragment.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
-                    getActivity().runOnUiThread(() -> adapterEquip.notifyDataSetChanged());
+                    adapterEquip.notifyDataSetChanged();
                     break;
                 default:
                     Log.d(TAG, "failure getting equipment for tour");
