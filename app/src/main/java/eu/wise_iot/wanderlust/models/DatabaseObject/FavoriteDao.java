@@ -93,7 +93,6 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                         for (ImageInfo imageInfo : tour.getImagePaths()) {
                             String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
                             imageInfo.setName(name);
-                            imageInfo.setId(tour.getTour_id());
                             imageInfo.setLocalDir(imageController.getTourFolder());
                         }
                     }

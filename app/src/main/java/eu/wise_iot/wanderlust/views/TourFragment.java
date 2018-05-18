@@ -628,7 +628,7 @@ public class TourFragment extends Fragment {
         if (weatherList.size() <= 5) {
             for (int i = 0; i < weatherList.size(); ++i) {
                 Weather weather = weatherList.get(i);
-                if(weather == null) return;
+                if(weather == null || getActivity() == null) return;
                 //set temperature
                 String temp = String.format(Locale.GERMAN, "%d", (int) weather.getTemp());
                 String degreeString = temp + getString(R.string.temperature_abbrevation);

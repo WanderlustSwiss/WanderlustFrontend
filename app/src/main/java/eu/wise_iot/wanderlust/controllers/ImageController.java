@@ -25,6 +25,8 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.views.MainActivity;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -48,6 +50,8 @@ public class ImageController {
     private final String[] FOLDERS;
     private final int standardWidth;
 
+    private final Cache cache;
+
     public ImageController(){
         picturesDir = CONTEXT.getApplicationContext().getApplicationContext().getExternalFilesDir("pictures").getAbsolutePath();
         FOLDERS = new String[4];
@@ -63,6 +67,9 @@ public class ImageController {
             File dir = new File(picturesDir + "/" + FOLDER);
             dir.mkdir();
         }
+
+        File httpCacheDirectory = new File(DatabaseController.getMainContext().getCacheDir(), "picasso-cache");
+        this.cache = new Cache(httpCacheDirectory, 15 * 1024 * 1024);
     }
     public String getPoiFolder(){
         return FOLDERS[0];
@@ -152,7 +159,9 @@ public class ImageController {
     }
 
     public Picasso getPicassoHandler(Activity context) {
+
         OkHttpClient client = new OkHttpClient.Builder()
+                .cache(cache)
                 .addInterceptor(chain -> {
                     Request newRequest = chain.request().newBuilder()
                             .addHeader("Cookie", LoginUser.getCookies().get(0))

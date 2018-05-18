@@ -402,47 +402,6 @@ public class PoiDao extends DatabaseObjectAbstract {
         return find(searchedColumn, searchPattern).size();
     }
 
-
-    public void syncPois(BoundingBox box) {
-        ImageController imageController = ImageController.getInstance();
-        Call<List<Poi>> call = service.retrievePoisByArea(
-                box.getLatNorth(), box.getLonWest(), box.getLatSouth(), box.getLonEast());
-        call.enqueue(new Callback<List<Poi>>() {
-            @Override
-            public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
-                if (response.isSuccessful()) {
-                    for (Poi poi : response.body()) {
-                        //if (poi.isPublic()) {
-                        poi.setInternal_id(0);
-                        Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
-                        if (internalPoi == null) {
-                            //non existent localy
-                            List<ImageInfo> imageInfos = new ArrayList<>();
-                            for (ImageInfo imageInfo : poi.getImagePaths()) {
-                                String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
-                                imageInfos.add(new ImageInfo(poi.getPoi_id(), name, imageController.getPoiFolder()));
-                            }
-                            poi.setImagePaths(imageInfos);
-                            poi.setInternal_id(0);
-                        } else {
-                            poi.setImagePaths(internalPoi.getImagePaths());
-                            poiBox.remove(internalPoi.getInternal_id());
-                        }
-                        poiBox.put(poi);
-                        //}
-                    }
-
-                }
-                DatabaseController.getInstance().syncPoisDone();
-            }
-
-            @Override
-            public void onFailure(Call<List<Poi>> call, Throwable t) {
-                DatabaseController.getInstance().syncPoisDone();
-            }
-        });
-    }
-
     /**
      * Delete all users out of the database
      */

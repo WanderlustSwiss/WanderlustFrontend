@@ -159,7 +159,7 @@ public class TourOverviewFragment extends Fragment {
         pbTours = (ProgressBar) view.findViewById(R.id.pbTouren);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvTours.setLayoutManager(horizontalLayoutManager);
-        adapterRoutes = new ToursOverviewRVAdapter(context, listTours);
+        adapterRoutes = new ToursOverviewRVAdapter(context, listTours, getActivity());
         adapterRoutes.setClickListener(this::onItemClickImages);
         rvTours.setAdapter(adapterRoutes);
 
@@ -173,7 +173,7 @@ public class TourOverviewFragment extends Fragment {
         pbFavorites = (ProgressBar) view.findViewById(R.id.pbFavorites);
         LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvFavorites.setLayoutManager(horizontalLayoutManager2);
-        adapterFavs = new ToursOverviewRVAdapter(context, favTours);
+        adapterFavs = new ToursOverviewRVAdapter(context, favTours, getActivity());
         adapterFavs.setClickListener(this::onItemClickImages);
         rvFavorites.setAdapter(adapterFavs);
 
@@ -183,13 +183,13 @@ public class TourOverviewFragment extends Fragment {
         pbRecent = (ProgressBar) view.findViewById(R.id.pbRecent);
         LinearLayoutManager horizontalLayoutManager3 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvRecent.setLayoutManager(horizontalLayoutManager3);
-        adapterRecent = new ToursOverviewRVAdapter(context, recentTours);
+        adapterRecent = new ToursOverviewRVAdapter(context, recentTours, getActivity());
         adapterRecent.setClickListener(this::onItemClickImages);
         rvRecent.setAdapter(adapterRecent);
 
         recentTours.clear();
         recentTours.addAll(tourOverviewController.getRecentTours());
-        getDataFromServer(recentTours);
+        //getDataFromServer(recentTours);
         adapterRecent.notifyDataSetChanged();
 
         if(adapterRecent.getItemCount() > 0) {
@@ -217,7 +217,7 @@ public class TourOverviewFragment extends Fragment {
 
                     Log.d(TAG, "Getting Tours: Server response arrived");
                     //get all the images needed and save them on the device
-                    getDataFromServer(listTours);
+                   // getDataFromServer(listTours);
 
                     adapterRoutes.notifyDataSetChanged();
                     if(adapterRoutes.getItemCount() > 0) {
@@ -260,7 +260,7 @@ public class TourOverviewFragment extends Fragment {
                             imageInfo.setLocalDir(imageController.getTourFolder());
 
                     TourOverviewFragment.this.favTours.addAll(list);
-                    getDataFromServer(favTours);
+                    //getDataFromServer(favTours);
                     Log.d(TAG, favTours.toString());
                     TourOverviewFragment.this.adapterFavs.notifyDataSetChanged();
 
@@ -308,7 +308,7 @@ public class TourOverviewFragment extends Fragment {
                                         LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                         currentPage++;
                                         listTours.addAll(newList);
-                                        getDataFromServer(newList);
+                                        //getDataFromServer(newList);
                                         adapterRoutes.notifyDataSetChanged();
                                         Log.d(TAG, "added new page " + currentPage);
                                         break;
