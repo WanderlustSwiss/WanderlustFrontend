@@ -34,9 +34,8 @@ public class WeatherController {
 
     private static Context CONTEXT;
 
-    public static WeatherController createInstance(Context context) {
+    public static void createInstance(Context context) {
         CONTEXT = context;
-        return WeatherController.Holder.INSTANCE;
     }
 
     public static WeatherController getInstance() {

@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -24,13 +23,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-
-import static eu.wise_iot.wanderlust.views.MainActivity.activity;
 
 public class ImageController {
     private static String TAG = "ImageController";
@@ -40,9 +36,8 @@ public class ImageController {
 
     private static Context CONTEXT;
 
-    public static ImageController createInstance(Context context){
+    public static void createInstance(Context context){
         CONTEXT = context;
-        return Holder.INSTANCE;
     }
 
     public static ImageController getInstance(){
@@ -123,9 +118,9 @@ public class ImageController {
         in.close();
     }
 
-    public boolean delete(ImageInfo imageInfo){
+    public void delete(ImageInfo imageInfo){
         File f = new File(imageInfo.getLocalPath());
-        return f.delete();
+        f.delete();
     }
 
     public String getPicturesDir() {

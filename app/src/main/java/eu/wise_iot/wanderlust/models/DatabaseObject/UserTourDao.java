@@ -13,17 +13,13 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKitEquipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
-import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TourService;
-import eu.wise_iot.wanderlust.views.FilterFragment;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -348,7 +344,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param imageId
      * @return true if everything went ok
      */
-    private boolean writeToDisk(ResponseBody body, long tourId, long imageId) {
+    private void writeToDisk(ResponseBody body, long tourId, long imageId) {
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
@@ -377,9 +373,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
 
             outputStream.flush();
-            return true;
         } catch (IOException e) {
-            return false;
         } finally {
             try {
                 if (inputStream != null)
