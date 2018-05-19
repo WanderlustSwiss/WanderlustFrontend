@@ -2,74 +2,67 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingTop="24dp"
+    android:paddingBottom="12dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="@color/white">
+        android:layout_height="140dp">
 
         <ImageView
             android:id="@+id/equipment_image"
-            android:layout_marginTop="12dp"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_alignParentStart="true"
-            />
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/content_header"
+        android:id="@+id/equipment_background_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:padding="12dp">
 
-        <RelativeLayout
-            android:id="@+id/equipment_background_container"
+        <TextView
+            android:id="@+id/equipmentTitleTextView"
+            style="@style/h1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/equipmentDescriptionTextView"
+            style="@style/p"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:padding="12dp">
+            android:layout_below="@id/equipmentTitleTextView" />
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/equipmentTitleTextView"
-                style="@style/h1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/equipmentDescriptionTextView"
+        android:layout_marginTop="12dp"
+        android:divider="@drawable/divider_vertical"
+        android:showDividers="middle">
 
-            <TextView
-                android:id="@+id/equipmentDescriptionTextView"
-                style="@style/p"
-                android:layout_below="@id/equipmentTitleTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/equipmentDescriptionTextView">
-                <ImageButton
-                    android:id="@+id/linkToShopButtonIcon"
-                    android:layout_below="@id/equipmentDescriptionTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/go_to_shop_string"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_worldwide_black_32dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginLeft="12dp"/>
+        <ImageButton
+            android:id="@+id/linkToShopButtonIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:layout_toLeftOf="@id/linkToShopButtonText"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_worldwide_black_32dp"
+            android:text="@string/go_to_shop_string" />
 
-                <Button
-                    android:id="@+id/linkToShopButtonText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/go_to_shop_string"
-                    android:layout_below="@id/equipmentDescriptionTextView"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginTop="3dp"
-                    style="@style/standard_button"/>
-            </LinearLayout>
-        </RelativeLayout>
+        <Button
+            android:id="@+id/linkToShopButtonText"
+            style="@style/standard_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/go_to_shop_string" />
     </RelativeLayout>
 </LinearLayout>
