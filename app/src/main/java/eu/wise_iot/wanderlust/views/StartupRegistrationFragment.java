@@ -28,6 +28,8 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 /**
  * Registration Fragment which handles front end inputs of the user
  * @author Joshua
@@ -104,6 +106,13 @@ public class StartupRegistrationFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initActionControls();
+
+        //handle keyboard closing
+        view.findViewById(R.id.rootLayout).setOnTouchListener((v, event) -> {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            return true;
+        });
     }
 
     /**

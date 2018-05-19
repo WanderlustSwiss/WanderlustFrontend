@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,6 +40,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * PoiEditDialog:
@@ -183,6 +186,13 @@ public class PoiEditDialog extends DialogFragment {
         }else{
             fillInDataFromAddress();
         }
+
+        //handle keyboard closing
+        view.findViewById(R.id.rootLayout).setOnTouchListener((v, event) -> {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            return true;
+        });
     }
 
 

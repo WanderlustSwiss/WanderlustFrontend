@@ -35,6 +35,8 @@ import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 /**
  * Login Fragment which handles front end inputs of the user for login
  *
@@ -158,6 +160,13 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initActionControls();
+
+        //handle keyboard closing
+        view.findViewById(R.id.rootLayout).setOnTouchListener((v, event) -> {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            return true;
+        });
     }
 
     /**

@@ -44,7 +44,6 @@ public class ResultFilterFragment extends Fragment {
     private TextView tvToursFilteredPlaceholder;
     private int currentPage = 0;
 
-
     public static ResultFilterFragment newInstance(FilterFragment.FilterSetting setting) {
         settingsSet = setting;
         Bundle args = new Bundle();
