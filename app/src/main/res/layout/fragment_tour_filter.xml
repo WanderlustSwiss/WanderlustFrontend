@@ -5,9 +5,10 @@
     android:layout_marginTop="56dp">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp">
+        android:layout_height="match_parent"
+        android:layout_above="@id/btnSearch">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:rsb="http://schemas.android.com/apk/res-auto"
@@ -291,30 +292,44 @@
                         rsb:absoluteMinValue="10"
                         rsb:textAboveThumbsColor="@color/black"
                         rsb:valuesAboveThumbs="true" />
+                </LinearLayout>
 
-                    <LinearLayout
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/background_two_and_inactive" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tourRatingNumbers"
+                        style="@style/p"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-                        <TextView
-                            android:id="@+id/tourRatingNumbers"
-                            style="@style/p"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tour_rating" />
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="6dp"
+                        android:text="@string/tour_rating" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <RatingBar
                             android:id="@+id/tourRatingFilter"
-                            android:theme="@style/RatingBar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/background_main" />
-                    </LinearLayout>
+                            android:layout_centerHorizontal="true"
+                            android:backgroundTint="@color/background_main"
+                            android:theme="@style/RatingBar" />
+                    </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <Button
         android:id="@+id/btnSearch"
         style="@style/standard_button"
