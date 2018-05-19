@@ -274,6 +274,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         case NETWORK_ERROR:
                             Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
                             break;
+                        default:
+                            Toast.makeText(getApplicationContext(), R.string.msg_general_error, Toast.LENGTH_LONG).show();
+                            break;
                     }
                 });
                 return true;
