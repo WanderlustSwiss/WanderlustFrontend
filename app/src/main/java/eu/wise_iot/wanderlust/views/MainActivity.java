@@ -191,6 +191,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().show();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
     /**
      * Manages drawer menu back navigation
      */
@@ -419,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     loggedInUser.setLastLogin(lastLoginNow);
                     UserDao.getInstance().update(loggedInUser);
 
-                    ft.replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                    getFragmentManager().beginTransaction().replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                             .commit();
                     break;
                 default:
@@ -428,12 +432,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //check if last login is within last 24h
                     if (lastLogin2.isAfter(new DateTime().minusDays(1))) {
                         setupDrawerHeader(user);
-                        ft.replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                        getFragmentManager().beginTransaction().replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                 .commit();
 
                     } else {
                         //StartupLoginFragment loginFragment = new StartupLoginFragment();
-                        ft.replace(R.id.content_frame, new StartupLoginFragment().newInstance())
+                        getFragmentManager().beginTransaction().replace(R.id.content_frame, new StartupLoginFragment().newInstance())
                                 .commit();
                     }
                     break;

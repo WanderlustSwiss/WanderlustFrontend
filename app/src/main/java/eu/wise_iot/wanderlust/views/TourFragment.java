@@ -71,6 +71,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
@@ -79,6 +80,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.EquipmentDialog;
 import eu.wise_iot.wanderlust.views.adapters.TourCommentRVAdapter;
@@ -137,6 +139,8 @@ public class TourFragment extends Fragment {
     private ImageButton sendCommentButton;
     private EditText commentText;
 
+    private static ImageController imageController;
+
     public TourFragment() {
         // Required empty public constructor
     }
@@ -156,6 +160,7 @@ public class TourFragment extends Fragment {
         tourController = new TourController(tour);
         equipmentController = EquipmentController.getInstance();
         weatherController = WeatherController.getInstance();
+        imageController = ImageController.getInstance();
         return fragment;
     }
 
@@ -370,14 +375,13 @@ public class TourFragment extends Fragment {
      *
      */
     private void fillControls() {
-        List<File> images = tourController.getImages();
+        List<File> images = imageController.getImages(tour.getImagePaths());
         Log.d("Debug", "Images size:" + images.size());
-        if (!images.isEmpty() && images.get(0).length() != 0) {
-            Picasso.with(context)
-                    .load(images.get(0))
-                    .fit()
-                    .centerCrop()
-                    .into(this.imageViewTourImage);
+        if (!images.isEmpty() && tour.getImagePaths().get(0) != null) {
+            Picasso handler = imageController.getPicassoHandler(getActivity());
+            //handler.setIndicatorsEnabled(true);
+            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
+            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(this.imageViewTourImage);
         } else {
             Picasso.with(context)
                     .load(R.drawable.no_image_found)

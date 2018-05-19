@@ -140,44 +140,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 
             btnLogin.setEnabled(true);
 
-//            loginController.logIn(loginUser, event -> {
-//                //Enable LoginButton after request is complete
-//                btnLogin.setEnabled(true);
-//
-//                switch (event.getType()) {
-//                    case OK:
-//                        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-//                        User user = (User) event.getModel();
-//                        ((MainActivity)getActivity()).setupDrawerHeader(user);
-//                        if(preferences.getBoolean("firstTimeOpened", true)) {
-//                            SharedPreferences.Editor editor = preferences.edit();
-//                            editor.putBoolean("firstTimeOpened", false); // save that app has been opened
-//                            editor.apply();
-//
-//                            Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
-//                            if (userGuideFragment == null)userGuideFragment = UserGuideFragment.newInstance();
-//
-//                            getFragmentManager().beginTransaction()
-//                                    .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
-//                                    .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
-//                                    .commit();
-//                        } else {
-//
-//                            Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-//                            if (mapFragment == null) mapFragment = MapFragment.newInstance();
-//                            getFragmentManager().beginTransaction()
-//                                    .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-//                                    .commit();
-//                            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-//                        }
-//
-//                        break;
-//                    default:
-//                        Toast.makeText(context, event.getType().toString(), Toast.LENGTH_LONG).show();
-//                        break;
-//                }
-//            });
-
             // hide soft keyboard after button was clicked
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(btnLogin.getApplicationWindowToken(), 0);
