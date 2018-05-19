@@ -13,13 +13,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Fabian Schwander
@@ -35,13 +38,14 @@ public class PoiViewDialogTest {
 
     private PoiViewDialog poiViewDialog;
     private View view;
+    private List<ImageInfo> list;
 
-    private Poi poi = new Poi(1, "name of poi", "description of poi", null, 2,
-            3, 1000, 0, 1, 0, true, 0, "", "");
+    private final Poi poi = new Poi(1, "name of poi", "description of poi",  2,
+            3, 1000, 0, 1, 0, true, list, "", "");
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mainActivity = testActivity.getActivity();
         poiViewDialog = PoiViewDialog.newInstance(poi);
 
@@ -68,11 +72,11 @@ public class PoiViewDialogTest {
     public void testTextViews() {
         TextView typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
         assertNotNull(typeTextView);
-        String[] typeValues = mainActivity.getResources().getStringArray(R.array.dialog_feedback_spinner_type);
+            String[] typeValues = mainActivity.getResources().getStringArray(R.array.dialog_feedback_spinner_type);
         assertEquals(typeValues[0], typeTextView.getText().toString());
 
-        TextView elevationTextView = (TextView) view.findViewById(R.id.poi_elevation_text_view);
-        assertNotNull(elevationTextView);
+        //TextView elevationTextView = (TextView) view.findViewById(R.id.poi_elevation_text_view);
+        //assertNotNull(elevationTextView);
 
         TextView titleTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
         assertNotNull(titleTextView);

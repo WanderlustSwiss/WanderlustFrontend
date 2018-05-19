@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.database.MatrixCursor;
 import android.graphics.Rect;
 import android.location.LocationManager;
@@ -489,7 +488,7 @@ public class MapFragment extends Fragment {
         }
     }
 
-    public void setTour(Polyline polyline) {
+    private void setTour(Polyline polyline) {
         mapOverlays.setTour(polyline);
         List<GeoPoint> polylineList = polyline.getPoints();
         mapController.setCenter(polylineList.get(0));
@@ -967,7 +966,7 @@ public class MapFragment extends Fragment {
                     return true;
                 }
 
-                public void callSearch(String query) {
+                void callSearch(String query) {
                     try {
                         searchMapController.searchPlace(query, 1, controllerEvent -> {
                             List<MapSearchResult> resultList = (List<MapSearchResult>) controllerEvent.getModel();
@@ -1118,7 +1117,7 @@ public class MapFragment extends Fragment {
         dialog.show(fragmentTransaction, Constants.CREATE_TOUR_DIALOG);
     }
 
-    private BroadcastReceiver createTourReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver createTourReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle args = intent.getBundleExtra(Constants.CREATE_TOUR_BUNDLE);
@@ -1151,7 +1150,7 @@ public class MapFragment extends Fragment {
         return track.size() < 6000 & track.size() > 30 && maxDistanceBetweenTwoPoints < 250;
     }
 
-    private BroadcastReceiver updateTrackingOverlayReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver updateTrackingOverlayReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle args = intent.getBundleExtra(Constants.CREATE_TOUR_BUNDLE);

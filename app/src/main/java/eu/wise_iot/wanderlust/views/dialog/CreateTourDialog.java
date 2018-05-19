@@ -2,12 +2,9 @@ package eu.wise_iot.wanderlust.views.dialog;
 
 import android.Manifest;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -81,6 +78,7 @@ public class CreateTourDialog extends DialogFragment {
     private List<String> regionNames;
 
     private Tour tour;
+    private Trip currentTrip;
     private EditText titleEditText;
     private TextInputLayout titleTextLayout;
     private EditText descriptionEditText;
@@ -160,9 +158,10 @@ public class CreateTourDialog extends DialogFragment {
         isNewTour = args.getBoolean(Constants.CREATE_TOUR_IS_NEW);
         if (isNewTour) {
             trackedTour = (ArrayList<GeoPoint>) args.getSerializable(Constants.CREATE_TOUR_TRACK);
-            String polyline = PolyLineEncoder.encode(trackedTour, 10);
-            this.tour.setPolyline(polyline);
-
+            if(trackedTour != null) {
+                String polyline = PolyLineEncoder.encode(trackedTour, 10);
+                this.tour.setPolyline(polyline);
+            }
         }
 
         // set style
@@ -170,10 +169,10 @@ public class CreateTourDialog extends DialogFragment {
 
         createTourhandler = controllerEvent -> {
             if (controllerEvent.getType() == EventType.OK) {
-                Trip trip = controllerEvent.getModel();
-                tourController.getTourById(trip.getTour(), getCreatedTourHandler);
+                currentTrip = controllerEvent.getModel();
+                tourController.getTourById(currentTrip.getTour(), getCreatedTourHandler);
             } else {
-                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -182,8 +181,10 @@ public class CreateTourDialog extends DialogFragment {
                 Toast.makeText(getActivity(), R.string.create_tour_saved, Toast.LENGTH_SHORT).show();
                 dismiss();
             } else {
-                Toast.makeText(getActivity(), R.string.image_upload_failed, Toast.LENGTH_SHORT).show();
-                dismiss();
+                if(isNewTour){
+                    tourController.deleteTrip(this.currentTrip, emptyEvent -> {});
+                }
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -208,7 +209,7 @@ public class CreateTourDialog extends DialogFragment {
 
 
             } else {
-                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -216,16 +217,20 @@ public class CreateTourDialog extends DialogFragment {
             if (controllerEvent.getType() == EventType.OK) {
                 tourController.uploadImage(new File(realPath), uploadPhotoHandler);
             } else {
-                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 
         updateTourHandler = controllerEvent -> {
             if (controllerEvent.getType() == EventType.OK) {
-                Toast.makeText(getActivity(), R.string.create_tour_update_successful, Toast.LENGTH_SHORT).show();
-                dismiss();
+                if(realPath != null){
+                    tourController.uploadImage(new File(realPath), uploadPhotoHandler);
+                } else {
+                    Toast.makeText(getActivity(), R.string.create_tour_update_successful, Toast.LENGTH_SHORT).show();
+                    dismiss();
+                }
             } else {
-                Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -347,9 +352,7 @@ public class CreateTourDialog extends DialogFragment {
                         .setTitle(R.string.create_tour_not_saved)
                         .setMessage(R.string.create_tour_not_save_tour)
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> {
-                            dismiss();
-                        })
+                        .setPositiveButton(android.R.string.yes, (dialog, positiveButton) -> dismiss())
                         .setNegativeButton(android.R.string.no, null).show();
             } else {
                 dismiss();

@@ -2,8 +2,6 @@ package eu.wise_iot.wanderlust.services;
 
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import retrofit2.Call;
 import retrofit2.http.Body;

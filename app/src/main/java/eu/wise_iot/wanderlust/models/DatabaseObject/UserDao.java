@@ -38,7 +38,7 @@ public class UserDao extends DatabaseObjectAbstract {
     }
 
     private static UserService service;
-    public final Box<User> userBox;
+    private final Box<User> userBox;
 
     /**
      * Constructor.
@@ -53,8 +53,7 @@ public class UserDao extends DatabaseObjectAbstract {
         return userBox.count();
     }
 
-    public long count(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
@@ -63,8 +62,7 @@ public class UserDao extends DatabaseObjectAbstract {
      *
      * @return Total number of records
      */
-    public long count(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, long searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
@@ -82,7 +80,7 @@ public class UserDao extends DatabaseObjectAbstract {
                 if (response.isSuccessful()) {
                     User newUser = response.body();
                     newUser.setUser_id(1);
-                    newUser.setPassword(((User) user).getPassword());
+                    newUser.setPassword(user.getPassword());
                     userBox.put(newUser);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
@@ -215,6 +213,7 @@ public class UserDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return User who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public User findOne(Property searchedColumn, String searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -230,10 +229,12 @@ public class UserDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<User> which contains the users, who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<User> find(Property searchedColumn, String searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<User> find(Property searchedColumn, long searchPattern) {
         return userBox.query().equal(searchedColumn, searchPattern).build().find();
     }
@@ -242,8 +243,7 @@ public class UserDao extends DatabaseObjectAbstract {
         return userBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         userBox.remove(findOne(searchedColumn, searchPattern));
     }
 
@@ -255,7 +255,7 @@ public class UserDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void deleteByPattern(Property searchedColumn, String searchPattern) {
         User toDeleteUser = findOne(searchedColumn, searchPattern);
         userBox.remove(toDeleteUser);
         //return toDeleteUser;

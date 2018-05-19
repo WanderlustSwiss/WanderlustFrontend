@@ -22,7 +22,6 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
  * @license MIT
  */
 public class RegionsCompletionView extends TokenCompleteTextView<Region> {
-    private RegionDao regionDao;
     public RegionsCompletionView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -38,7 +37,7 @@ public class RegionsCompletionView extends TokenCompleteTextView<Region> {
     @Override
     protected Region defaultObject(String completionText) {
         //Stupid simple example of guessing if we have an email or not
-        regionDao = RegionDao.getInstance();
+        RegionDao regionDao = RegionDao.getInstance();
         for(Region region : regionDao.find())
            if(region.getName().toLowerCase().contains(completionText) || region.getName().contains(completionText))
                return region;

@@ -24,9 +24,9 @@ import eu.wise_iot.wanderlust.views.WanderlustMapView;
 public class MapCacheHandler {
     private static final String TAG = "MapCacheHandler";
 
-    private Context context;
-    private Tour tour;
-    private MapView mapView;
+    private final Context context;
+    private final Tour tour;
+    private final MapView mapView;
     private int progressPercentage = 10;
 
     public MapCacheHandler(Context context, Tour tour){
@@ -34,7 +34,6 @@ public class MapCacheHandler {
         this.tour = tour;
         mapView = new MapView(context);
     }
-
 
     public boolean downloadMap(){
         ArrayList<GeoPoint> geoPoints = (ArrayList<GeoPoint>) tour.getGeoPoints();
@@ -130,7 +129,7 @@ public class MapCacheHandler {
 
     }
 
-    public boolean deleteMap(){
+    public void deleteMap(){
         ArrayList<GeoPoint> geoPoints = (ArrayList<GeoPoint>) tour.getGeoPoints();
 
         double minLat = 9999;
@@ -184,7 +183,5 @@ public class MapCacheHandler {
                         cacheManager.currentCacheUsage()) + "/" + String.valueOf(cacheManager.cacheCapacity()));
             }
         });
-
-        return true;
     }
 }

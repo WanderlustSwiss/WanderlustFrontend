@@ -56,7 +56,7 @@ public class EquipmentController {
         weatherController = WeatherController.getInstance();
     }
 
-    public List<Equipment> getEquipmentList() {
+    private List<Equipment> getEquipmentList() {
         return equipmentInitiated ? equipmentList : new ArrayList<>();
     }
 

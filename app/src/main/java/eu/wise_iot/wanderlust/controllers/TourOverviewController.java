@@ -2,9 +2,9 @@ package eu.wise_iot.wanderlust.controllers;
 
 import android.util.Log;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
@@ -16,9 +16,6 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
 import static android.util.Log.d;
-import static eu.wise_iot.wanderlust.controllers.EventType.NETWORK_ERROR;
-import static eu.wise_iot.wanderlust.controllers.EventType.NOT_FOUND;
-import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
  * ToursController:
@@ -32,7 +29,7 @@ public class TourOverviewController {
     private static final String TAG = "TourOverviewController";
     private final UserTourDao userTourDao;
     private FavoriteDao favoriteDao;
-    private RecentTourDao recentTourDao;
+    private final RecentTourDao recentTourDao;
     private final DifficultyTypeDao difficultyType;
     private final ImageController imageController;
 
@@ -67,7 +64,9 @@ public class TourOverviewController {
      * @return list of recent tours
      */
     public List<Tour> getRecentTours() {
-        return recentTourDao.find();
+        List<Tour> shallowCopy = recentTourDao.find();
+        Collections.reverse(shallowCopy.subList(0, shallowCopy.size()));
+        return shallowCopy;
     }
 
     /**

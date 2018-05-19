@@ -35,7 +35,8 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
     private final LayoutInflater mInflater;
     private final UserDao userDao;
     private final TourFragment fragment;
-    private User user;
+    private final User user;
+    @SuppressWarnings("WeakerAccess")
     public ItemClickListener mClickListener;
     private final Context context;
 

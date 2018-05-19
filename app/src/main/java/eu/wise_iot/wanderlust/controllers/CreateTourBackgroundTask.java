@@ -11,12 +11,8 @@ import android.content.IntentFilter;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
-import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -39,7 +35,7 @@ public class CreateTourBackgroundTask extends Service {
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 8000;
     private static final float LOCATION_DISTANCE = 13f;
-    private ArrayList<GeoPoint> track = new ArrayList<>();
+    private final ArrayList<GeoPoint> track = new ArrayList<>();
     private boolean wholeRouteRequired = false;
 
     private class LocationListener implements android.location.LocationListener {
@@ -104,16 +100,13 @@ public class CreateTourBackgroundTask extends Service {
                 return true;
             } else { // if the signal hasn't approved the last 15 seconds, just take the location
                 long timeDifference = newLocation.getTime() - oldLocation.getTime();
-                if (timeDifference > -TIME_DIFFERENCE_THRESHOLD) {
-                    return true;
-                }
+                return timeDifference > -TIME_DIFFERENCE_THRESHOLD;
             }
 
-            return false;
         }
     }
 
-    LocationListener mLocationListeners = new LocationListener();
+    final LocationListener mLocationListeners = new LocationListener();
 
     public CreateTourBackgroundTask() {
         super();
@@ -243,7 +236,7 @@ public class CreateTourBackgroundTask extends Service {
     /**
      * Is listening for the duty to send the whole tracking tour.
      */
-    private BroadcastReceiver wholeTourRequiredReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver wholeTourRequiredReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             wholeRouteRequired = true;

@@ -102,7 +102,7 @@ public class WebLoginFragment extends Fragment  {
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
-                    Log.d(TAG, getActivity() != null ? "nicht null" : "null");
+                    Log.d(TAG, getActivity() != null ? "not null" : "null");
                     SharedPreferences preferences = context.getPreferences(Context.MODE_PRIVATE);
                     User user = (User) event.getModel();
                     ((MainActivity) context).setupDrawerHeader(user);
@@ -122,11 +122,9 @@ public class WebLoginFragment extends Fragment  {
                     } else {
 
                         //set last login
-                        DateTime now = new DateTime();
                         DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
-                        now = now.withZone(timeZone);
                         DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-                        String lastLoginNow = fmt.print(now);
+                        String lastLoginNow = fmt.print(new DateTime().withZone(timeZone));
                         user.setLastLogin(lastLoginNow);
                         UserDao.getInstance().update(user);
 
@@ -141,7 +139,7 @@ public class WebLoginFragment extends Fragment  {
 
                     break;
                 default:
-                    Log.d("ERRROR", eventType.toString());
+                    Log.d("ERROR", eventType.toString());
                     Toast.makeText(context, eventType.toString(), Toast.LENGTH_LONG).show();
                     break;
             }

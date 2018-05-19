@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.File;
 import java.util.List;
 
@@ -21,7 +19,6 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.MainActivity;
@@ -121,7 +118,7 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
         Poi poi = getItem(position);
 
         //inflate the row layout
-        convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_tour_poi, parent, false);
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_poi, parent, false);
 
         //look up the view for elements
         title = (TextView) convertView.findViewById(R.id.ListTourTitle);
@@ -161,7 +158,7 @@ public class ProfilePoiListAdapter extends ArrayAdapter<Poi> {
 
             deleteIcon.setOnClickListener(e -> {
                 ConfirmDeletePoiDialog deleteDialog = ConfirmDeletePoiDialog.newInstance(
-                        getContext(), poiController, poi, context.getString(R.string.message_confirm_delete_poi));
+                        context, poiController, poi, context.getString(R.string.message_confirm_delete_poi));
                 deleteDialog.setupForProfileList(profileFragment);
                 deleteDialog.show(profileFragment.getFragmentManager(), Constants.CONFIRM_DELETE_POI_DIALOG);
                 profileFragment.setProfileStats();

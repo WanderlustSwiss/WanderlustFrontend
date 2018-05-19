@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.File;
 import java.util.List;
 
@@ -21,7 +19,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.MapCacheHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
@@ -30,11 +28,12 @@ import eu.wise_iot.wanderlust.views.ProfileFragment;
  * @author Baris Demirci
  * @license MIT
  */
-public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
+public class ProfileSavedListAdapter extends ArrayAdapter<SavedTour> {
 
     private TextView title;
     private TextView description;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private ImageView tripImage;
     private ImageView deleteIcon;
 
@@ -67,7 +66,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
      * @return saved tour at position
      */
     @Override
-    public Tour getItem(int position) {
+    public SavedTour getItem(int position) {
         return super.getItem(position);
     }
 
@@ -78,7 +77,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
      * @return position of the saved tour
      */
     @Override
-    public int getPosition(Tour item) {
+    public int getPosition(SavedTour item) {
         return super.getPosition(item);
     }
 
@@ -105,7 +104,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
     @Override
     public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
         //get the item for this row
-        Tour communityTour = getItem(position);
+        SavedTour communityTour = getItem(position);
 
         //inflate the row layout
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_saved, parent, false);
@@ -136,7 +135,7 @@ public class ProfileSavedListAdapter extends ArrayAdapter<Tour> {
             
             deleteIcon.setOnClickListener(e -> {
                 profileFragment.getProfileController().deleteCommunityTour(communityTour);
-                MapCacheHandler handler = new MapCacheHandler(context, communityTour);
+                MapCacheHandler handler = new MapCacheHandler(context, communityTour.toTour());
                 handler.deleteMap();
                 View v = profileFragment.getView();
                 profileFragment.setupSaved(v);

@@ -93,7 +93,7 @@ public class TripDao extends DatabaseObjectAbstract {
                     trip.setTrip_id(0);
                     routeBox.put(response.body());
                     trip.setTrip_id(remoteTripId);
-                    handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code()), response.body()));
+                    handler.onResponse(new ControllerEvent<>(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
                     handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code())));
                 }
@@ -164,7 +164,8 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param handler
      */
     public void delete(final AbstractModel trip, final FragmentHandler handler) {
-        Call<Trip> call = service.deleteTrip((Trip) trip);
+        Trip deletableTrip = (Trip) trip;
+        Call<Trip> call = service.deleteTrip((int) deletableTrip.getTrip_id());
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
@@ -220,6 +221,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Trip which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Trip findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -236,10 +238,12 @@ public class TripDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Trip> which contains the equipements, which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<Trip> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<Trip> find(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
@@ -248,8 +252,7 @@ public class TripDao extends DatabaseObjectAbstract {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 
@@ -263,7 +266,7 @@ public class TripDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void deleteByPattern(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 }

@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import io.objectbox.BoxStore;
 
@@ -32,14 +31,13 @@ public final class DatabaseController {
 
     private static Context CONTEXT;
 
-    public static DatabaseController createInstance(Context context){
+    public static void createInstance(Context context){
 
         if(BOX_STORE == null) {
             BOX_STORE = MyObjectBox.builder().androidContext(context).build();
         }
         CONTEXT = context;
 
-        return Holder.INSTANCE;
     }
 
     public static DatabaseController getInstance(){

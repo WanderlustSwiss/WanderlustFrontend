@@ -12,14 +12,11 @@ import android.location.LocationManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
@@ -61,7 +58,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     private Polyline currentTour;
     private final MapController searchMapController;
     private boolean poiFloraFaunaActive, poiViewActive, poiRestaurantActive, poiRestAreaActive;
-    private PoiController poiController;
+    private final PoiController poiController;
 
     private MyLocationNewOverlay myLocationNewOverlay;
     private ItemizedOverlayWithFocus<OverlayItem> poiHashtagOverlay;
@@ -412,7 +409,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                     if (controllerEvent.getType() == EventType.OK) {
 
                         Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_train_blue_24dp);
-                        publicTransportOverlay.removeAllItems();
+                        if(publicTransportOverlay != null)
+                            publicTransportOverlay.removeAllItems();
 
                         for (PublicTransportPoint publicTransportPoint : (List<PublicTransportPoint>) controllerEvent.getModel()) {
                             OverlayItem overlayItem = new OverlayItem(Integer.toString(publicTransportPoint.getId()), publicTransportPoint.getTitle(), publicTransportPoint.getTitle(), publicTransportPoint.getGeoPoint());
@@ -513,12 +511,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_location_on_highlighted_40dp);
 
             focusedPositionMarker = new Marker(mapView);
-            focusedPositionMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    return true;
-                }
-            });
+            focusedPositionMarker.setOnMarkerClickListener((marker, mapView) -> true);
             focusedPositionMarker.setIcon(drawable);
             focusedPositionMarker.setPosition(geoPoint);
             focusedPositionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
@@ -534,7 +527,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     /**
      * Deletes the focused position marker
      */
-    public void removeFocusedPositionMarker() {
+    private void removeFocusedPositionMarker() {
         mapView.getOverlays().remove(focusedPositionMarker);
     }
 
@@ -618,17 +611,20 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                     sacList = controllerEvent.getModel();
 
                     Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_home_24dp_blue);
-                    sacHutOverlay.removeAllItems();
+                    if(sacHutOverlay != null) {
 
-                    for (GeoObject sacHut : controllerEvent.getModel()) {
-                        GeoPoint sacLocation = new GeoPoint(sacHut.getLatitude(), sacHut.getLongitude());
-                        int id = sacHutOverlay.size();
-                        OverlayItem overlayItem = new OverlayItem(Integer.toString(id), sacHut.getTitle(), sacHut.getTitle(), sacLocation);
-                        overlayItem.setMarker(drawable);
-                        sacHutOverlay.addItem(overlayItem);
-                    }
-                    if(!mapView.getOverlays().contains(sacHutOverlay)) {
-                        mapView.getOverlays().add(sacHutOverlay);
+                        sacHutOverlay.removeAllItems();
+
+                        for (GeoObject sacHut : controllerEvent.getModel()) {
+                            GeoPoint sacLocation = new GeoPoint(sacHut.getLatitude(), sacHut.getLongitude());
+                            int id = sacHutOverlay.size();
+                            OverlayItem overlayItem = new OverlayItem(Integer.toString(id), sacHut.getTitle(), sacHut.getTitle(), sacLocation);
+                            overlayItem.setMarker(drawable);
+                            sacHutOverlay.addItem(overlayItem);
+                        }
+                        if (!mapView.getOverlays().contains(sacHutOverlay)) {
+                            mapView.getOverlays().add(sacHutOverlay);
+                        }
                     }
                 } else {
                     Toast.makeText(activity, R.string.map_nothing_found, Toast.LENGTH_SHORT).show();

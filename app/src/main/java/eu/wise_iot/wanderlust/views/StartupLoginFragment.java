@@ -1,15 +1,19 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +33,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -46,7 +48,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 public class StartupLoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "StartupLoginFragment";
 
-    public static final int REQ_CODE = 9001;
+    private static final int REQ_CODE = 9001;
     private Context context;
     private Button btnLogin;
     private Button btnInstagram;
@@ -60,47 +62,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     //    private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
     private final LoginController loginController;
-    private final FragmentHandler fragmentHandler = new FragmentHandler() {
-        @Override
-        public void onResponse(ControllerEvent event) {
 
-            //Enable LoginButton after request is complete
-            btnLogin.setEnabled(true);
-
-            switch (event.getType()) {
-                case OK:
-                    SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-                    User user = (User) event.getModel();
-                    ((MainActivity) getActivity()).setupDrawerHeader(user);
-                    if(preferences.getBoolean("firstTimeOpened", true)) {
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putBoolean("firstTimeOpened", false); // save that app has been opened
-                        editor.apply();
-
-                        Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
-                        if (userGuideFragment == null)userGuideFragment = UserGuideFragment.newInstance();
-
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
-                                .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
-                                .commit();
-                    } else {
-
-                        Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                        if (mapFragment == null) mapFragment = MapFragment.newInstance();
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                                .commit();
-                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-                    }
-
-                    break;
-                default:
-                    Toast.makeText(context, event.getType().toString(), Toast.LENGTH_LONG).show();
-                    break;
-            }
-        }
-    };
 
 
     /**
@@ -183,7 +145,9 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                     passwordTextfield.getText().toString()
             );
 
-            loginController.logIn(loginUser, fragmentHandler);
+            new AsyncLoginOnClick(loginUser,getActivity()).execute();
+
+            btnLogin.setEnabled(true);
 
             // hide soft keyboard after button was clicked
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -280,6 +244,85 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    /**
+     * handles async backend request for requesting a tour
+     */
+    private class AsyncLoginOnClick extends AsyncTask<Void, Void, Void> {
+        final ProgressDialog pdLoading;
+        private final LoginUser user;
+        private final Activity activity;
+        private ControllerEvent event;
+
+        AsyncLoginOnClick(LoginUser user, Activity activity){
+            this.user = user;
+            this.activity = activity;
+            pdLoading = new ProgressDialog(this.activity);
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //this method will be running on UI thread
+            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_logging_in));
+            pdLoading.show();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            event =  loginController.logInSequential(user);
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            switch(event.getType()) {
+                case OK:
+                    SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    User user = (User) event.getModel();
+                    ((MainActivity)getActivity()).setupDrawerHeader(user);
+                    if(preferences.getBoolean("firstTimeOpened", true)) {
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putBoolean("firstTimeOpened", false); // save that app has been opened
+                        editor.apply();
+
+                        Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
+                        if (userGuideFragment == null) userGuideFragment = UserGuideFragment.newInstance();
+
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
+                                .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
+                                .commit();
+                    } else {
+
+                        Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+                        if (mapFragment == null) mapFragment = MapFragment.newInstance();
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                .commit();
+                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    }
+
+                    break;
+                case NOT_FOUND:
+                    Log.d(TAG,"ERROR: Server Response arrived -> User was not found");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_user_not_found), Toast.LENGTH_LONG).show();
+                    break;
+                case SERVER_ERROR:
+                    Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_user), Toast.LENGTH_LONG).show();
+                    break;
+                case NETWORK_ERROR:
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                    Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                    break;
+                default:
+                    Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+            }
+
+            if (pdLoading.isShowing()) pdLoading.dismiss();
+        }
     }
 }
 

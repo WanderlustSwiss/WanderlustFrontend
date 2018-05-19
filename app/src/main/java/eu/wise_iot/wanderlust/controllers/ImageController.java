@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -24,13 +23,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-
-import static eu.wise_iot.wanderlust.views.MainActivity.activity;
 
 public class ImageController {
     private static String TAG = "ImageController";
@@ -40,9 +37,8 @@ public class ImageController {
 
     private static Context CONTEXT;
 
-    public static ImageController createInstance(Context context){
+    public static void createInstance(Context context){
         CONTEXT = context;
-        return Holder.INSTANCE;
     }
 
     public static ImageController getInstance(){
@@ -52,6 +48,8 @@ public class ImageController {
     private final String picturesDir;
     private final String[] FOLDERS;
     private final int standardWidth;
+
+    private final Cache cache;
 
     public ImageController(){
         picturesDir = CONTEXT.getApplicationContext().getApplicationContext().getExternalFilesDir("pictures").getAbsolutePath();
@@ -64,10 +62,13 @@ public class ImageController {
 
         File pictures = new File(picturesDir);
         if(!pictures.exists()) pictures.mkdir();
-        for (int i = 0; i < FOLDERS.length; i++){
-            File dir = new File(picturesDir + "/" + FOLDERS[i]);
+        for (String FOLDER : FOLDERS) {
+            File dir = new File(picturesDir + "/" + FOLDER);
             dir.mkdir();
         }
+
+        File httpCacheDirectory = new File(DatabaseController.getMainContext().getCacheDir(), "picasso-cache");
+        this.cache = new Cache(httpCacheDirectory, 15 * 1024 * 1024);
     }
     public String getPoiFolder(){
         return FOLDERS[0];
@@ -82,8 +83,10 @@ public class ImageController {
 
     public List<File> getImages(List<ImageInfo> imageInfos){
         List<File> images = new ArrayList<>();
-        for(ImageInfo imageInfo : imageInfos){
-            images.add(new File(picturesDir + "/" + imageInfo.getLocalPath()));
+        if(imageInfos != null) {
+            for (ImageInfo imageInfo : imageInfos) {
+                images.add(new File(picturesDir + "/" + imageInfo.getLocalPath()));
+            }
         }
         return images;
     }
@@ -121,9 +124,9 @@ public class ImageController {
         in.close();
     }
 
-    public boolean delete(ImageInfo imageInfo){
+    public void delete(ImageInfo imageInfo){
         File f = new File(imageInfo.getLocalPath());
-        return f.delete();
+        f.delete();
     }
 
     public String getPicturesDir() {
@@ -134,7 +137,7 @@ public class ImageController {
         return resize(imgFileOrig, standardWidth);
     }
 
-    public File resize(File imgFileOrig, int destWidth) throws IOException {
+    private File resize(File imgFileOrig, int destWidth) throws IOException {
         Bitmap b = BitmapFactory.decodeFile(imgFileOrig.getAbsolutePath());
         int origWidth = b.getWidth();
         int origHeight = b.getHeight();
@@ -155,7 +158,9 @@ public class ImageController {
     }
 
     public Picasso getPicassoHandler(Activity context) {
+
         OkHttpClient client = new OkHttpClient.Builder()
+                .cache(cache)
                 .addInterceptor(chain -> {
                     Request newRequest = chain.request().newBuilder()
                             .addHeader("Cookie", LoginUser.getCookies().get(0))
@@ -164,11 +169,9 @@ public class ImageController {
                 })
                 .build();
 
-        Picasso picasso = new Picasso.Builder(context)
+        return new Picasso.Builder(context)
                 .downloader(new OkHttp3Downloader(client))
                 .build();
-
-        return picasso;
     }
     public Bitmap resize(Bitmap b, int destWidth){
         int origWidth = b.getWidth();

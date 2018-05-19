@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DialogFragment;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,12 +11,8 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
-import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
 
@@ -39,7 +34,7 @@ public class PoiReportDialog extends DialogFragment {
     private ImageButton buttonSave, buttonCancel;
     private RadioButton rbHarassment, rbViolence, rbHatespeech, rbSpam, rbOther, rbNudity;
 
-    private ViolationTypeDao violationTypeDao = ViolationTypeDao.getInstance();
+    private final ViolationTypeDao violationTypeDao = ViolationTypeDao.getInstance();
 
 
     public PoiReportDialog newInstance(Poi poi, PoiController poiController) {

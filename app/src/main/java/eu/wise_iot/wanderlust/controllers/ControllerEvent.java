@@ -8,7 +8,7 @@ package eu.wise_iot.wanderlust.controllers;
 public class ControllerEvent<T> {
 
 
-    private EventType type;
+    private final EventType type;
     private T model;
 
     /**

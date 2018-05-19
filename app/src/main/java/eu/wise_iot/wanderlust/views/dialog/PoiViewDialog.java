@@ -4,17 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.net.Uri;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,13 +28,11 @@ import java.util.Map;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
@@ -58,7 +54,7 @@ public class PoiViewDialog extends DialogFragment {
     private ImageController imageController;
     private TextView occupationTitleSac;
     private TableLayout sacOccupation;
-    private Map<String, Integer> monthIds = new HashMap<>();
+    private final Map<String, Integer> monthIds = new HashMap<>();
     private static PoiController poiController;
     /**
      * Create a PoiViewDialog from a Poi object
@@ -89,7 +85,7 @@ public class PoiViewDialog extends DialogFragment {
         imageInfo.setPath(geoObject.getImageLink());
         list.add(imageInfo);
 
-        currentPoi = new Poi((long) geoObjectTypeId, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, (int) geoObjectTypeId, true, list, "", "");
+        currentPoi = new Poi(geoObjectTypeId, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, (int) geoObjectTypeId, true, list, "", "");
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         Bundle args = new Bundle();
         args.putLong(Constants.POI_ID, geoObjectTypeId);
@@ -146,6 +142,13 @@ public class PoiViewDialog extends DialogFragment {
         initActionControls();
         fillOutPoiView(view);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fillOutPoiView(getView());
+    }
+
 
     private void initActionControls() {
 
@@ -234,8 +237,13 @@ public class PoiViewDialog extends DialogFragment {
             poiType = geoObjectTypeValues[(-1 * (int) currentPoi.getType()) -1];
             sharePoiButton.setVisibility(View.GONE);
         }
-        String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
-        String typeText = String.format("%s (%s)", poiType, elevationText);
+        String typeText;
+        if (Integer.MAX_VALUE != currentPoi.getElevation()){
+            String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
+            typeText = String.format("%s (%s)", poiType, elevationText);
+        }else{
+            typeText = String.format("%s", poiType);
+        }
         typeTextView.setText(typeText);
 
         titleTextView.setText(currentPoi.getTitle());

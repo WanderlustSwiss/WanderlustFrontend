@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -104,15 +102,14 @@ public class Poi extends AbstractModel {
         imagePaths.add(imageInfo);
     }
 
-    public boolean removeImage(ImageInfo imageInfo){
+    public void removeImage(ImageInfo imageInfo){
 
         for(ImageInfo info : imagePaths){
             if(info.getId() == imageInfo.getId()){
                 imagePaths.remove(info);
-                return true;
+                return;
             }
         }
-        return false;
     }
 
     public String getCreatedAt(Locale language) {

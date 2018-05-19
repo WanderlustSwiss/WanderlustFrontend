@@ -13,17 +13,13 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKitEquipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
-import eu.wise_iot.wanderlust.services.PoiService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TourService;
-import eu.wise_iot.wanderlust.views.FilterFragment;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.Property;
@@ -73,8 +69,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
         return routeBox.count();
     }
 
-    public long count(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
@@ -83,8 +78,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
      *
      * @return Total number of records
      */
-    public long count(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, long searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
@@ -248,7 +242,6 @@ public class UserTourDao extends DatabaseObjectAbstract {
                         for (ImageInfo imageInfo : tour.getImagePaths()) {
                             String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
                             imageInfo.setName(name);
-                            imageInfo.setId(tour.getTour_id());
                             imageInfo.setLocalDir(imageController.getTourFolder());
                         }
                     }
@@ -281,7 +274,6 @@ public class UserTourDao extends DatabaseObjectAbstract {
                         for (ImageInfo imageInfo : tour.getImagePaths()) {
                             String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
                             imageInfo.setName(name);
-                            imageInfo.setId(tour.getTour_id());
                             imageInfo.setLocalDir(imageController.getTourFolder());
                         }
                     }
@@ -348,7 +340,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param imageId
      * @return true if everything went ok
      */
-    private boolean writeToDisk(ResponseBody body, long tourId, long imageId) {
+    private void writeToDisk(ResponseBody body, long tourId, long imageId) {
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
@@ -377,9 +369,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
             }
 
             outputStream.flush();
-            return true;
         } catch (IOException e) {
-            return false;
         } finally {
             try {
                 if (inputStream != null)
@@ -429,10 +419,12 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Tour which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Tour findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Tour findOne(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -444,10 +436,12 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Tour> which contains the equipements, which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<Tour> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<Tour> find(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
@@ -470,7 +464,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void deleteByPattern(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 

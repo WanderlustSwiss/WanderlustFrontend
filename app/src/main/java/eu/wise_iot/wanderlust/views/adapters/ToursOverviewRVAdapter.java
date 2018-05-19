@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 
 /**
@@ -35,10 +37,11 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 @SuppressWarnings("JavaDoc")
 public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRVAdapter.ViewHolder> {
 
-    private List<Tour> tours;
+    private final List<Tour> tours;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private final Context context;
+    private final Activity activity;
     private final ImageController imageController;
     private final FavoriteDao favoriteDao = FavoriteDao.getInstance();
     private final List<Long> favorizedTours = new ArrayList<>();
@@ -49,7 +52,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      * @param context
      * @param parTours
      */
-    public ToursOverviewRVAdapter(Context context, List<Tour> parTours) {
+    public ToursOverviewRVAdapter(Context context, List<Tour> parTours, Activity activity) {
         Log.d("ToursRecyclerview", "Copy Constructor");
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
@@ -57,6 +60,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         this.tours = parTours;
         //get which tour is favored
         this.imageController = ImageController.getInstance();
+        this.activity = activity;
     }
 
     /**
@@ -117,11 +121,11 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
 
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
-            File image = images.get(0);
-            Picasso.with(context).invalidate(image);
-            Picasso.with(context).load(image).fit().centerCrop().noFade()
-                    .placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
+            Picasso handler = imageController.getPicassoHandler(activity);
+            //handler.setIndicatorsEnabled(true);
+            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
+            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(holder.tvImage);
+            Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + url);
         } else {
             Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
                     .placeholder(R.drawable.progress_animation).into(holder.tvImage);

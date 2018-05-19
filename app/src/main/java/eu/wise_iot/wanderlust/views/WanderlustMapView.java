@@ -27,7 +27,7 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
     private boolean sacHutEnabled;
     private boolean hashTagEnabled;
 
-    RotationGestureDetector rotationGestureDetector = new RotationGestureDetector(this);
+    private final RotationGestureDetector rotationGestureDetector = new RotationGestureDetector(this);
     private MyMapOverlays mapOverlays;
 
     // Layer BottomSheet

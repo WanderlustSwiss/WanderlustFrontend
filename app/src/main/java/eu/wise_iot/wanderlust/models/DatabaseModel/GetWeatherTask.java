@@ -17,11 +17,11 @@ import eu.wise_iot.wanderlust.controllers.WeatherController;
 
 public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather>> {
 
-    public FragmentHandler handler;
-    public WeatherController controller;
-    public Weather[] weather;
-    public DateTime dateTime;
-    public long duration;
+    private final FragmentHandler handler;
+    private final WeatherController controller;
+    private final Weather[] weather;
+    private final DateTime dateTime;
+    private final long duration;
 
     public GetWeatherTask(FragmentHandler handler, DateTime dateTime, long duration) {
         this.handler = handler;
@@ -43,9 +43,9 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
         }
 
 
-        for (int i = 0; i < threads.length; i++) {
+        for (Thread thread : threads) {
             try {
-                threads[i].join();
+                thread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -58,17 +58,17 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
     }
 
 
-    public class WeatherThread implements Runnable {
+    class WeatherThread implements Runnable {
 
-        private GeoPoint geoPoint;
-        private WeatherController controller;
-        private Weather[] weatherList;
-        private long DTtime;
+        private final GeoPoint geoPoint;
+        private final WeatherController controller;
+        private final Weather[] weatherList;
+        private final long DTtime;
         private Weather weather;
-        private int index;
+        private final int index;
 
-        public WeatherThread(GeoPoint geoPoint, WeatherController controller, Weather[] weather,
-                             long DTtime, int index) {
+        WeatherThread(GeoPoint geoPoint, WeatherController controller, Weather[] weather,
+                      long DTtime, int index) {
             this.geoPoint = geoPoint;
             this.controller = controller;
             this.weatherList = weather;

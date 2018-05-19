@@ -93,7 +93,6 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                         for (ImageInfo imageInfo : tour.getImagePaths()) {
                             String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
                             imageInfo.setName(name);
-                            imageInfo.setId(tour.getTour_id());
                             imageInfo.setLocalDir(imageController.getTourFolder());
                         }
                     }
@@ -207,6 +206,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return Favorite which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Favorite findOne(Property searchedColumn, String searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -234,7 +234,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         favoriteBox.remove(findOne(searchedColumn, searchPattern));
     }
 

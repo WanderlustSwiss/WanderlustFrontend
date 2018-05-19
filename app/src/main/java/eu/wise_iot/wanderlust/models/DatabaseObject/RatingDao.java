@@ -135,7 +135,7 @@ public class RatingDao extends DatabaseObjectAbstract{
             public void onResponse(Call<Rating> call, Response<Rating> response) {
                 if (response.isSuccessful()) {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),
-                            response.body()));
+                            response.body().getRate()));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
@@ -169,10 +169,12 @@ public class RatingDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return Rating which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Rating findOne(Property searchedColumn, String searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Rating findOne(Property searchedColumn, long searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -201,7 +203,7 @@ public class RatingDao extends DatabaseObjectAbstract{
         return RatingBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         RatingBox.remove(findOne(searchedColumn, searchPattern));
     }
 

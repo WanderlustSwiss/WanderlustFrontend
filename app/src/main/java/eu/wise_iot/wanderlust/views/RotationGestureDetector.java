@@ -6,14 +6,14 @@ import android.view.MotionEvent;
 /*
     https://stackoverflow.com/questions/10682019/android-two-finger-rotation?rq=1
  */
-public class RotationGestureDetector {
+class RotationGestureDetector {
     private static final int INVALID_POINTER_ID = -1;
     private float fX, fY, sX, sY;
     private int ptrID1, ptrID2;
     private float mAngle;
     private static float lastAngle = 0;
 
-    private OnRotationGestureListener mListener;
+    private final OnRotationGestureListener mListener;
 
     public float getAngle() {
         return mAngle + lastAngle;
@@ -29,7 +29,7 @@ public class RotationGestureDetector {
         ptrID2 = INVALID_POINTER_ID;
     }
 
-    public boolean onTouchEvent(MotionEvent event){
+    public void onTouchEvent(MotionEvent event){
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 ptrID1 = event.getPointerId(event.getActionIndex());
@@ -69,7 +69,6 @@ public class RotationGestureDetector {
                 ptrID2 = INVALID_POINTER_ID;
                 break;
         }
-        return true;
     }
 
     private float angleBetweenLines (float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX, float nsY)
@@ -83,7 +82,7 @@ public class RotationGestureDetector {
         return angle;
     }
 
-    public static interface OnRotationGestureListener {
-        public void OnRotation(RotationGestureDetector rotationDetector);
+    public interface OnRotationGestureListener {
+        void OnRotation(RotationGestureDetector rotationDetector);
     }
 }

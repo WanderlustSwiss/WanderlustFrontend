@@ -7,8 +7,6 @@ import java.util.List;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
@@ -19,7 +17,6 @@ import com.google.gson.JsonParser;
 
 import android.app.Fragment;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
@@ -35,7 +32,6 @@ import eu.wise_iot.wanderlust.services.HashtagService;
 
 import eu.wise_iot.wanderlust.services.SacService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.views.MapFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 

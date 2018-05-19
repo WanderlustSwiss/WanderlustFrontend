@@ -8,7 +8,7 @@ public class MapSearchResult {
     private String locality;
     private double latitude;
     private double longitude;
-    private ArrayList<ArrayList<GeoPoint>> polygons;
+    private final ArrayList<ArrayList<GeoPoint>> polygons;
 
     public MapSearchResult() {
         polygons = new ArrayList<>();

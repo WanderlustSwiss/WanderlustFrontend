@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.models.DatabaseObject;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
-import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType_;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -94,6 +93,7 @@ public class ViolationTypeDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return ViolationType which matches the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public ViolationType findOne(Property searchedColumn, String searchPattern) {
         return violationTypeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }

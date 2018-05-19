@@ -94,10 +94,11 @@ public class TourOverviewFragment extends Fragment {
 
     @Override
     public void onPrepareOptionsMenu (Menu menu) {
-        getActivity().invalidateOptionsMenu();
-        if(menu.findItem(R.id.filterIcon) != null)
-            menu.findItem(R.id.filterIcon).setVisible(true);
         super.onPrepareOptionsMenu(menu);
+        getActivity().invalidateOptionsMenu();
+        MenuItem menuItem = menu.findItem(R.id.filterIcon);
+        if(menuItem != null)
+            menuItem.setVisible(true);
     }
 
     @Override
@@ -105,40 +106,13 @@ public class TourOverviewFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.filterIcon:
                 Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
-                Fragment filterFragment = getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT);
-                if(filterFragment == null) filterFragment = FilterFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, filterFragment, Constants.FILTER_FRAGMENT)
+                        .replace(R.id.content_frame, FilterFragment.newInstance(), Constants.FILTER_FRAGMENT)
                         .addToBackStack(Constants.FILTER_FRAGMENT)
                         .commit();
                 break;
         }
         return true;
-    }
-
-    /**
-     * retrieve all images from the database
-     * @param tours
-     */
-    private static void getDataFromServer(List<Tour> tours){
-        TourOverviewController tourOverviewController = new TourOverviewController();
-        //get thumbnail for each tour
-        for(Tour ut : tours){
-            try {
-                tourOverviewController.downloadThumbnail(ut.getTour_id(), 1, controllerEvent -> {
-                    switch (controllerEvent.getType()) {
-                        case OK:
-                            Log.d(TAG, "Server response thumbnail downloading: " + controllerEvent.getType().name());
-                            break;
-                        default:
-                            Log.d(TAG, "Server response thumbnail ERROR: " + controllerEvent.getType().name());
-                    }
-                });
-            } catch (Exception e){
-                Log.d(TAG, "Server response ERROR: " + e.getMessage());
-            }
-        }
-
     }
 
     /**
@@ -160,7 +134,7 @@ public class TourOverviewFragment extends Fragment {
         pbTours = (ProgressBar) view.findViewById(R.id.pbTouren);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvTours.setLayoutManager(horizontalLayoutManager);
-        adapterRoutes = new ToursOverviewRVAdapter(context, listTours);
+        adapterRoutes = new ToursOverviewRVAdapter(context, listTours, getActivity());
         adapterRoutes.setClickListener(this::onItemClickImages);
         rvTours.setAdapter(adapterRoutes);
 
@@ -174,7 +148,7 @@ public class TourOverviewFragment extends Fragment {
         pbFavorites = (ProgressBar) view.findViewById(R.id.pbFavorites);
         LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvFavorites.setLayoutManager(horizontalLayoutManager2);
-        adapterFavs = new ToursOverviewRVAdapter(context, favTours);
+        adapterFavs = new ToursOverviewRVAdapter(context, favTours, getActivity());
         adapterFavs.setClickListener(this::onItemClickImages);
         rvFavorites.setAdapter(adapterFavs);
 
@@ -184,13 +158,13 @@ public class TourOverviewFragment extends Fragment {
         pbRecent = (ProgressBar) view.findViewById(R.id.pbRecent);
         LinearLayoutManager horizontalLayoutManager3 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvRecent.setLayoutManager(horizontalLayoutManager3);
-        adapterRecent = new ToursOverviewRVAdapter(context, recentTours);
+        adapterRecent = new ToursOverviewRVAdapter(context, recentTours, getActivity());
         adapterRecent.setClickListener(this::onItemClickImages);
         rvRecent.setAdapter(adapterRecent);
 
         recentTours.clear();
         recentTours.addAll(tourOverviewController.getRecentTours());
-        getDataFromServer(recentTours);
+        //getDataFromServer(recentTours);
         adapterRecent.notifyDataSetChanged();
 
         if(adapterRecent.getItemCount() > 0) {
@@ -218,7 +192,7 @@ public class TourOverviewFragment extends Fragment {
 
                     Log.d(TAG, "Getting Tours: Server response arrived");
                     //get all the images needed and save them on the device
-                    getDataFromServer(listTours);
+                   // getDataFromServer(listTours);
 
                     adapterRoutes.notifyDataSetChanged();
                     if(adapterRoutes.getItemCount() > 0) {
@@ -261,7 +235,7 @@ public class TourOverviewFragment extends Fragment {
                             imageInfo.setLocalDir(imageController.getTourFolder());
 
                     TourOverviewFragment.this.favTours.addAll(list);
-                    getDataFromServer(favTours);
+                    //getDataFromServer(favTours);
                     Log.d(TAG, favTours.toString());
                     TourOverviewFragment.this.adapterFavs.notifyDataSetChanged();
 
@@ -309,7 +283,7 @@ public class TourOverviewFragment extends Fragment {
                                         LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                         currentPage++;
                                         listTours.addAll(newList);
-                                        getDataFromServer(newList);
+                                        //getDataFromServer(newList);
                                         adapterRoutes.notifyDataSetChanged();
                                         Log.d(TAG, "added new page " + currentPage);
                                         break;
@@ -400,10 +374,10 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tourOVSaveButton:
                 ImageButton ibSave = (ImageButton) view.findViewById(R.id.tourOVSaveButton);
-                TourController controller = new TourController(tour);
-                boolean saved = controller.isSaved();
+                TourController tourController = new TourController(tour);
+                boolean saved = tourController.isSaved();
                 if(saved){
-                    controller.unsetSaved(context, controllerEvent -> {
+                    tourController.unsetSaved(context, controllerEvent -> {
                         switch (controllerEvent.getType()){
                             case OK:
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
@@ -414,7 +388,7 @@ public class TourOverviewFragment extends Fragment {
                     });
 
                 }else{
-                    controller.setSaved(context , controllerEvent -> {
+                    tourController.setSaved(context , controllerEvent -> {
                         switch (controllerEvent.getType()){
                             case OK:
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
@@ -443,9 +417,9 @@ public class TourOverviewFragment extends Fragment {
      * handles async backend request for requesting a tour
      */
     private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
-        ProgressDialog pdLoading;
-        private Tour tour;
-        private Activity activity;
+        final ProgressDialog pdLoading;
+        private final Tour tour;
+        private final Activity activity;
         private Integer responseCode;
 
         AsyncCheckTourExists(Tour tour, Activity activity){
@@ -471,15 +445,8 @@ public class TourOverviewFragment extends Fragment {
             switch(EventType.getTypeByCode(responseCode)) {
                 case OK:
                     Log.d(TAG,"Server Response arrived -> OK Tour was found");
-                    TourFragment tourFragment = TourFragment.newInstance(tour);
-                    Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
-                    if (oldTourFragment != null) {
-                        getFragmentManager().beginTransaction()
-                                .remove(oldTourFragment)
-                                .commit();
-                    }
                     getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                            .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
                             .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
                             .commit();
                     ((AppCompatActivity) getActivity()).getSupportActionBar().show();

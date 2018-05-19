@@ -11,9 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -72,15 +71,16 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.dialog.EquipmentDialog;
 import eu.wise_iot.wanderlust.views.adapters.TourCommentRVAdapter;
@@ -139,6 +139,8 @@ public class TourFragment extends Fragment {
     private ImageButton sendCommentButton;
     private EditText commentText;
 
+    private static ImageController imageController;
+
     public TourFragment() {
         // Required empty public constructor
     }
@@ -158,6 +160,7 @@ public class TourFragment extends Fragment {
         tourController = new TourController(tour);
         equipmentController = EquipmentController.getInstance();
         weatherController = WeatherController.getInstance();
+        imageController = ImageController.getInstance();
         return fragment;
     }
 
@@ -307,7 +310,7 @@ public class TourFragment extends Fragment {
         tourController.getRating(tour, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
-                    tourRating.setRating((float) controllerEvent.getModel());
+                    tourRating.setRating(((Integer)controllerEvent.getModel()).floatValue());
             }
         });
 
@@ -353,15 +356,14 @@ public class TourFragment extends Fragment {
 
         Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
         Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
-        //TODO add recommended method for getting equipment
-        //listEquipment = tourController.getEquipmentOfTour(this.tour);
+
         equipmentController.retrieveRecommendedEquipment(tour, selectedDateTime, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
                     Log.d(TAG, "got equipment for tour");
                     TourFragment.this.listEquipment.clear();
                     TourFragment.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
-                    getActivity().runOnUiThread(() -> adapterEquip.notifyDataSetChanged());
+                    adapterEquip.notifyDataSetChanged();
                     break;
                 default:
                     Log.d(TAG, "failure getting equipment for tour");
@@ -374,14 +376,13 @@ public class TourFragment extends Fragment {
      *
      */
     private void fillControls() {
-        List<File> images = tourController.getImages();
+        List<File> images = imageController.getImages(tour.getImagePaths());
         Log.d("Debug", "Images size:" + images.size());
-        if (!images.isEmpty() && images.get(0).length() != 0) {
-            Picasso.with(context)
-                    .load(images.get(0))
-                    .fit()
-                    .centerCrop()
-                    .into(this.imageViewTourImage);
+        if (!images.isEmpty() && tour.getImagePaths().get(0) != null) {
+            Picasso handler = imageController.getPicassoHandler(getActivity());
+            //handler.setIndicatorsEnabled(true);
+            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
+            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(this.imageViewTourImage);
         } else {
             Picasso.with(context)
                     .load(R.drawable.no_image_found)
@@ -499,6 +500,7 @@ public class TourFragment extends Fragment {
             updateRVComments(true);
         });
     }
+    @SuppressWarnings("unchecked")
     private void updateRVComments(boolean doClear){
         tourController.getComments(0, event -> {
             switch (event.getType()) {
@@ -544,15 +546,12 @@ public class TourFragment extends Fragment {
         };
 
         //date picker listener, which triggers time picker
-        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
+        DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
+            selectedDateTime = selectedDateTime.withDate(year, month + 1, dayOfMonth);
 
-                TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
-                        0, 0, true);
-                tdialog.show();
-            }
+            TimePickerDialog tdialog = new TimePickerDialog(context, timeSetListener,
+                    0, 0, true);
+            tdialog.show();
         };
 
         //button click listener to select day, which triggers date picker
@@ -576,13 +575,14 @@ public class TourFragment extends Fragment {
             dialog.show();
         });
     }
+    @SuppressWarnings("unchecked")
     private void setupWeather() {
-
         weatherController.getWeatherFromTour(tour, selectedDateTime, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
                     weatherList = (List<Weather>) controllerEvent.getModel();
 
+                    if(getActivity() == null) return;
                     getActivity().runOnUiThread(() -> {
                         if (weatherList != null) {
                             weatherInfos.setVisibility(View.VISIBLE);
@@ -605,21 +605,21 @@ public class TourFragment extends Fragment {
      * the degrees, the icon's and the time points of the routes.
      */
     private void initializeWeather() {
-        List<ImageView> weatherIcons = new ArrayList<>();
+        final List<ImageView> weatherIcons = new ArrayList<>();
         weatherIcons.add(firstWeatherIcon);
         weatherIcons.add(secondWeatherIcon);
         weatherIcons.add(thirdWeatherIcon);
         weatherIcons.add(forthWeatherIcon);
         weatherIcons.add(fifthWeatherIcon);
 
-        List<TextView> weatherDegrees = new ArrayList<>();
+        final List<TextView> weatherDegrees = new ArrayList<>();
         weatherDegrees.add(firstWeatherDegree);
         weatherDegrees.add(secondWeatherDegree);
         weatherDegrees.add(thirdWeatherDegree);
         weatherDegrees.add(forthWeatherDegree);
         weatherDegrees.add(fifthWeatherDegree);
 
-        List<TextView> timePoints = new ArrayList<>();
+        final List<TextView> timePoints = new ArrayList<>();
         timePoints.add(firstTimePoint);
         timePoints.add(secondTimePoint);
         timePoints.add(thirdTimePoint);
@@ -632,7 +632,7 @@ public class TourFragment extends Fragment {
         if (weatherList.size() <= 5) {
             for (int i = 0; i < weatherList.size(); ++i) {
                 Weather weather = weatherList.get(i);
-
+                if(weather == null || getActivity() == null) return;
                 //set temperature
                 String temp = String.format(Locale.GERMAN, "%d", (int) weather.getTemp());
                 String degreeString = temp + getString(R.string.temperature_abbrevation);
@@ -778,12 +778,16 @@ public class TourFragment extends Fragment {
 
             String tourComment;
             int ratingCount = tourRate.getRateTotal();
-            if(ratingCount == 0) {
-                tourComment = getResources().getString(R.string.tour_comment_no_ratings);
-            } else if (ratingCount == 1) {
-                tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_rating);
-            } else {
-                tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_ratings);
+            switch (ratingCount) {
+                case 0:
+                    tourComment = getResources().getString(R.string.tour_comment_no_ratings);
+                    break;
+                case 1:
+                    tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_rating);
+                    break;
+                default:
+                    tourComment = ratingCount + " " + getResources().getString(R.string.tour_comment_ratings);
+                    break;
             }
             tourCommentRatingCount.setText(tourComment);
 
@@ -796,7 +800,7 @@ public class TourFragment extends Fragment {
             tourRatingInNumbers.setText("0");
         }
     }
-    public void drawChart() {
+    private void drawChart() {
         Number[] domainLabels = tourController.getElevationProfileXAxis();
         Number[] rangeLabels = tourController.getElevationProfileYAxis();
 
@@ -838,7 +842,7 @@ public class TourFragment extends Fragment {
             @Override
             public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
                 int i = Math.round(((Number) obj).floatValue());
-                return toAppendTo.append(domainLabels[i].intValue() + "km");
+                return toAppendTo.append(domainLabels[i].intValue()).append("km");
             }
 
             @Override
@@ -872,9 +876,12 @@ public class TourFragment extends Fragment {
         plot.redraw();
     }
 
-    public void showMapWithTour() {
+    /**
+     * shows the map with the drawn tour, also handles drawer selection
+     */
+    private void showMapWithTour() {
         //handle recent tours
-        tourController.addRecentTour(this.tour);
+        tourController.addRecentTour(tour);
 
         if (tourController.getPolyline() == null) {
             return;
@@ -885,22 +892,23 @@ public class TourFragment extends Fragment {
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
 
         roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent));
-
-
         //Disable my location
         getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.PREFERENCE_MY_LOCATION_ENABLED, false).apply();
-
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
+        //remove the old fragment from stack
         Fragment oldMapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
         if(oldMapFragment != null) {
             getFragmentManager().beginTransaction()
                     .remove(oldMapFragment)
                     .commit();
         }
-
+        //select map in navigationview
+        NavigationView nv = (NavigationView)getActivity().findViewById(R.id.nav_view);
+        nv.getMenu().getItem(0).setChecked(true);
+        //add new fragment to stack
         getFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                .addToBackStack(Constants.MAP_FRAGMENT)
+                .addToBackStack(null)
                 .commit();
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
@@ -920,6 +928,9 @@ public class TourFragment extends Fragment {
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
     }
 
+    /**
+     * report violation on tour
+     */
     private void reportTour(){
         TourReportDialog dialog = new TourReportDialog().newInstance(tour, tourController);
         dialog.show(getFragmentManager(), Constants.REPORT_TOUR_DIALOG);

@@ -3,10 +3,7 @@ package eu.wise_iot.wanderlust.controllers;
 import android.os.AsyncTask;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +23,7 @@ public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<Fi
     private FragmentHandler handler;
     @SuppressWarnings("FieldCanBeLocal")
     private ImageController imageController;
-    private List<DownloadedImage> downloadedImages = new LinkedList<>();
+    private final List<DownloadedImage> downloadedImages = new LinkedList<>();
 
     /**
      * Task which iterates over all images of a specific poi

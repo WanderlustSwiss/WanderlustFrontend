@@ -21,6 +21,9 @@ import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+
+import static eu.wise_iot.wanderlust.views.MainActivity.activity;
 
 
 /**
@@ -33,6 +36,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAdapter.ViewHolder> {
     private List<Tour> tours = Collections.emptyList();
     private final LayoutInflater mInflater;
+    @SuppressWarnings("WeakerAccess")
     public ItemClickListener mClickListener;
     private final Context context;
     private final ImageController imageController;
@@ -98,17 +102,18 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
 
         holder.tvDescending.setText(tour.getDescent() + " m");
         holder.tvAscending.setText(tour.getAscent() + " m");
-        
+
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
-            File image = images.get(0);
-            Picasso.with(context).load(image).fit().centerCrop().noFade()
-                    .placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
+            Picasso handler = imageController.getPicassoHandler(activity);
+            //handler.setIndicatorsEnabled(true);
+            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
+            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(holder.tvImage);
+            Log.d("ResultFilterRVAdapter", "ImageInfo loaded: " + url);
         } else {
             Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
                     .placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            Log.d("ToursoverviewAdapters", "Images not found");
+            Log.d("ResultFilterRVAdapter", "Images not found");
         }
         holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
     }

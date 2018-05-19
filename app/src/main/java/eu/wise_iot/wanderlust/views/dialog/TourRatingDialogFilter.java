@@ -9,16 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FilterController;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 
@@ -36,7 +33,7 @@ public class TourRatingDialogFilter extends DialogFragment {
     private static RatingBar ratingBar;
     private static TextView tourRatingInNumbers;
 
-    private ImageButton[] starButtonCollection = new ImageButton[5];
+    private final ImageButton[] starButtonCollection = new ImageButton[5];
 
     private ImageButton firstStarButton;
     private ImageButton secondStarButton;
@@ -95,7 +92,7 @@ public class TourRatingDialogFilter extends DialogFragment {
         setupListeners();
     }
 
-    public void setupListeners(){
+    private void setupListeners(){
         buttonSave.setOnClickListener(v -> {
             ratingBar.setRating(countRatedStars);
             getDialog().dismiss();

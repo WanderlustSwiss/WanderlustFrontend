@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.constants;
 
+import eu.wise_iot.wanderlust.BuildConfig;
+
 /**
  * Constants:
  *
@@ -16,7 +18,6 @@ public interface Constants {
 
     // GeoObjectTypes
     long TYPE_SAC = -1;
-
 
     /* ACTIVITIES */
     String MAIN_ACTIVITY = "MainActivity";
@@ -36,6 +37,7 @@ public interface Constants {
     String PROFILE_EDIT_FRAGMENT = "ProfileEditFragment";
     String DISCLAIMER_FRAGMENT = "DisclaimerFragment";
     String PROCESSING_FRAGMENT = "ProcessingFragment";
+    String BACKGROUND_FRAGMENT = "BackgroundFragment";
 
     String MY_MAP_OVERLAYS = "MyMapOverlays";
     String CAMERA_ACTIVITY = "Camera";

@@ -1,39 +1,5 @@
 package eu.wise_iot.wanderlust;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-
-import static org.junit.Assert.*;
-
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
-import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
-import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
-import eu.wise_iot.wanderlust.services.LoginService;
-import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import io.objectbox.Box;
-import io.objectbox.BoxStore;
-import io.objectbox.query.QueryBuilder;
-import okhttp3.Headers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 
 /**
  * Test class for Profile dao

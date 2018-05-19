@@ -20,12 +20,12 @@ public class HistoryDao {
         private static final HistoryDao INSTANCE = new HistoryDao();
     }
 
-    private static BoxStore BOXSTORE = DatabaseController.getBoxStore();
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
 
     public static HistoryDao getInstance(){
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
-    private Box<History> historyBox;
+    private final Box<History> historyBox;
 
     /**
      * Constructor.
@@ -39,13 +39,11 @@ public class HistoryDao {
         return historyBox.count();
     }
 
-    public long count(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
-    public long count(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, long searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
@@ -84,13 +82,12 @@ public class HistoryDao {
      * @param searchPattern  (required) contain the search pattern.
      * @return History which match to the search pattern in the searched columns
      */
-    public History findOne(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    @SuppressWarnings("WeakerAccess")
+    public History findOne(Property searchedColumn, String searchPattern) {
         return historyBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    public History findOne(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public History findOne(Property searchedColumn, long searchPattern) {
         return historyBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
@@ -101,8 +98,8 @@ public class HistoryDao {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<History> which contains the "done tours", which match to the search pattern in the searched columns
      */
-    public List<History> find(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    @SuppressWarnings("WeakerAccess")
+    public List<History> find(Property searchedColumn, String searchPattern) {
         return historyBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
@@ -113,8 +110,8 @@ public class HistoryDao {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<History> which contains the "done tours", which match to the search pattern in the searched columns
      */
-    public List<History> find(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    @SuppressWarnings("WeakerAccess")
+    public List<History> find(Property searchedColumn, long searchPattern) {
         return historyBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
@@ -129,14 +126,8 @@ public class HistoryDao {
         return historyBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    /*
-    TODO: return the deleted history tours
-     */
-    public History delete(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         historyBox.remove(findOne(searchedColumn, searchPattern));
-
-        return null;
     }
 
     public void deleteAll() {

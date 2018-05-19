@@ -14,18 +14,16 @@ import java.util.GregorianCalendar;
 import eu.wise_iot.wanderlust.R;
 
 /**
- * DisclaimerFragment:
+ * BackgroundFragment:
  *
- * @author Fabian Schwander
+ * @author Alexander Weinbeck
  * @license MIT
  */
-public class DisclaimerFragment extends Fragment {
+public class BackgroundFragment extends Fragment {
 
-    private TextView authorsTextView;
-
-    public static DisclaimerFragment newInstance() {
+    public static BackgroundFragment newInstance() {
         Bundle args = new Bundle();
-        DisclaimerFragment fragment = new DisclaimerFragment();
+        BackgroundFragment fragment = new BackgroundFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -33,19 +31,11 @@ public class DisclaimerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_disclaimer, container, false);
+        return inflater.inflate(R.layout.fragment_background, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        authorsTextView = (TextView) view.findViewById(R.id.authors_text_view);
-
-        Calendar calendar = new GregorianCalendar();
-        int year = calendar.get(Calendar.YEAR);
-        String authorsText = getActivity().getResources().getString(R.string.disclaimer_copy_wright);
-        authorsText += year + " ";
-        authorsText += getActivity().getResources().getString(R.string.disclaimer_authors);
-        authorsTextView.setText(authorsText);
     }
 }

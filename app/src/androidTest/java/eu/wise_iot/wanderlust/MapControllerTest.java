@@ -12,9 +12,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.views.MapFragment;
@@ -37,8 +35,6 @@ public class MapControllerTest {
             Assert.assertEquals(EventType.OK, controllerEvent.getType());
             ArrayList<MapSearchResult> result = (ArrayList<MapSearchResult>) controllerEvent.getModel();
             Assert.assertEquals(result.size(), 1);
-            Assert.assertNotNull(result.get(0).getLatitude());
-            Assert.assertNotNull(result.get(0).getLongitude());
         });
     }
 

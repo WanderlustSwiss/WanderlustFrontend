@@ -29,9 +29,14 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
         }
     }
     compileOptions {
@@ -59,7 +64,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     compile "com.splitwise:tokenautocomplete:2.0.8@aar"
-
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 

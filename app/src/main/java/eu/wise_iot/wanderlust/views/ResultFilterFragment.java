@@ -157,11 +157,12 @@ public class ResultFilterFragment extends Fragment {
      * @param view
      * @param tour
      */
+    @SuppressWarnings("WeakerAccess")
     protected void onItemClickImages(View view, Tour tour) {
         Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
-        TourFragment tourFragment = TourFragment.newInstance(tour);
+
         getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
+                .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
                 .addToBackStack(Constants.TOUR_FRAGMENT)
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();

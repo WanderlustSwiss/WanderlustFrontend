@@ -5,6 +5,10 @@
     <string name="msg_tour_not_existing">Tour existiert nicht mehr, da sie gelöscht wurde</string>
     <string name="msg_processing_open_tour">Lade Tour...</string>
     <string name="msg_general_error">Etwas ist schiefgelaufen...</string>
+    <string name="msg_logging_in">Anmeldevorgang...</string>
+    <string name="msg_user_not_found">Benutzer wurde nicht gefunden</string>
+    <string name="msg_server_error_get_user">Serverfehler 5XX</string>
+    <string name="msg_load_app">Lade Applikation...</string>
 
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
@@ -228,7 +232,7 @@
     <string name="msg_comment_create_successfull">Kommetar wurde erstellt</string>
     <string name="meter_abbreviation">m</string>
     <string name="logout_successful">Logout erfolgreich</string>
-    <string name="logout_failed">Logout fehlgeschlagen</string>
+    <string name="logout_failed">Logout nicht möglich, keine Internetverbindung</string>
     <string name="msg_available_in_next_feature">Dieses Feature wird in einem späteren Release verfügbar sein</string>
     <string name="profile_edit">Profil bearbeiten</string>
     <string name="profile_edit_delete_image">Aktuelles Foto entfernen</string>
