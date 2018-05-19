@@ -323,9 +323,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT).isAdded()) {
                     getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
                 }
-                //pop the backstack without showing the fragments to not infinite add to the stack null is anchor for the stack
+                //pop the backstack without showing the fragments to not infinite add to the stack
+                //null is anchor for the stack
                 getFragmentManager(). popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
+                //set anchor null, not the tag of the given fragment
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, fragment, fragmentTag)
                         .addToBackStack(null)
