@@ -13,7 +13,7 @@
         android:background="@color/primary_main"
         android:minHeight="?attr/actionBarSize"
         app:title="@string/login_login"
-        style="@style/p.Light" />
+        app:titleTextColor="@color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"

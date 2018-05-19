@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -90,11 +91,14 @@ public class EquipmentDialog extends DialogFragment{
     }
 
     private void linkToOnlineShop(){
-        //String url = equipment.getAdLink();
-        String url = "http://www.wanderlust-app.ch";
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        startActivity(i);
+        // todo: add real link here - until then: don't leave unexplained placeholder functionality in a release version...
+//        String url = equipment.getAdLink();
+//        String url = "http://www.wanderlust-app.ch";
+//        Intent i = new Intent(Intent.ACTION_VIEW);
+//        i.setData(Uri.parse(url));
+//        startActivity(i);
+        Toast.makeText(context, R.string.commercial_announcement, Toast.LENGTH_LONG).show();
+
     }
 
 }

@@ -317,4 +317,5 @@
     <string name="msg_last_known_position_marker">Das ist deine zuletzt bekannte Position</string>
     <string name="report_tour">Diese Tour melden</string>
     <string name="report_tour_introduction">Enthält die Tour anstössige Inhalte, ist sie unnötig oder willst du sie aus einem anderen Grund melden? Hier klicken</string>
+    <string name="commercial_announcement">Hier könnte deine Werbung stehen :)</string>
 </resources>
