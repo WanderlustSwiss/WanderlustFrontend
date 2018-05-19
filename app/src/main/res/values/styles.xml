@@ -258,4 +258,8 @@
     <style name="RatingBar" parent="Widget.AppCompat.RatingBar">
         <item name="android:colorControlActivated">@color/medium</item>
     </style>
+
+    <style name="RatingBar.Light">
+        <item name="android:colorControlActivated">@color/white</item>
+    </style>
 </resources>

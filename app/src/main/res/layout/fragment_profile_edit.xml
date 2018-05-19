@@ -65,10 +65,13 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/hikingpreference" />
 
+            <!-- TODO: add real functionality to checkboxes - until then: don't leave code without functionality -->
+            <!-- hint: when ready, remove gone visibility -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <!--<Space-->
                 <!--android:layout_width="0dp"-->
