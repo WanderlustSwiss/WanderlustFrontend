@@ -85,8 +85,9 @@ public class EquipmentDialog extends DialogFragment{
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        linkToOnlineShopButtonIcon.setOnClickListener(e ->{ linkToOnlineShop(); });
-        linkToOnlineShopButtonText.setOnClickListener(e ->{ linkToOnlineShop(); });
+        // todo: uncomment when actual link is available
+//        linkToOnlineShopButtonIcon.setOnClickListener(e ->{ linkToOnlineShop(); });
+//        linkToOnlineShopButtonText.setOnClickListener(e ->{ linkToOnlineShop(); });
     }
 
     public void linkToOnlineShop(){
