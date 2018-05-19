@@ -135,7 +135,8 @@
                 android:layout_height="wrap_content"
 
                 android:id="@+id/executeJob"
-                android:text="Start Download"/>
+                android:text="Start Download"
+                style="@style/standard_button"/>
 
 
         </LinearLayout>

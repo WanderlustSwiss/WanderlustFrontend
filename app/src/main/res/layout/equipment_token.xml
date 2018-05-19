@@ -4,6 +4,5 @@
     android:layout_height="wrap_content"
     android:background="@drawable/token_background"
     android:padding="5dp"
-    android:textColor="@android:color/white"
-    android:textSize="18sp" />
+    style="@style/h2.Light"/>
 
