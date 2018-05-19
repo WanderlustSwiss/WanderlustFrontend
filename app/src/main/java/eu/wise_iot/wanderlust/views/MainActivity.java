@@ -3,6 +3,7 @@ package eu.wise_iot.wanderlust.views;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -322,6 +323,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT).isAdded()) {
                     getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
                 }
+                //pop the backstack without showing the fragments to not infinite add to the stack null is anchor for the stack
+                getFragmentManager(). popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, fragment, fragmentTag)
                         .addToBackStack(null)

@@ -409,7 +409,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                     if (controllerEvent.getType() == EventType.OK) {
 
                         Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_train_blue_24dp);
-                        publicTransportOverlay.removeAllItems();
+                        if(publicTransportOverlay != null)
+                            publicTransportOverlay.removeAllItems();
 
                         for (PublicTransportPoint publicTransportPoint : (List<PublicTransportPoint>) controllerEvent.getModel()) {
                             OverlayItem overlayItem = new OverlayItem(Integer.toString(publicTransportPoint.getId()), publicTransportPoint.getTitle(), publicTransportPoint.getTitle(), publicTransportPoint.getGeoPoint());
