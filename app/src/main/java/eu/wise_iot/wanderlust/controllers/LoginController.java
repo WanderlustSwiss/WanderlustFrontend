@@ -102,13 +102,13 @@ public class LoginController {
                     initAppData();
                     getProfile(handler, updatedUser);
                 } else {
-                //    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-               // handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }

@@ -1,5 +1,7 @@
 package eu.wise_iot.wanderlust.services;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -34,16 +36,19 @@ public class ServiceGenerator {
      */
     public static <S> S createService(Class<S> serviceClass) {
         if (service == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.addInterceptor(new AddCookiesInterceptor());
-            builder.addInterceptor(new ReceivedCookiesInterceptor());
-            OkHttpClient client = builder.build();
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                                    .readTimeout(5, TimeUnit.SECONDS)
+                                    .writeTimeout(5, TimeUnit.SECONDS)
+                                    .addInterceptor(new AddCookiesInterceptor())
+                                    .addInterceptor(new ReceivedCookiesInterceptor())
+                                    .build();
 
             service = new Retrofit.Builder()
-                    .baseUrl(API_BASE_URL)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+                        .baseUrl(API_BASE_URL)
+                        .client(client)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
         }
         return service.create(serviceClass);
     }

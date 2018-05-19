@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, BackgroundFragment.newInstance(), Constants.BACKGROUND_FRAGMENT).commit();
+
         activity = this;
         setContentView(R.layout.activity_main);
         setupNavigation();
@@ -104,6 +107,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
 
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
         this.registerReceiver(
                 broadcastReceiver,
                 new IntentFilter(
@@ -111,10 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (preferences.getBoolean("firstTimeOpened", true)) {
             // start welcome screen
-            StartupRegistrationFragment registrationFragment = new StartupRegistrationFragment();
-
-            getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, registrationFragment)
+            ft.replace(R.id.content_frame, new StartupRegistrationFragment().newInstance())
                     .commit();
 
             // else try to login
@@ -123,71 +126,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             User user = UserDao.getInstance().getUser();
             if (user == null) {
                 StartupLoginFragment loginFragment = new StartupLoginFragment();
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, loginFragment)
+                ft.replace(R.id.content_frame, loginFragment)
                         .commit();
                 return;
             }
 
             switch (user.getAccountType()) {
-                case "instagram": {
+                case "instagram":
                     Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
                     if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance(
                             WebLoginFragment.LoginProvider.INSTAGRAM);
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                    ft.replace(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
                             .commit();
                     break;
-                }
-                case "facebook": {
-                    Fragment webLoginFragment = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
-                    if (webLoginFragment == null) webLoginFragment = WebLoginFragment.newInstance(
+                case "facebook":
+                    Fragment webLoginFragment2 = getFragmentManager().findFragmentByTag(Constants.WEB_LOGIN_FRAGMENT);
+                    if (webLoginFragment2 == null) webLoginFragment2 = WebLoginFragment.newInstance(
                             WebLoginFragment.LoginProvider.FACEBOOK);
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, webLoginFragment, Constants.WEB_LOGIN_FRAGMENT)
+                    ft.replace(R.id.content_frame, webLoginFragment2, Constants.WEB_LOGIN_FRAGMENT)
                             .commit();
                     break;
-                }
                 default:
-                    new AsyncLoginOnLoad(new LoginUser(user.getNickname(), user.getPassword()), user,this).execute();
-/*
-                    loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
-                        User loggedInUser = (User) controllerEvent.getModel();
-                        switch (controllerEvent.getType()) {
-                            case OK:
-                                setupDrawerHeader(loggedInUser);
-
-                                //set last login
-                                DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
-                                DateTime now = new DateTime().withZone(timeZone);
-                                DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-                                String lastLoginNow = fmt.print(now);
-                                loggedInUser.setLastLogin(lastLoginNow);
-                                UserDao.getInstance().update(loggedInUser);
-
-                                getFragmentManager().beginTransaction()
-                                        .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
-                                        .commit();
-                                break;
-                            default:
-                                DateTime lastLogin2 = DateTime.parse(user.getLastLogin());
-                                Log.d(TAG, "Last login: " + lastLogin2);
-                                //check if last login is within last 24h
-                                if (lastLogin2.isAfter(new DateTime().minusDays(1))) {
-                                    setupDrawerHeader(user);
-                                    getFragmentManager().beginTransaction()
-                                            .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
-                                            .commit();
-
-                                } else {
-                                    StartupLoginFragment loginFragment = new StartupLoginFragment();
-                                    getFragmentManager().beginTransaction()
-                                            .add(R.id.content_frame, loginFragment)
-                                            .commit();
-                                }
-                                break;
-                        }
-                    });*/
+                    new AsyncLoginOnLoad(new LoginUser(user.getNickname(), user.getPassword()), user,this, ft).execute();
                     break;
             }
         }
@@ -268,35 +228,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
         String fragmentTag = null;
         int id = item.getItemId();
+        FragmentManager fm = getFragmentManager();
 
-        Log.d(TAG,"FRAGMENTSTACK COUNT: " + getFragmentManager().getBackStackEntryCount());
+        Log.d(TAG,"FRAGMENTSTACK COUNT: " + fm.getBackStackEntryCount());
 
         // MAIN FRAGMENTS
         switch (id) {
             case R.id.nav_map:
                 fragmentTag = Constants.MAP_FRAGMENT;
-                fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+                fragment = fm.findFragmentByTag(fragmentTag);
                 if (fragment == null) fragment = MapFragment.newInstance(); //create if not available yet
                 break;
             case R.id.nav_tours:
                 fragmentTag = Constants.TOUROVERVIEW_FRAGMENT;
-                fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+                fragment = fm.findFragmentByTag(fragmentTag);
                 if (fragment == null) fragment = TourOverviewFragment.newInstance();
                 break;
             case R.id.nav_profile:
                 fragmentTag = Constants.PROFILE_FRAGMENT;
-                fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+                fragment = fm.findFragmentByTag(fragmentTag);
                 if (fragment == null) fragment = ProfileFragment.newInstance();
                 break;
             // OTHER FRAGMENTS
             case R.id.setup_guide:
                 fragmentTag = Constants.USER_GUIDE_FRAGMENT;
-                fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+                fragment = fm.findFragmentByTag(fragmentTag);
                 if (fragment == null) fragment = UserGuideFragment.newInstance();
                 break;
             case R.id.disclaimer:
                 fragmentTag = Constants.DISCLAIMER_FRAGMENT;
-                fragment = getFragmentManager().findFragmentByTag(fragmentTag);
+                fragment = fm.findFragmentByTag(fragmentTag);
                 if (fragment == null) fragment = DisclaimerFragment.newInstance();
                 break;
             case R.id.logout:
@@ -306,9 +267,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             LoginUser.clearCookies();
                             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                            Fragment f = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                            Fragment f = fm.findFragmentByTag(Constants.LOGIN_FRAGMENT);
                             if (f == null) f = StartupLoginFragment.newInstance();
-                            switchFragment(f, Constants.LOGIN_FRAGMENT);
+                            switchFragment(f, Constants.LOGIN_FRAGMENT,fm.beginTransaction());
                             break;
                         case NETWORK_ERROR:
                             Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
@@ -318,17 +279,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
         }
 
-        switchFragment(fragment, fragmentTag);
+        switchFragment(fragment, fragmentTag,fm.beginTransaction());
         return true;
     }
 
-    private void switchFragment(Fragment fragment, String fragmentTag) {
+    private void switchFragment(Fragment fragment, String fragmentTag, FragmentTransaction ft) {
         if (fragment != null) {
             if(fragment.isAdded()){
-                getFragmentManager().beginTransaction().show(fragment);
+                ft.show(fragment);
             } else {
                 if(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT).isAdded()) {
-                    getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
+                    ft.remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
                 }
                 //pop the backstack without showing the fragments to not infinite add to the stack
                 //null is anchor for the stack
@@ -341,8 +302,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     getSupportFragmentManager().executePendingTransactions();
                 }
                 //set anchor null, not the tag of the given fragment
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, fragment, fragmentTag)
+                ft.replace(R.id.content_frame, fragment, fragmentTag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -380,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
 
-        userProfileImage.setOnClickListener(view -> switchFragment(ProfileFragment.newInstance(), Constants.PROFILE_FRAGMENT));
+        userProfileImage.setOnClickListener(view -> switchFragment(ProfileFragment.newInstance(), Constants.PROFILE_FRAGMENT,getFragmentManager().beginTransaction()));
 
         username.setText(user.getNickname());
         email.setText(user.getEmail());
@@ -419,11 +379,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private final LoginUser loginUser;
         private final User user;
         private final Activity activity;
+        private final FragmentTransaction ft;
 
-        AsyncLoginOnLoad(LoginUser loginUser,User user, Activity activity){
+        AsyncLoginOnLoad(LoginUser loginUser,User user, Activity activity, FragmentTransaction ft){
             this.loginUser = loginUser;
             this.user = user;
             this.activity = activity;
+            this.ft = ft;
             pdLoading = new ProgressDialog(this.activity);
         }
         @Override
@@ -454,8 +416,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     loggedInUser.setLastLogin(lastLoginNow);
                     UserDao.getInstance().update(loggedInUser);
 
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                    ft.replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                             .commit();
                     break;
                 default:
@@ -464,14 +425,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //check if last login is within last 24h
                     if (lastLogin2.isAfter(new DateTime().minusDays(1))) {
                         setupDrawerHeader(user);
-                        getFragmentManager().beginTransaction()
-                                .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                        ft.replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                 .commit();
 
                     } else {
-                        StartupLoginFragment loginFragment = new StartupLoginFragment();
-                        getFragmentManager().beginTransaction()
-                                .add(R.id.content_frame, loginFragment)
+                        //StartupLoginFragment loginFragment = new StartupLoginFragment();
+                        ft.replace(R.id.content_frame, new StartupLoginFragment().newInstance())
                                 .commit();
                     }
                     break;
