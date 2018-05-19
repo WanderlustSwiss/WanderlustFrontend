@@ -304,12 +304,6 @@ public class TourFragment extends Fragment {
 
         textViewDifficulty.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
 
-
-        Drawable tourRatingDrawable = tourRating.getProgressDrawable();
-        tourRatingDrawable.setColorFilter(Color.parseColor("#FFFFFF"),
-                PorterDuff.Mode.SRC_ATOP);
-
-
         tourController.getRating(tour, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:

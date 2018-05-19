@@ -241,7 +241,6 @@ public class ProfileEditFragment extends Fragment {
         setupAvatar();
         buttonOpenGallery.setText(R.string.profile_edit_open_gallery);
         buttonDeleteImage.setText(R.string.profile_edit_delete_image);
-        buttonDeleteImage.setTextColor(Color.RED);
         emailTextfield.setText(profileController.getEmail());
     }
 
