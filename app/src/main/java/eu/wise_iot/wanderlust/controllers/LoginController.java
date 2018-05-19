@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicReference;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
@@ -107,6 +111,21 @@ public class LoginController {
                // handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
+    }
+    public ControllerEvent logInSequential(LoginUser user){
+        final AtomicReference<ControllerEvent> event = new AtomicReference<>();
+        try {
+            CountDownLatch countDownLatchThread = new CountDownLatch(1);
+            logIn(user, controllerEvent -> {
+                event.set(controllerEvent);
+                countDownLatchThread.countDown();
+            });
+            countDownLatchThread.await();
+            return event.get();
+        } catch (Exception e){
+            Log.d("loginController","failure while processing request");
+        }
+        return event.get();
     }
 
     public void logInWithExternalProvider(String cookie, final FragmentHandler handler){

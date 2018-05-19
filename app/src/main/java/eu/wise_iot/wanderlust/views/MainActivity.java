@@ -4,13 +4,16 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -47,6 +50,7 @@ import java.util.TimeZone;
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.ImageController;
@@ -58,6 +62,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import io.objectbox.BoxStore;
+
+import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
  * MainActivity:
@@ -143,7 +149,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     break;
                 }
                 default:
-
+                    new AsyncLoginOnLoad(new LoginUser(user.getNickname(), user.getPassword()), user,this).execute();
+/*
                     loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
                         User loggedInUser = (User) controllerEvent.getModel();
                         switch (controllerEvent.getType()) {
@@ -180,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                                 break;
                         }
-                    });
+                    });*/
                     break;
             }
         }
@@ -325,7 +332,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 //pop the backstack without showing the fragments to not infinite add to the stack
                 //null is anchor for the stack
-                getFragmentManager(). popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                //getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    android.support.v4.app.FragmentManager.BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(
+                            0);
+                    getSupportFragmentManager().popBackStack(entry.getId(),
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getSupportFragmentManager().executePendingTransactions();
+                }
                 //set anchor null, not the tag of the given fragment
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, fragment, fragmentTag)
@@ -395,6 +409,76 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void updateNickname(String newNickname) {
         username.setText(newNickname);
+    }
+
+    /**
+     * handles async backend request for requesting a tour
+     */
+    private class AsyncLoginOnLoad extends AsyncTask<Void, Void, ControllerEvent> {
+        final ProgressDialog pdLoading;
+        private final LoginUser loginUser;
+        private final User user;
+        private final Activity activity;
+
+        AsyncLoginOnLoad(LoginUser loginUser,User user, Activity activity){
+            this.loginUser = loginUser;
+            this.user = user;
+            this.activity = activity;
+            pdLoading = new ProgressDialog(this.activity);
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //this method will be running on UI thread
+            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_logging_in));
+            pdLoading.show();
+        }
+        @Override
+        protected ControllerEvent doInBackground(Void... params) {
+            return loginController.logInSequential(loginUser);
+        }
+        @Override
+        protected void onPostExecute(ControllerEvent event) {
+            super.onPostExecute(event);
+
+            User loggedInUser = (User) event.getModel();
+            switch (event.getType()) {
+                case OK:
+                    setupDrawerHeader(loggedInUser);
+
+                    //set last login
+                    DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
+                    DateTime now = new DateTime().withZone(timeZone);
+                    DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+                    String lastLoginNow = fmt.print(now);
+                    loggedInUser.setLastLogin(lastLoginNow);
+                    UserDao.getInstance().update(loggedInUser);
+
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                            .commit();
+                    break;
+                default:
+                    DateTime lastLogin2 = DateTime.parse(user.getLastLogin());
+                    Log.d(TAG, "Last login: " + lastLogin2);
+                    //check if last login is within last 24h
+                    if (lastLogin2.isAfter(new DateTime().minusDays(1))) {
+                        setupDrawerHeader(user);
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                .commit();
+
+                    } else {
+                        StartupLoginFragment loginFragment = new StartupLoginFragment();
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.content_frame, loginFragment)
+                                .commit();
+                    }
+                    break;
+            }
+
+            if (pdLoading.isShowing()) pdLoading.dismiss();
+        }
     }
 
 }
