@@ -108,33 +108,23 @@
                 android:textAlignment="center" />
 
         </LinearLayout>
+
         <Button
+            android:layout_marginTop="24dp"
             android:id="@+id/web_login_instagram_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="24dp"
-            android:paddingLeft="15dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:textColor="@color/white"
             android:text="@string/login_instagram"
-            android:background="#3f729b"
             android:drawableLeft="@drawable/instagram"
-            />
+            style="@style/standard_button.WithIcon"/>
+
         <Button
+            android:layout_marginTop="12dp"
             android:id="@+id/web_login_facebook_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="48dp"
-            android:layout_marginTop="15dp"
-            android:paddingLeft="15dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:textColor="@color/white"
             android:text="@string/login_facebook"
-            android:background="#3f729b"
             android:drawableLeft="@drawable/facebook"
-            />
+            style="@style/standard_button.WithIcon"/>
     </LinearLayout>
 </LinearLayout>
