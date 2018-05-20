@@ -249,7 +249,6 @@ public class LoginController {
     }
 
     public void resetPassword(String email, final FragmentHandler handler) {
-
         LoginService service = ServiceGenerator.createService(LoginService.class);
         Call<Void> call = service.resetPassword(new EmailBody(email));
         call.enqueue(new Callback<Void>() {
@@ -265,6 +264,23 @@ public class LoginController {
             }
         });
     }
+
+    public ControllerEvent resetPasswordSequential(String email){
+        final AtomicReference<ControllerEvent> event = new AtomicReference<>();
+        try {
+            CountDownLatch countDownLatchThread = new CountDownLatch(1);
+            resetPassword(email, controllerEvent -> {
+                event.set(controllerEvent);
+                countDownLatchThread.countDown();
+            });
+            countDownLatchThread.await();
+            return event.get();
+        } catch (Exception e){
+            if (BuildConfig.DEBUG) Log.d("loginController","failure while processing request");
+        }
+        return event.get();
+    }
+
     public File getProfileImage(){
         Profile profile = profileDao.getProfile();
         if (profile != null && profile.getImagePath() != null){
