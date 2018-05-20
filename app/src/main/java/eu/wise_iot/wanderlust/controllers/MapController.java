@@ -17,6 +17,7 @@ import com.google.gson.JsonParser;
 
 import android.app.Fragment;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
@@ -41,7 +42,7 @@ import retrofit2.Callback;
  * @author Joshua Meier
  */
 public class MapController {
-    private final String NOMINATIM_SERVICE_URL = "http://nominatim.openstreetmap.org/";
+    private final String NOMINATIM_SERVICE_URL = "https://nominatim.openstreetmap.org/";
     private final String SBB_SERVICE_URL = "https://data.sbb.ch/api/records/1.0/search/";
     private static final String TAG = "MapController";
     private final Fragment fragment;
@@ -268,8 +269,6 @@ public class MapController {
                 JsonParser parser = new JsonParser();
                 JsonElement json = parser.parse(response);
                 JsonArray jResults = json.getAsJsonArray();
-                //      JsonObject jsonObject = new Gson().fromJson(response, JsonArray.class);
-                //     JsonArray jResults = jsonObject.getAsJsonArray();
                 if (jResults.size() > 0) {
                     JsonObject jResult = jResults.get(0).getAsJsonObject();
                     AddressPoint gAddress = new AddressPoint();
@@ -286,6 +285,14 @@ public class MapController {
                         gAddress.setCity(jAddress.get("city").getAsString());
                     }
 
+                    if (jAddress.has("road")) {
+                        gAddress.setRoad(jAddress.get("road").getAsString());
+                    }
+
+                    if (jAddress.has("village")) {
+                        gAddress.setVillage(jAddress.get("village").getAsString());
+                    }
+
                     if (jAddress.has("state")) {
                         gAddress.setState(jAddress.get("state").getAsString());
                     }
@@ -294,7 +301,9 @@ public class MapController {
                 }
 
 
-            }, error -> handler.onResponse(new ControllerEvent<AddressPoint>(EventType.NETWORK_ERROR)));
+            }, error -> {
+                handler.onResponse(new ControllerEvent<AddressPoint>(EventType.NETWORK_ERROR));
+            });
 
             queue.add(stringRequest);
         } catch (IOException ex) {

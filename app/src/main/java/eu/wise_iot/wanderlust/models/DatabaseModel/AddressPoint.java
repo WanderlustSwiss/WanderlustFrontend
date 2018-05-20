@@ -10,15 +10,19 @@ public class AddressPoint {
     private String name;
     private String city;
     private String state;
+    private String road;
+    private String village;
 
 
-    public AddressPoint(String name, String city, String state) {
+    public AddressPoint() {
+    }
+
+    public AddressPoint(String name, String city, String state, String road, String village) {
         this.name = name;
         this.city = city;
         this.state = state;
-    }
-
-    public AddressPoint() {
+        this.road = road;
+        this.village = village;
     }
 
     public String getName() {
@@ -44,5 +48,20 @@ public class AddressPoint {
 
     public void setState(String state) {
         this.state = state;
+    }
+    public String getRoad() {
+        return road;
+    }
+
+    public void setRoad(String road) {
+        this.road = road;
+    }
+
+    public String getVillage() {
+        return village;
+    }
+
+    public void setVillage(String village) {
+        this.village = village;
     }
 }

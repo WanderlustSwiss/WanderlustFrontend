@@ -77,7 +77,7 @@
     <string name="filter_search">Filter anwenden</string>
 
     <!-- FEEDBACK DIALOG RELATED STRINGS -->
-    <string name="dialog_feedback_description_edit_hint">Schreibe hier einen eigenen Kommentar zu dieser Tour</string>
+    <string name="dialog_feedback_description_edit_hint">Deine Erfahrungen und #Hashtags</string>
     <string-array name="dialog_feedback_spinner_mode">
         <item>öffentlich</item>
         <item>nur für mich</item>
