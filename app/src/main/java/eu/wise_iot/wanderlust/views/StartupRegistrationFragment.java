@@ -213,6 +213,10 @@ public class StartupRegistrationFragment extends Fragment {
     private boolean validatePassword(String password) {
         return password.matches(VALID_PASSWORTD_REGX);
     }
+    /*
+     * TODO do async tasks static to prevent leaks see https://stackoverflow.com/questions/44309241/warning-this-asynctask-class-should-be-static-or-leaks-might-occur
+     * might not be the best solution either!
+     */
     /**
      * handles async backend request for performing an asynchronous registration
      * this will keep the UI responsive
@@ -262,15 +266,15 @@ public class StartupRegistrationFragment extends Fragment {
                     Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
                     break;
                 case SERVER_ERROR:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR" + event.getType().toString());
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_user), Toast.LENGTH_LONG).show();
                     break;
                 case NETWORK_ERROR:
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR" + event.getType().toString());
                     break;
                 default:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR" + event.getType().toString());
                     Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
             }
             //make registration button available again

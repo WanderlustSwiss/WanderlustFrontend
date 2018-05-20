@@ -51,6 +51,7 @@ import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
  * @license MIT
  */
 public class TourOverviewFragment extends Fragment {
+
     private static final String TAG = "TourOverviewFragment";
     private Context context;
     private ToursOverviewRVAdapter adapterRoutes, adapterFavs, adapterRecent;
@@ -63,7 +64,6 @@ public class TourOverviewFragment extends Fragment {
     private TourOverviewController tourOverviewController;
     private int currentPage = 0;
     private ImageController imageController;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,13 +116,7 @@ public class TourOverviewFragment extends Fragment {
         return true;
     }
 
-    /**
-     * upon view creation
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         currentPage = 0;
@@ -306,7 +300,13 @@ public class TourOverviewFragment extends Fragment {
         return view;
     }
 
+    /**
+     * handles click on an recycler view item
+     * @param view representing the recycler view item
+     * @param tour representing the tour of the clicked item
+     */
     private void onItemClickImages(View view, Tour tour) {
+        //distinguish what element was clicked by resource id
         switch (view.getId()) {
             case R.id.tourOVFavoriteButton:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Tour Favorite Clicked and event triggered ");
