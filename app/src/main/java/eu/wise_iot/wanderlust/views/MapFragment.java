@@ -558,7 +558,7 @@ public class MapFragment extends Fragment {
                 new String[]{"https://opentopomap.org/"});
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
-        mapView.setMultiTouchControls(true);
+        //mapView.setMultiTouchControls(true);
     }
 
     /**
@@ -910,109 +910,112 @@ public class MapFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        //getActivity().invalidateOptionsMenu();
+        getActivity().invalidateOptionsMenu();
         if(menu.findItem(R.id.action_search) != null) {
             SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-            searchView.setSuggestionsAdapter(mAdapter);
-            searchView.setIconifiedByDefault(false);
-            // Getting selected (clicked) item suggestion
-            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                @Override
-                public boolean onSuggestionClick(int position) {
-                    triggerHashtagSearch(position, null);
-                    return true;
-                }
+            if(searchView != null) {
+                searchView.setSuggestionsAdapter(mAdapter);
+                searchView.setIconifiedByDefault(false);
+                // Getting selected (clicked) item suggestion
 
-                @Override
-                public boolean onSuggestionSelect(int position) {
-                    triggerHashtagSearch(position, null);
-                    return true;
-                }
-            });
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    if (s.startsWith("#")) {
-                        triggerHashtagSearch(-1, s.substring(1));
-                    } else {
-                        callSearch(s);
+                searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                    @Override
+                    public boolean onSuggestionClick(int position) {
+                        triggerHashtagSearch(position, null);
+                        return true;
                     }
-                    return true;
-                }
 
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    if (s.trim().startsWith("#") && s.length() >= 2) {
-                        mapView.setHashTagEnabled(true);
-                        searchMapController.suggestHashtags(s.substring(1), controllerEvent -> {
-                            if (controllerEvent.getModel() != null && controllerEvent.getModel().size() != 0) {
-                                hashTagSearchSuggestions = controllerEvent.getModel();
-                            } else {
+                    @Override
+                    public boolean onSuggestionSelect(int position) {
+                        triggerHashtagSearch(position, null);
+                        return true;
+                    }
+                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String s) {
+                        if (s.startsWith("#")) {
+                            triggerHashtagSearch(-1, s.substring(1));
+                        } else {
+                            callSearch(s);
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String s) {
+                        if (s.trim().startsWith("#") && s.length() >= 2) {
+                            mapView.setHashTagEnabled(true);
+                            searchMapController.suggestHashtags(s.substring(1), controllerEvent -> {
+                                if (controllerEvent.getModel() != null && controllerEvent.getModel().size() != 0) {
+                                    hashTagSearchSuggestions = controllerEvent.getModel();
+                                } else {
+                                    hashTagSearchSuggestions.clear();
+                                }
+                                populateAdapter(s.substring(1));
+
+                            });
+                        } else {
+                            mapView.setHashTagEnabled(false);
+                            DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
+                            if (hashTagSearchSuggestions != null) {
                                 hashTagSearchSuggestions.clear();
                             }
-                            populateAdapter(s.substring(1));
-
-                        });
-                    } else {
-                        mapView.setHashTagEnabled(false);
-                        DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, mapView.getProjection().getBoundingBox()));
-                        if (hashTagSearchSuggestions != null) {
-                            hashTagSearchSuggestions.clear();
-                        }
-                        if (s.length() >= 1) {
-                            populateAdapter(s.substring(1));
-                        }
-                    }
-                    return true;
-                }
-
-                void callSearch(String query) {
-                    try {
-                        searchMapController.searchPlace(query, 1, controllerEvent -> {
-                            List<MapSearchResult> resultList = (List<MapSearchResult>) controllerEvent.getModel();
-                            if (!resultList.isEmpty()) {
-                                MapSearchResult firstResult = resultList.get(0);
-                                GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
-                                if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
-                                    mapOverlays.clearPolylines();
-
-                                    double minLat = 9999;
-                                    double maxLat = -9999;
-                                    double minLong = 9999;
-                                    double maxLong = -9999;
-
-                                    for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
-                                        mapOverlays.addPolyline(polygon);
-
-                                        for (GeoPoint point : polygon) {
-                                            if (point.getLatitude() < minLat)
-                                                minLat = point.getLatitude();
-                                            if (point.getLatitude() > maxLat)
-                                                maxLat = point.getLatitude();
-                                            if (point.getLongitude() < minLong)
-                                                minLong = point.getLongitude();
-                                            if (point.getLongitude() > maxLong)
-                                                maxLong = point.getLongitude();
-                                        }
-                                    }
-
-                                    BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
-                                    mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
-                                } else {
-                                    mapController.setZoom(Defaults.ZOOM_SEARCH);
-                                    mapController.animateTo(geoPoint);
-                                    mapOverlays.addFocusedPositionMarker(geoPoint);
-                                }
-                            } else {
-                                Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                            if (s.length() >= 1) {
+                                populateAdapter(s.substring(1));
                             }
-                        });
-                    } catch (IOException e) {
-                        Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
                     }
-                    searchView.clearFocus();
-                }
-            });
+
+                    void callSearch(String query) {
+                        try {
+                            searchMapController.searchPlace(query, 1, controllerEvent -> {
+                                List<MapSearchResult> resultList = (List<MapSearchResult>) controllerEvent.getModel();
+                                if (!resultList.isEmpty()) {
+                                    MapSearchResult firstResult = resultList.get(0);
+                                    GeoPoint geoPoint = new GeoPoint(firstResult.getLatitude(), firstResult.getLongitude());
+                                    if (!firstResult.getPolygon().isEmpty() && firstResult.getPolygon().get(0) != null) {
+                                        mapOverlays.clearPolylines();
+
+                                        double minLat = 9999;
+                                        double maxLat = -9999;
+                                        double minLong = 9999;
+                                        double maxLong = -9999;
+
+                                        for (ArrayList<GeoPoint> polygon : firstResult.getPolygon()) {
+                                            mapOverlays.addPolyline(polygon);
+
+                                            for (GeoPoint point : polygon) {
+                                                if (point.getLatitude() < minLat)
+                                                    minLat = point.getLatitude();
+                                                if (point.getLatitude() > maxLat)
+                                                    maxLat = point.getLatitude();
+                                                if (point.getLongitude() < minLong)
+                                                    minLong = point.getLongitude();
+                                                if (point.getLongitude() > maxLong)
+                                                    maxLong = point.getLongitude();
+                                            }
+                                        }
+
+                                        BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
+                                        mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.1f), true);
+                                    } else {
+                                        mapController.setZoom(Defaults.ZOOM_SEARCH);
+                                        mapController.animateTo(geoPoint);
+                                        mapOverlays.addFocusedPositionMarker(geoPoint);
+                                    }
+                                } else {
+                                    Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } catch (IOException e) {
+                            Toast.makeText(getActivity(), R.string.map_nothing_found, Toast.LENGTH_SHORT).show();
+                        }
+                        searchView.clearFocus();
+                    }
+                });
+            }
         }
     }
 
