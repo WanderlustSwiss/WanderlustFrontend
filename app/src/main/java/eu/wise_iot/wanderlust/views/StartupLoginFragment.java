@@ -248,7 +248,11 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     }
 
     /**
-     * handles async backend request for requesting a tour
+     * handles async backend request for performing an asynchronous login when clicking on login
+     * this will keep the UI responsive
+     *
+     * @author Alexander Weinbeck
+     * @license MIT
      */
     private class AsyncLoginOnClick extends AsyncTask<Void, Void, Void> {
         final ProgressDialog pdLoading;
@@ -266,6 +270,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             super.onPreExecute();
             //this method will be running on UI thread
             pdLoading.setMessage("\t" + getResources().getString(R.string.msg_logging_in));
+            pdLoading.setCancelable(false);
             pdLoading.show();
         }
         @Override

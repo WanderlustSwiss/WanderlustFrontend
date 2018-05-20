@@ -415,7 +415,11 @@ public class TourOverviewFragment extends Fragment {
     }
 
     /**
-     * handles async backend request for requesting a tour
+     * handles async backend request for performing a check if the tour is existing
+     * this will keep the UI responsive
+     *
+     * @author Alexander Weinbeck
+     * @license MIT
      */
     private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
         final ProgressDialog pdLoading;
@@ -433,6 +437,7 @@ public class TourOverviewFragment extends Fragment {
             super.onPreExecute();
             //this method will be running on UI thread
             pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
+            pdLoading.setCancelable(false);
             pdLoading.show();
         }
         @Override

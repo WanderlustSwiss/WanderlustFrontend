@@ -1,12 +1,16 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +23,10 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -37,6 +43,8 @@ public class StartupRegistrationFragment extends Fragment {
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,5}$", Pattern.CASE_INSENSITIVE);
     private final String VALID_PASSWORTD_REGX = "^((?=.*\\d)(?=.*[A-Za-z]).{8,})$";
+
+    private static final String TAG = "StartupRegisterFragment";
 
 
     private Context context;
@@ -123,30 +131,8 @@ public class StartupRegistrationFragment extends Fragment {
                     , passwordTextfield.getText().toString()
                     , 0, true, true, "", "");
             if (validateInput(user)) {
-
                 btnRegister.setEnabled(false);
-
-                //get response
-                registrationController.registerUser(user, controllerEvent -> {
-                    btnRegister.setEnabled(true);
-                    EventType eventType = controllerEvent.getType();
-                    switch (eventType) {
-                        case OK:
-                            ((MainActivity) getActivity()).setupDrawerHeader(user);
-                            Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
-                            Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
-                            if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
-                            getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
-                                    .commit();
-                            break;
-                        case CONFLICT:
-                            Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
-                            break;
-                        default:
-                            Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
-                    }
-                });
+                new AsyncRegistration(user,getActivity()).execute();
             }
             // hide soft keyboard after button was clicked
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -165,7 +151,7 @@ public class StartupRegistrationFragment extends Fragment {
 
 
     /**
-     * checks whether the user's data is valid and can be send to the servert
+     * checks whether the user's data is valid and can be send to the server
      *
      * @return true if the user's data is Valid, else if invalid
      */
@@ -227,6 +213,69 @@ public class StartupRegistrationFragment extends Fragment {
     private boolean validatePassword(String password) {
         return password.matches(VALID_PASSWORTD_REGX);
     }
+    /**
+     * handles async backend request for performing an asynchronous registration
+     * this will keep the UI responsive
+     *
+     * @author Alexander Weinbeck
+     * @license MIT
+     */
+    private class AsyncRegistration extends AsyncTask<Void, Void, Void> {
+        final ProgressDialog pdLoading;
+        private final Activity activity;
+        private User user;
+        private ControllerEvent event;
 
+        AsyncRegistration(User user, Activity activity){
+            this.user = user;
+            this.activity = activity;
+            pdLoading = new ProgressDialog(this.activity);
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //this method will be running on UI thread
+            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_registering));
+            pdLoading.setCancelable(false);
+            pdLoading.show();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            event =  registrationController.registerUserSequential(user);
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            switch(event.getType()) {
+                case OK:
+                    ((MainActivity) getActivity()).setupDrawerHeader(user);
+                    Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
+                    Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                    if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+                            .commit();
+                    break;
+                case CONFLICT:
+                    Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
+                    break;
+                case SERVER_ERROR:
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_user), Toast.LENGTH_LONG).show();
+                    break;
+                case NETWORK_ERROR:
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                    break;
+                default:
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
+            }
+
+            if (pdLoading.isShowing()) pdLoading.dismiss();
+        }
+    }
 
 }

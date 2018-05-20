@@ -9,6 +9,7 @@
     <string name="msg_user_not_found">Benutzer wurde nicht gefunden</string>
     <string name="msg_server_error_get_user">Serverfehler 5XX</string>
     <string name="msg_load_app">Lade Applikation...</string>
+    <string name="msg_registering">Registriervorgang...</string>
 
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
