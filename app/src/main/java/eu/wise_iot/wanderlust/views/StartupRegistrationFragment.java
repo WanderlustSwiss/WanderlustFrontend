@@ -273,9 +273,9 @@ public class StartupRegistrationFragment extends Fragment {
                     if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
                     Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
             }
-
+            //make registration button available again
+            btnRegister.setEnabled(true);
             if (pdLoading.isShowing()) pdLoading.dismiss();
         }
     }
-
 }
