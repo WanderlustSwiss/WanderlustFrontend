@@ -39,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.EventType;
@@ -180,12 +181,12 @@ public class ProfileEditFragment extends Fragment {
                     switch (type) {
                         case OK:
                             ((MainActivity) getActivity()).updateEmailAdress(newMail);
-                            Log.d(TAG, "Email wurde geändert.");
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Email wurde geändert.");
                             break;
                         default:
                             Toast.makeText(getActivity(), R.string.err_msg_error_occured,
                                     Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "Fehler: " + type.toString());
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Fehler: " + type.toString());
                             break;
                     }
                 });
@@ -195,13 +196,13 @@ public class ProfileEditFragment extends Fragment {
 
                     switch (type) {
                         case OK:
-                            Log.d(TAG, "Difficulty wurde geändert.");
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Difficulty wurde geändert.");
                             break;
 
                         default:
                             Toast.makeText(getActivity(), R.string.err_msg_error_occured,
                                     Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "Fehler: " + type.toString());
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Fehler: " + type.toString());
                             break;
                     }
                 });
@@ -354,7 +355,7 @@ public class ProfileEditFragment extends Fragment {
                 });
             }
         } catch (IOException e) {
-            Log.d(TAG, e.getMessage());
+            if (BuildConfig.DEBUG) Log.d(TAG, e.getMessage());
         }
     }
 

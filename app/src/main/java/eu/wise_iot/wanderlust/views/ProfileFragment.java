@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
@@ -152,10 +153,10 @@ public class ProfileFragment extends Fragment {
                     Profile profile = (Profile) controllerEvent.getModel();
                     int score = ((Profile) controllerEvent.getModel()).getScore();
                     amountScore.setText(String.format(Locale.GERMAN,"%1d" ,score));
-                    Log.d("SCORE",  String.valueOf(score));
+                    if (BuildConfig.DEBUG) Log.d("SCORE",  String.valueOf(score));
                     break;
                 default:
-                    Log.d("SCORE",  "Could not load Score");
+                    if (BuildConfig.DEBUG) Log.d("SCORE",  "Could not load Score");
                     break;
             }
         });

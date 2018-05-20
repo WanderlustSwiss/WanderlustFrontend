@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicReference;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
@@ -123,7 +124,7 @@ public class LoginController {
             countDownLatchThread.await();
             return event.get();
         } catch (Exception e){
-            Log.d("loginController","failure while processing request");
+            if (BuildConfig.DEBUG) Log.d("loginController","failure while processing request");
         }
         return event.get();
     }
@@ -132,7 +133,7 @@ public class LoginController {
         ArrayList<String> cookieList = new ArrayList<>();
         cookieList.add(cookie);
         LoginUser.setCookies(cookieList);
-        Log.d("COOKIE", cookie);
+        if (BuildConfig.DEBUG) Log.d("COOKIE", cookie);
 
         UserService service = ServiceGenerator.createService(UserService.class);
         Call<User> call = service.retrieveUser();

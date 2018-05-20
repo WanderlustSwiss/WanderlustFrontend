@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
@@ -48,7 +49,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
      * @param parTours
      */
     public ResultFilterRVAdapter(Context context, List<Tour> parTours) {
-        Log.d("ToursRecyclerview", "Copy Constructor");
+        if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "Copy Constructor");
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         if(parTours == null) parTours = new ArrayList<>();
@@ -66,7 +67,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d("ToursRecyclerview", "Creating View Holder");
+        if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "Creating View Holder");
         View view = mInflater.inflate(R.layout.recyclerview_tour_filter_result, parent, false);
         return new ViewHolder(view);
     }
@@ -78,7 +79,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.d("ToursRecyclerview", "starting set properties");
+        if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
         Tour tour = this.tours.get(position);
 //        holder.tvTitle.setTextColor(Color.BLACK);
@@ -109,11 +110,11 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
             //handler.setIndicatorsEnabled(true);
             String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
             handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            Log.d("ResultFilterRVAdapter", "ImageInfo loaded: " + url);
+            if (BuildConfig.DEBUG) Log.d("ResultFilterRVAdapter", "ImageInfo loaded: " + url);
         } else {
             Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
                     .placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            Log.d("ResultFilterRVAdapter", "Images not found");
+            if (BuildConfig.DEBUG) Log.d("ResultFilterRVAdapter", "Images not found");
         }
         holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
     }

@@ -85,6 +85,54 @@
 
 -keep class android.support.v7.widget.SearchView { *; }
 
+-keepattributes *Annotation*
+#-keep public class com.google.vending.licensing.ILicensingService
+#-keep public class com.android.vending.licensing.ILicensingService
+
+# For native methods, see http://proguard.sourceforge.net/manual/examples.html#native
+-keepclasseswithmembernames class * {
+	native <methods>;
+}
+
+-keep class Lorg.** { *; }
+-keep class org.** { *; }
+
+
+# keep setters in Views so that animations can still work.
+# see http://proguard.sourceforge.net/manual/examples.html#beans
+-keepclassmembers public class * extends android.view.View {
+   void set*(***);
+   *** get*();
+}
+
+-keepclassmembers public class Lorg.osmdroid.* {
+   void set*(***);
+   *** get*();
+}
+
+-keepclassmembers public class * extends org.osmdroid.views {
+   void set*(***);
+   *** get*();
+}
+
+# We want to keep methods in Activity that could be used in the XML attribute onClick
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+
+# For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations
+-keepclassmembers enum * {
+	public static **[] values();
+	public static ** valueOf(java.lang.String);
+}
+
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+
+-keepclassmembers class **.R$* {
+	public static <fields>;
+}
 
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
@@ -117,3 +165,9 @@
 -keep class eu.wise_iot.wanderlust.services.** { *; }
 
 ##---------------End: proguard configuration for Gson  ----------
+
+-assumenosideeffects class android.util.Log {
+    public static int v(...);
+    public static int d(...);
+    public static int i(...);
+}

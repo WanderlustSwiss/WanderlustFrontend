@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         FragmentManager fm = getFragmentManager();
 
-        Log.d(TAG,"FRAGMENTSTACK COUNT: " + fm.getBackStackEntryCount());
+        if (BuildConfig.DEBUG) Log.d(TAG,"FRAGMENTSTACK COUNT: " + fm.getBackStackEntryCount());
 
         // MAIN FRAGMENTS
         switch (id) {
@@ -428,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     break;
                 default:
                     DateTime lastLogin2 = DateTime.parse(user.getLastLogin());
-                    Log.d(TAG, "Last login: " + lastLogin2);
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Last login: " + lastLogin2);
                     //check if last login is within last 24h
                     if (lastLogin2.isAfter(new DateTime().minusDays(1))) {
                         setupDrawerHeader(user);

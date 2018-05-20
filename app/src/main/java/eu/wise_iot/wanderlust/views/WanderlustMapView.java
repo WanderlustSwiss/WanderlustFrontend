@@ -15,6 +15,7 @@ import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.MotionEventListener;
@@ -96,7 +97,7 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
                 centerOfPublicTransportOverlay = new GeoPoint(0.0, 0.0);
             }
 
-            Log.d("ZOOOOOOOOM", String.valueOf(getZoomLevel()));
+            if (BuildConfig.DEBUG) Log.d("ZOOOOOOOOM", String.valueOf(getZoomLevel()));
 
             // Update SAC Hut Overlay
             if (sacHutEnabled) {
@@ -143,7 +144,7 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
         float angle = rotationDetector.getAngle();
         wanderlustCompassOverlay.setLastKnownAngle(angle);
         this.setMapOrientation(-angle);
-        Log.d("RotationGestureDetector", "Rotation: " + Float.toString(angle));
+        if (BuildConfig.DEBUG) Log.d("RotationGestureDetector", "Rotation: " + Float.toString(angle));
     }
 
 

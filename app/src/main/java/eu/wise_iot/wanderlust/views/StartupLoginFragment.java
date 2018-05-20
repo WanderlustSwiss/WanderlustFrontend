@@ -30,6 +30,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -305,19 +306,19 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 
                     break;
                 case NOT_FOUND:
-                    Log.d(TAG,"ERROR: Server Response arrived -> User was not found");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> User was not found");
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_user_not_found), Toast.LENGTH_LONG).show();
                     break;
                 case SERVER_ERROR:
-                    Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_user), Toast.LENGTH_LONG).show();
                     break;
                 case NETWORK_ERROR:
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                    Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
                     break;
                 default:
-                    Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
             }
 

@@ -13,6 +13,7 @@ import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.WanderlustMapView;
@@ -89,7 +90,7 @@ public class MapCacheHandler {
                 @Override
                 public void onTaskComplete() {
                     notificationManager.cancel(notificationID);
-                    Log.d(TAG, "Download finished");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Download finished");
                 }
 
                 @Override
@@ -107,7 +108,7 @@ public class MapCacheHandler {
 
                 @Override
                 public void downloadStarted() {
-                    Log.d(TAG, "Download started");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Download started");
                 }
 
                 @Override
@@ -117,7 +118,7 @@ public class MapCacheHandler {
                 @Override
                 public void onTaskFailed(int errors) {
                     notificationManager.cancel(notificationID);
-                    Log.d(TAG, "Download finished");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Download finished");
                 }
             });
 
@@ -158,7 +159,7 @@ public class MapCacheHandler {
         cacheManagerTask.addCallback(new CacheManager.CacheManagerCallback() {
             @Override
             public void onTaskComplete() {
-                Log.d(TAG, "Tour deleted, Cache Usage/Capacity:" + String.valueOf(
+                if (BuildConfig.DEBUG) Log.d(TAG, "Tour deleted, Cache Usage/Capacity:" + String.valueOf(
                         cacheManager.currentCacheUsage()) + "/" + String.valueOf(cacheManager.cacheCapacity()));
             }
 
@@ -179,7 +180,7 @@ public class MapCacheHandler {
 
             @Override
             public void onTaskFailed(int errors) {
-                Log.d(TAG, "Tour deleted, Cache Usage/Capacity:" + String.valueOf(
+                if (BuildConfig.DEBUG) Log.d(TAG, "Tour deleted, Cache Usage/Capacity:" + String.valueOf(
                         cacheManager.currentCacheUsage()) + "/" + String.valueOf(cacheManager.cacheCapacity()));
             }
         });

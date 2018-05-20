@@ -168,7 +168,7 @@ public class TourController {
                     //save tour in local db
                     if(cacheHandler.downloadMap()){
                         communityTourDao.create(data);
-                        //Log.d(TAG, "Is saved");
+                        //if (BuildConfig.DEBUG) Log.d(TAG, "Is saved");
                         handler.onResponse(new ControllerEvent(EventType.OK));
                     }else{
                         handler.onResponse(new ControllerEvent(EventType.NOT_FOUND));

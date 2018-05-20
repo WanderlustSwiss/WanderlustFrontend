@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
@@ -150,7 +151,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         }
                     } catch (Exception e) {
-                        Log.d(TAG, "Favorite delete failed");
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Favorite delete failed");
                     }
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));

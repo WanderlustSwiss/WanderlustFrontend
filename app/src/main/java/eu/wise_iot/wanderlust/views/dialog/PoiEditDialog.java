@@ -327,10 +327,6 @@ public class PoiEditDialog extends DialogFragment {
             AddressPoint addressPoint = (AddressPoint) controllerEvent.getModel();
             StringBuilder nameProposal = new StringBuilder();
             boolean isFirst = true;
-            if (addressPoint.getName() != null){
-                nameProposal.append(addressPoint.getName());
-                isFirst = false;
-            }
             if (addressPoint.getName() == null && addressPoint.getRoad() != null){
                 nameProposal.append(addressPoint.getRoad());
                 isFirst = false;
@@ -340,6 +336,7 @@ public class PoiEditDialog extends DialogFragment {
                     nameProposal.append(", ");
                 }
                 nameProposal.append(addressPoint.getVillage());
+                isFirst = false;
             }
             if (addressPoint.getCity() != null){
                 if (!isFirst){

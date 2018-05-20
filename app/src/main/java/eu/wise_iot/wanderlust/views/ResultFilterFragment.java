@@ -19,6 +19,7 @@ import android.widget.TextView;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
@@ -88,7 +89,7 @@ public class ResultFilterFragment extends Fragment {
                     List<Tour> list  = new LinkedList<>((List<Tour>) event.getModel());
                     ResultFilterFragment.this.listFilteredTours.addAll(list);
                     currentPage++;
-                    Log.d(TAG, "Getting filtered Tours: Server response arrived");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Getting filtered Tours: Server response arrived");
                     //get all the images needed and save them on the device
                     getDataFromServer(listFilteredTours);
                     adapterRoutes.notifyDataSetChanged();
@@ -108,17 +109,17 @@ public class ResultFilterFragment extends Fragment {
                         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                             switch (newState) {
                                 case RecyclerView.SCROLL_STATE_IDLE:
-                                    Log.d(TAG,"The RecyclerView is not scrolling");
+                                    if (BuildConfig.DEBUG) Log.d(TAG,"The RecyclerView is not scrolling");
                                     int myCellWidth = rvToursFiltered.getChildAt(0).getMeasuredHeight();
                                     final int offset = rvToursFiltered.computeHorizontalScrollOffset();
                                     int position = offset / myCellWidth;
-                                    //Log.d(TAG, "pos: "+position);
+                                    //if (BuildConfig.DEBUG) Log.d(TAG, "pos: "+position);
                                     if (5 < (position - (10*currentPage))) {
                                         resultFilterController.getFilteredTours(controllerEvent -> {
                                             switch (controllerEvent.getType()) {
                                                 case OK:
                                                     //get all needed information from server db
-                                                    //Log.d(TAG,"added new page " + currentPage);
+                                                    //if (BuildConfig.DEBUG) Log.d(TAG,"added new page " + currentPage);
                                                     LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                                     currentPage++;
                                                     listFilteredTours.addAll(newList);
@@ -126,7 +127,7 @@ public class ResultFilterFragment extends Fragment {
                                                     adapterRoutes.notifyDataSetChanged();
                                                     break;
                                                 default:
-                                                    Log.d(TAG,"Server response ERROR: " + controllerEvent.getType().name());
+                                                    if (BuildConfig.DEBUG) Log.d(TAG,"Server response ERROR: " + controllerEvent.getType().name());
                                                     break;
                                             }
                                         },settingsSet.rating, settingsSet.distanceS, settingsSet.distanceE, currentPage ,settingsSet.durationS,
@@ -134,10 +135,10 @@ public class ResultFilterFragment extends Fragment {
                                                 settingsSet.name,
                                                 resultFilterController.getDifficultiesByArray(settingsSet.cbT1, settingsSet.cbT2,settingsSet.cbT3,settingsSet.cbT4,settingsSet.cbT5,settingsSet.cbT6));
                                     }
-                                    Log.d(TAG,"Scroll idle");
+                                    if (BuildConfig.DEBUG) Log.d(TAG,"Scroll idle");
                                     break;
                                 case RecyclerView.SCROLL_STATE_DRAGGING:
-                                    Log.d(TAG,"Scrolling now");
+                                    if (BuildConfig.DEBUG) Log.d(TAG,"Scrolling now");
                                     break;
                             }
                         }
@@ -159,7 +160,7 @@ public class ResultFilterFragment extends Fragment {
      */
     @SuppressWarnings("WeakerAccess")
     protected void onItemClickImages(View view, Tour tour) {
-        Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
+        if (BuildConfig.DEBUG) Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
@@ -180,14 +181,14 @@ public class ResultFilterFragment extends Fragment {
                 toc.downloadThumbnail(ut.getTour_id(), 1, controllerEvent -> {
                     switch (controllerEvent.getType()) {
                         case OK:
-                            Log.d(TAG, "Server response thumbnail downloading: " + controllerEvent.getType().name());
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Server response thumbnail downloading: " + controllerEvent.getType().name());
                             break;
                         default:
-                            Log.d(TAG, "Server response thumbnail ERROR: " + controllerEvent.getType().name());
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Server response thumbnail ERROR: " + controllerEvent.getType().name());
                     }
                 });
             } catch (Exception e){
-                Log.d(TAG, "Server response ERROR: " + e.getMessage());
+                if (BuildConfig.DEBUG) Log.d(TAG, "Server response ERROR: " + e.getMessage());
             }
         }
     }
