@@ -78,7 +78,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         UserComment userComment = this.comments.get(position);
 
-        holder.tvNickname.setText(userComment.getNickname());
+        holder.tvNickname.setText(userComment.getNickname() + " (" + userComment.getScore() + ")");
         holder.tvText.setText(userComment.getText());
         holder.tvUpdatedAt.setText(convertToTimeString(userComment.getUpdatedAt()));
 

@@ -391,7 +391,7 @@ public class TourController {
     }
     public void createComment(String comment, FragmentHandler handler){
         Call<UserComment> call = commentService.createTourComment(new UserComment(0,
-                comment,null, null, null, tour.getTour_id(), 0));
+                comment,null, null, null, tour.getTour_id(), 0, 0));
         call.enqueue(new Callback<UserComment>() {
             @Override
             public void onResponse(Call<UserComment> call, Response<UserComment> response) {

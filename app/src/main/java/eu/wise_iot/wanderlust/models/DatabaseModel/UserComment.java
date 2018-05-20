@@ -7,11 +7,12 @@ public class UserComment {
     private String updatedAt;
     private String createdAt;
     private String nickname;
+    private int score;
     private long tour;
     private long user;
 
     public UserComment(long com_id, String text, String updatedAt,
-                       String createdAt, String nickname, long tour, long user) {
+                       String createdAt, String nickname, long tour, long user, int score) {
         this.com_id = com_id;
         this.text = text;
         this.updatedAt = updatedAt;
@@ -19,6 +20,7 @@ public class UserComment {
         this.nickname = nickname;
         this.tour = tour;
         this.user = user;
+        this.score = score;
     }
     public long getCom_id() {
         return com_id;
@@ -74,5 +76,13 @@ public class UserComment {
 
     public void setUser(long user) {
         this.user = user;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
