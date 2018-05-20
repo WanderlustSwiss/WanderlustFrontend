@@ -105,7 +105,7 @@ public class StartupRegistrationFragment extends Fragment {
         initActionControls();
 
         //handle keyboard closing
-        view.findViewById(R.id.rootLayout).setOnTouchListener((v, event) -> {
+        view.findViewById(R.id.rootL).setOnTouchListener((v, event) -> {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             return true;
