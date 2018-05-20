@@ -484,6 +484,7 @@ public class TourOverviewFragment extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, description);
         shareIntent.putExtra(Intent.EXTRA_TITLE, tour.getTitle());
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, tour.getTitle());
+        shareIntent.setType("text/plain");
         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
     }
 }
