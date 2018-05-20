@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                             Fragment f = fm.findFragmentByTag(Constants.LOGIN_FRAGMENT);
                             if (f == null) f = StartupLoginFragment.newInstance();
-                            switchFragment(f, Constants.LOGIN_FRAGMENT,fm.beginTransaction());
+                            switchFragment(f, Constants.LOGIN_FRAGMENT);
                             break;
                         case NETWORK_ERROR:
                             Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
@@ -286,17 +286,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
         }
 
-        switchFragment(fragment, fragmentTag,fm.beginTransaction());
+        switchFragment(fragment, fragmentTag);
         return true;
     }
 
-    private void switchFragment(Fragment fragment, String fragmentTag, FragmentTransaction ft) {
+    private void switchFragment(Fragment fragment, String fragmentTag) {
         if (fragment != null) {
             if(fragment.isAdded()){
-                ft.show(fragment);
+                getFragmentManager().beginTransaction().show(fragment);
             } else {
                 if(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT).isAdded()) {
-                    ft.remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
+                    getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
                 }
                 //pop the backstack without showing the fragments to not infinite add to the stack
                 //null is anchor for the stack
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     getSupportFragmentManager().executePendingTransactions();
                 }
                 //set anchor null, not the tag of the given fragment
-                ft.replace(R.id.content_frame, fragment, fragmentTag)
+                getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, fragmentTag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         email = (TextView) findViewById(R.id.user_mail_address);
         userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
 
-        userProfileImage.setOnClickListener(view -> switchFragment(ProfileFragment.newInstance(), Constants.PROFILE_FRAGMENT,getFragmentManager().beginTransaction()));
+        userProfileImage.setOnClickListener(view -> switchFragment(ProfileFragment.newInstance(), Constants.PROFILE_FRAGMENT));
 
         username.setText(user.getNickname());
         email.setText(user.getEmail());
