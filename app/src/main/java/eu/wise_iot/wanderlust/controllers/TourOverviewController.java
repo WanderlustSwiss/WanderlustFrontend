@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
@@ -14,8 +15,6 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
-
-import static android.util.Log.d;
 
 /**
  * ToursController:
@@ -109,7 +108,7 @@ public class TourOverviewController {
             countDownLatchThread.await();
             return responseCode.get();
         } catch (Exception e){
-            Log.d(TAG,"failure while processing request");
+            if (BuildConfig.DEBUG) Log.d(TAG,"failure while processing request");
         }
         return responseCode.get();
     }
@@ -119,7 +118,7 @@ public class TourOverviewController {
             Favorite fav = favoriteDao.findOne(Favorite_.tour, id);
             if(fav != null) return fav.getFav_id();
         } catch (Exception e){
-            d(TAG, e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
         return -1;
     }

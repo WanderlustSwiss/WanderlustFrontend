@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
@@ -94,7 +95,7 @@ public class RatingDao extends DatabaseObjectAbstract{
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         }
                     } catch (Exception e){
-                        Log.d(TAG, e.getMessage());
+                        if (BuildConfig.DEBUG) Log.d(TAG, e.getMessage());
                     }
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));

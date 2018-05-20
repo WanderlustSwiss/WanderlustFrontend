@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
@@ -354,19 +355,19 @@ public class TourFragment extends Fragment {
         String completeString = preText + " " + dateTime + " " + getString(R.string.o_clock);
         selectedDay.setText(completeString);
 
-        Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
-        Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
+        if (BuildConfig.DEBUG) Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
+        if (BuildConfig.DEBUG) Log.d("GEOPOINT-LONGITUDE", String.valueOf(tour.getGeoPoints().get(0).getLongitude()));
 
         equipmentController.retrieveRecommendedEquipment(tour, selectedDateTime, controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
-                    Log.d(TAG, "got equipment for tour");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "got equipment for tour");
                     TourFragment.this.listEquipment.clear();
                     TourFragment.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
                     adapterEquip.notifyDataSetChanged();
                     break;
                 default:
-                    Log.d(TAG, "failure getting equipment for tour");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "failure getting equipment for tour");
                     break;
             }
         });
@@ -377,7 +378,7 @@ public class TourFragment extends Fragment {
      */
     private void fillControls() {
         List<File> images = imageController.getImages(tour.getImagePaths());
-        Log.d("Debug", "Images size:" + images.size());
+        if (BuildConfig.DEBUG) Log.d("Debug", "Images size:" + images.size());
         if (!images.isEmpty() && tour.getImagePaths().get(0) != null) {
             Picasso handler = imageController.getPicassoHandler(getActivity());
             //handler.setIndicatorsEnabled(true);
@@ -527,7 +528,7 @@ public class TourFragment extends Fragment {
                     commentProgressBar.setVisibility(View.GONE);
                     break;
                 default:
-                    Log.d(TAG, "Server response ERROR: " + event.getType().name());
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Server response ERROR: " + event.getType().name());
                     Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
             }
         });
@@ -593,7 +594,7 @@ public class TourFragment extends Fragment {
                     });
                     break;
                 default:
-                    Log.d("WETTER", "service problem");
+                    if (BuildConfig.DEBUG) Log.d("WETTER", "service problem");
                     break;
             }
         });
@@ -886,7 +887,7 @@ public class TourFragment extends Fragment {
         if (tourController.getPolyline() == null) {
             return;
         }
-        Log.d(TAG, tourController.getPolyline());
+        if (BuildConfig.DEBUG) Log.d(TAG, tourController.getPolyline());
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
         Road road = new Road(polyList);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);

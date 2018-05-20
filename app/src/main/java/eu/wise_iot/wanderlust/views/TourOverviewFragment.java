@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.EventType;
@@ -105,7 +106,7 @@ public class TourOverviewFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.filterIcon:
-                Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
+                if (BuildConfig.DEBUG) Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, FilterFragment.newInstance(), Constants.FILTER_FRAGMENT)
                         .addToBackStack(Constants.FILTER_FRAGMENT)
@@ -190,7 +191,7 @@ public class TourOverviewFragment extends Fragment {
 
                     listTours.addAll(list);
 
-                    Log.d(TAG, "Getting Tours: Server response arrived");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Getting Tours: Server response arrived");
                     //get all the images needed and save them on the device
                    // getDataFromServer(listTours);
 
@@ -218,7 +219,7 @@ public class TourOverviewFragment extends Fragment {
                         pbTours.setVisibility(View.GONE);
                     }
                 default:
-                    Log.d(TAG, "Server response ERROR: " + event.getType().name());
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Server response ERROR: " + event.getType().name());
 
             }
         });
@@ -227,7 +228,7 @@ public class TourOverviewFragment extends Fragment {
         tourOverviewController.getAllFavoriteTours(controllerEvent -> {
             switch (controllerEvent.getType()) {
                 case OK:
-                    Log.d(TAG, "refresh Favorites");
+                    if (BuildConfig.DEBUG) Log.d(TAG, "refresh Favorites");
                     List<Tour> list = (List<Tour>) controllerEvent.getModel();
                     TourOverviewFragment.this.favTours.clear();
                     for (Tour tour : list)
@@ -236,7 +237,7 @@ public class TourOverviewFragment extends Fragment {
 
                     TourOverviewFragment.this.favTours.addAll(list);
                     //getDataFromServer(favTours);
-                    Log.d(TAG, favTours.toString());
+                    if (BuildConfig.DEBUG) Log.d(TAG, favTours.toString());
                     TourOverviewFragment.this.adapterFavs.notifyDataSetChanged();
 
                     if(adapterFavs.getItemCount() > 0) {
@@ -262,7 +263,7 @@ public class TourOverviewFragment extends Fragment {
                         pbFavorites.setVisibility(View.GONE);
                     }
                 default:
-                    Log.d("ERROR", "failed to get Favorites");
+                    if (BuildConfig.DEBUG) Log.d("ERROR", "failed to get Favorites");
             }
         });
 
@@ -271,11 +272,11 @@ public class TourOverviewFragment extends Fragment {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
-                        Log.d(TAG, "The RecyclerView is not scrolling");
+                        if (BuildConfig.DEBUG) Log.d(TAG, "The RecyclerView is not scrolling");
                         int myCellWidth = rvTours.getChildAt(0).getMeasuredWidth();
                         final int offset = rvTours.computeHorizontalScrollOffset();
                         int position = offset / myCellWidth;
-                        Log.d(TAG, "Position=" + position + " " + myCellWidth + " " + offset );
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Position=" + position + " " + myCellWidth + " " + offset );
                         if (20 < (position - (25*(currentPage-1)))) {
                             tourOverviewController.getAllTours(currentPage, controllerEvent -> {
                                 switch (controllerEvent.getType()) {
@@ -285,18 +286,18 @@ public class TourOverviewFragment extends Fragment {
                                         listTours.addAll(newList);
                                         //getDataFromServer(newList);
                                         adapterRoutes.notifyDataSetChanged();
-                                        Log.d(TAG, "added new page " + currentPage);
+                                        if (BuildConfig.DEBUG) Log.d(TAG, "added new page " + currentPage);
                                         break;
                                     default:
-                                        Log.d(TAG, "Server response ERROR: " + controllerEvent.getType().name());
+                                        if (BuildConfig.DEBUG) Log.d(TAG, "Server response ERROR: " + controllerEvent.getType().name());
                                         Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
                                 }
                             });
                         }
-                        Log.d(TAG, "Scroll idle");
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Scroll idle");
                         break;
                     case RecyclerView.SCROLL_STATE_DRAGGING:
-                        Log.d(TAG, "Scrolling now");
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Scrolling now");
                         break;
                 }
             }
@@ -308,16 +309,16 @@ public class TourOverviewFragment extends Fragment {
     private void onItemClickImages(View view, Tour tour) {
         switch (view.getId()) {
             case R.id.tourOVFavoriteButton:
-                Log.d(TAG,"Tour Favorite Clicked and event triggered ");
+                if (BuildConfig.DEBUG) Log.d(TAG,"Tour Favorite Clicked and event triggered ");
                 ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.tourOVFavoriteButton);
-                Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
+                if (BuildConfig.DEBUG) Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
                 long favId = tourOverviewController.getTourFavoriteId(tour.getTour_id());
                 if(favId != -1) {
                     tourOverviewController.deleteFavorite(favId, controllerEvent -> {
                         switch (controllerEvent.getType()) {
                             case OK:
                                 //favorizedTours.remove(tour.getTour_id());
-                                Log.d(TAG, "favorite successfully deleted " + tour.getTour_id());
+                                if (BuildConfig.DEBUG) Log.d(TAG, "favorite successfully deleted " + tour.getTour_id());
                                 ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                                 //remove tour from adapter dataset
                                 for(Tour tmpTour : favTours)
@@ -338,16 +339,16 @@ public class TourOverviewFragment extends Fragment {
                                 }
                                 break;
                             default:
-                                Log.d(TAG, "favorite failure while deleting " + tour.getTour_id());
+                                if (BuildConfig.DEBUG) Log.d(TAG, "favorite failure while deleting " + tour.getTour_id());
                                 Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
                         }
                     });
                 } else {
-                    Log.d(TAG, "favorite gets favored: " + tour.getTour_id());
+                    if (BuildConfig.DEBUG) Log.d(TAG, "favorite gets favored: " + tour.getTour_id());
                     tourOverviewController.setFavorite(tour, controllerEvent -> {
                         switch (controllerEvent.getType()){
                             case OK:
-                                Log.d("Touroverview rv", "favorite succesfully added " + tour.getTour_id());
+                                if (BuildConfig.DEBUG) Log.d("Touroverview rv", "favorite succesfully added " + tour.getTour_id());
                                 ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
                                 //add tour to adapter dataset
                                 favTours.add(tour);
@@ -366,7 +367,7 @@ public class TourOverviewFragment extends Fragment {
                                 }
                                 break;
                             default:
-                                Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());
+                                if (BuildConfig.DEBUG) Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());
                                 Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
                         }
                     });
@@ -383,7 +384,7 @@ public class TourOverviewFragment extends Fragment {
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                                 break;
                             default:
-                                Log.d(TAG , "failed");
+                                if (BuildConfig.DEBUG) Log.d(TAG , "failed");
                         }
                     });
 
@@ -394,17 +395,17 @@ public class TourOverviewFragment extends Fragment {
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
                                 break;
                             default:
-                                Log.d(TAG, "failed");
+                                if (BuildConfig.DEBUG) Log.d(TAG, "failed");
                         }
                     });
                 }
                 break;
             case R.id.tourOVShareButton:
-                Log.d(TAG,"Tour share");
+                if (BuildConfig.DEBUG) Log.d(TAG,"Tour share");
                 shareTour(tour);
                 break;
             case R.id.tour_rv_item:
-                Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
+                if (BuildConfig.DEBUG) Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
 
                 AsyncCheckTourExists asyncCheckTourExists = new AsyncCheckTourExists(tour, getActivity());
                 asyncCheckTourExists.execute();
@@ -444,7 +445,7 @@ public class TourOverviewFragment extends Fragment {
             super.onPostExecute(result);
             switch(EventType.getTypeByCode(responseCode)) {
                 case OK:
-                    Log.d(TAG,"Server Response arrived -> OK Tour was found");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");
                     getFragmentManager().beginTransaction()
                             .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
                             .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
@@ -452,22 +453,22 @@ public class TourOverviewFragment extends Fragment {
                     ((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     break;
                 case NOT_FOUND:
-                    Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
                     recentTours.remove(tour);
                     adapterRecent.notifyDataSetChanged();
                     tourOverviewController.removeRecentTour(tour);
                     break;
                 case SERVER_ERROR:
-                    Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
                     break;
                 case NETWORK_ERROR:
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                    Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
                     break;
                 default:
-                    Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
             }
 

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour_;
@@ -95,22 +96,22 @@ public class RecentTourDao extends DatabaseObjectAbstract {
                         userTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
                             switch (controllerEvent.getType()) {
                                 case OK:
-                                    Log.d("RECENTTOUR UPDATE","OK");
+                                    if (BuildConfig.DEBUG) Log.d("RECENTTOUR UPDATE","OK");
                                     break;
                                 case NOT_FOUND:
-                                    Log.d("RECENTTOUR UPDATE","NOT FOUND");
+                                    if (BuildConfig.DEBUG) Log.d("RECENTTOUR UPDATE","NOT FOUND");
                                     this.remove(tour);
                                     break;
                                 default:
                             }
                         });
                     } catch (Exception e){
-                        Log.d("RECENTTOUR UPDATE","EXCEPTION THROWN IN THREAD");
+                        if (BuildConfig.DEBUG) Log.d("RECENTTOUR UPDATE","EXCEPTION THROWN IN THREAD");
                     }
                 }).start();
             }
         } catch(Exception e){
-            Log.d("FAILURE","EXCEPTION THROWN IN METHOD");
+            if (BuildConfig.DEBUG) Log.d("FAILURE","EXCEPTION THROWN IN METHOD");
         }
     }
     /**

@@ -23,6 +23,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.AddPoiCommand;
@@ -327,7 +328,7 @@ public class PoiEditDialog extends DialogFragment {
             AddressPoint addressPoint = (AddressPoint) controllerEvent.getModel();
             if (addressPoint != null &&
                     addressPoint.getCity() != null && addressPoint.getName() != null){
-                Log.d(TAG, addressPoint.getName());
+                if (BuildConfig.DEBUG) Log.d(TAG, addressPoint.getName());
                 titleEditText.setText(addressPoint.getName() + ", " + addressPoint.getCity());
             }
         });

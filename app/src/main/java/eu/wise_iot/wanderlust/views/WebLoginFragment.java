@@ -32,6 +32,7 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.TimeZone;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -102,7 +103,7 @@ public class WebLoginFragment extends Fragment  {
             EventType eventType = event.getType();
             switch (eventType) {
                 case OK:
-                    Log.d(TAG, getActivity() != null ? "not null" : "null");
+                    if (BuildConfig.DEBUG) Log.d(TAG, getActivity() != null ? "not null" : "null");
                     SharedPreferences preferences = context.getPreferences(Context.MODE_PRIVATE);
                     User user = (User) event.getModel();
                     ((MainActivity) context).setupDrawerHeader(user);
@@ -139,7 +140,7 @@ public class WebLoginFragment extends Fragment  {
 
                     break;
                 default:
-                    Log.d("ERROR", eventType.toString());
+                    if (BuildConfig.DEBUG) Log.d("ERROR", eventType.toString());
                     Toast.makeText(context, eventType.toString(), Toast.LENGTH_LONG).show();
                     break;
             }
@@ -202,7 +203,7 @@ public class WebLoginFragment extends Fragment  {
                 public void onReceivedHttpError(WebView view, WebResourceRequest request,
                                                 WebResourceResponse errorRyesponse) {
 
-                    Log.d("ERROR" , "Name: " + errorRyesponse.toString() + "/ Code: " + errorRyesponse.getStatusCode());
+                    if (BuildConfig.DEBUG) Log.d("ERROR" , "Name: " + errorRyesponse.toString() + "/ Code: " + errorRyesponse.getStatusCode());
 
                     Fragment loginFragment = context.getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
                     if (loginFragment == null) loginFragment = StartupLoginFragment.newInstance();
@@ -229,7 +230,7 @@ public class WebLoginFragment extends Fragment  {
             DateTime lastLogin = DateTime.parse(user.getLastLogin());
             DateTime timerLimit = new DateTime();
             timerLimit = timerLimit.minusDays(1);
-            Log.d(TAG, "Last login: " + lastLogin);
+            if (BuildConfig.DEBUG) Log.d(TAG, "Last login: " + lastLogin);
 
             if (lastLogin.isAfter(timerLimit)) {
                 ((MainActivity)context).setupDrawerHeader(user);

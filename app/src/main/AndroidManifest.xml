@@ -26,7 +26,6 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <!-- FileProvider is needed for targetSDKVersion >= 24 -->
         <provider
             android:name="android.support.v4.content.FileProvider"

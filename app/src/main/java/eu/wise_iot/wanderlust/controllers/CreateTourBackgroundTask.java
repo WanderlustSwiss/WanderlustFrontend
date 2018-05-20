@@ -21,6 +21,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.views.MainActivity;
@@ -140,7 +141,7 @@ public class CreateTourBackgroundTask extends Service {
         } catch (java.lang.SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+            if (BuildConfig.DEBUG) Log.d(TAG, "network provider does not exist, " + ex.getMessage());
         }
 
     }

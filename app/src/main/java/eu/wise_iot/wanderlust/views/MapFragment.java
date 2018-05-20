@@ -558,7 +558,7 @@ public class MapFragment extends Fragment {
                 new String[]{"https://opentopomap.org/"});
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);
-        //mapView.setMultiTouchControls(true);
+        mapView.setMultiTouchControls(true);
     }
 
     /**
@@ -910,7 +910,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        getActivity().invalidateOptionsMenu();
+        //getActivity().invalidateOptionsMenu();
         if(menu.findItem(R.id.action_search) != null) {
             SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
             if(searchView != null) {

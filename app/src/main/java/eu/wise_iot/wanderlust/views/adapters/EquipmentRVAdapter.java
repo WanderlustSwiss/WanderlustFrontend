@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
@@ -43,7 +44,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      * @param parEquipment
      */
     public EquipmentRVAdapter(Context context, List<Equipment> parEquipment) {
-        Log.d(TAG, "Copy Constructor");
+        if (BuildConfig.DEBUG) Log.d(TAG, "Copy Constructor");
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         if(parEquipment == null) parEquipment = new ArrayList<>();
@@ -59,7 +60,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "Creating Viewholder");
+        if (BuildConfig.DEBUG) Log.d(TAG, "Creating Viewholder");
         View view = mInflater.inflate(R.layout.recyclerview_tour_equipment, parent, false);
         return new ViewHolder(view);
     }
@@ -71,7 +72,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.d(TAG, "starting to set Viewholder properties");
+        if (BuildConfig.DEBUG) Log.d(TAG, "starting to set Viewholder properties");
         //set properties for each element
         Equipment equipment = this.equipment.get(position);
         //load image
@@ -139,7 +140,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.equipmentTitle);
             ivImage = (ImageView) itemView.findViewById(R.id.equipmentImage);
-            Log.d("DEBUG", "ViewHolder broken");
+            if (BuildConfig.DEBUG) Log.d("DEBUG", "ViewHolder broken");
             itemView.setOnClickListener(this);
         }
 

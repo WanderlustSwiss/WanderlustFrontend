@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -434,7 +435,7 @@ public class CreateTourDialog extends DialogFragment {
                 }
             }
         } catch (IOException e) {
-            Log.d(TAG, e.getMessage());
+            if (BuildConfig.DEBUG) Log.d(TAG, e.getMessage());
         }
 
         if (imageBitmap != null) {
