@@ -8,7 +8,7 @@
     android:elevation="5dp"
     android:orientation="vertical"
     android:id="@+id/tour_rv_item"
-    android:clickable="true"
+    android:clickable="false"
     android:layout_marginBottom="24dp">
 
     <ImageView

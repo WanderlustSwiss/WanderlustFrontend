@@ -129,11 +129,13 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
 
         public ViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.list_fav_title);
-            description = (TextView) itemView.findViewById(R.id.list_fav_description);
-            tripImage = (ImageView) itemView.findViewById(R.id.list_fav_image_view);
-            favIcon = (ImageView) itemView.findViewById(R.id.list_fav_icon);
+            title = itemView.findViewById(R.id.list_fav_title);
+            description = itemView.findViewById(R.id.list_fav_description);
+            tripImage = itemView.findViewById(R.id.list_fav_image_view);
+            favIcon = itemView.findViewById(R.id.list_fav_icon);
+            favIcon.bringToFront();
             itemView.setOnClickListener(this);
+            favIcon.setOnClickListener(this);
         }
 
         @Override

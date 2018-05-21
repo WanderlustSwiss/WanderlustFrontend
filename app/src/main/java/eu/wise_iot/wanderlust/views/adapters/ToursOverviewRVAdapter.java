@@ -78,8 +78,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "Creating View Holder");
-        View view = mInflater.inflate(R.layout.recyclerview_tour_overview, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(mInflater.inflate(R.layout.recyclerview_tour_overview, parent, false));
     }
 
     /**
@@ -92,10 +91,11 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
         Tour tour = this.tours.get(position);
+
         TourController tourController = new TourController(tour);
-//        holder.tvTitle.setTextColor(Color.BLACK);
+
         //difficulty calculations
-        long difficulty = tour.getDifficulty();
+        final long difficulty = tour.getDifficulty();
         if (difficulty >= 6)
             holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t6));
         else if (difficulty >= 4)
@@ -109,9 +109,8 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
 
         holder.ibShare.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
-        if(tourController.isSaved()){
+        if(tourController.isSaved())
             holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.medium));
-        }
 
         holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
         //button Favorite

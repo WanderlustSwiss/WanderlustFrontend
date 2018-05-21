@@ -120,7 +120,7 @@ public class TourOverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         currentPage = 0;
-        PicassoCache.clearCache(Picasso.with(context)); //https://stackoverflow.com/questions/22016382/invalidate-cache-in-picasso
+        //PicassoCache.clearCache(Picasso.with(context)); //https://stackoverflow.com/questions/22016382/invalidate-cache-in-picasso
         View view = inflater.inflate(R.layout.fragment_tour_overview, container, false);
 
         tvToursAllPlaceholder = (TextView) view.findViewById(R.id.tvToursAllPlaceholder);
@@ -128,6 +128,7 @@ public class TourOverviewFragment extends Fragment {
         rvTours = (RecyclerView) view.findViewById(R.id.rvTouren);
         pbTours = (ProgressBar) view.findViewById(R.id.pbTouren);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+
         rvTours.setLayoutManager(horizontalLayoutManager);
         adapterRoutes = new ToursOverviewRVAdapter(context, listTours, getActivity());
         adapterRoutes.setClickListener(this::onItemClickImages);
@@ -267,19 +268,21 @@ public class TourOverviewFragment extends Fragment {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
                         if (BuildConfig.DEBUG) Log.d(TAG, "The RecyclerView is not scrolling");
-                        int myCellWidth = rvTours.getChildAt(0).getMeasuredWidth();
+                        final int myCellWidth = rvTours.getChildAt(0).getMeasuredWidth();
                         final int offset = rvTours.computeHorizontalScrollOffset();
-                        int position = offset / myCellWidth;
+                        final int position = offset / myCellWidth;
                         if (BuildConfig.DEBUG) Log.d(TAG, "Position=" + position + " " + myCellWidth + " " + offset );
                         if (20 < (position - (25*(currentPage-1)))) {
                             tourOverviewController.getAllTours(currentPage, controllerEvent -> {
                                 switch (controllerEvent.getType()) {
                                     case OK:
+                                        listTours.remove(listTours.size() - 1);
+                                        adapterRoutes.notifyItemRemoved(listTours.size());
+
                                         LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                         currentPage++;
                                         listTours.addAll(newList);
-                                        //
-                                        adapterRoutes.notifyItemRangeChanged(listTours.size(),newList.size());
+                                        adapterRoutes.notifyItemRangeChanged((listTours.size() - 5),(newList.size() + 5));
                                         if (BuildConfig.DEBUG) Log.d(TAG, "added new page " + currentPage);
                                         break;
                                     default:
