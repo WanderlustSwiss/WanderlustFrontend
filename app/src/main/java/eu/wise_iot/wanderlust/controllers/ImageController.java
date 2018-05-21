@@ -7,18 +7,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,26 +27,12 @@ import java.util.concurrent.TimeUnit;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.services.GlideApp;
-import eu.wise_iot.wanderlust.services.GlideWL;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import android.content.Context;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Registry;
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.module.AppGlideModule;
-
-import java.io.InputStream;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
 
 
 public class ImageController {
@@ -192,26 +171,13 @@ public class ImageController {
                 ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId() :
                 Uri.parse("android.resource://eu.wise_iot.wanderlust/" + R.drawable.no_image_found).toString();
     }
-    /*
-    public Picasso getGlideHandler(Activity context) {
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .cache(cache)
-                .addInterceptor(chain -> {
-                    Request newRequest = chain.request().newBuilder()
-                            .addHeader("Cookie", LoginUser.getCookies().get(0))
-                            .build();
-                    return chain.proceed(newRequest);
-                })
-                .writeTimeout(5, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .build();
+    public String getURLPOIImage(Poi poi){
+        return (poi.getImagePaths().size() > 0) ?
+                ServiceGenerator.API_BASE_URL + "/poi/" + poi.getPoi_id() + "/img/1" :
+                Uri.parse("android.resource://eu.wise_iot.wanderlust/" + R.drawable.no_image_found).toString();
+    }
 
-        Glide.get(context.getApplicationContext).register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(client));
-        return new Glide.d.Builder(context)
-                .downloader(new OkHttp3Downloader(client))
-                .build();
-    }*/
     public Picasso getPicassoHandler(Activity context) {
 
         OkHttpClient client = new OkHttpClient.Builder()

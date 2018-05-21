@@ -10,16 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.services.GlideApp;
 
 /**
  * Adapter for the profile UI. Represents all favorites in a custom list view
@@ -27,22 +24,22 @@ import eu.wise_iot.wanderlust.services.ServiceGenerator;
  * @author Alexander Weinbeck
  * @license MIT
  */
-public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdapter.ViewHolder> {
+public class ProfilePOIRVAdapter extends RecyclerView.Adapter<ProfilePOIRVAdapter.ViewHolder> {
 
     private ItemClickListener mClickListener;
     private final LayoutInflater mInflater;
 
-    private static final String TAG = "PTRVAdapter";
+    private static final String TAG = "PPRVAdapter";
     private final Activity activity;
     private final Context context;
-    private final List<Tour> tours;
+    private final List<Poi> pois;
 
     private final ImageController imageController;
 
-    public ProfileTripRVAdapter(Context context, List<Tour> tours, Activity activity) {
+    public ProfilePOIRVAdapter(Context context, List<Poi> pois, Activity activity) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.tours = tours;
+        this.pois = pois;
         this.activity = activity;
         this.imageController = ImageController.getInstance();
     }
@@ -50,7 +47,7 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Creating View Holder");
-        View view = mInflater.inflate(R.layout.fragment_profile_list_tour, parent, false);
+        View view = mInflater.inflate(R.layout.fragment_profile_list_poi, parent, false);
         return new ViewHolder(view);
     }
 
@@ -59,38 +56,26 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
         if (BuildConfig.DEBUG) Log.d(TAG, "starting set properties");
 
         //get the item for this row
-        Tour tour = this.tours.get(position);
+        Poi poi = this.pois.get(position);
 
-        holder.title.setText(tour.getTitle());
-        holder.description.setText(tour.getDescription());
+        holder.title.setText(poi.getTitle());
+        holder.description.setText(poi.getDescription());
 
-        List<File> imagefiles = imageController.getImages(tour.getImagePaths());
-        if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
-            //handler.setIndicatorsEnabled(true);
-            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-            imageController.getPicassoHandler(activity)
-                    .load(url)
-                    .fit()
-                    .centerCrop()
-                    .placeholder(R.drawable.progress_animation)
-                    .into(holder.tripImage);
-        } else {
-            Picasso.with(context)
-                    .load(R.drawable.example_image).placeholder(R.drawable.progress_animation)
-                    .fit()
-                    .centerCrop()
-                    .placeholder(R.drawable.progress_animation)
-                    .into(holder.tripImage);
-        }
+        GlideApp.with(context)
+                .load(imageController.getURLPOIImage(poi))
+                .error(R.drawable.no_image_found)
+                .placeholder(R.drawable.progress_animation)
+                .centerCrop()
+                .into(holder.tripImage);
     }
 
     @Override
     public int getItemCount() {
-        return this.tours.size();
+        return this.pois.size();
     }
 
-    private Tour getItem(int id) {
-        return this.tours.get(id);
+    private Poi getItem(int id) {
+        return this.pois.get(id);
     }
 
     public void setClickListener (ItemClickListener itemClickListener){
@@ -98,7 +83,7 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view, Tour tour);
+        void onItemClick(View view, Poi poi);
     }
 
     /**
@@ -121,6 +106,7 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
             itemView.setOnClickListener(this);
             editIcon.setOnClickListener(this);
             deleteIcon.setOnClickListener(this);
+
         }
 
         @Override

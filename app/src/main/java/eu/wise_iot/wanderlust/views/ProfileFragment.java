@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.osmdroid.bonuspack.location.POI;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +35,22 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.MapCacheHandler;
+import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
+import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesRVAdapter;
+import eu.wise_iot.wanderlust.views.adapters.ProfilePOIRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileTripRVAdapter;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+import eu.wise_iot.wanderlust.views.dialog.ConfirmDeletePoiDialog;
+import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
+import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
 /**
  * Fragment which represents the UI of the profile of a user.
@@ -60,6 +69,7 @@ public class ProfileFragment extends Fragment {
     private TextView amountScore;
     private TextView amountTours;
     private TextView nickname;
+    private TextView tvProfileNoContent;
 
     private TabLayout tabLayout;
 
@@ -68,16 +78,20 @@ public class ProfileFragment extends Fragment {
     private final List listSaved = new ArrayList();
     private final List listTrips = new ArrayList();
     private final List listFavorites = new ArrayList();
+    private final List listPOIs = new ArrayList();
 
     private ProfileFavoritesRVAdapter profileFavoritesRVAdapter;
     private ProfileTripRVAdapter profileTripRVAdapter;
     private ProfileSavedRVAdapter profileSavedRVAdapter;
+    private ProfilePOIRVAdapter profilePOIRVAdapter;
 
     private final ProfileController profileController;
+    private final PoiController poiController;
 
     public ProfileFragment() {
         // Required empty public constructor
         profileController = new ProfileController();
+        poiController = new PoiController();
     }
 
     public static ProfileFragment newInstance() {
@@ -157,7 +171,6 @@ public class ProfileFragment extends Fragment {
         profileController.getScore(controllerEvent -> {
             switch (controllerEvent.getType()){
                 case OK:
-                    Profile profile = (Profile) controllerEvent.getModel();
                     int score = ((Profile) controllerEvent.getModel()).getScore();
                     amountScore.setText(String.format(Locale.GERMAN,"%1d" ,score));
                     if (BuildConfig.DEBUG) Log.d("SCORE",  String.valueOf(score));
@@ -184,9 +197,8 @@ public class ProfileFragment extends Fragment {
      * @param view in which the list will be represented
      */
     private void setupTabs(View view) {
-        //initializing views
-        //profileRV = (RecyclerView) view.findViewById(R.id.listContent);
-        tabLayout = (TabLayout) view.findViewById(R.id.profileTabs);
+
+        tabLayout = view.findViewById(R.id.profileTabs);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -199,7 +211,7 @@ public class ProfileFragment extends Fragment {
                         profileRV.setAdapter(profileTripRVAdapter);
                         break;
                     case 2:
-                        //profileRV.setAdapter(profilePoiRVAdapter);
+                        profileRV.setAdapter(profilePOIRVAdapter);
                         break;
                     case 3:
                         profileRV.setAdapter(profileSavedRVAdapter);
@@ -208,6 +220,7 @@ public class ProfileFragment extends Fragment {
                         profileRV.setAdapter(profileSavedRVAdapter);
                         break;
                 }
+                tvProfileNoContent.setVisibility((profileRV.getAdapter().getItemCount() == 0) ? View.VISIBLE : View.GONE);
             }
 
             @Override
@@ -221,7 +234,8 @@ public class ProfileFragment extends Fragment {
     }
 
     public void setupRVs(View view){
-
+        //init textview if empty list
+        tvProfileNoContent = view.findViewById(R.id.tvProfileNoContent);
         //set trip adapter
         profileTripRVAdapter = new ProfileTripRVAdapter(getActivity().getApplicationContext(),
                 listTrips, getActivity());
@@ -245,6 +259,7 @@ public class ProfileFragment extends Fragment {
         listTrips.clear();
         listTrips.addAll(profileController.getUserTours());
         profileTripRVAdapter.notifyDataSetChanged();
+
         //set saved adapter
         profileSavedRVAdapter = new ProfileSavedRVAdapter(getActivity().getApplicationContext(),
                 listSaved, getActivity());
@@ -253,7 +268,16 @@ public class ProfileFragment extends Fragment {
         listSaved.addAll(profileController.getSavedTours());
         profileSavedRVAdapter.notifyDataSetChanged();
 
-        profileRV = (RecyclerView) view.findViewById(R.id.listContent);
+        //set POI adapter
+        profilePOIRVAdapter = new ProfilePOIRVAdapter(getActivity().getApplicationContext(),
+                listPOIs, getActivity());
+        profilePOIRVAdapter.setClickListener(this::onRVItemClickPOI);
+        listPOIs.clear();
+        listPOIs.addAll(profileController.getPois());
+        profilePOIRVAdapter.notifyDataSetChanged();
+
+        //set Recyclerview
+        profileRV = view.findViewById(R.id.listContent);
         profileRV.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
         profileRV.setAdapter(profileFavoritesRVAdapter);
         
@@ -267,8 +291,18 @@ public class ProfileFragment extends Fragment {
         //distinguish what element was clicked by resource id
         switch (view.getId()) {
             case R.id.list_fav_icon:
-                listFavorites.remove(tour);
-                profileFavoritesRVAdapter.notifyDataSetChanged();
+                TourController tourController = new TourController(tour);
+                tourController.unsetFavorite(controllerEvent -> {
+                    switch (controllerEvent.getType()) {
+                        case OK:
+                            listFavorites.remove(tour);
+                            profileFavoritesRVAdapter.notifyDataSetChanged();
+                            break;
+                        default:
+                            Toast.makeText(getActivity(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                });
                 break;
             case R.id.ListTourDelete:
                 profileController.deleteTrip(tour, controllerEvent -> {
@@ -303,6 +337,31 @@ public class ProfileFragment extends Fragment {
                 break;
             default:
                 new AsyncCheckTourExists(tour.toTour(),getActivity()).execute();
+        }
+    }
+
+    /**
+     * handles click on an recycler view item
+     * @param view representing the recycler view item
+     * @param poi
+     */
+    private void onRVItemClickPOI(View view, Poi poi) {
+        //distinguish what element was clicked by resource id
+        switch (view.getId()) {
+            case R.id.ListTourEdit:
+                PoiEditDialog.newInstance(poi).show(getActivity().getFragmentManager(), Constants.EDIT_POI_DIALOG);
+                break;
+            case R.id.ListTourDelete:
+                ConfirmDeletePoiDialog deleteDialog = ConfirmDeletePoiDialog.newInstance(
+                        getActivity().getApplicationContext(), poiController, poi, getActivity().getApplicationContext().getString(R.string.message_confirm_delete_poi));
+                deleteDialog.setupForProfileList(this);
+                deleteDialog.show(getFragmentManager(), Constants.CONFIRM_DELETE_POI_DIALOG);
+                setProfileStats();
+                break;
+            default:
+                PoiViewDialog.newInstance(poi).show(getFragmentManager(), Constants.DISPLAY_FEEDBACK_DIALOG);
+
+                //new AsyncCheckPOIExists(poi,getActivity()).execute();
         }
     }
 
@@ -373,10 +432,7 @@ public class ProfileFragment extends Fragment {
             if (pdLoading.isShowing()) pdLoading.dismiss();
         }
     }
-    /**
-     * This method is invoked when the tab at position 0 is selected. Sets up model with
-     * favorites and adapter to represent the users favorites in a custom list view
-     */
+
 //    public void setupFavorites() {
 //        profileRV.setAdapter(profileFavoritesRVAdapter);
 //    }

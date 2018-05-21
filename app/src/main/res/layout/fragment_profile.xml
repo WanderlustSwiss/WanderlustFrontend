@@ -191,6 +191,14 @@
         android:layout_height="match_parent"
         android:background="@color/primary_second">
 
+        <TextView
+            android:id="@+id/tvProfileNoContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:text="@string/tour_filter_noresult"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listContent"
             android:layout_width="match_parent"

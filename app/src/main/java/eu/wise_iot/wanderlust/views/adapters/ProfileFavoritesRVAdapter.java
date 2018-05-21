@@ -31,7 +31,7 @@ import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.ProfileFragment;
 
 /**
- * Adapter for the profile UI. Represents all favorites in a custom list view
+ * Adapter for the profile UI. Represents all favorites in a custom recycler view
  *
  * @author Alexander Weinbeck
  * @license MIT
@@ -145,61 +145,4 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
         }
     }
 }
-    /**
-     * Gets the custom representation of one favorite in the list view back
-     *
-     * @param position    index of favorite
-     * @param convertView view of fragment
-     * @param parent      view where list element is represented
-     * @return view of one favorite
-     */
-    /*
-    @Nonnull
-    @Override
-    public View getView(int position, View convertView, @Nonnull ViewGroup parent) {
-        //get the item for this row
-        Tour fav = getItem(position);
-        TourController tourController = new TourController(fav);
-        //inflate the row layout
-        convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_profile_list_favorites, parent, false);
-
-        //look up the view for elements
-        title = (TextView) convertView.findViewById(R.id.list_fav_title);
-        description = (TextView) convertView.findViewById(R.id.list_fav_description);
-        tripImage = (ImageView) convertView.findViewById(R.id.list_fav_image_view);
-        favIcon = (ImageView) convertView.findViewById(R.id.list_fav_icon);
-
-        //set data
-        if (fav != null) {
-            title.setText(fav.getTitle());
-            description.setText(fav.getDescription());
-
-            List<ImageInfo> imageinfos = fav.getImagePaths();
-            List<File> imagefiles = imageController.getImages(imageinfos);
-            if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
-                Picasso.with(context)
-                        .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
-                        .fit()
-                        .centerCrop()
-                        .into(tripImage);
-            } else {
-                tripImage.setImageResource(R.drawable.example_image);
-            }
-
-            favIcon.setOnClickListener(e -> tourController.unsetFavorite(controllerEvent -> {
-                switch (controllerEvent.getType()) {
-                    case OK:
-                        View v = profileFragment.getView();
-                        profileFragment.setupFavorites();
-                        break;
-                    default:
-                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }));
-
-        }
-        return convertView;
-    }*/
-
 

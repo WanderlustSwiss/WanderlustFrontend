@@ -19,7 +19,6 @@ import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 /**
@@ -80,14 +79,14 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
                         .fit()
                         .centerCrop()
                         .placeholder(R.drawable.progress_animation)
-                        .into(holder.tripImage);
+                        .into(holder.savedImage);
             } else {
                 Picasso.with(context)
                         .load(R.drawable.example_image).placeholder(R.drawable.progress_animation)
                         .fit()
                         .centerCrop()
                         .placeholder(R.drawable.progress_animation)
-                        .into(holder.tripImage);
+                        .into(holder.savedImage);
             }
         }
     }
@@ -117,14 +116,16 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView title, description;
-        private ImageView tripImage;
+        private ImageView savedImage, savedIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.ListSavedTitle);
             description = (TextView) itemView.findViewById(R.id.ListSavedDescription);
-            tripImage = (ImageView) itemView.findViewById(R.id.ListSavedImageView);
+            savedImage = (ImageView) itemView.findViewById(R.id.ListSavedImageView);
+            savedIcon = itemView.findViewById(R.id.ListSavedIcon);
             itemView.setOnClickListener(this);
+            savedIcon.setOnClickListener(this);
         }
 
         @Override
