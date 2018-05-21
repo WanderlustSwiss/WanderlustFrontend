@@ -116,7 +116,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
 
         GlideApp.with(context)
-                .load(imageController.getURLForTourOVAdapterImage(tour))
+                .load(imageController.getURLImageTourSingle(tour))
                 .error(R.drawable.no_image_found)
                 .placeholder(R.drawable.progress_animation)
                 .centerCrop()

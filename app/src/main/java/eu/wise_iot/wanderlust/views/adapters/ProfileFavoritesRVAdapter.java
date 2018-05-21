@@ -7,28 +7,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.ImageController;
-import eu.wise_iot.wanderlust.controllers.TourController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.services.ServiceGenerator;
-import eu.wise_iot.wanderlust.views.ProfileFragment;
+import eu.wise_iot.wanderlust.services.GlideApp;
 
 /**
  * Adapter for the profile UI. Represents all favorites in a custom recycler view
@@ -74,30 +62,15 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
         //get the item for this row
         Tour fav = this.tours.get(position);
 
-        //set data
-        if (fav != null) {
-            holder.title.setText(fav.getTitle());
-            holder.description.setText(fav.getDescription());
+        holder.title.setText(fav.getTitle());
+        holder.description.setText(fav.getDescription());
 
-            List<File> imagefiles = imageController.getImages(fav.getImagePaths());
-            if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
-                //handler.setIndicatorsEnabled(true);
-                String url = ServiceGenerator.API_BASE_URL + "/tour/" + fav.getTour_id() + "/img/" + fav.getImagePaths().get(0).getId();
-                imageController.getPicassoHandler(activity)
-                        .load(url)
-                        .fit()
-                        .centerCrop()
-                        .placeholder(R.drawable.progress_animation)
-                        .into(holder.tripImage);
-            } else {
-                Picasso.with(context)
-                        .load(R.drawable.example_image)
-                        .fit()
-                        .centerCrop()
-                        .placeholder(R.drawable.progress_animation)
-                        .into(holder.tripImage);
-            }
-        }
+        GlideApp.with(context)
+                .load(imageController.getURLImageTourSingle(fav))
+                .error(R.drawable.no_image_found)
+                .placeholder(R.drawable.progress_animation)
+                .centerCrop()
+                .into(holder.tripImage);
     }
 
     @Override

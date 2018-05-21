@@ -62,7 +62,7 @@ public class ProfilePOIRVAdapter extends RecyclerView.Adapter<ProfilePOIRVAdapte
         holder.description.setText(poi.getDescription());
 
         GlideApp.with(context)
-                .load(imageController.getURLPOIImage(poi))
+                .load(imageController.getURLImagePOISingle(poi))
                 .error(R.drawable.no_image_found)
                 .placeholder(R.drawable.progress_animation)
                 .centerCrop()

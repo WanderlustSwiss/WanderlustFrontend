@@ -19,6 +19,7 @@ import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 /**
@@ -70,24 +71,12 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
             holder.title.setText(tour.getTitle());
             holder.description.setText(tour.getDescription());
 
-            List<File> imagefiles = imageController.getImages(tour.getImagePaths());
-            if (!imagefiles.isEmpty() && imagefiles.get(0).length() != 0) {
-                //handler.setIndicatorsEnabled(true);
-                String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-                imageController.getPicassoHandler(activity)
-                        .load(url)
-                        .fit()
-                        .centerCrop()
-                        .placeholder(R.drawable.progress_animation)
-                        .into(holder.savedImage);
-            } else {
-                Picasso.with(context)
-                        .load(R.drawable.example_image).placeholder(R.drawable.progress_animation)
-                        .fit()
-                        .centerCrop()
-                        .placeholder(R.drawable.progress_animation)
-                        .into(holder.savedImage);
-            }
+            GlideApp.with(context)
+                    .load(imageController.getURLImageTourSingle(tour.toTour()))
+                    .error(R.drawable.no_image_found)
+                    .placeholder(R.drawable.progress_animation)
+                    .centerCrop()
+                    .into(holder.savedImage);
         }
     }
 

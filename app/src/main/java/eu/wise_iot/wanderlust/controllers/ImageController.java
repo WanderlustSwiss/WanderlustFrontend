@@ -166,16 +166,26 @@ public class ImageController {
         return imgFileOrig;
     }
 
-    public String getURLForTourOVAdapterImage(Tour tour){
+    /**
+     * get URL for given tour
+     * @param tour for searching
+     * @return generated URL
+     */
+    public String getURLImageTourSingle(Tour tour){
         return (tour.getImagePaths().size() > 0) ?
                 ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId() :
-                Uri.parse("android.resource://eu.wise_iot.wanderlust/" + R.drawable.no_image_found).toString();
+                defaultImageURL.toString();
     }
 
-    public String getURLPOIImage(Poi poi){
+    /**
+     * get URL for given poi
+     * @param poi for searching
+     * @return generated URL
+     */
+    public String getURLImagePOISingle(Poi poi){
         return (poi.getImagePaths().size() > 0) ?
                 ServiceGenerator.API_BASE_URL + "/poi/" + poi.getPoi_id() + "/img/1" :
-                Uri.parse("android.resource://eu.wise_iot.wanderlust/" + R.drawable.no_image_found).toString();
+                defaultImageURL.toString();
     }
 
     public Picasso getPicassoHandler(Activity context) {
