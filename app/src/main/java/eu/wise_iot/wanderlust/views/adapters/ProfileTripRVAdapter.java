@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.BuildConfig;
@@ -20,7 +16,6 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.GlideApp;
-import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 /**
  * Adapter for the profile UI. Represents all favorites in a custom list view
@@ -34,24 +29,22 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
     private final LayoutInflater mInflater;
 
     private static final String TAG = "PTRVAdapter";
-    private final Activity activity;
     private final Context context;
     private final List<Tour> tours;
 
     private final ImageController imageController;
 
-    public ProfileTripRVAdapter(Context context, List<Tour> tours, Activity activity) {
+    public ProfileTripRVAdapter(Context context, List<Tour> tours) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.tours = tours;
-        this.activity = activity;
         this.imageController = ImageController.getInstance();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Creating View Holder");
-        View view = mInflater.inflate(R.layout.fragment_profile_list_tour, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_profile_trip, parent, false);
         return new ViewHolder(view);
     }
 

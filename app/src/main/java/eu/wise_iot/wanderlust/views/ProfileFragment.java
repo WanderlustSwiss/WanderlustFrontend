@@ -238,13 +238,13 @@ public class ProfileFragment extends Fragment {
         tvProfileNoContent = view.findViewById(R.id.tvProfileNoContent);
         //set trip adapter
         profileTripRVAdapter = new ProfileTripRVAdapter(getActivity().getApplicationContext(),
-                listTrips, getActivity());
+                listTrips);
         profileTripRVAdapter.setClickListener(this::onRVItemClickTour);
 
         //set favorite adapter
         profileFavoritesRVAdapter =
                 new ProfileFavoritesRVAdapter(getActivity().getApplicationContext(),
-                        listFavorites, getActivity());
+                        listFavorites);
         profileFavoritesRVAdapter.setClickListener(this::onRVItemClickTour);
         profileController.getFavorites(controllerEvent -> {
             switch (controllerEvent.getType()){
@@ -262,7 +262,7 @@ public class ProfileFragment extends Fragment {
 
         //set saved adapter
         profileSavedRVAdapter = new ProfileSavedRVAdapter(getActivity().getApplicationContext(),
-                listSaved, getActivity());
+                listSaved);
         profileSavedRVAdapter.setClickListener(this::onRVItemClickSavedTour);
         listSaved.clear();
         listSaved.addAll(profileController.getSavedTours());
@@ -270,7 +270,7 @@ public class ProfileFragment extends Fragment {
 
         //set POI adapter
         profilePOIRVAdapter = new ProfilePOIRVAdapter(getActivity().getApplicationContext(),
-                listPOIs, getActivity());
+                listPOIs);
         profilePOIRVAdapter.setClickListener(this::onRVItemClickPOI);
         listPOIs.clear();
         listPOIs.addAll(profileController.getPois());
@@ -334,6 +334,8 @@ public class ProfileFragment extends Fragment {
                 profileController.deleteCommunityTour(tour);
                 MapCacheHandler handler = new MapCacheHandler(getActivity().getApplicationContext(), tour.toTour());
                 handler.deleteMap();
+                listSaved.remove(tour);
+                profileSavedRVAdapter.notifyDataSetChanged();
                 break;
             default:
                 new AsyncCheckTourExists(tour.toTour(),getActivity()).execute();
@@ -468,7 +470,7 @@ public class ProfileFragment extends Fragment {
 //            //set adapter
 //            ProfilePoiListAdapter adapter =
 //                    new ProfilePoiListAdapter(getActivity(),
-//                            R.layout.fragment_profile_list_poi,
+//                            R.layout.recyclerview_profile_poi,
 //                            R.id.ListTourTitle,
 //                            listPois, this);
 //
@@ -505,7 +507,7 @@ public class ProfileFragment extends Fragment {
 //            //set adapter
 //            ProfileSavedListAdapter adapter =
 //                    new ProfileSavedListAdapter(getActivity(),
-//                            R.layout.fragment_profile_list_saved,
+//                            R.layout.recyclerview_profile_saved,
 //                            R.id.ListSavedTitle,
 //                            listSaved, this);
 //

@@ -3,15 +3,23 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import eu.wise_iot.wanderlust.services.GlideService;
 
 public class LoginUser {
+
     static private ArrayList<String> cookies = new ArrayList<>();
+
     private final String identifier;
     private final String password;
     private String osVersion;
     private String deviceModel;
     private String resolution;
     private String serialNumber;
+
+    public String  firstCookie;
 
 
     public LoginUser(String identifier, String password) {
@@ -33,7 +41,6 @@ public class LoginUser {
     public static void setCookies(ArrayList<String> cookiesC) {
         cookies = cookiesC;
     }
-
     public static void clearCookies() {
         cookies.clear();
     }

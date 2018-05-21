@@ -197,7 +197,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
-            android:text="@string/tour_filter_noresult"/>
+            android:text="@string/msg_no_data_found"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listContent"

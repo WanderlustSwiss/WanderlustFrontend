@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.services;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Queue;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import okhttp3.Interceptor;

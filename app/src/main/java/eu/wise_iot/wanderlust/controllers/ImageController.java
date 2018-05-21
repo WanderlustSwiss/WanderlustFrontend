@@ -172,7 +172,7 @@ public class ImageController {
      * @return generated URL
      */
     public String getURLImageTourSingle(Tour tour){
-        return (tour.getImagePaths().size() > 0) ?
+        return (tour.getImagePaths() != null && tour.getImagePaths().size() > 0) ?
                 ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId() :
                 defaultImageURL.toString();
     }
@@ -183,7 +183,7 @@ public class ImageController {
      * @return generated URL
      */
     public String getURLImagePOISingle(Poi poi){
-        return (poi.getImagePaths().size() > 0) ?
+        return (poi.getImagePaths() != null && poi.getImagePaths().size() > 0) ?
                 ServiceGenerator.API_BASE_URL + "/poi/" + poi.getPoi_id() + "/img/1" :
                 defaultImageURL.toString();
     }

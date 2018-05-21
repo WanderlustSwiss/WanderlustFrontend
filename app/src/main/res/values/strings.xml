@@ -11,6 +11,7 @@
     <string name="msg_load_app">Lade Applikation...</string>
     <string name="msg_registering">Registrierungsvorgang...</string>
     <string name="msg_email_not_found">Fehler: Email wurde nicht gefinden</string>
+    <string name="msg_no_data_found">Keine Daten gefunden</string>
 
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>

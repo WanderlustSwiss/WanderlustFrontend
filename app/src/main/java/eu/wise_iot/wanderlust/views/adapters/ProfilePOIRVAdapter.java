@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,24 +29,22 @@ public class ProfilePOIRVAdapter extends RecyclerView.Adapter<ProfilePOIRVAdapte
     private final LayoutInflater mInflater;
 
     private static final String TAG = "PPRVAdapter";
-    private final Activity activity;
     private final Context context;
     private final List<Poi> pois;
 
     private final ImageController imageController;
 
-    public ProfilePOIRVAdapter(Context context, List<Poi> pois, Activity activity) {
+    public ProfilePOIRVAdapter(Context context, List<Poi> pois) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.pois = pois;
-        this.activity = activity;
         this.imageController = ImageController.getInstance();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Creating View Holder");
-        View view = mInflater.inflate(R.layout.fragment_profile_list_poi, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_profile_poi, parent, false);
         return new ViewHolder(view);
     }
 
@@ -93,8 +90,11 @@ public class ProfilePOIRVAdapter extends RecyclerView.Adapter<ProfilePOIRVAdapte
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView title, description;
-        private ImageView tripImage, editIcon, deleteIcon;
+        private final TextView title;
+        private final TextView description;
+        private final ImageView tripImage;
+        private final ImageView editIcon;
+        private final ImageView deleteIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);

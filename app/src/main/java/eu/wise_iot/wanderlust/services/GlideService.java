@@ -21,19 +21,22 @@ public class GlideService extends AppGlideModule {
 
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
-                //.cache(cache)
-                .addInterceptor(chain -> {
-                    Request newRequest = chain.request().newBuilder()
-                            .addHeader("Cookie", LoginUser.getCookies().get(0))
-                            .build();
-                    return chain.proceed(newRequest);
-                })
-                .build();
+        if(LoginUser.getCookies() != null && LoginUser.getCookies().get(0) != null) {
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    //.cache(cache)
+                    .addInterceptor(chain -> {
+                        Request newRequest = chain.request().newBuilder()
+                                .addHeader("Cookie", LoginUser.getCookies().get(0))
+                                .build();
 
-        OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(client);
-        glide.getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+                        return chain.proceed(newRequest);
+                    })
+                    .build();
+
+            OkHttpUrlLoader.Factory factory = new OkHttpUrlLoader.Factory(client);
+            glide.getRegistry().replace(GlideUrl.class, InputStream.class, factory);
+        }
     }
 }

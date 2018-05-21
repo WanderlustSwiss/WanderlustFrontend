@@ -30,24 +30,22 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
     private final LayoutInflater mInflater;
 
     private static final String TAG = "PFRVAdapter";
-    private final Activity activity;
     private final Context context;
     private final List<Tour> tours;
 
     private final ImageController imageController;
 
-    public ProfileFavoritesRVAdapter(Context context, List<Tour> tours, Activity activity) {
+    public ProfileFavoritesRVAdapter(Context context, List<Tour> tours) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.tours = tours;
-        this.activity = activity;
         this.imageController = ImageController.getInstance();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Creating View Holder");
-        View view = mInflater.inflate(R.layout.fragment_profile_list_favorites, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_profile_favorite, parent, false);
         return new ViewHolder(view);
     }
 

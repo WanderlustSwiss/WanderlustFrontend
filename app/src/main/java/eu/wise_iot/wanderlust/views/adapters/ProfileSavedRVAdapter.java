@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.BuildConfig;
@@ -20,7 +16,6 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.services.GlideApp;
-import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 /**
  * Adapter for the profile UI. Represents all favorites in a custom list view
@@ -34,24 +29,22 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
     private final LayoutInflater mInflater;
 
     private static final String TAG = "PSRVAdapter";
-    private final Activity activity;
     private final Context context;
     private final List<SavedTour> tours;
 
     private final ImageController imageController;
 
-    public ProfileSavedRVAdapter(Context context, List<SavedTour> tours, Activity activity) {
+    public ProfileSavedRVAdapter(Context context, List<SavedTour> tours) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.tours = tours;
-        this.activity = activity;
         this.imageController = ImageController.getInstance();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Creating View Holder");
-        View view = mInflater.inflate(R.layout.fragment_profile_list_saved, parent, false);
+        View view = mInflater.inflate(R.layout.recyclerview_profile_saved, parent, false);
         return new ViewHolder(view);
     }
 
@@ -104,14 +97,16 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView title, description;
-        private ImageView savedImage, savedIcon;
+        private final TextView title;
+        private final TextView description;
+        private final ImageView savedImage;
+        private final ImageView savedIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.ListSavedTitle);
-            description = (TextView) itemView.findViewById(R.id.ListSavedDescription);
-            savedImage = (ImageView) itemView.findViewById(R.id.ListSavedImageView);
+            title = itemView.findViewById(R.id.ListSavedTitle);
+            description = itemView.findViewById(R.id.ListSavedDescription);
+            savedImage = itemView.findViewById(R.id.ListSavedImageView);
             savedIcon = itemView.findViewById(R.id.ListSavedIcon);
             itemView.setOnClickListener(this);
             savedIcon.setOnClickListener(this);
