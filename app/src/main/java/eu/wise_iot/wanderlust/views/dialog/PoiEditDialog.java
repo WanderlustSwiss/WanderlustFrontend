@@ -160,7 +160,7 @@ public class PoiEditDialog extends DialogFragment {
 
                     ProfileFragment fragment = (ProfileFragment) getFragmentManager().findFragmentByTag("ProfileFragment");
                     if(fragment != null){
-                        fragment.setupPOIs(fragment.getView());
+                        //fragment.setupPOIs(fragment.getView());
                     }
 
                     PoiViewDialog viewDialog = (PoiViewDialog) getFragmentManager()

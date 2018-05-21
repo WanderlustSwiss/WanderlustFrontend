@@ -407,8 +407,7 @@ public class TourOverviewFragment extends Fragment {
             case R.id.tour_rv_item:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
 
-                AsyncCheckTourExists asyncCheckTourExists = new AsyncCheckTourExists(tour, getActivity());
-                asyncCheckTourExists.execute();
+                new AsyncCheckTourExists(tour, getActivity()).execute();
                 break;
         }
 

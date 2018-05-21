@@ -111,7 +111,6 @@ public class TourController {
         tripDao = TripDao.getInstance();
     }
 
-
     public void addRecentTour(Tour tour){
         recentTourDao.create(tour);
     }

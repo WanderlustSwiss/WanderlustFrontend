@@ -1,43 +1,47 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.MapCacheHandler;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesListAdapter;
-import eu.wise_iot.wanderlust.views.adapters.ProfilePoiListAdapter;
-import eu.wise_iot.wanderlust.views.adapters.ProfileSavedListAdapter;
-import eu.wise_iot.wanderlust.views.adapters.ProfileTripListAdapter;
+import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesRVAdapter;
+import eu.wise_iot.wanderlust.views.adapters.ProfileSavedRVAdapter;
+import eu.wise_iot.wanderlust.views.adapters.ProfileTripRVAdapter;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
-import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
 /**
  * Fragment which represents the UI of the profile of a user.
@@ -59,8 +63,15 @@ public class ProfileFragment extends Fragment {
 
     private TabLayout tabLayout;
 
-    private ListView listView;
+    private RecyclerView profileRV;
     //private List list;
+    private final List listSaved = new ArrayList();
+    private final List listTrips = new ArrayList();
+    private final List listFavorites = new ArrayList();
+
+    private ProfileFavoritesRVAdapter profileFavoritesRVAdapter;
+    private ProfileTripRVAdapter profileTripRVAdapter;
+    private ProfileSavedRVAdapter profileSavedRVAdapter;
 
     private final ProfileController profileController;
 
@@ -87,13 +98,14 @@ public class ProfileFragment extends Fragment {
         //inflate view from xml-file
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        setupRVs(view);
         setupTabs(view);
         setupProfileInfo(view);
         setProfileStats();
 
         //load default list
         tabLayout.getTabAt(0).select();
-        setupFavorites(view);
+
         return view;
     }
 
@@ -109,14 +121,9 @@ public class ProfileFragment extends Fragment {
         amountPOI = (TextView) view.findViewById(R.id.profileAmountPOI);
         amountTours = (TextView) view.findViewById(R.id.profileAmountTours);
         amountScore = (TextView) view.findViewById(R.id.profileAmountScore);
-
         nickname = (TextView) view.findViewById(R.id.profileNickname);
-
         profilePicture = (ImageView) view.findViewById(R.id.profilePicture);
-
         editProfile = (Button) view.findViewById(R.id.editProfileButton);
-
-        listView = (ListView) view.findViewById(R.id.listContent);
 
         File image = profileController.getProfilePicture();
         if (image != null) {
@@ -178,29 +185,27 @@ public class ProfileFragment extends Fragment {
      */
     private void setupTabs(View view) {
         //initializing views
-        listView = (ListView) view.findViewById(R.id.listContent);
+        //profileRV = (RecyclerView) view.findViewById(R.id.listContent);
         tabLayout = (TabLayout) view.findViewById(R.id.profileTabs);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int id = tab.getPosition();
-
-                switch (id) {
+                switch (tab.getPosition()) {
                     case 0:
-                        setupFavorites(view);
+                        profileRV.setAdapter(profileFavoritesRVAdapter);
                         break;
                     case 1:
-                        setupMyTours(view);
+                        profileRV.setAdapter(profileTripRVAdapter);
                         break;
                     case 2:
-                        setupPOIs(view);
+                        //profileRV.setAdapter(profilePoiRVAdapter);
                         break;
                     case 3:
-                        setupSaved(view);
+                        profileRV.setAdapter(profileSavedRVAdapter);
                         break;
                     default:
-                        setupMyTours(view);
+                        profileRV.setAdapter(profileSavedRVAdapter);
                         break;
                 }
             }
@@ -215,202 +220,256 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    public void setupRVs(View view){
+
+        //set trip adapter
+        profileTripRVAdapter = new ProfileTripRVAdapter(getActivity().getApplicationContext(),
+                listTrips, getActivity());
+        profileTripRVAdapter.setClickListener(this::onRVItemClickTour);
+
+        //set favorite adapter
+        profileFavoritesRVAdapter =
+                new ProfileFavoritesRVAdapter(getActivity().getApplicationContext(),
+                        listFavorites, getActivity());
+        profileFavoritesRVAdapter.setClickListener(this::onRVItemClickTour);
+        profileController.getFavorites(controllerEvent -> {
+            switch (controllerEvent.getType()){
+                case OK:
+                    listFavorites.clear();
+                    listFavorites.addAll((List) controllerEvent.getModel());
+                    profileFavoritesRVAdapter.notifyDataSetChanged();
+                    break;
+            }
+        });
+
+        listTrips.clear();
+        listTrips.addAll(profileController.getUserTours());
+        profileTripRVAdapter.notifyDataSetChanged();
+        //set saved adapter
+        profileSavedRVAdapter = new ProfileSavedRVAdapter(getActivity().getApplicationContext(),
+                listSaved, getActivity());
+        profileSavedRVAdapter.setClickListener(this::onRVItemClickSavedTour);
+        listSaved.clear();
+        listSaved.addAll(profileController.getSavedTours());
+        profileSavedRVAdapter.notifyDataSetChanged();
+
+        profileRV = (RecyclerView) view.findViewById(R.id.listContent);
+        profileRV.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+        profileRV.setAdapter(profileFavoritesRVAdapter);
+        
+    }
+    /**
+     * handles click on an recycler view item
+     * @param view representing the recycler view item
+     * @param tour representing the tour of the clicked item
+     */
+    private void onRVItemClickTour(View view, Tour tour) {
+        //distinguish what element was clicked by resource id
+        switch (view.getId()) {
+            case R.id.list_fav_icon:
+                listFavorites.remove(tour);
+                profileFavoritesRVAdapter.notifyDataSetChanged();
+                break;
+            case R.id.ListTourDelete:
+                profileController.deleteTrip(tour, controllerEvent -> {
+                    switch (controllerEvent.getType()) {
+                        case OK:
+                            setProfileStats();
+                            listTrips.remove(tour);
+                            profileTripRVAdapter.notifyDataSetChanged();
+                            break;
+                        default:
+                            Toast.makeText(getActivity().getApplicationContext(), R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                });
+                break;
+            default:
+                new AsyncCheckTourExists(tour,getActivity()).execute();
+        }
+    }
+    /**
+     * handles click on an recycler view item
+     * @param view representing the recycler view item
+     * @param tour representing the tour of the clicked item
+     */
+    private void onRVItemClickSavedTour(View view, SavedTour tour) {
+        //distinguish what element was clicked by resource id
+        switch (view.getId()) {
+            case R.id.ListSavedIcon:
+                profileController.deleteCommunityTour(tour);
+                MapCacheHandler handler = new MapCacheHandler(getActivity().getApplicationContext(), tour.toTour());
+                handler.deleteMap();
+                break;
+            default:
+                new AsyncCheckTourExists(tour.toTour(),getActivity()).execute();
+        }
+    }
+
+    /**
+     * handles async backend request for performing a check if the tour is existing
+     * this will keep the UI responsive
+     *
+     * @author Alexander Weinbeck
+     * @license MIT
+     */
+    private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
+        final ProgressDialog pdLoading;
+        private final Tour tour;
+        private final Activity activity;
+        private Integer responseCode;
+        private final TourOverviewController tourOverviewController;
+
+        AsyncCheckTourExists(Tour tour, Activity activity){
+            this.tour = tour;
+            this.activity = activity;
+            pdLoading = new ProgressDialog(this.activity);
+            tourOverviewController = new TourOverviewController();
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //this method will be running on UI thread
+            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
+            pdLoading.setCancelable(false);
+            pdLoading.show();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            this.responseCode = tourOverviewController.checkIfTourExists(tour);
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            switch(EventType.getTypeByCode(responseCode)) {
+                case OK:
+                    if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
+                            .addToBackStack(Constants.TOUR_FRAGMENT)
+                            .commit();
+                    //TODO: check if needed
+                    //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    break;
+                case NOT_FOUND:
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
+                    tourOverviewController.removeRecentTour(tour);
+                    break;
+                case SERVER_ERROR:
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
+                    break;
+                case NETWORK_ERROR:
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                    break;
+                default:
+                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+            }
+
+            if (pdLoading.isShowing()) pdLoading.dismiss();
+        }
+    }
     /**
      * This method is invoked when the tab at position 0 is selected. Sets up model with
      * favorites and adapter to represent the users favorites in a custom list view
      */
-    public void setupFavorites(View view) {
+//    public void setupFavorites() {
+//        profileRV.setAdapter(profileFavoritesRVAdapter);
+//    }
+//
+//    /**
+//     * This method is invoked when the tab at position 1 is selected. Sets up model with
+//     * user tours and adapter to represent the users tours in a custom list view
+//     */
+//    public void setupMyTours(View view) {
+//
+//        profileRV.setAdapter(profileTripListAdapter);
+//        profileRV.setOnItemClickListener((parent, view1, position, id) -> {
+//            Tour tour = (Tour) profileRV.getItemAtPosition(position);
+//            new AsyncCheckTourExists(tour,getActivity()).execute();
+//        });
+//    }
 
-        ProfileFragment fragment = this;
-        profileController.getFavorites(controllerEvent -> {
-            switch (controllerEvent.getType()){
-                case OK:
+//    /**
+//     * This method is invoked when the tab at position 2 is selected. Sets up the model with
+//     * poi's and adapter to represent the users poi's in a custom list view
+//     */
+//    public void setupPOIs(View view) {
+//
+//        List<Poi> poiList = profileController.getPois();
+//        List listPois = Collections.emptyList();
+//        //only if there is at least one poi
+//        if (poiList != null && poiList.size() > 0) {
+//
+//
+//            //initialize list
+//            listPois = poiList;
+//
+//            //set adapter
+//            ProfilePoiListAdapter adapter =
+//                    new ProfilePoiListAdapter(getActivity(),
+//                            R.layout.fragment_profile_list_poi,
+//                            R.id.ListTourTitle,
+//                            listPois, this);
+//
+//            profileRV.setAdapter(adapter);
+//            profileRV.setOnItemClickListener((parent, view1, position, id) -> {
+//                Poi poi = (Poi) profileRV.getItemAtPosition(position);
+//                PoiViewDialog viewDialog = PoiViewDialog.newInstance(poi);
+//                viewDialog.show(getFragmentManager(), Constants.DISPLAY_FEEDBACK_DIALOG);
+//            });
+//
+//        } else {
+//
+//            listPois = null;
+//            profileRV.setAdapter(null);
+//        }
+//    }
 
-                    List listFavorites = (List) controllerEvent.getModel();
-
-                    if (listFavorites != null && listFavorites.size() > 0) {
-
-                        //set adapter
-                        ProfileFavoritesListAdapter adapter =
-                                new ProfileFavoritesListAdapter(getActivity(),
-                                        R.layout.fragment_profile_list_favorites,
-                                        R.id.list_fav_title,
-                                        listFavorites, fragment);
-
-                        listView.setAdapter(adapter);
-                        listView.setOnItemClickListener((parent, view1, position, id) -> {
-                            Tour tour = (Tour) listView.getItemAtPosition(position);
-
-
-                            TourFragment tourFragment = TourFragment.newInstance(tour);
-                            Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
-                            if(oldTourFragment != null) {
-                                getFragmentManager().beginTransaction()
-                                        .remove(oldTourFragment)
-                                        .commit();
-                            }
-                            getFragmentManager().beginTransaction()
-                                                .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                                                .addToBackStack(Constants.TOUR_FRAGMENT)
-                                                .commit();
-                        });
-
-                    } else {
-
-                        listFavorites = null;
-                        listView.setAdapter(null);
-                        Toast.makeText(getActivity(), R.string.no_favorites, Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                default:
-                    listFavorites = null;
-                    listView.setAdapter(null);
-                    break;
-            }
-        });
-    }
-
-    /**
-     * This method is invoked when the tab at position 1 is selected. Sets up model with
-     * user tours and adapter to represent the users tours in a custom list view
-     */
-    public void setupMyTours(View view) {
-
-        List<Tour> userTourList = profileController.getUserTours();
-
-        List listTrip = Collections.emptyList();
-
-        if(userTourList.size() > 0 && userTourList != null){
-            //list.clear();
-            listTrip = userTourList;
-
-        }
-        //only if there is at least one tour
-        if (listTrip != null && listTrip.size() > 0) {
-
-            //set adapter
-            ProfileTripListAdapter adapter =
-                    new ProfileTripListAdapter(getActivity(),
-                            R.layout.fragment_profile_list_tour,
-                            R.id.ListTourTitle,
-                            listTrip, this);
-
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener((parent, view1, position, id) -> {
-                Tour tour = (Tour) listView.getItemAtPosition(position);
-
-                TourFragment tourFragment = TourFragment.newInstance(tour);
-                Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
-                if(oldTourFragment != null) {
-                    getFragmentManager().beginTransaction()
-                            .remove(oldTourFragment)
-                            .commit();
-                }
-                getFragmentManager().beginTransaction()
-                                    .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                                    .addToBackStack(Constants.TOUR_FRAGMENT)
-                                    .commit();
-            });
-
-        } else {
-
-            listTrip = null;
-            listView.setAdapter(null);
-        }
-    }
-
-    /**
-     * This method is invoked when the tab at position 2 is selected. Sets up the model with
-     * poi's and adapter to represent the users poi's in a custom list view
-     */
-    public void setupPOIs(View view) {
-
-        List<Poi> poiList = profileController.getPois();
-        List listPois = Collections.emptyList();
-        //only if there is at least one poi
-        if (poiList != null && poiList.size() > 0) {
-
-            //initialize list
-            listPois = poiList;
-
-            //set adapter
-            ProfilePoiListAdapter adapter =
-                    new ProfilePoiListAdapter(getActivity(),
-                            R.layout.fragment_profile_list_poi,
-                            R.id.ListTourTitle,
-                            listPois, this);
-
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener((parent, view1, position, id) -> {
-                Poi poi = (Poi) listView.getItemAtPosition(position);
-                PoiViewDialog viewDialog = PoiViewDialog.newInstance(poi);
-                viewDialog.show(getFragmentManager(), Constants.DISPLAY_FEEDBACK_DIALOG);
-            });
-
-        } else {
-
-            listPois = null;
-            listView.setAdapter(null);
-        }
-    }
-
-    /**
-     * This method is invoked when the tab at position 3 is selected. Sets up the model with
-     * saved tours and adapter to represent the users saved tours in a custom list view
-     * @param view
-     */
-    public void setupSaved(View view) {
-
-        List<SavedTour> communityTourList = profileController.getSavedTours();
-
-        List listSaved = Collections.emptyList();
-
-        //only if there is at least one saved tour
-        if (communityTourList != null && communityTourList.size() > 0) {
-
-            //initialize list
-            listSaved = communityTourList;
-
-            //set adapter
-            ProfileSavedListAdapter adapter =
-                    new ProfileSavedListAdapter(getActivity(),
-                            R.layout.fragment_profile_list_saved,
-                            R.id.ListSavedTitle,
-                            listSaved, this);
-
-            listView.setAdapter(adapter);
-
-            listView.setOnItemClickListener((parent, view1, position, id) -> {
-                SavedTour tour = (SavedTour) listView.getItemAtPosition(position);
-                TourFragment tourFragment = TourFragment.newInstance(tour.toTour());
-                Fragment oldTourFragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
-                if(oldTourFragment != null) {
-                    getFragmentManager().beginTransaction()
-                            .remove(oldTourFragment)
-                            .commit();
-                }
-                getFragmentManager().beginTransaction()
-                        .add(R.id.content_frame, tourFragment, Constants.TOUR_FRAGMENT)
-                        .addToBackStack(Constants.TOUR_FRAGMENT)
-                        .commit();
-            });
-
-        } else {
-
-            listSaved = null;
-            listView.setAdapter(null);
-        }
-    }
-
-    /**
-     * Gets back the reference to the specific Controller of the profile UI
-     *
-     * @return the profile controller
-     */
-    public ProfileController getProfileController() {
-
-        return this.profileController;
-    }
+//    /**
+//     * This method is invoked when the tab at position 3 is selected. Sets up the model with
+//     * saved tours and adapter to represent the users saved tours in a custom list view
+//     * @param view
+//     */
+//    public void setupSaved(View view) {
+//
+//        List<SavedTour> communityTourList = profileController.getSavedTours();
+//
+//        //only if there is at least one saved tour
+//        if (communityTourList != null && communityTourList.size() > 0) {
+//
+//            listSaved.clear();
+//            //initialize list
+//            listSaved.addAll(communityTourList);
+//
+//            //set adapter
+//            ProfileSavedListAdapter adapter =
+//                    new ProfileSavedListAdapter(getActivity(),
+//                            R.layout.fragment_profile_list_saved,
+//                            R.id.ListSavedTitle,
+//                            listSaved, this);
+//
+//            profileRV.setAdapter(adapter);
+//            profileRV.setOnItemClickListener((parent, view1, position, id) ->
+//                new AsyncCheckTourExists(((SavedTour) profileRV.getItemAtPosition(position)).toTour(),getActivity()).execute()
+//            );
+//
+//        }
+//    }
+//
+//    /**
+//     * Gets back the reference to the specific Controller of the profile UI
+//     *
+//     * @return the profile controller
+//     */
+//    public ProfileController getProfileController() {
+//
+//        return this.profileController;
+//    }
 
 
 }

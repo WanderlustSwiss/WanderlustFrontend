@@ -191,13 +191,11 @@
         android:layout_height="match_parent"
         android:background="@color/primary_second">
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/listContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="false">
-
-        </ListView>
+            android:orientation="vertical"/>
     </FrameLayout>
 
 </LinearLayout>

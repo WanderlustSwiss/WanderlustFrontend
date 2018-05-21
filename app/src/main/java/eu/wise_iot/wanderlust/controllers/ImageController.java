@@ -172,6 +172,7 @@ public class ImageController {
                 .readTimeout(5, TimeUnit.SECONDS)
                 .build();
 
+
         return new Picasso.Builder(context)
                 .downloader(new OkHttp3Downloader(client))
                 .build();
