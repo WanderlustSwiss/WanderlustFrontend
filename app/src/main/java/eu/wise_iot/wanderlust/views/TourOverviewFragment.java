@@ -278,8 +278,8 @@ public class TourOverviewFragment extends Fragment {
                                         LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                         currentPage++;
                                         listTours.addAll(newList);
-                                        //getDataFromServer(newList);
-                                        adapterRoutes.notifyDataSetChanged();
+                                        //
+                                        adapterRoutes.notifyItemRangeChanged(listTours.size(),newList.size());
                                         if (BuildConfig.DEBUG) Log.d(TAG, "added new page " + currentPage);
                                         break;
                                     default:

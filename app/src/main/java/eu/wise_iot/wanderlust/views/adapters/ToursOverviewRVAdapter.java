@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.views.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -23,19 +26,21 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
+import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.services.GlideApp;
+import eu.wise_iot.wanderlust.services.GlideWL;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 
 /**
  * MyAdapter:
- * provides adapter for recyclerview which is used by the tourslist
+ * provides adapter for recycler view which is used by the tourslist
  *
  * @author Alexander Weinbeck
  * @license MIT
  */
-@SuppressWarnings("JavaDoc")
 public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRVAdapter.ViewHolder> {
 
     private final List<Tour> tours;
@@ -120,18 +125,13 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
 
-        List<File> images = imageController.getImages(tour.getImagePaths());
-        if (!images.isEmpty()){
-            Picasso handler = imageController.getPicassoHandler(activity);
-            //handler.setIndicatorsEnabled(true);
-            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            if (BuildConfig.DEBUG) Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + url);
-        } else {
-            Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
-                    .placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            if (BuildConfig.DEBUG) Log.d("ToursoverviewAdapters", "Images not found");
-        }
+        GlideApp.with(context)
+                .load(imageController.getURLForTourOVAdapterImage(tour))
+                .error(R.drawable.no_image_found)
+                .placeholder(R.drawable.progress_animation)
+                .centerCrop()
+                .into(holder.tvImage);
+
         holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
     }
 

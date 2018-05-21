@@ -22,7 +22,10 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }          // required to install OSM Bonus Pack
         google()
-        maven { url "http://objectbox.net/beta-repo/" }                         //required for ObjectBox #whatElse
+        maven { url "http://objectbox.net/beta-repo/" } //required for ObjectBox #whatElse
+        jcenter()
+        maven { url 'https://maven.google.com' }
+        mavenCentral()
     }
 }
 task wrapper(type: Wrapper) {

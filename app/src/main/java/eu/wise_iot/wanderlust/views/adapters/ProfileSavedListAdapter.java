@@ -124,7 +124,7 @@
 //            List<ImageInfo> imageinfos = communityTour.getImagePaths();
 //            List<File> imagefiles = imageController.getImages(imageinfos);
 //            if(!imagefiles.isEmpty() && imagefiles.get(0).length() > 0){
-//                Picasso.with(context)
+//                Picasso.get()
 //                        .load(imagefiles.get(0)).placeholder(R.drawable.progress_animation)
 //                        .fit()
 //                        .centerCrop()
