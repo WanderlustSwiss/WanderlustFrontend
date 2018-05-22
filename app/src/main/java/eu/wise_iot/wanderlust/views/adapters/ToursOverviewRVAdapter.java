@@ -178,15 +178,15 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            tvDistance = (TextView) itemView.findViewById(R.id.tourOVTourDistance);
-            tvDifficulty = (TextView) itemView.findViewById(R.id.tourOVTourDifficulty);
-            tvTitle = (TextView) itemView.findViewById(R.id.tourOVTourTitle);
-            tvTime = (TextView) itemView.findViewById(R.id.tourOVTourTime);
-            tvImage = (ImageView) itemView.findViewById(R.id.tourOVTourImage);
-            tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.tourOVImageDifficulty);
-            ibFavorite = (ImageButton) itemView.findViewById(R.id.tourOVFavoriteButton);
-            ibSave = (ImageButton) itemView.findViewById(R.id.tourOVSaveButton);
-            ibShare = (ImageButton) itemView.findViewById(R.id.tourOVShareButton);
+            tvDistance = itemView.findViewById(R.id.tourOVTourDistance);
+            tvDifficulty = itemView.findViewById(R.id.tourOVTourDifficulty);
+            tvTitle = itemView.findViewById(R.id.tourOVTourTitle);
+            tvTime = itemView.findViewById(R.id.tourOVTourTime);
+            tvImage = itemView.findViewById(R.id.tourOVTourImage);
+            tvDifficultyIcon = itemView.findViewById(R.id.tourOVImageDifficulty);
+            ibFavorite = itemView.findViewById(R.id.tourOVFavoriteButton);
+            ibSave = itemView.findViewById(R.id.tourOVSaveButton);
+            ibShare = itemView.findViewById(R.id.tourOVShareButton);
 
             itemView.setOnClickListener(this);
             ibFavorite.setOnClickListener(this);

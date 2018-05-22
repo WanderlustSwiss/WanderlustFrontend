@@ -13,6 +13,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TimingLogger;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +31,7 @@ import com.squareup.picasso.PicassoCache;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
 
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
@@ -41,6 +43,9 @@ import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
+
+import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
+import static android.os.Process.THREAD_PRIORITY_URGENT_DISPLAY;
 
 
 /**
@@ -436,15 +441,19 @@ public class TourOverviewFragment extends Fragment {
         }
         @Override
         protected void onPreExecute() {
+            TimingLogger t1 = new TimingLogger(TAG,"check tour exists");
             super.onPreExecute();
             //this method will be running on UI thread
             pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
             pdLoading.setCancelable(false);
             pdLoading.show();
+            t1.dumpToLog();
         }
         @Override
         protected Void doInBackground(Void... params) {
+            TimingLogger t1 = new TimingLogger(TAG,"check tour sequential");
             this.responseCode = tourOverviewController.checkIfTourExists(tour);
+            t1.dumpToLog();
             return null;
         }
         @Override
