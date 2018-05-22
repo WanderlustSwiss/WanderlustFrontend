@@ -279,40 +279,40 @@ public class MapFragment extends Fragment {
         else poiTypeSelection.setVisibility(View.GONE);
 
         if(restAreaActive){
-            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_campfire_white_24dp);
+            ibPoiRestAreaLayer.setImageResource(R.drawable.poi_campfire_white_24dp);
             ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
-            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_campfire_black_24dp);
+            ibPoiRestAreaLayer.setImageResource(R.drawable.poi_campfire_black_24dp);
             ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
         mapOverlays.setPoiRestAreaActive(restAreaActive);
         ibPoiRestAreaLayer.setSelected(restAreaActive);
 
         if(floraFaunaActive){
-            ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_white_24dp);
+            ibPoiFloraFaunaLayer.setImageResource(R.drawable.poi_local_florist_white_24dp);
             ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
-            ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_black_24dp);
+            ibPoiFloraFaunaLayer.setImageResource(R.drawable.poi_local_florist_black_24dp);
             ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
         mapOverlays.setPoiFloraFaunaActive(floraFaunaActive);
         ibPoiFloraFaunaLayer.setSelected(floraFaunaActive);
 
         if(restaurantActive){
-            ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_white_24dp);
+            ibPoiRestaurantLayer.setImageResource(R.drawable.poi_restaurant_white_24dp);
             ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
-            ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_black_24dp);
+            ibPoiRestaurantLayer.setImageResource(R.drawable.poi_restaurant_black_24dp);
             ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
         mapOverlays.setPoiRestAreaActive(restaurantActive);
         ibPoiRestaurantLayer.setSelected(restaurantActive);
 
         if(viewActive){
-            ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_white_24dp);
+            ibPoiViewLayer.setImageResource(R.drawable.poi_sight_white_24dp);
             ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
-            ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_black_24dp);
+            ibPoiViewLayer.setImageResource(R.drawable.poi_sight_black_24dp);
             ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
         mapOverlays.setPoiViewActive(viewActive);
@@ -320,11 +320,11 @@ public class MapFragment extends Fragment {
 
         ibPoiRestAreaLayer.setOnClickListener(v -> {
             if(ibPoiRestAreaLayer.isSelected()){
-                ibPoiRestAreaLayer.setImageResource(R.drawable.ic_campfire_black_24dp);
+                ibPoiRestAreaLayer.setImageResource(R.drawable.poi_campfire_black_24dp);
                 ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
                 ibPoiRestAreaLayer.setSelected(false);
             } else {
-                ibPoiRestAreaLayer.setImageResource(R.drawable.ic_campfire_white_24dp);
+                ibPoiRestAreaLayer.setImageResource(R.drawable.poi_campfire_white_24dp);
                 ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
                 ibPoiRestAreaLayer.setSelected(true);
             }
@@ -333,11 +333,11 @@ public class MapFragment extends Fragment {
         });
         ibPoiFloraFaunaLayer.setOnClickListener(v -> {
             if(ibPoiFloraFaunaLayer.isSelected()){
-                ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_black_24dp);
+                ibPoiFloraFaunaLayer.setImageResource(R.drawable.poi_local_florist_black_24dp);
                 ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
                 ibPoiFloraFaunaLayer.setSelected(false);
             } else {
-                ibPoiFloraFaunaLayer.setImageResource(R.drawable.ic_local_florist_white_24dp);
+                ibPoiFloraFaunaLayer.setImageResource(R.drawable.poi_local_florist_white_24dp);
                 ibPoiFloraFaunaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
                 ibPoiFloraFaunaLayer.setSelected(true);
             }
@@ -346,11 +346,11 @@ public class MapFragment extends Fragment {
         });
         ibPoiRestaurantLayer.setOnClickListener(v -> {
             if(ibPoiRestaurantLayer.isSelected()){
-                ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_black_24dp);
+                ibPoiRestaurantLayer.setImageResource(R.drawable.poi_restaurant_black_24dp);
                 ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
                 ibPoiRestaurantLayer.setSelected(false);
             } else {
-                ibPoiRestaurantLayer.setImageResource(R.drawable.ic_restaurant_white_24dp);
+                ibPoiRestaurantLayer.setImageResource(R.drawable.poi_restaurant_white_24dp);
                 ibPoiRestaurantLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
                 ibPoiRestaurantLayer.setSelected(true);
             }
@@ -359,11 +359,11 @@ public class MapFragment extends Fragment {
         });
         ibPoiViewLayer.setOnClickListener(v -> {
             if(ibPoiViewLayer.isSelected()){
-                ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_black_24dp);
+                ibPoiViewLayer.setImageResource(R.drawable.poi_sight_black_24dp);
                 ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
                 ibPoiViewLayer.setSelected(false);
             } else {
-                ibPoiViewLayer.setImageResource(R.drawable.ic_terrain_white_24dp);
+                ibPoiViewLayer.setImageResource(R.drawable.poi_sight_white_24dp);
                 ibPoiViewLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
                 ibPoiViewLayer.setSelected(true);
             }
