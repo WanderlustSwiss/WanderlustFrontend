@@ -257,9 +257,9 @@ public class MapController {
                                   int maxResults, final FragmentHandler handler) {
         try {
             String url = NOMINATIM_SERVICE_URL
-                    + "search?"
-                    + "q=" + URLEncoder.encode(Double.toString(latitude)
-                    + "," + Double.toString(longitude), "utf-8")
+                    + "reverse?"
+                    + "lat=" + URLEncoder.encode(Double.toString(latitude), "utf-8")
+                    + "&lon=" + URLEncoder.encode(Double.toString(longitude), "utf-8")
                     + "&format=json"
                     + "&addressdetails=1"
                     + "&limit=" + maxResults;

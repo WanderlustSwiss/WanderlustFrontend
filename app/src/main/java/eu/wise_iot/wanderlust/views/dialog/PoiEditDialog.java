@@ -325,9 +325,20 @@ public class PoiEditDialog extends DialogFragment {
         typeSpinner.setSelection(0);
         mapController.searchCoordinates(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),1, controllerEvent -> {
             AddressPoint addressPoint = (AddressPoint) controllerEvent.getModel();
+            if (addressPoint == null){
+                Log.d(TAG, "Is null");
+                return;
+            }
             StringBuilder nameProposal = new StringBuilder();
             boolean isFirst = true;
+            if (addressPoint.getName() != null){
+                nameProposal.append(addressPoint.getName());
+                isFirst = false;
+            }
             if (addressPoint.getName() == null && addressPoint.getRoad() != null){
+                if (!isFirst){
+                    nameProposal.append(", ");
+                }
                 nameProposal.append(addressPoint.getRoad());
                 isFirst = false;
             }
