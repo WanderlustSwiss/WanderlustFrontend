@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.signature.ObjectKey;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +119,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
 
         GlideApp.with(context)
                 .load(imageController.getURLImageTourSingle(tour))
+                .signature(new ObjectKey(System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
                 .error(R.drawable.no_image_found)
                 .placeholder(R.drawable.progress_animation)
                 .centerCrop()

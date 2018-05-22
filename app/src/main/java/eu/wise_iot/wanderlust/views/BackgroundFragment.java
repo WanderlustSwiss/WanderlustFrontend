@@ -16,6 +16,8 @@ import eu.wise_iot.wanderlust.R;
 /**
  * BackgroundFragment:
  *
+ * serves as placeholder until map is loaded
+ *
  * @author Alexander Weinbeck
  * @license MIT
  */

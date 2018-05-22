@@ -52,7 +52,6 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (BuildConfig.DEBUG) Log.d(TAG, "starting set properties");
 
-        //get the item for this row
         Tour tour = this.tours.get(position);
 
         holder.title.setText(tour.getTitle());

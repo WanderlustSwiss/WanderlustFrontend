@@ -25,8 +25,6 @@ public class AddPoiCommand implements QueueCommand {
                 Log.i(TAG, "Foto wurde erfolgreich hinzugefügt.");
             } else {
                 Log.i(TAG, "Foto upload fehlgeschlagen.");
-
-
             }
         };
     }

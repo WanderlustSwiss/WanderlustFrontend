@@ -52,20 +52,10 @@ public class TourKitDao extends DatabaseObjectAbstract {
         return tourKitBox.count();
     }
 
-    /**
-     * count all poi which match with the search criteria
-     *
-     * @return Total number of records
-     */
     public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
-    /**
-     * count all poi which match with the search criteria
-     *
-     * @return Total number of records
-     */
     public long count(Property searchedColumn, long searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
@@ -96,22 +86,11 @@ public class TourKitDao extends DatabaseObjectAbstract {
         });
     }
 
-    /**
-     * Return a list with all tourEquipement
-     *
-     * @return List<TourKit>
-     */
+
     public List<TourKit> find() {
         return tourKitBox.getAll();
     }
 
-    /**
-     * Searching for a single tour equipement with a search pattern in a column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return CommunityTours Equipment which match to the search pattern in the searched columns
-     */
     public TourKit findOne(Property searchedColumn, String searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -120,13 +99,6 @@ public class TourKitDao extends DatabaseObjectAbstract {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    /**
-     * Searching for user matching with the search pattern in a the selected column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return List<TourKit> which contains the tour equipements, which match to the search pattern in the searched columns
-     */
     public List<TourKit> find(Property searchedColumn, String searchPattern) {
         return tourKitBox.query().equal(searchedColumn, searchPattern).build().find();
     }
@@ -146,6 +118,5 @@ public class TourKitDao extends DatabaseObjectAbstract {
     public void deleteAll() {
         tourKitBox.removeAll();
     }
-
 
 }

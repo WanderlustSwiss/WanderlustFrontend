@@ -45,7 +45,6 @@ public class FilterFragment extends Fragment {
     private AutoCompleteTextView tiName;
     private CheckBox cbT1, cbT2, cbT3, cbT4, cbT5, cbT6;
     private FilterController filterController;
-    private TextView tourRatingInNumbers;
     private RatingBar ratingBar;
 
     public static FilterFragment newInstance() {
@@ -68,19 +67,18 @@ public class FilterFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tour_filter, container, false);
 
-        tourRatingInNumbers = (TextView) view.findViewById(R.id.tourRatingNumbers);
-        ratingBar = (RatingBar) view.findViewById(R.id.tourRatingFilter);
-        rsbDistance = (RangeSeekBar) view.findViewById(R.id.rsbDistance);
-        rsbDuration = (RangeSeekBar) view.findViewById(R.id.rsbDuration);
-        btnSearch = (Button)view.findViewById(R.id.btnSearch);
-        tiName = (AutoCompleteTextView)view.findViewById(R.id.tiTourNameInput);
-        tiRegion = (RegionsCompletionView)view.findViewById(R.id.tiTourRegionInput);
-        cbT1 = (CheckBox)view.findViewById(R.id.checkboxT1);
-        cbT2 = (CheckBox)view.findViewById(R.id.checkboxT2);
-        cbT3 = (CheckBox)view.findViewById(R.id.checkboxT3);
-        cbT4 = (CheckBox)view.findViewById(R.id.checkboxT4);
-        cbT5 = (CheckBox)view.findViewById(R.id.checkboxT5);
-        cbT6 = (CheckBox)view.findViewById(R.id.checkboxT6);
+        ratingBar = view.findViewById(R.id.tourRatingFilter);
+        rsbDistance = view.findViewById(R.id.rsbDistance);
+        rsbDuration = view.findViewById(R.id.rsbDuration);
+        btnSearch = view.findViewById(R.id.btnSearch);
+        tiName = view.findViewById(R.id.tiTourNameInput);
+        tiRegion = view.findViewById(R.id.tiTourRegionInput);
+        cbT1 = view.findViewById(R.id.checkboxT1);
+        cbT2 = view.findViewById(R.id.checkboxT2);
+        cbT3 = view.findViewById(R.id.checkboxT3);
+        cbT4 = view.findViewById(R.id.checkboxT4);
+        cbT5 = view.findViewById(R.id.checkboxT5);
+        cbT6 = view.findViewById(R.id.checkboxT6);
 
         SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         cbT1.setChecked(sharedPreferences.getBoolean("filter_cbt1", true));
@@ -174,6 +172,8 @@ public class FilterFragment extends Fragment {
         editor.putFloat("filter_duratione", rsbDuration.getSelectedMaxValue().floatValue());
         editor.putString("filter_name", tiName.getText().toString());
         editor.putString("filter_region", tiRegion.getText().toString());
+        editor.apply();
+
 
         ResultFilterFragment resultFilterFragment = ResultFilterFragment.newInstance(setting);
         getFragmentManager().beginTransaction()

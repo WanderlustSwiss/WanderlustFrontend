@@ -48,10 +48,6 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
         return new ViewHolder(view);
     }
 
-    /**
-     * binds the data to the view and textview in each row
-     *
-     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (BuildConfig.DEBUG) Log.d(TAG, "starting set properties");

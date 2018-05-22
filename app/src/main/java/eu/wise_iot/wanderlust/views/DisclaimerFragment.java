@@ -14,7 +14,7 @@ import java.util.GregorianCalendar;
 import eu.wise_iot.wanderlust.R;
 
 /**
- * DisclaimerFragment:
+ * Serves as disclaimer for the whole application
  *
  * @author Fabian Schwander
  * @license MIT

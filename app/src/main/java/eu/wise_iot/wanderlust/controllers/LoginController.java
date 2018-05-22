@@ -4,19 +4,12 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoCache;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.concurrent.atomic.AtomicReference;
 
 import eu.wise_iot.wanderlust.BuildConfig;
@@ -79,7 +72,12 @@ public class LoginController {
         poiDao = PoiDao.getInstance();
         recentTourDao = RecentTourDao.getInstance();
     }
-
+    /**
+     * perform login
+     *
+     * @param user to log in
+     * @return ControllerEvent from async retrofit call
+     */
     public void logIn(LoginUser user, final FragmentHandler handler) {
         setDeviceInfo(user);
 
@@ -115,6 +113,13 @@ public class LoginController {
             }
         });
     }
+
+    /**
+     * perform a sequential login for asynctask
+     *
+     * @param user to log in
+     * @return ControllerEvent from async retrofit call
+     */
     public ControllerEvent logInSequential(LoginUser user){
         final AtomicReference<ControllerEvent> event = new AtomicReference<>();
         try {
@@ -201,7 +206,6 @@ public class LoginController {
         });
     }
 
-    @SuppressWarnings("WeakerAccess")
     public void downloadProfileImage(Profile profile, User user, FragmentHandler handler) {
         ProfileService service = ServiceGenerator.createService(ProfileService.class);
         Call<ResponseBody> imageCall = service.downloadImage();
@@ -267,6 +271,7 @@ public class LoginController {
         });
     }
 
+
     public ControllerEvent resetPasswordSequential(String email){
         final AtomicReference<ControllerEvent> event = new AtomicReference<>();
         try {
@@ -309,7 +314,7 @@ public class LoginController {
         databaseController.sync(new DatabaseEvent(DatabaseEvent.SyncType.POITYPE));
         weatherController.initKeys();
         equipmentController.initEquipment();
-        regionDao.retrieve();
+        regionDao.retrieveAll();
         difficultyTypeDao.retrieve();
         violationTypeDao.retrieveAllViolationTypes();
         favoriteDao.retrieveAllFavorites();

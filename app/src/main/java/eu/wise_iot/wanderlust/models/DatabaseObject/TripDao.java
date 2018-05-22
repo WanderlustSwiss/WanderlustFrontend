@@ -21,6 +21,8 @@ import retrofit2.Response;
 /**
  * TripDao:
  *
+ * this model represents a self created tour by the user
+ *
  * @author Rilind Gashi, Alexander Weinbeck
  * @license MIT
  */
@@ -32,17 +34,11 @@ public class TripDao extends DatabaseObjectAbstract {
     }
 
     private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
-
+    private static TripService service;
+    private final Box<Trip> routeBox;
     public static TripDao getInstance() {
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
-
-    private static TripService service;
-    private final Box<Trip> routeBox;
-
-    /**
-     * Constructor.
-     */
 
     private TripDao() {
         routeBox = BOXSTORE.boxFor(Trip.class);
@@ -57,11 +53,6 @@ public class TripDao extends DatabaseObjectAbstract {
         return find(searchedColumn, searchPattern).size();
     }
 
-    /**
-     * count all poi which match with the search criteria
-     *
-     * @return Total number of records
-     */
     public long count(Property searchedColumn, long searchPattern){
         return find(searchedColumn, searchPattern).size();
     }
@@ -130,12 +121,6 @@ public class TripDao extends DatabaseObjectAbstract {
             }
         });
     }
-    /**
-     * update a trip
-     * @param id
-     * @param trip
-     * @param handler
-     */
     /*
     public void update(int id, final AbstractModel trip, final FragmentHandler handler){
         Call<Trip> call = service.updateTrip(id, (Trip)trip);
@@ -157,12 +142,6 @@ public class TripDao extends DatabaseObjectAbstract {
     }
     */
 
-    /**
-     * delete a trip local and remote
-     *
-     * @param trip
-     * @param handler
-     */
     public void delete(final AbstractModel trip, final FragmentHandler handler) {
         Trip deletableTrip = (Trip) trip;
         Call<Trip> call = service.deleteTrip((int) deletableTrip.getTrip_id());
@@ -184,11 +163,6 @@ public class TripDao extends DatabaseObjectAbstract {
         });
     }
 
-    /**
-     * get all trips out of the remote database
-     *
-     * @param handler
-     */
     public void retrieveAll(final FragmentHandler handler) {
         Call<Trip> call = service.retrieveAllTrips();
         call.enqueue(new Callback<Trip>() {
@@ -207,21 +181,10 @@ public class TripDao extends DatabaseObjectAbstract {
         });
     }
 
-    /**
-     * @return
-     */
     public List<Trip> find() {
         return routeBox.getAll();
     }
 
-    /**
-     * Searching for a single route with a search pattern in a column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return Trip which match to the search pattern in the searched columns
-     */
-    @SuppressWarnings("WeakerAccess")
     public Trip findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -230,20 +193,10 @@ public class TripDao extends DatabaseObjectAbstract {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-
-    /**
-     * Searching for routes matching with the search pattern in a the selected column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return List<Trip> which contains the equipements, which match to the search pattern in the searched columns
-     */
-    @SuppressWarnings("WeakerAccess")
     public List<Trip> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    @SuppressWarnings("WeakerAccess")
     public List<Trip> find(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
@@ -256,16 +209,6 @@ public class TripDao extends DatabaseObjectAbstract {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 
-    /**
-     * delete:
-     * Deleting a Trip which matches the given pattern
-     *
-     * @param searchedColumn
-     * @param searchPattern
-     * @return
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
-     */
     public void deleteByPattern(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }

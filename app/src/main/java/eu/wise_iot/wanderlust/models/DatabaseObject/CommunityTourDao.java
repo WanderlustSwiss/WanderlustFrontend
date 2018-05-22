@@ -20,6 +20,10 @@ import retrofit2.Response;
 /**
  * CommunityTourDao:
  *
+ * this model represents a saved tour out of the existing tours
+ * it is important to distinguish CommunityTour with UserTour
+ *
+ *
  * @author Rilind Gashi, Alexander Weinbeck, Simon Kaspar
  * @license MIT
  */
@@ -48,29 +52,14 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
         service = ServiceGenerator.createService(SavedTourService.class);
     }
 
-    /**
-     * count all poi
-     *
-     * @return Total number of records
-     */
     public long count() {
         return communityTourBox.count();
     }
 
-    /**
-     * count all poi which match with the search criteria
-     *
-     * @return Total number of records
-     */
     public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
-    /**
-     * count all poi which match with the search criteria
-     *
-     * @return Total number of records
-     */
     public long count(Property searchedColumn, long searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
@@ -144,14 +133,6 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
         });
     }
 
-    /**
-     * Searching for a single route with a search pattern in a column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return Tour which match to the search pattern in the searched columns
-     */
-    @SuppressWarnings("WeakerAccess")
     public SavedTour findOne(Property searchedColumn, String searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -160,20 +141,10 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    /**
-     * Searching for routes matching with the search pattern in a the selected column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return List<Tour> which contains the equipements,
-     * which match to the search pattern in the searched columns
-     */
-    @SuppressWarnings("WeakerAccess")
     public List<SavedTour> find(Property searchedColumn, String searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    @SuppressWarnings("WeakerAccess")
     public List<SavedTour> find(Property searchedColumn, long searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().find();
     }
@@ -183,21 +154,9 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
     }
 
     public List<SavedTour> find() {
-        if (communityTourBox != null)
-            return communityTourBox.getAll();
-        else
-            return null;
+        return (communityTourBox != null) ? communityTourBox.getAll() : null;
     }
-    /**
-     * delete:
-     * Deleting a Tour which matches the given pattern
-     *
-     * @param searchedColumn
-     * @param searchPattern
-     * @return
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
-     */
+
     public void deleteByPattern(Property searchedColumn, String searchPattern) {
         communityTourBox.remove(findOne(searchedColumn, searchPattern));
     }

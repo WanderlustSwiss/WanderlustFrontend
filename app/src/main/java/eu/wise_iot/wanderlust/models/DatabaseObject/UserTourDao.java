@@ -32,12 +32,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * TripDao:
+ * UserTourDao:
  *
  * @author Rilind Gashi, Alexander Weinbeck
  * @license MIT
  */
-
 
 public class UserTourDao extends DatabaseObjectAbstract {
 
@@ -55,31 +54,10 @@ public class UserTourDao extends DatabaseObjectAbstract {
     private final Box<Tour> routeBox;
     private final ImageController imageController;
 
-    /**
-     * Constructor.
-     */
-
     private UserTourDao() {
         routeBox = BOXSTORE.boxFor(Tour.class);
         service = ServiceGenerator.createService(TourService.class);
         imageController = ImageController.getInstance();
-    }
-
-    public long count() {
-        return routeBox.count();
-    }
-
-    public long count(Property searchedColumn, String searchPattern) {
-        return find(searchedColumn, searchPattern).size();
-    }
-
-    /**
-     * count all tours which match with the search criteria
-     *
-     * @return Total number of records
-     */
-    public long count(Property searchedColumn, long searchPattern) {
-        return find(searchedColumn, searchPattern).size();
     }
 
     /**
@@ -132,7 +110,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
     }
 
     /*
-    public void retrieve(long id, final FragmentHandler handler) {
+    public void retrieveAll(long id, final FragmentHandler handler) {
         Call<Poi> call = service.retrievePoi(id);
         call.enqueue(new Callback<Poi>() {
             @Override
@@ -383,9 +361,18 @@ public class UserTourDao extends DatabaseObjectAbstract {
         }
     }
 
-    /**
-     * @return
-     */
+    public long count() {
+        return routeBox.count();
+    }
+
+    public long count(Property searchedColumn, String searchPattern) {
+        return find(searchedColumn, searchPattern).size();
+    }
+
+    public long count(Property searchedColumn, long searchPattern) {
+        return find(searchedColumn, searchPattern).size();
+    }
+
     public List<Tour> find() {
         if (routeBox != null)
             return routeBox.getAll();
@@ -412,36 +399,18 @@ public class UserTourDao extends DatabaseObjectAbstract {
         });
     }
 
-    /**
-     * Searching for a single route with a search pattern in a column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return Tour which match to the search pattern in the searched columns
-     */
-    @SuppressWarnings("WeakerAccess")
     public Tour findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    @SuppressWarnings("WeakerAccess")
     public Tour findOne(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-    /**
-     * Searching for routes matching with the search pattern in a the selected column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return List<Tour> which contains the equipements, which match to the search pattern in the searched columns
-     */
-    @SuppressWarnings("WeakerAccess")
     public List<Tour> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    @SuppressWarnings("WeakerAccess")
     public List<Tour> find(Property searchedColumn, long searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
@@ -454,16 +423,6 @@ public class UserTourDao extends DatabaseObjectAbstract {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 
-    /**
-     * delete:
-     * Deleting a Tour which matches the given pattern
-     *
-     * @param searchedColumn
-     * @param searchPattern
-     * @return
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
-     */
     public void deleteByPattern(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }

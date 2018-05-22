@@ -26,7 +26,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.views.MainActivity;
 
-/*
+/**
  * A background service which is collecting geoPoints for Creating a tour.
  * @author Joshua Meier
  * @license MIT

@@ -4,7 +4,9 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * Favorite
+ * ViolationType
+ *
+ * represents the the type and contains reference to given Violation
  *
  * @author Alexander Weinbeck
  * @license MIT
