@@ -128,13 +128,11 @@ public class TourOverviewFragment extends Fragment {
         //PicassoCache.clearCache(Picasso.with(context)); //https://stackoverflow.com/questions/22016382/invalidate-cache-in-picasso
         View view = inflater.inflate(R.layout.fragment_tour_overview, container, false);
 
-        tvToursAllPlaceholder = (TextView) view.findViewById(R.id.tvToursAllPlaceholder);
+        tvToursAllPlaceholder = view.findViewById(R.id.tvToursAllPlaceholder);
         // set up the RecyclerView Tours
-        rvTours = (RecyclerView) view.findViewById(R.id.rvTouren);
-        pbTours = (ProgressBar) view.findViewById(R.id.pbTouren);
-        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-
-        rvTours.setLayoutManager(horizontalLayoutManager);
+        rvTours = view.findViewById(R.id.rvTouren);
+        pbTours = view.findViewById(R.id.pbTouren);
+        rvTours.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         adapterRoutes = new ToursOverviewRVAdapter(context, listTours, getActivity());
         adapterRoutes.setClickListener(this::onItemClickImages);
         rvTours.setAdapter(adapterRoutes);
@@ -143,29 +141,26 @@ public class TourOverviewFragment extends Fragment {
         itemDecorator.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_horizontal));
         rvTours.addItemDecoration(itemDecorator);
 
-        tvToursFavoritePlaceholder = (TextView) view.findViewById(R.id.tvToursFavoritePlaceholder);
+        tvToursFavoritePlaceholder = view.findViewById(R.id.tvToursFavoritePlaceholder);
         // set up the RecyclerView favorites
-        rvFavorites = (RecyclerView) view.findViewById(R.id.rvFavorites);
-        pbFavorites = (ProgressBar) view.findViewById(R.id.pbFavorites);
-        LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        rvFavorites.setLayoutManager(horizontalLayoutManager2);
+        rvFavorites = view.findViewById(R.id.rvFavorites);
+        pbFavorites = view.findViewById(R.id.pbFavorites);
+        rvFavorites.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         adapterFavs = new ToursOverviewRVAdapter(context, favTours, getActivity());
         adapterFavs.setClickListener(this::onItemClickImages);
         rvFavorites.setAdapter(adapterFavs);
 
-        tvToursRecentPlaceholder = (TextView) view.findViewById(R.id.tvToursRecentPlaceholder);
+        tvToursRecentPlaceholder = view.findViewById(R.id.tvToursRecentPlaceholder);
         // set up the RecyclerView favorites
-        rvRecent = (RecyclerView) view.findViewById(R.id.rvRecent);
-        pbRecent = (ProgressBar) view.findViewById(R.id.pbRecent);
-        LinearLayoutManager horizontalLayoutManager3 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        rvRecent.setLayoutManager(horizontalLayoutManager3);
+        rvRecent = view.findViewById(R.id.rvRecent);
+        pbRecent = view.findViewById(R.id.pbRecent);
+        rvRecent.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         adapterRecent = new ToursOverviewRVAdapter(context, recentTours, getActivity());
         adapterRecent.setClickListener(this::onItemClickImages);
         rvRecent.setAdapter(adapterRecent);
 
         recentTours.clear();
         recentTours.addAll(tourOverviewController.getRecentTours());
-        //getDataFromServer(recentTours);
         adapterRecent.notifyDataSetChanged();
 
         if(adapterRecent.getItemCount() > 0) {
@@ -192,8 +187,6 @@ public class TourOverviewFragment extends Fragment {
                     listTours.addAll(list);
 
                     if (BuildConfig.DEBUG) Log.d(TAG, "Getting Tours: Server response arrived");
-                    //get all the images needed and save them on the device
-                   // getDataFromServer(listTours);
 
                     adapterRoutes.notifyDataSetChanged();
                     if(adapterRoutes.getItemCount() > 0) {
@@ -273,17 +266,12 @@ public class TourOverviewFragment extends Fragment {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
                         if (BuildConfig.DEBUG) Log.d(TAG, "The RecyclerView is not scrolling");
-                        final int myCellWidth = rvTours.getChildAt(0).getMeasuredWidth();
-                        final int offset = rvTours.computeHorizontalScrollOffset();
-                        final int position = offset / myCellWidth;
-                        if (BuildConfig.DEBUG) Log.d(TAG, "Position=" + position + " " + myCellWidth + " " + offset );
-                        if (20 < (position - (25*(currentPage-1)))) {
+
+                        Tour tour = new Tour();
+                        if (15 < (((LinearLayoutManager)rvTours.getLayoutManager()).findLastVisibleItemPosition() - (25*(currentPage-1)))) {
                             tourOverviewController.getAllTours(currentPage, controllerEvent -> {
                                 switch (controllerEvent.getType()) {
                                     case OK:
-                                        listTours.remove(listTours.size() - 1);
-                                        adapterRoutes.notifyItemRemoved(listTours.size());
-
                                         LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                         currentPage++;
                                         listTours.addAll(newList);
@@ -318,7 +306,7 @@ public class TourOverviewFragment extends Fragment {
         switch (view.getId()) {
             case R.id.tourOVFavoriteButton:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Tour Favorite Clicked and event triggered ");
-                ImageButton ibFavorite = (ImageButton)view.findViewById(R.id.tourOVFavoriteButton);
+                ImageButton ibFavorite = view.findViewById(R.id.tourOVFavoriteButton);
                 if (BuildConfig.DEBUG) Log.d(TAG, "favorite get unfavored: " + tour.getTour_id());
                 long favId = tourOverviewController.getTourFavoriteId(tour.getTour_id());
                 if(favId != -1) {
@@ -382,7 +370,7 @@ public class TourOverviewFragment extends Fragment {
                 }
                 break;
             case R.id.tourOVSaveButton:
-                ImageButton ibSave = (ImageButton) view.findViewById(R.id.tourOVSaveButton);
+                ImageButton ibSave = view.findViewById(R.id.tourOVSaveButton);
                 TourController tourController = new TourController(tour);
                 boolean saved = tourController.isSaved();
                 if(saved){
@@ -423,6 +411,7 @@ public class TourOverviewFragment extends Fragment {
 
     /**
      * handles async backend request for performing a check if the tour is existing
+     * also redirects user to tour fragment if tour exists
      * this will keep the UI responsive
      *
      * @author Alexander Weinbeck
