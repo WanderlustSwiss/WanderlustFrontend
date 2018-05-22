@@ -279,10 +279,10 @@ public class MapFragment extends Fragment {
         else poiTypeSelection.setVisibility(View.GONE);
 
         if(restAreaActive){
-            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_white_24dp);
+            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_campfire_white_24dp);
             ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
         } else {
-            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_black_24dp);
+            ibPoiRestAreaLayer.setImageResource(R.drawable.ic_campfire_black_24dp);
             ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
         }
         mapOverlays.setPoiRestAreaActive(restAreaActive);
@@ -320,11 +320,11 @@ public class MapFragment extends Fragment {
 
         ibPoiRestAreaLayer.setOnClickListener(v -> {
             if(ibPoiRestAreaLayer.isSelected()){
-                ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_black_24dp);
+                ibPoiRestAreaLayer.setImageResource(R.drawable.ic_campfire_black_24dp);
                 ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.white));
                 ibPoiRestAreaLayer.setSelected(false);
             } else {
-                ibPoiRestAreaLayer.setImageResource(R.drawable.ic_local_parking_white_24dp);
+                ibPoiRestAreaLayer.setImageResource(R.drawable.ic_campfire_white_24dp);
                 ibPoiRestAreaLayer.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.primary_main));
                 ibPoiRestAreaLayer.setSelected(true);
             }

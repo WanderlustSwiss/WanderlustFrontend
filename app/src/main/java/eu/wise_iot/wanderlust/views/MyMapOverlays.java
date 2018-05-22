@@ -244,13 +244,13 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                     break;
                 case Constants.TYPE_REST_AREA:
                     if(this.poiRestAreaActive){
-                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resting));
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.ic_campfire_bubble));
                         poiMarkers.add(poiMarker);
                     }
                     break;
                 case Constants.TYPE_FLORA_FAUNA:
                     if(this.poiFloraFaunaActive){
-                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_fauna_flora));
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.ic_local_florist_bubble));
                         poiMarkers.add(poiMarker);
                     }
                     break;
@@ -327,10 +327,10 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
                 drawable = activity.getResources().getDrawable(R.drawable.poi_resaurant);
                 break;
             case Constants.TYPE_REST_AREA:
-                drawable = activity.getResources().getDrawable(R.drawable.poi_resting);
+                drawable = activity.getResources().getDrawable(R.drawable.ic_campfire_bubble);
                 break;
             case Constants.TYPE_FLORA_FAUNA:
-                drawable = activity.getResources().getDrawable(R.drawable.poi_fauna_flora);
+                drawable = activity.getResources().getDrawable(R.drawable.ic_local_florist_bubble);
                 break;
             default:
                 drawable = activity.getResources().getDrawable(R.drawable.poi_error);
