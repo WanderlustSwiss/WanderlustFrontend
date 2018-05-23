@@ -33,6 +33,7 @@ import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
+import static android.os.Process.setThreadPriority;
 
 
 public class StartupResetPasswordFragment extends Fragment {
@@ -161,7 +162,6 @@ public class StartupResetPasswordFragment extends Fragment {
         }
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             //this method will be running on UI thread
             pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
             pdLoading.setCancelable(false);
@@ -169,12 +169,12 @@ public class StartupResetPasswordFragment extends Fragment {
         }
         @Override
         protected Void doInBackground(Void... params) {
-            this.event = loginController.resetPasswordSequential(email);
+            setThreadPriority(-10);
+            event = loginController.resetPasswordSequential(email);
             return null;
         }
         @Override
         protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
             switch(event.getType()) {
                 case OK:
                     Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();

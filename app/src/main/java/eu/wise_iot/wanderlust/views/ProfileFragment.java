@@ -52,6 +52,11 @@ import eu.wise_iot.wanderlust.views.dialog.ConfirmDeletePoiDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
+import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
+import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
+import static android.os.Process.setThreadPriority;
+import static java.lang.Process.*;
+
 /**
  * Fragment which represents the UI of the profile of a user.
  *
@@ -332,7 +337,7 @@ public class ProfileFragment extends Fragment {
         switch (view.getId()) {
             case R.id.ListSavedIcon:
                 profileController.deleteCommunityTour(tour);
-                MapCacheHandler handler = new MapCacheHandler(getActivity().getApplicationContext(), tour.toTour());
+                MapCacheHandler handler = new MapCacheHandler(getActivity(), tour.toTour());
                 handler.deleteMap();
                 listSaved.remove(tour);
                 profileSavedRVAdapter.notifyDataSetChanged();
@@ -389,7 +394,6 @@ public class ProfileFragment extends Fragment {
         }
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             //this method will be running on UI thread
             pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
             pdLoading.setCancelable(false);
@@ -397,12 +401,13 @@ public class ProfileFragment extends Fragment {
         }
         @Override
         protected Void doInBackground(Void... params) {
-            this.responseCode = tourOverviewController.checkIfTourExists(tour);
+            setThreadPriority(-10);
+            responseCode = tourOverviewController.checkIfTourExists(tour);
             return null;
         }
         @Override
         protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
+            setThreadPriority(-10);
             switch(EventType.getTypeByCode(responseCode)) {
                 case OK:
                     if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");

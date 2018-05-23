@@ -2,18 +2,14 @@
     android:layout_height="wrap_content"
     android:divider="@drawable/divider_vertical"
     android:gravity="center"
-    android:layout_marginTop="70dp"
-    android:orientation="vertical"
-    android:padding="48dp"
-    android:showDividers="middle"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <ProgressBar
         android:id="@+id/pbProcessing"
         style="?android:progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_gravity="center"/>
 
 </LinearLayout>

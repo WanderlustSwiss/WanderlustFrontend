@@ -1,12 +1,10 @@
-plugins {
-    id "org.sonarqube" version "2.6.2"
-}
 repositories {
     jcenter()
     mavenCentral()
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.objectbox'
+//apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 27
@@ -59,13 +57,10 @@ sourceSets {
 }
 
 dependencies {
-
-
+    //controls
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.android.support:support-v4:27.1.1'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    //implementation 'com.android.support:support-v4:27.1.1'
+    //testImplementation 'junit:junit:4.12'
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     compile "com.splitwise:tokenautocomplete:2.0.8@aar"
 
@@ -86,8 +81,6 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:1.0.1'
     androidTestCompile 'com.android.support.test:rules:1.0.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
-
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // OSM Bonus Pack
     compile 'com.github.MKergall:osmbonuspack:6.4'
@@ -145,6 +138,9 @@ dependencies {
     // Internetchecker
     compile 'com.treebo:internetavailabilitychecker:1.0.1'
 
+    compile 'org.osmdroid:osmdroid-android:5.6.5'
+
+
 }
 
 //the following sets the required permissions for API 23+ devices and AVDs
@@ -197,5 +193,4 @@ android.applicationVariants.all { variant ->
         failOnError false
     }
 }
-apply plugin: 'com.google.gms.google-services'
 

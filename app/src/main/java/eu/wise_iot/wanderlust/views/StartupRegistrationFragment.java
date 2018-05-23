@@ -31,6 +31,7 @@ import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
+import static android.os.Process.setThreadPriority;
 
 /**
  * Registration Fragment which handles front end inputs of the user
@@ -236,7 +237,6 @@ public class StartupRegistrationFragment extends Fragment {
         }
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             //this method will be running on UI thread
             pdLoading.setMessage("\t" + getResources().getString(R.string.msg_registering));
             pdLoading.setCancelable(false);
@@ -244,13 +244,12 @@ public class StartupRegistrationFragment extends Fragment {
         }
         @Override
         protected Void doInBackground(Void... params) {
+            setThreadPriority(-10);
             event =  registrationController.registerUserSequential(user);
             return null;
         }
         @Override
         protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-
             switch(event.getType()) {
                 case OK:
                     ((MainActivity) getActivity()).setupDrawerHeader(user);

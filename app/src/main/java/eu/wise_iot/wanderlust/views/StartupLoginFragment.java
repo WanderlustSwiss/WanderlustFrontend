@@ -39,6 +39,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
+import static android.os.Process.setThreadPriority;
 
 /**
  * Login Fragment which handles front end inputs of the user for login
@@ -267,7 +268,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
         }
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             //this method will be running on UI thread
             pdLoading.setMessage("\t" + getResources().getString(R.string.msg_logging_in));
             pdLoading.setCancelable(false);
@@ -275,22 +275,19 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
         }
         @Override
         protected Void doInBackground(Void... params) {
+            setThreadPriority(-10);
             event =  loginController.logInSequential(user);
             return null;
         }
         @Override
         protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-
             switch(event.getType()) {
                 case OK:
                     SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
                     User user = (User) event.getModel();
                     ((MainActivity)getActivity()).setupDrawerHeader(user);
                     if(preferences.getBoolean("firstTimeOpened", true)) {
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putBoolean("firstTimeOpened", false); // save that app has been opened
-                        editor.apply();
+                        preferences.edit().putBoolean("firstTimeOpened", false).apply(); // save that app has been opened
 
                         Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
                         if (userGuideFragment == null) userGuideFragment = UserGuideFragment.newInstance();

@@ -41,15 +41,14 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
     /**
      * data is passed into the constructor, here as a equipment
      * @param context
-     * @param parEquipment
+     * @param equipment
      */
-    public EquipmentRVAdapter(Context context, List<Equipment> parEquipment) {
+    public EquipmentRVAdapter(Context context, List<Equipment> equipment) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Copy Constructor");
-        this.mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         this.context = context;
-        if(parEquipment == null) parEquipment = new ArrayList<>();
-        this.equipment = parEquipment;
-        this.imageController = ImageController.getInstance();
+        this.equipment = (equipment != null) ? equipment : new ArrayList<>();
+        imageController = ImageController.getInstance();
     }
 
     /**

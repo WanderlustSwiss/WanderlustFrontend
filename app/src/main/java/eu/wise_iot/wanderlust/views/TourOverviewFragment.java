@@ -1,8 +1,8 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -20,18 +20,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoCache;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Timer;
 
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
@@ -44,8 +41,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 
-import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
-import static android.os.Process.THREAD_PRIORITY_URGENT_DISPLAY;
+import static android.os.Process.setThreadPriority;
 
 
 /**
@@ -223,15 +219,15 @@ public class TourOverviewFragment extends Fragment {
                 case OK:
                     if (BuildConfig.DEBUG) Log.d(TAG, "refresh Favorites");
                     List<Tour> list = (List<Tour>) controllerEvent.getModel();
-                    TourOverviewFragment.this.favTours.clear();
+                    favTours.clear();
                     for (Tour tour : list)
                         for (ImageInfo imageInfo : tour.getImagePaths())
                             imageInfo.setLocalDir(imageController.getTourFolder());
 
-                    TourOverviewFragment.this.favTours.addAll(list);
+                    favTours.addAll(list);
                     //getDataFromServer(favTours);
                     if (BuildConfig.DEBUG) Log.d(TAG, favTours.toString());
-                    TourOverviewFragment.this.adapterFavs.notifyDataSetChanged();
+                    adapterFavs.notifyDataSetChanged();
 
                     if(adapterFavs.getItemCount() > 0) {
                         rvFavorites.setVisibility(View.VISIBLE);
@@ -383,7 +379,6 @@ public class TourOverviewFragment extends Fragment {
                                 if (BuildConfig.DEBUG) Log.d(TAG , "failed");
                         }
                     });
-
                 }else{
                     tourController.setSaved(context , controllerEvent -> {
                         switch (controllerEvent.getType()){
@@ -402,7 +397,6 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tour_rv_item:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
-
                 new AsyncCheckTourExists(tour, getActivity()).execute();
                 break;
         }
@@ -418,36 +412,42 @@ public class TourOverviewFragment extends Fragment {
      * @license MIT
      */
     private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
-        final ProgressDialog pdLoading;
+        //final private ProgressBar pbLoading;
+        private Dialog processingDialog;
         private final Tour tour;
-        private final Activity activity;
         private Integer responseCode;
+        private TimingLogger t1 = new TimingLogger("TIMINGS","check tour exists");
 
         AsyncCheckTourExists(Tour tour, Activity activity){
             this.tour = tour;
-            this.activity = activity;
-            pdLoading = new ProgressDialog(this.activity);
+            processingDialog = new Dialog(getActivity());
+           // processingDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         }
         @Override
         protected void onPreExecute() {
-            TimingLogger t1 = new TimingLogger(TAG,"check tour exists");
-            super.onPreExecute();
-            //this method will be running on UI thread
-            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
-            pdLoading.setCancelable(false);
-            pdLoading.show();
-            t1.dumpToLog();
+            processingDialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog);
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_processing, null);
+            processingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            processingDialog.getWindow().setBackgroundDrawableResource(R.color.ap_transparent);
+            processingDialog.setContentView(view);
+            processingDialog.show();
+            //pbLoading.setIndeterminate(true);
+            //pbLoading.setVisibility(View.VISIBLE);
+            getActivity().setProgressBarIndeterminateVisibility(true);
+            t1.addSplit("showing progress");
+
         }
         @Override
         protected Void doInBackground(Void... params) {
-            TimingLogger t1 = new TimingLogger(TAG,"check tour sequential");
-            this.responseCode = tourOverviewController.checkIfTourExists(tour);
-            t1.dumpToLog();
+            setThreadPriority(-10);
+            TimingLogger t1 = new TimingLogger("TIMINGS","check tour sequential");
+            responseCode = tourOverviewController.checkIfTourExists(tour);
+            t1.addSplit("got response");
             return null;
         }
         @Override
         protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
+            t1.addSplit("handle response");
             switch(EventType.getTypeByCode(responseCode)) {
                 case OK:
                     if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");
@@ -477,7 +477,8 @@ public class TourOverviewFragment extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
             }
 
-            if (pdLoading.isShowing()) pdLoading.dismiss();
+            processingDialog.dismiss();
+            t1.dumpToLog();
         }
     }
     /**

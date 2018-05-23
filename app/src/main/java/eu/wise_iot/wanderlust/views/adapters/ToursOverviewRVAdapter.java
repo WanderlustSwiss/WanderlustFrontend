@@ -49,16 +49,15 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
     /**
      * data is passed into the constructor, here as a Tour
      * @param context
-     * @param parTours
+     * @param tours
      */
-    public ToursOverviewRVAdapter(Context context, List<Tour> parTours, Activity activity) {
+    public ToursOverviewRVAdapter(Context context, List<Tour> tours, Activity activity) {
         if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "Copy Constructor");
-        this.mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         this.context = context;
-        if(parTours == null) parTours = new ArrayList<>();
-        this.tours = parTours;
+        this.tours = (tours != null) ? tours : new ArrayList<>();
         //get which tour is favored
-        this.imageController = ImageController.getInstance();
+        imageController = ImageController.getInstance();
         this.activity = activity;
     }
 
@@ -83,7 +82,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
-        Tour tour = this.tours.get(position);
+        Tour tour = tours.get(position);
 
         TourController tourController = new TourController(tour);
 

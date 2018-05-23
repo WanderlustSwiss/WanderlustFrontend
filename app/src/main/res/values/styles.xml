@@ -8,6 +8,12 @@
         <item name="android:statusBarColor">@color/primary_second</item>
     </style>
 
+    <style name="Theme.D1NoTitleDim" parent="android:style/Theme.Translucent">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
     <!-- TEXT STYLES: HEADER -->
 
     <style name="h1">

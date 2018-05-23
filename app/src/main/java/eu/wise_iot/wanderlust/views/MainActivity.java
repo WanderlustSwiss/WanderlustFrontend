@@ -30,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +65,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import io.objectbox.BoxStore;
 
+import static android.os.Process.setThreadPriority;
 import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         getFragmentManager().beginTransaction().replace(R.id.content_frame, BackgroundFragment.newInstance(), Constants.BACKGROUND_FRAGMENT).commit();
 
         activity = this;
@@ -402,19 +404,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
             //this method will be running on UI thread
             pdLoading.setMessage("\t" + getResources().getString(R.string.msg_logging_in));pdLoading.setCancelable(false);
             pdLoading.show();
         }
         @Override
         protected ControllerEvent doInBackground(Void... params) {
+            setThreadPriority(-10);
             return loginController.logInSequential(loginUser);
         }
         @Override
         protected void onPostExecute(ControllerEvent event) {
-            super.onPostExecute(event);
-
             User loggedInUser = (User) event.getModel();
             switch (event.getType()) {
                 case OK:

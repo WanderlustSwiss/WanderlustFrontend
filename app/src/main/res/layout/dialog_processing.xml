@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@android:style/Theme.Holo.Light.Dialog">
+
+    <ProgressBar
+        style="@android:style/Theme.Holo.Light.Dialog"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:progressDrawable="@drawable/loader"
+        android:indeterminate="true" />
+</RelativeLayout>

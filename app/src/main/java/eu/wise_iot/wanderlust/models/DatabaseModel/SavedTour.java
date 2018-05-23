@@ -7,6 +7,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
@@ -84,7 +85,7 @@ public class SavedTour extends AbstractModel {
         return new Tour(internal_id, tour_id, title, description,
                 polyline, elevation, duration, distance,
         ascent, descent, difficulty, editable,
-        updatedAt, createdAt, region, isPublic, new ArrayList<>(seasons));
+        updatedAt, createdAt, region, isPublic, (seasons != null) ? new ArrayList<>() : Collections.EMPTY_LIST);
     }
 
     public SavedTour(String title, String description, String polyline, long difficulty, boolean isPublic, List<String> seasons, long region) {
