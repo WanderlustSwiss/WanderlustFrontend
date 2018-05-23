@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -26,13 +25,11 @@ import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
+import eu.wise_iot.wanderlust.services.AsyncUITask;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static android.os.Process.setThreadPriority;
 
 
 public class StartupResetPasswordFragment extends Fragment {
@@ -62,26 +59,26 @@ public class StartupResetPasswordFragment extends Fragment {
         return fragment;
     }
 
-    private final FragmentHandler fragmentHandler = new FragmentHandler() {
-        @Override
-        public void onResponse(ControllerEvent event) {
-            EventType eventType = event.getType();
-            switch (eventType) {
-                case OK:
-                    Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
-                    Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
-                    if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
-                            .commit();
-
-                    break;
-                default:
-                    Toast.makeText(context, R.string.forgot_password_reset_mail_fail, Toast.LENGTH_LONG).show();
-                    break;
-            }
-        }
-    };
+//    private final FragmentHandler fragmentHandler = new FragmentHandler() {
+//        @Override
+//        public void onResponse(ControllerEvent event) {
+//            EventType eventType = event.getType();
+//            switch (eventType) {
+//                case OK:
+//                    Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
+//                    Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+//                    if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
+//                    getFragmentManager().beginTransaction()
+//                            .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+//                            .commit();
+//
+//                    break;
+//                default:
+//                    Toast.makeText(context, R.string.forgot_password_reset_mail_fail, Toast.LENGTH_LONG).show();
+//                    break;
+//            }
+//        }
+//    };
 
 
     @Override
@@ -122,14 +119,49 @@ public class StartupResetPasswordFragment extends Fragment {
             if (!validateEmail(inputMail)) {
                 textInputForgotPassword.setError(getString(R.string.registration_email_invalid));
             } else {
-                new AsyncResetPassword(inputMail).execute();
-                //loginController.resetPassword(inputMail, fragmentHandler);
+                LoadingDialog.getDialog().show(getActivity());
+                AsyncUITask.getHandler().queueTask(() -> {
+                    ControllerEvent event = loginController.resetPasswordSequential(inputMail);
+                    switch (event.getType()) {
+                        case OK:
+                            Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
+                            Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                            if (startupLoginFragment == null)
+                                startupLoginFragment = StartupLoginFragment.newInstance();
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+                                    .commit();
+                            break;
+                        case NOT_FOUND:
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> Email was not found");
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_email_not_found), Toast.LENGTH_LONG).show();
+                            break;
+                        case SERVER_ERROR:
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
+                            break;
+                        case NETWORK_ERROR:
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
+                            break;
+                        default:
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.forgot_password_reset_mail_fail), Toast.LENGTH_LONG).show();
+                    }
+
+                    LoadingDialog.getDialog().dismiss();
+                });
             }
         });
 
         redirectToLogin.setOnClickListener(v -> {
             Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
-            if (startupLoginFragment == null) startupLoginFragment = StartupLoginFragment.newInstance();
+            if (startupLoginFragment == null)
+                startupLoginFragment = StartupLoginFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                     .commit();
@@ -141,61 +173,62 @@ public class StartupResetPasswordFragment extends Fragment {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(mail);
         return matcher.find();
     }
-
-    /**
-     * handles async backend request for performing a password reset
-     * this will keep the UI responsive
-     *
-     * @author Alexander Weinbeck
-     * @license MIT
-     */
-    private class AsyncResetPassword extends AsyncTask<Void, Void, Void> {
-        private final String email;
-        private ControllerEvent event;
-
-        AsyncResetPassword(String email){
-            this.email = email;
-        }
-        @Override
-        protected void onPreExecute() {
-            //this method will be running on UI thread
-            LoadingDialog.getDialog().show(getActivity());
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            setThreadPriority(-10);
-            event = loginController.resetPasswordSequential(email);
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            switch(event.getType()) {
-                case OK:
-                    Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
-                    Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
-                    if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
-                            .commit();
-                    break;
-                case NOT_FOUND:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> Email was not found");
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_email_not_found), Toast.LENGTH_LONG).show();
-                    break;
-                case SERVER_ERROR:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
-                    break;
-                case NETWORK_ERROR:
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
-                    break;
-                default:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.forgot_password_reset_mail_fail), Toast.LENGTH_LONG).show();
-            }
-
-            LoadingDialog.getDialog().dismiss();
-        }
-    }
 }
+
+//    /**
+//     * handles async backend request for performing a password reset
+//     * this will keep the UI responsive
+//     *
+//     * @author Alexander Weinbeck
+//     * @license MIT
+//     */
+//    private class AsyncResetPassword extends AsyncTask<Void, Void, Void> {
+//        private final String email;
+//        private ControllerEvent event;
+//
+//        AsyncResetPassword(String email){
+//            this.email = email;
+//        }
+//        @Override
+//        protected void onPreExecute() {
+//            //this method will be running on UI thread
+//            LoadingDialog.getDialog().show(getActivity());
+//        }
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            setThreadPriority(-10);
+//            event = loginController.resetPasswordSequential(email);
+//            return null;
+//        }
+//        @Override
+//        protected void onPostExecute(Void result) {
+//            switch(event.getType()) {
+//                case OK:
+//                    Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
+//                    Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+//                    if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
+//                    getFragmentManager().beginTransaction()
+//                            .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+//                            .commit();
+//                    break;
+//                case NOT_FOUND:
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> Email was not found");
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_email_not_found), Toast.LENGTH_LONG).show();
+//                    break;
+//                case SERVER_ERROR:
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
+//                    break;
+//                case NETWORK_ERROR:
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+//                    break;
+//                default:
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.forgot_password_reset_mail_fail), Toast.LENGTH_LONG).show();
+//            }
+//
+//            LoadingDialog.getDialog().dismiss();
+//        }
+//    }
+//}

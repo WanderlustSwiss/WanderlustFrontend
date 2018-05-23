@@ -147,7 +147,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             .commit();
                     break;
                 default:
-                    new AsyncLoginOnLoad(new LoginUser(user.getNickname(), user.getPassword()), user,this, ft).execute();
+                    //new AsyncLoginOnLoad(new LoginUser(user.getNickname(), user.getPassword()), user,this, ft).execute();
+                    ControllerEvent event = loginController.logInSequential(new LoginUser(user.getNickname(), user.getPassword()));
+                    User loggedInUser = (User) event.getModel();
+                    switch (event.getType()) {
+                        case OK:
+                            setupDrawerHeader(loggedInUser);
+
+                            //set last login
+                            DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
+                            DateTime now = new DateTime().withZone(timeZone);
+                            DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+                            String lastLoginNow = fmt.print(now);
+                            loggedInUser.setLastLogin(lastLoginNow);
+                            UserDao.getInstance().update(loggedInUser);
+
+                            getFragmentManager().beginTransaction().replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                    .commit();
+                            break;
+                        default:
+                            DateTime lastLogin2 = DateTime.parse(user.getLastLogin());
+                            if (BuildConfig.DEBUG) Log.d(TAG, "Last login: " + lastLogin2);
+                            //check if last login is within last 24h
+                            if (lastLogin2.isAfter(new DateTime().minusDays(1))) {
+                                setupDrawerHeader(user);
+                                getFragmentManager()
+                                        .beginTransaction()
+                                        .replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                        .commit();
+
+                            } else {
+                                //StartupLoginFragment loginFragment = new StartupLoginFragment();
+                                getFragmentManager()
+                                        .beginTransaction()
+                                        .replace(R.id.content_frame, new StartupLoginFragment().newInstance())
+                                        .commit();
+                            }
+                            break;
+                    }
                     break;
             }
         }

@@ -2,7 +2,6 @@ package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -27,10 +26,10 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.services.AsyncUITask;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static android.os.Process.setThreadPriority;
 
 /**
  * Registration Fragment which handles front end inputs of the user
@@ -131,7 +130,43 @@ public class StartupRegistrationFragment extends Fragment {
                     , 0, true, true, "", "");
             if (validateInput(user)) {
                 btnRegister.setEnabled(false);
-                new AsyncRegistration(user).execute();
+                LoadingDialog.getDialog().show(getActivity());
+                final ControllerEvent event = registrationController.registerUserSequential(user);
+                AsyncUITask.getHandler().queueTask(() -> {
+                    switch (event.getType()) {
+                        case OK:
+                            ((MainActivity) getActivity()).setupDrawerHeader(user);
+                            Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
+                            Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+                            if (startupLoginFragment == null)
+                                startupLoginFragment = StartupLoginFragment.newInstance();
+                            getFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+                                    .commit();
+                            break;
+                        case CONFLICT:
+                            Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
+                            break;
+                        case SERVER_ERROR:
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR" + event.getType().toString());
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
+                            break;
+                        case NETWORK_ERROR:
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR" + event.getType().toString());
+                            break;
+                        default:
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR" + event.getType().toString());
+                            Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
+                    }
+                    //make registration button available again
+                    btnRegister.setEnabled(true);
+                    LoadingDialog.getDialog().dismiss();
+                });
             }
             // hide soft keyboard after button was clicked
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -141,7 +176,8 @@ public class StartupRegistrationFragment extends Fragment {
         redirectToLogin.setOnClickListener(v -> {
 
             Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
-            if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
+            if (startupLoginFragment == null)
+                startupLoginFragment = StartupLoginFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
                     .commit();
@@ -212,64 +248,66 @@ public class StartupRegistrationFragment extends Fragment {
     private boolean validatePassword(String password) {
         return password.matches(VALID_PASSWORTD_REGX);
     }
-    /*
-     * TODO do async tasks static to prevent leaks see https://stackoverflow.com/questions/44309241/warning-this-asynctask-class-should-be-static-or-leaks-might-occur
-     * might not be the best solution either!
-     */
-    /**
-     * handles async backend request for performing an asynchronous registration
-     * this will keep the UI responsive
-     *
-     * @author Alexander Weinbeck
-     * @license MIT
-     */
-    private class AsyncRegistration extends AsyncTask<Void, Void, Void> {
-        private final User user;
-        private ControllerEvent event;
-
-        AsyncRegistration(User user){
-            this.user = user;
-        }
-        @Override
-        protected void onPreExecute() {
-            LoadingDialog.getDialog().show(getActivity());
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            setThreadPriority(-10);
-            event =  registrationController.registerUserSequential(user);
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            switch(event.getType()) {
-                case OK:
-                    ((MainActivity) getActivity()).setupDrawerHeader(user);
-                    Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
-                    Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
-                    if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
-                            .commit();
-                    break;
-                case CONFLICT:
-                    Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
-                    break;
-                case SERVER_ERROR:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR" + event.getType().toString());
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
-                    break;
-                case NETWORK_ERROR:
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR" + event.getType().toString());
-                    break;
-                default:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR" + event.getType().toString());
-                    Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
-            }
-            //make registration button available again
-            btnRegister.setEnabled(true);
-            LoadingDialog.getDialog().dismiss();
-        }
-    }
 }
+
+//    /*
+//     * TODO do async tasks static to prevent leaks see https://stackoverflow.com/questions/44309241/warning-this-asynctask-class-should-be-static-or-leaks-might-occur
+//     * might not be the best solution either!
+//     */
+//    /**
+//     * handles async backend request for performing an asynchronous registration
+//     * this will keep the UI responsive
+//     *
+//     * @author Alexander Weinbeck
+//     * @license MIT
+//     */
+//    private class AsyncRegistration extends AsyncTask<Void, Void, Void> {
+//        private final User user;
+//        private ControllerEvent event;
+//
+//        AsyncRegistration(User user){
+//            this.user = user;
+//        }
+//        @Override
+//        protected void onPreExecute() {
+//            LoadingDialog.getDialog().show(getActivity());
+//        }
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            setThreadPriority(-10);
+//            event =  registrationController.registerUserSequential(user);
+//            return null;
+//        }
+//        @Override
+//        protected void onPostExecute(Void result) {
+//            switch(event.getType()) {
+//                case OK:
+//                    ((MainActivity) getActivity()).setupDrawerHeader(user);
+//                    Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
+//                    Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);
+//                    if (startupLoginFragment == null)startupLoginFragment = StartupLoginFragment.newInstance();
+//                    getFragmentManager().beginTransaction()
+//                            .replace(R.id.content_frame, startupLoginFragment, Constants.LOGIN_FRAGMENT)
+//                            .commit();
+//                    break;
+//                case CONFLICT:
+//                    Toast.makeText(context, R.string.registration_nickname_mail_used, Toast.LENGTH_LONG).show();
+//                    break;
+//                case SERVER_ERROR:
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR" + event.getType().toString());
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
+//                    break;
+//                case NETWORK_ERROR:
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR" + event.getType().toString());
+//                    break;
+//                default:
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR" + event.getType().toString());
+//                    Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
+//            }
+//            //make registration button available again
+//            btnRegister.setEnabled(true);
+//            LoadingDialog.getDialog().dismiss();
+//        }
+//    }
+//}

@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,10 +34,10 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.services.AsyncUITask;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static android.os.Process.setThreadPriority;
 
 /**
  * Login Fragment which handles front end inputs of the user for login
@@ -63,7 +62,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     //    private GoogleApiClient googleApiClient;
     private LoginUser loginUser;
     private final LoginController loginController;
-
 
 
     /**
@@ -146,8 +144,61 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                     passwordTextfield.getText().toString()
             );
 
-            new AsyncLoginOnClick(loginUser).execute();
+            LoadingDialog.getDialog().show(getActivity());
+            AsyncUITask.getHandler().queueTask(() -> {
+                ControllerEvent event = loginController.logInSequential(loginUser);
+                switch (event.getType()) {
+                    case OK:
+                        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                        User user = (User) event.getModel();
+                        ((MainActivity) getActivity()).setupDrawerHeader(user);
+                        if (preferences.getBoolean("firstTimeOpened", true)) {
+                            preferences.edit().putBoolean("firstTimeOpened", false).apply(); // save that app has been opened
 
+                            Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
+                            if (userGuideFragment == null)
+                                userGuideFragment = UserGuideFragment.newInstance();
+
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
+                                    .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
+                                    .commit();
+                        } else {
+
+                            Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+                            if (mapFragment == null) mapFragment = MapFragment.newInstance();
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                    .commit();
+                            //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                        }
+
+                        break;
+                    case NOT_FOUND:
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "ERROR: Server Response arrived -> User was not found");
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_user_not_found), Toast.LENGTH_LONG).show();
+                        break;
+                    case SERVER_ERROR:
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
+                        break;
+                    case NETWORK_ERROR:
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
+                        break;
+                    default:
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+                        break;
+
+                }
+                LoadingDialog.getDialog().dismiss();
+
+            });
             btnLogin.setEnabled(true);
 
             // hide soft keyboard after button was clicked
@@ -170,7 +221,8 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             //googleApiClient.stopAutoManage((FragmentActivity) getActivity());
             //googleApiClient.disconnect();
             Fragment startupRegistrationFragment = getFragmentManager().findFragmentByTag(Constants.REGISTRATION_FRAGMENT);
-            if (startupRegistrationFragment == null)startupRegistrationFragment = StartupRegistrationFragment.newInstance();
+            if (startupRegistrationFragment == null)
+                startupRegistrationFragment = StartupRegistrationFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, startupRegistrationFragment, Constants.REGISTRATION_FRAGMENT)
                     .addToBackStack(Constants.REGISTRATION_FRAGMENT)
@@ -199,7 +251,8 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
             //googleApiClient.disconnect();
 
             Fragment startupResetPasswordFragment = getFragmentManager().findFragmentByTag(Constants.RESET_PASSWORD_FRAGMENT);
-            if (startupResetPasswordFragment == null)startupResetPasswordFragment = StartupResetPasswordFragment.newInstance();
+            if (startupResetPasswordFragment == null)
+                startupResetPasswordFragment = StartupResetPasswordFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, startupResetPasswordFragment, Constants.RESET_PASSWORD_FRAGMENT)
                     .addToBackStack(Constants.RESET_PASSWORD_FRAGMENT)
@@ -246,7 +299,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
+}
     /**
      * handles async backend request for performing an asynchronous login when clicking on login
      * this will keep the UI responsive
@@ -254,71 +307,71 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
      * @author Alexander Weinbeck
      * @license MIT
      */
-    private class AsyncLoginOnClick extends AsyncTask<Void, Void, Void> {
-        private final LoginUser user;
-        private ControllerEvent event;
-
-        AsyncLoginOnClick(LoginUser user){
-            this.user = user;
-        }
-        @Override
-        protected void onPreExecute() {
-            LoadingDialog.getDialog().show(getActivity());
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            setThreadPriority(-10);
-            event =  loginController.logInSequential(user);
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            switch(event.getType()) {
-                case OK:
-                    SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-                    User user = (User) event.getModel();
-                    ((MainActivity)getActivity()).setupDrawerHeader(user);
-                    if(preferences.getBoolean("firstTimeOpened", true)) {
-                        preferences.edit().putBoolean("firstTimeOpened", false).apply(); // save that app has been opened
-
-                        Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
-                        if (userGuideFragment == null) userGuideFragment = UserGuideFragment.newInstance();
-
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
-                                .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
-                                .commit();
-                    } else {
-
-                        Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                        if (mapFragment == null) mapFragment = MapFragment.newInstance();
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                                .commit();
-                        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
-                    }
-
-                    break;
-                case NOT_FOUND:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> User was not found");
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_user_not_found), Toast.LENGTH_LONG).show();
-                    break;
-                case SERVER_ERROR:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
-                    break;
-                case NETWORK_ERROR:
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
-                    break;
-                default:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
-            }
-
-            LoadingDialog.getDialog().dismiss();
-        }
-    }
-}
+//    private class AsyncLoginOnClick extends AsyncTask<Void, Void, Void> {
+//        private final LoginUser user;
+//        private ControllerEvent event;
+//
+//        AsyncLoginOnClick(LoginUser user){
+//            this.user = user;
+//        }
+//        @Override
+//        protected void onPreExecute() {
+//            LoadingDialog.getDialog().show(getActivity());
+//        }
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            setThreadPriority(-10);
+//            event =  loginController.logInSequential(user);
+//            return null;
+//        }
+//        @Override
+//        protected void onPostExecute(Void result) {
+//            switch(event.getType()) {
+//                case OK:
+//                    SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+//                    User user = (User) event.getModel();
+//                    ((MainActivity)getActivity()).setupDrawerHeader(user);
+//                    if(preferences.getBoolean("firstTimeOpened", true)) {
+//                        preferences.edit().putBoolean("firstTimeOpened", false).apply(); // save that app has been opened
+//
+//                        Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
+//                        if (userGuideFragment == null) userGuideFragment = UserGuideFragment.newInstance();
+//
+//                        getFragmentManager().beginTransaction()
+//                                .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
+//                                .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
+//                                .commit();
+//                    } else {
+//
+//                        Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+//                        if (mapFragment == null) mapFragment = MapFragment.newInstance();
+//                        getFragmentManager().beginTransaction()
+//                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+//                                .commit();
+//                        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+//                    }
+//
+//                    break;
+//                case NOT_FOUND:
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> User was not found");
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_user_not_found), Toast.LENGTH_LONG).show();
+//                    break;
+//                case SERVER_ERROR:
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
+//                    break;
+//                case NETWORK_ERROR:
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+//                    break;
+//                default:
+//                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+//                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+//            }
+//
+//            LoadingDialog.getDialog().dismiss();
+//        }
+//    }
+//}
 
 

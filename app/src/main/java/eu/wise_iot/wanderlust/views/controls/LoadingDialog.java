@@ -34,5 +34,6 @@ public class LoadingDialog {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        dialog.dismiss();
     }
 }

@@ -44,7 +44,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
     private final Context context;
     private final ImageController imageController;
     private final FavoriteDao favoriteDao = FavoriteDao.getInstance();
-    private final List<Long> favorizedTours = new ArrayList<>();
+   // private final List<Long> favorizedTours = new ArrayList<>();
 
 
     /**
@@ -100,21 +100,19 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         holder.ibShare.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
         holder.ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
         AsyncUITask.getHandler().queueTask(() -> {
-            TourController tourController = new TourController(tour);
-            if(tourController.isSaved())
+            if(new TourController(tour).isSaved())
                 holder.ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
         });
 
 
         holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
         //button Favorite
-        for (Favorite favorite : favoriteDao.find()) {
-            if (favorite.getTour() == tour.getTour_id()) {
+        for (Favorite favorite : favoriteDao.find())
+            if (favorite.getTour() == tour.getTour_id())
                 holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
                 //add to favored tours
-                favorizedTours.add(favorite.getTour());
-            }
-        }
+                //favorizedTours.add(favorite.getTour());
+
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
 
