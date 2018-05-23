@@ -99,7 +99,7 @@ public final class DatabaseController {
                     syncingPois = true;
                     BoundingBox box = (BoundingBox) event.getObj();
                     poiController.loadPoiByArea(box);
-                    //PoiDao.getInstance().syncPois(box);
+                    //PoiDao.getDialog().syncPois(box);
                 }
                 break;
             default:

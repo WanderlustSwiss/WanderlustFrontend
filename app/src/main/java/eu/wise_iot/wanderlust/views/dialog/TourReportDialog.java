@@ -41,7 +41,7 @@ public class TourReportDialog extends DialogFragment {
         dialog.setArguments(args);
         dialog.tour = tour;
         dialog.tourController = tourController;
-        //this.violationTypeDao = ViolationTypeDao.getInstance();
+        //this.violationTypeDao = ViolationTypeDao.getDialog();
         return dialog;
     }
 

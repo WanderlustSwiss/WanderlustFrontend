@@ -37,8 +37,8 @@
 //    public void setUp(){
 //
 //        profileController = new ProfileController();
-//        userDao = UserDao.getInstance();
-//        profileDao = ProfileDao.getInstance();
+//        userDao = UserDao.getDialog();
+//        profileDao = ProfileDao.getDialog();
 //
 //    }
 //

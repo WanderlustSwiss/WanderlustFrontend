@@ -2,7 +2,6 @@ package eu.wise_iot.wanderlust.views;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -22,8 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-
-import org.osmdroid.bonuspack.location.POI;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,14 +45,12 @@ import eu.wise_iot.wanderlust.views.adapters.ProfilePOIRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileTripRVAdapter;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import eu.wise_iot.wanderlust.views.dialog.ConfirmDeletePoiDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
-import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
-import static android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE;
 import static android.os.Process.setThreadPriority;
-import static java.lang.Process.*;
 
 /**
  * Fragment which represents the UI of the profile of a user.
@@ -148,7 +143,7 @@ public class ProfileFragment extends Fragment {
         if (image != null) {
             Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(profilePicture);
             ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
-        }else{
+        } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
             drawable.setCircular(true);
@@ -160,7 +155,8 @@ public class ProfileFragment extends Fragment {
         editProfile.setOnClickListener(v -> {
 
             Fragment profileEditFragment = getFragmentManager().findFragmentByTag(Constants.PROFILE_EDIT_FRAGMENT);
-            if (profileEditFragment == null) profileEditFragment = ProfileEditFragment.newInstance();
+            if (profileEditFragment == null)
+                profileEditFragment = ProfileEditFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, profileEditFragment, Constants.PROFILE_EDIT_FRAGMENT)
                     .addToBackStack(null)
@@ -171,17 +167,17 @@ public class ProfileFragment extends Fragment {
     /**
      * To set the stats at the top of the profile
      */
-    public void setProfileStats(){
+    public void setProfileStats() {
         nickname.setText(profileController.getNickName());
         profileController.getScore(controllerEvent -> {
-            switch (controllerEvent.getType()){
+            switch (controllerEvent.getType()) {
                 case OK:
                     int score = ((Profile) controllerEvent.getModel()).getScore();
-                    amountScore.setText(String.format(Locale.GERMAN,"%1d" ,score));
-                    if (BuildConfig.DEBUG) Log.d("SCORE",  String.valueOf(score));
+                    amountScore.setText(String.format(Locale.GERMAN, "%1d", score));
+                    if (BuildConfig.DEBUG) Log.d("SCORE", String.valueOf(score));
                     break;
                 default:
-                    if (BuildConfig.DEBUG) Log.d("SCORE",  "Could not load Score");
+                    if (BuildConfig.DEBUG) Log.d("SCORE", "Could not load Score");
                     break;
             }
         });
@@ -238,7 +234,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public void setupRVs(View view){
+    public void setupRVs(View view) {
         //init textview if empty list
         tvProfileNoContent = view.findViewById(R.id.tvProfileNoContent);
         //set trip adapter
@@ -252,7 +248,7 @@ public class ProfileFragment extends Fragment {
                         listFavorites);
         profileFavoritesRVAdapter.setClickListener(this::onRVItemClickTour);
         profileController.getFavorites(controllerEvent -> {
-            switch (controllerEvent.getType()){
+            switch (controllerEvent.getType()) {
                 case OK:
                     listFavorites.clear();
                     listFavorites.addAll((List) controllerEvent.getModel());
@@ -285,10 +281,12 @@ public class ProfileFragment extends Fragment {
         profileRV = view.findViewById(R.id.listContent);
         profileRV.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
         profileRV.setAdapter(profileFavoritesRVAdapter);
-        
+
     }
+
     /**
      * handles click on an recycler view item
+     *
      * @param view representing the recycler view item
      * @param tour representing the tour of the clicked item
      */
@@ -324,11 +322,13 @@ public class ProfileFragment extends Fragment {
                 });
                 break;
             default:
-                new AsyncCheckTourExists(tour,getActivity()).execute();
+                new AsyncCheckTourExists(tour, getActivity()).execute();
         }
     }
+
     /**
      * handles click on an recycler view item
+     *
      * @param view representing the recycler view item
      * @param tour representing the tour of the clicked item
      */
@@ -343,12 +343,13 @@ public class ProfileFragment extends Fragment {
                 profileSavedRVAdapter.notifyDataSetChanged();
                 break;
             default:
-                new AsyncCheckTourExists(tour.toTour(),getActivity()).execute();
+                new AsyncCheckTourExists(tour.toTour(), getActivity()).execute();
         }
     }
 
     /**
      * handles click on an recycler view item
+     *
      * @param view representing the recycler view item
      * @param poi
      */
@@ -380,37 +381,36 @@ public class ProfileFragment extends Fragment {
      * @license MIT
      */
     private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
-        final ProgressDialog pdLoading;
         private final Tour tour;
         private final Activity activity;
         private Integer responseCode;
         private final TourOverviewController tourOverviewController;
 
-        AsyncCheckTourExists(Tour tour, Activity activity){
+        AsyncCheckTourExists(Tour tour, Activity activity) {
             this.tour = tour;
             this.activity = activity;
-            pdLoading = new ProgressDialog(this.activity);
             tourOverviewController = new TourOverviewController();
         }
+
         @Override
         protected void onPreExecute() {
-            //this method will be running on UI thread
-            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
-            pdLoading.setCancelable(false);
-            pdLoading.show();
+            LoadingDialog.getDialog().show(activity);
         }
+
         @Override
         protected Void doInBackground(Void... params) {
             setThreadPriority(-10);
             responseCode = tourOverviewController.checkIfTourExists(tour);
             return null;
         }
+
         @Override
         protected void onPostExecute(Void result) {
             setThreadPriority(-10);
-            switch(EventType.getTypeByCode(responseCode)) {
+            switch (EventType.getTypeByCode(responseCode)) {
                 case OK:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "Server Response arrived -> OK Tour was found");
                     getFragmentManager().beginTransaction()
                             .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
                             .addToBackStack(Constants.TOUR_FRAGMENT)
@@ -419,26 +419,31 @@ public class ProfileFragment extends Fragment {
                     //((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     break;
                 case NOT_FOUND:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "ERROR: Server Response arrived -> Tour was not found");
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
                     tourOverviewController.removeRecentTour(tour);
                     break;
                 case SERVER_ERROR:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
                     break;
                 case NETWORK_ERROR:
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
                     break;
                 default:
-                    if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
-                    Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
             }
 
-            if (pdLoading.isShowing()) pdLoading.dismiss();
+            LoadingDialog.getDialog().dismiss();
         }
     }
+}
 
 //    public void setupFavorites() {
 //        profileRV.setAdapter(profileFavoritesRVAdapter);
@@ -534,5 +539,3 @@ public class ProfileFragment extends Fragment {
 //        return this.profileController;
 //    }
 
-
-}

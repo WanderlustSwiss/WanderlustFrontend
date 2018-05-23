@@ -23,9 +23,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.zip.GZIPInputStream;
 
 import eu.wise_iot.wanderlust.BuildConfig;
@@ -50,7 +47,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
-import eu.wise_iot.wanderlust.services.DownloadQueueHandler;
+import eu.wise_iot.wanderlust.services.AsyncDownloadQueueTask;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.ViolationService;
 import io.objectbox.Property;
@@ -161,7 +158,7 @@ public class TourController {
     }
 
     public void setSaved(Context context, FragmentHandler handler){
-        DownloadQueueHandler.getInstance().queueTask(() ->
+        AsyncDownloadQueueTask.getHandler().queueTask(() ->
             communityTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
                 switch (controllerEvent.getType()){
                     case OK:
@@ -188,7 +185,7 @@ public class TourController {
     }
 
     public void unsetSaved(Context context, FragmentHandler fragmentHandler){
-        DownloadQueueHandler.getInstance().queueTask(() ->
+        AsyncDownloadQueueTask.getHandler().queueTask(() ->
             communityTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
                 switch (controllerEvent.getType()){
                     case OK:

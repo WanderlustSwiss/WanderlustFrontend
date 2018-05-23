@@ -43,7 +43,7 @@ public class PoiReportDialog extends DialogFragment {
         dialog.setArguments(args);
         dialog.poi = poi;
         dialog.poiController = poiController;
-        //this.violationTypeDao = ViolationTypeDao.getInstance();
+        //this.violationTypeDao = ViolationTypeDao.getDialog();
         return dialog;
     }
 

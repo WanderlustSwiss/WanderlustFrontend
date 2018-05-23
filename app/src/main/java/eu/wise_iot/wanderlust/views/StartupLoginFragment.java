@@ -37,6 +37,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.os.Process.setThreadPriority;
@@ -147,7 +148,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                     passwordTextfield.getText().toString()
             );
 
-            new AsyncLoginOnClick(loginUser,getActivity()).execute();
+            new AsyncLoginOnClick(loginUser).execute();
 
             btnLogin.setEnabled(true);
 
@@ -256,22 +257,15 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
      * @license MIT
      */
     private class AsyncLoginOnClick extends AsyncTask<Void, Void, Void> {
-        final ProgressDialog pdLoading;
         private final LoginUser user;
-        private final Activity activity;
         private ControllerEvent event;
 
-        AsyncLoginOnClick(LoginUser user, Activity activity){
+        AsyncLoginOnClick(LoginUser user){
             this.user = user;
-            this.activity = activity;
-            pdLoading = new ProgressDialog(this.activity);
         }
         @Override
         protected void onPreExecute() {
-            //this method will be running on UI thread
-            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_logging_in));
-            pdLoading.setCancelable(false);
-            pdLoading.show();
+            LoadingDialog.getDialog().show(getActivity());
         }
         @Override
         protected Void doInBackground(Void... params) {
@@ -324,7 +318,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
             }
 
-            if (pdLoading.isShowing()) pdLoading.dismiss();
+            LoadingDialog.getDialog().dismiss();
         }
     }
 }

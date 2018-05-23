@@ -29,6 +29,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.os.Process.setThreadPriority;
@@ -132,7 +133,7 @@ public class StartupRegistrationFragment extends Fragment {
                     , 0, true, true, "", "");
             if (validateInput(user)) {
                 btnRegister.setEnabled(false);
-                new AsyncRegistration(user,getActivity()).execute();
+                new AsyncRegistration(user).execute();
             }
             // hide soft keyboard after button was clicked
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -225,22 +226,15 @@ public class StartupRegistrationFragment extends Fragment {
      * @license MIT
      */
     private class AsyncRegistration extends AsyncTask<Void, Void, Void> {
-        final ProgressDialog pdLoading;
-        private final Activity activity;
-        private User user;
+        private final User user;
         private ControllerEvent event;
 
-        AsyncRegistration(User user, Activity activity){
+        AsyncRegistration(User user){
             this.user = user;
-            this.activity = activity;
-            pdLoading = new ProgressDialog(this.activity);
         }
         @Override
         protected void onPreExecute() {
-            //this method will be running on UI thread
-            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_registering));
-            pdLoading.setCancelable(false);
-            pdLoading.show();
+            LoadingDialog.getDialog().show(getActivity());
         }
         @Override
         protected Void doInBackground(Void... params) {
@@ -277,7 +271,7 @@ public class StartupRegistrationFragment extends Fragment {
             }
             //make registration button available again
             btnRegister.setEnabled(true);
-            if (pdLoading.isShowing()) pdLoading.dismiss();
+            LoadingDialog.getDialog().dismiss();
         }
     }
 }

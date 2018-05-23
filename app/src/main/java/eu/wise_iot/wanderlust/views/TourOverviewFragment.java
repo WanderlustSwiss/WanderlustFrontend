@@ -1,7 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,6 +28,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
@@ -39,7 +39,9 @@ import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.services.AsyncUITask;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.os.Process.setThreadPriority;
 
@@ -263,7 +265,6 @@ public class TourOverviewFragment extends Fragment {
                     case RecyclerView.SCROLL_STATE_IDLE:
                         if (BuildConfig.DEBUG) Log.d(TAG, "The RecyclerView is not scrolling");
 
-                        Tour tour = new Tour();
                         if (15 < (((LinearLayoutManager)rvTours.getLayoutManager()).findLastVisibleItemPosition() - (25*(currentPage-1)))) {
                             tourOverviewController.getAllTours(currentPage, controllerEvent -> {
                                 switch (controllerEvent.getType()) {
@@ -297,6 +298,7 @@ public class TourOverviewFragment extends Fragment {
      * @param view representing the recycler view item
      * @param tour representing the tour of the clicked item
      */
+    @SuppressLint("StaticFieldLeak")
     private void onItemClickImages(View view, Tour tour) {
         //distinguish what element was clicked by resource id
         switch (view.getId()) {
@@ -397,7 +399,7 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tour_rv_item:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
-                new AsyncCheckTourExists(tour, getActivity()).execute();
+                new AsyncCheckTourExists().execute(tour);
                 break;
         }
 
@@ -411,42 +413,25 @@ public class TourOverviewFragment extends Fragment {
      * @author Alexander Weinbeck
      * @license MIT
      */
-    private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
-        //final private ProgressBar pbLoading;
-        private Dialog processingDialog;
-        private final Tour tour;
+    private class AsyncCheckTourExists extends AsyncTask<Tour, Void, Tour> {
         private Integer responseCode;
         private TimingLogger t1 = new TimingLogger("TIMINGS","check tour exists");
 
-        AsyncCheckTourExists(Tour tour, Activity activity){
-            this.tour = tour;
-            processingDialog = new Dialog(getActivity());
-           // processingDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
-        }
         @Override
         protected void onPreExecute() {
-            processingDialog = new Dialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog);
-            View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_processing, null);
-            processingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            processingDialog.getWindow().setBackgroundDrawableResource(R.color.ap_transparent);
-            processingDialog.setContentView(view);
-            processingDialog.show();
-            //pbLoading.setIndeterminate(true);
-            //pbLoading.setVisibility(View.VISIBLE);
-            getActivity().setProgressBarIndeterminateVisibility(true);
+            LoadingDialog.getDialog().show(getActivity());
             t1.addSplit("showing progress");
-
         }
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Tour doInBackground(Tour... params) {
             setThreadPriority(-10);
             TimingLogger t1 = new TimingLogger("TIMINGS","check tour sequential");
-            responseCode = tourOverviewController.checkIfTourExists(tour);
+            responseCode = tourOverviewController.checkIfTourExists(params[0]);
             t1.addSplit("got response");
-            return null;
+            return params[0];
         }
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Tour tour) {
             t1.addSplit("handle response");
             switch(EventType.getTypeByCode(responseCode)) {
                 case OK:
@@ -455,7 +440,7 @@ public class TourOverviewFragment extends Fragment {
                             .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
                             .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
                             .commit();
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                    //((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     break;
                 case NOT_FOUND:
                     if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");
@@ -477,7 +462,7 @@ public class TourOverviewFragment extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
             }
 
-            processingDialog.dismiss();
+            LoadingDialog.getDialog().dismiss();
             t1.dumpToLog();
         }
     }

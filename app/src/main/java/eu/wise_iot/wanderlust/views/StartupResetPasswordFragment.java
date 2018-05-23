@@ -31,6 +31,7 @@ import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.LoginController;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static android.os.Process.setThreadPriority;
@@ -123,7 +124,7 @@ public class StartupResetPasswordFragment extends Fragment {
             if (!validateEmail(inputMail)) {
                 textInputForgotPassword.setError(getString(R.string.registration_email_invalid));
             } else {
-                new AsyncResetPassword(inputMail, getActivity()).execute();
+                new AsyncResetPassword(inputMail).execute();
                 //loginController.resetPassword(inputMail, fragmentHandler);
             }
         });
@@ -148,24 +149,19 @@ public class StartupResetPasswordFragment extends Fragment {
      * this will keep the UI responsive
      *
      * @author Alexander Weinbeck
+     * @license MIT
      */
     private class AsyncResetPassword extends AsyncTask<Void, Void, Void> {
-        final ProgressDialog pdLoading;
-        private final Activity activity;
         private String email;
         private ControllerEvent event;
 
-        AsyncResetPassword(String email, Activity activity){
-            this.activity = activity;
+        AsyncResetPassword(String email){
             this.email = email;
-            pdLoading = new ProgressDialog(this.activity);
         }
         @Override
         protected void onPreExecute() {
             //this method will be running on UI thread
-            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_processing_open_tour));
-            pdLoading.setCancelable(false);
-            pdLoading.show();
+            LoadingDialog.getDialog().show(getActivity());
         }
         @Override
         protected Void doInBackground(Void... params) {
@@ -201,7 +197,7 @@ public class StartupResetPasswordFragment extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.forgot_password_reset_mail_fail), Toast.LENGTH_LONG).show();
             }
 
-            if (pdLoading.isShowing()) pdLoading.dismiss();
+            LoadingDialog.getDialog().dismiss();
         }
     }
 }

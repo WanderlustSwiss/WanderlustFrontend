@@ -5,9 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -63,10 +61,10 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import io.objectbox.BoxStore;
 
 import static android.os.Process.setThreadPriority;
-import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
  * MainActivity:
@@ -389,7 +387,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @license MIT
      */
     private class AsyncLoginOnLoad extends AsyncTask<Void, Void, ControllerEvent> {
-        final ProgressDialog pdLoading;
         private final LoginUser loginUser;
         private final User user;
         private final Activity activity;
@@ -400,13 +397,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.user = user;
             this.activity = activity;
             this.ft = ft;
-            pdLoading = new ProgressDialog(this.activity);
         }
         @Override
         protected void onPreExecute() {
             //this method will be running on UI thread
-            pdLoading.setMessage("\t" + getResources().getString(R.string.msg_logging_in));pdLoading.setCancelable(false);
-            pdLoading.show();
+            LoadingDialog.getDialog().show(activity);
         }
         @Override
         protected ControllerEvent doInBackground(Void... params) {
@@ -437,18 +432,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //check if last login is within last 24h
                     if (lastLogin2.isAfter(new DateTime().minusDays(1))) {
                         setupDrawerHeader(user);
-                        getFragmentManager().beginTransaction().replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                        getFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                 .commit();
 
                     } else {
                         //StartupLoginFragment loginFragment = new StartupLoginFragment();
-                        getFragmentManager().beginTransaction().replace(R.id.content_frame, new StartupLoginFragment().newInstance())
+                        getFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.content_frame, new StartupLoginFragment().newInstance())
                                 .commit();
                     }
                     break;
             }
 
-            if (pdLoading.isShowing()) pdLoading.dismiss();
+            LoadingDialog.getDialog().dismiss();
         }
     }
 
