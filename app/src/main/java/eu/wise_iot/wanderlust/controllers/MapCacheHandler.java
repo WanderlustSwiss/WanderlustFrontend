@@ -4,14 +4,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.cachemanager.CacheManager;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-
-import java.util.ArrayList;
 
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
@@ -61,6 +60,7 @@ public class MapCacheHandler {
 
         //check if already in cache
         if(cacheManager.checkTile(new MapTile(10, (int) mapView.getX(), (int) mapView.getY()))){
+            if (BuildConfig.DEBUG) Log.d(TAG, "Tile already downloaded!");
             return true;
         }
 
@@ -76,7 +76,7 @@ public class MapCacheHandler {
             final Notification.Builder notificationBuilder = new Notification.Builder(context.getApplicationContext());
             notificationBuilder.setOngoing(true)
                                .setSmallIcon(R.mipmap.ic_launcher)
-                               .setContentTitle(tour.getTitle() + " wird heruntergeladen..")
+                               .setContentTitle(tour.getTitle() + " wird heruntergeladen...")
                                .setProgress(max, 0, false)
                                .setAutoCancel(true);
 
@@ -84,27 +84,24 @@ public class MapCacheHandler {
             notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
             notificationManager.notify(notificationID, notification);
 
-            cacheManager.downloadAreaAsync(context, boundingBox, 0, 20, new CacheManager.CacheManagerCallback() {
+            cacheManager.downloadAreaAsyncNoUI(context, boundingBox, 10, 20, new CacheManager.CacheManagerCallback() {
                 @Override
-                public void onTaskComplete() {
-                    notificationManager.cancel(notificationID);
-                    if (BuildConfig.DEBUG) Log.d(TAG, "Download finished");
+                public void downloadStarted() {
+                    Toast.makeText(context,"Tour wird heruntergeladen",Toast.LENGTH_LONG).show();
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Download started");
                 }
 
                 @Override
                 public void updateProgress(final int progress, final int currentZoomLevel, final int zoomMin, final int zoomMax) {
                     if(progress == ((max / 100) * progressPercentage)){
+                        if (BuildConfig.DEBUG) Log.d(TAG, "refreshing download progress" + progress);
                         notificationBuilder.setProgress(max, progress, false);
                         final Notification notification = notificationBuilder.build();
                         notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
                         notificationManager.notify(notificationID, notification);
                         progressPercentage += 10;
                     }
-                }
 
-                @Override
-                public void downloadStarted() {
-                    if (BuildConfig.DEBUG) Log.d(TAG, "Download started");
                 }
 
                 @Override
@@ -112,7 +109,14 @@ public class MapCacheHandler {
                 }
 
                 @Override
+                public void onTaskComplete() {
+                    notificationManager.cancel(notificationID);
+                    Toast.makeText(context,"Tour wurde erfolgreich heruntergeladen",Toast.LENGTH_LONG).show();
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Download finished");
+                }
+                @Override
                 public void onTaskFailed(final int errors) {
+                    Toast.makeText(context,"Tour konnte nicht heruntergeladen werden",Toast.LENGTH_LONG).show();
                     notificationManager.cancel(notificationID);
                     if (BuildConfig.DEBUG) Log.d(TAG, "Download finished");
                 }
@@ -153,7 +157,7 @@ public class MapCacheHandler {
             @Override
             public void onTaskComplete() {
                 if (BuildConfig.DEBUG) Log.d(TAG, "Tour deleted, Cache Usage/Capacity:" + String.valueOf(
-                        cacheManager.currentCacheUsage()) + "/" + String.valueOf(cacheManager.cacheCapacity()));
+                        cacheManager.currentCacheUsage()) + '/' + String.valueOf(cacheManager.cacheCapacity()));
             }
 
             @Override
@@ -174,7 +178,7 @@ public class MapCacheHandler {
             @Override
             public void onTaskFailed(final int errors) {
                 if (BuildConfig.DEBUG) Log.d(TAG, "Tour deleted, Cache Usage/Capacity:" + String.valueOf(
-                        cacheManager.currentCacheUsage()) + "/" + String.valueOf(cacheManager.cacheCapacity()));
+                        cacheManager.currentCacheUsage()) + '/' + String.valueOf(cacheManager.cacheCapacity()));
             }
         });
     }

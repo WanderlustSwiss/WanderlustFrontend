@@ -1,7 +1,5 @@
 package eu.wise_iot.wanderlust.constants;
 
-import eu.wise_iot.wanderlust.BuildConfig;
-
 /**
  * Constants:
  *

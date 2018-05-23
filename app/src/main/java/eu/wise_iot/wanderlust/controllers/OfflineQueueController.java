@@ -27,7 +27,7 @@ public class OfflineQueueController {
     }
 
     public void addCommand(QueueCommand command) {
-        this.list.add(command);
+        list.add(command);
     }
 
     private boolean isRunning() {

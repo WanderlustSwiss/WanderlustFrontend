@@ -1,8 +1,6 @@
 package eu.wise_iot.wanderlust.views;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,7 +41,7 @@ public class StartupRegistrationFragment extends Fragment {
 
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,5}$", Pattern.CASE_INSENSITIVE);
-    private final String VALID_PASSWORTD_REGX = "^((?=.*\\d)(?=.*[A-Za-z]).{8,})$";
+    private static final String VALID_PASSWORTD_REGX = "^((?=.*\\d)(?=.*[A-Za-z]).{8,})$";
 
     private static final String TAG = "StartupRegisterFragment";
 
@@ -69,7 +67,7 @@ public class StartupRegistrationFragment extends Fragment {
      * Create a standard registration fragment
      */
     public StartupRegistrationFragment() {
-        this.registrationController = new RegistrationController();
+        registrationController = new RegistrationController();
     }
 
     public static StartupRegistrationFragment newInstance() {
@@ -94,16 +92,16 @@ public class StartupRegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_startup_registration, container, false);
-        btnRegister = (Button) view.findViewById(R.id.btn_signup);
-        nickNameTextfield = (EditText) view.findViewById(R.id.input_nickname);
-        eMailTextfield = (EditText) view.findViewById(R.id.input_mail);
-        passwordTextfield = (EditText) view.findViewById(R.id.input_password);
-        repeatedPasswordTextfield = (EditText) view.findViewById(R.id.input_password_repeat);
-        nickNameLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_nickname);
-        emailLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_mail);
-        passwordLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_password);
-        passwordRepeatLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_password_repeat);
-        redirectToLogin = (TextView) view.findViewById(R.id.link_login);
+        btnRegister = view.findViewById(R.id.btn_signup);
+        nickNameTextfield = view.findViewById(R.id.input_nickname);
+        eMailTextfield = view.findViewById(R.id.input_mail);
+        passwordTextfield = view.findViewById(R.id.input_password);
+        repeatedPasswordTextfield = view.findViewById(R.id.input_password_repeat);
+        nickNameLayout = view.findViewById(R.id.text_input_layout_nickname);
+        emailLayout = view.findViewById(R.id.text_input_layout_mail);
+        passwordLayout = view.findViewById(R.id.text_input_layout_password);
+        passwordRepeatLayout = view.findViewById(R.id.text_input_layout_password_repeat);
+        redirectToLogin = view.findViewById(R.id.link_login);
 
         return view;
     }
@@ -158,14 +156,14 @@ public class StartupRegistrationFragment extends Fragment {
      */
     private boolean validateInput(User user) {
         boolean isValid = true;
-        if (user.getNickname().equals("")) {
+        if (user.getNickname().isEmpty()) {
             nickNameLayout.setError(getString(R.string.registration_username_required));
             isValid = false;
         } else {
             nickNameLayout.setError(null);
         }
 
-        if (user.getEmail().equals("")) {
+        if (user.getEmail().isEmpty()) {
             emailLayout.setError(getString(R.string.registration_email_required));
             isValid = false;
         } else if (!validateMail(user.getEmail())) {
@@ -175,7 +173,7 @@ public class StartupRegistrationFragment extends Fragment {
             emailLayout.setError(null);
         }
 
-        if (user.getPassword().equals("")) {
+        if (user.getPassword().isEmpty()) {
             passwordLayout.setError(getString(R.string.registration_password_required));
             isValid = false;
         } else if (!validatePassword(user.getPassword())) {

@@ -38,7 +38,7 @@ public class UserGuideFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_user_guide, container, false);
 
-        goToMapButton = (Button) rootView.findViewById(R.id.btn_go_to_map);
+        goToMapButton = rootView.findViewById(R.id.btn_go_to_map);
         return rootView;
     }
 

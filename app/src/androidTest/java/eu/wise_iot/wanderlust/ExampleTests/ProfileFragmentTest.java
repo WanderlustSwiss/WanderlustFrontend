@@ -24,7 +24,7 @@ import static junit.framework.Assert.assertNotNull;
 public class ProfileFragmentTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> testActivity = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> testActivity = new ActivityTestRule<>(MainActivity.class);
 
     private MainActivity main;
 
@@ -35,7 +35,7 @@ public class ProfileFragmentTest {
 
     @Test
     public void testScore(){
-        FrameLayout frameLayout = (FrameLayout) main.findViewById(R.id.content_frame);
+        FrameLayout frameLayout = main.findViewById(R.id.content_frame);
         assertNotNull(frameLayout);
 
         ProfileFragment profileFragment = new ProfileFragment();
@@ -48,7 +48,7 @@ public class ProfileFragmentTest {
         View view = profileFragment.getView().findViewById(R.id.profileLayout);
         assertNotNull(view);
 
-        TextView textView = (TextView) view.findViewById(R.id.profileAmountScore);
+        TextView textView = view.findViewById(R.id.profileAmountScore);
         assertNotNull(textView);
 
         String score = textView.getText().toString();

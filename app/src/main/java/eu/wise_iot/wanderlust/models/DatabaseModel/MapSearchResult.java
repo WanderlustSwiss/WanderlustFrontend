@@ -27,22 +27,22 @@ public class MapSearchResult {
     }
 
     public void setPolygon(ArrayList<GeoPoint> geopoints) {
-        this.polygons.add(geopoints);
+        polygons.add(geopoints);
     }
 
     public String getLocality() {
-        return this.locality;
+        return locality;
     }
 
     public double getLatitude() {
-        return this.latitude;
+        return latitude;
     }
 
     public double getLongitude() {
-        return this.longitude;
+        return longitude;
     }
 
     public ArrayList<ArrayList<GeoPoint>>  getPolygon() {
-        return this.polygons;
+        return polygons;
     }
 }

@@ -21,6 +21,7 @@ public class LoadingDialog {
         if (dialog != null && dialog.isShowing()) {
             return;
         }
+
         dialog = new Dialog(context, android.R.style.Theme_DeviceDefault_Light_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.fragment_processing);

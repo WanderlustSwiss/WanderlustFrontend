@@ -2,7 +2,6 @@ package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
-
-import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
  * TourReportDialog:
@@ -48,23 +45,17 @@ public class PoiReportDialog extends DialogFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_report_poi, container, false);
 
-        buttonCancel = (ImageButton) view.findViewById(R.id.violationPoiCancelButton);
-        buttonSave = (ImageButton) view.findViewById(R.id.violationPoiSaveButton);
-        rbHarassment = (RadioButton) view.findViewById(R.id.violationPoiHarassment);
-        rbHatespeech = (RadioButton) view.findViewById(R.id.violationPoiHateSpeech);
-        rbNudity = (RadioButton) view.findViewById(R.id.violationPoiNudity);
-        rbOther = (RadioButton) view.findViewById(R.id.violationPoiOther);
-        rbSpam = (RadioButton) view.findViewById(R.id.violationPoiSpam);
-        rbViolence = (RadioButton) view.findViewById(R.id.violationPoiViolence);
+        buttonCancel = view.findViewById(R.id.violationPoiCancelButton);
+        buttonSave = view.findViewById(R.id.violationPoiSaveButton);
+        rbHarassment = view.findViewById(R.id.violationPoiHarassment);
+        rbHatespeech = view.findViewById(R.id.violationPoiHateSpeech);
+        rbNudity = view.findViewById(R.id.violationPoiNudity);
+        rbOther = view.findViewById(R.id.violationPoiOther);
+        rbSpam = view.findViewById(R.id.violationPoiSpam);
+        rbViolence = view.findViewById(R.id.violationPoiViolence);
 
         buttonCancel.setOnClickListener(v -> getDialog().dismiss());
         buttonSave.setOnClickListener(v -> reportTour());
@@ -84,7 +75,7 @@ public class PoiReportDialog extends DialogFragment {
 
         ViolationType violationType = violationTypeDao.getViolationTypebyName(violationName);
 
-        poiController.reportViolation(poiController.new Violation(this.poi.getPoi_id(), violationType.getViolationt_id()), controllerEvent -> {
+        poiController.reportViolation(poiController.new Violation(poi.getPoi_id(), violationType.getViolationt_id()), controllerEvent -> {
             switch (controllerEvent.getType()){
                 case OK:
                     getDialog().dismiss();
@@ -97,8 +88,5 @@ public class PoiReportDialog extends DialogFragment {
         });
     }
 
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
 }
 

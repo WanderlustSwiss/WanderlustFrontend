@@ -35,10 +35,10 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
     private final ImageController imageController;
 
     public ProfileTripRVAdapter(Context context, List<Tour> tours) {
-        this.mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         this.context = context;
         this.tours = tours;
-        this.imageController = ImageController.getInstance();
+        imageController = ImageController.getInstance();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (BuildConfig.DEBUG) Log.d(TAG, "starting set properties");
 
-        Tour tour = this.tours.get(position);
+        Tour tour = tours.get(position);
 
         holder.title.setText(tour.getTitle());
         holder.description.setText(tour.getDescription());
@@ -67,15 +67,15 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
 
     @Override
     public int getItemCount() {
-        return this.tours.size();
+        return tours.size();
     }
 
     private Tour getItem(int id) {
-        return this.tours.get(id);
+        return tours.get(id);
     }
 
     public void setClickListener (ItemClickListener itemClickListener){
-        this.mClickListener = itemClickListener;
+        mClickListener = itemClickListener;
     }
 
     public interface ItemClickListener {
@@ -89,8 +89,11 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView title, description;
-        private ImageView tripImage, editIcon, deleteIcon;
+        private final TextView title;
+        private final TextView description;
+        private final ImageView tripImage;
+        private final ImageView editIcon;
+        private final ImageView deleteIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);

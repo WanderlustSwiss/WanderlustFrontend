@@ -40,6 +40,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.services.AsyncUITask;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePOIRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedRVAdapter;
@@ -102,11 +103,6 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         //inflate view from xml-file
@@ -132,12 +128,12 @@ public class ProfileFragment extends Fragment {
     private void setupProfileInfo(View view) {
         //initializing views
         //birthday = (TextView) view.findViewById(R.id.profileBirthDay);
-        amountPOI = (TextView) view.findViewById(R.id.profileAmountPOI);
-        amountTours = (TextView) view.findViewById(R.id.profileAmountTours);
-        amountScore = (TextView) view.findViewById(R.id.profileAmountScore);
-        nickname = (TextView) view.findViewById(R.id.profileNickname);
-        profilePicture = (ImageView) view.findViewById(R.id.profilePicture);
-        editProfile = (Button) view.findViewById(R.id.editProfileButton);
+        amountPOI = view.findViewById(R.id.profileAmountPOI);
+        amountTours = view.findViewById(R.id.profileAmountTours);
+        amountScore = view.findViewById(R.id.profileAmountScore);
+        nickname = view.findViewById(R.id.profileNickname);
+        profilePicture = view.findViewById(R.id.profilePicture);
+        editProfile = view.findViewById(R.id.editProfileButton);
 
         File image = profileController.getProfilePicture();
         if (image != null) {
@@ -234,6 +230,10 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * sets up the needed recycler views for the given tabs
+     * @param view
+     */
     public void setupRVs(View view) {
         //init textview if empty list
         tvProfileNoContent = view.findViewById(R.id.tvProfileNoContent);
@@ -322,7 +322,42 @@ public class ProfileFragment extends Fragment {
                 });
                 break;
             default:
-                new AsyncCheckTourExists(tour, getActivity()).execute();
+                LoadingDialog.getDialog().show(getActivity());
+                AsyncUITask.getHandler().queueTask(() -> {
+                    switch (EventType.getTypeByCode(new TourOverviewController().checkIfTourExists(tour))) {
+                        case OK:
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "Server Response arrived -> OK Tour was found");
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
+                                    .addToBackStack(Constants.TOUR_FRAGMENT)
+                                    .commit();
+                            //TODO: check if needed
+                            //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                            break;
+                        case NOT_FOUND:
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> Tour was not found");
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
+                            new TourOverviewController().removeRecentTour(tour);
+                            break;
+                        case SERVER_ERROR:
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
+                            break;
+                        case NETWORK_ERROR:
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
+                            break;
+                        default:
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+                    }
+                    LoadingDialog.getDialog().dismiss();
+                });
         }
     }
 

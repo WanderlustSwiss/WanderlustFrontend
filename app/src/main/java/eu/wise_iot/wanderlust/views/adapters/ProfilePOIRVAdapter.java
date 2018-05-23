@@ -35,10 +35,10 @@ public class ProfilePOIRVAdapter extends RecyclerView.Adapter<ProfilePOIRVAdapte
     private final ImageController imageController;
 
     public ProfilePOIRVAdapter(Context context, List<Poi> pois) {
-        this.mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         this.context = context;
         this.pois = pois;
-        this.imageController = ImageController.getInstance();
+        imageController = ImageController.getInstance();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ProfilePOIRVAdapter extends RecyclerView.Adapter<ProfilePOIRVAdapte
         if (BuildConfig.DEBUG) Log.d(TAG, "starting set properties");
 
         //get the item for this row
-        Poi poi = this.pois.get(position);
+        Poi poi = pois.get(position);
 
         holder.title.setText(poi.getTitle());
         holder.description.setText(poi.getDescription());
@@ -68,15 +68,15 @@ public class ProfilePOIRVAdapter extends RecyclerView.Adapter<ProfilePOIRVAdapte
 
     @Override
     public int getItemCount() {
-        return this.pois.size();
+        return pois.size();
     }
 
     private Poi getItem(int id) {
-        return this.pois.get(id);
+        return pois.get(id);
     }
 
     public void setClickListener (ItemClickListener itemClickListener){
-        this.mClickListener = itemClickListener;
+        mClickListener = itemClickListener;
     }
 
     public interface ItemClickListener {

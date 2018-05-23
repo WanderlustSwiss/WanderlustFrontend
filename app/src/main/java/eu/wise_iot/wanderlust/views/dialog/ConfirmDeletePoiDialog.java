@@ -61,7 +61,7 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         // set style
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog);
-        this.context = getActivity();
+        context = getActivity();
         Bundle args = getArguments();
         message = args.getString(MESSAGE);
     }
@@ -71,9 +71,9 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_confirm_delete_poi, container, false);
 
-        messageTextView = (TextView) view.findViewById(R.id.message_text_view);
-        abortButton = (ImageButton) view.findViewById(R.id.abort_button);
-        confirmButton = (ImageButton) view.findViewById(R.id.confirm_button);
+        messageTextView = view.findViewById(R.id.message_text_view);
+        abortButton = view.findViewById(R.id.abort_button);
+        confirmButton = view.findViewById(R.id.confirm_button);
 
         return view;
     }
@@ -87,7 +87,7 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
         abortButton.setOnClickListener(v -> dismiss());
 
         confirmButton.setOnClickListener(v -> {
-            controller.deletePoi(this.currentPoi, e -> {
+            controller.deletePoi(currentPoi, e -> {
                 EventType eventType = e.getType();
                 switch (eventType) {
                     case OK:

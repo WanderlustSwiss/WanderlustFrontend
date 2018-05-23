@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -135,7 +134,7 @@ public class WebLoginFragment extends Fragment  {
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                                 .commit();
-                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     }
 
                     break;
@@ -152,8 +151,8 @@ public class WebLoginFragment extends Fragment  {
      * Create a standard login fragment
      */
     public WebLoginFragment() {
-        this.target_url = ServiceGenerator.API_BASE_URL + provider.getPath();
-        this.loginController = new LoginController();
+        target_url = ServiceGenerator.API_BASE_URL + provider.getPath();
+        loginController = new LoginController();
     }
 
     public static WebLoginFragment newInstance(LoginProvider prov) {
@@ -180,14 +179,14 @@ public class WebLoginFragment extends Fragment  {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_web_login, container, false);
-        instagramContainer = (LinearLayout) view.findViewById(R.id.web_login_provider_layout);
-        loadDrawable = (ImageView) view.findViewById(R.id.web_login_provider_image);
-        loadString = (TextView) view.findViewById(R.id.web_login_provider_text);
+        instagramContainer = view.findViewById(R.id.web_login_provider_layout);
+        loadDrawable = view.findViewById(R.id.web_login_provider_image);
+        loadString = view.findViewById(R.id.web_login_provider_text);
         loadDrawable.setImageDrawable(getResources().getDrawable(provider.loadDrawableId));
         loadString.setText(getResources().getString(provider.loadStringId));
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
-        webview = (WebView) view.findViewById(R.id.web_login);
+        webview = view.findViewById(R.id.web_login);
         webview.setBackgroundColor(getResources().getColor(R.color.primary_main));
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -247,11 +246,6 @@ public class WebLoginFragment extends Fragment  {
             }
         }
         return view;
-    }
-
-    @Override
-    public void onViewCreated (View view, @Nullable Bundle savedInstanceState){
-        super.onViewCreated(view, savedInstanceState);
     }
 
     private boolean isNetworkAvailable() {

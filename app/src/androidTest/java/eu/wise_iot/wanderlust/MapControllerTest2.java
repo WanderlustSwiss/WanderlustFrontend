@@ -31,7 +31,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 public class MapControllerTest2 {
 
     @Rule
-    public ActivityTestRule<MainActivity> main = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> main = new ActivityTestRule<>(MainActivity.class);
     private MapFragment mapFragment;
     private MapController controller;
     private MainActivity activity;
@@ -39,7 +39,7 @@ public class MapControllerTest2 {
     @Before
     public void setUp() {
         activity = main.getActivity();
-        FrameLayout frameLayout = (FrameLayout) activity.findViewById(R.id.content_frame);
+        FrameLayout frameLayout = activity.findViewById(R.id.content_frame);
         mapFragment = MapFragment.newInstance();
         activity.getFragmentManager().beginTransaction().add(frameLayout.getId(), mapFragment).commit();
         controller = new MapController(mapFragment);

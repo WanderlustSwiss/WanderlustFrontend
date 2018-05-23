@@ -5,14 +5,22 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
+/**
+ * this class provides a thread pool for high priority
+ * heavy load tasks on the UI if needed
+ *
+ * @author Alexander Weinbeck
+ * @license MIT
+ */
 public class AsyncUITask {
     private static final String TAG = "AsyncUITask";
     private static AsyncUITask uiQueueHandler;
     private static ScheduledExecutorService executorService;
+    private final static int POOL_SIZE = 5;
 
     private AsyncUITask(){
-        executorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-            ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
+        executorService = Executors.newScheduledThreadPool(POOL_SIZE, new ThreadFactory() {
+            final ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
             @Override
             public Thread newThread(Runnable r) {
                 Thread t = defaultThreadFactory.newThread(r);

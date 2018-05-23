@@ -20,7 +20,7 @@ class WanderlustCompassOverlay extends CompassOverlay {
     private boolean compassEnabled = false;
 
     private final AtomicInteger alpha = new AtomicInteger(0);
-    private final int timeUntilFade = 2870; //1 + ((1+Math.sqrt(5)*Math.PI)/2*Math.E);
+    private static final int timeUntilFade = 2870; //1 + ((1+Math.sqrt(5)*Math.PI)/2*Math.E);
     private Thread timerThread;
 
     public WanderlustCompassOverlay(Context context, MapView mapView) {
@@ -30,7 +30,7 @@ class WanderlustCompassOverlay extends CompassOverlay {
     @Override
     protected void drawCompass(Canvas canvas, float bearing, Rect screenRect) {
         try {
-            Field field = this.getClass().getSuperclass().getDeclaredField("sSmoothPaint");
+            Field field = getClass().getSuperclass().getDeclaredField("sSmoothPaint");
             Paint alphaPaint = new Paint();
             alphaPaint.setAlpha(alpha.get());
             field.setAccessible(true);

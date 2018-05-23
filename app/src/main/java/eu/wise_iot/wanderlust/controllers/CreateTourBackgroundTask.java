@@ -13,8 +13,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.osmdroid.util.GeoPoint;
@@ -156,11 +156,11 @@ public class CreateTourBackgroundTask extends Service {
         contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, MainActivity.class), 0);
 
-        NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setColor(this.getResources().getColor(R.color.ap_white))
+                        .setColor(getResources().getColor(R.color.ap_white))
                         .setContentTitle(getString(R.string.app_name))
                         .setOngoing(true)
                         .setAutoCancel(false)
@@ -252,8 +252,7 @@ public class CreateTourBackgroundTask extends Service {
      * @return Name of best suiting provider.
      */
     private String getProviderName() {
-        LocationManager locationManager = (LocationManager) this
-                .getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         Criteria criteria = new Criteria();
         criteria.setPowerRequirement(Criteria.POWER_LOW);

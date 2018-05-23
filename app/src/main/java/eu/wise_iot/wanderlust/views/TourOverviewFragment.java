@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +27,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Future;
 
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
@@ -37,13 +35,10 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.AsyncUITask;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
-
-import static android.os.Process.setThreadPriority;
 
 
 /**
@@ -77,11 +72,7 @@ public class TourOverviewFragment extends Fragment {
         tourOverviewController = new TourOverviewController();
         setHasOptionsMenu(true);
     }
-    /**
-     * Static instance constructor.
-     *
-     * @return Fragment: TourOverviewFragment
-     */
+
     public static TourOverviewFragment newInstance() {
         Bundle args = new Bundle();
         TourOverviewFragment fragment = new TourOverviewFragment();
@@ -125,7 +116,6 @@ public class TourOverviewFragment extends Fragment {
         currentPage = 0;
         //PicassoCache.clearCache(Picasso.with(context)); //https://stackoverflow.com/questions/22016382/invalidate-cache-in-picasso
         View view = inflater.inflate(R.layout.fragment_tour_overview, container, false);
-
         tvToursAllPlaceholder = view.findViewById(R.id.tvToursAllPlaceholder);
         // set up the RecyclerView Tours
         rvTours = view.findViewById(R.id.rvTouren);
@@ -176,13 +166,8 @@ public class TourOverviewFragment extends Fragment {
             switch (event.getType()) {
                 case OK:
                     //get all needed information from server db
-                    List<Tour> list = (List<Tour>) event.getModel();
                     currentPage++;
-                    for (Tour tour : list)
-                        for (ImageInfo imageInfo : tour.getImagePaths())
-                            imageInfo.setLocalDir(imageController.getTourFolder());
-
-                    listTours.addAll(list);
+                    listTours.addAll((List<Tour>) event.getModel());
 
                     if (BuildConfig.DEBUG) Log.d(TAG, "Getting Tours: Server response arrived");
 
@@ -220,13 +205,8 @@ public class TourOverviewFragment extends Fragment {
             switch (controllerEvent.getType()) {
                 case OK:
                     if (BuildConfig.DEBUG) Log.d(TAG, "refresh Favorites");
-                    List<Tour> list = (List<Tour>) controllerEvent.getModel();
                     favTours.clear();
-                    for (Tour tour : list)
-                        for (ImageInfo imageInfo : tour.getImagePaths())
-                            imageInfo.setLocalDir(imageController.getTourFolder());
-
-                    favTours.addAll(list);
+                    favTours.addAll((List<Tour>) controllerEvent.getModel());
                     //getDataFromServer(favTours);
                     if (BuildConfig.DEBUG) Log.d(TAG, favTours.toString());
                     adapterFavs.notifyDataSetChanged();
@@ -263,9 +243,8 @@ public class TourOverviewFragment extends Fragment {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
-                        if (BuildConfig.DEBUG) Log.d(TAG, "The RecyclerView is not scrolling");
-
-                        if (15 < (((LinearLayoutManager)rvTours.getLayoutManager()).findLastVisibleItemPosition() - (25*(currentPage-1)))) {
+                        if (BuildConfig.DEBUG) Log.d(TAG, "The RecyclerView is not scrolling anymore");
+                        if ((((LinearLayoutManager) rvTours.getLayoutManager()).findLastVisibleItemPosition() - (25 * (currentPage - 1))) > 15) {
                             tourOverviewController.getAllTours(currentPage, controllerEvent -> {
                                 switch (controllerEvent.getType()) {
                                     case OK:
@@ -277,7 +256,7 @@ public class TourOverviewFragment extends Fragment {
                                         break;
                                     default:
                                         if (BuildConfig.DEBUG) Log.d(TAG, "Server response ERROR: " + controllerEvent.getType().name());
-                                        Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+                                        Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -362,7 +341,7 @@ public class TourOverviewFragment extends Fragment {
                                 break;
                             default:
                                 if (BuildConfig.DEBUG) Log.d("Touroverview rv", "favorite failure while adding " + tour.getTour_id());
-                                Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+                                Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -370,9 +349,8 @@ public class TourOverviewFragment extends Fragment {
             case R.id.tourOVSaveButton:
                 ImageButton ibSave = view.findViewById(R.id.tourOVSaveButton);
                 TourController tourController = new TourController(tour);
-                boolean saved = tourController.isSaved();
-                if(saved){
-                    tourController.unsetSaved(context, controllerEvent -> {
+                if(tourController.isSaved()){
+                    tourController.unsetSaved(getActivity(), controllerEvent -> {
                         switch (controllerEvent.getType()){
                             case OK:
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
@@ -382,7 +360,7 @@ public class TourOverviewFragment extends Fragment {
                         }
                     });
                 }else{
-                    tourController.setSaved(context , controllerEvent -> {
+                    tourController.setSaved(getActivity() , controllerEvent -> {
                         switch (controllerEvent.getType()){
                             case OK:
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
@@ -399,7 +377,39 @@ public class TourOverviewFragment extends Fragment {
                 break;
             case R.id.tour_rv_item:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
-                new AsyncCheckTourExists().execute(tour);
+                LoadingDialog.getDialog().show(getActivity());
+                AsyncUITask.getHandler().queueTask(() -> {
+                    switch(EventType.getTypeByCode(tourOverviewController.checkIfTourExists(tour))) {
+                        case OK:
+                            if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
+                                    .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
+                                    .commit();
+                            //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                            break;
+                        case NOT_FOUND:
+                            if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");
+                            Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
+                            recentTours.remove(tour);
+                            adapterRecent.notifyDataSetChanged();
+                            tourOverviewController.removeRecentTour(tour);
+                            break;
+                        case SERVER_ERROR:
+                            if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
+                            Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
+                            break;
+                        case NETWORK_ERROR:
+                            Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                            if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
+                            break;
+                        default:
+                            if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
+                            Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+                    }
+
+                    LoadingDialog.getDialog().dismiss();
+                });
                 break;
         }
 
@@ -415,16 +425,20 @@ public class TourOverviewFragment extends Fragment {
      */
     private class AsyncCheckTourExists extends AsyncTask<Tour, Void, Tour> {
         private Integer responseCode;
-        private TimingLogger t1 = new TimingLogger("TIMINGS","check tour exists");
+        private final TimingLogger t1 = new TimingLogger("TIMINGS","check tour exists");
+        private final Activity activity;
+
+        AsyncCheckTourExists(Activity activity){
+            this.activity = activity;
+        }
 
         @Override
         protected void onPreExecute() {
-            LoadingDialog.getDialog().show(getActivity());
+            LoadingDialog.getDialog().show(activity);
             t1.addSplit("showing progress");
         }
         @Override
         protected Tour doInBackground(Tour... params) {
-            setThreadPriority(-10);
             TimingLogger t1 = new TimingLogger("TIMINGS","check tour sequential");
             responseCode = tourOverviewController.checkIfTourExists(params[0]);
             t1.addSplit("got response");
@@ -433,6 +447,7 @@ public class TourOverviewFragment extends Fragment {
         @Override
         protected void onPostExecute(Tour tour) {
             t1.addSplit("handle response");
+
             switch(EventType.getTypeByCode(responseCode)) {
                 case OK:
                     if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");

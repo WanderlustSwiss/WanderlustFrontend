@@ -46,7 +46,7 @@ public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<Fi
         List<File> images = new ArrayList<>();
         for(ImageInfo imageInfo : imageInfos){
             imageInfo.setLocalDir(route);
-            File image = new File(imageController.getPicturesDir() + "/" + imageInfo.getLocalPath());
+            File image = new File(imageController.getPicturesDir() + '/' + imageInfo.getLocalPath());
             if (!image.exists()) {
                 //Download it!
                 try {

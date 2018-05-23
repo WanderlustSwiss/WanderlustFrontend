@@ -35,10 +35,10 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
     private final ImageController imageController;
 
     public ProfileSavedRVAdapter(Context context, List<SavedTour> tours) {
-        this.mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         this.context = context;
         this.tours = tours;
-        this.imageController = ImageController.getInstance();
+        imageController = ImageController.getInstance();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
         if (BuildConfig.DEBUG) Log.d(TAG, "starting set properties");
 
         //get the item for this row
-        SavedTour tour = this.tours.get(position);
+        SavedTour tour = tours.get(position);
 
         //set data
         if (tour != null) {
@@ -71,15 +71,15 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
 
     @Override
     public int getItemCount() {
-        return this.tours.size();
+        return tours.size();
     }
 
     private SavedTour getItem(int id) {
-        return this.tours.get(id);
+        return tours.get(id);
     }
 
     public void setClickListener (ItemClickListener itemClickListener){
-        this.mClickListener = itemClickListener;
+        mClickListener = itemClickListener;
     }
 
     public interface ItemClickListener {

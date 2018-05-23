@@ -48,13 +48,13 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
      */
     public TourCommentRVAdapter(Context context, List<UserComment> paramUserComments,
                                 TourFragment paramFragment) {
-        this.mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.userDao = UserDao.getInstance();
-        this.fragment = paramFragment;
+        userDao = UserDao.getInstance();
+        fragment = paramFragment;
         if (paramUserComments == null) paramUserComments = new ArrayList<>();
-        this.user = userDao.getUser();
-        this.comments = paramUserComments;
+        user = userDao.getUser();
+        comments = paramUserComments;
     }
 
     /**
@@ -76,9 +76,9 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        UserComment userComment = this.comments.get(position);
+        UserComment userComment = comments.get(position);
 
-        holder.tvNickname.setText(userComment.getNickname() + " (" + userComment.getScore() + ")");
+        holder.tvNickname.setText(userComment.getNickname() + " (" + userComment.getScore() + ')');
         holder.tvText.setText(userComment.getText());
         holder.tvUpdatedAt.setText(convertToTimeString(userComment.getUpdatedAt()));
 
@@ -100,7 +100,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
      */
     @Override
     public int getItemCount() {
-        return this.comments.size();
+        return comments.size();
     }
 
     /**
@@ -109,7 +109,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
      * @return
      */
     private UserComment getItem(int id) {
-        return this.comments.get(id);
+        return comments.get(id);
     }
     private String convertToTimeString(String date){
         DateTimeFormatter encodef = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -118,35 +118,35 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
         String before = context.getResources().getString(R.string.tour_comment_before);
         if (passedSeconds < 60){
             String timeMarker = context.getResources().getString(R.string.tour_comment_seconds);
-            return before + " " + passedSeconds + " " + timeMarker;
+            return before + ' ' + passedSeconds + ' ' + timeMarker;
         }else if (passedSeconds >= 60 && passedSeconds < 3600){
             passedSeconds = passedSeconds / 60;
             String timeMarker = context.getResources().getString(R.string.tour_comment_minutes);
-            return before + " " + passedSeconds + " " + timeMarker;
+            return before + ' ' + passedSeconds + ' ' + timeMarker;
         }else if (passedSeconds >= 3600 && passedSeconds < (3600 * 24)){
             passedSeconds = passedSeconds / 3600;
             String timeMarker;
             if (passedSeconds == 1) timeMarker = context.getResources().getString(R.string.tour_comment_hour);
             else timeMarker = context.getResources().getString(R.string.tour_comment_houres);
-            return before + " " + passedSeconds + " " + timeMarker;
+            return before + ' ' + passedSeconds + ' ' + timeMarker;
         }else if (passedSeconds >= (3600 * 24) && passedSeconds < (3600 * 24 * 7)){
             passedSeconds = passedSeconds / (3600 * 24);
             String timeMarker;
             if (passedSeconds == 1) timeMarker = context.getResources().getString(R.string.tour_comment_day);
             else timeMarker = context.getResources().getString(R.string.tour_comment_days);
-            return before + " " + passedSeconds + " " + timeMarker;
+            return before + ' ' + passedSeconds + ' ' + timeMarker;
         } else if (passedSeconds >= (3600 * 24 * 7) && passedSeconds < (3600 * 24 * 365)){
             passedSeconds = passedSeconds / (3600 * 24 * 7);
             String timeMarker;
             if (passedSeconds == 1) timeMarker = context.getResources().getString(R.string.tour_comment_week);
             else timeMarker = context.getResources().getString(R.string.tour_comment_weeks);
-            return before + " " + passedSeconds + " " + timeMarker;
+            return before + ' ' + passedSeconds + ' ' + timeMarker;
         } else {
             passedSeconds = passedSeconds / (3600 * 24 * 365);
             String timeMarker;
             if (passedSeconds == 1) timeMarker = context.getResources().getString(R.string.tour_comment_year);
             else timeMarker = context.getResources().getString(R.string.tour_comment_years);
-            return before + " " + passedSeconds + " " + timeMarker;
+            return before + ' ' + passedSeconds + ' ' + timeMarker;
         }
     }
     /**
@@ -154,7 +154,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
      * @param itemClickListener
      */
     public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
+        mClickListener = itemClickListener;
     }
 
     /**
@@ -179,10 +179,10 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
          */
         ViewHolder(View itemView) {
             super(itemView);
-            tvNickname = (TextView) itemView.findViewById(R.id.tour_comment_nickname);
-            tvText = (TextView) itemView.findViewById(R.id.tour_comment_text);
-            tvUpdatedAt = (TextView) itemView.findViewById(R.id.tour_comment_updatedat);
-            tvDelete = (ImageButton) itemView.findViewById(R.id.tour_comment_delete);
+            tvNickname = itemView.findViewById(R.id.tour_comment_nickname);
+            tvText = itemView.findViewById(R.id.tour_comment_text);
+            tvUpdatedAt = itemView.findViewById(R.id.tour_comment_updatedat);
+            tvDelete = itemView.findViewById(R.id.tour_comment_delete);
             itemView.setOnClickListener(this);
         }
 

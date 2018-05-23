@@ -46,23 +46,17 @@ public class TourReportDialog extends DialogFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_report_tour, container, false);
 
-        buttonCancel = (ImageButton) view.findViewById(R.id.violationTourCancelButton);
-        buttonSave = (ImageButton) view.findViewById(R.id.violationTourSaveButton);
-        rbHarassment = (RadioButton) view.findViewById(R.id.violationTourHarassment);
-        rbHatespeech = (RadioButton) view.findViewById(R.id.violationTourHateSpeech);
-        rbNudity = (RadioButton) view.findViewById(R.id.violationTourNudity);
-        rbOther = (RadioButton) view.findViewById(R.id.violationTourOther);
-        rbSpam = (RadioButton) view.findViewById(R.id.violationTourSpam);
-        rbViolence = (RadioButton) view.findViewById(R.id.violationTourViolence);
+        buttonCancel = view.findViewById(R.id.violationTourCancelButton);
+        buttonSave = view.findViewById(R.id.violationTourSaveButton);
+        rbHarassment = view.findViewById(R.id.violationTourHarassment);
+        rbHatespeech = view.findViewById(R.id.violationTourHateSpeech);
+        rbNudity = view.findViewById(R.id.violationTourNudity);
+        rbOther = view.findViewById(R.id.violationTourOther);
+        rbSpam = view.findViewById(R.id.violationTourSpam);
+        rbViolence = view.findViewById(R.id.violationTourViolence);
 
         buttonCancel.setOnClickListener(v -> getDialog().dismiss());
         buttonSave.setOnClickListener(v -> reportTour());
@@ -83,7 +77,7 @@ public class TourReportDialog extends DialogFragment {
 
         ViolationType violationType = violationTypeDao.getViolationTypebyName(violationName);
 
-        tourController.reportViolation(tourController.new Violation(this.tour.getTour_id(), violationType.getViolationt_id()), controllerEvent -> {
+        tourController.reportViolation(tourController.new Violation(tour.getTour_id(), violationType.getViolationt_id()), controllerEvent -> {
             switch (controllerEvent.getType()){
                 case OK:
                     getDialog().dismiss();

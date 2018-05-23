@@ -1,7 +1,6 @@
 package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -103,34 +102,29 @@ public class PoiViewDialog extends DialogFragment {
         setRetainInstance(true);
     }
 
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return super.onCreateDialog(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_poi_view, container, false);
-        poiImage = (ImageView) view.findViewById(R.id.poi_image);
-        typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
-        titleTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
-        dateTextView = (TextView) view.findViewById(R.id.poi_date_text_view);
-        descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
-        closeDialogButton = (ImageButton) view.findViewById(R.id.poi_close_dialog_button);
-        editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
-        deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
-        sharePoiButton = (ImageButton) view.findViewById(R.id.poi_share_button);
-        sacOccupation = (TableLayout) view.findViewById(R.id.tableLayout_occupation_sac);
-        occupationTitleSac = (TextView) view.findViewById(R.id.title_occupation);
-        reportPoiButton = (ImageButton) view.findViewById(R.id.reportPoiButton);
-        privateModeButton = (ImageButton) view.findViewById(R.id.poi_mode_private_image);
+        poiImage = view.findViewById(R.id.poi_image);
+        typeTextView = view.findViewById(R.id.poi_type_text_view);
+        titleTextView = view.findViewById(R.id.poi_title_text_view);
+        dateTextView = view.findViewById(R.id.poi_date_text_view);
+        descriptionTextView = view.findViewById(R.id.poi_description_text_view);
+        closeDialogButton = view.findViewById(R.id.poi_close_dialog_button);
+        editPoiButton = view.findViewById(R.id.poi_edit_button);
+        deletePoiButton = view.findViewById(R.id.poi_delete_button);
+        sharePoiButton = view.findViewById(R.id.poi_share_button);
+        sacOccupation = view.findViewById(R.id.tableLayout_occupation_sac);
+        occupationTitleSac = view.findViewById(R.id.title_occupation);
+        reportPoiButton = view.findViewById(R.id.reportPoiButton);
+        privateModeButton = view.findViewById(R.id.poi_mode_private_image);
         // default not visible
         sacOccupation.setVisibility(View.GONE);
         occupationTitleSac.setVisibility(View.GONE);
 
         if (controller.isOwnerOf(currentPoi)) {
-            this.showControlsForOwner();
+            showControlsForOwner();
         }
 
         return view;
@@ -238,7 +232,7 @@ public class PoiViewDialog extends DialogFragment {
             sharePoiButton.setVisibility(View.GONE);
         }
         String typeText;
-        if (Integer.MAX_VALUE != currentPoi.getElevation()){
+        if (currentPoi.getElevation() != Integer.MAX_VALUE){
             String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
             typeText = String.format("%s (%s)", poiType, elevationText);
         }else{
@@ -333,9 +327,9 @@ public class PoiViewDialog extends DialogFragment {
                 for (String anOccupiedMonth : occupiedMonth) {
                     String month = anOccupiedMonth.toLowerCase();
                     int id = monthIds.get(month);
-                    TextView currentMonthRow = (TextView) view.findViewById(id);
+                    TextView currentMonthRow = view.findViewById(id);
                     if (currentMonthRow != null) {
-                        currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.medium));
+                        currentMonthRow.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.medium));
                     }
                 }
             } else if (aTextSplit.contains("Bewartet: ")) {
@@ -345,13 +339,13 @@ public class PoiViewDialog extends DialogFragment {
                 for (String anOccupiedMonth : occupiedMonth) {
                     String month = anOccupiedMonth.toLowerCase();
                     int id = monthIds.get(month);
-                    TextView currentMonthRow = (TextView) view.findViewById(id);
+                    TextView currentMonthRow = view.findViewById(id);
                     if (currentMonthRow != null) {
-                        currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.success_easy));
+                        currentMonthRow.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.success_easy));
                     }
                 }
             } else {
-                editedDescription.append(aTextSplit).append("\n");
+                editedDescription.append(aTextSplit).append('\n');
             }
         }
         int lasIndex = editedDescription.lastIndexOf("\n");

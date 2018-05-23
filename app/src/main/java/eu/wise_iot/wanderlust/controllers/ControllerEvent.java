@@ -25,15 +25,15 @@ public class ControllerEvent<T> {
     }
 
     public ControllerEvent(EventType event) {
-        this.type = event;
+        type = event;
     }
 
     public EventType getType() {
-        return this.type;
+        return type;
     }
 
     public T getModel() {
-        return this.model;
+        return model;
     }
 
 

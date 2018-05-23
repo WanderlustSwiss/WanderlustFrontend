@@ -224,7 +224,7 @@ public class PoiController {
         }
         public Violation(long poi_id, long violationType_id){
             this.poi_id = (int)poi_id;
-            this.type = (int)violationType_id;
+            type = (int)violationType_id;
         }
     }
 

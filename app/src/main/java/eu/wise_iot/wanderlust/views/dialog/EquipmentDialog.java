@@ -2,8 +2,6 @@ package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -53,19 +51,13 @@ public class EquipmentDialog extends DialogFragment{
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_equipment_view, container, false);
-        equipment_imageView = (ImageView) view.findViewById(R.id.equipment_image);
-        titleTextView = (TextView) view.findViewById(R.id.equipmentTitleTextView);
-        descriptionTextView = (TextView) view.findViewById(R.id.equipmentDescriptionTextView);
-        linkToOnlineShopButtonIcon = (ImageButton) view.findViewById(R.id.linkToShopButtonIcon);
-        linkToOnlineShopButtonText = (Button) view.findViewById(R.id.linkToShopButtonText);
+        equipment_imageView = view.findViewById(R.id.equipment_image);
+        titleTextView = view.findViewById(R.id.equipmentTitleTextView);
+        descriptionTextView = view.findViewById(R.id.equipmentDescriptionTextView);
+        linkToOnlineShopButtonIcon = view.findViewById(R.id.linkToShopButtonIcon);
+        linkToOnlineShopButtonText = view.findViewById(R.id.linkToShopButtonText);
 
         ImageInfo imagepath = equipment.getImagePath();
         if(imagepath != null){

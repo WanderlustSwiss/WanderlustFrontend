@@ -3,10 +3,6 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import eu.wise_iot.wanderlust.services.GlideService;
 
 public class LoginUser {
 
@@ -60,8 +56,8 @@ public class LoginUser {
             String resolutionString = "resolution=" + URLEncoder.encode(resolution, "UTF-8");
             String serialNumberString = "serialNumber=" + URLEncoder.encode(serialNumber, "UTF-8");
 
-            return "?" + osVersionString + "&" + deviceModelString + "&"
-                    + resolutionString + "&" + serialNumberString;
+            return '?' + osVersionString + '&' + deviceModelString + '&'
+                    + resolutionString + '&' + serialNumberString;
         } catch (UnsupportedEncodingException e) {
             return "";
         }

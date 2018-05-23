@@ -36,7 +36,7 @@ import okhttp3.Request;
 
 
 public class ImageController {
-    private static String TAG = "ImageController";
+    private static final String TAG = "ImageController";
     private static class Holder {
         private static final ImageController INSTANCE = new ImageController();
     }
@@ -72,12 +72,12 @@ public class ImageController {
         File pictures = new File(picturesDir);
         if(!pictures.exists()) pictures.mkdir();
         for (String FOLDER : FOLDERS) {
-            File dir = new File(picturesDir + "/" + FOLDER);
+            File dir = new File(picturesDir + '/' + FOLDER);
             dir.mkdir();
         }
 
         File httpCacheDirectory = new File(DatabaseController.getMainContext().getCacheDir(), "picasso-cache");
-        this.cache = new Cache(httpCacheDirectory, 15 * 1024 * 1024);
+        cache = new Cache(httpCacheDirectory, 15 * 1024 * 1024);
     }
     public String getPoiFolder(){
         return FOLDERS[0];
@@ -94,7 +94,7 @@ public class ImageController {
         List<File> images = new ArrayList<>();
         if(imageInfos != null) {
             for (ImageInfo imageInfo : imageInfos) {
-                images.add(new File(picturesDir + "/" + imageInfo.getLocalPath()));
+                images.add(new File(picturesDir + '/' + imageInfo.getLocalPath()));
             }
         }
         return images;
@@ -103,12 +103,12 @@ public class ImageController {
         if (imageInfo == null){
             return null;
         }
-        return new File(picturesDir + "/" + imageInfo.getLocalPath());
+        return new File(picturesDir + '/' + imageInfo.getLocalPath());
     }
     public void save(File file, ImageInfo image) throws IOException {
 
         InputStream in = new FileInputStream(file);
-        FileOutputStream out = new FileOutputStream(picturesDir + "/" + image.getLocalPath());
+        FileOutputStream out = new FileOutputStream(picturesDir + '/' + image.getLocalPath());
 
 
         byte[] buf = new byte[1024];
@@ -122,7 +122,7 @@ public class ImageController {
 
     public void save(InputStream in, ImageInfo image) throws IOException {
 
-        FileOutputStream out = new FileOutputStream(picturesDir + "/" + image.getLocalPath());
+        FileOutputStream out = new FileOutputStream(picturesDir + '/' + image.getLocalPath());
 
         byte[] buf = new byte[1024];
         int len;

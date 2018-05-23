@@ -27,10 +27,10 @@ public class Region extends AbstractModel implements Serializable {
         this.countryCode = countryCode;
     }
     public Region(){
-        this.internal_id = 0;
-        this.region_id = 0;
-        this.name = "No name";
-        this.countryCode = "NONE";
+        internal_id = 0;
+        region_id = 0;
+        name = "No name";
+        countryCode = "NONE";
     }
 
     public long getInternal_id() {

@@ -48,7 +48,7 @@ public class ViolationTypeDao extends DatabaseObjectAbstract{
      */
     public ViolationType getViolationTypebyName(String name){
 
-        return this.findOne(ViolationType_.name,name);
+        return findOne(ViolationType_.name,name);
     }
 
     /**

@@ -173,7 +173,7 @@ public class PoiEditDialog extends DialogFragment {
                     dismiss();
                     break;
                 case NETWORK_ERROR:
-                    AddPoiCommand cmd = new AddPoiCommand(this.poi, new File(MapFragment.photoPath));
+                    AddPoiCommand cmd = new AddPoiCommand(poi, new File(MapFragment.photoPath));
                     offlineQueueController.addCommand(cmd);
                     Toast.makeText(context, R.string.in_queue, Toast.LENGTH_SHORT).show();
                     dismiss();
@@ -188,14 +188,14 @@ public class PoiEditDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_poi_edit, container, false);
 
-        titleEditText = (EditText) view.findViewById(R.id.poi_title);
-        titleTextLayout = (TextInputLayout) view.findViewById(R.id.poi_title_layout);
-        descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
-        typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
-        modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
+        titleEditText = view.findViewById(R.id.poi_title);
+        titleTextLayout = view.findViewById(R.id.poi_title_layout);
+        descriptionEditText = view.findViewById(R.id.poi_description);
+        typeSpinner = view.findViewById(R.id.poi_type_spinner);
+        modeSpinner = view.findViewById(R.id.poi_mode_spinner);
 
-        buttonSave = (ImageButton) view.findViewById(R.id.poi_save_button);
-        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_edit_poi_cancel_button);
+        buttonSave = view.findViewById(R.id.poi_save_button);
+        buttonCancel = view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
     }
 
@@ -281,9 +281,9 @@ public class PoiEditDialog extends DialogFragment {
                 poi.setLatitude((float) lastKnownLocation.getLatitude());
                 poi.setLongitude((float) lastKnownLocation.getLongitude());
 
-                controller.saveNewPoi(this.poi, poiHandler);
+                controller.saveNewPoi(poi, poiHandler);
             } else {
-                File poiImage = new File(this.poi.getImageById(1).getLocalPath());
+                File poiImage = new File(poi.getImageById(1).getLocalPath());
                 if (publish) {
                     controller.uploadImage(poiImage, poi, controllerEvent -> {
                         switch (controllerEvent.getType()) {
@@ -295,7 +295,7 @@ public class PoiEditDialog extends DialogFragment {
                         }
                     });
                 } else {
-                    controller.updatePoi(this.poi, poiHandler);
+                    controller.updatePoi(poi, poiHandler);
                 }
             }
 
@@ -308,9 +308,9 @@ public class PoiEditDialog extends DialogFragment {
      * Prefills all data from a existing Poi into the form for the user
      */
     private void fillInDataFromExistingPoi() {
-        titleEditText.setText(this.poi.getTitle());
-        descriptionEditText.setText(this.poi.getDescription());
-        typeSpinner.setSelection((int) this.poi.getType());
+        titleEditText.setText(poi.getTitle());
+        descriptionEditText.setText(poi.getDescription());
+        typeSpinner.setSelection((int) poi.getType());
         if (poi.isPublic()) {
             modeSpinner.setSelection(0); // public
         } else {

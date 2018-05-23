@@ -1,14 +1,12 @@
 package eu.wise_iot.wanderlust.views;
 
 
-import android.app.Activity;
-import android.app.ProgressDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -98,10 +96,10 @@ public class StartupResetPasswordFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_startup_reset_password, container, false);
-        btnForgotPassword = (Button) view.findViewById(R.id.btn_forgot_pw);
-        editTextForgotPassword = (EditText) view.findViewById(R.id.input_forgot_pw);
-        textInputForgotPassword = (TextInputLayout) view.findViewById(R.id.text_input_forgot_pw);
-        redirectToLogin = (TextView) view.findViewById(R.id.link_login);
+        btnForgotPassword = view.findViewById(R.id.btn_forgot_pw);
+        editTextForgotPassword = view.findViewById(R.id.input_forgot_pw);
+        textInputForgotPassword = view.findViewById(R.id.text_input_forgot_pw);
+        redirectToLogin = view.findViewById(R.id.link_login);
         return view;
     }
 
@@ -152,7 +150,7 @@ public class StartupResetPasswordFragment extends Fragment {
      * @license MIT
      */
     private class AsyncResetPassword extends AsyncTask<Void, Void, Void> {
-        private String email;
+        private final String email;
         private ControllerEvent event;
 
         AsyncResetPassword(String email){

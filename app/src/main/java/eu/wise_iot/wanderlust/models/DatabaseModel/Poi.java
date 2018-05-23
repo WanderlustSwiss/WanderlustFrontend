@@ -49,7 +49,7 @@ public class Poi extends AbstractModel {
                float latitude, float elevation, int rate, long user, int type, boolean isPublic,
                List<ImageInfo> imagePaths, String updatedAt, String createdAt) {
         this.poi_id = poi_id;
-        this.title = name;
+        title = name;
         this.description = description;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -64,17 +64,17 @@ public class Poi extends AbstractModel {
     }
 
     public Poi() {
-        this.internal_id = 0;
-        this.title = "No title";
-        this.description = "No description";
-        this.longitude = 0;
-        this.latitude = 0;
-        this.elevation = 0;
-        this.rate = 3;
-        this.user = 1;
-        this.type = 0;
-        this.isPublic = false;
-        this.imagePaths = new ArrayList<>();
+        internal_id = 0;
+        title = "No title";
+        description = "No description";
+        longitude = 0;
+        latitude = 0;
+        elevation = 0;
+        rate = 3;
+        user = 1;
+        type = 0;
+        isPublic = false;
+        imagePaths = new ArrayList<>();
     }
 
     public int getImageCount() {

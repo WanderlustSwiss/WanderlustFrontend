@@ -1,6 +1,6 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import android.content.Context;
+import android.app.Activity;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -36,24 +36,24 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
-import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseObject.DifficultyTypeDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
-import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RatingDao;
+import eu.wise_iot.wanderlust.models.DatabaseObject.RecentTourDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 import eu.wise_iot.wanderlust.services.AsyncDownloadQueueTask;
+import eu.wise_iot.wanderlust.services.CommentService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.ViolationService;
 import io.objectbox.Property;
 import retrofit2.Call;
 import retrofit2.Callback;
-import eu.wise_iot.wanderlust.services.CommentService;
 import retrofit2.Response;
 
 
@@ -157,7 +157,7 @@ public class TourController {
         return false;
     }
 
-    public void setSaved(Context context, FragmentHandler handler){
+    public void setSaved(Activity context, FragmentHandler handler){
         AsyncDownloadQueueTask.getHandler().queueTask(() ->
             communityTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
                 switch (controllerEvent.getType()){
@@ -184,7 +184,7 @@ public class TourController {
         );
     }
 
-    public void unsetSaved(Context context, FragmentHandler fragmentHandler){
+    public void unsetSaved(Activity context, FragmentHandler fragmentHandler){
         AsyncDownloadQueueTask.getHandler().queueTask(() ->
             communityTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
                 switch (controllerEvent.getType()){
@@ -240,7 +240,7 @@ public class TourController {
         if (region == null) {
             return "";
         } else {
-            return region.getName() + " " + region.getCountryCode();
+            return region.getName() + ' ' + region.getCountryCode();
         }
     }
 
@@ -508,7 +508,7 @@ public class TourController {
     public void createTour(FragmentHandler<Trip> handler) {
         TripDao dao = TripDao.getInstance();
         if (dao != null) {
-            dao.create(this.tour, handler);
+            dao.create(tour, handler);
         }
     }
 
@@ -554,7 +554,7 @@ public class TourController {
 
         public Violation(long tour_id, long violationType_id){
             this.tour_id = (int)tour_id;
-            this.type = (int)violationType_id;
+            type = (int)violationType_id;
         }
     }
     public void uploadImage(File origiFile, FragmentHandler handler){
@@ -562,11 +562,11 @@ public class TourController {
     }
 
     public void addTour(FragmentHandler handler, Tour newTour){
-        this.tour = newTour;
+        tour = newTour;
         userTourDao.create(newTour, handler);
     }
     public void updateTour(FragmentHandler handler){
-        userTourDao.update((int) this.tour.getTour_id() ,this.tour, handler);
+        userTourDao.update((int) tour.getTour_id() , tour, handler);
     }
 
     /**

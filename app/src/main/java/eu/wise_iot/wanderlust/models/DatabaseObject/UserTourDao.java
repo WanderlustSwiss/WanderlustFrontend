@@ -331,7 +331,7 @@ public class UserTourDao extends DatabaseObjectAbstract {
 
             String name = tourId + "-" + imageId + ".jpg";
             inputStream = body.byteStream();
-            outputStream = new FileOutputStream(imageController.getPicturesDir() + "/tours/" + tourId + "-" + imageId + ".jpg");
+            outputStream = new FileOutputStream(imageController.getPicturesDir() + "/tours/" + tourId + '-' + imageId + ".jpg");
 
             while (true) {
                 int read = inputStream.read(fileReader);

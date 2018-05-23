@@ -76,9 +76,9 @@ public class SavedTour extends AbstractModel {
     }
 
     public SavedTour() {
-        this.internal_id = 0;
-        this.title = "No title";
-        this.description = "No description";
+        internal_id = 0;
+        title = "No title";
+        description = "No description";
     }
 
     public Tour toTour(){
@@ -89,7 +89,7 @@ public class SavedTour extends AbstractModel {
     }
 
     public SavedTour(String title, String description, String polyline, long difficulty, boolean isPublic, List<String> seasons, long region) {
-        this.internal_id = 0;
+        internal_id = 0;
         this.title = title;
         this.description = description;
         this.polyline = polyline;
@@ -100,7 +100,7 @@ public class SavedTour extends AbstractModel {
     }
 
     public List<GeoPoint> getGeoPoints() {
-        return PolyLineEncoder.decode(this.getPolyline(), 10);
+        return PolyLineEncoder.decode(getPolyline(), 10);
     }
 
     public List<ImageInfo> getImagePaths() {

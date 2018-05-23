@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -68,9 +67,9 @@ public class ResultFilterFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_tour_filter_result, container, false);
 
         // set up the RecyclerView 1
-        pbToursFiltered = (ProgressBar) rootView.findViewById(R.id.pbTourResult);
-        rvToursFiltered = (RecyclerView) rootView.findViewById(R.id.rvFilteredTours);
-        tvToursFilteredPlaceholder = (TextView) rootView.findViewById(R.id.tvToursFilteredPlaceholder);
+        pbToursFiltered = rootView.findViewById(R.id.pbTourResult);
+        rvToursFiltered = rootView.findViewById(R.id.rvFilteredTours);
+        tvToursFilteredPlaceholder = rootView.findViewById(R.id.tvToursFilteredPlaceholder);
 
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         rvToursFiltered.setLayoutManager(verticalLayoutManager);
@@ -87,7 +86,7 @@ public class ResultFilterFragment extends Fragment {
                 case OK:
                     //get all needed information from server db
                     List<Tour> list  = new LinkedList<>((List<Tour>) event.getModel());
-                    ResultFilterFragment.this.listFilteredTours.addAll(list);
+                    listFilteredTours.addAll(list);
                     currentPage++;
                     if (BuildConfig.DEBUG) Log.d(TAG, "Getting filtered Tours: Server response arrived");
                     //get all the images needed and save them on the device
@@ -114,7 +113,7 @@ public class ResultFilterFragment extends Fragment {
                                     final int offset = rvToursFiltered.computeHorizontalScrollOffset();
                                     int position = offset / myCellWidth;
                                     //if (BuildConfig.DEBUG) Log.d(TAG, "pos: "+position);
-                                    if (5 < (position - (10*currentPage))) {
+                                    if ((position - (10 * currentPage)) > 5) {
                                         resultFilterController.getFilteredTours(controllerEvent -> {
                                             switch (controllerEvent.getType()) {
                                                 case OK:
@@ -166,7 +165,7 @@ public class ResultFilterFragment extends Fragment {
                 .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
                 .addToBackStack(Constants.TOUR_FRAGMENT)
                 .commit();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
     /**

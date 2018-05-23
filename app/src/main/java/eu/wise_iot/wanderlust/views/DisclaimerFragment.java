@@ -39,7 +39,7 @@ public class DisclaimerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        authorsTextView = (TextView) view.findViewById(R.id.authors_text_view);
+        authorsTextView = view.findViewById(R.id.authors_text_view);
 
         Calendar calendar = new GregorianCalendar();
         int year = calendar.get(Calendar.YEAR);

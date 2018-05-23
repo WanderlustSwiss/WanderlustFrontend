@@ -1,9 +1,8 @@
 package eu.wise_iot.wanderlust.controllers;
 
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import android.app.Fragment;
+import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,12 +14,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import android.app.Fragment;
-import android.support.annotation.NonNull;
-import android.util.Log;
-import android.widget.Toast;
-
 import org.osmdroid.util.GeoPoint;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
@@ -30,7 +29,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.PublicTransportPoint;
 import eu.wise_iot.wanderlust.services.HashtagService;
-
 import eu.wise_iot.wanderlust.services.SacService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import retrofit2.Call;
@@ -42,8 +40,8 @@ import retrofit2.Callback;
  * @author Joshua Meier
  */
 public class MapController {
-    private final String NOMINATIM_SERVICE_URL = "https://nominatim.openstreetmap.org/";
-    private final String SBB_SERVICE_URL = "https://data.sbb.ch/api/records/1.0/search/";
+    private static final String NOMINATIM_SERVICE_URL = "https://nominatim.openstreetmap.org/";
+    private static final String SBB_SERVICE_URL = "https://data.sbb.ch/api/records/1.0/search/";
     private static final String TAG = "MapController";
     private final Fragment fragment;
 
@@ -195,7 +193,7 @@ public class MapController {
     public void searchPublicTransportStations(GeoPoint centerGeoPoint, int rows, int radius, final FragmentHandler handler) {
         String url = SBB_SERVICE_URL
                 + "?dataset=didok-liste"
-                + "&geofilter.distance=" + centerGeoPoint.getLatitude() + "," + centerGeoPoint.getLongitude() + "," + radius + ""
+                + "&geofilter.distance=" + centerGeoPoint.getLatitude() + ',' + centerGeoPoint.getLongitude() + ',' + radius + ""
                 + "&rows=" + rows;
 
         RequestQueue queue = Volley.newRequestQueue(fragment.getActivity());
@@ -301,9 +299,7 @@ public class MapController {
                 }
 
 
-            }, error -> {
-                handler.onResponse(new ControllerEvent<AddressPoint>(EventType.NETWORK_ERROR));
-            });
+            }, error -> handler.onResponse(new ControllerEvent<AddressPoint>(EventType.NETWORK_ERROR)));
 
             queue.add(stringRequest);
         } catch (IOException ex) {

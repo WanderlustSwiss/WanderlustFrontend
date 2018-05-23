@@ -1,8 +1,6 @@
 package eu.wise_iot.wanderlust.views;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,7 +70,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
      * Create a standard login fragment
      */
     public StartupLoginFragment() {
-        this.loginController = new LoginController();
+        loginController = new LoginController();
     }
 
     public static StartupLoginFragment newInstance() {
@@ -108,15 +106,15 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_startup_login, container, false);
-        btnLogin = (Button) view.findViewById(R.id.btn_signin);
-        btnInstagram = (Button) view.findViewById(R.id.web_login_instagram_button);
-        btnFacebook = (Button) view.findViewById(R.id.web_login_facebook_button);
-        nicknameEmailTextfield = (EditText) view.findViewById(R.id.input_nickname_email);
-        nicknameEmailLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_nickname_email);
+        btnLogin = view.findViewById(R.id.btn_signin);
+        btnInstagram = view.findViewById(R.id.web_login_instagram_button);
+        btnFacebook = view.findViewById(R.id.web_login_facebook_button);
+        nicknameEmailTextfield = view.findViewById(R.id.input_nickname_email);
+        nicknameEmailLayout = view.findViewById(R.id.text_input_layout_nickname_email);
 //        signInButtonGoogle = (SignInButton) view.findViewById(R.id.sign_in_button);
-        redirectToRegistration = (TextView) view.findViewById(R.id.link_registration);
-        forgotPassword = (TextView) view.findViewById(R.id.login_forgetPassword);
-        passwordTextfield = (EditText) view.findViewById(R.id.input_password);
+        redirectToRegistration = view.findViewById(R.id.link_registration);
+        forgotPassword = view.findViewById(R.id.login_forgetPassword);
+        passwordTextfield = view.findViewById(R.id.input_password);
         return view;
     }
 
@@ -234,7 +232,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
             String token = account.getIdToken();
-            Toast.makeText(context, getString(R.string.msg_hello) + " " + account.getGivenName() + " " + account.getFamilyName(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, getString(R.string.msg_hello) + ' ' + account.getGivenName() + ' ' + account.getFamilyName(), Toast.LENGTH_LONG).show();
 
             LoginUser user = new LoginUser(account.getEmail(), token);
             //   loginController.logIn(user, fragmentHandler);
@@ -297,7 +295,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                         getFragmentManager().beginTransaction()
                                 .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                                 .commit();
-                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
                     }
 
                     break;

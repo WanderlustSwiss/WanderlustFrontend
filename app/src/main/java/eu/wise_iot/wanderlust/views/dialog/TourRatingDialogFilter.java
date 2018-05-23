@@ -70,13 +70,13 @@ public class TourRatingDialogFilter extends DialogFragment {
 
         //titleEditText = (EditText) view.findViewById(R.id.rate_description);
         //titleTextLayout = (TextInputLayout) view.findViewById(R.id.rate_title_layout);
-        firstStarButton = (ImageButton) view.findViewById(R.id.first_star_button);
-        secondStarButton = (ImageButton) view.findViewById(R.id.second_star_button);
-        thirdStarButton = (ImageButton) view.findViewById(R.id.third_star_button);
-        fourthStarButton = (ImageButton) view.findViewById(R.id.fourth_star_button);
-        fifthStarButton = (ImageButton) view.findViewById(R.id.fifth_star_button);
-        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_cancel_rate_filter_button);
-        buttonSave = (ImageButton) view.findViewById(R.id.dialog_save_rate_filter_button);
+        firstStarButton = view.findViewById(R.id.first_star_button);
+        secondStarButton = view.findViewById(R.id.second_star_button);
+        thirdStarButton = view.findViewById(R.id.third_star_button);
+        fourthStarButton = view.findViewById(R.id.fourth_star_button);
+        fifthStarButton = view.findViewById(R.id.fifth_star_button);
+        buttonCancel = view.findViewById(R.id.dialog_cancel_rate_filter_button);
+        buttonSave = view.findViewById(R.id.dialog_save_rate_filter_button);
 
         starButtonCollection[0] = firstStarButton;
         starButtonCollection[1] = secondStarButton;

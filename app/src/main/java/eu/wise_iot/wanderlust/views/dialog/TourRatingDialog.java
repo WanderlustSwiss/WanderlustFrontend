@@ -16,8 +16,8 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
-import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.views.TourFragment;
 
 /**
@@ -68,22 +68,16 @@ public class TourRatingDialog extends DialogFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_rate_tour, container, false);
 
-        firstStarButton = (ImageButton) view.findViewById(R.id.first_star_button);
-        secondStarButton = (ImageButton) view.findViewById(R.id.second_star_button);
-        thirdStarButton = (ImageButton) view.findViewById(R.id.third_star_button);
-        fourthStarButton = (ImageButton) view.findViewById(R.id.fourth_star_button);
-        fifthStarButton = (ImageButton) view.findViewById(R.id.fifth_star_button);
-        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_canel_rate_button);
-        buttonSave = (ImageButton) view.findViewById(R.id.rate_save_button);
+        firstStarButton = view.findViewById(R.id.first_star_button);
+        secondStarButton = view.findViewById(R.id.second_star_button);
+        thirdStarButton = view.findViewById(R.id.third_star_button);
+        fourthStarButton = view.findViewById(R.id.fourth_star_button);
+        fifthStarButton = view.findViewById(R.id.fifth_star_button);
+        buttonCancel = view.findViewById(R.id.dialog_canel_rate_button);
+        buttonSave = view.findViewById(R.id.rate_save_button);
 
         starButtonCollection[0] = firstStarButton;
         starButtonCollection[1] = secondStarButton;

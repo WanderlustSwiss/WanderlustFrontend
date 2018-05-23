@@ -5,8 +5,6 @@ import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -77,20 +75,19 @@ import eu.wise_iot.wanderlust.controllers.PolyLineEncoder;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
-import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
-import eu.wise_iot.wanderlust.views.dialog.EquipmentDialog;
 import eu.wise_iot.wanderlust.views.adapters.TourCommentRVAdapter;
+import eu.wise_iot.wanderlust.views.dialog.EquipmentDialog;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialog;
 import eu.wise_iot.wanderlust.views.dialog.TourReportDialog;
 
-import static eu.wise_iot.wanderlust.controllers.EventType.OK;
-
 import static android.content.Context.INPUT_METHOD_SERVICE;
+import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
  * TourController:
@@ -232,67 +229,67 @@ public class TourFragment extends Fragment {
     }
 
     private void initializeControls(View view) {
-        rbTourCommentAverageRating = (RatingBar) view.findViewById(R.id.rbTourCommentAverageRating);
-        tvTourCommentAverageRating = (TextView) view.findViewById(R.id.tvTourCommentAverageRating);
-        tourCommentRatingCount = (TextView) view.findViewById(R.id.tourCommentRatingCount);
-        tourCommentRating1 = (ImageView) view.findViewById(R.id.tourCommentRating1);
-        tourCommentRating2 = (ImageView) view.findViewById(R.id.tourCommentRating2);
-        tourCommentRating3 = (ImageView) view.findViewById(R.id.tourCommentRating3);
-        tourCommentRating4 = (ImageView) view.findViewById(R.id.tourCommentRating4);
-        tourCommentRating5 = (ImageView) view.findViewById(R.id.tourCommentRating5);
-        rbCommentUserSpecificRating = (RatingBar) view.findViewById(R.id.rbCommentUserSpecificRating);
+        rbTourCommentAverageRating = view.findViewById(R.id.rbTourCommentAverageRating);
+        tvTourCommentAverageRating = view.findViewById(R.id.tvTourCommentAverageRating);
+        tourCommentRatingCount = view.findViewById(R.id.tourCommentRatingCount);
+        tourCommentRating1 = view.findViewById(R.id.tourCommentRating1);
+        tourCommentRating2 = view.findViewById(R.id.tourCommentRating2);
+        tourCommentRating3 = view.findViewById(R.id.tourCommentRating3);
+        tourCommentRating4 = view.findViewById(R.id.tourCommentRating4);
+        tourCommentRating5 = view.findViewById(R.id.tourCommentRating5);
+        rbCommentUserSpecificRating = view.findViewById(R.id.rbCommentUserSpecificRating);
 
-        imageViewTourImage = (ImageView) view.findViewById(R.id.tourOVTourImage);
+        imageViewTourImage = view.findViewById(R.id.tourOVTourImage);
 
-        favButton = (ImageButton) view.findViewById(R.id.favourite_tour_button);
+        favButton = view.findViewById(R.id.favourite_tour_button);
 
-        tourRegion = (TextView) view.findViewById(R.id.tour_region);
-        tourTitle = (TextView) view.findViewById(R.id.tourOVTourTitle);
-        tourExecutionDate = (TextView) view.findViewById(R.id.tour_execution_date);
-        tourSavedButton = (ImageButton) view.findViewById(R.id.save_tour_button);
-        tourSharedButton = (ImageButton) view.findViewById(R.id.share_tour_button);
-        backbutton = (ImageButton) view.findViewById(R.id.tour_back_button);
-        textViewTourDistance = (TextView) view.findViewById(R.id.tourOVTourDistance);
-        textViewAscend = (TextView) view.findViewById(R.id.tour_ascend);
-        textViewDuration = (TextView) view.findViewById(R.id.tour_duration);
-        textViewDescend = (TextView) view.findViewById(R.id.tour_descend);
-        textViewDifficulty = (TextView) view.findViewById(R.id.tourOVTourDifficulty);
+        tourRegion = view.findViewById(R.id.tour_region);
+        tourTitle = view.findViewById(R.id.tourOVTourTitle);
+        tourExecutionDate = view.findViewById(R.id.tour_execution_date);
+        tourSavedButton = view.findViewById(R.id.save_tour_button);
+        tourSharedButton = view.findViewById(R.id.share_tour_button);
+        backbutton = view.findViewById(R.id.tour_back_button);
+        textViewTourDistance = view.findViewById(R.id.tourOVTourDistance);
+        textViewAscend = view.findViewById(R.id.tour_ascend);
+        textViewDuration = view.findViewById(R.id.tour_duration);
+        textViewDescend = view.findViewById(R.id.tour_descend);
+        textViewDifficulty = view.findViewById(R.id.tourOVTourDifficulty);
 
-        tourDescriptionTextView = (ExpandableTextView) view.findViewById(R.id.tour_description);
-        tourDescriptionToggler = (ImageButton) view.findViewById(R.id.tour_descrition_toggler);
+        tourDescriptionTextView = view.findViewById(R.id.tour_description);
+        tourDescriptionToggler = view.findViewById(R.id.tour_descrition_toggler);
 
-        goToMapButton = (Button) view.findViewById(R.id.go_to_map_button);
+        goToMapButton = view.findViewById(R.id.go_to_map_button);
 
-        tourRatingInNumbers = (TextView) view.findViewById(R.id.tour_rating_in_numbers);
-        tourRating = (RatingBar) view.findViewById(R.id.tour_rating);
+        tourRatingInNumbers = view.findViewById(R.id.tour_rating_in_numbers);
+        tourRating = view.findViewById(R.id.tour_rating);
 
-        plot = (XYPlot) view.findViewById(R.id.plot);
+        plot = view.findViewById(R.id.plot);
 
         //weather
-        selectDayButton = (Button) view.findViewById(R.id.weather_date_picker_button);
-        selectedDay = (TextView) view.findViewById(R.id.weather_date_and_time);
-        weatherInfos = (LinearLayout) view.findViewById(R.id.weather_info);
-        firstWeatherIcon = (ImageView) view.findViewById(R.id.firstPointIcon);
-        secondWeatherIcon = (ImageView) view.findViewById(R.id.secondPointIcon);
-        thirdWeatherIcon = (ImageView) view.findViewById(R.id.thirdPointIcon);
-        forthWeatherIcon = (ImageView) view.findViewById(R.id.forthPointIcon);
-        fifthWeatherIcon = (ImageView) view.findViewById(R.id.fifthPointIcon);
-        firstWeatherDegree = (TextView) view.findViewById(R.id.degreeFirstPoint);
-        secondWeatherDegree = (TextView) view.findViewById(R.id.degreeSecondPoint);
-        thirdWeatherDegree = (TextView) view.findViewById(R.id.degreeThirdPoint);
-        forthWeatherDegree = (TextView) view.findViewById(R.id.degreeForthPoint);
-        fifthWeatherDegree = (TextView) view.findViewById(R.id.degreeFifthPoint);
-        firstTimePoint = (TextView) view.findViewById(R.id.timeFirstPoint);
-        secondTimePoint = (TextView) view.findViewById(R.id.timeSecondPoint);
-        thirdTimePoint = (TextView) view.findViewById(R.id.timeThirdPoint);
-        forthTimePoint = (TextView) view.findViewById(R.id.timeForthPoint);
-        fifthTimePoint = (TextView) view.findViewById(R.id.timeFifthPoint);
+        selectDayButton = view.findViewById(R.id.weather_date_picker_button);
+        selectedDay = view.findViewById(R.id.weather_date_and_time);
+        weatherInfos = view.findViewById(R.id.weather_info);
+        firstWeatherIcon = view.findViewById(R.id.firstPointIcon);
+        secondWeatherIcon = view.findViewById(R.id.secondPointIcon);
+        thirdWeatherIcon = view.findViewById(R.id.thirdPointIcon);
+        forthWeatherIcon = view.findViewById(R.id.forthPointIcon);
+        fifthWeatherIcon = view.findViewById(R.id.fifthPointIcon);
+        firstWeatherDegree = view.findViewById(R.id.degreeFirstPoint);
+        secondWeatherDegree = view.findViewById(R.id.degreeSecondPoint);
+        thirdWeatherDegree = view.findViewById(R.id.degreeThirdPoint);
+        forthWeatherDegree = view.findViewById(R.id.degreeForthPoint);
+        fifthWeatherDegree = view.findViewById(R.id.degreeFifthPoint);
+        firstTimePoint = view.findViewById(R.id.timeFirstPoint);
+        secondTimePoint = view.findViewById(R.id.timeSecondPoint);
+        thirdTimePoint = view.findViewById(R.id.timeThirdPoint);
+        forthTimePoint = view.findViewById(R.id.timeForthPoint);
+        fifthTimePoint = view.findViewById(R.id.timeFifthPoint);
 
 
-        tourReportButton = (ImageButton) view.findViewById(R.id.report_tour_button);
+        tourReportButton = view.findViewById(R.id.report_tour_button);
 
-        sendCommentButton = (ImageButton) view.findViewById(R.id.tour_comment_send);
-        commentText = (EditText) view.findViewById(R.id.tour_comment_description);
+        sendCommentButton = view.findViewById(R.id.tour_comment_send);
+        commentText = view.findViewById(R.id.tour_comment_description);
 
 
         long difficulty = tourController.getLevel();
@@ -320,7 +317,7 @@ public class TourFragment extends Fragment {
         setupRVEquipment(view);
     }
     private void setupRVEquipment(View view){
-        RecyclerView rvEquipment = (RecyclerView) view.findViewById(R.id.rvEquipment);
+        RecyclerView rvEquipment = view.findViewById(R.id.rvEquipment);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         rvEquipment.setLayoutManager(horizontalLayoutManager);
         adapterEquip = new EquipmentRVAdapter(context, listEquipment);
@@ -333,9 +330,9 @@ public class TourFragment extends Fragment {
     }
 
     private void setupRVComments(View view){
-        commentProgressBar = (ProgressBar) view.findViewById(R.id.tour_comment_progressbar);
-        commentRecyclerView = (RecyclerView) view.findViewById(R.id.tour_comment_recyclerview);
-        commentPlaceholder = (TextView) view.findViewById(R.id.tour_comment_placeholder);
+        commentProgressBar = view.findViewById(R.id.tour_comment_progressbar);
+        commentRecyclerView = view.findViewById(R.id.tour_comment_recyclerview);
+        commentPlaceholder = view.findViewById(R.id.tour_comment_placeholder);
 
         commentRecyclerView.setPadding(5, 5, 5, 5);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -352,7 +349,7 @@ public class TourFragment extends Fragment {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
         String preText = getString(R.string.wanderung_beginn);
-        String completeString = preText + " " + dateTime + " " + getString(R.string.o_clock);
+        String completeString = preText + ' ' + dateTime + ' ' + getString(R.string.o_clock);
         selectedDay.setText(completeString);
 
         if (BuildConfig.DEBUG) Log.d("GEOPOINT-LATITUDE", String.valueOf(tour.getGeoPoints().get(0).getLatitude()));
@@ -362,8 +359,8 @@ public class TourFragment extends Fragment {
             switch (controllerEvent.getType()) {
                 case OK:
                     if (BuildConfig.DEBUG) Log.d(TAG, "got equipment for tour");
-                    TourFragment.this.listEquipment.clear();
-                    TourFragment.this.listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
+                    listEquipment.clear();
+                    listEquipment.addAll((List<Equipment>) controllerEvent.getModel());
                     adapterEquip.notifyDataSetChanged();
                     break;
                 default:
@@ -383,12 +380,12 @@ public class TourFragment extends Fragment {
             Picasso handler = imageController.getPicassoHandler(getActivity());
             //handler.setIndicatorsEnabled(true);
             String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(this.imageViewTourImage);
+            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(imageViewTourImage);
         } else {
             Picasso.with(context)
                     .load(R.drawable.no_image_found)
                     .fit().centerCrop().placeholder(R.drawable.progress_animation)
-                    .into(this.imageViewTourImage);
+                    .into(imageViewTourImage);
         }
 
         if (tourController.isFavorite()) {
@@ -396,7 +393,7 @@ public class TourFragment extends Fragment {
         } else {
             favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
         }
-        tourRegion.setText(getString(R.string.tour_region) + " " + tourController.getRegion());
+        tourRegion.setText(getString(R.string.tour_region) + ' ' + tourController.getRegion());
 
         if(tourController.isSaved()){
             tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
@@ -424,8 +421,8 @@ public class TourFragment extends Fragment {
         textViewTourDistance.setText(tourController.getDistanceString());
         textViewDuration.setText(tourController.getDurationString());
 
-        textViewAscend.setText(String.valueOf(tourController.getAscent()) + "m");
-        textViewDescend.setText(String.valueOf(tourController.getDescent()) + "m");
+        textViewAscend.setText(String.valueOf(tourController.getAscent()) + 'm');
+        textViewDescend.setText(String.valueOf(tourController.getDescent()) + 'm');
 
         textViewDifficulty.setText(tourController.getDifficultyMark());
     }
@@ -489,7 +486,7 @@ public class TourFragment extends Fragment {
                 listUserComment.remove(userComment);
                 adapterComments.notifyDataSetChanged();
             }else{
-                Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+                Toast.makeText(context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
             }
         });
     }
@@ -497,7 +494,7 @@ public class TourFragment extends Fragment {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         tourController.createComment(commentText.getText().toString(), (controllerEvent) -> {
-            Toast.makeText(this.context,getResources().getText(R.string.msg_comment_create_successfull), Toast.LENGTH_SHORT);
+            Toast.makeText(context,getResources().getText(R.string.msg_comment_create_successfull), Toast.LENGTH_SHORT);
             updateRVComments(true);
         });
     }
@@ -529,7 +526,7 @@ public class TourFragment extends Fragment {
                     break;
                 default:
                     if (BuildConfig.DEBUG) Log.d(TAG, "Server response ERROR: " + event.getType().name());
-                    Toast.makeText(this.context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
+                    Toast.makeText(context,getResources().getText(R.string.msg_no_internet), Toast.LENGTH_SHORT);
             }
         });
     }
@@ -734,7 +731,7 @@ public class TourFragment extends Fragment {
 
     private void toggleSaved(){
         if (tourController.isSaved()){
-            tourController.unsetSaved(context, controllerEvent -> {
+            tourController.unsetSaved(getActivity(), controllerEvent -> {
                 switch (controllerEvent.getType()){
                     case OK:
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
@@ -743,7 +740,7 @@ public class TourFragment extends Fragment {
                 }
             });
         }else{
-            tourController.setSaved(context , controllerEvent -> {
+            tourController.setSaved(getActivity() , controllerEvent -> {
                 switch (controllerEvent.getType()){
                     case OK:
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
@@ -904,7 +901,7 @@ public class TourFragment extends Fragment {
                     .commit();
         }
         //select map in navigationview
-        NavigationView nv = (NavigationView)getActivity().findViewById(R.id.nav_view);
+        NavigationView nv = getActivity().findViewById(R.id.nav_view);
         nv.getMenu().getItem(0).setChecked(true);
         //add new fragment to stack
         getFragmentManager().beginTransaction()
@@ -912,7 +909,7 @@ public class TourFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
     }
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -18,7 +17,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RatingBar;
-import android.widget.TextView;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
@@ -154,7 +152,7 @@ public class FilterFragment extends Fragment {
         //build query for regions
         StringBuilder sb = new StringBuilder();
         for(Region r : tiRegion.getObjects())
-            sb.append(r.getRegion_id()).append(",");
+            sb.append(r.getRegion_id()).append(',');
         if(!sb.toString().isEmpty())sb.deleteCharAt(sb.length() - 1);
         setting.region = sb.toString();
         setting.name = tiName.getText().toString();
@@ -180,7 +178,7 @@ public class FilterFragment extends Fragment {
                 .replace(R.id.content_frame, resultFilterFragment, Constants.RESULT_FILTER_FRAGMENT)
                 .addToBackStack(Constants.RESULT_FILTER_FRAGMENT)
                 .commit();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
     /**

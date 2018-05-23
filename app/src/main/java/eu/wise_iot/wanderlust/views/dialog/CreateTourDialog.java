@@ -143,7 +143,7 @@ public class CreateTourDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tourController = new TourController(this.tour);
+        tourController = new TourController(tour);
         mapController = new MapController(this);
         tourKitController = TourKitController.createInstance(getActivity());
         imageController = ImageController.getInstance();
@@ -161,7 +161,7 @@ public class CreateTourDialog extends DialogFragment {
             trackedTour = (ArrayList<GeoPoint>) args.getSerializable(Constants.CREATE_TOUR_TRACK);
             if(trackedTour != null) {
                 String polyline = PolyLineEncoder.encode(trackedTour, 10);
-                this.tour.setPolyline(polyline);
+                tour.setPolyline(polyline);
             }
         }
 
@@ -183,7 +183,7 @@ public class CreateTourDialog extends DialogFragment {
                 dismiss();
             } else {
                 if(isNewTour){
-                    tourController.deleteTrip(this.currentTrip, emptyEvent -> {});
+                    tourController.deleteTrip(currentTrip, emptyEvent -> {});
                 }
                 Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
             }
@@ -244,21 +244,21 @@ public class CreateTourDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_create_tour, container, false);
 
-        titleEditText = (EditText) view.findViewById(R.id.tourOVTourTitle);
-        titleTextLayout = (TextInputLayout) view.findViewById(R.id.tour_title_layout);
-        descriptionEditText = (EditText) view.findViewById(R.id.tour_description);
-        publicSpinner = (Spinner) view.findViewById(R.id.tour_is_public);
-        difficultySpinner = (Spinner) view.findViewById(R.id.tourOVTourDifficulty);
-        buttonSave = (ImageButton) view.findViewById(R.id.tour_save_button);
-        uploadImageBtn = (AppCompatButton) view.findViewById(R.id.upload_image_btn);
-        buttonCancel = (ImageButton) view.findViewById(R.id.tour_return_button);
-        regionSpinner = (Spinner) view.findViewById(R.id.tour_region);
-        winterCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_winter);
-        summerCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_summer);
-        fallCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_fall);
-        springCheckBox = (CheckBox) view.findViewById(R.id.create_tour_checkbox_spring);
-        tourImageDisplay = (ImageView) view.findViewById(R.id.tour_image);
-        extraTourKitInput = (EquipmentCompletionView)view.findViewById(R.id.tourkitExtraKitInput);
+        titleEditText = view.findViewById(R.id.tourOVTourTitle);
+        titleTextLayout = view.findViewById(R.id.tour_title_layout);
+        descriptionEditText = view.findViewById(R.id.tour_description);
+        publicSpinner = view.findViewById(R.id.tour_is_public);
+        difficultySpinner = view.findViewById(R.id.tourOVTourDifficulty);
+        buttonSave = view.findViewById(R.id.tour_save_button);
+        uploadImageBtn = view.findViewById(R.id.upload_image_btn);
+        buttonCancel = view.findViewById(R.id.tour_return_button);
+        regionSpinner = view.findViewById(R.id.tour_region);
+        winterCheckBox = view.findViewById(R.id.create_tour_checkbox_winter);
+        summerCheckBox = view.findViewById(R.id.create_tour_checkbox_summer);
+        fallCheckBox = view.findViewById(R.id.create_tour_checkbox_fall);
+        springCheckBox = view.findViewById(R.id.create_tour_checkbox_spring);
+        tourImageDisplay = view.findViewById(R.id.tour_image);
+        extraTourKitInput = view.findViewById(R.id.tourkitExtraKitInput);
 
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, regionNames);
@@ -343,7 +343,7 @@ public class CreateTourDialog extends DialogFragment {
             if (isNewTour) {
                 tourController.createTour(createTourhandler);
             } else {
-                this.tourController.updateTour(updateTourHandler);
+                tourController.updateTour(updateTourHandler);
             }
         });
 
@@ -376,9 +376,9 @@ public class CreateTourDialog extends DialogFragment {
      * Fills all data from a existing Tour into the form for the user
      */
     private void fillInDataFromExistingTour() {
-        titleEditText.setText(this.tour.getTitle());
-        descriptionEditText.setText(this.tour.getDescription());
-        difficultySpinner.setSelection((int) this.tour.getDifficulty() - 1);
+        titleEditText.setText(tour.getTitle());
+        descriptionEditText.setText(tour.getDescription());
+        difficultySpinner.setSelection((int) tour.getDifficulty() - 1);
         if (tour.isPublic()) {
             publicSpinner.setSelection(0); // public
         } else {

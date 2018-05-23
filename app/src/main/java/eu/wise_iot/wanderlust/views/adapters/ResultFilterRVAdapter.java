@@ -50,13 +50,13 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
      */
     public ResultFilterRVAdapter(Context context, List<Tour> parTours) {
         if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "Copy Constructor");
-        this.mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         this.context = context;
         if(parTours == null) parTours = new ArrayList<>();
-        this.tours = parTours;
+        tours = parTours;
         //get which tour is favored
-        this.imageController = ImageController.getInstance();
-        this.resultFilterController = new ResultFilterController();
+        imageController = ImageController.getInstance();
+        resultFilterController = new ResultFilterController();
     }
 
     /**
@@ -81,7 +81,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
-        Tour tour = this.tours.get(position);
+        Tour tour = tours.get(position);
 //        holder.tvTitle.setTextColor(Color.BLACK);
         //difficulty calculations
         long difficulty = tour.getDifficulty();
@@ -99,7 +99,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
 
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
-        holder.tvRegion.setText(context.getString(R.string.tour_region) + " " + resultFilterController.getRegionbyID(tour.getRegion(),this.context));
+        holder.tvRegion.setText(context.getString(R.string.tour_region) + ' ' + resultFilterController.getRegionbyID(tour.getRegion(), context));
 
         holder.tvDescending.setText(tour.getDescent() + " m");
         holder.tvAscending.setText(tour.getAscent() + " m");
@@ -125,7 +125,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
      */
     @Override
     public int getItemCount() {
-        return this.tours.size();
+        return tours.size();
     }
 
     /**
@@ -134,7 +134,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
      * @return
      */
     private Tour getItem(int id) {
-        return this.tours.get(id);
+        return tours.get(id);
     }
 
     /**
@@ -142,7 +142,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
      * @param itemClickListener
      */
     public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
+        mClickListener = itemClickListener;
     }
 
     /**
@@ -169,15 +169,15 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
          */
         ViewHolder(View itemView) {
             super(itemView);
-            tvDistance = (TextView) itemView.findViewById(R.id.tourOVTourDistance);
-            tvDifficulty = (TextView) itemView.findViewById(R.id.tourOVTourDifficulty);
-            tvRegion = (TextView) itemView.findViewById(R.id.tour_region);
-            tvTitle = (TextView) itemView.findViewById(R.id.tourOVTourTitle);
-            tvTime = (TextView) itemView.findViewById(R.id.tour_time);
-            tvAscending = (TextView) itemView.findViewById(R.id.tour_ascend);
-            tvDescending = (TextView) itemView.findViewById(R.id.tour_descend);
-            tvImage = (ImageView) itemView.findViewById(R.id.tourOVTourImage);
-            ivTourDifficulty = (ImageView) itemView.findViewById(R.id.ivTourDifficulty);
+            tvDistance = itemView.findViewById(R.id.tourOVTourDistance);
+            tvDifficulty = itemView.findViewById(R.id.tourOVTourDifficulty);
+            tvRegion = itemView.findViewById(R.id.tour_region);
+            tvTitle = itemView.findViewById(R.id.tourOVTourTitle);
+            tvTime = itemView.findViewById(R.id.tour_time);
+            tvAscending = itemView.findViewById(R.id.tour_ascend);
+            tvDescending = itemView.findViewById(R.id.tour_descend);
+            tvImage = itemView.findViewById(R.id.tourOVTourImage);
+            ivTourDifficulty = itemView.findViewById(R.id.ivTourDifficulty);
 
             itemView.setOnClickListener(this);
         }

@@ -108,24 +108,24 @@ public class ProfileEditFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_edit, container, false);
 
         //initialize view's
-        profileImage = (ImageView) view.findViewById(R.id.currentImage);
+        profileImage = view.findViewById(R.id.currentImage);
 
-        changeImage = (TextView) view.findViewById(R.id.changeImage);
+        changeImage = view.findViewById(R.id.changeImage);
 
-        emailLayout = (TextInputLayout) view.findViewById(R.id.editEmailLayout);
-        emailTextfield = (EditText) view.findViewById(R.id.editEmailField);
+        emailLayout = view.findViewById(R.id.editEmailLayout);
+        emailTextfield = view.findViewById(R.id.editEmailField);
 
-        buttonDeleteImage = (Button) view.findViewById(R.id.editProfileButtonDeleteImage);
-        buttonOpenGallery = (Button) view.findViewById(R.id.editProfileButtonOpenGallery);
+        buttonDeleteImage = view.findViewById(R.id.editProfileButtonDeleteImage);
+        buttonOpenGallery = view.findViewById(R.id.editProfileButtonOpenGallery);
 
         bottomSheet = view.findViewById(R.id.profileEditBottomSheet);
 
-        checkT1 = (CheckBox) view.findViewById(R.id.checkboxT1);
-        checkT2 = (CheckBox) view.findViewById(R.id.checkboxT2);
-        checkT3 = (CheckBox) view.findViewById(R.id.checkboxT3);
-        checkT4 = (CheckBox) view.findViewById(R.id.checkboxT4);
-        checkT5 = (CheckBox) view.findViewById(R.id.checkboxT5);
-        checkT6 = (CheckBox) view.findViewById(R.id.checkboxT6);
+        checkT1 = view.findViewById(R.id.checkboxT1);
+        checkT2 = view.findViewById(R.id.checkboxT2);
+        checkT3 = view.findViewById(R.id.checkboxT3);
+        checkT4 = view.findViewById(R.id.checkboxT4);
+        checkT5 = view.findViewById(R.id.checkboxT5);
+        checkT6 = view.findViewById(R.id.checkboxT6);
         checkBoxes = new CheckBox[]{checkT1, checkT2, checkT3,
                 checkT4, checkT5, checkT6};
 

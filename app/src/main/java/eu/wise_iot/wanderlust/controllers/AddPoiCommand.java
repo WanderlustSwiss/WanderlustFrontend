@@ -12,7 +12,7 @@ public class AddPoiCommand implements QueueCommand {
     private Poi poi;
     private final FragmentHandler<Poi> successHandler;
     private int numberOfTries = 0;
-    private final String TAG = "AddPoiCommand";
+    private static final String TAG = "AddPoiCommand";
     private final File imagePath;
 
     public AddPoiCommand(Poi poi, File imagePath) {
@@ -32,16 +32,16 @@ public class AddPoiCommand implements QueueCommand {
     @Override
     public void execute(FragmentHandler handler) {
         Log.i(TAG, "Poi wird gespeichert.");
-        controller.saveNewPoi(this.poi, handler);
+        controller.saveNewPoi(poi, handler);
         ++ numberOfTries;
     }
 
     @Override
     public void executeAfterSuccess(Object obj) {
         if(obj instanceof Poi){
-            this.poi = (Poi) obj;
+            poi = (Poi) obj;
             Log.i(TAG, "Foto wird gespeichert.");
-            controller.uploadImage(this.imagePath, poi, successHandler);
+            controller.uploadImage(imagePath, poi, successHandler);
         }
     }
 

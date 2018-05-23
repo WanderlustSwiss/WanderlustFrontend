@@ -35,7 +35,7 @@ public class User extends AbstractModel {
      */
     public User(long user_id, String nickname, String email, String password, long profile,
                 boolean isActive, boolean isValid, String lastLogin, String accountType) {
-        this.internalId = 0;
+        internalId = 0;
         this.user_id = user_id;
         this.nickname = nickname;
         this.email = email;
@@ -48,21 +48,21 @@ public class User extends AbstractModel {
     }
 
     public User() {
-        this.internalId = 0;
-        this.user_id = 1;
-        this.nickname = "test nickname";
-        this.email = "muster@mustermail.com";
-        this.password = "test";
-        this.profile = 1;
-        this.isActive = false;
-        this.isValid = false;
-        this.lastLogin = "";
-        this.accountType = "";
+        internalId = 0;
+        user_id = 1;
+        nickname = "test nickname";
+        email = "muster@mustermail.com";
+        password = "test";
+        profile = 1;
+        isActive = false;
+        isValid = false;
+        lastLogin = "";
+        accountType = "";
     }
 
 
     public void setInternalId(long id) {
-        this.internalId = id;
+        internalId = id;
     }
     public long getInternalId(){
         return internalId;

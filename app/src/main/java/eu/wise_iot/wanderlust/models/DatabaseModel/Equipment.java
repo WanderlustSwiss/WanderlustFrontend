@@ -35,17 +35,17 @@ public class Equipment extends AbstractModel implements Serializable {
     ImageInfo imagePath;
 
     public Equipment(){
-        this.internal_id = 0;
-        this.equip_id = 0;
-        this.type = 0;
-        this.name = "init";
-        this.description = "init";
-        this.seasons = new byte[0];
-        this.weather = new byte[0];
-        this.minTemperature = 0;
-        this.maxTemperature = 0;
-        this.isBasic = false;
-        this.routeKit = 0;
+        internal_id = 0;
+        equip_id = 0;
+        type = 0;
+        name = "init";
+        description = "init";
+        seasons = new byte[0];
+        weather = new byte[0];
+        minTemperature = 0;
+        maxTemperature = 0;
+        isBasic = false;
+        routeKit = 0;
     }
 
     public Equipment(long internal_id, long equip_id, int type, String name, String description, byte[] seasons, byte[] weather, int minTemperature, int maxTemperature, boolean isBasic, long routeKit) {

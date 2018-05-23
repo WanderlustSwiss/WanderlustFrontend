@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,10 +35,10 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
     private final ImageController imageController;
 
     public ProfileFavoritesRVAdapter(Context context, List<Tour> tours) {
-        this.mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         this.context = context;
         this.tours = tours;
-        this.imageController = ImageController.getInstance();
+        imageController = ImageController.getInstance();
     }
 
     @Override
@@ -58,7 +57,7 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
         if (BuildConfig.DEBUG) Log.d(TAG, "starting set properties");
 
         //get the item for this row
-        Tour fav = this.tours.get(position);
+        Tour fav = tours.get(position);
 
         holder.title.setText(fav.getTitle());
         holder.description.setText(fav.getDescription());
@@ -73,15 +72,15 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
 
     @Override
     public int getItemCount() {
-        return this.tours.size();
+        return tours.size();
     }
 
     private Tour getItem(int id) {
-        return this.tours.get(id);
+        return tours.get(id);
     }
 
     public void setClickListener (ItemClickListener itemClickListener){
-        this.mClickListener = itemClickListener;
+        mClickListener = itemClickListener;
     }
 
     public interface ItemClickListener {
@@ -95,8 +94,10 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView title, description;
-        private ImageView tripImage, favIcon;
+        private final TextView title;
+        private final TextView description;
+        private final ImageView tripImage;
+        private final ImageView favIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);

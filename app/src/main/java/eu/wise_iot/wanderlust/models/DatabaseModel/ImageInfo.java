@@ -23,7 +23,7 @@ public class ImageInfo {
     public void setName(String name){ this.name = name; }
 
     public String getLocalDir(){ return localDir; }
-    public String getLocalPath(){ return localDir + "/" + name; }
+    public String getLocalPath(){ return localDir + '/' + name; }
     public long getId() {
         return id;
     }

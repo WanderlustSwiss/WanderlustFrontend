@@ -103,14 +103,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loginController = new LoginController();
         broadcastReceiver = new OfflineQueueController.NetworkChangeReceiver();
 
-        username = (TextView) findViewById(R.id.user_name);
-        email = (TextView) findViewById(R.id.user_mail_address);
-        userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+        username = findViewById(R.id.user_name);
+        email = findViewById(R.id.user_mail_address);
+        userProfileImage = findViewById(R.id.user_profile_image);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
-        this.registerReceiver(
+        registerReceiver(
                 broadcastReceiver,
                 new IntentFilter(
                         ConnectivityManager.CONNECTIVITY_ACTION));
@@ -172,10 +172,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Initializes the navigation and elements
      */
     private void setupNavigation() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         header = navigationView.getHeaderView(0);
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         Fragment fragment = getFragmentManager().findFragmentById(R.id.content_frame);
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     switch (controllerEvent.getType()) {
                         case OK:
                             LoginUser.clearCookies();
-                            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                            DrawerLayout drawer = findViewById(R.id.drawer_layout);
                             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                             Fragment f = fm.findFragmentByTag(Constants.LOGIN_FRAGMENT);
                             if (f == null) f = StartupLoginFragment.newInstance();
@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(getApplicationContext(), R.string.msg_no_action_defined, Toast.LENGTH_LONG).show();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
 
@@ -343,9 +343,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setupDrawerHeader(User user) {
-        username = (TextView) findViewById(R.id.user_name);
-        email = (TextView) findViewById(R.id.user_mail_address);
-        userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+        username = findViewById(R.id.user_name);
+        email = findViewById(R.id.user_mail_address);
+        userProfileImage = findViewById(R.id.user_profile_image);
 
         userProfileImage.setOnClickListener(view -> switchFragment(ProfileFragment.newInstance(), Constants.PROFILE_FRAGMENT));
 
@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void updateProfileImage(File image) {
         if (userProfileImage == null) {
-            userProfileImage = (ImageView) findViewById(R.id.user_profile_image);
+            userProfileImage = findViewById(R.id.user_profile_image);
         }
         if (image != null) {
             Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);

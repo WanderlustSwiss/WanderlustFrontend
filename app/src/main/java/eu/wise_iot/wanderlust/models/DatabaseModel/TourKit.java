@@ -22,8 +22,8 @@ public class TourKit extends AbstractModel {
     public TourKit(long internal_id, long rKit_id, long tour, long equipment) {
         this.internal_id = internal_id;
         this.rKit_id = rKit_id;
-        this.tour_id = tour;
-        this.equip_id = equipment;
+        tour_id = tour;
+        equip_id = equipment;
     }
 
     public long getInternal_id() {
@@ -47,7 +47,7 @@ public class TourKit extends AbstractModel {
     }
 
     public void setTour(long tour) {
-        this.tour_id = tour;
+        tour_id = tour;
     }
 
     public long getEquipment() {
@@ -55,6 +55,6 @@ public class TourKit extends AbstractModel {
     }
 
     public void setEquipment(long equipment) {
-        this.equip_id = equipment;
+        equip_id = equipment;
     }
 }

@@ -90,7 +90,7 @@ public class RecentTourDao extends DatabaseObjectAbstract {
      */
     public void updateRecentToursOnStartup() {
         try {
-            for(Tour tour : this.find()) {
+            for(Tour tour : find()) {
                 new Thread(() -> {
                     try {
                         userTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
@@ -100,7 +100,7 @@ public class RecentTourDao extends DatabaseObjectAbstract {
                                     break;
                                 case NOT_FOUND:
                                     if (BuildConfig.DEBUG) Log.d("RECENTTOUR UPDATE","NOT FOUND");
-                                    this.remove(tour);
+                                    remove(tour);
                                     break;
                                 default:
                             }

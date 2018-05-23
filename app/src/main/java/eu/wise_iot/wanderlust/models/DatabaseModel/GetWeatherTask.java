@@ -25,8 +25,8 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
 
     public GetWeatherTask(FragmentHandler handler, DateTime dateTime, long duration) {
         this.handler = handler;
-        this.controller = WeatherController.getInstance();
-        this.weather = new Weather[5];
+        controller = WeatherController.getInstance();
+        weather = new Weather[5];
         this.dateTime = dateTime;
         this.duration = duration;
     }
@@ -71,7 +71,7 @@ public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather
                       long DTtime, int index) {
             this.geoPoint = geoPoint;
             this.controller = controller;
-            this.weatherList = weather;
+            weatherList = weather;
             this.DTtime = DTtime;
             this.index = index;
         }

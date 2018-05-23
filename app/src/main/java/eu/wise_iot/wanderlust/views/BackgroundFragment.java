@@ -6,10 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import eu.wise_iot.wanderlust.R;
 
@@ -36,8 +32,4 @@ public class BackgroundFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_background, container, false);
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
 }

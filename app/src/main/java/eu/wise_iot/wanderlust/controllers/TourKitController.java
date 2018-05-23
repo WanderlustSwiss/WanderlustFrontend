@@ -9,7 +9,7 @@ public class TourKitController {
     private final TourKitDao tourKitDao;
 
     private TourKitController(){
-        this.tourKitDao = TourKitDao.getInstance();
+        tourKitDao = TourKitDao.getInstance();
     }
 
     private static class Holder {

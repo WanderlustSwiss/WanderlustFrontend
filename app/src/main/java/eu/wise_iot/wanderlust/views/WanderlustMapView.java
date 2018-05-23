@@ -45,7 +45,7 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
     }
 
     public void addObserver(MotionEventListener<WanderlustMapView> motionEventListener){
-        this.motionEventListenerList.add(motionEventListener);
+        motionEventListenerList.add(motionEventListener);
     }
 
 
@@ -81,7 +81,7 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
         if (event.getAction() == MotionEvent.ACTION_UP) {
 
             if(!hashTagEnabled) {
-                DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, this.getProjection().getBoundingBox()));
+                DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, getProjection().getBoundingBox()));
             }
 
             // Update public transport
@@ -143,7 +143,7 @@ public class WanderlustMapView extends MapView implements RotationGestureDetecto
     public void OnRotation(RotationGestureDetector rotationDetector) {
         float angle = rotationDetector.getAngle();
         wanderlustCompassOverlay.setLastKnownAngle(angle);
-        this.setMapOrientation(-angle);
+        setMapOrientation(-angle);
         if (BuildConfig.DEBUG) Log.d("RotationGestureDetector", "Rotation: " + Float.toString(angle));
     }
 

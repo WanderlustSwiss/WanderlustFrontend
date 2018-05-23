@@ -93,7 +93,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      * @param itemClickListener
      */
     public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
+        mClickListener = itemClickListener;
     }
 
     /**
@@ -102,7 +102,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      */
     @Override
     public int getItemCount() {
-        return this.equipment.size();
+        return equipment.size();
     }
 
     /**
@@ -111,7 +111,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      * @return
      */
     private Equipment getItem(int id) {
-        return this.equipment.get(id);
+        return equipment.get(id);
     }
 
     /**
@@ -137,8 +137,8 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
          */
         ViewHolder(View itemView) {
             super(itemView);
-            tvTitle = (TextView) itemView.findViewById(R.id.equipmentTitle);
-            ivImage = (ImageView) itemView.findViewById(R.id.equipmentImage);
+            tvTitle = itemView.findViewById(R.id.equipmentTitle);
+            ivImage = itemView.findViewById(R.id.equipmentImage);
             if (BuildConfig.DEBUG) Log.d("DEBUG", "ViewHolder broken");
             itemView.setOnClickListener(this);
         }
