@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         getFragmentManager().beginTransaction().replace(R.id.content_frame, BackgroundFragment.newInstance(), Constants.BACKGROUND_FRAGMENT).commit();
 
         activity = this;
@@ -161,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 UserDao.getInstance().update(loggedInUser);
 
                                 getFragmentManager().beginTransaction()
-                                        .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                        .replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                         .commit();
                                 break;
                             default:
@@ -171,13 +170,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 if(lastLogin2.isAfter(new DateTime().minusDays(1))){
                                     setupDrawerHeader(user);
                                     getFragmentManager().beginTransaction()
-                                            .add(R.id.content_frame,MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                            .replace(R.id.content_frame,MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                             .commit();
 
                                 } else {
                                     StartupLoginFragment loginFragment = new StartupLoginFragment();
                                     getFragmentManager().beginTransaction()
-                                            .add(R.id.content_frame, loginFragment)
+                                            .replace(R.id.content_frame, loginFragment)
                                             .commit();
                                 }
                                 break;
@@ -336,15 +335,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //pop the backstack without showing the fragments to not infinite add to the stack
                 //null is anchor for the stack
                 //getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                    android.support.v4.app.FragmentManager.BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(
+                if(getFragmentManager().getBackStackEntryCount() > 0) {
+                    FragmentManager.BackStackEntry entry = getFragmentManager().getBackStackEntryAt(
                             0);
-                    getSupportFragmentManager().popBackStack(entry.getId(),
+                    getFragmentManager().popBackStack(entry.getId(),
                             FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getSupportFragmentManager().executePendingTransactions();
+                    getFragmentManager().executePendingTransactions();
                 }
                 //set anchor null, not the tag of the given fragment
-                getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, fragmentTag)
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.content_frame, fragment, fragmentTag)
                         .addToBackStack(null)
                         .commit();
             }
