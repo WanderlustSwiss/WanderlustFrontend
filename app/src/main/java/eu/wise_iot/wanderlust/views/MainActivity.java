@@ -310,7 +310,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                             Fragment f = fm.findFragmentByTag(Constants.LOGIN_FRAGMENT);
                             if (f == null) f = StartupLoginFragment.newInstance();
-                            switchFragment(f, Constants.LOGIN_FRAGMENT);
+                            //switchFragment(f, Constants.LOGIN_FRAGMENT);
+                            getFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.content_frame, f, Constants.LOGIN_FRAGMENT)
+                                    .commit();
+                            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                             break;
                         case NETWORK_ERROR:
                             Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
@@ -330,28 +335,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void switchFragment(Fragment fragment, String fragmentTag) {
         if (fragment != null) {
             if(fragment.isAdded()){
-                if(getFragmentManager().getBackStackEntryCount() > 0) {
-                    FragmentManager.BackStackEntry entry = getFragmentManager().getBackStackEntryAt(
-                            0);
-                    getFragmentManager().popBackStack(entry.getId(),
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getFragmentManager().executePendingTransactions();
-                }
-                getFragmentManager().beginTransaction().show(fragment);
+                getFragmentManager()
+                        .beginTransaction()
+                        .show(fragment);
             } else {
-                /*
+
                 if(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT).isAdded()) {
-                    getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
-                }*/
+                    getFragmentManager()
+                            .beginTransaction()
+                            .remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
+                }
                 //pop the backstack without showing the fragments to not infinite add to the stack
                 //null is anchor for the stack
                 //getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 if(getFragmentManager().getBackStackEntryCount() > 0) {
-                    FragmentManager.BackStackEntry entry = getFragmentManager().getBackStackEntryAt(
-                            0);
-                    getFragmentManager().popBackStack(entry.getId(),
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getFragmentManager().executePendingTransactions();
+                    FragmentManager.BackStackEntry entry = getFragmentManager().getBackStackEntryAt(0);
+                    getFragmentManager().popBackStack(entry.getId(),FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    //getFragmentManager().executePendingTransactions();
                 }
                 //set anchor null, not the tag of the given fragment
                 getFragmentManager()
