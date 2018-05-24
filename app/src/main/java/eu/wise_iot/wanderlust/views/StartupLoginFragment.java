@@ -30,10 +30,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -142,66 +142,67 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                     passwordTextfield.getText().toString()
             );
 
-            //LoadingDialog.getDialog().show(getActivity());
-           // AsyncUITask.getHandler().queueTask(() -> {
-            ControllerEvent event = loginController.logInSequential(loginUser);
-            switch (event.getType()) {
-                case OK:
-                    SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-                    User user = (User) event.getModel();
-                    ((MainActivity) getActivity()).setupDrawerHeader(user);
-                    if (preferences.getBoolean("firstTimeOpened", true)) {
-                        preferences.edit().putBoolean("firstTimeOpened", false).apply(); // save that app has been opened
+            LoadingDialog.getDialog().show(getActivity());
+            loginController.logIn(loginUser, event -> {
+                switch (event.getType()) {
+                    case OK:
+                        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                        User user = (User) event.getModel();
+                        ((MainActivity) getActivity()).setupDrawerHeader(user);
+                        if (preferences.getBoolean("firstTimeOpened", true)) {
+                            preferences.edit().putBoolean("firstTimeOpened", false).apply(); // save that app has been opened
 
-                        Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
-                        if (userGuideFragment == null)
-                            userGuideFragment = UserGuideFragment.newInstance();
+                            Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
+                            if (userGuideFragment == null)
+                                userGuideFragment = UserGuideFragment.newInstance();
 
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
-                                .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
-                                .commit();
-                    } else {
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
+                                    .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
+                                    .commit();
+                        } else {
 
-                        Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                        if (mapFragment == null) mapFragment = MapFragment.newInstance();
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                                .commit();
-                        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-                    }
+                            Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+                            if (mapFragment == null) mapFragment = MapFragment.newInstance();
+                            getFragmentManager().beginTransaction()
+                                    .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                                    .commit();
+                            ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                        }
 
-                    break;
-                case NOT_FOUND:
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "ERROR: Server Response arrived -> User was not found");
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_user_not_found), Toast.LENGTH_LONG).show();
-                    break;
-                case SERVER_ERROR:
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
-                    break;
-                case NETWORK_ERROR:
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
-                    break;
-                default:
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
-                    break;
+                        break;
+                    case NOT_FOUND:
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "ERROR: Server Response arrived -> User was not found");
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_user_not_found), Toast.LENGTH_LONG).show();
+                        break;
+                    case SERVER_ERROR:
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
+                        break;
+                    case NETWORK_ERROR:
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
+                        break;
+                    default:
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
+                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+                        break;
 
-            }
-            //LoadingDialog.getDialog().dismiss();
+                }
 
-            //});
-            btnLogin.setEnabled(true);
+                LoadingDialog.getDialog().dismiss();
 
-            // hide soft keyboard after button was clicked
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(btnLogin.getApplicationWindowToken(), 0);
+                btnLogin.setEnabled(true);
+
+                // hide soft keyboard after button was clicked
+                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(btnLogin.getApplicationWindowToken(), 0);
+            });
+
         });
 
 
