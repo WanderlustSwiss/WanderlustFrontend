@@ -232,25 +232,25 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             switch (Integer.parseInt(poi.mCategory)) {
                 case Constants.TYPE_VIEW:
                     if(this.poiViewActive){
-                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_sight));
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_sight_bubble));
                         poiMarkers.add(poiMarker);
                     }
                     break;
                 case Constants.TYPE_RESTAURANT:
                     if(this.poiRestaurantActive) {
-                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resaurant));
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resaurant_bubble));
                         poiMarkers.add(poiMarker);
                     }
                     break;
                 case Constants.TYPE_REST_AREA:
                     if(this.poiRestAreaActive){
-                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.ic_campfire_bubble));
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_campfire_bubble));
                         poiMarkers.add(poiMarker);
                     }
                     break;
                 case Constants.TYPE_FLORA_FAUNA:
                     if(this.poiFloraFaunaActive){
-                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.ic_local_florist_bubble));
+                        poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_local_florist_bubble));
                         poiMarkers.add(poiMarker);
                     }
                     break;
@@ -321,16 +321,16 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         Drawable drawable;
         switch (Integer.parseInt(poi.mCategory)) {
             case Constants.TYPE_VIEW:
-                drawable = activity.getResources().getDrawable(R.drawable.poi_sight);
+                drawable = activity.getResources().getDrawable(R.drawable.poi_sight_bubble);
                 break;
             case Constants.TYPE_RESTAURANT:
-                drawable = activity.getResources().getDrawable(R.drawable.poi_resaurant);
+                drawable = activity.getResources().getDrawable(R.drawable.poi_resaurant_bubble);
                 break;
             case Constants.TYPE_REST_AREA:
-                drawable = activity.getResources().getDrawable(R.drawable.ic_campfire_bubble);
+                drawable = activity.getResources().getDrawable(R.drawable.poi_campfire_bubble);
                 break;
             case Constants.TYPE_FLORA_FAUNA:
-                drawable = activity.getResources().getDrawable(R.drawable.ic_local_florist_bubble);
+                drawable = activity.getResources().getDrawable(R.drawable.poi_local_florist_bubble);
                 break;
             default:
                 drawable = activity.getResources().getDrawable(R.drawable.poi_error);
