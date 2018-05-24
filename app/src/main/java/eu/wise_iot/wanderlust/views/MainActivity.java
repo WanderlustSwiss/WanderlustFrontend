@@ -87,7 +87,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, BackgroundFragment.newInstance(), Constants.BACKGROUND_FRAGMENT).commit();
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, BackgroundFragment.newInstance(), Constants.BACKGROUND_FRAGMENT)
+                .commit();
 
         activity = this;
         setContentView(R.layout.activity_main);
@@ -327,6 +330,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void switchFragment(Fragment fragment, String fragmentTag) {
         if (fragment != null) {
             if(fragment.isAdded()){
+                if(getFragmentManager().getBackStackEntryCount() > 0) {
+                    FragmentManager.BackStackEntry entry = getFragmentManager().getBackStackEntryAt(
+                            0);
+                    getFragmentManager().popBackStack(entry.getId(),
+                            FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getFragmentManager().executePendingTransactions();
+                }
                 getFragmentManager().beginTransaction().show(fragment);
             } else {
                 /*

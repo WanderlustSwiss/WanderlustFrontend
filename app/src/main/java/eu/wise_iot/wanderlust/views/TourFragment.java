@@ -370,9 +370,6 @@ public class TourFragment extends Fragment {
         });
     }
 
-    /**
-     *
-     */
     private void fillControls() {
         List<File> images = imageController.getImages(tour.getImagePaths());
         if (BuildConfig.DEBUG) Log.d("Debug", "Images size:" + images.size());

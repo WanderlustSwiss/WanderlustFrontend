@@ -227,10 +227,15 @@ public class LoginController {
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), user));
                 } else {
+                    if(EventType.getTypeByCode(response.code()) == EventType.NOT_FOUND){
+                        //redirect even no image found
+                        handler.onResponse(new ControllerEvent(EventType.OK, user));
+                    }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
 
             }
+
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
@@ -238,7 +243,6 @@ public class LoginController {
             }
         });
     }
-
     public User getAvailableUser(){
         return userDao.getUser();
     }
