@@ -41,6 +41,7 @@ public class ServiceGenerator {
             OkHttpClient client = new OkHttpClient.Builder()
                                     .readTimeout(5, TimeUnit.SECONDS)
                                     .writeTimeout(5, TimeUnit.SECONDS)
+                                    .connectTimeout(5, TimeUnit.SECONDS)
                                     .addInterceptor(new AddCookiesInterceptor())
                                     .addInterceptor(new ReceivedCookiesInterceptor())
                                     .build();

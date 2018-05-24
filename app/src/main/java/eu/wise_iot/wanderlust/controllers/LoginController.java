@@ -81,11 +81,13 @@ public class LoginController {
     public void logIn(LoginUser user, final FragmentHandler handler) {
         setDeviceInfo(user);
 
+        if (BuildConfig.DEBUG) Log.d("login", "login: logging in with retro");
         LoginService service = ServiceGenerator.createService(LoginService.class);
         Call<User> call = service.basicLogin(user);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                if (BuildConfig.DEBUG) Log.d("response arrived", "getting profile start");
                 if (response.isSuccessful() && !LoginUser.getCookies().isEmpty()) {
                     Headers headerResponse = response.headers();
                     Map<String, List<String>> headerMapList = headerResponse.toMultimap();
@@ -100,7 +102,9 @@ public class LoginController {
                     }
                     updatedUser.setPassword(user.getPassword());
                     userDao.update(updatedUser);
+                    if (BuildConfig.DEBUG) Log.d("init data", "getting profile start");
                     initAppData();
+                    if (BuildConfig.DEBUG) Log.d("getting profile", "getting profile start");
                     getProfile(handler, updatedUser);
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
@@ -111,6 +115,7 @@ public class LoginController {
             public void onFailure(Call<User> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
+
         });
     }
 

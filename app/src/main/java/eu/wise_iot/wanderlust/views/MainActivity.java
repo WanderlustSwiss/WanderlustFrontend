@@ -28,7 +28,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        //supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         getFragmentManager().beginTransaction().replace(R.id.content_frame, BackgroundFragment.newInstance(), Constants.BACKGROUND_FRAGMENT).commit();
 
         activity = this;
@@ -147,44 +146,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             .commit();
                     break;
                 default:
-                    //new AsyncLoginOnLoad(new LoginUser(user.getNickname(), user.getPassword()), user,this, ft).execute();
-                    ControllerEvent event = loginController.logInSequential(new LoginUser(user.getNickname(), user.getPassword()));
-                    User loggedInUser = (User) event.getModel();
-                    switch (event.getType()) {
-                        case OK:
-                            setupDrawerHeader(loggedInUser);
+                    loginController.logIn(new LoginUser(user.getNickname(), user.getPassword()), controllerEvent -> {
+                        User loggedInUser = (User) controllerEvent.getModel();
+                        switch (controllerEvent.getType()) {
+                            case OK:
+                                setupDrawerHeader(loggedInUser);
 
-                            //set last login
-                            DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
-                            DateTime now = new DateTime().withZone(timeZone);
-                            DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-                            String lastLoginNow = fmt.print(now);
-                            loggedInUser.setLastLogin(lastLoginNow);
-                            UserDao.getInstance().update(loggedInUser);
+                                //set last login
+                                DateTimeZone timeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
+                                DateTime now = new DateTime().withZone(timeZone);
+                                DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+                                String lastLoginNow = fmt.print(now);
+                                loggedInUser.setLastLogin(lastLoginNow);
+                                UserDao.getInstance().update(loggedInUser);
 
-                            getFragmentManager().beginTransaction().replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
-                                    .commit();
-                            break;
-                        default:
-                            DateTime lastLogin2 = DateTime.parse(user.getLastLogin());
-                            if (BuildConfig.DEBUG) Log.d(TAG, "Last login: " + lastLogin2);
-                            //check if last login is within last 24h
-                            if (lastLogin2.isAfter(new DateTime().minusDays(1))) {
-                                setupDrawerHeader(user);
-                                getFragmentManager()
-                                        .beginTransaction()
-                                        .replace(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.content_frame, MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                         .commit();
+                                break;
+                            default:
+                                DateTime lastLogin2 = DateTime.parse(user.getLastLogin());
+                                Log.d(TAG, "Last login: " + lastLogin2);
+                                //check if last login is within last 24h
+                                if(lastLogin2.isAfter(new DateTime().minusDays(1))){
+                                    setupDrawerHeader(user);
+                                    getFragmentManager().beginTransaction()
+                                            .add(R.id.content_frame,MapFragment.newInstance(), Constants.MAP_FRAGMENT)
+                                            .commit();
 
-                            } else {
-                                //StartupLoginFragment loginFragment = new StartupLoginFragment();
-                                getFragmentManager()
-                                        .beginTransaction()
-                                        .replace(R.id.content_frame, new StartupLoginFragment().newInstance())
-                                        .commit();
-                            }
-                            break;
-                    }
+                                } else {
+                                    StartupLoginFragment loginFragment = new StartupLoginFragment();
+                                    getFragmentManager().beginTransaction()
+                                            .add(R.id.content_frame, loginFragment)
+                                            .commit();
+                                }
+                                break;
+                        }
+                    });
                     break;
             }
         }
