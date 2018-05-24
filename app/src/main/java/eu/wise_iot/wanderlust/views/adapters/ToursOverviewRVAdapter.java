@@ -102,19 +102,20 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         AsyncUITask.getHandler().queueTask(() -> {
             if(new TourController(tour).isSaved())
                 holder.ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+
+
+            holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+            //button Favorite
+            for (Favorite favorite : favoriteDao.find())
+                if (favorite.getTour() == tour.getTour_id())
+                    holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
+                    //add to favored tours
+                    //favorizedTours.add(favorite.getTour());
         });
-
-
-        holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
-        //button Favorite
-        for (Favorite favorite : favoriteDao.find())
-            if (favorite.getTour() == tour.getTour_id())
-                holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
-                //add to favored tours
-                //favorizedTours.add(favorite.getTour());
-
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
+
+        holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
 
         GlideApp.with(context)
                 .load(imageController.getURLImageTourSingle(tour))
@@ -123,8 +124,6 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
                 .placeholder(R.drawable.progress_animation)
                 .centerCrop()
                 .into(holder.tvImage);
-
-        holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
     }
 
     /**

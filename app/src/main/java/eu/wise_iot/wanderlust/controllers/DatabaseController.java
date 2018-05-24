@@ -128,7 +128,6 @@ public final class DatabaseController {
     }
 
     private void clearCache() {
-
         //TODO endless loop if userimages are higher than maxchachesize
         while (cacheSize >= MAXCACHESIZE) {
             DownloadedImage image = downloadedImages.getFirst();
