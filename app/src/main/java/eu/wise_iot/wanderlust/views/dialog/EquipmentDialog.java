@@ -37,7 +37,6 @@ public class EquipmentDialog extends DialogFragment{
     private TextView titleTextView;
     private TextView descriptionTextView;
     private ImageView equipment_imageView;
-    private ImageButton linkToOnlineShopButtonIcon;
     private Button linkToOnlineShopButtonText;
 
     public static EquipmentDialog newInstance(Context paramContext, Equipment paramEquipment){
@@ -64,7 +63,6 @@ public class EquipmentDialog extends DialogFragment{
         equipment_imageView = (ImageView) view.findViewById(R.id.equipment_image);
         titleTextView = (TextView) view.findViewById(R.id.equipmentTitleTextView);
         descriptionTextView = (TextView) view.findViewById(R.id.equipmentDescriptionTextView);
-        linkToOnlineShopButtonIcon = (ImageButton) view.findViewById(R.id.linkToShopButtonIcon);
         linkToOnlineShopButtonText = (Button) view.findViewById(R.id.linkToShopButtonText);
 
         ImageInfo imagepath = equipment.getImagePath();
@@ -77,7 +75,6 @@ public class EquipmentDialog extends DialogFragment{
         descriptionTextView.setText(equipment.getDescription());
 
         if(equipment.getName().equals("Bargeld")){
-            linkToOnlineShopButtonIcon.setVisibility(View.INVISIBLE);
             linkToOnlineShopButtonText.setVisibility(View.INVISIBLE);
         }
 
@@ -86,7 +83,6 @@ public class EquipmentDialog extends DialogFragment{
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        linkToOnlineShopButtonIcon.setOnClickListener(e -> linkToOnlineShop());
         linkToOnlineShopButtonText.setOnClickListener(e -> linkToOnlineShop());
     }
 

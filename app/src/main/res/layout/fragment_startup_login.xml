@@ -122,7 +122,7 @@
             android:layout_height="wrap_content"
             android:text="@string/login_instagram"
             android:drawableLeft="@drawable/instagram"
-            style="@style/standard_button.WithIcon"/>
+            style="@style/standard_button.WithIcon.Blue"/>
 
         <Button
             android:layout_marginTop="12dp"
@@ -134,6 +134,6 @@
             android:layout_height="wrap_content"
             android:text="@string/login_facebook"
             android:drawableLeft="@drawable/facebook"
-            style="@style/standard_button.WithIcon"/>
+            style="@style/standard_button.WithIcon.Blue"/>
     </LinearLayout>
 </LinearLayout>
