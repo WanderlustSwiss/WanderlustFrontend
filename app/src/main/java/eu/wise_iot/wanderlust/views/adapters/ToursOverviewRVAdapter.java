@@ -111,6 +111,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
                     holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
                     //add to favored tours
                     //favorizedTours.add(favorite.getTour());
+            holder.notify();
         });
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
