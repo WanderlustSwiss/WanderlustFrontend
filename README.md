@@ -35,6 +35,25 @@ Latest documentation: [API JavaDoc](http://86.119.40.34/Frontend_Android_App/Doc
 ## Releases
 Released .apk packages: [Browse Packages](http://86.119.40.34/Frontend_Android_App)
 
+### Release 0.6
+The release tour, poi, maps and profile changes
+
+**Package**
+[wanderlust-app-0.4.0-18052.apk](http://86.119.40.34/Frontend_Android_App/wanderlust-app-0.4.0-18052.apk)
+
+**Date**
+25.05.2018
+
+**Features**
+This release includes the following features:
+  - Offline map for saved tours
+  - Tour filtering
+  - Track own tour on map
+  - POI clustering
+  - Tour and POI sharing
+  - Adapted style
+  - Tour commenting and viloation
+
 ### Release 0.4
 The release tour, poi, maps and profile changes
 
