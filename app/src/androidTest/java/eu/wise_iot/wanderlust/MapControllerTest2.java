@@ -12,9 +12,7 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.MapController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.MapSearchResult;
 import eu.wise_iot.wanderlust.views.MainActivity;
@@ -33,7 +31,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 public class MapControllerTest2 {
 
     @Rule
-    public ActivityTestRule<MainActivity> main = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> main = new ActivityTestRule<>(MainActivity.class);
     private MapFragment mapFragment;
     private MapController controller;
     private MainActivity activity;
@@ -41,7 +39,7 @@ public class MapControllerTest2 {
     @Before
     public void setUp() {
         activity = main.getActivity();
-        FrameLayout frameLayout = (FrameLayout) activity.findViewById(R.id.content_frame);
+        FrameLayout frameLayout = activity.findViewById(R.id.content_frame);
         mapFragment = MapFragment.newInstance();
         activity.getFragmentManager().beginTransaction().add(frameLayout.getId(), mapFragment).commit();
         controller = new MapController(mapFragment);
@@ -55,8 +53,6 @@ public class MapControllerTest2 {
             Assert.assertEquals(EventType.OK, controllerEvent.getType());
             ArrayList<MapSearchResult> result = (ArrayList<MapSearchResult>) controllerEvent.getModel();
             Assert.assertEquals(result.size(), 1);
-            Assert.assertNotNull(result.get(0).getLatitude());
-            Assert.assertNotNull(result.get(0).getLongitude());
         });
     }
 

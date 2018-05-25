@@ -1,6 +1,8 @@
 package eu.wise_iot.wanderlust.views.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,54 +13,52 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.signature.ObjectKey;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseObject.FavoriteDao;
+import eu.wise_iot.wanderlust.services.AsyncUITask;
+import eu.wise_iot.wanderlust.services.GlideApp;
 
 
 /**
  * MyAdapter:
- * provides adapter for recyclerview which is used by the tourslist
+ * provides adapter for recycler view which is used by the tourslist
  *
  * @author Alexander Weinbeck
  * @license MIT
  */
-@SuppressWarnings("JavaDoc")
 public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRVAdapter.ViewHolder> {
 
-    private List<Tour> tours = Collections.emptyList();
+    private final List<Tour> tours;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private final Context context;
     private final ImageController imageController;
-
     private final FavoriteDao favoriteDao = FavoriteDao.getInstance();
-    private final List<Long> favorizedTours = new ArrayList<>();
+   // private final List<Long> favorizedTours = new ArrayList<>();
 
 
     /**
      * data is passed into the constructor, here as a Tour
      * @param context
-     * @param parTours
+     * @param tours
      */
-    public ToursOverviewRVAdapter(Context context, List<Tour> parTours) {
-        Log.d("ToursRecyclerview", "Copy Constructor");
-        this.mInflater = LayoutInflater.from(context);
+    public ToursOverviewRVAdapter(Context context, List<Tour> tours, Activity activity) {
+        if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "Copy Constructor");
+        mInflater = LayoutInflater.from(context);
         this.context = context;
-        if(parTours == null) parTours = new ArrayList<>();
-        this.tours = parTours;
+        this.tours = (tours != null) ? tours : new ArrayList<>();
         //get which tour is favored
-        this.imageController = ImageController.getInstance();
+        imageController = ImageController.getInstance();
     }
 
     /**
@@ -69,9 +69,8 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d("ToursRecyclerview", "Creating View Holder");
-        View view = mInflater.inflate(R.layout.recyclerview_tour_overview, parent, false);
-        return new ViewHolder(view);
+        if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "Creating View Holder");
+        return new ViewHolder(mInflater.inflate(R.layout.recyclerview_tour_overview, parent, false));
     }
 
     /**
@@ -81,12 +80,12 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.d("ToursRecyclerview", "starting set properties");
+        if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
-        Tour tour = this.tours.get(position);
-//        holder.tvTitle.setTextColor(Color.BLACK);
+        final Tour tour = tours.get(position);
+
         //difficulty calculations
-        long difficulty = tour.getDifficulty();
+        final long difficulty = tour.getDifficulty();
         if (difficulty >= 6)
             holder.tvDifficultyIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.t6));
         else if (difficulty >= 4)
@@ -98,30 +97,34 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
 
         holder.tvDifficulty.setText("T " + String.valueOf(difficulty));
 
-        holder.ibShare.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
-        holder.ibSave.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
-        holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.heading_icon_unselected));
-        //button Favorite
-        for (Favorite favorite : favoriteDao.find()) {
-            if (favorite.getTour() == tour.getTour_id()) {
-                holder.ibFavorite.setColorFilter(ContextCompat.getColor(this.context, R.color.highlight_main));
-                //add to favored tours
-                this.favorizedTours.add(favorite.getTour());
-            }
-        }
+        holder.ibShare.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+        holder.ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+        AsyncUITask.getHandler().queueTask(() -> {
+            if(new TourController(tour).isSaved())
+                holder.ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+
+
+            holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+            //button Favorite
+            for (Favorite favorite : favoriteDao.find())
+                if (favorite.getTour() == tour.getTour_id())
+                    holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
+                    //add to favored tours
+                    //favorizedTours.add(favorite.getTour());
+            holder.notify();
+        });
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
 
-        List<File> images = imageController.getImages(tour.getImagePaths());
-        if (!images.isEmpty()){
-            File image = images.get(0);
-            Picasso.with(context).load(image).fit().centerCrop().into(holder.tvImage);
-            Log.d("ToursoverviewAdapters", "ImageInfo loaded: " + image.toString());
-        } else {
-            Picasso.with(context).load(R.drawable.no_image_found).into(holder.tvImage);
-            Log.d("ToursoverviewAdapters", "Images not found");
-        }
         holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
+
+        GlideApp.with(context)
+                .load(imageController.getURLImageTourSingle(tour))
+                .signature(new ObjectKey(System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
+                .error(R.drawable.no_image_found)
+                .placeholder(R.drawable.progress_animation)
+                .centerCrop()
+                .into(holder.tvImage);
     }
 
     /**
@@ -130,7 +133,13 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      */
     @Override
     public int getItemCount() {
-        return this.tours.size();
+        return tours.size();
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
+        GlideApp.with(context).clear(holder.tvImage);
     }
 
     /**
@@ -139,7 +148,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      * @return
      */
     private Tour getItem(int id) {
-        return this.tours.get(id);
+        return tours.get(id);
     }
 
     /**
@@ -147,7 +156,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      * @param itemClickListener
      */
     public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
+        mClickListener = itemClickListener;
     }
 
     /**
@@ -164,16 +173,9 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each tour
-        public final TextView tvDistance;
-        public final TextView tvDifficulty;
-        public final TextView tvRegion;
-        public final TextView tvTitle;
-        public final TextView tvTime;
-        public final ImageView tvImage;
-        public final ImageView tvDifficultyIcon;
-        public final ImageButton ibFavorite;
-        public final ImageButton ibSave;
-        public final ImageButton ibShare;
+        private final TextView tvDistance, tvDifficulty, tvTitle, tvTime;
+        private final ImageView tvImage, tvDifficultyIcon;
+        private final ImageButton ibFavorite, ibSave, ibShare;
 
         /**
          * copy constructor for each element which holds the view
@@ -181,19 +183,20 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            tvDistance = (TextView) itemView.findViewById(R.id.tour_distance);
-            tvDifficulty = (TextView) itemView.findViewById(R.id.tour_difficulty);
-            tvRegion = (TextView) itemView.findViewById(R.id.tour_region);
-            tvTitle = (TextView) itemView.findViewById(R.id.tour_title);
-            tvTime = (TextView) itemView.findViewById(R.id.tourTime);
-            tvImage = (ImageView) itemView.findViewById(R.id.tour_image);
-            tvDifficultyIcon = (ImageView) itemView.findViewById(R.id.imageDifficulty);
-            ibFavorite = (ImageButton) itemView.findViewById(R.id.favoriteButton);
-            ibSave = (ImageButton) itemView.findViewById(R.id.saveButton);
-            ibShare = (ImageButton) itemView.findViewById(R.id.shareButton);
+            tvDistance = itemView.findViewById(R.id.tourOVTourDistance);
+            tvDifficulty = itemView.findViewById(R.id.tourOVTourDifficulty);
+            tvTitle = itemView.findViewById(R.id.tourOVTourTitle);
+            tvTime = itemView.findViewById(R.id.tourOVTourTime);
+            tvImage = itemView.findViewById(R.id.tourOVTourImage);
+            tvDifficultyIcon = itemView.findViewById(R.id.tourOVImageDifficulty);
+            ibFavorite = itemView.findViewById(R.id.tourOVFavoriteButton);
+            ibSave = itemView.findViewById(R.id.tourOVSaveButton);
+            ibShare = itemView.findViewById(R.id.tourOVShareButton);
 
             itemView.setOnClickListener(this);
             ibFavorite.setOnClickListener(this);
+            ibSave.setOnClickListener(this);
+            ibShare.setOnClickListener(this);
         }
 
         /**

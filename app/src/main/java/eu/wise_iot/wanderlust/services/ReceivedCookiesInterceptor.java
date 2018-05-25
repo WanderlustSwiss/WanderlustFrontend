@@ -23,9 +23,7 @@ public class ReceivedCookiesInterceptor implements Interceptor {
         if (!originalResponse.headers("Set-Cookie").isEmpty() && originalResponse.isSuccessful()) {
             ArrayList<String> cookies = LoginUser.getCookies();
 
-            for (String header : originalResponse.headers("Set-Cookie")) {
-                cookies.add(header);
-            }
+            cookies.addAll(originalResponse.headers("Set-Cookie"));
 
         }
 

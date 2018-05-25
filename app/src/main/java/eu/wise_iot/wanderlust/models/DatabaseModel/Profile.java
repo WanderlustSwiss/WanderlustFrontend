@@ -45,13 +45,13 @@ public class Profile extends AbstractModel {
     }
 
     public Profile() {
-        this.internal_id = 0;
-        this.profile_id = 1;
-        this.score = 0;
-        this.birthday = "01.01.1990";
-        this.language = "Deutsch";
-        this.user = 1;
-        this.difficulty = 1;
+        internal_id = 0;
+        profile_id = 1;
+        score = 0;
+        birthday = "01.01.1990";
+        language = "Deutsch";
+        user = 1;
+        difficulty = 1;
     }
 
     public long getInternal_id() {

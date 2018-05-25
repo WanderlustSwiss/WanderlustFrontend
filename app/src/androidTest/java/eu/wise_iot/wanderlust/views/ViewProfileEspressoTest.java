@@ -114,7 +114,7 @@ allOf(withText("WanderlustAdmin"),
 childAtPosition(
 allOf(withId(R.id.toolbar),
 childAtPosition(
-IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+IsInstanceOf.instanceOf(android.widget.LinearLayout.class),
 0)),
 1),
 isDisplayed()));
@@ -124,7 +124,7 @@ isDisplayed()));
 allOf(withId(R.id.editProfileButton),
 childAtPosition(
 childAtPosition(
-IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+IsInstanceOf.instanceOf(android.widget.LinearLayout.class),
 1),
 6),
 isDisplayed()));

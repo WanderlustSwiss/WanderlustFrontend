@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.services;
 
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -26,12 +27,12 @@ public interface TripService {
     @GET("Trip/{id}")
     Call<Trip> retrieveTrip(@Path("id") int id);
 
-    @POST("Trip/")
-    Call<Trip> createTrip(@Body Trip user);
+    @POST("trip")
+    Call<Trip> createTrip(@Body Tour tour);
 
     @PUT("Trip")
     Call<Trip> updateTrip(int id, @Body Trip Trip);
 
-    @DELETE("Trip/{")
-    Call<Trip> deleteTrip(@Body Trip Trip);
+    @DELETE("trip/{id}")
+    Call<Trip> deleteTrip(@Path("id") int id);
 }

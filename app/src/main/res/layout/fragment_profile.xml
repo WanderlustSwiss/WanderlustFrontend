@@ -1,45 +1,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profileLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="eu.wise_iot.wanderlust.views.ProfileFragment">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="225dp"
+        android:layout_height="wrap_content"
         android:background="@color/primary_main"
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
-        android:paddingTop="50dp">
+        android:paddingBottom="24dp"
+        android:paddingTop="80dp">
 
-        <ImageView
-            android:id="@+id/profilePicture"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/images" />
+        <LinearLayout
+            android:id="@+id/profilePictureContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/profileNickname"
-            android:layout_width="150dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/profilePicture" />
+            <ImageView
+                android:id="@+id/profilePicture"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/profile_pic"/>
+
+            <TextView
+                android:id="@+id/profileNickname"
+                style="@style/p.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/profilePicture"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp">
+            android:layout_toRightOf="@id/profilePictureContainer"
+            android:paddingTop="24dp"
+            android:paddingLeft="48dp"
+            android:paddingRight="48dp">
 
             <LinearLayout
                 android:id="@+id/score_layout"
@@ -131,15 +135,21 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@color/white" />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/profileTabs"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="48dp"
         android:background="@color/primary_main"
         android:clickable="false"
         android:focusable="true"
         android:splitMotionEvents="false"
-        app:tabIndicatorColor="@color/highlight_main"
+        app:tabIndicatorColor="@color/structure_main"
+        app:tabIndicatorHeight="3dp"
         app:tabSelectedTextColor="@color/white"
         app:tabTextAppearance="@style/p.Light">
 
@@ -172,8 +182,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="fill"
-            android:text="@string/saved"
-            android:visibility="visible" />
+            android:text="@string/saved" />
     </android.support.design.widget.TabLayout>
 
     <FrameLayout
@@ -182,14 +191,19 @@
         android:layout_height="match_parent"
         android:background="@color/primary_second">
 
-        <ListView
+        <TextView
+            android:id="@+id/tvProfileNoContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:text="@string/msg_no_data_found"/>
+
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/listContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.75"
-            android:clickable="false">
-
-        </ListView>
+            android:orientation="vertical"/>
     </FrameLayout>
 
 </LinearLayout>

@@ -8,7 +8,7 @@ public class MapSearchResult {
     private String locality;
     private double latitude;
     private double longitude;
-    private ArrayList<ArrayList<GeoPoint>> polygons;
+    private final ArrayList<ArrayList<GeoPoint>> polygons;
 
     public MapSearchResult() {
         polygons = new ArrayList<>();
@@ -27,22 +27,22 @@ public class MapSearchResult {
     }
 
     public void setPolygon(ArrayList<GeoPoint> geopoints) {
-        this.polygons.add(geopoints);
+        polygons.add(geopoints);
     }
 
     public String getLocality() {
-        return this.locality;
+        return locality;
     }
 
     public double getLatitude() {
-        return this.latitude;
+        return latitude;
     }
 
     public double getLongitude() {
-        return this.longitude;
+        return longitude;
     }
 
     public ArrayList<ArrayList<GeoPoint>>  getPolygon() {
-        return this.polygons;
+        return polygons;
     }
 }

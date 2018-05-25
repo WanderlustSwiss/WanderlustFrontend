@@ -2,53 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@color/primary_second">
+        android:layout_height="wrap_content">
 
-        <com.jsibbold.zoomage.ZoomageView
-            android:id="@+id/poi_image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:adjustViewBounds="true"
-            app:zoomage_animateOnReset="true"
-            app:zoomage_autoCenter="true"
-            app:zoomage_autoResetMode="NEVER"
-            app:zoomage_maxScale="6"
-            app:zoomage_minScale="1"
-            app:zoomage_restrictBounds="true"
-            app:zoomage_translatable="true"
-            app:zoomage_zoomable="true" />
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1" >
 
-        <ImageView
-            android:id="@+id/poi_mode_private_image"
-            android:layout_width="96dp"
-            android:layout_height="36dp"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:contentDescription="@null" />
+            <com.jsibbold.zoomage.ZoomageView
+                android:id="@+id/poi_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:zoomage_animateOnReset="false"
+                app:zoomage_autoCenter="true"
+                app:zoomage_autoResetMode="NEVER"
+                app:zoomage_maxScale="6"
+                app:zoomage_minScale="1"
+                app:zoomage_restrictBounds="true"
+                app:zoomage_translatable="true"
+                app:zoomage_zoomable="true" />
 
-        <ImageButton
-            android:id="@+id/poi_close_dialog_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="@android:color/transparent"
-            android:padding="16dp"
-            android:src="@drawable/ic_arrow_back_white_24dp" />
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/poi_close_dialog_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@android:color/transparent"
+                android:padding="16dp"
+                android:src="@drawable/ic_arrow_back_white_24dp" />
+
+            <ImageButton
+                android:id="@+id/poi_mode_private_image"
+                android:layout_alignParentTop="true"
+                android:layout_margin="12dp"
+                style="@style/FloatingActionButton.Mini.Red"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_visibility_off_white_24dp" />
+        </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <RelativeLayout
         android:id="@+id/content_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background_main">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/poi_background_container"
@@ -59,72 +61,71 @@
             android:background="@color/primary_main"
             android:padding="12dp">
 
-            <TextView
-                android:id="@+id/poi_type_text_view"
-                style="@style/p.Light"
+            <LinearLayout
+                android:id="@+id/poi_description_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" />
+                android:orientation="vertical"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:divider="@drawable/divider_vertical_s"
+                android:showDividers="middle">
 
-            <TextView
-                android:id="@+id/poi_elevation_text_view"
-                style="@style/p.Light"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/poi_type_text_view"
-                android:layout_marginBottom="16dp" />
+                <TextView
+                    android:id="@+id/poi_type_text_view"
+                    style="@style/p.Light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/poi_title_text_view"
-                style="@style/h1.Light"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/poi_elevation_text_view"
-                android:layout_marginBottom="16dp" />
+                <TextView
+                    android:id="@+id/poi_title_text_view"
+                    style="@style/h1.Light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/poi_date_text_view"
-                style="@style/p.Light"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/poi_title_text_view"
-                android:layout_marginBottom="16dp" />
+                <TextView
+                    android:id="@+id/poi_date_text_view"
+                    style="@style/p.Light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/poi_edit_button"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:background="@android:color/transparent"
-                android:padding="8dp"
-                android:paddingEnd="16dp"
-                android:src="@drawable/ic_edit_white_24dp"
-                android:visibility="invisible" />
+                android:orientation="horizontal"
+                android:layout_marginTop="24dp"
+                android:layout_below="@id/poi_share_button"
+                android:layout_alignParentEnd="true">
 
-            <ImageButton
-                android:id="@+id/poi_delete_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/poi_share_button"
-                android:layout_marginEnd="48dp"
-                android:background="@android:color/transparent"
-                android:padding="8dp"
-                android:src="@drawable/ic_delete_white_24dp"
-                android:visibility="invisible" />
+                <ImageButton
+                    android:id="@+id/poi_edit_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:padding="8dp"
+                    android:paddingEnd="16dp"
+                    android:src="@drawable/ic_edit_white_24dp"
+                    android:visibility="invisible" />
+
+                <ImageButton
+                    android:id="@+id/poi_delete_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_delete_white_24dp"
+                    android:visibility="invisible" />
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/poi_share_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/poi_date_text_view"
                 android:layout_alignParentEnd="true"
                 android:background="@android:color/transparent"
                 android:padding="8dp"
-                android:paddingEnd="16dp"
                 android:src="@drawable/ic_reply_white_24dp" />
-
         </RelativeLayout>
 
         <TextView
@@ -134,95 +135,108 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/poi_background_container"
             android:layout_marginTop="16dp"
-            android:padding="12dp" />
-
-        <TextView
-            android:id="@+id/title_occupation"
-            style="@style/p"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/poi_description_text_view"
-            android:layout_marginTop="4dp"
-            android:padding="12dp"
-            android:text="@string/sac_occupation_bewartet"
-            android:visibility="gone"></TextView>
-
-        <TableLayout
-            android:id="@+id/tableLayout_occupation_sac"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/title_occupation"
-            android:layout_marginTop="-8dp"
-            android:visibility="gone">
-
-            <TableRow
-                android:id="@+id/table_row_3"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/occupation_jan"
-                    style="@style/sac_occupation_table"
-                    android:text="Jan"/>
-
-                <TextView
-                    android:id="@+id/occupation_feb"
-                    style="@style/sac_occupation_table"
-                    android:text="Feb"/>
-
-                <TextView
-                    android:id="@+id/occupation_mär"
-                    style="@style/sac_occupation_table"
-                    android:text="Mar"/>
-
-                <TextView
-                    android:id="@+id/occupation_apr"
-                    style="@style/sac_occupation_table"
-                    android:text="Apr"/>
-
-                <TextView
-                    android:id="@+id/occupation_mai"
-                    style="@style/sac_occupation_table"
-                    android:text="Mai"/>
-
-                <TextView
-                    android:id="@+id/occupation_jun"
-                    style="@style/sac_occupation_table"
-                    android:text="Jun"/>
-
-                <TextView
-                    android:id="@+id/occupation_jul"
-                    style="@style/sac_occupation_table"
-                    android:text="Jul"/>
-
-                <TextView
-                    android:id="@+id/occupation_aug"
-                    style="@style/sac_occupation_table"
-                    android:text="Aug"/>
-
-                <TextView
-                    android:id="@+id/occupation_sep"
-                    style="@style/sac_occupation_table"
-                    android:text="Sep"/>
-
-                <TextView
-                    android:id="@+id/occupation_okt"
-                    style="@style/sac_occupation_table"
-                    android:text="Okt"/>
-
-                <TextView
-                    android:id="@+id/occupation_nov"
-                    style="@style/sac_occupation_table"
-                    android:text="Nov"/>
-
-                <TextView
-                    android:id="@+id/occupation_dez"
-                    style="@style/sac_occupation_table"
-                    android:text="Dez"/>
-            </TableRow>
-        </TableLayout>
-
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp"/>
     </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title_occupation"
+                style="@style/p"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sac_occupation_bewartet"
+                android:visibility="gone" />
+
+            <TableLayout
+                android:id="@+id/tableLayout_occupation_sac"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_occupation"
+                android:visibility="gone">
+
+                <TableRow
+                    android:id="@+id/table_row_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/occupation_jan"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_january"/>
+
+                    <TextView
+                        android:id="@+id/occupation_feb"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_february"/>
+
+                    <TextView
+                        android:id="@+id/occupation_mär"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_march"/>
+
+                    <TextView
+                        android:id="@+id/occupation_apr"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_april"/>
+
+                    <TextView
+                        android:id="@+id/occupation_mai"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_mai"/>
+
+                    <TextView
+                        android:id="@+id/occupation_jun"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_june"/>
+
+                    <TextView
+                        android:id="@+id/occupation_jul"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_july"/>
+
+                    <TextView
+                        android:id="@+id/occupation_aug"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_august"/>
+
+                    <TextView
+                        android:id="@+id/occupation_sep"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_september"/>
+
+                    <TextView
+                        android:id="@+id/occupation_okt"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_october"/>
+
+                    <TextView
+                        android:id="@+id/occupation_nov"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_november"/>
+
+                    <TextView
+                        android:id="@+id/occupation_dez"
+                        style="@style/sac_occupation_table"
+                        android:text="@string/short_december"/>
+                </TableRow>
+            </TableLayout>
+            <ImageButton
+                android:id="@+id/reportPoiButton"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_report_problem_black_24dp" />
+
+        </RelativeLayout>
+    </ScrollView>
 </LinearLayout>

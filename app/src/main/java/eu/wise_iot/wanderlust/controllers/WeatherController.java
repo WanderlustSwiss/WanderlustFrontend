@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.GetWeatherTask;
-import eu.wise_iot.wanderlust.models.DatabaseModel.SeasonsKeys;
+import eu.wise_iot.wanderlust.models.DatabaseModel.SeasonsKey;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
@@ -24,7 +24,7 @@ public class WeatherController {
 
     private final WeatherService service;
     private List<WeatherKeys> weatherKeys;
-    private List<SeasonsKeys> seasonsKeys;
+    private List<SeasonsKey> seasonsKeys;
 
     private volatile boolean initKeys = false;
 
@@ -34,9 +34,8 @@ public class WeatherController {
 
     private static Context CONTEXT;
 
-    public static WeatherController createInstance(Context context) {
+    public static void createInstance(Context context) {
         CONTEXT = context;
-        return WeatherController.Holder.INSTANCE;
     }
 
     public static WeatherController getInstance() {
@@ -52,8 +51,21 @@ public class WeatherController {
         return initKeys ? weatherKeys : null;
     }
 
-    public List<SeasonsKeys> getSeasonsKeys() {
+    private List<SeasonsKey> getSeasonsKeys() {
         return initKeys ? seasonsKeys : null;
+    }
+
+    public int getCurrentSeason(){
+        DateTime dateTime = new DateTime();
+        List<SeasonsKey> seasonsKeys = getSeasonsKeys();
+        if(seasonsKeys == null) return 0; //if season not available yet
+        for(SeasonsKey key : seasonsKeys){
+            if(key.getStart().isBefore(dateTime) && key.getEnd().isAfter(dateTime)){
+                return key.getKey();
+            }
+        }
+
+        return 0;
     }
 
     public void initKeys() {
@@ -94,10 +106,10 @@ public class WeatherController {
     }
 
     private void initSeasonsKeys(FragmentHandler handler) {
-        Call<List<SeasonsKeys>> call = service.getSeasonsKeys();
-        call.enqueue(new Callback<List<SeasonsKeys>>() {
+        Call<List<SeasonsKey>> call = service.getSeasonsKeys();
+        call.enqueue(new Callback<List<SeasonsKey>>() {
             @Override
-            public void onResponse(Call<List<SeasonsKeys>> call, Response<List<SeasonsKeys>> response) {
+            public void onResponse(Call<List<SeasonsKey>> call, Response<List<SeasonsKey>> response) {
                 if (response.isSuccessful()) {
                     seasonsKeys = response.body();
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
@@ -106,7 +118,7 @@ public class WeatherController {
             }
 
             @Override
-            public void onFailure(Call<List<SeasonsKeys>> call, Throwable t) {
+            public void onFailure(Call<List<SeasonsKey>> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });

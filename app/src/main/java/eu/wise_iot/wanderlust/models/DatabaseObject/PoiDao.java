@@ -1,10 +1,7 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
-import org.osmdroid.util.BoundingBox;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
@@ -13,6 +10,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi_;
@@ -38,19 +36,19 @@ import retrofit2.Response;
 
 public class PoiDao extends DatabaseObjectAbstract {
 
+    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
+
     private static class Holder {
         private static final PoiDao INSTANCE = new PoiDao();
     }
 
-    private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
-
-    public static PoiDao getInstance(){
+    public static PoiDao getInstance() {
         return BOXSTORE != null ? Holder.INSTANCE : null;
     }
 
     private static PoiService service;
     private final Box<Poi> poiBox;
-    private final ImageController imageController;
+    private final PoiController poiController = new PoiController();
 
     /**
      * constructor
@@ -59,7 +57,6 @@ public class PoiDao extends DatabaseObjectAbstract {
     private PoiDao() {
         poiBox = BOXSTORE.boxFor(Poi.class);
         service = ServiceGenerator.createService(PoiService.class);
-        imageController = ImageController.getInstance();
     }
 
     /**
@@ -78,7 +75,10 @@ public class PoiDao extends DatabaseObjectAbstract {
                     Poi newPoi = response.body();
                     newPoi.setInternal_id(0);
                     poiBox.put(newPoi);
+                    poiController.getPoiCache().add(newPoi);
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), newPoi));
+                    DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.SINGLEPOI));
+
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
@@ -127,6 +127,39 @@ public class PoiDao extends DatabaseObjectAbstract {
         });
     }
 
+    public void retrieveUserPois() {
+        Call<List<Poi>> call = service.retrieveAllPois();
+        call.enqueue(new Callback<List<Poi>>() {
+            @Override
+            public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
+
+                List<Poi> userPois = response.body();
+
+                for (Poi poi : userPois) {
+                    if (findOne(Poi_.poi_id, poi.getPoi_id()) == null) {
+                        //new UserPoi
+                        poi.setInternal_id(0);
+                        poiBox.put(poi);
+                        poiController.getImages(poi, controllerEvent -> {
+                            switch (controllerEvent.getType()) {
+                                case OK:
+                                    break;
+                                default:
+
+                            }
+                        });
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Poi>> call, Throwable t) {
+
+            }
+        });
+    }
+
     /**
      * update:
      * update a poi in the database
@@ -171,12 +204,11 @@ public class PoiDao extends DatabaseObjectAbstract {
             @Override
             public void onResponse(Call<Poi> call, Response<Poi> response) {
                 if (response.isSuccessful()) {
-                    poiBox.remove(poi);
-                    for(ImageInfo imageInfo : poi.getImagePaths()){
+                    poiBox.remove(find(Poi_.poi_id, poi.getPoi_id()));
+                    for (ImageInfo imageInfo : poi.getImagePaths()) {
                         new File(imageInfo.getLocalPath()).delete();
                     }
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
-                    DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.DELETESINGLEPOI, response.body()));
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
@@ -195,6 +227,7 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param poi
      */
     public void addImage(final File origFile, final Poi poi, final FragmentHandler handler) {
+        ImageController imageController = ImageController.getInstance();
         try {
             File file = imageController.resize(origFile);
             if (poi.isPublic()) {
@@ -231,13 +264,12 @@ public class PoiDao extends DatabaseObjectAbstract {
                 });
             } else {
                 Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
-                int newId = internalPoi.getImageCount() + 1;
-                String name = internalPoi.getPoi_id() + "-" + newId + ".jpg";
-                ImageInfo newImage = new ImageInfo(newId, name, imageController.getPoiFolder());
+                String name = internalPoi.getPoi_id() + "-1.jpg";
+                ImageInfo newImage = new ImageInfo(1, name, imageController.getPoiFolder());
                 imageController.save(file, newImage);
                 internalPoi.addImagePath(newImage);
                 poiBox.put(internalPoi);
-                handler.onResponse(new ControllerEvent(EventType.OK, internalPoi));
+                handler.onResponse(new ControllerEvent(EventType.OK, poi));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -290,6 +322,7 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return User who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Poi findOne(Property searchedColumn, String searchPattern) {
         return poiBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -305,10 +338,12 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return List<Poi> which contains the users, who match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public List<Poi> find(Property searchedColumn, String searchPattern) {
         return poiBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<Poi> find(Property searchedColumn, long searchPattern) {
         return poiBox.query().equal(searchedColumn, searchPattern).build().find();
     }
@@ -325,11 +360,11 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         poiBox.remove(findOne(searchedColumn, searchPattern));
     }
 
-    public void delete(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, long searchPattern) {
         poiBox.remove(findOne(searchedColumn, searchPattern));
     }
 
@@ -356,59 +391,28 @@ public class PoiDao extends DatabaseObjectAbstract {
      * @param searchPattern  (required) contain the search pattern.
      * @return Total number of records
      */
-    public long count(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
-    public long count(Property searchedColumn, long searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, long searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
-
-    public void syncPois(BoundingBox box) {
-        Call<List<Poi>> call = service.retrievePoisByArea(
-                box.getLatNorth(), box.getLonWest(), box.getLatSouth(), box.getLonEast());
-        call.enqueue(new Callback<List<Poi>>() {
-            @Override
-            public void onResponse(Call<List<Poi>> call, Response<List<Poi>> response) {
-                if (response.isSuccessful()) {
-                    for (Poi poi : response.body()) {
-                        if (poi.isPublic()) {
-                            poi.setInternal_id(0);
-                            Poi internalPoi = findOne(Poi_.poi_id, poi.getPoi_id());
-                            if(internalPoi == null){
-                                //non existent localy
-                                List<ImageInfo> imageInfos = new ArrayList<>();
-                                for(ImageInfo imageInfo : poi.getImagePaths()){
-                                    String name = poi.getPoi_id() + "-" + imageInfo.getId() + ".jpg";
-                                    imageInfos.add(new ImageInfo(poi.getPoi_id(), name, imageController.getPoiFolder()));
-                                }
-                                poi.setImagePaths(imageInfos);
-                                poi.setInternal_id(0);
-                            } else {
-                                poi.setImagePaths(internalPoi.getImagePaths());
-                                poiBox.remove(internalPoi.getInternal_id());
-                            }
-                            poiBox.put(poi);
-
-                        }
-                    }
-
-                }
-                DatabaseController.getInstance().syncPoisDone();
-            }
-
-            @Override
-            public void onFailure(Call<List<Poi>> call, Throwable t) {
-                DatabaseController.getInstance().syncPoisDone();
-            }
-        });
-    }
     /**
      * Delete all users out of the database
      */
     public void removeAll() {
         poiBox.removeAll();
+    }
+
+    public void removeNonUserPois(long userId) {
+        List<Poi> userPois = poiBox.find(Poi_.user, userId);
+        for (Poi p : userPois) {
+            p.setInternal_id(0);
+        }
+        poiBox.removeAll();
+        poiBox.put(userPois);
     }
 
 }

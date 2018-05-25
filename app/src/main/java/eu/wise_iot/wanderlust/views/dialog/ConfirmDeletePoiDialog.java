@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.views.dialog;
 
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
@@ -28,7 +30,7 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
     private static final String MESSAGE = "message";
     private String message;
 
-    private Context context;
+    private Activity context;
     private PoiController controller;
     private Poi currentPoi;
 
@@ -47,7 +49,7 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
         Bundle args = new Bundle();
         args.putString(MESSAGE, message);
         ConfirmDeletePoiDialog fragment = new ConfirmDeletePoiDialog();
-        fragment.context = context;
+        //fragment.context = context;
         fragment.controller = controller;
         fragment.currentPoi = currentPoi;
         fragment.setArguments(args);
@@ -59,7 +61,7 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         // set style
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog);
-
+        context = getActivity();
         Bundle args = getArguments();
         message = args.getString(MESSAGE);
     }
@@ -69,9 +71,9 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_confirm_delete_poi, container, false);
 
-        messageTextView = (TextView) view.findViewById(R.id.message_text_view);
-        abortButton = (ImageButton) view.findViewById(R.id.abort_button);
-        confirmButton = (ImageButton) view.findViewById(R.id.confirm_button);
+        messageTextView = view.findViewById(R.id.message_text_view);
+        abortButton = view.findViewById(R.id.abort_button);
+        confirmButton = view.findViewById(R.id.confirm_button);
 
         return view;
     }
@@ -85,17 +87,21 @@ public class ConfirmDeletePoiDialog extends DialogFragment {
         abortButton.setOnClickListener(v -> dismiss());
 
         confirmButton.setOnClickListener(v -> {
-            controller.deletePoi(this.currentPoi, e -> {
+            controller.deletePoi(currentPoi, e -> {
                 EventType eventType = e.getType();
                 switch (eventType) {
                     case OK:
                         Toast.makeText(context, R.string.poi_fragment_success_delete, Toast.LENGTH_LONG).show();
-                        //for profile list view
+
+
+                        profileFragment = (ProfileFragment) context.getFragmentManager().findFragmentByTag(Constants.PROFILE_FRAGMENT);
+
                         if(profileFragment != null){
                             View vw = profileFragment.getView();
-                            profileFragment.setupPOIs(vw);
+                            //profileFragment.setupPOIs(vw);
                             profileFragment.setProfileStats();
                         }
+
                         dismiss();
                         break;
                     default: // fail

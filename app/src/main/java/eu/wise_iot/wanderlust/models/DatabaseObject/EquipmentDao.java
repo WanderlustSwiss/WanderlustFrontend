@@ -35,7 +35,7 @@ public class EquipmentDao extends DatabaseObjectAbstract {
     }
 
     private final Box<Equipment> equipmentBox;
-    public static EquipmentService service;
+    private static EquipmentService service;
 
 
     /**

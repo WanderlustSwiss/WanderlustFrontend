@@ -12,6 +12,8 @@ import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Profile_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
@@ -23,6 +25,11 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.ProfileDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TripDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
+import eu.wise_iot.wanderlust.services.ProfileService;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Profile controller which initializes the profile view
@@ -55,7 +62,6 @@ public class ProfileController {
         communityTourDao = CommunityTourDao.getInstance();
         imageController = ImageController.getInstance();
         context = DatabaseController.getMainContext();
-        difficultyTypeDao.retrive();
     }
 
     /**
@@ -104,12 +110,40 @@ public class ProfileController {
      *
      * @return the score of the user
      */
-    public int getScore() {
-        Profile profile = profileDao.getProfile();
-        if (profile == null) {
-            return 0;
-        }
-        return profile.getScore();
+    public void getScore(FragmentHandler handler) {
+        int score = 0;
+        User user = userDao.getUser();
+        ProfileService service = ServiceGenerator.createService(ProfileService.class);
+        Call<Profile> call = service.retrieveProfile();
+        call.enqueue(new Callback<Profile>() {
+            @Override
+            public void onResponse(Call<Profile> call, Response<Profile> response) {
+                if(response.isSuccessful()){
+                    Profile internalProfile = profileDao.findOne(Profile_.profile_id, user.getProfile());
+                    Profile updatedProfile = response.body();
+                    if (internalProfile == null){
+                        profileDao.removeAll();
+                        updatedProfile.setInternal_id(0);
+                        profileDao.create(updatedProfile);
+                    }else{
+                        if (updatedProfile.getImagePath() != null){
+                            updatedProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
+                        }
+                        updatedProfile.setInternal_id(internalProfile.getInternal_id());
+                        profileDao.update(updatedProfile);
+                    }
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), updatedProfile));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Profile> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+
     }
 
     /**
@@ -238,7 +272,7 @@ public class ProfileController {
      *
      * @return list with all saved tours
      */
-    public List<Tour> getSavedTours() {
+    public List<SavedTour> getSavedTours() {
         return communityTourDao.find();
     }
 
@@ -256,10 +290,18 @@ public class ProfileController {
      *
      * @param trip trip whose tour is requested
      * @param handler tour and response given back to handler
-     */
+
+    /*
     public void getTourToTrip(Trip trip, FragmentHandler handler) {
         userTourDao.retrieve(trip.getTour(), handler);
 
+    }*/
+    /**
+     *
+     * @return
+     */
+    public List<Tour> getUserTours(){
+        return userTourDao.find();
     }
 
     /**
@@ -277,7 +319,7 @@ public class ProfileController {
      *
      * @param communityTour to delete
      */
-    public void deleteCommunityTour(Tour communityTour){
+    public void deleteCommunityTour(SavedTour communityTour){
         communityTourDao.delete(communityTour);
     }
 

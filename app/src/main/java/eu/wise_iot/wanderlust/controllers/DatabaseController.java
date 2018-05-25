@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.MyObjectBox;
-import eu.wise_iot.wanderlust.models.DatabaseObject.PoiDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.PoiTypeDao;
 import io.objectbox.BoxStore;
 
@@ -32,12 +31,13 @@ public final class DatabaseController {
 
     private static Context CONTEXT;
 
-    public static DatabaseController createInstance(Context context){
+    public static void createInstance(Context context){
 
-        BOX_STORE = MyObjectBox.builder().androidContext(context).build();
+        if(BOX_STORE == null) {
+            BOX_STORE = MyObjectBox.builder().androidContext(context).build();
+        }
         CONTEXT = context;
 
-        return Holder.INSTANCE;
     }
 
     public static DatabaseController getInstance(){
@@ -62,6 +62,8 @@ public final class DatabaseController {
     private boolean syncingPois;
     private Date lastSync;
 
+    private final PoiController poiController;
+
     private final LinkedList<DownloadedImage> downloadedImages;
     private long cacheSize;
 
@@ -73,6 +75,7 @@ public final class DatabaseController {
 
         listeners = new ArrayList<>();
         downloadedImages = new LinkedList<>();
+        poiController = new PoiController();
     }
 
 
@@ -95,7 +98,8 @@ public final class DatabaseController {
                 if (!syncingPois) {
                     syncingPois = true;
                     BoundingBox box = (BoundingBox) event.getObj();
-                    PoiDao.getInstance().syncPois(box);
+                    poiController.loadPoiByArea(box);
+                    //PoiDao.getDialog().syncPois(box);
                 }
                 break;
             default:
@@ -116,7 +120,6 @@ public final class DatabaseController {
 
 
     public void addDownloadedImages(List<DownloadedImage> images) {
-
         for (DownloadedImage image : images) {
             downloadedImages.add(image);
             cacheSize += image.getSize();
@@ -125,7 +128,6 @@ public final class DatabaseController {
     }
 
     private void clearCache() {
-
         //TODO endless loop if userimages are higher than maxchachesize
         while (cacheSize >= MAXCACHESIZE) {
             DownloadedImage image = downloadedImages.getFirst();

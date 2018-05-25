@@ -4,20 +4,21 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import eu.wise_iot.wanderlust.R;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
+import eu.wise_iot.wanderlust.views.TourFragment;
 
 /**
  * TourRatingDialog:
@@ -30,9 +31,12 @@ public class TourRatingDialog extends DialogFragment {
 
     private static TourController controller;
     private static Tour tour;
-    private static RatingBar ratingBar;
 
-    private ImageButton[] starButtonCollection = new ImageButton[5];
+    private static RatingBar ratingBar;
+    private static TextView tourRatingInNumbers;
+    private static TourFragment tourFragment;
+
+    private final ImageButton[] starButtonCollection = new ImageButton[5];
 
     private ImageButton firstStarButton;
     private ImageButton secondStarButton;
@@ -45,8 +49,6 @@ public class TourRatingDialog extends DialogFragment {
     private FragmentHandler ratingHandler;
     private Context context;
     private Rating rating;
-    private EditText titleEditText;
-    private TextInputLayout titleTextLayout;
     private EditText descriptionEditText;
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
@@ -54,35 +56,28 @@ public class TourRatingDialog extends DialogFragment {
     private int countRatedStars = 0;
 
     public static TourRatingDialog newInstance(Tour paramTour, TourController tourController,
-                                               RatingBar paramRatingBar) {
+                                               TourFragment paramTourFragment) {
         TourRatingDialog fragment = new TourRatingDialog();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        ratingBar = paramRatingBar;
+
         tour = paramTour;
+        tourFragment = paramTourFragment;
         controller = tourController;
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_rate_tour, container, false);
 
-        //titleEditText = (EditText) view.findViewById(R.id.rate_description);
-        //titleTextLayout = (TextInputLayout) view.findViewById(R.id.rate_title_layout);
-        firstStarButton = (ImageButton) view.findViewById(R.id.first_star_button);
-        secondStarButton = (ImageButton) view.findViewById(R.id.second_star_button);
-        thirdStarButton = (ImageButton) view.findViewById(R.id.third_star_button);
-        fourthStarButton = (ImageButton) view.findViewById(R.id.fourth_star_button);
-        fifthStarButton = (ImageButton) view.findViewById(R.id.fifth_star_button);
-        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_canel_rate_button);
-        buttonSave = (ImageButton) view.findViewById(R.id.rate_save_button);
+        firstStarButton = view.findViewById(R.id.first_star_button);
+        secondStarButton = view.findViewById(R.id.second_star_button);
+        thirdStarButton = view.findViewById(R.id.third_star_button);
+        fourthStarButton = view.findViewById(R.id.fourth_star_button);
+        fifthStarButton = view.findViewById(R.id.fifth_star_button);
+        buttonCancel = view.findViewById(R.id.dialog_canel_rate_button);
+        buttonSave = view.findViewById(R.id.rate_save_button);
 
         starButtonCollection[0] = firstStarButton;
         starButtonCollection[1] = secondStarButton;
@@ -98,20 +93,18 @@ public class TourRatingDialog extends DialogFragment {
         setupListeners();
     }
 
-    public void setupListeners(){
+    private void setupListeners(){
         long rate = controller.alreadyRated(tour.getTour_id());
         if(rate == 0) {
-            buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, new FragmentHandler() {
-                @Override
-                public void onResponse(ControllerEvent controllerEvent) {
-                    getDialog().dismiss();
-                    controller.getRating(tour, controllerEvent1 -> {
-                        switch (controllerEvent1.getType()) {
-                            case OK:
-                                ratingBar.setRating((float) controllerEvent1.getModel());
-                        }
-                    });
-                }
+            buttonSave.setOnClickListener(v -> controller.setRating(tour, countRatedStars, controllerEvent0 -> {
+                getDialog().dismiss();
+                controller.getTourRating(controllerEvent1 -> {
+                    switch (controllerEvent1.getType()) {
+                        case OK:
+                            TourRate tourRate = (TourRate) controllerEvent1.getModel();
+                            tourFragment.updateRating(tourRate);
+                    }
+                });
             }));
         }
         else{

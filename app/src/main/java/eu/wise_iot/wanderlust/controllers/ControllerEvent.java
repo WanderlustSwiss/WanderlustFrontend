@@ -1,14 +1,15 @@
 package eu.wise_iot.wanderlust.controllers;
 
-/*
+/**
  * ControllerEvent has information of a made request
+ *
  * @author Tobias Rüegsegger
  * @license MIT
  */
 public class ControllerEvent<T> {
 
 
-    private EventType type;
+    private final EventType type;
     private T model;
 
     /**
@@ -24,15 +25,15 @@ public class ControllerEvent<T> {
     }
 
     public ControllerEvent(EventType event) {
-        this.type = event;
+        type = event;
     }
 
     public EventType getType() {
-        return this.type;
+        return type;
     }
 
     public T getModel() {
-        return this.model;
+        return model;
     }
 
 

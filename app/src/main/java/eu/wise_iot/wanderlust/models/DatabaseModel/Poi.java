@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import io.objectbox.annotation.Convert;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -51,7 +49,7 @@ public class Poi extends AbstractModel {
                float latitude, float elevation, int rate, long user, int type, boolean isPublic,
                List<ImageInfo> imagePaths, String updatedAt, String createdAt) {
         this.poi_id = poi_id;
-        this.title = name;
+        title = name;
         this.description = description;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -66,17 +64,17 @@ public class Poi extends AbstractModel {
     }
 
     public Poi() {
-        this.internal_id = 0;
-        this.title = "No title";
-        this.description = "No description";
-        this.longitude = 0;
-        this.latitude = 0;
-        this.elevation = 0;
-        this.rate = 3;
-        this.user = 1;
-        this.type = 0;
-        this.isPublic = false;
-        this.imagePaths = new ArrayList<>();
+        internal_id = 0;
+        title = "No title";
+        description = "No description";
+        longitude = 0;
+        latitude = 0;
+        elevation = 0;
+        rate = 3;
+        user = 1;
+        type = 0;
+        isPublic = false;
+        imagePaths = new ArrayList<>();
     }
 
     public int getImageCount() {
@@ -104,15 +102,14 @@ public class Poi extends AbstractModel {
         imagePaths.add(imageInfo);
     }
 
-    public boolean removeImage(ImageInfo imageInfo){
+    public void removeImage(ImageInfo imageInfo){
 
         for(ImageInfo info : imagePaths){
             if(info.getId() == imageInfo.getId()){
                 imagePaths.remove(info);
-                return true;
+                return;
             }
         }
-        return false;
     }
 
     public String getCreatedAt(Locale language) {
@@ -229,6 +226,7 @@ public class Poi extends AbstractModel {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
+
     public static class imageInfoConverter implements PropertyConverter<List<ImageInfo>, String> {
         @Override
         public List<ImageInfo> convertToEntityProperty(String databaseValue) {

@@ -2,12 +2,17 @@ package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,14 +25,22 @@ import java.io.File;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.controllers.AddPoiCommand;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
+import eu.wise_iot.wanderlust.controllers.MapController;
+import eu.wise_iot.wanderlust.controllers.OfflineQueueController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
+import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
+import eu.wise_iot.wanderlust.views.ProfileFragment;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * PoiEditDialog:
@@ -40,6 +53,7 @@ public class PoiEditDialog extends DialogFragment {
     private FragmentHandler poiHandler;
     private Context context;
     private Poi poi;
+    private MapController mapController;
     private GeoPoint lastKnownLocation;
     private EditText titleEditText;
     private TextInputLayout titleTextLayout;
@@ -49,9 +63,11 @@ public class PoiEditDialog extends DialogFragment {
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
     private PoiController controller;
+    private ImageController imageController;
     private boolean isNewPoi;
     private boolean publish;
     private FragmentHandler poiPhotoUploadHandler;
+    private OfflineQueueController offlineQueueController;
 
     /**
      * Create EditPoit dialog, which is used for CREATING a Poi
@@ -67,6 +83,7 @@ public class PoiEditDialog extends DialogFragment {
         args.putDouble(Constants.LAST_POS_LON, lastKnownLocation.getLongitude());
         args.putBoolean(Constants.POI_IS_NEW, true);
         fragment.poi = new Poi();
+        fragment.mapController = new MapController(fragment);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,6 +95,7 @@ public class PoiEditDialog extends DialogFragment {
      */
     public static PoiEditDialog newInstance(Poi poi) {
         PoiEditDialog fragment = new PoiEditDialog();
+
         Bundle args = new Bundle();
         fragment.poi = poi;
         args.putBoolean(Constants.POI_IS_NEW, false);
@@ -85,11 +103,24 @@ public class PoiEditDialog extends DialogFragment {
         return fragment;
     }
 
+    //added
+    public static PoiEditDialog newInstance(Poi poi, PoiViewDialog dialog) {
+        PoiEditDialog fragment = new PoiEditDialog();
+        Bundle args = new Bundle();
+        fragment.poi = poi;
+        args.putBoolean(Constants.POI_IS_NEW, false);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         controller = new PoiController();
+        imageController = ImageController.getInstance();
         context = getActivity();
+        offlineQueueController = OfflineQueueController.getInstance();
 
         Bundle args = getArguments();
         double lat = args.getDouble(Constants.LAST_POS_LAT);
@@ -117,9 +148,34 @@ public class PoiEditDialog extends DialogFragment {
                     if (isNewPoi) {
                         poi = (Poi) event.getModel();
                         //Poi image has to be uploaded after the poi is saved
-                        controller.uploadImage(new File(MapFragment.photoPath), poi, poiPhotoUploadHandler);
+                        String imagePath = MapFragment.photoPath;
+                        Bitmap imageBitmap = BitmapFactory.decodeFile(imagePath);
+                        Uri uri = ImageController.getInstance().getImageUri(getActivity(), imageBitmap);
+                        ImageController.getInstance().setAndSaveCorrectOrientation(imageBitmap, uri, new File(imagePath));
+
+                        controller.uploadImage(new File(imagePath), poi, poiPhotoUploadHandler);
                     }
                     Toast.makeText(getActivity(), R.string.poi_successful_saving, Toast.LENGTH_LONG).show();
+                    fillInDataFromExistingPoi();
+
+                    ProfileFragment fragment = (ProfileFragment) getFragmentManager().findFragmentByTag("ProfileFragment");
+                    if(fragment != null){
+                        //fragment.setupPOIs(fragment.getView());
+                    }
+
+                    PoiViewDialog viewDialog = (PoiViewDialog) getFragmentManager()
+                                                                .findFragmentByTag(Constants.DISPLAY_FEEDBACK_DIALOG);
+                    
+                    if(viewDialog != null){
+                        viewDialog.onResume();
+                    }
+
+                    dismiss();
+                    break;
+                case NETWORK_ERROR:
+                    AddPoiCommand cmd = new AddPoiCommand(poi, new File(MapFragment.photoPath));
+                    offlineQueueController.addCommand(cmd);
+                    Toast.makeText(context, R.string.in_queue, Toast.LENGTH_SHORT).show();
                     dismiss();
                     break;
                 default:
@@ -132,14 +188,14 @@ public class PoiEditDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_poi_edit, container, false);
 
-        titleEditText = (EditText) view.findViewById(R.id.poi_title);
-        titleTextLayout = (TextInputLayout) view.findViewById(R.id.poi_title_layout);
-        descriptionEditText = (EditText) view.findViewById(R.id.poi_description);
-        typeSpinner = (Spinner) view.findViewById(R.id.poi_type_spinner);
-        modeSpinner = (Spinner) view.findViewById(R.id.poi_mode_spinner);
+        titleEditText = view.findViewById(R.id.poi_title);
+        titleTextLayout = view.findViewById(R.id.poi_title_layout);
+        descriptionEditText = view.findViewById(R.id.poi_description);
+        typeSpinner = view.findViewById(R.id.poi_type_spinner);
+        modeSpinner = view.findViewById(R.id.poi_mode_spinner);
 
-        buttonSave = (ImageButton) view.findViewById(R.id.poi_save_button);
-        buttonCancel = (ImageButton) view.findViewById(R.id.dialog_edit_poi_cancel_button);
+        buttonSave = view.findViewById(R.id.poi_save_button);
+        buttonCancel = view.findViewById(R.id.dialog_edit_poi_cancel_button);
         return view;
     }
 
@@ -151,8 +207,19 @@ public class PoiEditDialog extends DialogFragment {
         initActionControls();
         if (!isNewPoi) {
             fillInDataFromExistingPoi();
+        }else{
+            fillInDataFromAddress();
         }
+
+        //handle keyboard closing
+        view.findViewById(R.id.rootLayout).setOnTouchListener((v, event) -> {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            return true;
+        });
     }
+
+
 
     /**
      * initializes the actions of the mode (private / public) spinner, which sets the current mode of the poi in case of changing of the user
@@ -182,7 +249,7 @@ public class PoiEditDialog extends DialogFragment {
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                poi.setType(position);
+                poi.setType(position+1);
             }
 
             @Override
@@ -214,11 +281,11 @@ public class PoiEditDialog extends DialogFragment {
                 poi.setLatitude((float) lastKnownLocation.getLatitude());
                 poi.setLongitude((float) lastKnownLocation.getLongitude());
 
-                controller.saveNewPoi(this.poi, poiHandler);
+                controller.saveNewPoi(poi, poiHandler);
             } else {
+                File poiImage = new File(poi.getImageById(1).getLocalPath());
                 if (publish) {
-                    //TODO only uploads first image
-                    controller.uploadImage(new File(this.poi.getImageById(1).getLocalPath()), this.poi, controllerEvent -> {
+                    controller.uploadImage(poiImage, poi, controllerEvent -> {
                         switch (controllerEvent.getType()) {
                             case OK:
                                 controller.updatePoi(poi, poiHandler);
@@ -228,9 +295,10 @@ public class PoiEditDialog extends DialogFragment {
                         }
                     });
                 } else {
-                    controller.updatePoi(this.poi, poiHandler);
+                    controller.updatePoi(poi, poiHandler);
                 }
             }
+
         });
 
         buttonCancel.setOnClickListener(view -> dismiss());
@@ -240,13 +308,59 @@ public class PoiEditDialog extends DialogFragment {
      * Prefills all data from a existing Poi into the form for the user
      */
     private void fillInDataFromExistingPoi() {
-        titleEditText.setText(this.poi.getTitle());
-        descriptionEditText.setText(this.poi.getDescription());
-        typeSpinner.setSelection((int) this.poi.getType());
+        titleEditText.setText(poi.getTitle());
+        descriptionEditText.setText(poi.getDescription());
+        typeSpinner.setSelection((int) poi.getType());
         if (poi.isPublic()) {
             modeSpinner.setSelection(0); // public
         } else {
             modeSpinner.setSelection(1); // private
         }
+    }
+
+    /**
+     * Prefills all data from address
+     */
+    private void fillInDataFromAddress(){
+        typeSpinner.setSelection(0);
+        mapController.searchCoordinates(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(),1, controllerEvent -> {
+            AddressPoint addressPoint = (AddressPoint) controllerEvent.getModel();
+            if (addressPoint == null){
+                Log.d(TAG, "Is null");
+                return;
+            }
+            StringBuilder nameProposal = new StringBuilder();
+            boolean isFirst = true;
+            if (addressPoint.getName() != null){
+                nameProposal.append(addressPoint.getName());
+                isFirst = false;
+            }
+            if (addressPoint.getName() == null && addressPoint.getRoad() != null){
+                if (!isFirst){
+                    nameProposal.append(", ");
+                }
+                nameProposal.append(addressPoint.getRoad());
+                isFirst = false;
+            }
+            if (addressPoint.getVillage() != null){
+                if (!isFirst){
+                    nameProposal.append(", ");
+                }
+                nameProposal.append(addressPoint.getVillage());
+                isFirst = false;
+            }
+            if (addressPoint.getCity() != null){
+                if (!isFirst){
+                    nameProposal.append(", ");
+                }
+                nameProposal.append(addressPoint.getCity());
+            }else if (addressPoint.getState() != null){
+                if (!isFirst){
+                    nameProposal.append(", ");
+                }
+                nameProposal.append(addressPoint.getState());
+            }
+            titleEditText.setText(nameProposal.toString());
+        });
     }
 }

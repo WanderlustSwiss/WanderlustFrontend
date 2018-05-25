@@ -7,6 +7,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.services.TripService;
@@ -20,6 +21,8 @@ import retrofit2.Response;
 /**
  * TripDao:
  *
+ * this model represents a self created tour by the user
+ *
  * @author Rilind Gashi, Alexander Weinbeck
  * @license MIT
  */
@@ -31,17 +34,11 @@ public class TripDao extends DatabaseObjectAbstract {
     }
 
     private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();
-
-    public static TripDao getInstance(){
-        return BOXSTORE != null ? Holder.INSTANCE : null;
-    }
-
     private static TripService service;
     private final Box<Trip> routeBox;
-
-    /**
-     * Constructor.
-     */
+    public static TripDao getInstance() {
+        return BOXSTORE != null ? Holder.INSTANCE : null;
+    }
 
     private TripDao() {
         routeBox = BOXSTORE.boxFor(Trip.class);
@@ -52,18 +49,11 @@ public class TripDao extends DatabaseObjectAbstract {
         return routeBox.count();
     }
 
-    public long count(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, String searchPattern) {
         return find(searchedColumn, searchPattern).size();
     }
 
-    /**
-     * count all poi which match with the search criteria
-     *
-     * @return Total number of records
-     */
-    public long count(Property searchedColumn, long searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public long count(Property searchedColumn, long searchPattern){
         return find(searchedColumn, searchPattern).size();
     }
 
@@ -80,25 +70,29 @@ public class TripDao extends DatabaseObjectAbstract {
     /**
      * insert a trip local and remote
      *
-     * @param trip
+     * @param tour a tour, from which the backend creates an trip, which can be inserted to the database
      * @param handler
      */
-    public void create(final AbstractModel trip, final FragmentHandler handler) {
-        Call<Trip> call = service.createTrip((Trip) trip);
+    public void create(final Tour tour, final FragmentHandler handler) {
+        Call<Trip> call = service.createTrip(tour);
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
-                if (response.isSuccessful()) {
-                    routeBox.put((Trip) trip);
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                if (response.isSuccessful() && response.body() != null) {
+                    Trip trip = response.body();
+                    long remoteTripId = trip.getTrip_id();
+                    trip.setTrip_id(0);
+                    routeBox.put(response.body());
+                    trip.setTrip_id(remoteTripId);
+                    handler.onResponse(new ControllerEvent<>(EventType.getTypeByCode(response.code()), response.body()));
                 } else {
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                    handler.onResponse(new ControllerEvent<Trip>(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
             public void onFailure(Call<Trip> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+                handler.onResponse(new ControllerEvent<Trip>(EventType.NETWORK_ERROR));
             }
         });
     }
@@ -127,12 +121,6 @@ public class TripDao extends DatabaseObjectAbstract {
             }
         });
     }
-    /**
-     * update a trip
-     * @param id
-     * @param trip
-     * @param handler
-     */
     /*
     public void update(int id, final AbstractModel trip, final FragmentHandler handler){
         Call<Trip> call = service.updateTrip(id, (Trip)trip);
@@ -154,14 +142,9 @@ public class TripDao extends DatabaseObjectAbstract {
     }
     */
 
-    /**
-     * delete a trip local and remote
-     *
-     * @param trip
-     * @param handler
-     */
     public void delete(final AbstractModel trip, final FragmentHandler handler) {
-        Call<Trip> call = service.deleteTrip((Trip) trip);
+        Trip deletableTrip = (Trip) trip;
+        Call<Trip> call = service.deleteTrip((int) deletableTrip.getTrip_id());
         call.enqueue(new Callback<Trip>() {
             @Override
             public void onResponse(Call<Trip> call, Response<Trip> response) {
@@ -180,11 +163,6 @@ public class TripDao extends DatabaseObjectAbstract {
         });
     }
 
-    /**
-     * get all trips out of the remote database
-     *
-     * @param handler
-     */
     public void retrieveAll(final FragmentHandler handler) {
         Call<Trip> call = service.retrieveAllTrips();
         call.enqueue(new Callback<Trip>() {
@@ -203,20 +181,10 @@ public class TripDao extends DatabaseObjectAbstract {
         });
     }
 
-    /**
-     * @return
-     */
     public List<Trip> find() {
         return routeBox.getAll();
     }
 
-    /**
-     * Searching for a single route with a search pattern in a column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return Trip which match to the search pattern in the searched columns
-     */
     public Trip findOne(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -225,14 +193,6 @@ public class TripDao extends DatabaseObjectAbstract {
         return routeBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
-
-    /**
-     * Searching for routes matching with the search pattern in a the selected column.
-     *
-     * @param searchedColumn (required) the column in which the searchPattern should be looked for.
-     * @param searchPattern  (required) contain the search pattern.
-     * @return List<Trip> which contains the equipements, which match to the search pattern in the searched columns
-     */
     public List<Trip> find(Property searchedColumn, String searchPattern) {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
@@ -245,22 +205,11 @@ public class TripDao extends DatabaseObjectAbstract {
         return routeBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern)
-            throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 
-    /**
-     * delete:
-     * Deleting a Trip which matches the given pattern
-     *
-     * @param searchedColumn
-     * @param searchPattern
-     * @return
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
-     */
-    public void deleteByPattern(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void deleteByPattern(Property searchedColumn, String searchPattern) {
         routeBox.remove(findOne(searchedColumn, searchPattern));
     }
 }

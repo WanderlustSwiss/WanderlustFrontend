@@ -54,7 +54,7 @@ public class Tour {
     }
 
     public String getDifficultyWithExplainingText() {
-        String text = "T" + difficulty + " ";
+        String text = "T" + difficulty + ' ';
         switch (difficulty) {
             case 1:
                 text += "(Wandern)";

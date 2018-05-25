@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rate_action_control_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:padding="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/primary_main">
+
+        <ImageButton
+            android:id="@+id/violationTourCancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:padding="4dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
+
+        <ImageButton
+            android:id="@+id/violationTourSaveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_check_white_24dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:padding="8dp">
+
+        <RadioGroup
+            android:id="@+id/violationTypeTour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/violationTourNudity"
+                android:tag="nudity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_nudity"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/violationTourViolence"
+                android:tag="violence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_violence" />
+
+            <RadioButton
+                android:id="@+id/violationTourHarassment"
+                android:tag="harassment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_harassment" />
+
+            <RadioButton
+                android:id="@+id/violationTourSuicide"
+                android:tag="suicide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_suicide" />
+
+            <RadioButton
+                android:id="@+id/violationTourSpam"
+                android:tag="spam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_spam" />
+
+            <RadioButton
+                android:id="@+id/violationTourHateSpeech"
+                android:tag="hate speech"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_hatespeech" />
+
+            <RadioButton
+                android:id="@+id/violationTourOther"
+                android:tag="other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/violation_other" />
+
+        </RadioGroup>
+    </LinearLayout>
+</LinearLayout>

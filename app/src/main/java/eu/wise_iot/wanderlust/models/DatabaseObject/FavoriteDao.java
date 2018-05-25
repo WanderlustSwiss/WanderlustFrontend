@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
@@ -93,7 +94,6 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                         for (ImageInfo imageInfo : tour.getImagePaths()) {
                             String name = tour.getTour_id() + "-" + imageInfo.getId() + ".jpg";
                             imageInfo.setName(name);
-                            imageInfo.setId(tour.getTour_id());
                             imageInfo.setLocalDir(imageController.getTourFolder());
                         }
                     }
@@ -112,9 +112,8 @@ public class FavoriteDao extends DatabaseObjectAbstract{
     /**
      * Insert a favorite into the database
      *
-     * @param handler
      */
-    public void retrieveAllFavorites(final FragmentHandler handler) {
+    public void retrieveAllFavorites() {
         Call<List<Favorite>> call = service.retrievAllFavorites();
         call.enqueue(new Callback<List<Favorite>>() {
             @Override
@@ -126,17 +125,13 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                         favorite.setInternal_id(0);
                         favoriteBox.put(favorite);
                     }
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
-                } else
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
             }
             @Override
             public void onFailure(Call<List<Favorite>> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
     }
-
     /**
      * delete a favorite in the database
      *
@@ -156,7 +151,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         }
                     } catch (Exception e) {
-                        Log.d(TAG, e.getMessage());
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Favorite delete failed");
                     }
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
@@ -212,6 +207,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return Favorite which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Favorite findOne(Property searchedColumn, String searchPattern) {
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -239,7 +235,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
         return favoriteBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         favoriteBox.remove(findOne(searchedColumn, searchPattern));
     }
 

@@ -1,11 +1,10 @@
 package eu.wise_iot.wanderlust.views.dialog;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
-import android.net.Uri;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -27,12 +27,13 @@ import java.util.Map;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
-import eu.wise_iot.wanderlust.controllers.FragmentHandler;
+import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
+import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 /**
  * PoiViewDialog:
@@ -45,23 +46,15 @@ public class PoiViewDialog extends DialogFragment {
     //Assume there is only 1 PoiViewDialog
     private static Poi currentPoi;
     private Activity context;
-    private ImageView poiImage;
-    private ImageView displayModeImage;
-    private TextView typeTextView;
-    private TextView elevationTextView;
-    private TextView titleTextView;
-    private TextView dateTextView;
-    private TextView descriptionTextView;
-    private ImageButton closeDialogButton;
-    private ImageButton editPoiButton;
-    private ImageButton deletePoiButton;
-    private ImageButton sharePoiButton;
+    private ImageView poiImage, displayModeImage;
+    private TextView typeTextView, elevationTextView, titleTextView, dateTextView, descriptionTextView;
+    private ImageButton closeDialogButton, editPoiButton, deletePoiButton, sharePoiButton, reportPoiButton, privateModeButton;
     private PoiController controller;
+    private ImageController imageController;
     private TextView occupationTitleSac;
     private TableLayout sacOccupation;
-    private Map<String, Integer> monthIds = new HashMap<>();
-
-
+    private final Map<String, Integer> monthIds = new HashMap<>();
+    private static PoiController poiController;
     /**
      * Create a PoiViewDialog from a Poi object
      *
@@ -75,6 +68,7 @@ public class PoiViewDialog extends DialogFragment {
         Bundle args = new Bundle();
         args.putLong(Constants.POI_ID, poiId);
         dialog.setArguments(args);
+        poiController = new PoiController();
         return dialog;
     }
 
@@ -90,7 +84,7 @@ public class PoiViewDialog extends DialogFragment {
         imageInfo.setPath(geoObject.getImageLink());
         list.add(imageInfo);
 
-        currentPoi = new Poi((long) geoObjectTypeId, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, (int) geoObjectTypeId, true, list, "", "");
+        currentPoi = new Poi(geoObjectTypeId, geoObject.getTitle(), geoObject.getDescription(), geoObject.getLongitude(), geoObject.getLatitude(), (float) geoObject.getElevation(), -1, (long) -1, (int) geoObjectTypeId, true, list, "", "");
         dialog.setStyle(R.style.my_no_border_dialog_theme, R.style.AppTheme);
         Bundle args = new Bundle();
         args.putLong(Constants.POI_ID, geoObjectTypeId);
@@ -104,40 +98,33 @@ public class PoiViewDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         context = getActivity();
         controller = new PoiController();
-
-        Bundle args = getArguments();
-        long poiId = args.getLong(Constants.POI_ID);
+        imageController = ImageController.getInstance();
         setRetainInstance(true);
-    }
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return super.onCreateDialog(savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_poi_view, container, false);
-        poiImage = (ImageView) view.findViewById(R.id.poi_image);
-        displayModeImage = (ImageView) view.findViewById(R.id.poi_mode_private_image);
-        typeTextView = (TextView) view.findViewById(R.id.poi_type_text_view);
-        elevationTextView = (TextView) view.findViewById(R.id.poi_elevation_text_view);
-        titleTextView = (TextView) view.findViewById(R.id.poi_title_text_view);
-        dateTextView = (TextView) view.findViewById(R.id.poi_date_text_view);
-        descriptionTextView = (TextView) view.findViewById(R.id.poi_description_text_view);
-        closeDialogButton = (ImageButton) view.findViewById(R.id.poi_close_dialog_button);
-        editPoiButton = (ImageButton) view.findViewById(R.id.poi_edit_button);
-        deletePoiButton = (ImageButton) view.findViewById(R.id.poi_delete_button);
-        sharePoiButton = (ImageButton) view.findViewById(R.id.poi_share_button);
-        sacOccupation = (TableLayout) view.findViewById(R.id.tableLayout_occupation_sac);
-        occupationTitleSac = (TextView) view.findViewById(R.id.title_occupation);
+        poiImage = view.findViewById(R.id.poi_image);
+        typeTextView = view.findViewById(R.id.poi_type_text_view);
+        titleTextView = view.findViewById(R.id.poi_title_text_view);
+        dateTextView = view.findViewById(R.id.poi_date_text_view);
+        descriptionTextView = view.findViewById(R.id.poi_description_text_view);
+        closeDialogButton = view.findViewById(R.id.poi_close_dialog_button);
+        editPoiButton = view.findViewById(R.id.poi_edit_button);
+        deletePoiButton = view.findViewById(R.id.poi_delete_button);
+        sharePoiButton = view.findViewById(R.id.poi_share_button);
+        sacOccupation = view.findViewById(R.id.tableLayout_occupation_sac);
+        occupationTitleSac = view.findViewById(R.id.title_occupation);
+        reportPoiButton = view.findViewById(R.id.reportPoiButton);
+        privateModeButton = view.findViewById(R.id.poi_mode_private_image);
         // default not visible
         sacOccupation.setVisibility(View.GONE);
         occupationTitleSac.setVisibility(View.GONE);
 
         if (controller.isOwnerOf(currentPoi)) {
-            this.showControlsForOwner();
+            showControlsForOwner();
         }
 
         return view;
@@ -150,9 +137,17 @@ public class PoiViewDialog extends DialogFragment {
         fillOutPoiView(view);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fillOutPoiView(getView());
+    }
+
+
     private void initActionControls() {
 
         sharePoiButton.setOnClickListener(v -> shareImage());
+        reportPoiButton.setOnClickListener(v -> reportPoi());
 
         closeDialogButton.setOnClickListener(v -> {
             // dismisses the current dialog view
@@ -173,46 +168,88 @@ public class PoiViewDialog extends DialogFragment {
                 dismiss();
             }
         });
+
+        privateModeButton.setOnClickListener(v -> Toast.makeText(context, getString(R.string.poi_mode_is_private), Toast.LENGTH_LONG).show());
     }
 
     private void fillOutPoiView(View view) {
         if (currentPoi.getType() >= 0) {
-            controller.getImages(currentPoi, controllerEvent -> {
-                List<File> images = (List<File>) controllerEvent.getModel();
-                if (images.size() > 0) {
-                    Picasso.with(context).load(images.get(0)).fit().centerCrop().into(poiImage);
+
+            if(currentPoi.getUser() == UserDao.getInstance().getUser().getUser_id()){
+                if(currentPoi.isPublic()){
+                    poiController.getImages(currentPoi, controllerEvent -> {
+                        switch (controllerEvent.getType()) {
+                            case OK:
+                                List<File> images = (List<File>) controllerEvent.getModel();
+                                if (images.size() != 0) {
+                                    Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                                }
+                                break;
+                            default:
+
+                        }
+                    });
+                } else{
+                    Poi localPoi = poiController.getLocalPoi(currentPoi.getPoi_id());
+                    List<File> images = imageController.getImages(localPoi.getImagePaths());
+                    if (images.size() != 0) {
+                        Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                    }
                 }
-            });
+            }
+            else {
+                if (currentPoi.isPublic()) {
+                    Picasso handler = imageController.getPicassoHandler(context);
+                    String url = ServiceGenerator.API_BASE_URL + "/poi/" + currentPoi.getPoi_id() + "/img/1";
+                    handler.load(url).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                } else {
+
+                    Poi localPoi = poiController.getLocalPoi(currentPoi.getPoi_id());
+                    List<File> images = imageController.getImages(localPoi.getImagePaths());
+                    if (images.size() != 0) {
+                        Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                    }
+                }
+            }
         } else {
             List<File> images = new ArrayList<>();
             images.add(new File(currentPoi.getImagePaths().get(0).getPath()));
             Picasso.with(context).load(images.get(0).getPath()).fit().centerCrop().into(poiImage);
         }
 
-        // todo: add better image to display that poi is private (ask Hristian how)
-        if (!currentPoi.isPublic()) {
-            Picasso.with(context).load(R.drawable.image_msg_mode_private).fit().into(displayModeImage);
-        }
-
+        if (currentPoi.isPublic()) privateModeButton.setVisibility(View.GONE);
 
         String[] typeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_type);
         String[] geoObjectTypeValues = getResources().getStringArray(R.array.dialog_feedback_spinner_geoobject_type);
 
 
+        String poiType;
+
         if(currentPoi.getType() >= 0){
-            typeTextView.setText(typeValues[(int) currentPoi.getType()]);
+            poiType = typeValues[(int) currentPoi.getType() - 1];
         } else {
-            typeTextView.setText(geoObjectTypeValues[(-1 * (int) currentPoi.getType()) -1]);
+            poiType = geoObjectTypeValues[(-1 * (int) currentPoi.getType()) -1];
             sharePoiButton.setVisibility(View.GONE);
         }
-        String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
-        elevationTextView.setText(elevationText);
+        String typeText;
+        if (currentPoi.getElevation() != Integer.MAX_VALUE){
+            String elevationText = String.format("%.0f  %s", currentPoi.getElevation(), getString(R.string.meter_above_sea_level_abbreviation));
+            typeText = String.format("%s (%s)", poiType, elevationText);
+        }else{
+            typeText = String.format("%s", poiType);
+        }
+        typeTextView.setText(typeText);
 
         titleTextView.setText(currentPoi.getTitle());
+
+        // only show date text view if poi is a sac hut
         if(currentPoi.getType() >= 0){
             dateTextView.setText(currentPoi.getCreatedAt(Locale.GERMAN));
+        } else {
+            dateTextView.setVisibility(View.GONE);
         }
 
+        // TODO: can be removed after seperating sac from poi view
         if (currentPoi.getType() == Constants.TYPE_SAC) {
             String description = showSacOccupation(currentPoi.getDescription(), view);
             currentPoi.setDescription(description);
@@ -290,9 +327,9 @@ public class PoiViewDialog extends DialogFragment {
                 for (String anOccupiedMonth : occupiedMonth) {
                     String month = anOccupiedMonth.toLowerCase();
                     int id = monthIds.get(month);
-                    TextView currentMonthRow = (TextView) view.findViewById(id);
+                    TextView currentMonthRow = view.findViewById(id);
                     if (currentMonthRow != null) {
-                        currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.medium));
+                        currentMonthRow.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.medium));
                     }
                 }
             } else if (aTextSplit.contains("Bewartet: ")) {
@@ -302,20 +339,18 @@ public class PoiViewDialog extends DialogFragment {
                 for (String anOccupiedMonth : occupiedMonth) {
                     String month = anOccupiedMonth.toLowerCase();
                     int id = monthIds.get(month);
-                    TextView currentMonthRow = (TextView) view.findViewById(id);
+                    TextView currentMonthRow = view.findViewById(id);
                     if (currentMonthRow != null) {
-                        currentMonthRow.setBackgroundTintList(this.getActivity().getResources().getColorStateList(R.color.success_easy));
+                        currentMonthRow.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.success_easy));
                     }
                 }
             } else {
-                editedDescription.append(aTextSplit).append("\n");
+                editedDescription.append(aTextSplit).append('\n');
             }
         }
         int lasIndex = editedDescription.lastIndexOf("\n");
         return editedDescription.substring(0, lasIndex);
     }
-
-
 
     private void initMonthTableString() {
         monthIds.put("jan", R.id.occupation_jan);
@@ -332,4 +367,11 @@ public class PoiViewDialog extends DialogFragment {
         monthIds.put("dez", R.id.occupation_dez);
     }
 
+    /**
+     * report the current poi for violation
+     */
+    private void reportPoi(){
+        PoiReportDialog dialog = new PoiReportDialog().newInstance(currentPoi, controller);
+        dialog.show(getFragmentManager(), Constants.REPORT_POI_DIALOG);
+    }
 }

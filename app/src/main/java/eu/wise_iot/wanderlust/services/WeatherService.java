@@ -2,7 +2,7 @@ package eu.wise_iot.wanderlust.services;
 
 import java.util.List;
 
-import eu.wise_iot.wanderlust.models.DatabaseModel.SeasonsKeys;
+import eu.wise_iot.wanderlust.models.DatabaseModel.SeasonsKey;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.models.DatabaseModel.WeatherKeys;
 import retrofit2.Call;
@@ -20,6 +20,6 @@ public interface WeatherService {
     Call<List<WeatherKeys>> getWeatherKeys();
 
     @GET("weather/seasons")
-    Call<List<SeasonsKeys>> getSeasonsKeys();
+    Call<List<SeasonsKey>> getSeasonsKeys();
 
 }

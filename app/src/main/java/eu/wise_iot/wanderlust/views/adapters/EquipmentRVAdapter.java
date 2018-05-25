@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
@@ -40,15 +41,14 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
     /**
      * data is passed into the constructor, here as a equipment
      * @param context
-     * @param parEquipment
+     * @param equipment
      */
-    public EquipmentRVAdapter(Context context, List<Equipment> parEquipment) {
-        Log.d(TAG, "Copy Constructor");
-        this.mInflater = LayoutInflater.from(context);
+    public EquipmentRVAdapter(Context context, List<Equipment> equipment) {
+        if (BuildConfig.DEBUG) Log.d(TAG, "Copy Constructor");
+        mInflater = LayoutInflater.from(context);
         this.context = context;
-        if(parEquipment == null) parEquipment = new ArrayList<>();
-        this.equipment = parEquipment;
-        this.imageController = ImageController.getInstance();
+        this.equipment = (equipment != null) ? equipment : new ArrayList<>();
+        imageController = ImageController.getInstance();
     }
 
     /**
@@ -59,8 +59,8 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "Creating Viewholder");
-        View view = mInflater.inflate(R.layout.recyclerview_equipment, parent, false);
+        if (BuildConfig.DEBUG) Log.d(TAG, "Creating Viewholder");
+        View view = mInflater.inflate(R.layout.recyclerview_tour_equipment, parent, false);
         return new ViewHolder(view);
     }
 
@@ -71,7 +71,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.d(TAG, "starting to set Viewholder properties");
+        if (BuildConfig.DEBUG) Log.d(TAG, "starting to set Viewholder properties");
         //set properties for each element
         Equipment equipment = this.equipment.get(position);
         //load image
@@ -81,11 +81,10 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
             Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
         }else{
             File image = imageController.getImage(equipment.getImagePath());
-            if (image == null){
-                Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
-            }else{
+            if (image == null)
+                Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).placeholder(R.drawable.progress_animation).into(holder.ivImage);
+            else
                 Picasso.with(context).load(image).placeholder(R.drawable.loader).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
-            }
         }
     }
 
@@ -94,7 +93,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      * @param itemClickListener
      */
     public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
+        mClickListener = itemClickListener;
     }
 
     /**
@@ -103,7 +102,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      */
     @Override
     public int getItemCount() {
-        return this.equipment.size();
+        return equipment.size();
     }
 
     /**
@@ -112,7 +111,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      * @return
      */
     private Equipment getItem(int id) {
-        return this.equipment.get(id);
+        return equipment.get(id);
     }
 
     /**
@@ -129,18 +128,18 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each equipment part
-        public final TextView tvTitle;
-        public final ImageView ivImage;
+        final TextView tvTitle;
+        final ImageView ivImage;
 
         /**
          * copy constructor for each element which holds the view
          * @param itemView
          */
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            tvTitle = (TextView) itemView.findViewById(R.id.equipmentTitle);
-            ivImage = (ImageView) itemView.findViewById(R.id.equipmentImage);
-            Log.d("DEBUG", "ViewHolder broken");
+            tvTitle = itemView.findViewById(R.id.equipmentTitle);
+            ivImage = itemView.findViewById(R.id.equipmentImage);
+            if (BuildConfig.DEBUG) Log.d("DEBUG", "ViewHolder broken");
             itemView.setOnClickListener(this);
         }
 

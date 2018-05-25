@@ -23,6 +23,7 @@ public class UserGuideFragment extends Fragment {
 
     private Button goToMapButton;
 
+
     public static UserGuideFragment newInstance() {
         Bundle args = new Bundle();
         UserGuideFragment fragment = new UserGuideFragment();
@@ -37,7 +38,7 @@ public class UserGuideFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_user_guide, container, false);
 
-        goToMapButton = (Button) rootView.findViewById(R.id.btn_go_to_map);
+        goToMapButton = rootView.findViewById(R.id.btn_go_to_map);
         return rootView;
     }
 
@@ -46,7 +47,9 @@ public class UserGuideFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         goToMapButton.setOnClickListener(v -> {
-            MapFragment mapFragment = MapFragment.newInstance();
+
+            Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+            if (mapFragment == null) mapFragment = MapFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                     .addToBackStack(null)

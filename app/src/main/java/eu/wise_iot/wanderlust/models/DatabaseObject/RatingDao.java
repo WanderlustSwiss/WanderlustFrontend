@@ -4,12 +4,13 @@ import android.util.Log;
 
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
-import eu.wise_iot.wanderlust.models.DatabaseModel.RatingAVG;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
 import eu.wise_iot.wanderlust.services.RatingService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
@@ -94,7 +95,7 @@ public class RatingDao extends DatabaseObjectAbstract{
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         }
                     } catch (Exception e){
-                        Log.d(TAG, e.getMessage());
+                        if (BuildConfig.DEBUG) Log.d(TAG, e.getMessage());
                     }
                 } else
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
@@ -107,23 +108,42 @@ public class RatingDao extends DatabaseObjectAbstract{
         });
     }
 
-    public void retrieve(long id, final FragmentHandler handler) {
-        Call<RatingAVG> call = service.retrieveRating(id);
-        call.enqueue(new Callback<RatingAVG>() {
+    public void retrieveTour(long tourId, final FragmentHandler handler) {
+        Call<TourRate> call = service.retrieveTourRating(tourId);
+        call.enqueue(new Callback<TourRate>() {
             @Override
-            public void onResponse(Call<RatingAVG> call, Response<RatingAVG> response) {
+            public void onResponse(Call<TourRate> call, Response<TourRate> response) {
                 if (response.isSuccessful()) {
-                    RatingAVG ratingAVG = response.body();
-                    //RatingBox.put(backendRating);
+                    TourRate ratingStats = response.body();
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),
-                            ratingAVG.getRateAvg()));
+                            ratingStats));
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
                 }
             }
 
             @Override
-            public void onFailure(Call<RatingAVG> call, Throwable t) {
+            public void onFailure(Call<TourRate> call, Throwable t) {
+                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
+            }
+        });
+    }
+
+    public void retrieve(long id, final FragmentHandler handler) {
+        Call<Rating> call = service.retrieveRating(id);
+        call.enqueue(new Callback<Rating>() {
+            @Override
+            public void onResponse(Call<Rating> call, Response<Rating> response) {
+                if (response.isSuccessful()) {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()),
+                            response.body().getRate()));
+                } else {
+                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Rating> call, Throwable t) {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
@@ -150,10 +170,12 @@ public class RatingDao extends DatabaseObjectAbstract{
      * @param searchPattern  (required) contain the search pattern.
      * @return Rating which match to the search pattern in the searched columns
      */
+    @SuppressWarnings("WeakerAccess")
     public Rating findOne(Property searchedColumn, String searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Rating findOne(Property searchedColumn, long searchPattern) {
         return RatingBox.query().equal(searchedColumn, searchPattern).build().findFirst();
     }
@@ -182,7 +204,7 @@ public class RatingDao extends DatabaseObjectAbstract{
         return RatingBox.query().equal(searchedColumn, searchPattern).build().find();
     }
 
-    public void delete(Property searchedColumn, String searchPattern) throws NoSuchFieldException, IllegalAccessException {
+    public void delete(Property searchedColumn, String searchPattern) {
         RatingBox.remove(findOne(searchedColumn, searchPattern));
     }
 

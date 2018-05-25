@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.design.widget.BottomSheetBehavior;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,22 +15,27 @@ import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.MotionEventListener;
 
-public class WanderlustMapView extends MapView {
+public class WanderlustMapView extends MapView implements RotationGestureDetector.OnRotationGestureListener {
 
     private GeoPoint centerOfPublicTransportOverlay = new GeoPoint(0.0, 0.0);
 
     private boolean publicTransportEnabled;
     private boolean sacHutEnabled;
+    private boolean hashTagEnabled;
 
+    private final RotationGestureDetector rotationGestureDetector = new RotationGestureDetector(this);
     private MyMapOverlays mapOverlays;
 
     // Layer BottomSheet
     private BottomSheetBehavior bottomSheetBehavior;
     private View bottomSheet;
+
+    private WanderlustCompassOverlay wanderlustCompassOverlay;
 
     private final ArrayList<MotionEventListener<WanderlustMapView>> motionEventListenerList = new ArrayList<>();
 
@@ -39,7 +45,7 @@ public class WanderlustMapView extends MapView {
     }
 
     public void addObserver(MotionEventListener<WanderlustMapView> motionEventListener){
-        this.motionEventListenerList.add(motionEventListener);
+        motionEventListenerList.add(motionEventListener);
     }
 
 
@@ -56,6 +62,10 @@ public class WanderlustMapView extends MapView {
         this.publicTransportEnabled = publicTransportEnabled;
     }
 
+    public void setHashTagEnabled(boolean hashTagEnabled){
+        this.hashTagEnabled = hashTagEnabled;
+    }
+
     public void setSacHutEnabledEnabled(boolean sacHutEnabled) {
         this.sacHutEnabled = sacHutEnabled;
     }
@@ -70,7 +80,9 @@ public class WanderlustMapView extends MapView {
         boolean result = super.dispatchTouchEvent(event);
         if (event.getAction() == MotionEvent.ACTION_UP) {
 
-            DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, this.getProjection().getBoundingBox()));
+            if(!hashTagEnabled) {
+                DatabaseController.getInstance().sync(new DatabaseEvent(DatabaseEvent.SyncType.POIAREA, getProjection().getBoundingBox()));
+            }
 
             // Update public transport
             if (getZoomLevel() > 14 && publicTransportEnabled) {
@@ -85,6 +97,7 @@ public class WanderlustMapView extends MapView {
                 centerOfPublicTransportOverlay = new GeoPoint(0.0, 0.0);
             }
 
+            if (BuildConfig.DEBUG) Log.d("ZOOOOOOOOM", String.valueOf(getZoomLevel()));
 
             // Update SAC Hut Overlay
             if (sacHutEnabled) {
@@ -118,5 +131,24 @@ public class WanderlustMapView extends MapView {
 
 
         return result;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        rotationGestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void OnRotation(RotationGestureDetector rotationDetector) {
+        float angle = rotationDetector.getAngle();
+        wanderlustCompassOverlay.setLastKnownAngle(angle);
+        setMapOrientation(-angle);
+        if (BuildConfig.DEBUG) Log.d("RotationGestureDetector", "Rotation: " + Float.toString(angle));
+    }
+
+
+    public void setWanderlustCompassOverlay(WanderlustCompassOverlay wanderlustCompassOverlay) {
+        this.wanderlustCompassOverlay = wanderlustCompassOverlay;
     }
 }

@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@color/background_main"
+    android:clickable="true"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/list_fav_image_view"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerVertical="true"
+        android:src="@color/heading_icon_unselected" />
+
+    <LinearLayout
+        android:id="@+id/ListFavInfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_toLeftOf="@id/list_fav_icon"
+        android:layout_toRightOf="@id/list_fav_image_view"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/list_fav_title"
+            style="@style/h2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <TextView
+            android:id="@+id/list_fav_description"
+            style="@style/p.Grey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/list_fav_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_favorite_black_24dp" />
+
+</RelativeLayout>
