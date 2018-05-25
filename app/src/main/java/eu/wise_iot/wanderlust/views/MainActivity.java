@@ -43,6 +43,7 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -83,6 +84,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View header;
     private NavigationView navigationView;
     private LoginController loginController;
+    private final List<String> drawerFragments = Arrays.asList(Constants.DISCLAIMER_FRAGMENT, Constants.MAP_FRAGMENT,
+                                                               Constants.PROFILE_FRAGMENT, Constants.TOUROVERVIEW_FRAGMENT,
+                                                               Constants.USER_GUIDE_FRAGMENT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .beginTransaction()
                 .replace(R.id.content_frame, BackgroundFragment.newInstance(), Constants.BACKGROUND_FRAGMENT)
                 .commit();
+
 
         activity = this;
         setContentView(R.layout.activity_main);
@@ -333,11 +338,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void switchFragment(Fragment fragment, String fragmentTag) {
+
+        for(String drawerFragment : drawerFragments){
+            Fragment fragmentFind = getFragmentManager().findFragmentByTag(drawerFragment);
+            if((fragmentFind != null) && fragmentFind.isAdded() && (fragmentFind != fragment)){
+                if (BuildConfig.DEBUG) Log.d(TAG, "hiding fragment: " + fragmentFind.getTag());
+                getFragmentManager().beginTransaction().hide(fragmentFind).commit();
+            }
+
+        }
         if (fragment != null) {
-            if(fragment.isAdded()){
+
+            if(fragment.isAdded() && fragment.isHidden()){
+                if (BuildConfig.DEBUG) Log.d(TAG, "showing fragment: " + fragment.getTag());
                 getFragmentManager()
                         .beginTransaction()
-                        .show(fragment);
+                        .show(fragment)
+                        .commit();
             } else {
 
 //                if(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT).isAdded()) {
@@ -354,9 +371,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    //getFragmentManager().executePendingTransactions();
 //                }
                 //set anchor null, not the tag of the given fragment
+                if (BuildConfig.DEBUG) Log.d(TAG, "adding fragment: " + fragmentTag);
                 getFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.content_frame, fragment, fragmentTag)
+                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                        .add(R.id.content_frame,fragment, fragmentTag)
                         .commit();
             }
         } else {
