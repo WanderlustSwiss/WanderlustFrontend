@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 Log.d(TAG, "Last login: " + lastLogin2);
                                 //check if last login is within last 24h
                                 if(lastLogin2.isAfter(new DateTime().minusDays(1))){
-                                    setupDrawerHeader(user);
+                                    //setupDrawerHeader(user);
                                     getFragmentManager().beginTransaction()
                                             .replace(R.id.content_frame,MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                             .commit();
@@ -339,20 +339,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .beginTransaction()
                         .show(fragment);
             } else {
-
-//                if(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT).isAdded()) {
-//                    getFragmentManager()
-//                            .beginTransaction()
-//                            .remove(getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT));
-//                }
-                //pop the backstack without showing the fragments to not infinite add to the stack
-                //null is anchor for the stack
-                //getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                if(getFragmentManager().getBackStackEntryCount() > 0) {
-//                    FragmentManager.BackStackEntry entry = getFragmentManager().getBackStackEntryAt(0);
-//                    getFragmentManager().popBackStack(entry.getId(),FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                    //getFragmentManager().executePendingTransactions();
-//                }
                 //set anchor null, not the tag of the given fragment
                 getFragmentManager()
                         .beginTransaction()
