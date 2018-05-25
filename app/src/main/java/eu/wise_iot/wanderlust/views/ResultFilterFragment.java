@@ -90,7 +90,7 @@ public class ResultFilterFragment extends Fragment {
                     currentPage++;
                     if (BuildConfig.DEBUG) Log.d(TAG, "Getting filtered Tours: Server response arrived");
                     //get all the images needed and save them on the device
-                    getDataFromServer(listFilteredTours);
+                    //getDataFromServer(listFilteredTours);
                     adapterRoutes.notifyDataSetChanged();
                     if(adapterRoutes.getItemCount() > 0) {
                         rvToursFiltered.setVisibility(View.VISIBLE);
@@ -122,7 +122,7 @@ public class ResultFilterFragment extends Fragment {
                                                     LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                                     currentPage++;
                                                     listFilteredTours.addAll(newList);
-                                                    getDataFromServer(listFilteredTours);
+                                                    //getDataFromServer(listFilteredTours);
                                                     adapterRoutes.notifyDataSetChanged();
                                                     break;
                                                 default:
@@ -157,14 +157,24 @@ public class ResultFilterFragment extends Fragment {
      * @param view
      * @param tour
      */
-    @SuppressWarnings("WeakerAccess")
     protected void onItemClickImages(View view, Tour tour) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
-                .addToBackStack(Constants.TOUR_FRAGMENT)
-                .commit();
+        Fragment fragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
+        if(fragment.isAdded()) {
+            getFragmentManager().beginTransaction()
+                    .hide(this)
+                    .remove(getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT))
+                    .add(R.id.content_frame,TourFragment.newInstance(tour))
+                    //.addToBackStack(Constants.TOUR_FRAGMENT)
+                    .commit();
+        } else {
+            getFragmentManager().beginTransaction()
+                    .hide(this)
+                    .add(R.id.content_frame,TourFragment.newInstance(tour))
+                    //.addToBackStack(Constants.TOUR_FRAGMENT)
+                    .commit();
+        }
         //((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 

@@ -172,15 +172,15 @@ public class FilterFragment extends Fragment {
         editor.putString("filter_region", tiRegion.getText().toString());
         editor.apply();
 
-        getFragmentManager().beginTransaction().hide(this);
+        getFragmentManager().beginTransaction().hide(this).commit();
 
         Fragment resultFragment = getFragmentManager().findFragmentByTag(Constants.RESULT_FILTER_FRAGMENT);
         if (resultFragment != null) getFragmentManager().beginTransaction().remove(resultFragment).commit();
 
         ResultFilterFragment resultFilterFragment = ResultFilterFragment.newInstance(setting);
         getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, resultFilterFragment, Constants.RESULT_FILTER_FRAGMENT)
-                .addToBackStack(Constants.RESULT_FILTER_FRAGMENT)
+                .add(R.id.content_frame, resultFilterFragment, Constants.RESULT_FILTER_FRAGMENT)
+                //.addToBackStack(Constants.FILTER_FRAGMENT)
                 .commit();
         //((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }

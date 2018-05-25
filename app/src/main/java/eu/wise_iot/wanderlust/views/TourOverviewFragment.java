@@ -102,12 +102,12 @@ public class TourOverviewFragment extends Fragment {
                 if (fragment != null && fragment.isAdded()) {
                     getFragmentManager().beginTransaction()
                             .show(fragment)
-                            .addToBackStack(Constants.FILTER_FRAGMENT)
+                            //.addToBackStack(Constants.FILTER_FRAGMENT)
                             .commit();
                 }
                 getFragmentManager().beginTransaction()
                         .add(R.id.content_frame, FilterFragment.newInstance(), Constants.FILTER_FRAGMENT)
-                        .addToBackStack(Constants.FILTER_FRAGMENT)
+                        //.addToBackStack(Constants.FILTER_FRAGMENT)
                         .commit();
                 break;
         }
@@ -382,14 +382,14 @@ public class TourOverviewFragment extends Fragment {
             case R.id.tour_rv_item:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
                 LoadingDialog.getDialog().show(getActivity());
-                //AsyncUITask.getHandler().queueTask(() -> {
                 tourOverviewController.checkIfTourExists(tour, controllerEvent -> {
                     switch(controllerEvent.getType()) {
                         case OK:
                             if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");
+                            getFragmentManager().beginTransaction().hide(this).commit();
                             getFragmentManager().beginTransaction()
                                     .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
-                                    .addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
+                                    //.addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
                                     .commit();
                             //((AppCompatActivity) getActivity()).getSupportActionBar().show();
                             break;
@@ -414,9 +414,6 @@ public class TourOverviewFragment extends Fragment {
                     }
                     LoadingDialog.getDialog().dismiss();
                 });
-
-                    LoadingDialog.getDialog().dismiss();
-               // });
                 break;
         }
 

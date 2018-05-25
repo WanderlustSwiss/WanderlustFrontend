@@ -249,28 +249,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         }
 
-        //Don't do anything with back button if user is on login or registration screen
-        else if (fragment != null && fragment instanceof StartupRegistrationFragment
-                || fragment instanceof StartupLoginFragment
-                || fragment instanceof MapFragment
-                || fragment instanceof TourOverviewFragment
-                || fragment instanceof ProfileFragment
-                || fragment instanceof DisclaimerFragment
-                || fragment instanceof UserGuideFragment
-                || fragment instanceof StartupResetPasswordFragment) {
-        } else {
-            if(fragment instanceof FilterFragment) {
+        if(fragment != null) {
+            //Don't do anything with back button if user is on login or registration screen
+            if ((fragment instanceof StartupRegistrationFragment)
+                    || (fragment instanceof StartupLoginFragment)
+                    || (fragment instanceof MapFragment)
+                    || (fragment instanceof TourOverviewFragment)
+                    || (fragment instanceof ProfileFragment)
+                    || (fragment instanceof DisclaimerFragment)
+                    || (fragment instanceof UserGuideFragment)
+                    || (fragment instanceof StartupResetPasswordFragment)) {
+            } else if (fragment instanceof FilterFragment || fragment instanceof TourFragment) {
                 getFragmentManager().beginTransaction()
-                        .hide(fragment)
                         .show(getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT))
+                        .hide(fragment)
                         .commit();
+            } else if (fragment instanceof ResultFilterFragment) {
+                getFragmentManager().beginTransaction()
+                        .remove(getFragmentManager().findFragmentByTag(Constants.RESULT_FILTER_FRAGMENT))
+                        .show(getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT))
+                        .commit();
+            } else {
+                super.onBackPressed();
             }
-            /*if(getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT) != null
-                    && getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT).isHidden()
-                    && getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT).isVisible())
-                Fragment f = getFragmentManager().();*/
-
-            super.onBackPressed();
         }
     }
 
