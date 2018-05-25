@@ -92,7 +92,7 @@ public class CreateTourDialog extends DialogFragment {
     private CheckBox winterCheckBox;
 
     private ImageView tourImageDisplay;
-    private AppCompatButton uploadImageBtn;
+    private Button uploadImageBtn;
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
     private TourController tourController;
