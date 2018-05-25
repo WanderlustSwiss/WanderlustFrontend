@@ -158,7 +158,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
 
                             getFragmentManager().beginTransaction()
                                     .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
-                                    .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
+                                    //.addToBackStack(Constants.USER_GUIDE_FRAGMENT)
                                     .commit();
                         } else {
 

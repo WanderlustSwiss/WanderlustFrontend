@@ -901,10 +901,20 @@ public class TourFragment extends Fragment {
         NavigationView nv = getActivity().findViewById(R.id.nav_view);
         nv.getMenu().getItem(0).setChecked(true);
         //add new fragment to stack
-        getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                .addToBackStack(null)
-                .commit();
+//        getFragmentManager().beginTransaction()
+//                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+//                .disallowAddToBackStack()
+//                .commit();
+        //getFragmentManager().popBackStackImmediate(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+       // getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT));
+       // getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT));
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT).commit();
+        //Fragment backStackEntryAt = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+        //Fragment currentFragment = backStackEntryAt.getName();
+//        android.app.FragmentManager
+//                .BackStackEntry entry = getFragmentManager().getBackStackEntryAt(0);
+//        getFragmentManager().popBackStack(entry.getId(),FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//        getFragmentManager().executePendingTransactions();
 
         //((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
