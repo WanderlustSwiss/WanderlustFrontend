@@ -18,14 +18,7 @@ public class ServiceGenerator {
     /*
      * Defines the URL for the backend communication
      */
-    //productive host
-    //public static final String API_BASE_URL = "https://www.cs.technik.fhnw.ch/wanderlust/";
-    //local development hosts (recommended)
-    //public static final String API_BASE_URL = "http://10.0.2.2:1337";
-    //public static final String API_BASE_URL = "http://192.168.56.1";
-    //public static final String API_BASE_URL = "http://192.168.178.61:1337";
-    //build host
-    public static final String API_BASE_URL = "http://86.119.40.34:8080";
+    public static final String API_BASE_URL = "https://www.cs.technik.fhnw.ch/wanderlust/";
 
     private static Retrofit service;
 
