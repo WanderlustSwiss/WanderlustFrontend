@@ -98,8 +98,17 @@ public class TourOverviewFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.filterIcon:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
+
+                getFragmentManager().beginTransaction().hide(this).commit();
+                Fragment fragment = getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT);
+                if (fragment != null && fragment.isAdded()) {
+                    getFragmentManager().beginTransaction()
+                            .show(fragment)
+                            .addToBackStack(Constants.FILTER_FRAGMENT)
+                            .commit();
+                }
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, FilterFragment.newInstance(), Constants.FILTER_FRAGMENT)
+                        .add(R.id.content_frame, FilterFragment.newInstance(), Constants.FILTER_FRAGMENT)
                         .addToBackStack(Constants.FILTER_FRAGMENT)
                         .commit();
                 break;

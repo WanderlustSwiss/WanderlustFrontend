@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 Log.d(TAG, "Last login: " + lastLogin2);
                                 //check if last login is within last 24h
                                 if(lastLogin2.isAfter(new DateTime().minusDays(1))){
-                                    setupDrawerHeader(user);
+                                    //setupDrawerHeader(user);
                                     getFragmentManager().beginTransaction()
                                             .replace(R.id.content_frame,MapFragment.newInstance(), Constants.MAP_FRAGMENT)
                                             .commit();
@@ -259,6 +259,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || fragment instanceof UserGuideFragment
                 || fragment instanceof StartupResetPasswordFragment) {
         } else {
+            if(fragment instanceof FilterFragment) {
+                getFragmentManager().beginTransaction()
+                        .hide(fragment)
+                        .show(getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT))
+                        .commit();
+            }
+            /*if(getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT) != null
+                    && getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT).isHidden()
+                    && getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT).isVisible())
+                Fragment f = getFragmentManager().();*/
+
             super.onBackPressed();
         }
     }
@@ -349,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (fragment != null) {
 
-            if(fragment.isAdded() && fragment.isHidden()){
+            if(fragment.isAdded()){
                 if (BuildConfig.DEBUG) Log.d(TAG, "showing fragment: " + fragment.getTag());
                 getFragmentManager()
                         .beginTransaction()

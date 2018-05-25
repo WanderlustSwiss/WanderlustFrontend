@@ -172,6 +172,10 @@ public class FilterFragment extends Fragment {
         editor.putString("filter_region", tiRegion.getText().toString());
         editor.apply();
 
+        getFragmentManager().beginTransaction().hide(this);
+
+        Fragment resultFragment = getFragmentManager().findFragmentByTag(Constants.RESULT_FILTER_FRAGMENT);
+        if (resultFragment != null) getFragmentManager().beginTransaction().remove(resultFragment).commit();
 
         ResultFilterFragment resultFilterFragment = ResultFilterFragment.newInstance(setting);
         getFragmentManager().beginTransaction()
