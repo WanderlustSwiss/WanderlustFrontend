@@ -43,8 +43,8 @@ public class FragmentService extends Application {
     private String lastManipulatedTag;
 
     private final List<String> drawerFragments = Arrays.asList(Constants.DISCLAIMER_FRAGMENT, Constants.MAP_FRAGMENT,
-            Constants.PROFILE_FRAGMENT, Constants.TOUROVERVIEW_FRAGMENT,
-            Constants.USER_GUIDE_FRAGMENT);
+                                                                Constants.PROFILE_FRAGMENT, Constants.TOUROVERVIEW_FRAGMENT,
+                                                                Constants.USER_GUIDE_FRAGMENT);
 
     public static synchronized FragmentService getInstance(Activity activity){
         if (fragmentService == null) {

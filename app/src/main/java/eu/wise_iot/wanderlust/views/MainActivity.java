@@ -95,7 +95,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                                             Constants.USER_GUIDE_FRAGMENT,
                                                             Constants.TOUR_FRAGMENT,
                                                             Constants.FILTER_FRAGMENT,
-                                                            Constants.RESULT_FILTER_FRAGMENT);
+                                                            Constants.RESULT_FILTER_FRAGMENT,
+                                                            Constants.LOGIN_FRAGMENT,
+                                                            Constants.RESET_PASSWORD_FRAGMENT,
+                                                            Constants.REGISTRATION_FRAGMENT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -375,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                         .add(R.id.content_frame,fragment, fragmentTag)
                         .commit();
-
             }
         } else {
             Log.e(TAG, "Error in creating fragment");
