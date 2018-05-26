@@ -88,6 +88,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final List<String> drawerFragments = Arrays.asList(Constants.DISCLAIMER_FRAGMENT, Constants.MAP_FRAGMENT,
                                                                Constants.PROFILE_FRAGMENT, Constants.TOUROVERVIEW_FRAGMENT,
                                                                Constants.USER_GUIDE_FRAGMENT);
+    private final List<String> fragmentPool = Arrays.asList(Constants.DISCLAIMER_FRAGMENT,
+                                                            Constants.MAP_FRAGMENT,
+                                                            Constants.PROFILE_FRAGMENT,
+                                                            Constants.TOUROVERVIEW_FRAGMENT,
+                                                            Constants.USER_GUIDE_FRAGMENT,
+                                                            Constants.TOUR_FRAGMENT,
+                                                            Constants.FILTER_FRAGMENT,
+                                                            Constants.RESULT_FILTER_FRAGMENT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,46 +254,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
+        FragmentService service = FragmentService.getInstance(this);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-       // Fragment fragment = getFragmentManager().findFragmentById(R.id.content_frame);
-        Fragment fragment = getFragmentManager().findFragmentByTag(FragmentService.getInstance(this).getLastManipulated());
+
+        Fragment fragment = fm.findFragmentByTag(service.getLastManipulated());
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
         //get backstack
-        //Fragment fragmentFromStack = (fm.getBackStackEntryCount() > 0) ? fm.findFragmentById(fm.) : null;
-
         if(fragment != null) {
-            //Don't do anything with back button if user is on login or registration screen
-            if ((fragment instanceof StartupRegistrationFragment)
-                    || (fragment instanceof StartupLoginFragment)
-                    || (fragment instanceof MapFragment)
-                    || (fragment instanceof TourOverviewFragment)
-                    || (fragment instanceof ProfileFragment)
-                    || (fragment instanceof DisclaimerFragment)
-                    || (fragment instanceof UserGuideFragment)) {
-
-                FragmentService.getInstance(this).clearStack();
-            }
-
-            //use backstack to go back
-            else if(FragmentService.getInstance(this).hasElements()) {
-
-                Fragment targetFragment = FragmentService.getInstance(this).popBackStack();
-                //FragmentService.getInstance(this).performTransaction(false, targetFragment.getTag(), targetFragment,fragment,false);
-                if(BuildConfig.DEBUG) Log.d(TAG, "entered Backstack state: fragment from stack: " + targetFragment.getTag() );
-                if(BuildConfig.DEBUG) Log.d(TAG, "entered Backstack state: fragment from ui: " + fragment.getTag() );
-                FragmentService.getInstance(this).setLastManipulated( targetFragment.getTag());
-                fm.beginTransaction()
-                        .hide(fragment)
-                        .show(targetFragment)
-                        .commit();
-                //check if there is an appbar needed if it was removed
-                if(FragmentService.getInstance(this).hasAppbar(targetFragment.getTag())){
-                    ((AppCompatActivity) this).getSupportActionBar().show();
-                }
-            }
+            service.handleBackstackPress(fragment);
         } else {
             super.onBackPressed();
         }
@@ -348,7 +327,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     .beginTransaction()
                                     .replace(R.id.content_frame, f, Constants.LOGIN_FRAGMENT)
                                     .commit();
-                            //getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                             break;
                         case NETWORK_ERROR:
                             Toast.makeText(getApplicationContext(), R.string.logout_failed, Toast.LENGTH_LONG).show();
@@ -366,8 +344,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void switchFragment(Fragment fragment, String fragmentTag) {
-
-        for(String drawerFragment : drawerFragments){
+        for(String drawerFragment : fragmentPool){
             Fragment fragmentFind = getFragmentManager().findFragmentByTag(drawerFragment);
             if((fragmentFind != null) && fragmentFind.isAdded() && (fragmentFind != fragment)){
                 if (BuildConfig.DEBUG) Log.d(TAG, "hiding fragment: " + fragmentFind.getTag());
@@ -376,13 +353,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         if (fragment != null) {
-
-            if(fragment.isAdded()){
+            if(fragment.isAdded() && !fragmentTag.equals(Constants.TOUROVERVIEW_FRAGMENT)) {
                 if (BuildConfig.DEBUG) Log.d(TAG, "showing fragment: " + fragment.getTag());
+
                 getFragmentManager()
                         .beginTransaction()
                         .show(fragment)
                         .commit();
+            } else if (fragmentTag.equals(Constants.TOUROVERVIEW_FRAGMENT)) {
+                getFragmentManager()
+                        .beginTransaction()
+                        .remove(fragment)
+                        .commit();
+                getFragmentManager().executePendingTransactions();
+                getFragmentManager().beginTransaction().add(R.id.content_frame,fragment, fragmentTag).commit();
             } else {
                 //set anchor null, not the tag of the given fragment
                 if (BuildConfig.DEBUG) Log.d(TAG, "adding fragment: " + fragmentTag);
@@ -391,6 +375,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                         .add(R.id.content_frame,fragment, fragmentTag)
                         .commit();
+
             }
         } else {
             Log.e(TAG, "Error in creating fragment");
