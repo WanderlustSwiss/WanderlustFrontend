@@ -33,6 +33,7 @@ public class AsyncDownloadQueueTask {
                 threadCount++;
                 Thread t = defaultThreadFactory.newThread(r);
                 t.setPriority(Thread.MIN_PRIORITY);
+                t.setDaemon(true);
                 return t;
             }
         });

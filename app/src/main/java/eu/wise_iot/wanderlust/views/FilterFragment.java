@@ -24,6 +24,7 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.FilterController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
+import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialogFilter;
 
@@ -172,7 +173,10 @@ public class FilterFragment extends Fragment {
         editor.putString("filter_region", tiRegion.getText().toString());
         editor.apply();
 
-        getFragmentManager().beginTransaction().hide(this).commit();
+        FragmentService
+                .getInstance(getActivity())
+                .performTraceTransaction(true, Constants.RESULT_FILTER_FRAGMENT, ResultFilterFragment.newInstance(setting),this);
+/*        getFragmentManager().beginTransaction().hide(this).commit();
 
         Fragment resultFragment = getFragmentManager().findFragmentByTag(Constants.RESULT_FILTER_FRAGMENT);
         if (resultFragment != null) getFragmentManager().beginTransaction().remove(resultFragment).commit();
@@ -181,7 +185,7 @@ public class FilterFragment extends Fragment {
         getFragmentManager().beginTransaction()
                 .add(R.id.content_frame, resultFilterFragment, Constants.RESULT_FILTER_FRAGMENT)
                 //.addToBackStack(Constants.FILTER_FRAGMENT)
-                .commit();
+                .commit();*/
         //((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 

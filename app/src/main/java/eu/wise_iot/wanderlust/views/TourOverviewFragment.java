@@ -32,6 +32,7 @@ import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
@@ -97,7 +98,10 @@ public class TourOverviewFragment extends Fragment {
             case R.id.filterIcon:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Filterbutton clicked changing to Filterfragment");
 
-                getFragmentManager().beginTransaction().hide(this).commit();
+                FragmentService
+                        .getInstance(getActivity())
+                        .performTraceTransaction(true,Constants.FILTER_FRAGMENT, FilterFragment.newInstance(),this);
+               /* getFragmentManager().beginTransaction().hide(this).commit();
                 Fragment fragment = getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT);
                 if (fragment != null && fragment.isAdded()) {
                     getFragmentManager().beginTransaction()
@@ -109,6 +113,7 @@ public class TourOverviewFragment extends Fragment {
                         .add(R.id.content_frame, FilterFragment.newInstance(), Constants.FILTER_FRAGMENT)
                         //.addToBackStack(Constants.FILTER_FRAGMENT)
                         .commit();
+                        */
                 break;
         }
         return true;
@@ -386,12 +391,10 @@ public class TourOverviewFragment extends Fragment {
                     switch(controllerEvent.getType()) {
                         case OK:
                             if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");
-                            getFragmentManager().beginTransaction().hide(this).commit();
-                            getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
-                                    //.addToBackStack(Constants.TOUROVERVIEW_FRAGMENT)
-                                    .commit();
-                            //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
+                            FragmentService
+                                    .getInstance(getActivity())
+                                    .performTraceTransaction(true, Constants.TOUR_FRAGMENT, TourFragment.newInstance(tour), this);
                             break;
                         case NOT_FOUND:
                             if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");

@@ -79,6 +79,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.TourCommentRVAdapter;
@@ -890,21 +891,32 @@ public class TourFragment extends Fragment {
         //Disable my location
         getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.PREFERENCE_MY_LOCATION_ENABLED, false).apply();
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
-        //remove the old fragment from stack
+        //select map in navigationview
+        NavigationView nv = getActivity().findViewById(R.id.nav_view);
+        nv.getMenu().getItem(0).setChecked(true);
+
+        FragmentService.getInstance(getActivity()).performTransaction(true,Constants.MAP_FRAGMENT,mapFragment,this,true);
+ /*       //remove the old fragment from stack
         Fragment oldMapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
         if(oldMapFragment != null) {
             getFragmentManager().beginTransaction()
                     .remove(oldMapFragment)
                     .commit();
         }
-        //select map in navigationview
-        NavigationView nv = getActivity().findViewById(R.id.nav_view);
-        nv.getMenu().getItem(0).setChecked(true);
+
         //add new fragment to stack
-
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT).commit();
-
-        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        getFragmentManager().beginTransaction()
+                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+                .commit();
+        //clear backstack
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        for(int i = 0; i < getFragmentManager().getBackStackEntryCount(); i ++){
+            ft.remove(fm.findFragmentById(fm.getBackStackEntryAt(i).getId()));
+        }
+        ft.commit();*/
+        //show supportbar again
+       // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
 
     }
 

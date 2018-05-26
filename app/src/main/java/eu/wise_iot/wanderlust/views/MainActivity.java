@@ -60,6 +60,7 @@ import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import io.objectbox.BoxStore;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, BackgroundFragment.newInstance(), Constants.BACKGROUND_FRAGMENT)
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         username = findViewById(R.id.user_name);
         email = findViewById(R.id.user_mail_address);
         userProfileImage = findViewById(R.id.user_profile_image);
+
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -173,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 break;
                             default:
                                 DateTime lastLogin2 = DateTime.parse(user.getLastLogin());
-                                Log.d(TAG, "Last login: " + lastLogin2);
+                                if(BuildConfig.DEBUG) Log.d(TAG, "Last login: " + lastLogin2);
                                 //check if last login is within last 24h
                                 if(lastLogin2.isAfter(new DateTime().minusDays(1))){
                                     //setupDrawerHeader(user);
@@ -242,12 +245,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     @Override
     public void onBackPressed() {
+        FragmentManager fm = getFragmentManager();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        Fragment fragment = getFragmentManager().findFragmentById(R.id.content_frame);
+       // Fragment fragment = getFragmentManager().findFragmentById(R.id.content_frame);
+        Fragment fragment = getFragmentManager().findFragmentByTag(FragmentService.getInstance(this).getLastManipulated());
 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
+        //get backstack
+        //Fragment fragmentFromStack = (fm.getBackStackEntryCount() > 0) ? fm.findFragmentById(fm.) : null;
 
         if(fragment != null) {
             //Don't do anything with back button if user is on login or registration screen
@@ -257,21 +264,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     || (fragment instanceof TourOverviewFragment)
                     || (fragment instanceof ProfileFragment)
                     || (fragment instanceof DisclaimerFragment)
-                    || (fragment instanceof UserGuideFragment)
-                    || (fragment instanceof StartupResetPasswordFragment)) {
-            } else if (fragment instanceof FilterFragment || fragment instanceof TourFragment) {
-                getFragmentManager().beginTransaction()
-                        .show(getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT))
-                        .hide(fragment)
-                        .commit();
-            } else if (fragment instanceof ResultFilterFragment) {
-                getFragmentManager().beginTransaction()
-                        .remove(getFragmentManager().findFragmentByTag(Constants.RESULT_FILTER_FRAGMENT))
-                        .show(getFragmentManager().findFragmentByTag(Constants.FILTER_FRAGMENT))
-                        .commit();
-            } else {
-                super.onBackPressed();
+                    || (fragment instanceof UserGuideFragment)) {
+
+                FragmentService.getInstance(this).clearStack();
             }
+
+            //use backstack to go back
+            else if(FragmentService.getInstance(this).hasElements()) {
+
+                Fragment targetFragment = FragmentService.getInstance(this).popBackStack();
+                //FragmentService.getInstance(this).performTransaction(false, targetFragment.getTag(), targetFragment,fragment,false);
+                if(BuildConfig.DEBUG) Log.d(TAG, "entered Backstack state: fragment from stack: " + targetFragment.getTag() );
+                if(BuildConfig.DEBUG) Log.d(TAG, "entered Backstack state: fragment from ui: " + fragment.getTag() );
+                FragmentService.getInstance(this).setLastManipulated( targetFragment.getTag());
+                fm.beginTransaction()
+                        .hide(fragment)
+                        .show(targetFragment)
+                        .commit();
+                //check if there is an appbar needed if it was removed
+                if(FragmentService.getInstance(this).hasAppbar(targetFragment.getTag())){
+                    ((AppCompatActivity) this).getSupportActionBar().show();
+                }
+            }
+        } else {
+            super.onBackPressed();
         }
     }
 
