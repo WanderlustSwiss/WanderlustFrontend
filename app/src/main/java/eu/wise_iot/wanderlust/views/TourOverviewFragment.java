@@ -364,7 +364,7 @@ public class TourOverviewFragment extends Fragment {
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                                 break;
                             default:
-                                if (BuildConfig.DEBUG) Log.d(TAG , "failed");
+                                if (BuildConfig.DEBUG) Log.d(TAG , "failed deleting");
                         }
                     });
                 }else{
@@ -374,7 +374,7 @@ public class TourOverviewFragment extends Fragment {
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
                                 break;
                             default:
-                                if (BuildConfig.DEBUG) Log.d(TAG, "failed");
+                                if (BuildConfig.DEBUG) Log.d(TAG, "failed saving");
                         }
                     });
                 }

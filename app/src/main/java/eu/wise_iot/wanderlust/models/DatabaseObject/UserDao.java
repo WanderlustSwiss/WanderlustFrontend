@@ -144,7 +144,7 @@ public class UserDao extends DatabaseObjectAbstract {
                 handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
         } catch (Exception e){
-            if(BuildConfig.DEBUG) Log.d("Retrofit","IOException thrown");
+            if(BuildConfig.DEBUG) Log.d("Retrofit","Exception thrown: " + e.getMessage());
         }
     }
     /**

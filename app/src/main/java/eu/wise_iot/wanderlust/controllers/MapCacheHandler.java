@@ -26,13 +26,13 @@ public class MapCacheHandler {
 
     private final Context context;
     private final Tour tour;
-    private final MapView mapView;
+    //private final MapView mapView;
     private int progressPercentage = 10;
 
     public MapCacheHandler(final Context context, final Tour tour){
         this.context = context;
         this.tour = tour;
-        mapView = new MapView(context);
+        //mapView = new MapView(context);
     }
 
     public boolean downloadMap(){
@@ -52,11 +52,12 @@ public class MapCacheHandler {
                 maxLong = point.getLongitude();
         }
 
-        final MapView mapView = new WanderlustMapView(context);
-        final BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
+        MapView mapView = new WanderlustMapView(context);
+
+        BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
         mapView.zoomToBoundingBox(boundingBox, false);
 
-        final CacheManager cacheManager = new CacheManager(mapView);
+        CacheManager cacheManager = new CacheManager(mapView);
 
         //check if already in cache
         if(cacheManager.checkTile(new MapTile(10, (int) mapView.getX(), (int) mapView.getY()))){
@@ -83,7 +84,7 @@ public class MapCacheHandler {
             final Notification notification = notificationBuilder.build();
             notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
             notificationManager.notify(notificationID, notification);
-
+            if (BuildConfig.DEBUG) Log.d(TAG, "starting download");
             cacheManager.downloadAreaAsyncNoUI(context, boundingBox, 10, 20, new CacheManager.CacheManagerCallback() {
                 @Override
                 public void downloadStarted() {
@@ -93,13 +94,19 @@ public class MapCacheHandler {
 
                 @Override
                 public void updateProgress(final int progress, final int currentZoomLevel, final int zoomMin, final int zoomMax) {
-                    if(progress == ((max / 100) * progressPercentage)){
-                        if (BuildConfig.DEBUG) Log.d(TAG, "refreshing download progress" + progress);
-                        notificationBuilder.setProgress(max, progress, false);
-                        final Notification notification = notificationBuilder.build();
-                        notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
-                        notificationManager.notify(notificationID, notification);
-                        progressPercentage += 10;
+                    try {
+                        Thread.sleep(1000);
+                        if (progress == ((max / 100) * progressPercentage)) {
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, "refreshing download progress" + progress);
+                            notificationBuilder.setProgress(max, progress, false);
+                            final Notification notification = notificationBuilder.build();
+                            notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
+                            notificationManager.notify(notificationID, notification);
+                            progressPercentage += 10;
+                        }
+                    } catch (Exception e){
+
                     }
 
                 }
@@ -122,7 +129,7 @@ public class MapCacheHandler {
                 }
             });
 
-        }else{
+        } else {
             return false;
         }
 

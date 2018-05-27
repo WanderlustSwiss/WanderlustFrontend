@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.services;
 
 import android.util.Log;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -49,6 +50,9 @@ public class AsyncDownloadQueueTask {
         return asyncDownloadQueueTask;
     }
 
+    public synchronized Future queueTask(Callable r){
+        return executorService.submit(r);
+    }
     public synchronized Future queueTask(Runnable r){
         return executorService.submit(r);
     }

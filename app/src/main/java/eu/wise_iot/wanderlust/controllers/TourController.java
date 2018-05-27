@@ -3,7 +3,6 @@ package eu.wise_iot.wanderlust.controllers;
 import android.app.Activity;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,6 +22,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.zip.GZIPInputStream;
 
 import eu.wise_iot.wanderlust.BuildConfig;
@@ -55,6 +55,8 @@ import io.objectbox.Property;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 
 /**
@@ -158,48 +160,55 @@ public class TourController {
     }
 
     public void setSaved(Activity context, FragmentHandler handler){
-        AsyncDownloadQueueTask.getHandler().queueTask(() ->
-            communityTourDao.retrieveSequential(tour.getTour_id(), controllerEvent -> {
-                switch (controllerEvent.getType()){
-                    case OK:
-                        //download in cache
-                        SavedTour data = (SavedTour) controllerEvent.getModel();
-                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
-
-                        //save tour in local db
-                        if(cacheHandler.downloadMap()){
-                            communityTourDao.create(data);
-                            //if (BuildConfig.DEBUG) Log.d(TAG, "Is saved");
-                            handler.onResponse(new ControllerEvent(EventType.OK));
-                        }else{
-                            handler.onResponse(new ControllerEvent(EventType.NOT_FOUND));
-                            Toast.makeText(context, "Kartenspeicher ist voll, löschen Sie Touren um Platz zu schaffen",
-                                                                        Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    default:
-                        handler.onResponse(new ControllerEvent(EventType.CONFLICT));
-                }
-            })
-        );
+        Future<ControllerEvent<SavedTour>> response = AsyncDownloadQueueTask.getHandler().queueTask(() ->
+            communityTourDao.retrieveSequential(tour.getTour_id()));
+            try {
+                ControllerEvent<SavedTour> event = response.get();
+               switch (event.getType()) {
+                   case OK:
+                       //download in cache
+                       if (BuildConfig.DEBUG) Log.d(TAG, "OK arrived saving tour controller");
+                       SavedTour data = (SavedTour) event.getModel();
+                       MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
+                       if (BuildConfig.DEBUG) Log.d(TAG, "Is saved");
+                       //save tour in local db
+                       if (cacheHandler.downloadMap()) {
+                           if (BuildConfig.DEBUG) Log.d(TAG, "Is saved");
+                           communityTourDao.create(data);
+                           if (BuildConfig.DEBUG) Log.d(TAG, "Is saved");
+                           handler.onResponse(new ControllerEvent(OK));
+                       } else {
+                           handler.onResponse(new ControllerEvent(EventType.NOT_FOUND));
+                           //Toast.makeText(context, "Kartenspeicher ist voll, löschen Sie Touren um Platz zu schaffen",
+                           //Toast.LENGTH_SHORT).show();
+                       }
+                       break;
+                   default:
+                       if (BuildConfig.DEBUG)
+                           Log.d(TAG, "saving failure: " + event.getType());
+                       handler.onResponse(new ControllerEvent(EventType.CONFLICT));
+               }
+       } catch (Exception e){
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "saving failure: excepton"+ e.getStackTrace());
+            }
     }
 
     public void unsetSaved(Activity context, FragmentHandler fragmentHandler){
-        AsyncDownloadQueueTask.getHandler().queueTask(() ->
-            communityTourDao.retrieveSequential(tour.getTour_id(), controllerEvent -> {
+        /*AsyncDownloadQueueTask.getHandler().queueTask(() -> {
+            ControllerEvent<SavedTour> controllerEvent = communityTourDao.retrieveSequential(tour.getTour_id());
                 switch (controllerEvent.getType()){
                     case OK:
                         SavedTour data = (SavedTour) controllerEvent.getModel();
                         MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
                         cacheHandler.deleteMap();
                         //communityTourDao.delete(data);
-                        fragmentHandler.onResponse(new ControllerEvent(EventType.OK));
+                        fragmentHandler.onResponse(new ControllerEvent(OK));
                         if (BuildConfig.DEBUG) Log.d(TAG, "Is deleted");
                     default:
                         fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
                 }
-            })
-        );
+        });*/
     }
 
     public boolean setRating(Tour tour, int starRating, FragmentHandler handler){
@@ -286,11 +295,11 @@ public class TourController {
 
     public void loadGeoData(FragmentHandler handler) {
         userTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
-            if (controllerEvent.getType() == EventType.OK) {
+            if (controllerEvent.getType() == OK) {
                 Tour TourWithGeoData = (Tour) controllerEvent.getModel();
                 tour.setPolyline(TourWithGeoData.getPolyline());
                 tour.setElevation(TourWithGeoData.getElevation());
-                handler.onResponse(new ControllerEvent(EventType.OK, tour));
+                handler.onResponse(new ControllerEvent(OK, tour));
             } else {
                 handler.onResponse(new ControllerEvent(controllerEvent.getType(), tour));
             }
