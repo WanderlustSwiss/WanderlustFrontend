@@ -1,6 +1,5 @@
 package eu.wise_iot.wanderlust.views;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -281,12 +280,12 @@ public class TourOverviewFragment extends Fragment {
         return view;
     }
 
+
     /**
      * handles click on an recycler view item
      * @param view representing the recycler view item
      * @param tour representing the tour of the clicked item
      */
-    @SuppressLint("StaticFieldLeak")
     private void onItemClickImages(View view, Tour tour) {
         //distinguish what element was clicked by resource id
         switch (view.getId()) {
@@ -422,6 +421,27 @@ public class TourOverviewFragment extends Fragment {
 
     }
 
+    /**
+     * shares the tour with other apps
+     */
+    private void shareTour(Tour tour){
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        String description = tour.getDescription() + getResources().getString(R.string.app_domain);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, description);
+        shareIntent.putExtra(Intent.EXTRA_TITLE, tour.getTitle());
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, tour.getTitle());
+        shareIntent.setType("text/plain");
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
+    }
+
+    public void updateTourDataSet(){
+        if(BuildConfig.DEBUG) Log.d(TAG, "refreshing recyclerviews on callback");
+        rvTours.getAdapter().notifyDataSetChanged();
+        rvRecent.getAdapter().notifyDataSetChanged();
+        rvFavorites.getAdapter().notifyDataSetChanged();
+    }
+}
+
 //
 //    private class AsyncCheckTourExists extends AsyncTask<Tour, Void, Tour> {
 //        private Integer responseCode;
@@ -481,16 +501,3 @@ public class TourOverviewFragment extends Fragment {
 //            t1.dumpToLog();
 //        }
 //    }
-    /**
-     * shares the tour with other apps
-     */
-    private void shareTour(Tour tour){
-        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-        String description = tour.getDescription() + getResources().getString(R.string.app_domain);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, description);
-        shareIntent.putExtra(Intent.EXTRA_TITLE, tour.getTitle());
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, tour.getTitle());
-        shareIntent.setType("text/plain");
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title_tour)));
-    }
-}

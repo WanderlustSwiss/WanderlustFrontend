@@ -159,7 +159,7 @@ public class TourController {
 
     public void setSaved(Activity context, FragmentHandler handler){
         AsyncDownloadQueueTask.getHandler().queueTask(() ->
-            communityTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
+            communityTourDao.retrieveSequential(tour.getTour_id(), controllerEvent -> {
                 switch (controllerEvent.getType()){
                     case OK:
                         //download in cache
@@ -186,12 +186,13 @@ public class TourController {
 
     public void unsetSaved(Activity context, FragmentHandler fragmentHandler){
         AsyncDownloadQueueTask.getHandler().queueTask(() ->
-            communityTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
+            communityTourDao.retrieveSequential(tour.getTour_id(), controllerEvent -> {
                 switch (controllerEvent.getType()){
                     case OK:
                         SavedTour data = (SavedTour) controllerEvent.getModel();
                         MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
-                        communityTourDao.delete(data);
+                        cacheHandler.deleteMap();
+                        //communityTourDao.delete(data);
                         fragmentHandler.onResponse(new ControllerEvent(EventType.OK));
                         if (BuildConfig.DEBUG) Log.d(TAG, "Is deleted");
                     default:

@@ -1,6 +1,7 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -45,10 +46,13 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
+import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.INPUT_METHOD_SERVICE;
+import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 
 public class ProfileEditFragment extends Fragment {
@@ -129,7 +133,6 @@ public class ProfileEditFragment extends Fragment {
         checkBoxes = new CheckBox[]{checkT1, checkT2, checkT3,
                 checkT4, checkT5, checkT6};
 
-        Rect outRect = new Rect();
         view.setOnTouchListener((v, event) -> {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN && bottomSheet != null && bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
@@ -149,6 +152,37 @@ public class ProfileEditFragment extends Fragment {
         return view;
     }
 
+    ProfileEdited notifier;
+
+    public interface ProfileEdited{
+        void editedMail(String mail);
+        //void editedDifficulty();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            notifier = (ProfileEdited) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ProfileEdited");
+        }
+    }
+/*
+    public void someMethod(){
+        notifier.editedMail("YOUR TEXT");
+    }
+*/
+    @Override
+    public void onDetach() {
+        notifier = null; // avoid leaking
+        super.onDetach();
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -161,69 +195,75 @@ public class ProfileEditFragment extends Fragment {
         });
     }
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.profile_edit_menu, menu);
         menu.removeItem(R.id.drawer_layout);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.checkIcon:
                 //save changings
                 String newMail = emailTextfield.getText().toString();
-
-                profileController.setEmail(newMail, getActivity(), controllerEvent -> {
-                    EventType type = controllerEvent.getType();
-
-                    switch (type) {
-                        case OK:
-                            ((MainActivity) getActivity()).updateEmailAdress(newMail);
-                            if (BuildConfig.DEBUG) Log.d(TAG, "Email wurde geändert.");
-                            break;
-                        default:
-                            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
-                                    Toast.LENGTH_SHORT).show();
-                            if (BuildConfig.DEBUG) Log.d(TAG, "Fehler: " + type.toString());
-                            break;
-                    }
-                });
-
-                profileController.setDifficulty(difficulty, getActivity(), controllerEvent -> {
-                    EventType type = controllerEvent.getType();
-
-                    switch (type) {
-                        case OK:
-                            if (BuildConfig.DEBUG) Log.d(TAG, "Difficulty wurde geändert.");
-                            break;
-
-                        default:
-                            Toast.makeText(getActivity(), R.string.err_msg_error_occured,
-                                    Toast.LENGTH_SHORT).show();
-                            if (BuildConfig.DEBUG) Log.d(TAG, "Fehler: " + type.toString());
-                            break;
-                    }
-                });
+                LoadingDialog.getDialog().show(getActivity());
+                try {
+                    profileController.setEmail(newMail, getActivity(), controllerEvent -> {
+                        switch (controllerEvent.getType()) {
+                            case OK:
+                                notifier.editedMail(newMail);
+                                //((MainActivity) getActivity()).updateEmailAdress(newMail);
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Email changed");
+                                break;
+                            default:
+                                Toast.makeText(getActivity(), R.string.err_msg_error_occured, Toast.LENGTH_SHORT).show();
+                                if (BuildConfig.DEBUG)
+                                    Log.d(TAG, "Failure: " + controllerEvent.getType().toString());
+                                break;
+                        }
+                    });
+                    profileController.setDifficulty(difficulty, getActivity(), controllerEvent -> {
+                        switch (controllerEvent.getType()) {
+                            case OK:
+                                if (BuildConfig.DEBUG) Log.d(TAG, "Difficulty changed");
+                                break;
+                            default:
+                                Toast.makeText(getActivity(), R.string.err_msg_error_occured,
+                                        Toast.LENGTH_SHORT).show();
+                                if (BuildConfig.DEBUG)
+                                    Log.d(TAG, "Fehler: " + controllerEvent.getType().toString());
+                                break;
+                        }
+                    });
+                } catch (Exception e){
+                    Log.d(TAG, "Error with latch");
+                }
                 Toast.makeText(getActivity(), R.string.profileEditChangesApplied, Toast.LENGTH_SHORT).show();
-                ProfileFragment fragment = ProfileFragment.newInstance();
+                LoadingDialog.getDialog().dismiss();
+                /*ProfileFragment fragment = ProfileFragment.newInstance();
                 getFragmentManager().beginTransaction()
                                     .replace(R.id.content_frame, fragment, Constants.PROFILE_FRAGMENT)
-                                    .commit();
+                                    .commit();*/
+                FragmentService.getInstance(getActivity()).performTransaction(true,Constants.PROFILE_FRAGMENT, ProfileFragment.newInstance(),this,true);
                 return true;
 
             case R.id.cancelIcon:
                 //back to profile
                 Toast.makeText(getActivity(), R.string.msg_no_changes_done,
                         Toast.LENGTH_SHORT).show();
+                /*
                 ProfileFragment profileFragment = ProfileFragment.newInstance();
+
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, profileFragment, Constants.PROFILE_FRAGMENT)
-                        .commit();
+                        .commit();*/
+                FragmentService.getInstance(getActivity()).performTransaction(true,Constants.PROFILE_FRAGMENT, ProfileFragment.newInstance(),this,true);
                 return true;
         }
+
         emailTextfield.setText(profileController.getEmail());
+        FragmentService.getInstance(getActivity()).performTransaction(true,Constants.PROFILE_FRAGMENT, ProfileFragment.newInstance(),this,true);
         return true;
     }
 
@@ -266,7 +306,7 @@ public class ProfileEditFragment extends Fragment {
                 } else {
                     profileController.deleteProfilePicture(controllerEvent -> {
                         EventType type = controllerEvent.getType();
-                        if (type == EventType.OK) {
+                        if (type == OK) {
                             openGallery();
                         }
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -282,7 +322,7 @@ public class ProfileEditFragment extends Fragment {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             profileController.deleteProfilePicture(controllerEvent -> {
                 EventType type = controllerEvent.getType();
-                if (type == EventType.OK) {
+                if (type == OK) {
                     setupAvatar();
                 }
             });
@@ -346,7 +386,7 @@ public class ProfileEditFragment extends Fragment {
             bitmapImage = ImageController.getInstance().resize(bitmapImage, 170);
             if (bitmapImage != null) {
                 profileController.setProfilePicture(bitmapImage, controllerEvent -> {
-                    if (controllerEvent.getType() == EventType.OK) {
+                    if (controllerEvent.getType() == OK) {
                         setupAvatar();
                     } else {
                         Toast.makeText(getActivity(), R.string.err_msg_error_occured,

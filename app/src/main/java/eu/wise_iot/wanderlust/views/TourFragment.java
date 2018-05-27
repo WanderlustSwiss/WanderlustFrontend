@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
@@ -17,6 +18,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -144,6 +146,34 @@ public class TourFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * interface to notify hidden fragment of changes
+     */
+    EditedTour notifier;
+    public interface EditedTour {
+        void editedTour();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            notifier = (EditedTour) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement EditedTour");
+        }
+    }
+
+
+    @Override
+    public void onDetach() {
+        notifier = null; // avoid leaking
+        super.onDetach();
+    }
 
     /**
      * Static instance constructor.
@@ -425,22 +455,20 @@ public class TourFragment extends Fragment {
         textViewDifficulty.setText(tourController.getDifficultyMark());
     }
 
-    /**
-     *
-     */
     private void setupActionListeners() {
         tourSharedButton.setOnClickListener((View v) -> shareTour());
         tourReportButton.setOnClickListener((View v) -> reportTour());
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
-        backbutton.setOnClickListener((View v) -> getFragmentManager().popBackStack());
+        backbutton.setOnClickListener((View v) -> getActivity().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK)));
         favButton.setOnClickListener((View v) -> toggleFavorite());
         tourSavedButton.setOnClickListener((View v) -> toggleSaved());
         sendCommentButton.setOnClickListener((View v) -> createComment());
         tourRating.setOnTouchListener((View v, MotionEvent e) -> {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
-                    TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,this);
-                    dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
+                    new TourRatingDialog()
+                            .newInstance(tour, tourController,this)
+                            .show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
                 }
@@ -452,7 +480,7 @@ public class TourFragment extends Fragment {
     }
 
     /**
-     * Takes an ExpandableTextView and a ImageButton and handles creates the behaviour.
+     * Takes an ExpandableTextView and a ImageButton and handles/creates the behaviour.
      *
      * @param textView ExpandableTextView
      * @param toggler  ImageButton
@@ -725,6 +753,7 @@ public class TourFragment extends Fragment {
                 isFavoriteUpdate = false;
             });
         }
+        notifier.editedTour();
     }
 
     private void toggleSaved(){
@@ -748,6 +777,7 @@ public class TourFragment extends Fragment {
                 }
             });
         }
+        notifier.editedTour();
     }
     public void updateRating(TourRate tourRate){
         if (tourRate != null){
@@ -884,18 +914,19 @@ public class TourFragment extends Fragment {
         }
         if (BuildConfig.DEBUG) Log.d(TAG, tourController.getPolyline());
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
-        Road road = new Road(polyList);
-        Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
 
+        Polyline roadOverlay = RoadManager.buildRoadOverlay(new Road(polyList));
         roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent));
-        //Disable my location
+        //disable my location
         getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.PREFERENCE_MY_LOCATION_ENABLED, false).apply();
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
-        //select map in navigationview
+        //select map in navigation-view
         NavigationView nv = getActivity().findViewById(R.id.nav_view);
         nv.getMenu().getItem(0).setChecked(true);
 
-        FragmentService.getInstance(getActivity()).performTransaction(true,Constants.MAP_FRAGMENT,mapFragment,this,true);
+        FragmentService
+                .getInstance(getActivity())
+                .performTransaction(true,Constants.MAP_FRAGMENT,mapFragment,this,true);
  /*       //remove the old fragment from stack
         Fragment oldMapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
         if(oldMapFragment != null) {

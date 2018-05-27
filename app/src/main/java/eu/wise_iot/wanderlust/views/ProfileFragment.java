@@ -37,6 +37,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePOIRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedRVAdapter;
@@ -143,14 +144,17 @@ public class ProfileFragment extends Fragment {
 
         //edit profile button_white
         editProfile.setOnClickListener(v -> {
-
+            FragmentService.getInstance(getActivity())
+                    .performTraceTransaction(true,Constants.PROFILE_EDIT_FRAGMENT,ProfileEditFragment.newInstance(),this);
+            /*
             Fragment profileEditFragment = getFragmentManager().findFragmentByTag(Constants.PROFILE_EDIT_FRAGMENT);
+
             if (profileEditFragment == null)
                 profileEditFragment = ProfileEditFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, profileEditFragment, Constants.PROFILE_EDIT_FRAGMENT)
                     .addToBackStack(null)
-                    .commit();
+                    .commit();*/
         });
     }
 
@@ -323,10 +327,11 @@ public class ProfileFragment extends Fragment {
                                 case OK:
                                     if (BuildConfig.DEBUG)
                                         Log.d(TAG, "Server Response arrived -> OK Tour was found");
-                                    getFragmentManager().beginTransaction()
-                                            .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
-                                            .addToBackStack(Constants.TOUR_FRAGMENT)
-                                            .commit();
+                                    FragmentService.getInstance(getActivity()).performTraceTransaction(true,Constants.TOUR_FRAGMENT,TourFragment.newInstance(tour),this);
+//                                    getFragmentManager().beginTransaction()
+//                                            .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
+//                                            .addToBackStack(Constants.TOUR_FRAGMENT)
+//                                            .commit();
                                     //TODO: check if needed
                                     //((AppCompatActivity) getActivity()).getSupportActionBar().show();
                                     break;
@@ -382,10 +387,13 @@ public class ProfileFragment extends Fragment {
                         case OK:
                             if (BuildConfig.DEBUG)
                                 Log.d(TAG, "Server Response arrived -> OK Tour was found");
+                            FragmentService.getInstance(getActivity())
+                                    .performTraceTransaction(true, Constants.TOUR_FRAGMENT,TourFragment.newInstance(tour.toTour()),this);
+                            /*
                             getFragmentManager().beginTransaction()
                                     .replace(R.id.content_frame, TourFragment.newInstance(tour.toTour()), Constants.TOUR_FRAGMENT)
                                     .addToBackStack(Constants.TOUR_FRAGMENT)
-                                    .commit();
+                                    .commit();*/
                             //TODO: check if needed
                             //((AppCompatActivity) getActivity()).getSupportActionBar().show();
                             break;
@@ -413,9 +421,6 @@ public class ProfileFragment extends Fragment {
 
                     LoadingDialog.getDialog().dismiss();
                 });
-
-                //});
-                //new AsyncCheckTourExists(tour.toTour(), getActivity()).execute();
         }
     }
 

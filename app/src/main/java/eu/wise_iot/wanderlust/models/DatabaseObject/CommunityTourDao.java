@@ -132,6 +132,30 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
             }
         });
     }
+    /**
+     * get usertour out of the remote database by entity
+     *
+     * @param id
+     * @param handler
+     */
+
+    public void retrieveSequential(final long id, final FragmentHandler handler) {
+        final long[] newUserTourID = new long[1];
+        Call<SavedTour> call = service.retrieveTour(id);
+        try {
+            Response<SavedTour> response = call.execute();
+            if (response.isSuccessful()) {
+                SavedTour backendTour = response.body();
+                //routeBox.put(backendTour); wieso in die lokale db einfügen ??
+                newUserTourID[0] = backendTour.getInternal_id();
+                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendTour));
+            } else {
+                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+            }
+        } catch (Exception e){
+            handler.onResponse(new ControllerEvent(EventType.SERVER_ERROR));
+        }
+    }
 
     public SavedTour findOne(Property searchedColumn, String searchPattern) {
         return communityTourBox.query().equal(searchedColumn, searchPattern).build().findFirst();
