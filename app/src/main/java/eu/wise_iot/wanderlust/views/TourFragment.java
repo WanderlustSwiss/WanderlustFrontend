@@ -768,31 +768,32 @@ public class TourFragment extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(context, "starting download",Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.download_started,Toast.LENGTH_LONG).show();
             tourController.setSaved(getActivity(), controllerEvent -> {
                 switch (controllerEvent.getType()) {
                     case DOWNLOAD_OK:
-                        Toast.makeText(context,"Download abgeschlossen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,R.string.download_ok, Toast.LENGTH_SHORT).show();
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
                         notifier.editedTour();
                         break;
                     case DOWNLOAD_NO_SPACE:
-                        Toast.makeText(context, "Kein Speicherplatz mehr verfügbar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.download_no_space, Toast.LENGTH_SHORT).show();
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                         break;
                     case DOWNLOAD_FAILED:
-                        Toast.makeText(context,"Tour konnte nicht heruntergeladen werden",Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,R.string.download_server_error,Toast.LENGTH_LONG).show();
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                         break;
                     case DOWNLOAD_ALREADY_DONE:
-                        Toast.makeText(context,"Tour wurde bereits heruntergeladen",Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,R.string.download_already_done,Toast.LENGTH_LONG).show();
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                         break;
                     case PROGRESS_NOTIFICATION:
-                        Toast.makeText(context, controllerEvent.getMessage(), Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(context, controllerEvent.getMessage(), Toast.LENGTH_SHORT).show();
                         break;
                 }
             });
+            notifier.editedTour();
         }
     }
     public void updateRating(TourRate tourRate){

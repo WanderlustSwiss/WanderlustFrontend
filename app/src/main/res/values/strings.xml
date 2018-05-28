@@ -13,6 +13,15 @@
     <string name="msg_email_not_found">Fehler: Email wurde nicht gefinden</string>
     <string name="msg_no_data_found">Keine Daten gefunden</string>
 
+    <!-- DOWNLOAD RELATED STRINGS -->
+    <string name="download_ok">Download abgeschlossen</string>
+    <string name="download_server_error">Serverfehler 5XX</string>
+    <string name="download_already_done">Tour wurde schon geladen</string>
+    <string name="download_started">Download gestartet</string>
+    <string name="download_no_space">Fehler: Zu wenig Speicherplatz</string>
+    <string name="download_notification_title">Lade Tour: </string>
+
+
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
     <string name="app_domain"> #wanderlustapp</string>

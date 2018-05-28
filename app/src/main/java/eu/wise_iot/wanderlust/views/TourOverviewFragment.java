@@ -373,26 +373,40 @@ public class TourOverviewFragment extends Fragment {
             case R.id.tourOVSaveButton:
                 ImageButton ibSave = view.findViewById(R.id.tourOVSaveButton);
                 TourController tourController = new TourController(tour);
-                if (tourController.isSaved()) {
+                if (tourController.isSaved()){
                     tourController.unsetSaved(getActivity(), controllerEvent -> {
-                        switch (controllerEvent.getType()) {
+                        switch (controllerEvent.getType()){
                             case OK:
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
                                 break;
                             default:
-                                if (BuildConfig.DEBUG) Log.d(TAG, "failed deleting");
                         }
                     });
-                } else {/*
-                    tourController.setSaved(getActivity() , controllerEvent -> {
-                        switch (controllerEvent.getType()){
-                            case OK:
+                } else {
+                    Toast.makeText(context, R.string.download_started,Toast.LENGTH_LONG).show();
+                    tourController.setSaved(getActivity(), controllerEvent -> {
+                        switch (controllerEvent.getType()) {
+                            case DOWNLOAD_OK:
+                                Toast.makeText(context,R.string.download_ok, Toast.LENGTH_SHORT).show();
                                 ibSave.setColorFilter(ContextCompat.getColor(context, R.color.medium));
                                 break;
-                            default:
-                                if (BuildConfig.DEBUG) Log.d(TAG, "failed saving");
+                            case DOWNLOAD_NO_SPACE:
+                                Toast.makeText(context, R.string.download_no_space, Toast.LENGTH_SHORT).show();
+                                ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                                break;
+                            case DOWNLOAD_FAILED:
+                                Toast.makeText(context,R.string.download_server_error,Toast.LENGTH_LONG).show();
+                                ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                                break;
+                            case DOWNLOAD_ALREADY_DONE:
+                                Toast.makeText(context,R.string.download_already_done,Toast.LENGTH_LONG).show();
+                                ibSave.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                                break;
+                            case PROGRESS_NOTIFICATION:
+                                // Toast.makeText(context, controllerEvent.getMessage(), Toast.LENGTH_SHORT).show();
+                                break;
                         }
-                    });*/
+                    });
                 }
                 break;
             case R.id.tourOVShareButton:
