@@ -126,7 +126,7 @@ public class FragmentService extends Application {
             }
         }
 
-        //show or add the new Fragment
+        //show or add the new Fragment depending on dynamic or static content
         if (fm.findFragmentByTag(targetFragmentTag) != null && !isDynamicTargetFragment) {
             ft.show(targetFragment);
         } else {
@@ -164,7 +164,7 @@ public class FragmentService extends Application {
         Fragment targetFragment = fm.findFragmentByTag(targetTag);
 
         //if dynamic content is inside of the targetFragment re-render it completely
-        //by removing and then adding the target fragment
+        //by removing the fragment tag
         if (isDynamicTarget) {
             Fragment oldFragment = fm.findFragmentByTag(targetTag);
             if (oldFragment != null) {

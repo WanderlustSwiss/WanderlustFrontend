@@ -16,15 +16,32 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
+/**
+ * Glide Module which provides overriden functions to enhance glide usage
+ * @author Alexander Weinbeck
+ * @license MIT
+ */
 @GlideModule
 public class GlideService extends AppGlideModule {
 
+    /**
+     * overriden function to provide following things:
+     * connect timeout
+     * write timeout
+     * cookie interception
+     * cookie validation check before rendering
+     *
+     * @param context {@inheritDoc}
+     * @param glide {@inheritDoc}
+     * @param registry {@inheritDoc}
+     */
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
         if(LoginUser.getCookies() != null && !LoginUser.getCookies().isEmpty() && LoginUser.getCookies().get(0) != null) {
             OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(20, TimeUnit.SECONDS)
-                    .readTimeout(20, TimeUnit.SECONDS)
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(10, TimeUnit.SECONDS)
                     //.cache(cache)
                     .addInterceptor(chain -> {
                         Request newRequest = chain.request().newBuilder()
