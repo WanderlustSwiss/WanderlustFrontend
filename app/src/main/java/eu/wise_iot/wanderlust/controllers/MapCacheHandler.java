@@ -78,7 +78,7 @@ public class MapCacheHandler {
 
             final Notification.Builder notificationBuilder = new Notification.Builder(context.getApplicationContext());
             notificationBuilder.setOngoing(true)
-                   // .setSmallIcon(R.drawable.loader)
+                    .setSmallIcon(R.drawable.loader)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                     .setContentTitle(tour.getTitle() + " wird heruntergeladen...")
                     .setProgress(max, 0, false)

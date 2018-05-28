@@ -225,6 +225,8 @@ public class TourOverviewFragment extends Fragment {
                     //getDataFromServer(favTours);
                     if (BuildConfig.DEBUG) Log.d(TAG, favTours.toString());
                     adapterFavs.notifyDataSetChanged();
+                    adapterRecent.notifyDataSetChanged();
+                    adapterRoutes.notifyDataSetChanged();
 
                     if (adapterFavs.getItemCount() > 0) {
                         rvFavorites.setVisibility(View.VISIBLE);

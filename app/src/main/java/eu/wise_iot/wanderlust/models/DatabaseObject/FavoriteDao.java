@@ -110,7 +110,7 @@ public class FavoriteDao extends DatabaseObjectAbstract{
     }
 
     /**
-     * Insert a favorite into the database
+     * Insert all favorites into the database
      *
      */
     public void retrieveAllFavorites() {
@@ -151,7 +151,8 @@ public class FavoriteDao extends DatabaseObjectAbstract{
                             handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
                         }
                     } catch (Exception e) {
-                        if (BuildConfig.DEBUG) Log.d(TAG, "Favorite delete failed");
+                        handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+                        if (BuildConfig.DEBUG) Log.d(TAG, "Favorite delete failed" + e.getMessage() + e.getStackTrace() + e.getCause());
                     }
                 } else {
                     handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));

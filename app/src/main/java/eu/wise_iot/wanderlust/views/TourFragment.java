@@ -18,7 +18,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -459,7 +458,7 @@ public class TourFragment extends Fragment {
         tourSharedButton.setOnClickListener((View v) -> shareTour());
         tourReportButton.setOnClickListener((View v) -> reportTour());
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
-        backbutton.setOnClickListener((View v) -> getActivity().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK)));
+        backbutton.setOnClickListener((View v) -> getActivity().onBackPressed());
         favButton.setOnClickListener((View v) -> toggleFavorite());
         tourSavedButton.setOnClickListener((View v) -> toggleSaved());
         sendCommentButton.setOnClickListener((View v) -> createComment());
@@ -792,6 +791,7 @@ public class TourFragment extends Fragment {
                        // Toast.makeText(context, controllerEvent.getMessage(), Toast.LENGTH_SHORT).show();
                         break;
                 }
+                if(BuildConfig.DEBUG) Log.d(TAG, "Response arrived: " + controllerEvent.getMessage() + controllerEvent.getType());
             });
             notifier.editedTour();
         }
