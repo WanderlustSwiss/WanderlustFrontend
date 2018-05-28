@@ -402,36 +402,6 @@ public class TourOverviewFragment extends Fragment {
             case R.id.tour_rv_item:
                 if (BuildConfig.DEBUG) Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
                 new AsyncCheckTourExists(getActivity(),this).execute(tour);
-               /* LoadingDialog.getDialog().show(getActivity());
-                tourOverviewController.checkIfTourExists(tour, controllerEvent -> {
-                    switch(controllerEvent.getType()) {
-                        case OK:
-                            if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");
-                            FragmentService
-                                    .getInstance(getActivity())
-                                    .performTraceTransaction(true, Constants.TOUR_FRAGMENT, TourFragment.newInstance(tour), this);
-                            break;
-                        case NOT_FOUND:
-                            if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> Tour was not found");
-                            Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
-                            recentTours.remove(tour);
-                            adapterRecent.notifyDataSetChanged();
-                            tourOverviewController.removeRecentTour(tour);
-                            break;
-                        case SERVER_ERROR:
-                            if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> SERVER ERROR");
-                            Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
-                            break;
-                        case NETWORK_ERROR:
-                            Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                            if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> NETWORK ERROR");
-                            break;
-                        default:
-                            if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
-                            Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
-                    }
-                    LoadingDialog.getDialog().dismiss();
-                });*/
                 break;
         }
 
