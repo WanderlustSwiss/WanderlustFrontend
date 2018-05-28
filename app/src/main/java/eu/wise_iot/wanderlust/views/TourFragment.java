@@ -404,13 +404,8 @@ public class TourFragment extends Fragment {
         //List<File> images = imageController.getImages(tour.getImagePaths());
         //if (BuildConfig.DEBUG) Log.d("Debug", "Images size:" + images.size());
 
-        String url = null;
-        if(tour.getImagePaths() != null && !tour.getImagePaths().isEmpty() && tour.getImagePaths().get(0) != null) {
-            url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-        }
-
         GlideApp.with(getActivity())
-                .load(url)
+                .load(ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/1")
                 .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
                 .placeholder(R.drawable.progress_animation)
                 .centerCrop()

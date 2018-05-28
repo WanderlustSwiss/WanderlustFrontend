@@ -404,7 +404,7 @@ public class ProfileEditFragment extends Fragment {
             //Picasso.with(getActivity()).load(image).placeholder(R.drawable.progress_animation).transform(new CircleTransform()).fit().into(profileImage);
 
             GlideApp.with(getActivity())
-                    .load(image)
+                    .load(profileController.getProfilePicture())
                     .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).circleCrop())
                     .placeholder(R.drawable.progress_animation)
                     .circleCrop()

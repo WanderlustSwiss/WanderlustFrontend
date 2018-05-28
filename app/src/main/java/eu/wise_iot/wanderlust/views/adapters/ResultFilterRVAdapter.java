@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.signature.ObjectKey;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,7 +79,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
         Tour tour = tours.get(position);
-//        holder.tvTitle.setTextColor(Color.BLACK);
+
         //difficulty calculations
         long difficulty = tour.getDifficulty();
         if (difficulty >= 6)
@@ -102,32 +101,13 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         holder.tvDescending.setText(tour.getDescent() + " m");
         holder.tvAscending.setText(tour.getAscent() + " m");
 
-        List<File> images = imageController.getImages(tour.getImagePaths());
-        if (!images.isEmpty()) {
-            GlideApp.with(context)
-                    .load(ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId())
-                    .signature(new ObjectKey(System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
-                    .error(GlideApp.with(context).load(R.drawable.no_image_found).centerCrop())
-                    .placeholder(R.drawable.progress_animation)
-                    .centerCrop()
-                    .into(holder.tvImage);
-
-        }
-        /*
-        List<File> images = imageController.getImages(tour.getImagePaths());
-        if (!images.isEmpty()){
-            Picasso handler = imageController.getPicassoHandler(activity);
-            //handler.setIndicatorsEnabled(true);
-            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            if (BuildConfig.DEBUG) Log.d("ResultFilterRVAdapter", "ImageInfo loaded: " + url);
-        } else {
-            Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
-                    .placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            if (BuildConfig.DEBUG) Log.d("ResultFilterRVAdapter", "Images not found");
-        }*/
-
-
+        GlideApp.with(context)
+                .load(ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/1")
+                .signature(new ObjectKey(System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
+                .error(GlideApp.with(context).load(R.drawable.no_image_found).centerCrop())
+                .placeholder(R.drawable.progress_animation)
+                .centerCrop()
+                .into(holder.tvImage);
 
         holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
     }

@@ -313,6 +313,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Fragment f = fm.findFragmentByTag(Constants.LOGIN_FRAGMENT);
                             if (f == null) f = StartupLoginFragment.newInstance();
                             //switchFragment(f, Constants.LOGIN_FRAGMENT);
+
+                            for (String drawerFragment : Constants.fragmentPool) {
+                                Fragment fragmentFind = getFragmentManager().findFragmentByTag(drawerFragment);
+                                if ((fragmentFind != null) && fragmentFind.isAdded()) {
+                                    if (BuildConfig.DEBUG) Log.d(TAG, "hiding fragment: " + fragmentFind.getTag());
+                                    getFragmentManager().beginTransaction().hide(fragmentFind).commit();
+                                }
+                            }
+
                             getFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.content_frame, f, Constants.LOGIN_FRAGMENT)
@@ -346,7 +355,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (BuildConfig.DEBUG) Log.d(TAG, "hiding fragment: " + fragmentFind.getTag());
                 getFragmentManager().beginTransaction().hide(fragmentFind).commit();
             }
-
         }
         if (fragment != null) {
             if (fragment.isAdded() && !fragmentTag.equals(Constants.TOUROVERVIEW_FRAGMENT)) {

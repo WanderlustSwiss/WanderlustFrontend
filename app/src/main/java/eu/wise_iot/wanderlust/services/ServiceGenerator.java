@@ -29,6 +29,8 @@ public class ServiceGenerator {
 
     private static Retrofit service;
 
+    private static OkHttpClient client;
+
     /**
      * Create service for a new backend request
      * if already set there will be not a new instance
@@ -38,22 +40,21 @@ public class ServiceGenerator {
      * @return service for respective model
      */
     public static <S> S createService(Class<S> serviceClass) {
-        if (service == null) {
+        if (client == null) {
 
-            OkHttpClient client = new OkHttpClient.Builder()
+            client = new OkHttpClient.Builder()
                                     .readTimeout(5, TimeUnit.SECONDS)
                                     .writeTimeout(5, TimeUnit.SECONDS)
                                     .connectTimeout(5, TimeUnit.SECONDS)
                                     .addInterceptor(new AddCookiesInterceptor())
                                     .addInterceptor(new ReceivedCookiesInterceptor())
                                     .build();
-
-            service = new Retrofit.Builder()
-                        .baseUrl(API_BASE_URL)
-                        .client(client)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
         }
+        service = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         return service.create(serviceClass);
     }
 }
