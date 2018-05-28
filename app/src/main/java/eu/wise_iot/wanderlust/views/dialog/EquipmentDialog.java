@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.File;
 
 import eu.wise_iot.wanderlust.R;
@@ -21,7 +19,7 @@ import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
-import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+import eu.wise_iot.wanderlust.services.GlideApp;
 //TODO Commenting
 
 /**
@@ -65,8 +63,15 @@ public class EquipmentDialog extends DialogFragment{
         ImageInfo imagepath = equipment.getImagePath();
         if(imagepath != null){
             File image = imageController.getImage(equipment.getImagePath());
-            Picasso.with(context).load(image).placeholder(R.drawable.loader)
-                    .fit().centerCrop().transform(new CircleTransform()).into(equipment_imageView);
+//            Picasso.with(context).load(image).placeholder(R.drawable.loader)
+//                    .fit().centerCrop().transform(new CircleTransform()).into(equipment_imageView);
+
+            GlideApp.with(getActivity())
+                    .load(image)
+                    .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                    .placeholder(R.drawable.progress_animation)
+                    .centerCrop()
+                    .into(equipment_imageView);
         }
         titleTextView.setText(equipment.getName());
         descriptionTextView.setText(equipment.getDescription());

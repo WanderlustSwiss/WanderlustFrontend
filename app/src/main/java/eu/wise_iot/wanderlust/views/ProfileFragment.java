@@ -20,8 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +39,11 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.FragmentService;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePOIRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileTripRVAdapter;
-import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import eu.wise_iot.wanderlust.views.dialog.ConfirmDeletePoiDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
@@ -135,7 +133,14 @@ public class ProfileFragment extends Fragment {
 
         File image = profileController.getProfilePicture();
         if (image != null) {
-            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(profilePicture);
+            GlideApp.with(getActivity())
+                    .load(image)
+                    .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).circleCrop())
+                    .placeholder(R.drawable.progress_animation)
+                    .circleCrop()
+                    .into(profilePicture);
+
+            //Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(profilePicture);
             ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
         } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);

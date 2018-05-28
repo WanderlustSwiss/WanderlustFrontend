@@ -26,8 +26,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
@@ -54,6 +52,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.views.controls.EquipmentCompletionView;
 
 import static android.app.Activity.RESULT_OK;
@@ -439,8 +438,15 @@ public class CreateTourDialog extends DialogFragment {
         }
 
         if (imageBitmap != null) {
-            Picasso.with(getActivity().getApplicationContext())
+//            Picasso.with(getActivity().getApplicationContext())
+//                    .load(returnUri)
+//                    .into(tourImageDisplay);
+
+            GlideApp.with(getActivity())
                     .load(returnUri)
+                    .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                    .placeholder(R.drawable.progress_animation)
+                    .centerCrop()
                     .into(tourImageDisplay);
         }
     }

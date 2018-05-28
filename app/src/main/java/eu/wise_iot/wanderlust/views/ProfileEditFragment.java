@@ -34,8 +34,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +45,7 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
 import eu.wise_iot.wanderlust.services.FragmentService;
-import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.app.Activity.RESULT_OK;
@@ -402,8 +400,16 @@ public class ProfileEditFragment extends Fragment {
     private void setupAvatar() {
         File image = profileController.getProfilePicture();
         if (image != null) {
-            Picasso.with(getActivity()).invalidate(image);
-            Picasso.with(getActivity()).load(image).placeholder(R.drawable.progress_animation).transform(new CircleTransform()).fit().into(profileImage);
+            //Picasso.with(getActivity()).invalidate(image);
+            //Picasso.with(getActivity()).load(image).placeholder(R.drawable.progress_animation).transform(new CircleTransform()).fit().into(profileImage);
+
+            GlideApp.with(getActivity())
+                    .load(image)
+                    .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).circleCrop())
+                    .placeholder(R.drawable.progress_animation)
+                    .circleCrop()
+                    .into(profileImage);
+
             ((MainActivity) getActivity()).updateProfileImage(image);
         } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);

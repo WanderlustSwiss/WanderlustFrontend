@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,9 +22,8 @@ import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
-
-import static eu.wise_iot.wanderlust.views.MainActivity.activity;
 
 
 /**
@@ -104,6 +103,18 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         holder.tvAscending.setText(tour.getAscent() + " m");
 
         List<File> images = imageController.getImages(tour.getImagePaths());
+        if (!images.isEmpty()) {
+            GlideApp.with(context)
+                    .load(ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId())
+                    .signature(new ObjectKey(System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
+                    .error(GlideApp.with(context).load(R.drawable.no_image_found).centerCrop())
+                    .placeholder(R.drawable.progress_animation)
+                    .centerCrop()
+                    .into(holder.tvImage);
+
+        }
+        /*
+        List<File> images = imageController.getImages(tour.getImagePaths());
         if (!images.isEmpty()){
             Picasso handler = imageController.getPicassoHandler(activity);
             //handler.setIndicatorsEnabled(true);
@@ -114,7 +125,10 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
             Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
                     .placeholder(R.drawable.progress_animation).into(holder.tvImage);
             if (BuildConfig.DEBUG) Log.d("ResultFilterRVAdapter", "Images not found");
-        }
+        }*/
+
+
+
         holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
     }
 

@@ -16,8 +16,6 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +31,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.GeoObject;
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 /**
@@ -181,8 +180,14 @@ public class PoiViewDialog extends DialogFragment {
                         switch (controllerEvent.getType()) {
                             case OK:
                                 List<File> images = (List<File>) controllerEvent.getModel();
-                                if (images.size() != 0) {
-                                    Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                                if (!images.isEmpty()) {
+                                    //Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                                    GlideApp.with(getActivity())
+                                            .load(images.get(0))
+                                            .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                                            .placeholder(R.drawable.progress_animation)
+                                            .centerCrop()
+                                            .into(poiImage);
                                 }
                                 break;
                             default:
@@ -192,29 +197,55 @@ public class PoiViewDialog extends DialogFragment {
                 } else{
                     Poi localPoi = poiController.getLocalPoi(currentPoi.getPoi_id());
                     List<File> images = imageController.getImages(localPoi.getImagePaths());
-                    if (images.size() != 0) {
-                        Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                    if (!images.isEmpty()) {
+                        //Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+
+                        GlideApp.with(getActivity())
+                                .load(images.get(0))
+                                .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                                .placeholder(R.drawable.progress_animation)
+                                .centerCrop()
+                                .into(poiImage);
                     }
                 }
             }
             else {
                 if (currentPoi.isPublic()) {
-                    Picasso handler = imageController.getPicassoHandler(context);
+                    //Picasso handler = imageController.getPicassoHandler(context);
                     String url = ServiceGenerator.API_BASE_URL + "/poi/" + currentPoi.getPoi_id() + "/img/1";
-                    handler.load(url).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                    //handler.load(url).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                    GlideApp.with(getActivity())
+                            .load(url)
+                            .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                            .placeholder(R.drawable.progress_animation)
+                            .centerCrop()
+                            .into(poiImage);
+
                 } else {
 
                     Poi localPoi = poiController.getLocalPoi(currentPoi.getPoi_id());
                     List<File> images = imageController.getImages(localPoi.getImagePaths());
                     if (images.size() != 0) {
-                        Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                        //Picasso.with(context).load(images.get(0)).fit().placeholder(R.drawable.progress_animation).into(poiImage);
+                        GlideApp.with(getActivity())
+                                .load(images.get(0))
+                                .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                                .placeholder(R.drawable.progress_animation)
+                                .centerCrop()
+                                .into(poiImage);
                     }
                 }
             }
         } else {
             List<File> images = new ArrayList<>();
             images.add(new File(currentPoi.getImagePaths().get(0).getPath()));
-            Picasso.with(context).load(images.get(0).getPath()).fit().centerCrop().into(poiImage);
+            //Picasso.with(context).load(images.get(0).getPath()).fit().centerCrop().into(poiImage);
+            GlideApp.with(getActivity())
+                    .load(images.get(0))
+                    .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                    .placeholder(R.drawable.progress_animation)
+                    .centerCrop()
+                    .into(poiImage);
         }
 
         if (currentPoi.isPublic()) privateModeButton.setVisibility(View.GONE);

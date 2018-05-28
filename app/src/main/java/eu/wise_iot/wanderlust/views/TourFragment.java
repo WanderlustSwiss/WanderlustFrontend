@@ -43,7 +43,6 @@ import com.androidplot.xy.StepMode;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -53,7 +52,6 @@ import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
 
-import java.io.File;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
@@ -81,6 +79,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
 import eu.wise_iot.wanderlust.services.FragmentService;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.TourCommentRVAdapter;
@@ -402,19 +401,33 @@ public class TourFragment extends Fragment {
     }
 
     private void fillControls() {
-        List<File> images = imageController.getImages(tour.getImagePaths());
-        if (BuildConfig.DEBUG) Log.d("Debug", "Images size:" + images.size());
+        //List<File> images = imageController.getImages(tour.getImagePaths());
+        //if (BuildConfig.DEBUG) Log.d("Debug", "Images size:" + images.size());
+
+        String url = null;
+        if(tour.getImagePaths() != null && !tour.getImagePaths().isEmpty() && tour.getImagePaths().get(0) != null) {
+            url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
+        }
+
+        GlideApp.with(getActivity())
+                .load(url)
+                .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                .placeholder(R.drawable.progress_animation)
+                .centerCrop()
+                .into(imageViewTourImage);
+
+        /*
         if (!images.isEmpty() && tour.getImagePaths().get(0) != null) {
-            Picasso handler = imageController.getPicassoHandler(getActivity());
+            //Picasso handler = imageController.getPicassoHandler(getActivity());
             //handler.setIndicatorsEnabled(true);
             String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(imageViewTourImage);
+            //handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(imageViewTourImage);
         } else {
             Picasso.with(context)
                     .load(R.drawable.no_image_found)
                     .fit().centerCrop().placeholder(R.drawable.progress_animation)
                     .into(imageViewTourImage);
-        }
+        }*/
 
         if (tourController.isFavorite()) {
             favButton.setImageResource(R.drawable.ic_favorite_red_24dp);

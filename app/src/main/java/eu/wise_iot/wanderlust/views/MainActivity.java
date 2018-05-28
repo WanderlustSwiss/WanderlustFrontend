@@ -31,8 +31,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
@@ -59,7 +57,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.FragmentService;
-import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import io.objectbox.BoxStore;
 
@@ -335,6 +333,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /**
+     * Perform a fragment switch
+     * TODO: can be refactored into Fragment Service
+     * @param fragment destination fragment
+     * @param fragmentTag destination tag
+     */
     private void switchFragment(Fragment fragment, String fragmentTag) {
         for (String drawerFragment : Constants.fragmentPool) {
             Fragment fragmentFind = getFragmentManager().findFragmentByTag(drawerFragment);
@@ -416,7 +420,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userProfileImage = findViewById(R.id.user_profile_image);
         }
         if (image != null) {
-            Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
+            //Picasso.with(activity).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(userProfileImage);
+
+            GlideApp.with(activity)
+                    .load(image)
+                    .error(GlideApp.with(activity).load(R.drawable.no_image_found).circleCrop())
+                    .placeholder(R.drawable.progress_animation)
+                    .circleCrop()
+                    .into(userProfileImage);
+
         } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
@@ -425,17 +437,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////CALLBACKS//////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////
+    /****************************** CROSS FRAGMENT COMMUNICATION ***********************************
 
+    /**
+     * Notify from profile edit fragment, that the user has changed
+     * @param email
+     */
     @Override
     public void editedMail(String email) {
         this.email.setText(email);
     }
 
     /**
-     * notify Touroverview fragment recycler views from Tour fragment of changes
+     * Notify Tour-overview fragment recycler views from Tour fragment of changes about saving
      * this does not force a full reload on the whole view
      */
     @Override
@@ -445,6 +459,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment.updateTourDataSet();
         }
     }
+    /**
+     * Notify Tour-overview fragment recycler views from Tour fragment of changes about favorites
+     * this does not force a full reload on the whole view
+     */
     @Override
     public void editedFavorite(Tour tour, boolean isDeleted) {
         TourOverviewFragment fragment = (TourOverviewFragment) getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT);

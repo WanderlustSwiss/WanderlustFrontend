@@ -64,7 +64,7 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
 
         GlideApp.with(context)
                 .load(imageController.getURLImageTourSingle(fav))
-                .error(R.drawable.no_image_found)
+                .error(GlideApp.with(context).load(R.drawable.no_image_found).centerCrop())
                 .placeholder(R.drawable.progress_animation)
                 .centerCrop()
                 .into(holder.tripImage);

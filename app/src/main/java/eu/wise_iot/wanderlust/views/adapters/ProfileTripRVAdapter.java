@@ -59,7 +59,7 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
 
         GlideApp.with(context)
                 .load(imageController.getURLImageTourSingle(tour))
-                .error(R.drawable.no_image_found)
+                .error(GlideApp.with(context).load(R.drawable.no_image_found).centerCrop())
                 .placeholder(R.drawable.progress_animation)
                 .centerCrop()
                 .into(holder.tripImage);
