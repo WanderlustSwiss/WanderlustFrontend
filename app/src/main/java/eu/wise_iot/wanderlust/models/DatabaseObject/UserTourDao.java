@@ -109,6 +109,47 @@ public class UserTourDao extends DatabaseObjectAbstract {
         });
     }
 
+//    public ControllerEvent<Tour> retrieveUnhandled(final long id) {
+//        final long[] newUserTourID = new long[1];
+//        Call<Tour> call = service.retrieveTour(id);
+//        call.enqueue(new Callback<Tour>() {
+//            @Override
+//            public void onResponse(Call<Tour> call, Response<Tour> response) {
+//                if (response.isSuccessful()) {
+//                    Tour backendTour = response.body();
+//                    //routeBox.put(backendTour); wieso in die lokale db einfügen ??
+//                    newUserTourID[0] = backendTour.getInternal_id();
+//                    return new ControllerEvent(EventType.getTypeByCode(response.code()), backendTour);
+//                } else {
+//                    return new ControllerEvent(EventType.getTypeByCode(response.code()));
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Tour> call, Throwable t) {
+//                return new ControllerEvent(EventType.NETWORK_ERROR);
+//            }
+//        });
+//    }
+
+    public ControllerEvent<Tour> retrieveSequential(final long id) {
+        final long[] newUserTourID = new long[1];
+        Call<Tour> call = service.retrieveTour(id);
+        try {
+            Response<Tour> response = call.execute();
+            if (response.isSuccessful()) {
+                Tour backendTour = response.body();
+                //routeBox.put(backendTour); wieso in die lokale db einfügen ??
+                newUserTourID[0] = backendTour.getInternal_id();
+                return new ControllerEvent(EventType.getTypeByCode(response.code()), backendTour);
+            } else {
+                return new ControllerEvent(EventType.getTypeByCode(response.code()));
+            }
+        } catch (Exception e){
+            return new ControllerEvent(EventType.getTypeByCode(500));
+        }
+    }
+
     /*
     public void retrieveAll(long id, final FragmentHandler handler) {
         Call<Poi> call = service.retrievePoi(id);

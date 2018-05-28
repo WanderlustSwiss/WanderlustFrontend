@@ -762,22 +762,38 @@ public class TourFragment extends Fragment {
                 switch (controllerEvent.getType()){
                     case OK:
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        notifier.editedTour();
                         break;
                     default:
                 }
             });
-        }else{
-            tourController.setSaved(getActivity() , controllerEvent -> {
-                switch (controllerEvent.getType()){
-                    case OK:
+        } else {
+            Toast.makeText(context, "starting download",Toast.LENGTH_LONG).show();
+            tourController.setSaved(getActivity(), controllerEvent -> {
+                switch (controllerEvent.getType()) {
+                    case DOWNLOAD_OK:
+                        Toast.makeText(context,"Download abgeschlossen", Toast.LENGTH_SHORT).show();
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                        notifier.editedTour();
                         break;
-                    default:
-                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                    case DOWNLOAD_NO_SPACE:
+                        Toast.makeText(context, "Kein Speicherplatz mehr verfügbar", Toast.LENGTH_SHORT).show();
+                        tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        break;
+                    case DOWNLOAD_FAILED:
+                        Toast.makeText(context,"Tour konnte nicht heruntergeladen werden",Toast.LENGTH_LONG).show();
+                        tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        break;
+                    case DOWNLOAD_ALREADY_DONE:
+                        Toast.makeText(context,"Tour wurde bereits heruntergeladen",Toast.LENGTH_LONG).show();
+                        tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        break;
+                    case PROGRESS_NOTIFICATION:
+                        Toast.makeText(context, controllerEvent.getMessage(), Toast.LENGTH_SHORT).show();
+                        break;
                 }
             });
         }
-        notifier.editedTour();
     }
     public void updateRating(TourRate tourRate){
         if (tourRate != null){

@@ -160,38 +160,28 @@ public class TourController {
     }
 
     public void setSaved(Activity context, FragmentHandler handler){
-        Future<ControllerEvent<SavedTour>> response = AsyncDownloadQueueTask.getHandler().queueTask(() ->
-            communityTourDao.retrieveSequential(tour.getTour_id()));
-            try {
-                ControllerEvent<SavedTour> event = response.get();
-               switch (event.getType()) {
-                   case OK:
-                       //download in cache
-                       if (BuildConfig.DEBUG) Log.d(TAG, "OK arrived saving tour controller");
-                       SavedTour data = (SavedTour) event.getModel();
-                       MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
-                       if (BuildConfig.DEBUG) Log.d(TAG, "Is saved");
-                       //save tour in local db
-                       if (cacheHandler.downloadMap()) {
-                           if (BuildConfig.DEBUG) Log.d(TAG, "Is saved");
-                           communityTourDao.create(data);
-                           if (BuildConfig.DEBUG) Log.d(TAG, "Is saved");
-                           handler.onResponse(new ControllerEvent(OK));
-                       } else {
-                           handler.onResponse(new ControllerEvent(EventType.NOT_FOUND));
-                           //Toast.makeText(context, "Kartenspeicher ist voll, löschen Sie Touren um Platz zu schaffen",
-                           //Toast.LENGTH_SHORT).show();
-                       }
-                       break;
-                   default:
-                       if (BuildConfig.DEBUG)
-                           Log.d(TAG, "saving failure: " + event.getType());
-                       handler.onResponse(new ControllerEvent(EventType.CONFLICT));
-               }
-       } catch (Exception e){
-                if (BuildConfig.DEBUG)
-                    Log.d(TAG, "saving failure: excepton"+ e.getStackTrace());
+        Future<ControllerEvent<SavedTour>> response =
+                AsyncDownloadQueueTask.getHandler().queueTask(() ->
+                        communityTourDao.retrieveSequential(tour.getTour_id()));
+        try {
+            ControllerEvent<SavedTour> event = response.get();
+            switch (event.getType()) {
+                case OK:
+                    //download in cache
+                    if (BuildConfig.DEBUG) Log.d(TAG, "OK arrived saving tour controller");
+                    SavedTour data = event.getModel();
+                    //save tour in local db
+                    new MapCacheHandler(context, data.toTour())
+                            .downloadMap(data, handler::onResponse);
+                    break;
+                default:
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "saving failure: " + event.getType());
+                    handler.onResponse(new ControllerEvent(EventType.CONFLICT));
             }
+       } catch (Exception e){
+            if (BuildConfig.DEBUG) Log.d(TAG, "saving failure: excepton"+ e.getStackTrace() + e.getCause() + e.getMessage());
+        }
     }
 
     public void unsetSaved(Activity context, FragmentHandler fragmentHandler){

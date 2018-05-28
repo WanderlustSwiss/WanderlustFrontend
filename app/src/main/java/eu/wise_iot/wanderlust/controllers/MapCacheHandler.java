@@ -3,8 +3,8 @@ package eu.wise_iot.wanderlust.controllers;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.osmdroid.tileprovider.MapTile;
 import org.osmdroid.tileprovider.cachemanager.CacheManager;
@@ -14,7 +14,9 @@ import org.osmdroid.views.MapView;
 
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
+import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.views.WanderlustMapView;
 
 /**
@@ -35,7 +37,7 @@ public class MapCacheHandler {
         //mapView = new MapView(context);
     }
 
-    public boolean downloadMap(){
+    public void downloadMap(SavedTour tour, FragmentHandler handler){
         double minLat = 9999;
         double maxLat = -9999;
         double minLong = 9999;
@@ -62,53 +64,50 @@ public class MapCacheHandler {
         //check if already in cache
         if(cacheManager.checkTile(new MapTile(10, (int) mapView.getX(), (int) mapView.getY()))){
             if (BuildConfig.DEBUG) Log.d(TAG, "Tile already downloaded!");
-            return true;
+            handler.onResponse(new ControllerEvent(EventType.DOWNLOAD_ALREADY_DONE));
         }
 
         //check if limit reached
         final long cacheLimit = cacheManager.cacheCapacity() - 100000000;
-        if(cacheManager.currentCacheUsage() < cacheLimit){
+        if(cacheManager.currentCacheUsage() < cacheLimit) {
 
-            final int max = cacheManager.possibleTilesInArea(boundingBox, 10, 20);
+            final int max = cacheManager.possibleTilesInArea(boundingBox, 10, 15);
             final int notificationID = 900;
 
             final NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             final Notification.Builder notificationBuilder = new Notification.Builder(context.getApplicationContext());
             notificationBuilder.setOngoing(true)
-                               .setSmallIcon(R.mipmap.ic_launcher)
-                               .setContentTitle(tour.getTitle() + " wird heruntergeladen...")
-                               .setProgress(max, 0, false)
-                               .setAutoCancel(true);
+                   // .setSmallIcon(R.drawable.loader)
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                    .setContentTitle(tour.getTitle() + " wird heruntergeladen...")
+                    .setProgress(max, 0, false)
+                    .setAutoCancel(true);
 
             final Notification notification = notificationBuilder.build();
             notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
             notificationManager.notify(notificationID, notification);
             if (BuildConfig.DEBUG) Log.d(TAG, "starting download");
-            cacheManager.downloadAreaAsyncNoUI(context, boundingBox, 10, 20, new CacheManager.CacheManagerCallback() {
+
+            cacheManager.downloadAreaAsyncNoUI(context, boundingBox, 10, 15, new CacheManager.CacheManagerCallback() {
                 @Override
                 public void downloadStarted() {
-                    Toast.makeText(context,"Tour wird heruntergeladen",Toast.LENGTH_LONG).show();
                     if (BuildConfig.DEBUG) Log.d(TAG, "Download started");
+                    handler.onResponse(new ControllerEvent(EventType.PROGRESS_NOTIFICATION, "STARTED"));
                 }
 
                 @Override
                 public void updateProgress(final int progress, final int currentZoomLevel, final int zoomMin, final int zoomMax) {
-                    try {
-                        Thread.sleep(1000);
-                        if (progress == ((max / 100) * progressPercentage)) {
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "refreshing download progress" + progress);
-                            notificationBuilder.setProgress(max, progress, false);
-                            final Notification notification = notificationBuilder.build();
-                            notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
-                            notificationManager.notify(notificationID, notification);
-                            progressPercentage += 10;
-                        }
-                    } catch (Exception e){
-
+                    if (progress >= ((max / 100) * progressPercentage)) {
+                        if (BuildConfig.DEBUG)
+                            Log.d(TAG, "refreshing download progress" + progress);
+                        notificationBuilder.setProgress(max, progress, false);
+                        final Notification notification = notificationBuilder.build();
+                        notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_LIGHTS;
+                        notificationManager.notify(notificationID, notification);
+                        progressPercentage += 5;
+                        handler.onResponse(new ControllerEvent(EventType.PROGRESS_UPDATE, progressPercentage));
                     }
-
                 }
 
                 @Override
@@ -118,23 +117,22 @@ public class MapCacheHandler {
                 @Override
                 public void onTaskComplete() {
                     notificationManager.cancel(notificationID);
-                    Toast.makeText(context,"Tour wurde erfolgreich heruntergeladen",Toast.LENGTH_LONG).show();
                     if (BuildConfig.DEBUG) Log.d(TAG, "Download finished");
+                    CommunityTourDao.getInstance().create(tour);
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Download is saved in internal database");
+                    handler.onResponse(new ControllerEvent(EventType.DOWNLOAD_OK));
                 }
+
                 @Override
                 public void onTaskFailed(final int errors) {
-                    Toast.makeText(context,"Tour konnte nicht heruntergeladen werden",Toast.LENGTH_LONG).show();
                     notificationManager.cancel(notificationID);
                     if (BuildConfig.DEBUG) Log.d(TAG, "Download finished");
+                    handler.onResponse(new ControllerEvent(EventType.DOWNLOAD_FAILED));
                 }
             });
-
         } else {
-            return false;
+            handler.onResponse(new ControllerEvent(EventType.DOWNLOAD_NO_SPACE));
         }
-
-        return true;
-
     }
 
     public void deleteMap(){

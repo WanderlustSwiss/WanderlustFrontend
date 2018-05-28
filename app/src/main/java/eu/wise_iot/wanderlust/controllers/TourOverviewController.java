@@ -4,10 +4,7 @@ import android.util.Log;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Favorite_;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
@@ -96,25 +93,9 @@ public class TourOverviewController {
     public void deleteFavorite(long favorite_id, FragmentHandler handler) {
         favoriteDao.delete(favorite_id,handler);
     }
-    public Integer checkIfTourExists(Tour tour){
-        final AtomicInteger responseCode = new AtomicInteger(0);
-        try {
-            CountDownLatch countDownLatchThread = new CountDownLatch(1);
-            userTourDao.retrieve(tour.getTour_id(), controllerEvent -> {
-                responseCode.set(controllerEvent.getType().code);
-                countDownLatchThread.countDown();
 
-            });
-            countDownLatchThread.await();
-            return responseCode.get();
-        } catch (Exception e){
-            if (BuildConfig.DEBUG) Log.d(TAG,"failure while processing request");
-        }
-        return responseCode.get();
-    }
-
-    public void checkIfTourExists(Tour tour, FragmentHandler handler){
-        userTourDao.retrieve(tour.getTour_id(), handler);
+    public ControllerEvent<Tour> checkIfTourExists(Tour tour){
+        return userTourDao.retrieveSequential(tour.getTour_id());
     }
 
     public long getTourFavoriteId(long id){

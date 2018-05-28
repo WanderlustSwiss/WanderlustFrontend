@@ -12,6 +12,21 @@ public class ControllerEvent<T> {
     private final EventType type;
     private T model;
 
+    private int percentage;
+    private String message;
+
+
+    public ControllerEvent(EventType type, int percentage, String message) {
+        this.type = type;
+        this.percentage = percentage;
+        this.message = message;
+    }
+
+    public ControllerEvent(EventType type, String message) {
+        this.type = type;
+        this.message = message;
+    }
+
     /**
      * Create response event
      *
@@ -37,4 +52,19 @@ public class ControllerEvent<T> {
     }
 
 
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
