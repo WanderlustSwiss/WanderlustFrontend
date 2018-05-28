@@ -26,7 +26,12 @@ import eu.wise_iot.wanderlust.views.UserGuideFragment;
 
 
 /**
- * provides appwide Fragmentservice
+ * Provides app-wide fragment handling
+ * see method description for usage description
+ * for correct usage also set a new fragment in the activity under all fragments
+ *
+ * @author Alexander Weinbeck
+ * @license MIT
  */
 public class FragmentService extends Application {
     private static final String TAG = "FragmentService";
@@ -35,17 +40,36 @@ public class FragmentService extends Application {
     private static final Stack<Fragment> fragmentBackStack = new Stack<>();
     private static FragmentService fragmentService;
     private FragmentTransaction transaction;
+
+    /**
+     * Define all fragments with an appbar,
+     * if not specified completely the service will NOT work
+     */
     private static final List<String> fragmentsWithAppBar = Arrays.asList(  Constants.TOUROVERVIEW_FRAGMENT,
                                                                             Constants.PROFILE_FRAGMENT,
                                                                             Constants.MAP_FRAGMENT,
                                                                             Constants.FILTER_FRAGMENT,
                                                                             Constants.RESULT_FILTER_FRAGMENT);
+    /**
+     * last used fragment need for backstack internally
+     */
     private String lastManipulatedTag;
 
-    private final List<String> drawerFragments = Arrays.asList(Constants.DISCLAIMER_FRAGMENT, Constants.MAP_FRAGMENT,
-                                                                Constants.PROFILE_FRAGMENT, Constants.TOUROVERVIEW_FRAGMENT,
+    /**
+     * all fragments that are inside the drawer, maybe needed in further development
+     * keep this class even if unused
+     */
+    private final List<String> drawerFragments = Arrays.asList(Constants.DISCLAIMER_FRAGMENT,
+                                                                Constants.MAP_FRAGMENT,
+                                                                Constants.PROFILE_FRAGMENT,
+                                                                Constants.TOUROVERVIEW_FRAGMENT,
                                                                 Constants.USER_GUIDE_FRAGMENT);
 
+    /**
+     * singleton factory
+     * @param activity mostly passed in via this (activity) or getActivity() (fragment)
+     * @return service
+     */
     public static synchronized FragmentService getInstance(Activity activity){
         if (fragmentService == null) {
             fragmentService = new FragmentService();
@@ -53,15 +77,41 @@ public class FragmentService extends Application {
         }
         return fragmentService;
     }
+
+    /**
+     * push given fragment to backstack, only used internally
+     * @param fragment
+     */
     public synchronized void pushBackStack(Fragment fragment){
         fragmentBackStack.push(fragment);
     }
+
+    /**
+     * get fragment from backstack
+     * @return Fragment on the backstack
+     */
     public synchronized Fragment popBackStack (){
         return fragmentBackStack.pop();
     }
+
+    /**
+     * check if the Backstack has elements useful in some cases
+     * @return boolean has elements
+     */
     public synchronized boolean hasElements(){
         return !fragmentBackStack.empty();
     }
+
+    /**
+     * perform a transition from one fragment to another
+     * use this method if you want to put the fragment on the backstack and you can return to it
+     * so do not provide an end fragment (such as tourfragment)
+     *
+     * @param isDynamicTargetFragment boolean if the target needs to be completely rerendered
+     * @param targetFragmentTag Tag of the fragment that is the target of the transition
+     * @param targetFragmentInstance Instance of target
+     * @param currentFragmentInstance current Fragment (this inside of fragment)
+     */
     public synchronized void performTraceTransaction(boolean isDynamicTargetFragment, String targetFragmentTag, Fragment targetFragmentInstance, Fragment currentFragmentInstance){
 
             FragmentManager fm = activityUsed.getFragmentManager();
@@ -95,6 +145,17 @@ public class FragmentService extends Application {
                 setAppbar(targetFragmentTag);
             }
     }
+
+    /**
+     * provides a method to do a fragment transition without remembering the source fragment
+     * if needed kill the backstack of fragmentservice to prevent backbutton press in source fragment
+     *
+     * @param isDynamicTarget boolean if the target needs to be completely rerendered
+     * @param targetTag Tag of the fragment that is the target of the transition
+     * @param targetInstance Instance of target
+     * @param currentInstance current Fragment (this inside of fragment)
+     * @param killBackStack if the backstack should be deleted
+     */
     public synchronized void performTransaction(boolean isDynamicTarget, String targetTag, Fragment targetInstance, Fragment currentInstance, boolean killBackStack){
 
             FragmentManager fm = activityUsed.getFragmentManager();
@@ -131,24 +192,56 @@ public class FragmentService extends Application {
         //clear backstack
         if(killBackStack) clearStack();
     }
+
+    /**
+     * clear the backstack so no tracing or backbutton usage possible
+     */
     public synchronized void clearStack(){
         fragmentBackStack.clear();
     }
+
+    /**
+     * helper method which checks if appbar is needed
+     * @param fragment to check if appbar needed
+     * @return boolean wheter the fragment has an appbar or not
+     */
     public synchronized boolean hasAppbar(String fragment){
         return (fragmentsWithAppBar.contains(fragment)) ? true : false;
     }
+
+    /**
+     * set the appbar for given target fragment tag
+     * @param targetTag to set the appbar
+     */
     public synchronized void setAppbar(String targetTag){
         if(hasAppbar(targetTag)){
             android.support.v7.app.ActionBar actionbar = ((AppCompatActivity) activityUsed).getSupportActionBar();
             if(actionbar != null) actionbar.show();
         }
     }
+
+    /**
+     * get current visible fragment tag / shown fragment tag
+     * @return fragment tag
+     */
     public synchronized String getLastManipulated(){
         return lastManipulatedTag;
     }
+
+    /**
+     * set last visible fragment tag / shown fragment tag
+     * used internally
+     *
+     * @return fragment tag
+     */
     public synchronized void setLastManipulated(String tag){
         lastManipulatedTag = tag;
     }
+    /**
+     * handle the press on the back button for the given fragment
+     *
+     * @param fragment to handle
+     */
     public synchronized void handleBackstackPress(Fragment fragment){
         FragmentManager fm = activityUsed.getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -179,45 +272,47 @@ public class FragmentService extends Application {
             }
         }
     }
-    public void performSwitchInActivity(boolean isDynamicTarget, String targetTag, Fragment targetInstance){
-        if (!activityUsed.isFinishing() && !activityUsed.isDestroyed()) {
-        FragmentManager fm = activityUsed.getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        Fragment targetFragment = fm.findFragmentByTag(targetTag);
-        /*
-        //hide all other fragments
-        for(String drawerFragment : drawerFragments) {
-            Fragment fragmentFind = fm.findFragmentByTag(drawerFragment);
-            if ((fragmentFind != null) && fragmentFind.isAdded() && (fragmentFind != targetInstance)) {
-                if (BuildConfig.DEBUG) Log.d(TAG, "hiding fragment: " + fragmentFind.getTag());
-                ft.hide(fragmentFind);
-            }
-        }
-        */
-        //if dynamic content is inside of the targetFragment re-render it completely
-        //by removing and then adding the target fragment
-        if (isDynamicTarget) {
-            Fragment oldFragment = fm.findFragmentByTag(targetTag);
-            if (oldFragment != null) {
-                ft.remove(oldFragment);
-            }
-        }
-
-        //show or add the new Fragment
-        if (fm.findFragmentByTag(targetTag) != null && !isDynamicTarget) {
-            ft.show(targetFragment);
-        } else {
-            ft.add(R.id.content_frame, targetInstance, targetTag);
-        }
-
-        //commit changes
-
-            ft.commit();
-            fm.executePendingTransactions();
-            setAppbar(targetTag);
-        } else {
-            return;
-        }
-    }
 }
+
+
+//    public void performSwitchInActivity(boolean isDynamicTarget, String targetTag, Fragment targetInstance){
+//        if (!activityUsed.isFinishing() && !activityUsed.isDestroyed()) {
+//        FragmentManager fm = activityUsed.getFragmentManager();
+//        FragmentTransaction ft = fm.beginTransaction();
+//
+//        Fragment targetFragment = fm.findFragmentByTag(targetTag);
+//        /*
+//        //hide all other fragments
+//        for(String drawerFragment : drawerFragments) {
+//            Fragment fragmentFind = fm.findFragmentByTag(drawerFragment);
+//            if ((fragmentFind != null) && fragmentFind.isAdded() && (fragmentFind != targetInstance)) {
+//                if (BuildConfig.DEBUG) Log.d(TAG, "hiding fragment: " + fragmentFind.getTag());
+//                ft.hide(fragmentFind);
+//            }
+//        }
+//        */
+//        //if dynamic content is inside of the targetFragment re-render it completely
+//        //by removing and then adding the target fragment
+//        if (isDynamicTarget) {
+//            Fragment oldFragment = fm.findFragmentByTag(targetTag);
+//            if (oldFragment != null) {
+//                ft.remove(oldFragment);
+//            }
+//        }
+//
+//        //show or add the new Fragment
+//        if (fm.findFragmentByTag(targetTag) != null && !isDynamicTarget) {
+//            ft.show(targetFragment);
+//        } else {
+//            ft.add(R.id.content_frame, targetInstance, targetTag);
+//        }
+//
+//        //commit changes
+//
+//            ft.commit();
+//            fm.executePendingTransactions();
+//            setAppbar(targetTag);
+//        } else {
+//            return;
+//        }
+//    }
