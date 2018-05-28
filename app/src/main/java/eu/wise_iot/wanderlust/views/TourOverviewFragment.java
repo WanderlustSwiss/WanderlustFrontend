@@ -443,6 +443,17 @@ public class TourOverviewFragment extends Fragment {
         rvFavorites.getAdapter().notifyDataSetChanged();
     }
 
+    public void updateFavoriteDataSet(Tour tour, boolean isDeleted) {
+        if (BuildConfig.DEBUG) Log.d(TAG, "refreshing recyclerviews on callback");
+
+        if(isDeleted)favTours.remove(tour);
+        else favTours.add(tour);
+
+        rvTours.getAdapter().notifyDataSetChanged();
+        rvRecent.getAdapter().notifyDataSetChanged();
+        rvFavorites.getAdapter().notifyDataSetChanged();
+    }
+
 
     private class AsyncCheckTourExists extends AsyncTask<Tour, Void, Tour> {
         private static final String TAG = "checkTourExists";

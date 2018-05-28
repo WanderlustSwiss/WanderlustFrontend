@@ -151,6 +151,7 @@ public class TourFragment extends Fragment {
     EditedTour notifier;
     public interface EditedTour {
         void editedTour();
+        void editedFavorite(Tour tour, boolean isDeleted);
     }
 
     @Override
@@ -743,16 +744,18 @@ public class TourFragment extends Fragment {
             isFavoriteUpdate = true;
             tourController.unsetFavorite(controllerEvent -> {
                 favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                notifier.editedFavorite(tourController.getCurrentTour(), true);
                 isFavoriteUpdate = false;
             });
         } else {
             isFavoriteUpdate = true;
             tourController.setFavorite(controllerEvent -> {
                 favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+                notifier.editedFavorite(tourController.getCurrentTour(), false);
                 isFavoriteUpdate = false;
             });
         }
-        notifier.editedTour();
+
     }
 
     private void toggleSaved(){

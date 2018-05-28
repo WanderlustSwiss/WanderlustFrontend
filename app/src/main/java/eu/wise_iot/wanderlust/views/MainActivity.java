@@ -56,6 +56,7 @@ import eu.wise_iot.wanderlust.controllers.LoginController;
 import eu.wise_iot.wanderlust.controllers.OfflineQueueController;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.LoginUser;
+import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.FragmentService;
@@ -454,6 +455,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TourOverviewFragment fragment = (TourOverviewFragment) getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT);
         if (fragment != null) {
             fragment.updateTourDataSet();
+        }
+    }
+    @Override
+    public void editedFavorite(Tour tour, boolean isDeleted) {
+        TourOverviewFragment fragment = (TourOverviewFragment) getFragmentManager().findFragmentByTag(Constants.TOUROVERVIEW_FRAGMENT);
+        if (fragment != null) {
+            fragment.updateFavoriteDataSet(tour, isDeleted);
         }
     }
 }
