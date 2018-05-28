@@ -30,8 +30,7 @@ import eu.wise_iot.wanderlust.services.GlideApp;
 
 
 /**
- * MyAdapter:
- * provides adapter for recycler view which is used by the tourslist
+ * Provides adapter for recycler view which is used by the tours list
  *
  * @author Alexander Weinbeck
  * @license MIT

@@ -20,6 +20,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
  * TourReportDialog:
  *
  * @author Rilind Gashi
+ * @author Alexander Weinbeck
  * @license MIT
  */
 

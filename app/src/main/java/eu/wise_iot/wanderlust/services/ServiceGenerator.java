@@ -15,8 +15,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    /*
-     * Defines the URL for the backend communication
+    /**
+     * Defines the URL for the backend communication remote server
      */
     //productive host
     //public static final String API_BASE_URL = "https://www.cs.technik.fhnw.ch/wanderlust/";
@@ -31,8 +31,10 @@ public class ServiceGenerator {
 
     /**
      * Create service for a new backend request
+     * if already set there will be not a new instance
+     * this prevents threads flooding
      *
-     * @param serviceClass
+     * @param serviceClass served class
      * @return service for respective model
      */
     public static <S> S createService(Class<S> serviceClass) {

@@ -18,7 +18,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.services.GlideApp;
 
 /**
- * Adapter for the profile UI. Represents all favorites in a custom list view
+ * Adapter for the tour saved UI. Represents all saved tours in a custom recycler view
  *
  * @author Alexander Weinbeck
  * @license MIT

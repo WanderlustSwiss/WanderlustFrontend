@@ -7,11 +7,10 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 /**
+ * provides services for violation type
  *
  * @author Alexander Weinbeck
  */
-
-
 public interface ViolationTypeService {
     @GET("violationtype")
     Call<List<ViolationType>> retrieveAllViolationTypes();

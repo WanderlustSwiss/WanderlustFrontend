@@ -42,7 +42,6 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -61,12 +60,15 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.User;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import io.objectbox.BoxStore;
 
 /**
  * MainActivity:
+ * Startup class for the application
  *
  * @author Fabian Schwander
+ * @author Alexander Weinbeck
  * @license MIT
  */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileEditFragment.ProfileEdited, TourFragment.EditedTour {
@@ -81,26 +83,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View header;
     private NavigationView navigationView;
     private LoginController loginController;
-    private final List<String> drawerFragments = Arrays.asList(Constants.DISCLAIMER_FRAGMENT, Constants.MAP_FRAGMENT,
-            Constants.PROFILE_FRAGMENT, Constants.TOUROVERVIEW_FRAGMENT,
-            Constants.USER_GUIDE_FRAGMENT);
-    private final List<String> fragmentPool = Arrays.asList(Constants.DISCLAIMER_FRAGMENT,
-            Constants.PROFILE_EDIT_FRAGMENT,
-            Constants.MAP_FRAGMENT,
-            Constants.PROFILE_FRAGMENT,
-            Constants.TOUROVERVIEW_FRAGMENT,
-            Constants.USER_GUIDE_FRAGMENT,
-            Constants.TOUR_FRAGMENT,
-            Constants.FILTER_FRAGMENT,
-            Constants.RESULT_FILTER_FRAGMENT,
-            Constants.LOGIN_FRAGMENT,
-            Constants.RESET_PASSWORD_FRAGMENT,
-            Constants.REGISTRATION_FRAGMENT);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        LoadingDialog.getDialog().show(this);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, BackgroundFragment.newInstance(), Constants.BACKGROUND_FRAGMENT)
@@ -134,12 +123,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (preferences.getBoolean("firstTimeOpened", true)) {
             // start welcome screen
+            LoadingDialog.getDialog().dismiss();
             ft.replace(R.id.content_frame, new StartupRegistrationFragment().newInstance())
                     .commit();
 
             // else try to login
         } else {
-
+            LoadingDialog.getDialog().dismiss();
             User user = UserDao.getInstance().getUser();
             if (user == null) {
                 StartupLoginFragment loginFragment = new StartupLoginFragment();
@@ -346,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void switchFragment(Fragment fragment, String fragmentTag) {
-        for (String drawerFragment : fragmentPool) {
+        for (String drawerFragment : Constants.fragmentPool) {
             Fragment fragmentFind = getFragmentManager().findFragmentByTag(drawerFragment);
             if ((fragmentFind != null) && fragmentFind.isAdded() && (fragmentFind != fragment)) {
                 if (BuildConfig.DEBUG) Log.d(TAG, "hiding fragment: " + fragmentFind.getTag());
@@ -447,8 +437,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /**
      * notify Touroverview fragment recycler views from Tour fragment of changes
      * this does not force a full reload on the whole view
-     *
-     * @param tour
      */
     @Override
     public void editedTour() {

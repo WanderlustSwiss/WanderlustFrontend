@@ -43,7 +43,7 @@ public class FragmentService extends Application {
      * Define all fragments with an appbar,
      * if not specified completely the service will NOT work
      */
-    private static final List<String> fragmentsWithAppBar = Arrays.asList(  Constants.TOUROVERVIEW_FRAGMENT,
+    private static final List<String> fragmentsWithAppBar = Arrays.asList(Constants.TOUROVERVIEW_FRAGMENT,
                                                                             Constants.PROFILE_FRAGMENT,
                                                                             Constants.MAP_FRAGMENT,
                                                                             Constants.FILTER_FRAGMENT,
@@ -58,10 +58,10 @@ public class FragmentService extends Application {
      * keep this class even if unused
      */
     private final List<String> drawerFragments = Arrays.asList(Constants.DISCLAIMER_FRAGMENT,
-                                                                Constants.MAP_FRAGMENT,
-                                                                Constants.PROFILE_FRAGMENT,
-                                                                Constants.TOUROVERVIEW_FRAGMENT,
-                                                                Constants.USER_GUIDE_FRAGMENT);
+                                                                 Constants.MAP_FRAGMENT,
+                                                                 Constants.PROFILE_FRAGMENT,
+                                                                 Constants.TOUROVERVIEW_FRAGMENT,
+                                                                 Constants.USER_GUIDE_FRAGMENT);
 
     /**
      * singleton factory

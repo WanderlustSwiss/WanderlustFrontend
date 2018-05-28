@@ -13,6 +13,7 @@ import retrofit2.http.PUT;
  * AuthController
  * register
  * UserController
+ * create   POST    /auth/register | restricted
  * show 	GET	    /user | restricted
  * update	PUT	    /user | restricted
  * disable	DELETE	/user | restricted

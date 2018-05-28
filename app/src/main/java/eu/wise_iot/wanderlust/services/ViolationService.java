@@ -7,6 +7,8 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 /**
+ * provides service for a violation
+ *
  * @author Alexander Weinbeck
  */
 public interface ViolationService {

@@ -24,8 +24,7 @@ import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 
 
 /**
- * MyAdapter:
- * provides adapter for recyclerview which is used to show equipment needed on a equipment
+ * provides adapter for recycler view which is used to show equipment needed on an equipment
  *
  * @author Alexander Weinbeck
  */

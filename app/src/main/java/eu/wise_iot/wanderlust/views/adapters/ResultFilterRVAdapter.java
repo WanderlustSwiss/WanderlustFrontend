@@ -28,8 +28,7 @@ import static eu.wise_iot.wanderlust.views.MainActivity.activity;
 
 
 /**
- * MyAdapter:
- * provides adapter for recyclerview which is used by the tourslist
+ * Provides adapter for recycler view which is used by the filtered tours list
  *
  * @author Alexander Weinbeck
  * @license MIT
