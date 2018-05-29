@@ -25,7 +25,7 @@ import eu.wise_iot.wanderlust.views.TourFragment;
 
 /**
  * MyAdapter:
- * provides adapter for recyclerview which is used by the comment list
+ * provides adapter for recycler view which is used by the comment list
  *
  * @author Simon Kaspar
  * @license MIT
@@ -36,7 +36,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
     private final UserDao userDao;
     private final TourFragment fragment;
     private final User user;
-    @SuppressWarnings("WeakerAccess")
+
     public ItemClickListener mClickListener;
     private final Context context;
 

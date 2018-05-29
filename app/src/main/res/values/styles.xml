@@ -14,8 +14,8 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
-    <!-- TEXT STYLES: HEADER -->
 
+    <!-- TEXT STYLES: HEADER -->
     <style name="h1">
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/black</item>
@@ -189,7 +189,7 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <!-- Full screen dialog -->
+    <!-- FULL SCREEN DIALOG -->
     <style name="FullScreenDialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
@@ -197,7 +197,7 @@
     </style>
 
 
-    <!-- Input Fields -->
+    <!-- INPUT FIELDS -->
 
     <style name="TextInputLayout" parent="Widget.Design.TextInputLayout">
         <item name="android:layout_marginTop">0dp</item>
@@ -229,14 +229,14 @@
         <item name="colorControlNormal">@color/background_main</item>
     </style>
 
-    <!-- Spinner -->
+    <!-- SPINNER -->
     <style name="default_spinner" parent="@android:style/Widget.Holo.Light.Spinner">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">16dp</item>
     </style>
 
-    <!-- Plot -->
+    <!-- PLOT -->
     <style name="Plot" parent="APDefacto.Light">
         <item name="graphMarginRight">12dp</item>
         <item name="graphMarginLeft">12dp</item>

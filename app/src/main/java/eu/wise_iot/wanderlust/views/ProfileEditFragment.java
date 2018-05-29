@@ -52,7 +52,12 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
-
+/**
+ * Represents section to edit the profile
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class ProfileEditFragment extends Fragment {
     private static final String TAG = "ProfileEditFragment";
 

@@ -12,6 +12,12 @@ import org.osmdroid.views.overlay.compass.CompassOverlay;
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * provides the wanderlust compass overlay
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 class WanderlustCompassOverlay extends CompassOverlay {
 
     private static final float OFFSET = 120;

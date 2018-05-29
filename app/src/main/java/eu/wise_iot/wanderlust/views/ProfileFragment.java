@@ -52,7 +52,8 @@ import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 /**
  * Fragment which represents the UI of the profile of a user.
  *
- * @author Baris Demirci, Alexander Weinbeck
+ * @author Baris Demirci
+ * @author Alexander Weinbeck
  * @license MIT
  */
 public class ProfileFragment extends Fragment {

@@ -46,7 +46,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.PublicTransportPoint;
 import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
 /**
- * MyMapFragment:
+ * Provides overlays for the mapview
  *
  * @author Fabian Schwander
  * @license MIT
@@ -78,12 +78,12 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
 
     public MyMapOverlays(Activity activity, WanderlustMapView mapView, MapController searchMapController, MapFragment fragment) {
-        this.mapFragment = fragment;
+        mapFragment = fragment;
         this.searchMapController = searchMapController;
         this.activity = activity;
         this.mapView = mapView;
-        this.currentTour = null;
-        this.poiController = new PoiController();
+        currentTour = null;
+        poiController = new PoiController();
 
         initPoiOverlay();
         mapView.getOverlays().add(poiOverlay);
@@ -125,14 +125,14 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
     public void setTour(Polyline polyline) {
-        if (this.currentTour == null) {
-            this.currentTour = polyline;
-            this.currentTour.setWidth(25);
+        if (currentTour == null) {
+            currentTour = polyline;
+            currentTour.setWidth(25);
             Context context = DatabaseController.getMainContext();
-            this.currentTour.setColor(context.getResources().getColor(R.color.highlight_main_transparent));
-            mapView.getOverlays().add(this.currentTour);
+            currentTour.setColor(context.getResources().getColor(R.color.highlight_main_transparent));
+            mapView.getOverlays().add(currentTour);
         } else {
-            this.currentTour = polyline;
+            currentTour = polyline;
         }
         mapView.invalidate();
     }
@@ -151,6 +151,13 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         mapView.getOverlays().add(myLocationNewOverlay);
     }
 
+    /**
+     * Converts a bitmap from a vector drawable
+     *
+     * @param context used
+     * @param drawableId id of the drawable to convert
+     * @return the converted Bitmap
+     */
     private Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         drawable = (DrawableCompat.wrap(drawable)).mutate();
@@ -163,6 +170,9 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         return bitmap;
     }
 
+    /**
+     * initialize the poi overlay
+     */
     private void initPoiOverlay() {
         // add items with on click listener plus define actions for clicks
 
@@ -210,8 +220,8 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
     /**
-     * provides clustering for all poi icons on the map
-     *
+     * Provides clustering for all poi icons on the map
+     * this class also creates the POI markers and adds them to the overlays
      */
     private void makeClusteringGreatAgain(){
         mapView.getOverlays().remove(poiMarkers);
@@ -231,25 +241,25 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
             poiMarker.setPosition(poi.mLocation);
             switch (Integer.parseInt(poi.mCategory)) {
                 case Constants.TYPE_VIEW:
-                    if(this.poiViewActive){
+                    if(poiViewActive){
                         poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_sight_bubble));
                         poiMarkers.add(poiMarker);
                     }
                     break;
                 case Constants.TYPE_RESTAURANT:
-                    if(this.poiRestaurantActive) {
+                    if(poiRestaurantActive) {
                         poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_resaurant_bubble));
                         poiMarkers.add(poiMarker);
                     }
                     break;
                 case Constants.TYPE_REST_AREA:
-                    if(this.poiRestAreaActive){
+                    if(poiRestAreaActive){
                         poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_campfire_bubble));
                         poiMarkers.add(poiMarker);
                     }
                     break;
                 case Constants.TYPE_FLORA_FAUNA:
-                    if(this.poiFloraFaunaActive){
+                    if(poiFloraFaunaActive){
                         poiMarker.setIcon(activity.getResources().getDrawable(R.drawable.poi_local_florist_bubble));
                         poiMarkers.add(poiMarker);
                     }
@@ -303,16 +313,16 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
     }
 
     public void setPoiFloraFaunaActive(boolean value){
-        this.poiFloraFaunaActive = value;
+        poiFloraFaunaActive = value;
     }
     public void setPoiRestAreaActive(boolean value){
-        this.poiRestAreaActive = value;
+        poiRestAreaActive = value;
     }
     public void setPoiViewActive(boolean value){
-        this.poiViewActive = value;
+        poiViewActive = value;
     }
     public void setPoiRestaurantActive(boolean value){
-        this.poiRestaurantActive = value;
+        poiRestaurantActive = value;
     }
     /**
      * Creates an OverlayItem from a poi with item considering the poi type
@@ -657,7 +667,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
 
         Polyline polyline = new Polyline();
         trackingTourPoints.add(geoPoint);
-        polyline.setPoints(this.trackingTourPoints);
+        polyline.setPoints(trackingTourPoints);
         polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent));
         trackingTourOverlay.add(polyline);
         mapView.getOverlays().add(polyline);
@@ -686,7 +696,7 @@ public class MyMapOverlays implements Serializable, DatabaseListener {
         trackingTourOverlay = new ArrayList<>();
 
         Polyline polyline = new Polyline();
-        polyline.setPoints(this.trackingTourPoints);
+        polyline.setPoints(trackingTourPoints);
         polyline.setColor(activity.getResources().getColor(R.color.highlight_main_transparent));
         trackingTourOverlay.add(polyline);
         mapView.getOverlays().add(polyline);

@@ -29,7 +29,12 @@ import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-
+/**
+ * Represents the Reset Password section
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class StartupResetPasswordFragment extends Fragment {
 
     private Context context;

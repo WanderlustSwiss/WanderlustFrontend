@@ -41,10 +41,11 @@ import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 
 /**
- * TourOverviewFragment:
+ * Shows favorized tours as well as all other tours which are available from the database
+ * shows also recently started tours
  *
- * shows favorized tours as well as all other tours which are available from the database
- * @author Fabian Schwander, Alexander Weinbeck
+ * @author Fabian Schwander
+ * @author Alexander Weinbeck
  * @license MIT
  */
 public class TourOverviewFragment extends Fragment {

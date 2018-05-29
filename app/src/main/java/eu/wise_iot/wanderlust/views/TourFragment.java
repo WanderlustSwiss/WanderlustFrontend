@@ -91,9 +91,12 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
- * TourController:
+ * Represents a tour and all its properties
  *
- * @author Alexander Weinbeck, Rilind Gashi, Baris Demirci, Simon Kaspar
+ * @author Alexander Weinbeck
+ * @author Rilind Gashi
+ * @author Baris Demirci
+ * @author Simon Kaspar
  * @license MIT
  */
 public class TourFragment extends Fragment {
@@ -372,9 +375,8 @@ public class TourFragment extends Fragment {
 
         updateRVComments(false);
     }
-    /**
-     * @param tour
-     */
+
+
     private void setupEquipment(Tour tour) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
@@ -401,8 +403,6 @@ public class TourFragment extends Fragment {
     }
 
     private void fillControls() {
-        //List<File> images = imageController.getImages(tour.getImagePaths());
-        //if (BuildConfig.DEBUG) Log.d("Debug", "Images size:" + images.size());
 
         GlideApp.with(getActivity())
                 .load(ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/1")
@@ -411,18 +411,6 @@ public class TourFragment extends Fragment {
                 .centerCrop()
                 .into(imageViewTourImage);
 
-        /*
-        if (!images.isEmpty() && tour.getImagePaths().get(0) != null) {
-            //Picasso handler = imageController.getPicassoHandler(getActivity());
-            //handler.setIndicatorsEnabled(true);
-            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-            //handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(imageViewTourImage);
-        } else {
-            Picasso.with(context)
-                    .load(R.drawable.no_image_found)
-                    .fit().centerCrop().placeholder(R.drawable.progress_animation)
-                    .into(imageViewTourImage);
-        }*/
 
         if (tourController.isFavorite()) {
             favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
@@ -955,28 +943,6 @@ public class TourFragment extends Fragment {
         FragmentService
                 .getInstance(getActivity())
                 .performTransaction(true,Constants.MAP_FRAGMENT,mapFragment,this,true);
- /*       //remove the old fragment from stack
-        Fragment oldMapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-        if(oldMapFragment != null) {
-            getFragmentManager().beginTransaction()
-                    .remove(oldMapFragment)
-                    .commit();
-        }
-
-        //add new fragment to stack
-        getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                .commit();
-        //clear backstack
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        for(int i = 0; i < getFragmentManager().getBackStackEntryCount(); i ++){
-            ft.remove(fm.findFragmentById(fm.getBackStackEntryAt(i).getId()));
-        }
-        ft.commit();*/
-        //show supportbar again
-       // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-
     }
 
     /**
