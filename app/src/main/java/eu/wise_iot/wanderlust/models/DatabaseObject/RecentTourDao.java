@@ -13,9 +13,8 @@ import io.objectbox.BoxStore;
 import io.objectbox.Property;
 
 /**
- * RecentTourDao:
+ * Provides all calls on recent tour model
  *
- * represents interface for all calls on recent tours
  * @author Alexander Weinbeck
  * @license MIT
  */

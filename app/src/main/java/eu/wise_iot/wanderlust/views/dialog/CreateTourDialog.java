@@ -58,8 +58,8 @@ import eu.wise_iot.wanderlust.views.controls.EquipmentCompletionView;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-/** tourkitExtraKitInput
- * CreateTour:
+/**
+ * CreateTour: TODO description
  *
  * @author Joshua Meier
  * @license MIT

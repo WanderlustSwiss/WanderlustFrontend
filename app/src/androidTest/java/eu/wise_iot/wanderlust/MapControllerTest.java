@@ -48,6 +48,7 @@ public class MapControllerTest {
         });
     }
 
+    //TODO still needed?
     private static class FragmentUtilActivity extends Activity {
         @Override
         protected void onCreate(Bundle savedInstanceState) {

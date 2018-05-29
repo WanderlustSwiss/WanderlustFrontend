@@ -46,9 +46,11 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.PublicTransportPoint;
 import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
 
 /**
- * Provides overlays for the mapview
+ * Provides overlays for the map-view
  *
  * @author Fabian Schwander
+ * @author Alexander Weinbeck
+ * @author Rilind Gashi
  * @license MIT
  */
 public class MyMapOverlays implements Serializable, DatabaseListener {

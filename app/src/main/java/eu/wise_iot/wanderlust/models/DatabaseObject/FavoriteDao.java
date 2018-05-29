@@ -27,9 +27,9 @@ import retrofit2.Response;
  * FavoriteDao
  *
  * @author Rilind Gashi
+ * @author Alexander Weinbeck
  * @license MIT
  */
-
 public class FavoriteDao extends DatabaseObjectAbstract{
 
     private static class Holder {

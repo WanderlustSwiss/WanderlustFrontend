@@ -27,7 +27,7 @@ import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.views.adapters.ResultFilterRVAdapter;
 
 /**
- * Fragment that contains the filtering functionality for all tours
+ * Contains the filtering functionality for all tours
  *
  * @author Alexander Weinbeck
  * @license MIT

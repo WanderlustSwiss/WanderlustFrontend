@@ -21,7 +21,7 @@ import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.MotionEventListener;
 
 /**
- * Mapview that is shown to the user
+ * Map-view that is shown to the user
  *
  * @author TODO ?
  * @license MIT

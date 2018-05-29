@@ -76,9 +76,10 @@ import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 import static android.content.Context.POWER_SERVICE;
 
 /**
- * MapFragment: The Fragment that contains the map view, map functionality and buttons.
+ * Contains the map view, map functionality and buttons.
  *
  * @author Fabian Schwander
+ * @author Alexander Weinbeck
  * @license MIT
  */
 public class MapFragment extends Fragment {

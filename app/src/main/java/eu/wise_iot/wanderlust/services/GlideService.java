@@ -17,7 +17,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 /**
- * Glide Module which provides overriden functions to enhance glide usage
+ * Glide Module which provides overridden functions to enhance glide usage
+ *
  * @author Alexander Weinbeck
  * @license MIT
  */

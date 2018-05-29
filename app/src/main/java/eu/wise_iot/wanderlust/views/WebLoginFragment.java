@@ -44,7 +44,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
 /**
- * Weblogin Fragment which handles front end inputs of the user for login
+ * Web-login Fragment which handles front end inputs of the user for login
  *
  * @author Simon Kaspar
  * @license MIT

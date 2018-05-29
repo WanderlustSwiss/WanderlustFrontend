@@ -19,15 +19,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * TripDao:
+ * This model represents access to a self created tour by the user
  *
- * this model represents a self created tour by the user
- *
- * @author Rilind Gashi, Alexander Weinbeck
+ * @author Rilind Gashi
+ * @author Alexander Weinbeck
  * @license MIT
  */
-
-
 public class TripDao extends DatabaseObjectAbstract {
     private static class Holder {
         private static final TripDao INSTANCE = new TripDao();

@@ -4,12 +4,11 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * TourKit
+ * Represents TourKit entity in the database
  *
  * @author Rilind Gashi
  * @license MIT
  */
-
 @Entity
 public class TourKit extends AbstractModel {
 

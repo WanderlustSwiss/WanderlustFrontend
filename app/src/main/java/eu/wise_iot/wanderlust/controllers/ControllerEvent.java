@@ -2,12 +2,13 @@ package eu.wise_iot.wanderlust.controllers;
 
 /**
  * ControllerEvent has information of a made request
+ * Used mainly by a functional interface see FragmentHandler
  *
  * @author Tobias Rüegsegger
+ * @author Alexander Weinbeck
  * @license MIT
  */
 public class ControllerEvent<T> {
-
 
     private final EventType type;
     private T model;
@@ -50,7 +51,6 @@ public class ControllerEvent<T> {
     public T getModel() {
         return model;
     }
-
 
     public int getPercentage() {
         return percentage;

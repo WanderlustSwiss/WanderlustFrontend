@@ -3,11 +3,12 @@ package eu.wise_iot.wanderlust.models.Old;
 import android.location.Location;
 
 /**
- * CommunityTours:
+ * CommunityTours: DEPRECATED
  *
  * @author Fabian Schwander
  * @license MIT
  */
+@Deprecated
 public class Tour {
     private int tourId;
     private String editor;

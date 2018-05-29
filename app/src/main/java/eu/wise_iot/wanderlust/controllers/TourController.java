@@ -60,10 +60,12 @@ import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 
 /**
- * TourController:
- * handles the tourfragment and its in and output
+ * Handles the tour-fragment and its in and output
  *
- * @author Alexander Weinbeck, Rilind Gashi, Simon Kaspar
+ * @author Alexander Weinbeck
+ * @author Rilind Gashi
+ * @author Simon Kaspar
+ * @license MIT
  */
 public class TourController {
 
@@ -539,8 +541,9 @@ public class TourController {
     }
 
     /**
-     * represents a tour violation
+     * Represents a tour violation
      * structure needs to be kept like this for retrofit
+     *
      * @author Alexander Weinbeck
      * @license MIT
      */

@@ -15,7 +15,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * ViolationTypeDao
+ * ViolationTypeDao provides access to its model ViolationType
  *
  * @author Alexander Weinbeck
  * @license MIT

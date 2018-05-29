@@ -22,10 +22,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 import eu.wise_iot.wanderlust.views.TourFragment;
 
-
 /**
- * MyAdapter:
- * provides adapter for recycler view which is used by the comment list
+ * Provides adapter for recycler view which is used by the comment list
  *
  * @author Simon Kaspar
  * @license MIT

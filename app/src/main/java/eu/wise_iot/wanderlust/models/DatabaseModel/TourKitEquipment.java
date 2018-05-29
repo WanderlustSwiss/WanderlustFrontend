@@ -4,6 +4,7 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
  * Helper object for backend communication
  *
  * @author Tobias Rüegsegger
+ * @license MIT
  */
 public class TourKitEquipment {
 

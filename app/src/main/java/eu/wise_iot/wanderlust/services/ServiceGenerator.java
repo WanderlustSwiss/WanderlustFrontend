@@ -9,7 +9,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * ServiceGenerator handles all request for the backend database
  *
- * @author Tobias Rüegsegger, Alexander Weinbeck
+ * @author Tobias Rüegsegger
+ * @author Alexander Weinbeck
  * @license MIT
  */
 

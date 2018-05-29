@@ -20,9 +20,12 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.CommunityTourDao;
 import eu.wise_iot.wanderlust.views.WanderlustMapView;
 
 /**
- * Created by Baris Demirci on 26.04.2018.
+ * Handles logic related to Images
+ *
+ * @author Baris Demirci
+ * @author Alexander Weinbeck
+ * @license MIT
  */
-
 public class MapCacheHandler {
     private static final String TAG = "MapCacheHandler";
 

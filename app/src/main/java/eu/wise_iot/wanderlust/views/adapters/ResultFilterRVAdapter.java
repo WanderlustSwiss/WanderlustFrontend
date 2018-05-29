@@ -24,7 +24,6 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
-
 /**
  * Provides adapter for recycler view which is used by the filtered tours list
  *

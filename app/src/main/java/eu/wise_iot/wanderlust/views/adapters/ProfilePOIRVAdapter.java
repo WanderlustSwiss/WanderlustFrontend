@@ -18,7 +18,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.services.GlideApp;
 
 /**
- * Adapter for the profile UI. Represents all favorites in a custom list view
+ * Adapter for the profile Poi UI. Represents all favorites in a custom list view
  *
  * @author Alexander Weinbeck
  * @license MIT

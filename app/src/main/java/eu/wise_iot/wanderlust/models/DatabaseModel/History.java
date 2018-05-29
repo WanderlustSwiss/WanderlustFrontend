@@ -4,12 +4,11 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * History
+ * Represents History entity in database
  *
  * @author Rilind Gashi
  * @license MIT
  */
-
 @Entity
 public class History extends AbstractModel {
 

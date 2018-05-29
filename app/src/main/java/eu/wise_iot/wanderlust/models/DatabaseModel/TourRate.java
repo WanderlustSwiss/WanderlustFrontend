@@ -5,7 +5,8 @@ import java.util.List;
 /**
  * Helper object for backend communication
  *
- * @author Gashi Rilind, Simon Kaspar
+ * @author Gashi Rilind
+ * @author Simon Kaspar
  * @license MIT
  */
 public class TourRate {

@@ -15,6 +15,12 @@ import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.controllers.WeatherController;
 
+/**
+ * Get the Weather asynchronous TODO
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather>> {
 
     private final FragmentHandler handler;

@@ -22,6 +22,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Represents logic handler for equipment related operations
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class EquipmentController {
     private final EquipmentService service;
     private List<Equipment> equipmentList;

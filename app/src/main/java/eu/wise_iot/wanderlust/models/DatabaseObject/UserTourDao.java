@@ -32,9 +32,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * UserTourDao:
+ * UserTourDao provides acces to its model UserTour
  *
- * @author Rilind Gashi, Alexander Weinbeck
+ * @author Rilind Gashi
+ * @author Alexander Weinbeck
  * @license MIT
  */
 

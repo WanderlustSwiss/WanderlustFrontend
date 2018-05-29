@@ -21,17 +21,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * CommunityTourDao:
- *
- * this model represents a saved tour out of the existing tours
- * it is important to distinguish CommunityTour with UserTour
+ * This model represents a saved tour out of the existing tours
+ * it is important to distinguish CommunityTour from UserTour
  *
  *
- * @author Rilind Gashi, Alexander Weinbeck, Simon Kaspar
+ * @author Rilind Gashi
+ * @author Alexander Weinbeck
+ * @author Simon Kaspar
  * @license MIT
  */
-
-
 public class CommunityTourDao extends DatabaseObjectAbstract {
     private static class Holder {
         private static final CommunityTourDao INSTANCE = new CommunityTourDao();

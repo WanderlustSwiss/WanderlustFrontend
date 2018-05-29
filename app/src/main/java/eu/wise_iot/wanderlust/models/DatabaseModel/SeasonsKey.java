@@ -3,6 +3,12 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 
 import org.joda.time.DateTime;
 
+/**
+ * TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class SeasonsKey {
 
     private int key;

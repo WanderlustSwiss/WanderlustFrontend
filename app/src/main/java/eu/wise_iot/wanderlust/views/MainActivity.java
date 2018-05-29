@@ -62,7 +62,6 @@ import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import io.objectbox.BoxStore;
 
 /**
- * MainActivity:
  * Startup class for the application
  *
  * @author Fabian Schwander

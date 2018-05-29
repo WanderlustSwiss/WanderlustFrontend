@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadFactory;
 import eu.wise_iot.wanderlust.BuildConfig;
 
 /**
- * this class provides a thread queue for low priority
+ * Provides a thread queue for low priority
  * load tasks in the background
  * for example downloads
  *

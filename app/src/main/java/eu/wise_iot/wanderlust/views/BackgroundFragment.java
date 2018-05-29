@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import eu.wise_iot.wanderlust.R;
 
 /**
- * BackgroundFragment:
- *
- * serves as placeholder until map is loaded
+ * Serves as placeholder until map is loaded
  *
  * @author Alexander Weinbeck
  * @license MIT

@@ -4,12 +4,12 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * DifficultType
+ * Represents DifficultyType entity in database
  *
  * @author Rilind Gashi
+ * @author Alexander Weinbeck
  * @license MIT
  */
-
 @Entity
 public class DifficultyType extends AbstractModel {
     @Id

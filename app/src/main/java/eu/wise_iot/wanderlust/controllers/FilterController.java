@@ -10,8 +10,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
 
 /**
- * ToursController:
- * handles the toursfragment and its in and output
+ * Handles the logic fpr tour fragment and its in and output
  *
  * @author Alexander Weinbeck
  * @license MIT

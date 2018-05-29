@@ -22,9 +22,10 @@ import retrofit2.Response;
 
 
 /**
- * UserDao
+ * UserDao provides access to its model User
  *
- * @author Rilind Gashi, Simon Kaspar
+ * @author Rilind Gashi
+ * @author Simon Kaspar
  * @license MIT license
  */
 
