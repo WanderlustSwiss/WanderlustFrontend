@@ -183,24 +183,27 @@ public class TourController {
             }
        } catch (Exception e){
             if (BuildConfig.DEBUG) Log.d(TAG, "saving failure: excepton"+ e.getStackTrace() + e.getCause() + e.getMessage());
-        }
+       }
     }
 
     public void unsetSaved(Activity context, FragmentHandler fragmentHandler){
-        /*AsyncDownloadQueueTask.getHandler().queueTask(() -> {
-            ControllerEvent<SavedTour> controllerEvent = communityTourDao.retrieveSequential(tour.getTour_id());
-                switch (controllerEvent.getType()){
-                    case OK:
-                        SavedTour data = (SavedTour) controllerEvent.getModel();
-                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
-                        cacheHandler.deleteMap();
-                        //communityTourDao.delete(data);
-                        fragmentHandler.onResponse(new ControllerEvent(OK));
-                        if (BuildConfig.DEBUG) Log.d(TAG, "Is deleted");
-                    default:
-                        fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
-                }
-        });*/
+        Future<ControllerEvent<SavedTour>> controllerEvent = AsyncDownloadQueueTask.getHandler().queueTask(() -> communityTourDao.retrieveSequential(tour.getTour_id()));
+        try {
+        ControllerEvent<SavedTour> event = controllerEvent.get();
+            switch (event.getType()){
+                case OK:
+                    SavedTour data = event.getModel();
+                    MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
+                    cacheHandler.deleteMap();
+                    communityTourDao.delete(data);
+                    fragmentHandler.onResponse(new ControllerEvent(OK));
+                    if (BuildConfig.DEBUG) Log.d(TAG, "Is deleted");
+                default:
+                    fragmentHandler.onResponse(new ControllerEvent(EventType.CONFLICT));
+            }
+        } catch (Exception e){
+            if (BuildConfig.DEBUG) Log.d(TAG, "deleting failure: excepton"+ e.getStackTrace() + e.getCause() + e.getMessage());
+        }
     }
 
     public boolean setRating(Tour tour, int starRating, FragmentHandler handler){
