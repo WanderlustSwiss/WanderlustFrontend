@@ -28,12 +28,10 @@ import java.util.List;
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.services.AsyncUITask;
 import eu.wise_iot.wanderlust.views.adapters.ToursOverviewRVAdapter;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
@@ -375,8 +373,9 @@ public class TourOverviewFragment extends Fragment {
             case R.id.tour_rv_item:
                 if (BuildConfig.DEBUG) Log.d(TAG,"Tour ImageInfo Clicked and event triggered ");
                 LoadingDialog.getDialog().show(getActivity());
-                AsyncUITask.getHandler().queueTask(() -> {
-                    switch(EventType.getTypeByCode(tourOverviewController.checkIfTourExists(tour))) {
+                //AsyncUITask.getHandler().queueTask(() -> {
+                tourOverviewController.checkIfTourExists(tour, controllerEvent -> {
+                    switch(controllerEvent.getType()) {
                         case OK:
                             if (BuildConfig.DEBUG) Log.d(TAG,"Server Response arrived -> OK Tour was found");
                             getFragmentManager().beginTransaction()
@@ -404,9 +403,11 @@ public class TourOverviewFragment extends Fragment {
                             if (BuildConfig.DEBUG) Log.d(TAG,"ERROR: Server Response arrived -> UNDEFINED ERROR");
                             Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
                     }
-
                     LoadingDialog.getDialog().dismiss();
                 });
+
+                    LoadingDialog.getDialog().dismiss();
+               // });
                 break;
         }
 

@@ -23,10 +23,8 @@ import java.util.regex.Pattern;
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.RegistrationController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.User;
-import eu.wise_iot.wanderlust.services.AsyncUITask;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -131,9 +129,8 @@ public class StartupRegistrationFragment extends Fragment {
             if (validateInput(user)) {
                 btnRegister.setEnabled(false);
                 LoadingDialog.getDialog().show(getActivity());
-                final ControllerEvent event = registrationController.registerUserSequential(user);
-                AsyncUITask.getHandler().queueTask(() -> {
-                    switch (event.getType()) {
+                registrationController.registerUser(user, controllerEvent -> {
+                    switch (controllerEvent.getType()) {
                         case OK:
                             ((MainActivity) getActivity()).setupDrawerHeader(user);
                             Toast.makeText(context, R.string.registration_email_confirmation, Toast.LENGTH_LONG).show();
@@ -150,17 +147,17 @@ public class StartupRegistrationFragment extends Fragment {
                             break;
                         case SERVER_ERROR:
                             if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR" + event.getType().toString());
+                                Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR" + controllerEvent.getType().toString());
                             Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error), Toast.LENGTH_LONG).show();
                             break;
                         case NETWORK_ERROR:
                             Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
                             if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR" + event.getType().toString());
+                                Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR" + controllerEvent.getType().toString());
                             break;
                         default:
                             if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR" + event.getType().toString());
+                                Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR" + controllerEvent.getType().toString());
                             Toast.makeText(context, R.string.registration_connection_error, Toast.LENGTH_LONG).show();
                     }
                     //make registration button available again

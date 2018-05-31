@@ -24,9 +24,7 @@ import java.util.regex.Pattern;
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.LoginController;
-import eu.wise_iot.wanderlust.services.AsyncUITask;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -120,9 +118,8 @@ public class StartupResetPasswordFragment extends Fragment {
                 textInputForgotPassword.setError(getString(R.string.registration_email_invalid));
             } else {
                 LoadingDialog.getDialog().show(getActivity());
-                AsyncUITask.getHandler().queueTask(() -> {
-                    ControllerEvent event = loginController.resetPasswordSequential(inputMail);
-                    switch (event.getType()) {
+                loginController.resetPassword(inputMail, controllerEvent -> {
+                    switch (controllerEvent.getType()) {
                         case OK:
                             Toast.makeText(context, R.string.forgot_password_reset_mail_success, Toast.LENGTH_LONG).show();
                             Fragment startupLoginFragment = getFragmentManager().findFragmentByTag(Constants.LOGIN_FRAGMENT);

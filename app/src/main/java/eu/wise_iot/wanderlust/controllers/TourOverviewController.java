@@ -113,6 +113,10 @@ public class TourOverviewController {
         return responseCode.get();
     }
 
+    public void checkIfTourExists(Tour tour, FragmentHandler handler){
+        userTourDao.retrieve(tour.getTour_id(), handler);
+    }
+
     public long getTourFavoriteId(long id){
         try {
             Favorite fav = favoriteDao.findOne(Favorite_.tour, id);

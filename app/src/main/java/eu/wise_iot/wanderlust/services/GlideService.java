@@ -21,7 +21,7 @@ public class GlideService extends AppGlideModule {
 
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
-        if(LoginUser.getCookies() != null && LoginUser.getCookies().get(0) != null) {
+        if(LoginUser.getCookies() != null && !LoginUser.getCookies().isEmpty() && LoginUser.getCookies().get(0) != null) {
             OkHttpClient client = new OkHttpClient.Builder()
                     .connectTimeout(20, TimeUnit.SECONDS)
                     .readTimeout(20, TimeUnit.SECONDS)
