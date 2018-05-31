@@ -4,6 +4,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+/**
+ * TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class LoginUser {
 
     static private ArrayList<String> cookies = new ArrayList<>();

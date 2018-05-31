@@ -18,7 +18,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.services.GlideApp;
 
 /**
- * Adapter for the profile UI. Represents all favorites in a custom list view
+ * Adapter for the tour saved UI. Represents all saved tours in a custom recycler view
  *
  * @author Alexander Weinbeck
  * @license MIT
@@ -62,7 +62,7 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
 
             GlideApp.with(context)
                     .load(imageController.getURLImageTourSingle(tour.toTour()))
-                    .error(R.drawable.no_image_found)
+                    .error(GlideApp.with(context).load(R.drawable.no_image_found).centerCrop())
                     .placeholder(R.drawable.progress_animation)
                     .centerCrop()
                     .into(holder.savedImage);

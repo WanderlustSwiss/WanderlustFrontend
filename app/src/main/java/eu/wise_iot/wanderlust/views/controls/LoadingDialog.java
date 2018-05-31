@@ -6,10 +6,20 @@ import android.view.Window;
 
 import eu.wise_iot.wanderlust.R;
 
+/**
+ * Helper class for showing and hiding a loading dialog
+ *
+ * @author Alexander Weinbeck
+ * @license MIT
+ */
 public class LoadingDialog {
     private Dialog dialog;
     private static LoadingDialog mInstance;
 
+    /**
+     * Threadsafe singleton initialization
+     * @return instance for dialog
+     */
     public static synchronized LoadingDialog getDialog() {
         if (mInstance == null) {
             mInstance = new LoadingDialog();
@@ -17,6 +27,10 @@ public class LoadingDialog {
         return mInstance;
     }
 
+    /**
+     * Show the dialog
+     * @param context from where it is used
+     */
     public void show(Context context) {
         if (dialog != null && dialog.isShowing()) {
             return;
@@ -30,6 +44,9 @@ public class LoadingDialog {
         dialog.show();
     }
 
+    /**
+     * Hide the Dialog
+     */
     public void dismiss() {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();

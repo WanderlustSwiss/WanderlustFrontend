@@ -22,7 +22,6 @@ import retrofit2.Response;
  * @author Rilind Gashi
  * @license MIT
  */
-
 public class EquipmentDao extends DatabaseObjectAbstract {
     private static class Holder {
         private static final EquipmentDao INSTANCE = new EquipmentDao();

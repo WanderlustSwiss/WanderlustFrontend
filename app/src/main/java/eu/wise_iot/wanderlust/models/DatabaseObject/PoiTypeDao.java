@@ -13,6 +13,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class PoiTypeDao extends DatabaseObjectAbstract {
 
     private static class Holder {

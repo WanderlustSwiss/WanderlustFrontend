@@ -6,7 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
 /**
- * this class provides a thread pool for high priority
+ * Provides a thread pool for high priority
  * heavy load tasks on the UI if needed
  *
  * @author Alexander Weinbeck

@@ -4,15 +4,15 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * Trip
+ * Represents a Trip entity in the database
  * trip_id          integer	Primary Key, auto increment
  * communityTours	model	Foreign key, communityTours model
  * user	            model	Foreign key, user model
  *
- * @author Alexander Weinbeck, Tobias Ruegsegger
+ * @author Alexander Weinbeck
+ * @author Tobias Ruegsegger
  * @license MIT
  */
-
 @Entity
 public class Trip extends AbstractModel {
 

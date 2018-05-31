@@ -11,12 +11,11 @@ import io.objectbox.annotation.Id;
 import io.objectbox.converter.PropertyConverter;
 
 /**
- * Profile
+ * Represents a Profile entity
  *
  * @author Rilind Gashi
  * @license MIT
  */
-
 @Entity
 public class Profile extends AbstractModel {
 

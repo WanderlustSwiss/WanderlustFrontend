@@ -13,10 +13,18 @@
     <string name="msg_email_not_found">Fehler: Email wurde nicht gefinden</string>
     <string name="msg_no_data_found">Keine Daten gefunden</string>
 
+    <!-- DOWNLOAD RELATED STRINGS -->
+    <string name="download_ok">Download abgeschlossen</string>
+    <string name="download_server_error">Serverfehler 5XX</string>
+    <string name="download_already_done">Tour wurde schon geladen</string>
+    <string name="download_started">Download gestartet</string>
+    <string name="download_no_space">Fehler: Zu wenig Speicherplatz</string>
+    <string name="download_notification_title">Lade Tour: </string>
+
+
     <!-- GENERAL STRINGS -->
     <string name="app_name">Wanderlust</string>
     <string name="app_domain"> #wanderlustapp</string>
-    <!-- WELCOME FRAGMENT -->
 
     <!-- MANUAL FRAGMENT -->
     <string name="msg_manual_header">Bedienungsanleitung</string>
@@ -109,7 +117,6 @@
     <string name="msg_picture_not_saved">Foto konnte nicht gespeichert werden</string>
     <string name="msg_no_action_defined">Noch keine Aktion definiert</string>
     <string name="msg_no_internet">Fehler: keine Internetverbindung konnte aufgebaut werden</string>
-
     <string name="msg_not_saved">nicht gespeichert</string>
     <string name="msg_camera_about_to_start">Kamera wird geöffnet</string>
     <string name="msg_camera_no_gps">GPS deaktiviert! Eindrücke werden nicht gespeichert</string>
@@ -117,7 +124,6 @@
     <string name="msg_follow_mode_disabled">Verfolgunsmodus deaktiviert\n(Batterie-Sparmodus). Keine Tourerfassung möglich</string>
     <string name="msg_map_centered_on_long_click">Karte wird zentriert</string>
 
-    <!-- ERROR MESSAGES -->
 
     <!-- USER ACTIONS -->
     <string name="action_foreward">weiter</string>
@@ -183,17 +189,17 @@
     <string name="registration_email_confirmation">Eine E-Mail wurde verschickt. Bitte bestätigen vor dem einloggen</string>
 
 
-    <!-- Map Type -->
+    <!-- MAP TYPE -->
     <string name="map_type_terrain">Terrain</string>
     <string name="map_type_default">Standard</string>
     <string name="map_type_satelite">Satellit</string>
     <string name="map_type_types">Kartentypen</string>
 
-    <!-- Map Layers -->
+    <!-- MAP LAYERS -->
     <string name="map_layer_layers">Layer</string>
     <string name="map_nothing_found">Kein Resultat gefunden</string>
 
-    <!-- Tour Fragment -->
+    <!-- TOUR FRAGMENT -->
     <string name="tour_elevation_chart_title">Höhenprofil</string>
     <string name="tour_elevation_chart_range">Höhenmeter</string>
     <string name="tour_elevation_chart_domain">Distanz</string>
@@ -282,7 +288,7 @@
     <string name="temperature_abbrevation">°C</string>
     <string name="create_tour_information">Tour wird aufgenommen. Bitte GPS nicht ausschalten</string>
 
-    <!--- Seasons -->
+    <!--- SEASONS -->
     <string name="summer">Sommer</string>
     <string name="winter">Winter</string>
     <string name="fall">Herbst</string>

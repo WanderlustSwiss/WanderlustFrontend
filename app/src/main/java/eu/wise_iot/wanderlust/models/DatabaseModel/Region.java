@@ -6,12 +6,11 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * Region
+ * Represents Region entity in the database
  *
  * @author Simon Kaspar
  * @license MIT
  */
-
 @Entity
 public class Region extends AbstractModel implements Serializable {
     @Id

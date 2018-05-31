@@ -17,12 +17,11 @@ import io.objectbox.annotation.Id;
 import io.objectbox.converter.PropertyConverter;
 
 /**
- * SavedTour
+ * Represents a SavedTour entity in the database
  *
  * @author Alexander Weinbeck
  * @license MIT
  */
-
 @Entity
 public class SavedTour extends AbstractModel {
 

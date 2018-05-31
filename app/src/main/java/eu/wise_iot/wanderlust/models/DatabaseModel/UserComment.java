@@ -1,5 +1,11 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+/**
+ * Represents a user comment
+ *
+ * @author Simon Kaspar
+ * @license MIT
+ */
 public class UserComment {
 
     private long com_id;

@@ -12,7 +12,8 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserDao;
 /**
  * Registration Controller which handles registrations of the user
  *
- * @author Joshua Meier, Alexander Weinbeck
+ * @author Joshua Meier
+ * @author Alexander Weinbeck
  * @license MIT
  */
 public class RegistrationController {

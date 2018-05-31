@@ -14,7 +14,6 @@ import io.objectbox.Property;
  * @author Rilind Gashi
  * @license MIT
  */
-
 public class HistoryDao {
     private static class Holder {
         private static final HistoryDao INSTANCE = new HistoryDao();

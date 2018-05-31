@@ -1,7 +1,12 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
 
-
+/**
+ * Represents a GeoObject for the Map database
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class GeoObject {
 
     public GeoObject() {

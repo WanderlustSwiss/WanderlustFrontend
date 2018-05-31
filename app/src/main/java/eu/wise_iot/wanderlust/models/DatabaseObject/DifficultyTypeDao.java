@@ -12,7 +12,12 @@ import io.objectbox.Property;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+/**
+ * TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class DifficultyTypeDao extends DatabaseObjectAbstract {
 
     private static class Holder {

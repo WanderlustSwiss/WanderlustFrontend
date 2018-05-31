@@ -91,28 +91,23 @@ public class ProfileDao extends DatabaseObjectAbstract {
         profile.setBirthday("0");
 
         Call<Profile> call = service.updateProfile(profile);
-        call.enqueue(new Callback<Profile>() {
-            @Override
-            public void onResponse(Call<Profile> call, Response<Profile> response) {
-                if (response.isSuccessful()) {
-                    Profile backendProfile = response.body();
-                    Profile internalProfile = getProfile();
-                    backendProfile.setInternal_id(internalProfile.getInternal_id());
-                    if (backendProfile.getImagePath() != null) {
-                        backendProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
-                    }
-                    profileBox.put(backendProfile);
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendProfile));
-                }else{
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
+        try {
+            Response<Profile> response = call.execute();
+            if (response.isSuccessful()) {
+                Profile backendProfile = response.body();
+                Profile internalProfile = getProfile();
+                backendProfile.setInternal_id(internalProfile.getInternal_id());
+                if (backendProfile.getImagePath() != null) {
+                    backendProfile.getImagePath().setLocalDir(imageController.getProfileFolder());
                 }
+                profileBox.put(backendProfile);
+                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), backendProfile));
+            } else {
+                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
-
-            @Override
-            public void onFailure(Call<Profile> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
-            }
-        });
+        } catch (Exception e){
+            handler.onResponse(new ControllerEvent(EventType.SERVER_ERROR));
+        }
     }
     /**
      * Update an existing user in the database

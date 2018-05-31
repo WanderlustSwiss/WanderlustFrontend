@@ -21,7 +21,6 @@ import retrofit2.Callback;
  * @author Rilind Gashi
  * @license MIT
  */
-
 public class TourKitDao extends DatabaseObjectAbstract {
 
     private static TourKitService service;

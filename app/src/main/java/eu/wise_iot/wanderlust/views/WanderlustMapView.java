@@ -20,6 +20,12 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.DatabaseEvent;
 import eu.wise_iot.wanderlust.controllers.MotionEventListener;
 
+/**
+ * Map-view that is shown to the user
+ *
+ * @author TODO ?
+ * @license MIT
+ */
 public class WanderlustMapView extends MapView implements RotationGestureDetector.OnRotationGestureListener {
 
     private GeoPoint centerOfPublicTransportOverlay = new GeoPoint(0.0, 0.0);

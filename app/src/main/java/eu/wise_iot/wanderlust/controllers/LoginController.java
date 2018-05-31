@@ -37,8 +37,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Login Controller which handles the login of the user
- * @author Joshua
+ * Handles all logic involved with login process and its fragment
+ *
+ * @author Joshua Meier
  * @license MIT
  */
 public class LoginController {

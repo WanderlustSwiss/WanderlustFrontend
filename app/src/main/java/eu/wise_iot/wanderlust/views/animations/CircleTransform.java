@@ -8,6 +8,14 @@ import android.graphics.Paint;
 
 import com.squareup.picasso.Transformation;
 
+/**
+ * TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
+//TODO useful anymore?
+@Deprecated
 public class CircleTransform implements Transformation {
     @Override
     public Bitmap transform(Bitmap source) {

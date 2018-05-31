@@ -4,12 +4,11 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * User
+ * Represents User entity in the database
  *
  * @author Rilind Gashi
  * @license MIT
  */
-
 @Entity
 public class User extends AbstractModel {
 

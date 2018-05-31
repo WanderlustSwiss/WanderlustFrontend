@@ -4,6 +4,12 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 
+/**
+ * TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class MapSearchResult {
     private String locality;
     private double latitude;

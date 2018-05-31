@@ -7,12 +7,12 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * Equipment
+ * Represents Equipment entity in database
  *
  * @author Rilind Gashi
+ * @author Alexander Weinbeck
  * @license MIT
  */
-
 @Entity
 public class Equipment extends AbstractModel implements Serializable {
 

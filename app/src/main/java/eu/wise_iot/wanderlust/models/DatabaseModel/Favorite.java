@@ -2,13 +2,13 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+
 /**
- * Favorite
+ * Represents Favorite entity in database
  *
  * @author Rilind Gashi
  * @license MIT
  */
-
 @Entity
 public class Favorite extends AbstractModel{
 

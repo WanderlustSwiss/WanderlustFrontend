@@ -30,8 +30,9 @@ import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
- * Registration Fragment which handles front end inputs of the user
- * @author Joshua
+ * Handles front end inputs of the user
+ *
+ * @author Joshua Meier
  * @license MIT
  */
 public class StartupRegistrationFragment extends Fragment {

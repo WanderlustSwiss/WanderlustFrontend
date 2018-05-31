@@ -17,11 +17,13 @@ import retrofit2.Response;
 
 /**
  * The asynchronous task for receiving all images from a specific poi
+ *
+ * @author TODO ??
+ * @license MIT
  */
 public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<File>> {
 
     private FragmentHandler handler;
-    @SuppressWarnings("FieldCanBeLocal")
     private ImageController imageController;
     private final List<DownloadedImage> downloadedImages = new LinkedList<>();
 

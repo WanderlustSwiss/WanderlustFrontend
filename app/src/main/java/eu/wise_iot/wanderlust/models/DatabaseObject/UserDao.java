@@ -1,7 +1,10 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
+import android.util.Log;
+
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
@@ -19,10 +22,11 @@ import retrofit2.Response;
 
 
 /**
- * UserDao
+ * UserDao provides access to its model User
  *
- * @author Rilind Gashi, Simon Kaspar
- * @license MIT <license in our case always MIT>
+ * @author Rilind Gashi
+ * @author Simon Kaspar
+ * @license MIT license
  */
 
 public class UserDao extends DatabaseObjectAbstract {
@@ -128,26 +132,21 @@ public class UserDao extends DatabaseObjectAbstract {
 
         UserService service = ServiceGenerator.createService(UserService.class);
         Call<User> call = service.updateUser(user);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    User newUser = response.body();
-                    newUser.setInternalId(0);
-                    newUser.setPassword(find().get(0).getPassword());
-                    userBox.removeAll();
-                    userBox.put(newUser);
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
-                } else {
-                    handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
-                }
+        try {
+            Response<User> response = call.execute();
+            if (response.isSuccessful()) {
+                User newUser = response.body();
+                newUser.setInternalId(0);
+                newUser.setPassword(find().get(0).getPassword());
+                userBox.removeAll();
+                userBox.put(newUser);
+                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code()), response.body()));
+            } else {
+                handler.onResponse(new ControllerEvent(EventType.getTypeByCode(response.code())));
             }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
-            }
-        });
+        } catch (Exception e){
+            if(BuildConfig.DEBUG) Log.d("Retrofit","Exception thrown: " + e.getMessage());
+        }
     }
     /**
      * Update user in internal database, no sync to backedn

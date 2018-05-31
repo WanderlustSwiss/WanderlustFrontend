@@ -76,9 +76,10 @@ import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
 import static android.content.Context.POWER_SERVICE;
 
 /**
- * MapFragment: The Fragment that contains the map view, map functionality and buttons.
+ * Contains the map view, map functionality and buttons.
  *
  * @author Fabian Schwander
+ * @author Alexander Weinbeck
  * @license MIT
  */
 public class MapFragment extends Fragment {
@@ -554,7 +555,7 @@ public class MapFragment extends Fragment {
      */
     private void initMap(View view) {
         mapView = view.findViewById(R.id.mapView);
-        ITileSource tileSource = new XYTileSource("OpenTopoMap", 0, 20, 256, ".png",
+        ITileSource tileSource = new XYTileSource("OpenTopoMap", 5, 18, 256, ".png",
                 new String[]{"https://opentopomap.org/"});
         mapView.setTileSource(tileSource);
         mapView.setTilesScaledToDpi(true);

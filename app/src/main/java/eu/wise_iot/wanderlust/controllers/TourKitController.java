@@ -4,7 +4,12 @@ import android.content.Context;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
 
-
+/**
+ * TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class TourKitController {
     private final TourKitDao tourKitDao;
 

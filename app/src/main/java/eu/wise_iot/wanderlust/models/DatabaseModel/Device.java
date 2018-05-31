@@ -4,7 +4,7 @@ import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
 /**
- * Device
+ * Represents a device entity
  *
  * @author Rilind Gashi
  * @license MIT

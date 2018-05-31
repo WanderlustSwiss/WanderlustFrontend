@@ -24,13 +24,14 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.FilterController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
+import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.views.controls.RegionsCompletionView;
 import eu.wise_iot.wanderlust.views.dialog.TourRatingDialogFilter;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
- * Fragment that contains the filtering functionality for all tours
+ * Contains the filtering functionality for all tours
  *
  * @author Alexander Weinbeck
  * @license MIT
@@ -172,12 +173,19 @@ public class FilterFragment extends Fragment {
         editor.putString("filter_region", tiRegion.getText().toString());
         editor.apply();
 
+        FragmentService
+                .getInstance(getActivity())
+                .performTraceTransaction(true, Constants.RESULT_FILTER_FRAGMENT, ResultFilterFragment.newInstance(setting),this);
+/*        getFragmentManager().beginTransaction().hide(this).commit();
+
+        Fragment resultFragment = getFragmentManager().findFragmentByTag(Constants.RESULT_FILTER_FRAGMENT);
+        if (resultFragment != null) getFragmentManager().beginTransaction().remove(resultFragment).commit();
 
         ResultFilterFragment resultFilterFragment = ResultFilterFragment.newInstance(setting);
         getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, resultFilterFragment, Constants.RESULT_FILTER_FRAGMENT)
-                .addToBackStack(Constants.RESULT_FILTER_FRAGMENT)
-                .commit();
+                .add(R.id.content_frame, resultFilterFragment, Constants.RESULT_FILTER_FRAGMENT)
+                //.addToBackStack(Constants.FILTER_FRAGMENT)
+                .commit();*/
         //((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 

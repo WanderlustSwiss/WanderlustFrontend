@@ -16,7 +16,7 @@ import io.objectbox.annotation.Id;
 import io.objectbox.converter.PropertyConverter;
 
 /**
- * Poi
+ * Represents a Poi in the database
  *
  * @author Rilind Gashi
  * @author Tobias Rüegsegger

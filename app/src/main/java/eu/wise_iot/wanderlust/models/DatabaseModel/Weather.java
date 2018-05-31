@@ -1,5 +1,11 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+/**
+ * Represents Weather
+ *
+ * @author Simon Kaspar
+ * @license MIT
+ */
 public class Weather {
 
     private float temp;

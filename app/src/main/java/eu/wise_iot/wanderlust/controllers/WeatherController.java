@@ -20,6 +20,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Handles Weather IO
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class WeatherController {
 
     private final WeatherService service;

@@ -15,12 +15,11 @@ import io.objectbox.annotation.Id;
 import io.objectbox.converter.PropertyConverter;
 
 /**
- * CommunityTours
+ * Represents a CommunityTour in the database
  *
  * @author Alexander Weinbeck
  * @license MIT
  */
-
 @Entity
 public class Tour extends AbstractModel {
 

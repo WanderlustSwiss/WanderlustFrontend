@@ -3,6 +3,12 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
+/**
+ * Represents a Poi Type in the database
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 @Entity
 public class PoiType extends AbstractModel {
     @Id

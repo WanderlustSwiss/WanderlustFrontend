@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.signature.ObjectKey;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,14 +21,11 @@ import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
 import eu.wise_iot.wanderlust.controllers.TourController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 
-import static eu.wise_iot.wanderlust.views.MainActivity.activity;
-
-
 /**
- * MyAdapter:
- * provides adapter for recyclerview which is used by the tourslist
+ * Provides adapter for recycler view which is used by the filtered tours list
  *
  * @author Alexander Weinbeck
  * @license MIT
@@ -37,7 +33,6 @@ import static eu.wise_iot.wanderlust.views.MainActivity.activity;
 public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAdapter.ViewHolder> {
     private List<Tour> tours = Collections.emptyList();
     private final LayoutInflater mInflater;
-    @SuppressWarnings("WeakerAccess")
     public ItemClickListener mClickListener;
     private final Context context;
     private final ImageController imageController;
@@ -82,7 +77,7 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         if (BuildConfig.DEBUG) Log.d("ToursRecyclerview", "starting set properties");
         //set properties for each element
         Tour tour = tours.get(position);
-//        holder.tvTitle.setTextColor(Color.BLACK);
+
         //difficulty calculations
         long difficulty = tour.getDifficulty();
         if (difficulty >= 6)
@@ -104,18 +99,14 @@ public class ResultFilterRVAdapter extends RecyclerView.Adapter<ResultFilterRVAd
         holder.tvDescending.setText(tour.getDescent() + " m");
         holder.tvAscending.setText(tour.getAscent() + " m");
 
-        List<File> images = imageController.getImages(tour.getImagePaths());
-        if (!images.isEmpty()){
-            Picasso handler = imageController.getPicassoHandler(activity);
-            //handler.setIndicatorsEnabled(true);
-            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            if (BuildConfig.DEBUG) Log.d("ResultFilterRVAdapter", "ImageInfo loaded: " + url);
-        } else {
-            Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().noFade()
-                    .placeholder(R.drawable.progress_animation).into(holder.tvImage);
-            if (BuildConfig.DEBUG) Log.d("ResultFilterRVAdapter", "Images not found");
-        }
+        GlideApp.with(context)
+                .load(ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/1")
+                .signature(new ObjectKey(System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
+                .error(GlideApp.with(context).load(R.drawable.no_image_found).centerCrop())
+                .placeholder(R.drawable.progress_animation)
+                .centerCrop()
+                .into(holder.tvImage);
+
         holder.tvTime.setText(TourController.convertToStringDuration(tour.getDuration()));
     }
 

@@ -17,12 +17,12 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.ViolationType;
 import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
 
 /**
- * TourReportDialog:
+ * Handles user input for reporting a tour for any kind of violation
  *
  * @author Rilind Gashi
+ * @author Alexander Weinbeck
  * @license MIT
  */
-
 public class TourReportDialog extends DialogFragment {
 
     private TourController tourController;

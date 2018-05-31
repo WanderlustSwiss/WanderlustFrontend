@@ -52,7 +52,6 @@ public class UserGuideFragment extends Fragment {
             if (mapFragment == null) mapFragment = MapFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                    .addToBackStack(null)
                     .commit();
             ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         });
