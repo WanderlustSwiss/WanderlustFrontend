@@ -555,7 +555,7 @@ public class TourController {
         int type;
 
         public Violation(){
-
+            //empty constructor
         }
 
         public Violation(long tour_id, long violationType_id){

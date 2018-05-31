@@ -54,6 +54,7 @@ public class PoiViewDialog extends DialogFragment {
     private TableLayout sacOccupation;
     private final Map<String, Integer> monthIds = new HashMap<>();
     private static PoiController poiController;
+
     /**
      * Create a PoiViewDialog from a Poi object
      *
@@ -90,7 +91,6 @@ public class PoiViewDialog extends DialogFragment {
         dialog.setArguments(args);
         return dialog;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

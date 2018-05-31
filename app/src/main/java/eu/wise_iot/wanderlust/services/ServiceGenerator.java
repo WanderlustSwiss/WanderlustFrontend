@@ -29,7 +29,6 @@ public class ServiceGenerator {
     public static final String API_BASE_URL = "http://86.119.40.34:8080";
 
     private static Retrofit service;
-
     private static OkHttpClient client;
 
     /**
