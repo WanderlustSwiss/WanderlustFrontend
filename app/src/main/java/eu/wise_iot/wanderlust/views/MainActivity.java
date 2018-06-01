@@ -307,6 +307,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     switch (controllerEvent.getType()) {
                         case OK:
                             LoginUser.clearCookies();
+
+                            UserDao.getInstance().removeAll();
+
                             DrawerLayout drawer = findViewById(R.id.drawer_layout);
                             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                             Fragment f = fm.findFragmentByTag(Constants.LOGIN_FRAGMENT);
