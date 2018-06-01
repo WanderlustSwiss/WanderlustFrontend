@@ -232,7 +232,7 @@ public class MapFragment extends Fragment {
                 if (startTourTracking()) {
                     createTourButton.setImageResource(R.drawable.ic_track_stop_3);
                     createTourButton.setColorNormalResId(R.color.highlight_main);
-
+                    enableLocationTracking();
                     creatingTourInformation.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(getActivity(), R.string.create_tour_need_whitelist, Toast.LENGTH_SHORT).show();
@@ -626,7 +626,7 @@ public class MapFragment extends Fragment {
         } else {
             ibLocationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
         }
-        createTourButton.setEnabled(myLocationIsEnabled);
+        createTourButton.setEnabled(true);
 
         //register behavior on touched
         StyleBehavior.buttonEffectOnTouched(ibLocationToggler);
@@ -641,14 +641,8 @@ public class MapFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.msg_follow_mode_disabled, Toast.LENGTH_SHORT).show();
             } else {
                 // toggle to enabled
-                myLocationIsEnabled = true;
-                displayMyLocationOnMap(true);
-
-                ibLocationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
-                Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
-                centerMapOnCurrentPosition();
+               enableLocationTracking();
             }
-            createTourButton.setEnabled(myLocationIsEnabled);
         });
 
         //long click listener
@@ -657,6 +651,15 @@ public class MapFragment extends Fragment {
             centerMapOnCurrentPosition();
             return true;
         });
+    }
+
+    private void enableLocationTracking(){
+        myLocationIsEnabled = true;
+        displayMyLocationOnMap(true);
+
+        ibLocationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
+        Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
+        centerMapOnCurrentPosition();
     }
 
     /**
