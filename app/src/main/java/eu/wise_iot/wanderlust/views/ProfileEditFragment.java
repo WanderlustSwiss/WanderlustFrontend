@@ -229,12 +229,8 @@ public class ProfileEditFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case 1000:
-                    onActionResultGallery(data);
-                    break;
-            }
+        if(requestCode == 1000 && resultCode == RESULT_OK && data != null){
+            onActionResultGallery(data);
         }
     }
 
@@ -260,18 +256,8 @@ public class ProfileEditFragment extends Fragment {
         buttonOpenGallery.setOnClickListener(v -> {
             if (ActivityCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                if (profileController.getProfilePicture() == null) {
-                    openGallery();
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                } else {
-                    profileController.deleteProfilePicture(controllerEvent -> {
-                        EventType type = controllerEvent.getType();
-                        if (type == EventType.OK) {
-                            openGallery();
-                        }
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                    });
-                }
+                openGallery();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             } else {
                 Toast.makeText(getActivity(), getString(R.string.msg_picture_not_saved),
                         Toast.LENGTH_SHORT).show();

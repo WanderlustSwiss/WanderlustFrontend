@@ -54,6 +54,7 @@ public class MapCacheHandler {
 
         final MapView mapView = new WanderlustMapView(context);
         final BoundingBox boundingBox = new BoundingBox(maxLat, maxLong, minLat, minLong);
+        //final BoundingBox boundingBox = new BoundingBox(47.424482, 9.376717, 47.420000 , 9.360000);
         mapView.zoomToBoundingBox(boundingBox, false);
 
         final CacheManager cacheManager = new CacheManager(mapView);

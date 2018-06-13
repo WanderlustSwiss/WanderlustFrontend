@@ -57,6 +57,10 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
         holder.title.setText(tour.getTitle());
         holder.description.setText(tour.getDescription());
 
+        holder.editIcon.setOnClickListener(e -> {
+
+        });
+
         GlideApp.with(context)
                 .load(imageController.getURLImageTourSingle(tour))
                 .error(R.drawable.no_image_found)

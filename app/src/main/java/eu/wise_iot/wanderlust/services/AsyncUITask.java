@@ -29,6 +29,7 @@ public class AsyncUITask {
             }
         });
     }
+
     public static synchronized AsyncUITask getHandler(){
         if (uiQueueHandler == null)
             uiQueueHandler = new AsyncUITask();

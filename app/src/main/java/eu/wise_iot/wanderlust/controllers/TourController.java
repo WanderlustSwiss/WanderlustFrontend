@@ -164,7 +164,14 @@ public class TourController {
                     case OK:
                         //download in cache
                         SavedTour data = (SavedTour) controllerEvent.getModel();
-                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data.toTour());
+                        Tour data1 = data.toTour();
+
+                        Log.d("BLABLA", data1.getGeoPoints() == null ? "null" : String.valueOf(data1.getGeoPoints().size()));
+                        for(GeoPoint geoPoint : data1.getGeoPoints()){
+                            Log.d("BLABLA", String.valueOf(geoPoint.getLatitude()) + "/" + String.valueOf(geoPoint.getLongitude()));
+                        }
+
+                        MapCacheHandler cacheHandler = new MapCacheHandler(context, data1);
 
                         //save tour in local db
                         if(cacheHandler.downloadMap()){
