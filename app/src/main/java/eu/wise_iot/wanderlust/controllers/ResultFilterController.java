@@ -54,7 +54,7 @@ public class ResultFilterController {
     }
     public String getDifficultiesByArray(boolean t1, boolean t2, boolean t3, boolean t4, boolean t5, boolean t6) {
         StringBuilder sb = new StringBuilder();
-        if(t1) sb.append(difficultyType.findOne(DifficultyType_.level,1));
+        if(t1) sb.append(difficultyType.findOne(DifficultyType_.level,1).getDifft_id());
         else if(t2) sb.append(difficultyType.findOne(DifficultyType_.level,2).getDifft_id());
         else if(t3) sb.append(difficultyType.findOne(DifficultyType_.level,3).getDifft_id());
         else if(t4) sb.append(difficultyType.findOne(DifficultyType_.level,4).getDifft_id());
