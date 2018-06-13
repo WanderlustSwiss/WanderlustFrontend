@@ -39,6 +39,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.AddressPoint;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.views.MapFragment;
 import eu.wise_iot.wanderlust.views.ProfileFragment;
+import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -140,6 +141,7 @@ public class PoiEditDialog extends DialogFragment {
                 default:
                     Toast.makeText(context, R.string.image_upload_failed, Toast.LENGTH_LONG).show();
             }
+            LoadingDialog.getDialog().dismiss();
         };
 
         poiHandler = event -> {
@@ -181,6 +183,7 @@ public class PoiEditDialog extends DialogFragment {
                 default:
                     Toast.makeText(context, R.string.msg_not_saved, Toast.LENGTH_SHORT).show();
             }
+            LoadingDialog.getDialog().dismiss();
         };
     }
 
@@ -272,6 +275,7 @@ public class PoiEditDialog extends DialogFragment {
                 titleTextLayout.setError(getString(R.string.message_add_title));
                 return;
             }
+
             if (descriptionEditText != null && descriptionEditText.getText() != null) {
                 String description = descriptionEditText.getText().toString();
                 poi.setDescription(description);
@@ -293,12 +297,13 @@ public class PoiEditDialog extends DialogFragment {
                             default:
                                 poiHandler.onResponse(new ControllerEvent(EventType.getTypeByCode(500)));
                         }
+                        LoadingDialog.getDialog().dismiss();
                     });
                 } else {
                     controller.updatePoi(poi, poiHandler);
+                    LoadingDialog.getDialog().dismiss();
                 }
             }
-
         });
 
         buttonCancel.setOnClickListener(view -> dismiss());
@@ -310,7 +315,8 @@ public class PoiEditDialog extends DialogFragment {
     private void fillInDataFromExistingPoi() {
         titleEditText.setText(poi.getTitle());
         descriptionEditText.setText(poi.getDescription());
-        typeSpinner.setSelection((int) poi.getType());
+        //added -1 for out of range exception
+        typeSpinner.setSelection(((int) poi.getType()) -1);
         if (poi.isPublic()) {
             modeSpinner.setSelection(0); // public
         } else {
