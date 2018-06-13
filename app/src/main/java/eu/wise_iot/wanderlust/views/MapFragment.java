@@ -99,7 +99,7 @@ public class MapFragment extends Fragment {
     private WanderlustMapView mapView;
     private IMapController mapController;
     private MyMapOverlays mapOverlays;
-    private ImageButton ibLocationToggler, cameraButton, layerButton, staliteTypeButton, defaultTypeButton, terrainTypeButton,
+    private ImageButton cameraButton, ibLocationToggler, layerButton, staliteTypeButton, defaultTypeButton, terrainTypeButton,
                         //bottom sheet
                         ibPoiRestAreaLayer, ibPoiFloraFaunaLayer, ibPoiRestaurantLayer, ibPoiViewLayer,
                         ibPoiLayer, ibPublicTransportLayer, ibSacHutLayer;
@@ -617,14 +617,14 @@ public class MapFragment extends Fragment {
      * @param view View: view of current fragment
      */
     private void initLocationToggler(View view) {
-        ibLocationToggler = view.findViewById(R.id.locationButton);
+        ibLocationToggler = (FloatingActionButton) view.findViewById(R.id.locationButton);
         displayMyLocationOnMap(myLocationIsEnabled);
 
         if (myLocationIsEnabled) {
             centerMapOnCurrentPosition();
-            ibLocationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
+            ibLocationToggler.setImageResource(R.drawable.ic_my_location_found_white_24dp);
         } else {
-            ibLocationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
+            ibLocationToggler.setImageResource(R.drawable.ic_my_location_disabled_white_24dp);
         }
         createTourButton.setEnabled(true);
 
@@ -637,7 +637,7 @@ public class MapFragment extends Fragment {
                 myLocationIsEnabled = false;
                 displayMyLocationOnMap(false);
 
-                ibLocationToggler.setImageResource(R.drawable.ic_my_location_disabled_black_24dp);
+                ibLocationToggler.setImageResource(R.drawable.ic_my_location_disabled_white_24dp);
                 Toast.makeText(getActivity(), R.string.msg_follow_mode_disabled, Toast.LENGTH_SHORT).show();
             } else {
                 // toggle to enabled
@@ -657,7 +657,7 @@ public class MapFragment extends Fragment {
         myLocationIsEnabled = true;
         displayMyLocationOnMap(true);
 
-        ibLocationToggler.setImageResource(R.drawable.ic_my_location_found_black_24dp);
+        ibLocationToggler.setImageResource(R.drawable.ic_my_location_found_white_24dp);
         Toast.makeText(getActivity(), R.string.msg_follow_mode_enabled, Toast.LENGTH_SHORT).show();
         centerMapOnCurrentPosition();
     }

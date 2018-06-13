@@ -36,10 +36,7 @@
                     android:id="@+id/searchView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="16dp" />
+                    android:layout_margin="16dp"/>
             </LinearLayout>
 
             <TextView
@@ -58,10 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp">
+                android:layout_margin="16dp">
 
                 <ImageButton
                     android:id="@+id/layerButton"
@@ -75,10 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_margin="16dp"
             android:orientation="vertical">
 
 
@@ -86,12 +77,8 @@
                 android:id="@+id/menu_floating_button"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:layout_margin="0dp"
-                android:layout_marginBottom="-30dp"
                 android:contentDescription="@null"
                 android:elevation="5dp"
-                android:padding="15dp"
-                android:paddingBottom="0dp"
                 fab:menu_buttonSpacing="1dp"
                 fab:menu_colorNormal="@color/primary_main"
                 fab:menu_fab_hide_animation="@null"
@@ -102,30 +89,28 @@
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_gravity="center_horizontal|center"
-                    android:layout_marginLeft="30dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_photo_camera_white_24dp"
                     app:fab_colorNormal="@color/primary_main" />
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/createTourButton"
+                    android:paddingBottom="0dp"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:paddingBottom="0dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_track_start_3"
                     app:fab_colorNormal="@color/primary_main" />
 
-            </com.github.clans.fab.FloatingActionMenu>
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/locationButton"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:contentDescription="@null"
+                    app:fab_colorNormal="@color/primary_main"
+                    android:src="@drawable/ic_my_location_disabled_white_24dp" />
 
-            <ImageButton
-                android:id="@+id/locationButton"
-                style="@style/FloatingActionButton.Light"
-                android:layout_margin="20dp"
-                android:layout_marginTop="-20dp"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_my_location_disabled_black_24dp" />
+            </com.github.clans.fab.FloatingActionMenu>
 
         </LinearLayout>
     </FrameLayout>
