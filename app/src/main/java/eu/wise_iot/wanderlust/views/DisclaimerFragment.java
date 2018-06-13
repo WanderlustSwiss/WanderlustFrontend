@@ -1,11 +1,14 @@
 package eu.wise_iot.wanderlust.views;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -21,6 +24,10 @@ import eu.wise_iot.wanderlust.R;
  */
 public class DisclaimerFragment extends Fragment {
 
+    private SharedPreferences preferences;
+    private boolean firstTimeOpened;
+
+    private ImageButton disclaimerBackButton;
     private TextView authorsTextView;
 
     public static DisclaimerFragment newInstance() {
@@ -28,6 +35,13 @@ public class DisclaimerFragment extends Fragment {
         DisclaimerFragment fragment = new DisclaimerFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        firstTimeOpened = preferences.getBoolean("firstTimeOpened", true);
     }
 
     @Nullable
@@ -40,6 +54,7 @@ public class DisclaimerFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         authorsTextView = view.findViewById(R.id.authors_text_view);
+        disclaimerBackButton = view.findViewById(R.id.disclaimer_back_button);
 
         Calendar calendar = new GregorianCalendar();
         int year = calendar.get(Calendar.YEAR);
@@ -47,5 +62,11 @@ public class DisclaimerFragment extends Fragment {
         authorsText += year + " ";
         authorsText += getActivity().getResources().getString(R.string.disclaimer_authors);
         authorsTextView.setText(authorsText);
+
+        if (firstTimeOpened) {
+            disclaimerBackButton.setOnClickListener(v -> getActivity().onBackPressed());
+        } else {
+            disclaimerBackButton.setVisibility(View.GONE);
+        }
     }
 }

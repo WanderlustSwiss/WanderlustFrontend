@@ -6,57 +6,73 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/divider_vertical"
-        android:gravity="center"
-        android:layout_marginTop="48dp"
-        android:orientation="vertical"
-        android:padding="48dp"
-        android:showDividers="middle">
+        android:orientation="vertical">
 
-        <TextView
-            style="@style/h2"
+        <ImageButton
+            android:id="@+id/disclaimer_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@null"
+            android:padding="4dp"
+            android:src="@drawable/ic_arrow_back_black_24dp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/menu_disclaimer" />
+            android:layout_marginTop="48dp"
+            android:divider="@drawable/divider_vertical"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="48dp"
+            android:showDividers="middle">
 
-        <TextView
-            style="@style/p"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/disclaimer_text2" />
+            <TextView
+                style="@style/h2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/menu_disclaimer" />
 
-        <TextView
-            style="@style/p"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/disclaimer_text3" />
+            <TextView
+                style="@style/p"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/disclaimer_text2" />
 
-        <TextView
-            style="@style/p"
-            android:id="@+id/authors_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/disclaimer_authors" />
+            <TextView
+                style="@style/p"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/disclaimer_text3" />
 
-        <ImageView
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/temp_logo" />
+            <TextView
+                android:id="@+id/authors_text_view"
+                style="@style/p"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/disclaimer_authors" />
 
-        <TextView
-            style="@style/p.Small.Grey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/disclaimer_mit_header" />
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:src="@drawable/temp_logo" />
 
-        <TextView
-            style="@style/p.Small.Grey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/disclaimer_mit_text"
-            android:layout_marginBottom="24dp"/>
+            <TextView
+                style="@style/p.Small.Grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/disclaimer_mit_header" />
+
+            <TextView
+                style="@style/p.Small.Grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="@string/disclaimer_mit_text" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>
