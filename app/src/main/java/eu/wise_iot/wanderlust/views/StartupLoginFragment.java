@@ -174,7 +174,8 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                     case NOT_FOUND:
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, "ERROR: Server Response arrived -> User was not found");
-                        Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_user_not_found), Toast.LENGTH_LONG).show();
+                        //TODO: this is caused by wrong login handling - has to be fixed
+                        //Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_user_not_found), Toast.LENGTH_LONG).show();
                         break;
                     case SERVER_ERROR:
                         if (BuildConfig.DEBUG)
