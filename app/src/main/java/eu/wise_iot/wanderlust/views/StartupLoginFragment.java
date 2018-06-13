@@ -151,7 +151,6 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                         User user = (User) event.getModel();
                         ((MainActivity) getActivity()).setupDrawerHeader(user);
                         if (preferences.getBoolean("firstTimeOpened", true)) {
-                            preferences.edit().putBoolean("firstTimeOpened", false).apply(); // save that app has been opened
 
                             Fragment userGuideFragment = getFragmentManager().findFragmentByTag(Constants.USER_GUIDE_FRAGMENT);
                             if (userGuideFragment == null)

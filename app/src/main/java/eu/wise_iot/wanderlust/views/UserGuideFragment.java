@@ -1,18 +1,19 @@
 package eu.wise_iot.wanderlust.views;
 
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.graphics.Color;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
@@ -26,8 +27,12 @@ import eu.wise_iot.wanderlust.constants.Constants;
  */
 public class UserGuideFragment extends Fragment {
 
+    private SharedPreferences preferences;
+
     private Button goToMapButton;
     private CheckBox disclaimerAccepted;
+
+    private boolean firstTimeOpened;
 
 
     public static UserGuideFragment newInstance() {
@@ -35,6 +40,13 @@ public class UserGuideFragment extends Fragment {
         UserGuideFragment fragment = new UserGuideFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        firstTimeOpened = preferences.getBoolean("firstTimeOpened", true);
     }
 
     @Override
@@ -53,23 +65,33 @@ public class UserGuideFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.heading_icon_unselected));
+        View container = view.findViewById(R.id.disclaimer_accept_container);
 
-        disclaimerAccepted.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (disclaimerAccepted.isChecked()) {
-                goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.primary_main));
-            } else {
-                goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.heading_icon_unselected));
-            }
-        });
+        if (firstTimeOpened) {
+            goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.heading_icon_unselected));
+
+            disclaimerAccepted.setOnCheckedChangeListener((compoundButton, b) -> {
+                if (disclaimerAccepted.isChecked()) {
+                    goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.primary_main));
+                } else {
+                    goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.heading_icon_unselected));
+                }
+            });
+        } else {
+            container.setVisibility(View.GONE);
+        }
 
         goToMapButton.setOnClickListener(v -> {
-            if (disclaimerAccepted.isChecked()) {
+            if (disclaimerAccepted.isChecked() || container.getVisibility() == View.GONE) {
                 Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
                 if (mapFragment == null) mapFragment = MapFragment.newInstance();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                         .commit();
+
+                // save that app has been opened
+                preferences.edit().putBoolean("firstTimeOpened", false).apply();
+
                 ((AppCompatActivity) getActivity()).getSupportActionBar().show();
             } else {
                 Toast.makeText(getActivity(), R.string.msg_accept_disclaimer, Toast.LENGTH_LONG).show();
