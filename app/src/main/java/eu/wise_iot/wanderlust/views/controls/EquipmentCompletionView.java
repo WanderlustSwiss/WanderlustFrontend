@@ -14,6 +14,12 @@ import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.EquipmentController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
 
+/**
+ * TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class EquipmentCompletionView extends TokenCompleteTextView<Equipment> {
 
     private EquipmentController controller;

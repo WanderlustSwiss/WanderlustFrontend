@@ -19,7 +19,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.views.MapFragment;
 
 /**
- * Camera:
+ * Camera related actions
  *
  * @author Fabian Schwander
  * @license MIT

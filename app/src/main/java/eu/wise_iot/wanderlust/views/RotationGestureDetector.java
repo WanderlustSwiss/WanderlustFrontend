@@ -6,6 +6,13 @@ import android.view.MotionEvent;
 /*
     https://stackoverflow.com/questions/10682019/android-two-finger-rotation?rq=1
  */
+
+/**
+ * Detects gestures for the map
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 class RotationGestureDetector {
     private static final int INVALID_POINTER_ID = -1;
     private float fX, fY, sX, sY;

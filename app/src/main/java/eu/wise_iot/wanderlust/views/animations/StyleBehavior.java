@@ -5,7 +5,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * StyleBehavior:
+ * Adds style behaviour to controls
  *
  * @author Fabian Schwander
  * @author Alexander Weinbeck

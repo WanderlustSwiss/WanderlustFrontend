@@ -8,7 +8,7 @@ import retrofit2.http.Path;
 /**
  * SavedTourService:
  * handles exchange with server for Tours
- * server db:
+ * server requests:
  * show	            GET	        /tour/:id               | restricted
  * @author Alexander Weinbeck
  */

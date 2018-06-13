@@ -211,8 +211,9 @@ public class PoiController {
     }
 
     /**
-     * represents a poi violation
+     * Represents a poi violation
      * structure needs to be kept like this for retrofit
+     *
      * @author Alexander Weinbeck
      * @license MIT
      */

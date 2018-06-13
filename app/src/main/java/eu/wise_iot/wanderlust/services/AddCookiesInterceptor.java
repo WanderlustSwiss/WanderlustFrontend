@@ -15,7 +15,6 @@ import okhttp3.Response;
  * @author Tobias Rüegsegger
  * @license MIT
  */
-
 public class AddCookiesInterceptor implements Interceptor {
 
     @Override

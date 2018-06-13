@@ -27,7 +27,8 @@ import eu.wise_iot.wanderlust.views.TourFragment;
  * @license MIT
  */
 
-public class TourRatingDialog extends DialogFragment {
+public
+class TourRatingDialog extends DialogFragment {
 
     private static TourController controller;
     private static Tour tour;

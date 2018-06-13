@@ -9,3 +9,4 @@ package eu.wise_iot.wanderlust.controllers;
 public interface FragmentHandler<T> {
     void onResponse(ControllerEvent<T> controllerEvent);
 }
+

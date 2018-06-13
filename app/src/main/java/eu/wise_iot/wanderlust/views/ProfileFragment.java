@@ -1,8 +1,10 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -18,8 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.Locale;
 import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
-import eu.wise_iot.wanderlust.controllers.EventType;
+import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.MapCacheHandler;
 import eu.wise_iot.wanderlust.controllers.PoiController;
 import eu.wise_iot.wanderlust.controllers.ProfileController;
@@ -38,12 +38,12 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Profile;
 import eu.wise_iot.wanderlust.models.DatabaseModel.SavedTour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
-import eu.wise_iot.wanderlust.services.AsyncUITask;
+import eu.wise_iot.wanderlust.services.FragmentService;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.views.adapters.ProfileFavoritesRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfilePOIRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileSavedRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.ProfileTripRVAdapter;
-import eu.wise_iot.wanderlust.views.animations.CircleTransform;
 import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import eu.wise_iot.wanderlust.views.dialog.ConfirmDeletePoiDialog;
 import eu.wise_iot.wanderlust.views.dialog.PoiEditDialog;
@@ -53,6 +53,7 @@ import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
  * Fragment which represents the UI of the profile of a user.
  *
  * @author Baris Demirci
+ * @author Alexander Weinbeck
  * @license MIT
  */
 public class ProfileFragment extends Fragment {
@@ -133,7 +134,14 @@ public class ProfileFragment extends Fragment {
 
         File image = profileController.getProfilePicture();
         if (image != null) {
-            Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(profilePicture);
+            GlideApp.with(getActivity())
+                    .load(image)
+                    .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).circleCrop())
+                    .placeholder(R.drawable.progress_animation)
+                    .circleCrop()
+                    .into(profilePicture);
+
+            //Picasso.with(getActivity()).load(image).transform(new CircleTransform()).fit().placeholder(R.drawable.progress_animation).into(profilePicture);
             ((MainActivity) getActivity()).updateProfileImage(profileController.getProfilePicture());
         } else {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_pic);
@@ -145,14 +153,17 @@ public class ProfileFragment extends Fragment {
 
         //edit profile button_white
         editProfile.setOnClickListener(v -> {
-
+            FragmentService.getInstance(getActivity())
+                    .performTraceTransaction(true,Constants.PROFILE_EDIT_FRAGMENT,ProfileEditFragment.newInstance(),this);
+            /*
             Fragment profileEditFragment = getFragmentManager().findFragmentByTag(Constants.PROFILE_EDIT_FRAGMENT);
+
             if (profileEditFragment == null)
                 profileEditFragment = ProfileEditFragment.newInstance();
             getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, profileEditFragment, Constants.PROFILE_EDIT_FRAGMENT)
                     .addToBackStack(null)
-                    .commit();
+                    .commit();*/
         });
     }
 
@@ -291,8 +302,7 @@ public class ProfileFragment extends Fragment {
         //distinguish what element was clicked by resource id
         switch (view.getId()) {
             case R.id.list_fav_icon:
-                TourController tourController = new TourController(tour);
-                tourController.unsetFavorite(controllerEvent -> {
+                new TourController(tour).unsetFavorite(controllerEvent -> {
                     switch (controllerEvent.getType()) {
                         case OK:
                             listFavorites.remove(tour);
@@ -319,42 +329,45 @@ public class ProfileFragment extends Fragment {
                 });
                 break;
             default:
-                LoadingDialog.getDialog().show(getActivity());
-                AsyncUITask.getHandler().queueTask(() -> {
-                    switch (EventType.getTypeByCode(new TourOverviewController().checkIfTourExists(tour))) {
-                        case OK:
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "Server Response arrived -> OK Tour was found");
-                            getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
-                                    .addToBackStack(Constants.TOUR_FRAGMENT)
-                                    .commit();
-                            //TODO: check if needed
-                            //((AppCompatActivity) getActivity()).getSupportActionBar().show();
-                            break;
-                        case NOT_FOUND:
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> Tour was not found");
-                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
-                            new TourOverviewController().removeRecentTour(tour);
-                            break;
-                        case SERVER_ERROR:
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
-                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
-                            break;
-                        case NETWORK_ERROR:
-                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
-                            break;
-                        default:
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
-                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
-                    }
-                    LoadingDialog.getDialog().dismiss();
+                new AsyncCheckTourExists(tour,getActivity(),this).execute();
+                //AsyncUITask.getHandler().queueTask(() -> {
+               /* new TourOverviewController().checkIfTourExists(tour, controllerEvent -> {
+                            switch (controllerEvent.getType()) {
+                                case OK:
+                                    if (BuildConfig.DEBUG)
+                                        Log.d(TAG, "Server Response arrived -> OK Tour was found");
+                                    FragmentService.getInstance(getActivity()).performTraceTransaction(true,Constants.TOUR_FRAGMENT,TourFragment.newInstance(tour),this);
+//                                    getFragmentManager().beginTransaction()
+//                                            .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
+//                                            .addToBackStack(Constants.TOUR_FRAGMENT)
+//                                            .commit();
+                                    //TODO: check if needed
+                                    //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+                                    break;
+                                case NOT_FOUND:
+                                    if (BuildConfig.DEBUG)
+                                        Log.d(TAG, "ERROR: Server Response arrived -> Tour was not found");
+                                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
+                                    new TourOverviewController().removeRecentTour(tour);
+                                    break;
+                                case SERVER_ERROR:
+                                    if (BuildConfig.DEBUG)
+                                        Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
+                                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
+                                    break;
+                                case NETWORK_ERROR:
+                                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                                    if (BuildConfig.DEBUG)
+                                        Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
+                                    break;
+                                default:
+                                    if (BuildConfig.DEBUG)
+                                        Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
+                                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+                            }
+                            LoadingDialog.getDialog().dismiss();
                 });
+                //});*/
         }
     }
 
@@ -375,45 +388,50 @@ public class ProfileFragment extends Fragment {
                 profileSavedRVAdapter.notifyDataSetChanged();
                 break;
             default:
-                LoadingDialog.getDialog().show(getActivity());
-                TourOverviewController tourOverviewController = new TourOverviewController();
-                AsyncUITask.getHandler().queueTask(() -> {
-                    switch (EventType.getTypeByCode(tourOverviewController.checkIfTourExists(tour.toTour()))) {
-                        case OK:
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "Server Response arrived -> OK Tour was found");
-                            getFragmentManager().beginTransaction()
-                                    .replace(R.id.content_frame, TourFragment.newInstance(tour.toTour()), Constants.TOUR_FRAGMENT)
-                                    .addToBackStack(Constants.TOUR_FRAGMENT)
-                                    .commit();
-                            //TODO: check if needed
-                            //((AppCompatActivity) getActivity()).getSupportActionBar().show();
-                            break;
-                        case NOT_FOUND:
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> Tour was not found");
-                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
-                            tourOverviewController.removeRecentTour(tour.toTour());
-                            break;
-                        case SERVER_ERROR:
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
-                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
-                            break;
-                        case NETWORK_ERROR:
-                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
-                            break;
-                        default:
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
-                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
-                    }
-
-                    LoadingDialog.getDialog().dismiss();
-                });
-                //new AsyncCheckTourExists(tour.toTour(), getActivity()).execute();
+                new AsyncCheckTourExists(tour.toTour(),getActivity(),this).execute();
+                /*
+//                LoadingDialog.getDialog().show(getActivity());
+//                TourOverviewController tourOverviewController = new TourOverviewController();
+//                //AsyncUITask.getHandler().queueTask(() -> {
+//                tourOverviewController.checkIfTourExists(tour.toTour(), controllerEvent -> {
+//                    switch (controllerEvent.getType()) {
+//                        case OK:
+//                            if (BuildConfig.DEBUG)
+//                                Log.d(TAG, "Server Response arrived -> OK Tour was found");
+//                            FragmentService.getInstance(getActivity())
+//                                    .performTraceTransaction(true, Constants.TOUR_FRAGMENT,TourFragment.newInstance(tour.toTour()),this);
+//                            /*
+//                            getFragmentManager().beginTransaction()
+//                                    .replace(R.id.content_frame, TourFragment.newInstance(tour.toTour()), Constants.TOUR_FRAGMENT)
+//                                    .addToBackStack(Constants.TOUR_FRAGMENT)
+//                                    .commit();*/
+//                            //TODO: check if needed
+//                            //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+//                            break;
+//                        case NOT_FOUND:
+//                            if (BuildConfig.DEBUG)
+//                                Log.d(TAG, "ERROR: Server Response arrived -> Tour was not found");
+//                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
+//                            tourOverviewController.removeRecentTour(tour.toTour());
+//                            break;
+//                        case SERVER_ERROR:
+//                            if (BuildConfig.DEBUG)
+//                                Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
+//                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
+//                            break;
+//                        case NETWORK_ERROR:
+//                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+//                            if (BuildConfig.DEBUG)
+//                                Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
+//                            break;
+//                        default:
+//                            if (BuildConfig.DEBUG)
+//                                Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
+//                            Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+//                    }
+//
+//                    LoadingDialog.getDialog().dismiss();
+//                });
         }
     }
 
@@ -442,79 +460,77 @@ public class ProfileFragment extends Fragment {
                 //new AsyncCheckPOIExists(poi,getActivity()).execute();
         }
     }
-}
 
-//    /**
-//     * handles async backend request for performing a check if the tour is existing
-//     * this will keep the UI responsive
-//     *
-//     * @author Alexander Weinbeck
-//     * @license MIT
-//     */
-//    private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
-//        private final Tour tour;
-//        private final Activity activity;
-//        private Integer responseCode;
-//        private final TourOverviewController tourOverviewController;
-//
-//        AsyncCheckTourExists(Tour tour, Activity activity) {
-//            this.tour = tour;
-//            this.activity = activity;
-//            tourOverviewController = new TourOverviewController();
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            LoadingDialog.getDialog().show(activity);
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... params) {
-//            setThreadPriority(-10);
-//            responseCode = tourOverviewController.checkIfTourExists(tour);
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void result) {
-//            setThreadPriority(-10);
-//            switch (EventType.getTypeByCode(responseCode)) {
-//                case OK:
-//                    if (BuildConfig.DEBUG)
-//                        Log.d(TAG, "Server Response arrived -> OK Tour was found");
-//                    getFragmentManager().beginTransaction()
-//                            .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
-//                            .addToBackStack(Constants.TOUR_FRAGMENT)
-//                            .commit();
-//                    //TODO: check if needed
-//                    //((AppCompatActivity) getActivity()).getSupportActionBar().show();
-//                    break;
-//                case NOT_FOUND:
-//                    if (BuildConfig.DEBUG)
-//                        Log.d(TAG, "ERROR: Server Response arrived -> Tour was not found");
-//                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
-//                    tourOverviewController.removeRecentTour(tour);
-//                    break;
-//                case SERVER_ERROR:
-//                    if (BuildConfig.DEBUG)
-//                        Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
-//                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
-//                    break;
-//                case NETWORK_ERROR:
-//                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
-//                    if (BuildConfig.DEBUG)
-//                        Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
-//                    break;
-//                default:
-//                    if (BuildConfig.DEBUG)
-//                        Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
-//                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
-//            }
-//
-//            LoadingDialog.getDialog().dismiss();
-//        }
-//    }
-//}
+
+    /**
+     * handles async backend request for performing a check if the tour is existing
+     * this will keep the UI responsive
+     *
+     * @author Alexander Weinbeck
+     * @license MIT
+     */
+    private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
+        private final Tour tour;
+        private final Activity activity;
+        private ControllerEvent<Tour> responseCode;
+        private final TourOverviewController tourOverviewController;
+        private static final String TAG = "checkTourExists";
+        private Fragment currentFragment;
+
+        AsyncCheckTourExists(Tour tour, Activity activity, Fragment fragment) {
+            this.tour = tour;
+            this.activity = activity;
+            tourOverviewController = new TourOverviewController();
+            currentFragment = fragment;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            LoadingDialog.getDialog().show(activity);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            responseCode = tourOverviewController.checkIfTourExists(tour);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            switch (responseCode.getType()) {
+                case OK:
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "Server Response arrived -> OK Tour was found");
+                    FragmentService
+                            .getInstance(activity)
+                            .performTraceTransaction(true, Constants.TOUR_FRAGMENT, TourFragment.newInstance(tour), currentFragment);
+                    break;
+                case NOT_FOUND:
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "ERROR: Server Response arrived -> Tour was not found");
+                    Toast.makeText(activity.getApplicationContext(), activity.getResources().getText(R.string.msg_tour_not_existing), Toast.LENGTH_LONG).show();
+                    tourOverviewController.removeRecentTour(tour);
+                    break;
+                case SERVER_ERROR:
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "ERROR: Server Response arrived -> SERVER ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_server_error_get_tour), Toast.LENGTH_LONG).show();
+                    break;
+                case NETWORK_ERROR:
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_no_internet), Toast.LENGTH_LONG).show();
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "ERROR: Server Response arrived -> NETWORK ERROR");
+                    break;
+                default:
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, "ERROR: Server Response arrived -> UNDEFINED ERROR");
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getText(R.string.msg_general_error), Toast.LENGTH_LONG).show();
+            }
+
+            LoadingDialog.getDialog().dismiss();
+        }
+    }
+}
 
 //    public void setupFavorites() {
 //        profileRV.setAdapter(profileFavoritesRVAdapter);

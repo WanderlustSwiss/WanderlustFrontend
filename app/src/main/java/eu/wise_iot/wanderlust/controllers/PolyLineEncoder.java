@@ -2,11 +2,12 @@ package eu.wise_iot.wanderlust.controllers;
 
 
 import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 
 
 /**
- * PolyLineEncoder:
+ * Provides helper classes for encoding poly lines
  *
  * @author Rilind Gashi
  * @license MIT
@@ -42,6 +43,7 @@ public class PolyLineEncoder {
         StringBuilder encodedPoints = new StringBuilder();
         int prev_lat = 0, prev_lng = 0;
         for (GeoPoint trackpoint:polyline) {
+            //TODO: replace deprecated method invocations
             int lat = trackpoint.getLatitudeE6() / precision;
             int lng = trackpoint.getLongitudeE6() / precision;
             encodedPoints.append(encodeSignedNumber(lat - prev_lat));

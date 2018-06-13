@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.controllers;
 
 /**
  * ControllerEvent has information of a made request
+ *
  * @author Tobias Rüegsegger
  * @license MIT
  */

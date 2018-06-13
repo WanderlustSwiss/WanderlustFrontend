@@ -3,9 +3,10 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
 import org.osmdroid.util.GeoPoint;
 
 /**
- * PublicTransportPoint
- *
  * PublicTransportPoint with Coordinates and and description
+ *
+ * @author TODO ??
+ * @license MIT
  */
 public class PublicTransportPoint {
     private GeoPoint geoPoint;

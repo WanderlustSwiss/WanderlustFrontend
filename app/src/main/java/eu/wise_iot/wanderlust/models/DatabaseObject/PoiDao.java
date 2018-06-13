@@ -27,13 +27,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * PoiDao:
- * Represents POI controller
+ * Represents PoiDao to access its model
  *
- * @author Rilind Gashi, Alexander Weinbeck, Tobias Rüegsegger, Simon Kaspar
+ * @author Rilind Gashi
+ * @author Alexander Weinbeck
+ * @author Tobias Rüegsegger
+ * @author Simon Kaspar
  * @license MIT
  */
-
 public class PoiDao extends DatabaseObjectAbstract {
 
     private static final BoxStore BOXSTORE = DatabaseController.getBoxStore();

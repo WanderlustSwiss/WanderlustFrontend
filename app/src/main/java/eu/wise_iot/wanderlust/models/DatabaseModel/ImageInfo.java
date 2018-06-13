@@ -1,5 +1,11 @@
 package eu.wise_iot.wanderlust.models.DatabaseModel;
 
+/**
+ * TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class ImageInfo {
     private long id;
     private String path;

@@ -6,6 +6,12 @@ import java.io.File;
 
 import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 
+/**
+ * Poi command class for adding POIs
+ *
+ * @author TODO ?
+ * @license MIT
+ */
 public class AddPoiCommand implements QueueCommand {
 
     private final PoiController controller;

@@ -19,7 +19,8 @@ import io.objectbox.BoxStore;
  * Database controller which initializes all Model Dao objects
  * Use this statically to use dao models or boxstore
  *
- * @author Tobias Rüegsegger, Simon Kaspar
+ * @author Tobias Rüegsegger
+ * @author Simon Kaspar
  * @license MIT
  */
 public final class DatabaseController {

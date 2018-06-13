@@ -1,5 +1,6 @@
 package eu.wise_iot.wanderlust.views;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
@@ -42,7 +43,6 @@ import com.androidplot.xy.StepMode;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -52,7 +52,6 @@ import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polyline;
 
-import java.io.File;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
@@ -79,6 +78,8 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.UserComment;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Weather;
+import eu.wise_iot.wanderlust.services.FragmentService;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import eu.wise_iot.wanderlust.views.adapters.EquipmentRVAdapter;
 import eu.wise_iot.wanderlust.views.adapters.TourCommentRVAdapter;
@@ -90,9 +91,12 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 import static eu.wise_iot.wanderlust.controllers.EventType.OK;
 
 /**
- * TourController:
+ * Represents a tour and all its properties
  *
- * @author Alexander Weinbeck, Rilind Gashi, Baris Demirci, Simon Kaspar
+ * @author Alexander Weinbeck
+ * @author Rilind Gashi
+ * @author Baris Demirci
+ * @author Simon Kaspar
  * @license MIT
  */
 public class TourFragment extends Fragment {
@@ -143,6 +147,35 @@ public class TourFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * interface to notify hidden fragment of changes
+     */
+    EditedTour notifier;
+    public interface EditedTour {
+        void editedTour();
+        void editedFavorite(Tour tour, boolean isDeleted);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            notifier = (EditedTour) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement EditedTour");
+        }
+    }
+
+
+    @Override
+    public void onDetach() {
+        notifier = null; // avoid leaking
+        super.onDetach();
+    }
 
     /**
      * Static instance constructor.
@@ -342,9 +375,8 @@ public class TourFragment extends Fragment {
 
         updateRVComments(false);
     }
-    /**
-     * @param tour
-     */
+
+
     private void setupEquipment(Tour tour) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd. MMMM, HH:mm");
         String dateTime = selectedDateTime.toString(formatter);
@@ -371,19 +403,14 @@ public class TourFragment extends Fragment {
     }
 
     private void fillControls() {
-        List<File> images = imageController.getImages(tour.getImagePaths());
-        if (BuildConfig.DEBUG) Log.d("Debug", "Images size:" + images.size());
-        if (!images.isEmpty() && tour.getImagePaths().get(0) != null) {
-            Picasso handler = imageController.getPicassoHandler(getActivity());
-            //handler.setIndicatorsEnabled(true);
-            String url = ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/" + tour.getImagePaths().get(0).getId();
-            handler.load(url).fit().centerCrop().noFade().placeholder(R.drawable.progress_animation).into(imageViewTourImage);
-        } else {
-            Picasso.with(context)
-                    .load(R.drawable.no_image_found)
-                    .fit().centerCrop().placeholder(R.drawable.progress_animation)
-                    .into(imageViewTourImage);
-        }
+
+        GlideApp.with(getActivity())
+                .load(ServiceGenerator.API_BASE_URL + "/tour/" + tour.getTour_id() + "/img/1")
+                .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                .placeholder(R.drawable.progress_animation)
+                .centerCrop()
+                .into(imageViewTourImage);
+
 
         if (tourController.isFavorite()) {
             favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
@@ -424,22 +451,20 @@ public class TourFragment extends Fragment {
         textViewDifficulty.setText(tourController.getDifficultyMark());
     }
 
-    /**
-     *
-     */
     private void setupActionListeners() {
         tourSharedButton.setOnClickListener((View v) -> shareTour());
         tourReportButton.setOnClickListener((View v) -> reportTour());
         goToMapButton.setOnClickListener((View v) -> showMapWithTour());
-        backbutton.setOnClickListener((View v) -> getFragmentManager().popBackStack());
+        backbutton.setOnClickListener((View v) -> getActivity().onBackPressed());
         favButton.setOnClickListener((View v) -> toggleFavorite());
         tourSavedButton.setOnClickListener((View v) -> toggleSaved());
         sendCommentButton.setOnClickListener((View v) -> createComment());
         tourRating.setOnTouchListener((View v, MotionEvent e) -> {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 if (tourController.alreadyRated(tour.getTour_id()) == 0L) {
-                    TourRatingDialog dialog = new TourRatingDialog().newInstance(tour, tourController,this);
-                    dialog.show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
+                    new TourRatingDialog()
+                            .newInstance(tour, tourController,this)
+                            .show(getFragmentManager(), Constants.RATE_TOUR_DIALOG);
                 } else {
                     Toast.makeText(context, R.string.already_rated, Toast.LENGTH_SHORT).show();
                 }
@@ -451,7 +476,7 @@ public class TourFragment extends Fragment {
     }
 
     /**
-     * Takes an ExpandableTextView and a ImageButton and handles creates the behaviour.
+     * Takes an ExpandableTextView and a ImageButton and handles/creates the behaviour.
      *
      * @param textView ExpandableTextView
      * @param toggler  ImageButton
@@ -715,15 +740,18 @@ public class TourFragment extends Fragment {
             isFavoriteUpdate = true;
             tourController.unsetFavorite(controllerEvent -> {
                 favButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                notifier.editedFavorite(tourController.getCurrentTour(), true);
                 isFavoriteUpdate = false;
             });
         } else {
             isFavoriteUpdate = true;
             tourController.setFavorite(controllerEvent -> {
                 favButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+                notifier.editedFavorite(tourController.getCurrentTour(), false);
                 isFavoriteUpdate = false;
             });
         }
+
     }
 
     private void toggleSaved(){
@@ -732,20 +760,39 @@ public class TourFragment extends Fragment {
                 switch (controllerEvent.getType()){
                     case OK:
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        notifier.editedTour();
                         break;
                     default:
                 }
             });
-        }else{
-            tourController.setSaved(getActivity() , controllerEvent -> {
-                switch (controllerEvent.getType()){
-                    case OK:
+        } else {
+            Toast.makeText(context, R.string.download_started,Toast.LENGTH_LONG).show();
+            tourController.setSaved(getActivity(), controllerEvent -> {
+                switch (controllerEvent.getType()) {
+                    case DOWNLOAD_OK:
+                        Toast.makeText(context,R.string.download_ok, Toast.LENGTH_SHORT).show();
                         tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.medium));
+                        notifier.editedTour();
                         break;
-                    default:
-                        Toast.makeText(context, R.string.connection_fail, Toast.LENGTH_SHORT).show();
+                    case DOWNLOAD_NO_SPACE:
+                        Toast.makeText(context, R.string.download_no_space, Toast.LENGTH_SHORT).show();
+                        tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        break;
+                    case DOWNLOAD_FAILED:
+                        Toast.makeText(context,R.string.download_server_error,Toast.LENGTH_LONG).show();
+                        tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        break;
+                    case DOWNLOAD_ALREADY_DONE:
+                        Toast.makeText(context,R.string.download_already_done,Toast.LENGTH_LONG).show();
+                        tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.heading_icon_unselected));
+                        break;
+                    case PROGRESS_NOTIFICATION:
+                       // Toast.makeText(context, controllerEvent.getMessage(), Toast.LENGTH_SHORT).show();
+                        break;
                 }
+                if(BuildConfig.DEBUG) Log.d(TAG, "Response arrived: " + controllerEvent.getMessage() + controllerEvent.getType());
             });
+            notifier.editedTour();
         }
     }
     public void updateRating(TourRate tourRate){
@@ -883,31 +930,19 @@ public class TourFragment extends Fragment {
         }
         if (BuildConfig.DEBUG) Log.d(TAG, tourController.getPolyline());
         ArrayList<GeoPoint> polyList = PolyLineEncoder.decode(tourController.getPolyline(), 10);
-        Road road = new Road(polyList);
-        Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
 
+        Polyline roadOverlay = RoadManager.buildRoadOverlay(new Road(polyList));
         roadOverlay.setColor(getResources().getColor(R.color.highlight_main_transparent));
-        //Disable my location
+        //disable my location
         getActivity().getPreferences(Context.MODE_PRIVATE).edit().putBoolean(Constants.PREFERENCE_MY_LOCATION_ENABLED, false).apply();
         MapFragment mapFragment = MapFragment.newInstance(roadOverlay);
-        //remove the old fragment from stack
-        Fragment oldMapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-        if(oldMapFragment != null) {
-            getFragmentManager().beginTransaction()
-                    .remove(oldMapFragment)
-                    .commit();
-        }
-        //select map in navigationview
+        //select map in navigation-view
         NavigationView nv = getActivity().findViewById(R.id.nav_view);
         nv.getMenu().getItem(0).setChecked(true);
-        //add new fragment to stack
-        getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                .addToBackStack(null)
-                .commit();
 
-        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
-
+        FragmentService
+                .getInstance(getActivity())
+                .performTransaction(true,Constants.MAP_FRAGMENT,mapFragment,this,true);
     }
 
     /**

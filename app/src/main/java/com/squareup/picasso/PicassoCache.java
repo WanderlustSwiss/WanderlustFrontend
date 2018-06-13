@@ -5,6 +5,7 @@ package com.squareup.picasso;
  *
  *
  */
+//TODO: still needed?
 public class PicassoCache {
     //https://stackoverflow.com/questions/22016382/invalidate-cache-in-picasso
     public static void clearCache (Picasso p) {

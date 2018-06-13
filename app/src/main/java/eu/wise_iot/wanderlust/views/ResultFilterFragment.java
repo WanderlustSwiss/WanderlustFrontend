@@ -22,12 +22,12 @@ import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
 import eu.wise_iot.wanderlust.controllers.ResultFilterController;
-import eu.wise_iot.wanderlust.controllers.TourOverviewController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
+import eu.wise_iot.wanderlust.services.FragmentService;
 import eu.wise_iot.wanderlust.views.adapters.ResultFilterRVAdapter;
 
 /**
- * Fragment that contains the filtering functionality for all tours
+ * Contains the filtering functionality for all tours
  *
  * @author Alexander Weinbeck
  * @license MIT
@@ -55,7 +55,7 @@ public class ResultFilterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity().getApplicationContext();
+        context = getActivity();
         resultFilterController = new ResultFilterController();
         setHasOptionsMenu(true);
     }
@@ -64,7 +64,7 @@ public class ResultFilterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_tour_filter_result, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_tour_filter_result, container, false);
 
         // set up the RecyclerView 1
         pbToursFiltered = rootView.findViewById(R.id.pbTourResult);
@@ -90,7 +90,7 @@ public class ResultFilterFragment extends Fragment {
                     currentPage++;
                     if (BuildConfig.DEBUG) Log.d(TAG, "Getting filtered Tours: Server response arrived");
                     //get all the images needed and save them on the device
-                    getDataFromServer(listFilteredTours);
+                    //getDataFromServer(listFilteredTours);
                     adapterRoutes.notifyDataSetChanged();
                     if(adapterRoutes.getItemCount() > 0) {
                         rvToursFiltered.setVisibility(View.VISIBLE);
@@ -122,7 +122,7 @@ public class ResultFilterFragment extends Fragment {
                                                     LinkedList<Tour> newList = new LinkedList<>((List<Tour>)controllerEvent.getModel());
                                                     currentPage++;
                                                     listFilteredTours.addAll(newList);
-                                                    getDataFromServer(listFilteredTours);
+                                                    //getDataFromServer(listFilteredTours);
                                                     adapterRoutes.notifyDataSetChanged();
                                                     break;
                                                 default:
@@ -157,38 +157,26 @@ public class ResultFilterFragment extends Fragment {
      * @param view
      * @param tour
      */
-    @SuppressWarnings("WeakerAccess")
     protected void onItemClickImages(View view, Tour tour) {
         if (BuildConfig.DEBUG) Log.d(TAG, "Tour ImageInfo Clicked and event triggered ");
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, TourFragment.newInstance(tour), Constants.TOUR_FRAGMENT)
-                .addToBackStack(Constants.TOUR_FRAGMENT)
-                .commit();
+        FragmentService.getInstance(getActivity()).performTraceTransaction(true, Constants.TOUR_FRAGMENT,TourFragment.newInstance(tour),this);
+        /*
+        Fragment fragment = getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT);
+        if(fragment != null && fragment.isAdded()) {
+            getFragmentManager().beginTransaction()
+                    .hide(this)
+                    .remove(getFragmentManager().findFragmentByTag(Constants.TOUR_FRAGMENT))
+                    .add(R.id.content_frame,TourFragment.newInstance(tour))
+                    .commit();
+        } else {
+            getFragmentManager().beginTransaction()
+                    .hide(this)
+                    .add(R.id.content_frame,TourFragment.newInstance(tour))
+                    .commit();
+        }
         //((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        */
     }
 
-    /**
-     * retrieve all images from the database
-     * @param tours
-     */
-    private static void getDataFromServer(List<Tour> tours){
-        TourOverviewController toc = new TourOverviewController();
-        //get thumbnail for each tour
-        for(Tour ut : tours){
-            try {
-                toc.downloadThumbnail(ut.getTour_id(), 1, controllerEvent -> {
-                    switch (controllerEvent.getType()) {
-                        case OK:
-                            if (BuildConfig.DEBUG) Log.d(TAG, "Server response thumbnail downloading: " + controllerEvent.getType().name());
-                            break;
-                        default:
-                            if (BuildConfig.DEBUG) Log.d(TAG, "Server response thumbnail ERROR: " + controllerEvent.getType().name());
-                    }
-                });
-            } catch (Exception e){
-                if (BuildConfig.DEBUG) Log.d(TAG, "Server response ERROR: " + e.getMessage());
-            }
-        }
-    }
 }

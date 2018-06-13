@@ -2,6 +2,7 @@ package eu.wise_iot.wanderlust.services;
 
 import android.util.Log;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -10,7 +11,7 @@ import java.util.concurrent.ThreadFactory;
 import eu.wise_iot.wanderlust.BuildConfig;
 
 /**
- * this class provides a thread queue for low priority
+ * Provides a thread queue for low priority
  * load tasks in the background
  * for example downloads
  *
@@ -33,6 +34,7 @@ public class AsyncDownloadQueueTask {
                 threadCount++;
                 Thread t = defaultThreadFactory.newThread(r);
                 t.setPriority(Thread.MIN_PRIORITY);
+                t.setDaemon(true);
                 return t;
             }
         });
@@ -48,6 +50,9 @@ public class AsyncDownloadQueueTask {
         return asyncDownloadQueueTask;
     }
 
+    public synchronized Future queueTask(Callable r){
+        return executorService.submit(r);
+    }
     public synchronized Future queueTask(Runnable r){
         return executorService.submit(r);
     }

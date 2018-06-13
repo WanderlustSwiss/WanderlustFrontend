@@ -1,8 +1,15 @@
 package eu.wise_iot.wanderlust.controllers;
 
 import java.util.List;
+
 import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
 
+/**
+ * Represents Tasks related to images TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class ImagesTaskParameters {
     final long id;
     final List<ImageInfo> imageInfos;

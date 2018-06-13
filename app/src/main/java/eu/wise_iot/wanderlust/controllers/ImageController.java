@@ -35,6 +35,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 
+/**
+ * Handles logic related to Images
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class ImageController {
     private static final String TAG = "ImageController";
     private static class Holder {

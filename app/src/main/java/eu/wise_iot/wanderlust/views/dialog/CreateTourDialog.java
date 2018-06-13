@@ -12,21 +12,19 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import org.osmdroid.util.GeoPoint;
 
@@ -54,13 +52,14 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
 import eu.wise_iot.wanderlust.models.DatabaseModel.TourKit;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Trip;
+import eu.wise_iot.wanderlust.services.GlideApp;
 import eu.wise_iot.wanderlust.views.controls.EquipmentCompletionView;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-/** tourkitExtraKitInput
- * CreateTour:
+/**
+ * CreateTour: TODO description
  *
  * @author Joshua Meier
  * @license MIT
@@ -92,7 +91,7 @@ public class CreateTourDialog extends DialogFragment {
     private CheckBox winterCheckBox;
 
     private ImageView tourImageDisplay;
-    private AppCompatButton uploadImageBtn;
+    private Button uploadImageBtn;
     private ImageButton buttonSave;
     private ImageButton buttonCancel;
     private TourController tourController;
@@ -439,8 +438,15 @@ public class CreateTourDialog extends DialogFragment {
         }
 
         if (imageBitmap != null) {
-            Picasso.with(getActivity().getApplicationContext())
+//            Picasso.with(getActivity().getApplicationContext())
+//                    .load(returnUri)
+//                    .into(tourImageDisplay);
+
+            GlideApp.with(getActivity())
                     .load(returnUri)
+                    .error(GlideApp.with(getActivity()).load(R.drawable.no_image_found).centerCrop())
+                    .placeholder(R.drawable.progress_animation)
+                    .centerCrop()
                     .into(tourImageDisplay);
         }
     }

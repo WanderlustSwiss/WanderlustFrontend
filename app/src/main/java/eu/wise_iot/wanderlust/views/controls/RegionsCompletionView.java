@@ -15,9 +15,10 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Region;
 import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
 
 /**
- * represents a token auto complete textview used for putting in regions with usage of 3rd party library
- * see TokenCompleteTextView for reference
- * inside the filter
+ * Represents a token auto complete text-view used for putting in regions
+ * with usage of third party library
+ * see TokenCompleteTextView for reference inside the filter
+ *
  * @author Alexander Weinbeck
  * @license MIT
  */

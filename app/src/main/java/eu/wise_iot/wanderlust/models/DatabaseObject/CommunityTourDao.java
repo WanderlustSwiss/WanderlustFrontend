@@ -1,7 +1,10 @@
 package eu.wise_iot.wanderlust.models.DatabaseObject;
 
+import android.util.Log;
+
 import java.util.List;
 
+import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.controllers.ControllerEvent;
 import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
@@ -18,17 +21,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * CommunityTourDao:
- *
- * this model represents a saved tour out of the existing tours
- * it is important to distinguish CommunityTour with UserTour
+ * This model represents a saved tour out of the existing tours
+ * it is important to distinguish CommunityTour from UserTour
  *
  *
- * @author Rilind Gashi, Alexander Weinbeck, Simon Kaspar
+ * @author Rilind Gashi
+ * @author Alexander Weinbeck
+ * @author Simon Kaspar
  * @license MIT
  */
-
-
 public class CommunityTourDao extends DatabaseObjectAbstract {
     private static class Holder {
         private static final CommunityTourDao INSTANCE = new CommunityTourDao();
@@ -131,6 +132,33 @@ public class CommunityTourDao extends DatabaseObjectAbstract {
                 handler.onResponse(new ControllerEvent(EventType.NETWORK_ERROR));
             }
         });
+    }
+    /**
+     * get usertour out of the remote database by entity
+     *
+     * @param id
+     * @param handler
+     */
+
+    public ControllerEvent<SavedTour> retrieveSequential(final long id) {
+        final long[] newUserTourID = new long[1];
+        Call<SavedTour> call = service.retrieveTour(id);
+        try {
+            Response<SavedTour> response = call.execute();
+            if (response.isSuccessful()) {
+                if(BuildConfig.DEBUG) Log.d("retrieveSequential", "OK arrived saving tour");
+                SavedTour backendTour = response.body();
+                //routeBox.put(backendTour); wieso in die lokale db einfügen ??
+                newUserTourID[0] = backendTour.getInternal_id();
+                return new ControllerEvent(EventType.getTypeByCode(response.code()), backendTour);
+            } else {
+                return new ControllerEvent(EventType.getTypeByCode(response.code()));
+            }
+        } catch (Exception e){
+            if (BuildConfig.DEBUG) Log.d("retrieveSequential", "exception catched: " + e.toString() + e.getMessage() + e.getStackTrace());
+            return new ControllerEvent(EventType.SERVER_ERROR);
+            //handler.onResponse(new ControllerEvent(EventType.SERVER_ERROR));
+        }
     }
 
     public SavedTour findOne(Property searchedColumn, String searchPattern) {

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +39,7 @@ import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
- * Login Fragment which handles front end inputs of the user for login
+ * Handles front end inputs of the user for login
  *
  * @author Joshua Meier
  * @license MIT
@@ -156,14 +157,21 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
                             if (userGuideFragment == null)
                                 userGuideFragment = UserGuideFragment.newInstance();
 
+                            NavigationView nv = getActivity().findViewById(R.id.nav_view);
+                            nv.getMenu().getItem(3).setChecked(true);
+
                             getFragmentManager().beginTransaction()
                                     .replace(R.id.content_frame, userGuideFragment, Constants.USER_GUIDE_FRAGMENT)
-                                    .addToBackStack(Constants.USER_GUIDE_FRAGMENT)
+                                    //.addToBackStack(Constants.USER_GUIDE_FRAGMENT)
                                     .commit();
                         } else {
 
                             Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
                             if (mapFragment == null) mapFragment = MapFragment.newInstance();
+
+                            NavigationView nv = getActivity().findViewById(R.id.nav_view);
+                            nv.getMenu().getItem(0).setChecked(true);
+
                             getFragmentManager().beginTransaction()
                                     .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
                                     .commit();

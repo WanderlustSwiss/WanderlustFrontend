@@ -35,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 /**
- * MapController: The Map controller which handles requests of the map fragment
+ * Handles requests of the map fragment and the map itself
  *
  * @author Joshua Meier
  */

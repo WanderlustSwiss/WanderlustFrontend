@@ -1,26 +1,40 @@
 package eu.wise_iot.wanderlust.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * Constants:
+ * Defines all constants app-wide used
  *
  * @author Fabian Schwander
+ * @author Alexander Weinbeck
  * @license MIT
  */
-public interface Constants {
+public interface Constants{
 
-    // POI new types
+    /**
+     * POI TYPES
+     */
     int TYPE_VIEW = 1;
     int TYPE_RESTAURANT = 2;
     int TYPE_REST_AREA = 3;
     int TYPE_FLORA_FAUNA = 4;
 
-    // GeoObjectTypes
+    /**
+     * GEO OBJECT TYPES
+     */
     long TYPE_SAC = -1;
 
-    /* ACTIVITIES */
+    /**
+     * ACTIVITIES
+     */
     String MAIN_ACTIVITY = "MainActivity";
+    String CAMERA_ACTIVITY = "Camera";
 
-    /* FRAGMENTS */
+    /**
+     * FRAGMENTS
+     * Add a new fragment here, DO NOT FORGET to also add it to the pool (see below)
+     */
     String MAP_FRAGMENT = "MapFragment";
     String TOUR_FRAGMENT = "TourFragment";
     String FILTER_FRAGMENT = "FilterFragment";
@@ -37,8 +51,30 @@ public interface Constants {
     String PROCESSING_FRAGMENT = "ProcessingFragment";
     String BACKGROUND_FRAGMENT = "BackgroundFragment";
 
+    /**
+     * FRAGMENT POOL
+     * Always add fragment also here
+     * else the fragment switching in drawer menu WILL NOT WORK!
+     */
+    List<String> fragmentPool = Arrays.asList(
+            DISCLAIMER_FRAGMENT,
+            PROFILE_EDIT_FRAGMENT,
+            MAP_FRAGMENT,
+            PROFILE_FRAGMENT,
+            TOUROVERVIEW_FRAGMENT,
+            USER_GUIDE_FRAGMENT,
+            TOUR_FRAGMENT,
+            FILTER_FRAGMENT,
+            RESULT_FILTER_FRAGMENT,
+            LOGIN_FRAGMENT,
+            RESET_PASSWORD_FRAGMENT,
+            REGISTRATION_FRAGMENT);
+
     String MY_MAP_OVERLAYS = "MyMapOverlays";
-    String CAMERA_ACTIVITY = "Camera";
+
+    /**
+     * DIALOGS
+     */
     String DISPLAY_FEEDBACK_DIALOG = "DisplayFeedbackDialog";
     String EDIT_POI_DIALOG = "PoiFeedbackDialog";
     String RATE_TOUR_DIALOG = "TourRatingDialog";
@@ -46,11 +82,12 @@ public interface Constants {
     String EQUIPMENT_DIALOG = "EquipmentDialog";
     String REPORT_TOUR_DIALOG = "TourReportDialog";
     String REPORT_POI_DIALOG = "PoiReportDialog";
-
     String CREATE_TOUR_DIALOG = "CreateTourDialog";
     String CONFIRM_DELETE_POI_DIALOG = "YesNoDialog";
 
-    /* PHOTO INTENT */
+    /**
+     * PHOTO INTENTS
+     */
     String IMAGE_FILE_NAME = "imageFileName";
     String IMAGE_PATH = "imagePath";
     String PREFERENCE_FILE_POSITIONS = "preference_file_positions";
@@ -64,10 +101,10 @@ public interface Constants {
     String FEEDBACK_DESCRIPTION = "feedback_description";
     String POI_IS_NEW = "isNew";
 
-    /* TOUR */
-    String CLICKED_TOUR = "clicked_tour";
 
-    /* PREFERENCES */
+    /**
+     * PREFERENCES
+     */
     String PREFERENCE_MY_LOCATION_ENABLED = "buttonLocationToggler";
     String PREFERENCE_BUTTON_LOCATION_CLICKED = "buttonLocationFirstClick";
     String PREFERENCE_POITYPE_RESTAURANT_ACTIVE = "PoiTypeRestaurantActive";
@@ -79,11 +116,15 @@ public interface Constants {
     String PREFERENCE_PUBLICTRANSPORT_LAYER_ACTIVE = "PoiTypeViewActive";
 
 
-    /* INTENTS */
+    /**
+     * INTENTS
+     */
     int TAKE_PHOTO = 1;
     int REQUEST_FOR_MULTIPLE_PERMISSIONS = 2;
 
-    /* Create Tour */
+    /**
+     * INTENTS
+     */
     String CREATE_TOUR_INTENT = "gpsTrackingFinished";
     String CREATE_TOUR_TRACK = "tourTrackGeoPoints";
     String CREATE_TOUR_BUNDLE = "tourTrackBundle";

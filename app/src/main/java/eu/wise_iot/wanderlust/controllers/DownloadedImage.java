@@ -2,6 +2,12 @@ package eu.wise_iot.wanderlust.controllers;
 
 import java.io.File;
 
+/**
+ * Represents a downloaded Image
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class DownloadedImage {
     private final File image;
     private final long size;

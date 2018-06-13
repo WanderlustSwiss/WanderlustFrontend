@@ -9,6 +9,12 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+/**
+ * Handles an offline queue used for TODO ??
+ *
+ * @author TODO ??
+ * @license MIT
+ */
 public class OfflineQueueController {
 
     private final ArrayList<QueueCommand> list = new ArrayList<>();
@@ -60,7 +66,12 @@ public class OfflineQueueController {
         isRunning = false;
     }
 
-
+    /**
+     * Handles network changes
+     *
+     * @author TODO ??
+     * @license MIT
+     */
     public static class NetworkChangeReceiver extends BroadcastReceiver {
 
         private final OfflineQueueController offlineQueueController;
@@ -83,7 +94,12 @@ public class OfflineQueueController {
         }
     }
 
-
+    /**
+     * Helper class for network
+     *
+     * @author TODO ??
+     * @license MIT
+     */
     private static class NetworkUtil {
 
         private static boolean getConnectivityStatusString(Context context) {

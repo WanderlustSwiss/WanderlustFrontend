@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,15 +16,14 @@ import eu.wise_iot.wanderlust.BuildConfig;
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.controllers.ImageController;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
-import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
-import eu.wise_iot.wanderlust.views.animations.CircleTransform;
+import eu.wise_iot.wanderlust.services.GlideApp;
 
 
 /**
- * MyAdapter:
- * provides adapter for recyclerview which is used to show equipment needed on a equipment
+ * Provides adapter for recycler view which is used to show equipment needed on an equipment
  *
  * @author Alexander Weinbeck
+ * @license MIT
  */
 public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.ViewHolder> {
 
@@ -76,16 +72,14 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
         Equipment equipment = this.equipment.get(position);
         //load image
         holder.tvTitle.setText(equipment.getName());
-        ImageInfo imagepath = equipment.getImagePath();
-        if(imagepath == null){
-            Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
-        }else{
-            File image = imageController.getImage(equipment.getImagePath());
-            if (image == null)
-                Picasso.with(context).load(R.drawable.no_image_found).fit().centerCrop().transform(new CircleTransform()).placeholder(R.drawable.progress_animation).into(holder.ivImage);
-            else
-                Picasso.with(context).load(image).placeholder(R.drawable.loader).fit().centerCrop().transform(new CircleTransform()).into(holder.ivImage);
-        }
+
+        GlideApp.with(context)
+                .load(imageController.getImage(equipment.getImagePath()))
+                .error(GlideApp.with(context).load(R.drawable.no_image_found).circleCrop())
+                .placeholder(R.drawable.progress_animation)
+                .circleCrop()
+                .into(holder.ivImage);
+//        }
     }
 
     /**

@@ -18,7 +18,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
 import eu.wise_iot.wanderlust.services.GlideApp;
 
 /**
- * Adapter for the profile UI. Represents all favorites in a custom list view
+ * Adapter for the profile Poi UI. Represents all favorites in a custom list view
  *
  * @author Alexander Weinbeck
  * @license MIT
@@ -60,7 +60,7 @@ public class ProfilePOIRVAdapter extends RecyclerView.Adapter<ProfilePOIRVAdapte
 
         GlideApp.with(context)
                 .load(imageController.getURLImagePOISingle(poi))
-                .error(R.drawable.no_image_found)
+                .error(GlideApp.with(context).load(R.drawable.no_image_found).centerCrop())
                 .placeholder(R.drawable.progress_animation)
                 .centerCrop()
                 .into(holder.tripImage);

@@ -4,6 +4,9 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
  * AddressPoint
  * <p>
  * Address from coordinates
+ *
+ * @author TODO ??
+ * @license MIT
  */
 public class AddressPoint {
 

@@ -30,8 +30,7 @@ import eu.wise_iot.wanderlust.services.GlideApp;
 
 
 /**
- * MyAdapter:
- * provides adapter for recycler view which is used by the tourslist
+ * Provides adapter for recycler view which is used by the tours list
  *
  * @author Alexander Weinbeck
  * @license MIT
@@ -111,6 +110,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
                     holder.ibFavorite.setColorFilter(ContextCompat.getColor(context, R.color.highlight_main));
                     //add to favored tours
                     //favorizedTours.add(favorite.getTour());
+            holder.notify();
         });
         holder.tvTitle.setText(tour.getTitle());
         holder.tvDistance.setText(TourController.convertToStringDistance(tour.getDistance()));
@@ -120,7 +120,7 @@ public class ToursOverviewRVAdapter extends RecyclerView.Adapter<ToursOverviewRV
         GlideApp.with(context)
                 .load(imageController.getURLImageTourSingle(tour))
                 .signature(new ObjectKey(System.currentTimeMillis() / (24 * 60 * 60 * 1000)))
-                .error(R.drawable.no_image_found)
+                .error(GlideApp.with(context).load(R.drawable.no_image_found).centerCrop())
                 .placeholder(R.drawable.progress_animation)
                 .centerCrop()
                 .into(holder.tvImage);
