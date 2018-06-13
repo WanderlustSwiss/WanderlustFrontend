@@ -6,18 +6,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
+import eu.wise_iot.wanderlust.views.adapters.UserGuidePagerAdapter;
 
 /**
  * Fragment that contains a manual / user guide. Explains the most important features of the app.
@@ -28,12 +28,10 @@ import eu.wise_iot.wanderlust.constants.Constants;
 public class UserGuideFragment extends Fragment {
 
     private SharedPreferences preferences;
+    private boolean firstTimeOpened;
 
     private Button goToMapButton;
     private CheckBox disclaimerAccepted;
-
-    private boolean firstTimeOpened;
-
 
     public static UserGuideFragment newInstance() {
         Bundle args = new Bundle();
@@ -59,43 +57,46 @@ public class UserGuideFragment extends Fragment {
         goToMapButton = rootView.findViewById(R.id.btn_go_to_map);
         disclaimerAccepted = rootView.findViewById(R.id.disclaimer_accepted_check_box);
 
+        ViewPager viewPager = rootView.findViewById(R.id.viewpager);
+        viewPager.setAdapter(new UserGuidePagerAdapter(getActivity()));
+
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        View container = view.findViewById(R.id.disclaimer_accept_container);
-
-        if (firstTimeOpened) {
-            goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.heading_icon_unselected));
-
-            disclaimerAccepted.setOnCheckedChangeListener((compoundButton, b) -> {
-                if (disclaimerAccepted.isChecked()) {
-                    goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.primary_main));
-                } else {
-                    goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.heading_icon_unselected));
-                }
-            });
-        } else {
-            container.setVisibility(View.GONE);
-        }
-
-        goToMapButton.setOnClickListener(v -> {
-            if (disclaimerAccepted.isChecked() || container.getVisibility() == View.GONE) {
-                Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
-                if (mapFragment == null) mapFragment = MapFragment.newInstance();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
-                        .commit();
-
-                // save that app has been opened
-                preferences.edit().putBoolean("firstTimeOpened", false).apply();
-
-                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-            } else {
-                Toast.makeText(getActivity(), R.string.msg_accept_disclaimer, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        View container = view.findViewById(R.id.disclaimer_accept_container);
+//
+//        if (firstTimeOpened) {
+//            goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.heading_icon_unselected));
+//
+//            disclaimerAccepted.setOnCheckedChangeListener((compoundButton, b) -> {
+//                if (disclaimerAccepted.isChecked()) {
+//                    goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.primary_main));
+//                } else {
+//                    goToMapButton.setBackgroundTintList(getActivity().getResources().getColorStateList(R.color.heading_icon_unselected));
+//                }
+//            });
+//        } else {
+//            container.setVisibility(View.GONE);
+//        }
+//
+//        goToMapButton.setOnClickListener(v -> {
+//            if (disclaimerAccepted.isChecked() || container.getVisibility() == View.GONE) {
+//                Fragment mapFragment = getFragmentManager().findFragmentByTag(Constants.MAP_FRAGMENT);
+//                if (mapFragment == null) mapFragment = MapFragment.newInstance();
+//                getFragmentManager().beginTransaction()
+//                        .replace(R.id.content_frame, mapFragment, Constants.MAP_FRAGMENT)
+//                        .commit();
+//
+//                // save that app has been opened
+//                preferences.edit().putBoolean("firstTimeOpened", false).apply();
+//
+//                ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+//            } else {
+//                Toast.makeText(getActivity(), R.string.msg_accept_disclaimer, Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 }
