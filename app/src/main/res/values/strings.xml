@@ -269,7 +269,7 @@
     <string name="manual_welcome">Willkommen bei Wanderlust! Hier eine kurze Anleitung über die Funktionen, die dich erwarten.</string>
     <string name="manual_header">Wanderlust-Anleitung</string>
     <string name="manual_finish_text1">Jetzt weisst du alles, was es über die Wanderlust-App zu wissen gibt.</string>
-    <string name="manual_finish_text2">Klicke auf <b>los geh\'s</b> um das Abenteuer zu starten!</string>
+    <string name="manual_finish_text2">Klicke auf <b>los geht\'s</b> um das Abenteuer zu starten!</string>
     <string name="manual_poi_header">POI (Point of Interest)</string>
     <string name="manual_poi_text">Mit dem POI-Button kannst du eindrückliche Orte fotografieren und den POI entweder nur privat für dich speichern oder ihn mit der Community teilen.</string>
     <string name="manual_header_search">Suche</string>
@@ -327,4 +327,6 @@
     <string name="report_tour">Diese Tour melden</string>
     <string name="report_tour_introduction">Enthält die Tour anstössige Inhalte, ist sie unnötig oder willst du sie aus einem anderen Grund melden? Hier klicken</string>
     <string name="commercial_announcement">Hier könnte deine Werbung stehen :)</string>
+    <string name="msg_accept_disclaimer">Die Haftungsbedingungen müssen akzeptiert sein.</string>
+    <string name="user_guide_accept_disclaimer">Ich bin mir bewusst, dass Wandern immer ein Restrisiko birgt. Die Haftungsbedingungen von Wanderlust habe ich gelesen und akzeptiert.</string>
 </resources>

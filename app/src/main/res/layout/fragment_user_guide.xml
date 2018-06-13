@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_two_and_inactive"
@@ -17,10 +16,10 @@
             android:layout_height="wrap_content"
             android:divider="@drawable/divider_vertical"
             android:orientation="vertical"
-            android:showDividers="middle"
-            android:paddingTop="52dp"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp">
+            android:paddingRight="12dp"
+            android:paddingTop="52dp"
+            android:showDividers="middle">
 
             <TextView
                 style="@style/p"
@@ -175,49 +174,77 @@
                     android:id="@+id/manual_container_finish"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:divider="@drawable/divider_vertical"
-                    android:orientation="vertical"
-                    android:padding="36dp"
-                    android:showDividers="middle">
+                    android:orientation="vertical">
 
-                    <TextView
-                        style="@style/h1"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/manual_header"
-                        android:textAlignment="center" />
-
-                    <TextView
-                        style="@style/p"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/manual_finish_text1"
-                        android:textAlignment="center" />
-
-                    <TextView
-                        style="@style/p"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/manual_finish_text2"
-                        android:textAlignment="center" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="150dp"
                         android:layout_gravity="center"
-                        android:padding="10dp"
-                        android:src="@drawable/temp_logo" />
-                </LinearLayout>
-            </LinearLayout>
+                        android:divider="@drawable/divider_vertical"
+                        android:orientation="vertical"
+                        android:padding="36dp"
+                        android:showDividers="middle">
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn_go_to_map"
-                style="@style/standard_button"
-                android:layout_width="fill_parent"
-                android:layout_marginBottom="48dp"
-                android:padding="12dp"
-                android:text="@string/msg_lets_go" />
+                        <TextView
+                            style="@style/h1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/manual_header"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            style="@style/p"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/manual_finish_text1"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            style="@style/p"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/manual_finish_text2"
+                            android:textAlignment="center" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="150dp"
+                            android:layout_gravity="center"
+                            android:padding="10dp"
+                            android:src="@drawable/temp_logo" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <CheckBox
+                                android:id="@+id/disclaimer_accepted_check_box"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:checked="false"
+                                android:paddingRight="4dp" />
+
+                            <TextView
+                                style="@style/p"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/disclaimer_accepted_check_box"
+                                android:text="@string/user_guide_accept_disclaimer" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/btn_go_to_map"
+                        style="@style/standard_button"
+                        android:padding="12dp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="48dp"
+                        android:text="@string/msg_lets_go" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
