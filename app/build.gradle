@@ -13,9 +13,9 @@ android {
         applicationId "eu.wise_iot.wanderlust"
         minSdkVersion 21
         //noinspection OldTargetApi
-        targetSdkVersion 25
-        versionCode 6
-        versionName "0.6.0"
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
