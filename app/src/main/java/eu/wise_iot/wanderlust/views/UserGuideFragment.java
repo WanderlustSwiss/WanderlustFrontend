@@ -7,13 +7,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import eu.wise_iot.wanderlust.R;
@@ -28,11 +27,12 @@ import eu.wise_iot.wanderlust.constants.Constants;
 public class UserGuideFragment extends Fragment {
 
     private SharedPreferences preferences;
+    private boolean firstTimeOpened;
 
     private Button goToMapButton;
     private CheckBox disclaimerAccepted;
+    private TextView readDisclaimerLink;
 
-    private boolean firstTimeOpened;
 
 
     public static UserGuideFragment newInstance() {
@@ -58,6 +58,7 @@ public class UserGuideFragment extends Fragment {
 
         goToMapButton = rootView.findViewById(R.id.btn_go_to_map);
         disclaimerAccepted = rootView.findViewById(R.id.disclaimer_accepted_check_box);
+        readDisclaimerLink = rootView.findViewById(R.id.read_disclaimer_link);
 
         return rootView;
     }
@@ -96,6 +97,16 @@ public class UserGuideFragment extends Fragment {
             } else {
                 Toast.makeText(getActivity(), R.string.msg_accept_disclaimer, Toast.LENGTH_LONG).show();
             }
+        });
+
+        readDisclaimerLink.setOnClickListener(v -> {
+            Fragment disclaimerFragment = getFragmentManager().findFragmentByTag(Constants.DISCLAIMER_FRAGMENT);
+            if (disclaimerFragment == null)
+                disclaimerFragment = DisclaimerFragment.newInstance();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, disclaimerFragment, Constants.DISCLAIMER_FRAGMENT)
+                    .addToBackStack(Constants.DISCLAIMER_FRAGMENT)
+                    .commit();
         });
     }
 }

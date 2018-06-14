@@ -3,7 +3,8 @@
     android:layout_height="100dp"
     android:background="@color/background_main"
     android:clickable="true"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:layout_marginBottom="1dp">
 
     <ImageView
         android:id="@+id/list_fav_image_view"

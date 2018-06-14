@@ -197,7 +197,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone"
-            android:text="@string/msg_no_data_found"/>
+            android:text="@string/msg_no_data_found"
+            style="@style/p.Light"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/listContent"
