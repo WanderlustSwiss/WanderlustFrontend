@@ -154,6 +154,7 @@ public class PoiViewDialog extends DialogFragment {
         });
 
         editPoiButton.setOnClickListener(v -> {
+
             if (controller.isOwnerOf(currentPoi)) {
                 PoiEditDialog dialog = PoiEditDialog.newInstance(currentPoi);
                 dialog.show(getFragmentManager(), Constants.EDIT_POI_DIALOG);

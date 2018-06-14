@@ -114,9 +114,7 @@ public class FilterFragment extends Fragment {
             imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             return true;
         });
-
-
-
+        
         ratingBar.setOnTouchListener((View v, MotionEvent e) -> {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 TourRatingDialogFilter dialog = new TourRatingDialogFilter().newInstance(filterController, ratingBar);
