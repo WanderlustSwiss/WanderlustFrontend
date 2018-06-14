@@ -329,10 +329,4 @@
     <string name="commercial_announcement">Hier könnte deine Werbung stehen :)</string>
     <string name="msg_accept_disclaimer">Die Haftungsbedingungen müssen akzeptiert sein.</string>
     <string name="user_guide_accept_disclaimer">Ich bin mir bewusst, dass Wandern immer ein Restrisiko birgt. Die Haftungsbedingungen von Wanderlust habe ich gelesen und akzeptiert.</string>
-    <string name="user_guide_page_poi">POI</string>
-    <string name="user_guide_page_search">Suche</string>
-    <string name="user_guide_page_filter">Filter</string>
-    <string name="user_guide_page_profile">Profil</string>
-    <string name="user_guide_page_dashboard">Dashboard</string>
-    <string name="user_guide_page_start">Start</string>
 </resources>
