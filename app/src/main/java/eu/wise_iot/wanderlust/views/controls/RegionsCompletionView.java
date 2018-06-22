@@ -37,7 +37,6 @@ public class RegionsCompletionView extends TokenCompleteTextView<Region> {
 
     @Override
     protected Region defaultObject(String completionText) {
-
         for(Region region : RegionDao.getInstance().find())
            if(region.getName().toLowerCase().contains(completionText) || region.getName().contains(completionText))
                return region;

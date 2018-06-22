@@ -18,7 +18,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RatingBar;
 
+import com.google.gson.Gson;
+
 import org.florescu.android.rangeseekbar.RangeSeekBar;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import eu.wise_iot.wanderlust.R;
 import eu.wise_iot.wanderlust.constants.Constants;
@@ -92,7 +97,13 @@ public class FilterFragment extends Fragment {
         rsbDuration.setSelectedMaxValue(sharedPreferences.getFloat("filter_duratione",40f));
         rsbDuration.setSelectedMinValue(sharedPreferences.getFloat("filter_durations",0.0f));
         tiName.setText(sharedPreferences.getString("filter_name", ""));
-        tiRegion.setText(sharedPreferences.getString("filter_region", ""));
+        //tiRegion.setText(sharedPreferences.getString("filter_region", ""));
+
+        Gson gson = new Gson();
+        //set = sharedPreferences.getStringSet("filter_region", new HashSet<>(1));
+
+        for(String region : sharedPreferences.getStringSet("filter_region", new HashSet<>()))
+            tiRegion.addObject(gson.fromJson(region, Region.class));
 
         return view;
     }
@@ -175,23 +186,18 @@ public class FilterFragment extends Fragment {
         editor.putFloat("filter_durations", rsbDuration.getSelectedMinValue().floatValue());
         editor.putFloat("filter_duratione", rsbDuration.getSelectedMaxValue().floatValue());
         editor.putString("filter_name", tiName.getText().toString());
-        editor.putString("filter_region", tiRegion.getText().toString());
+
+        Gson gson = new Gson();
+        Set<String> regions = new HashSet<>();
+        for(Region region : tiRegion.getObjects())
+            regions.add(gson.toJson(region));
+
+        editor.putStringSet("filter_region", regions);
         editor.apply();
 
         FragmentService
                 .getInstance(getActivity())
                 .performTraceTransaction(true, Constants.RESULT_FILTER_FRAGMENT, ResultFilterFragment.newInstance(setting),this);
-/*        getFragmentManager().beginTransaction().hide(this).commit();
-
-        Fragment resultFragment = getFragmentManager().findFragmentByTag(Constants.RESULT_FILTER_FRAGMENT);
-        if (resultFragment != null) getFragmentManager().beginTransaction().remove(resultFragment).commit();
-
-        ResultFilterFragment resultFilterFragment = ResultFilterFragment.newInstance(setting);
-        getFragmentManager().beginTransaction()
-                .add(R.id.content_frame, resultFilterFragment, Constants.RESULT_FILTER_FRAGMENT)
-                //.addToBackStack(Constants.FILTER_FRAGMENT)
-                .commit();*/
-        //((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
     /**
