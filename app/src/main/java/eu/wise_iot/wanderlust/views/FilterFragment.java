@@ -124,7 +124,14 @@ public class FilterFragment extends Fragment {
         });
 
         btnSearch.setOnClickListener((View v) -> performSearch());
+        tiRegion.performBestGuess(true);
+        tiRegion.setSplitChar(new char[]{',', ';', ' '});
         tiRegion.setThreshold(1);
+        tiRegion.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                tiRegion.performCompletion();
+            }
+        });
 
         ArrayAdapter<Region> regionAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, filterController.getRegions());
         tiRegion.setAdapter(regionAdapter);

@@ -37,9 +37,8 @@ public class RegionsCompletionView extends TokenCompleteTextView<Region> {
 
     @Override
     protected Region defaultObject(String completionText) {
-        //Stupid simple example of guessing if we have an email or not
-        RegionDao regionDao = RegionDao.getInstance();
-        for(Region region : regionDao.find())
+
+        for(Region region : RegionDao.getInstance().find())
            if(region.getName().toLowerCase().contains(completionText) || region.getName().contains(completionText))
                return region;
         return null;
