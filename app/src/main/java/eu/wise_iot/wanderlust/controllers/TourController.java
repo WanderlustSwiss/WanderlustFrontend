@@ -173,6 +173,7 @@ public class TourController {
                     if (BuildConfig.DEBUG) Log.d(TAG, "OK arrived saving tour controller");
                     SavedTour data = event.getModel();
                     //save tour in local db
+                    communityTourDao.update(data);
                     new MapCacheHandler(context, data.toTour())
                             .downloadMap(data, handler::onResponse);
                     break;

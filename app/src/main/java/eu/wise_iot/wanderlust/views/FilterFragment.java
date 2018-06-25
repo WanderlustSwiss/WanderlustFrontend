@@ -97,11 +97,8 @@ public class FilterFragment extends Fragment {
         rsbDuration.setSelectedMaxValue(sharedPreferences.getFloat("filter_duratione",40f));
         rsbDuration.setSelectedMinValue(sharedPreferences.getFloat("filter_durations",0.0f));
         tiName.setText(sharedPreferences.getString("filter_name", ""));
-        //tiRegion.setText(sharedPreferences.getString("filter_region", ""));
 
         Gson gson = new Gson();
-        //set = sharedPreferences.getStringSet("filter_region", new HashSet<>(1));
-
         for(String region : sharedPreferences.getStringSet("filter_region", new HashSet<>()))
             tiRegion.addObject(gson.fromJson(region, Region.class));
 
