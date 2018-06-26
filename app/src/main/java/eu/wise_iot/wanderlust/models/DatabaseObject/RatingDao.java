@@ -10,8 +10,8 @@ import eu.wise_iot.wanderlust.controllers.DatabaseController;
 import eu.wise_iot.wanderlust.controllers.EventType;
 import eu.wise_iot.wanderlust.controllers.FragmentHandler;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating;
-import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.models.DatabaseModel.Rating_;
+import eu.wise_iot.wanderlust.models.DatabaseModel.TourRate;
 import eu.wise_iot.wanderlust.services.RatingService;
 import eu.wise_iot.wanderlust.services.ServiceGenerator;
 import io.objectbox.Box;
@@ -25,7 +25,7 @@ import retrofit2.Response;
  * RatingDao
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 public class RatingDao extends DatabaseObjectAbstract{
 

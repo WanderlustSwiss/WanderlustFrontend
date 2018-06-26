@@ -18,7 +18,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Equipment;
  * TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class EquipmentCompletionView extends TokenCompleteTextView<Equipment> {
 

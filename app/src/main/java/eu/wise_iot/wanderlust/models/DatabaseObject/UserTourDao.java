@@ -36,7 +36,7 @@ import retrofit2.Response;
  *
  * @author Rilind Gashi
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class UserTourDao extends DatabaseObjectAbstract {

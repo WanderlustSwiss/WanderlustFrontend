@@ -12,7 +12,7 @@ import io.objectbox.Property;
  * HistoryDao
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 public class HistoryDao {
     private static class Holder {

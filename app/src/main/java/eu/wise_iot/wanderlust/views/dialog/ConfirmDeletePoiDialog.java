@@ -24,7 +24,7 @@ import eu.wise_iot.wanderlust.views.ProfileFragment;
  * ConfirmDeletePoiDialog: Fragment takes a short String message and displays a abort and confirm button
  *
  * @author Fabian Schwander
- * @license MIT
+ * @license GPL-3.0
  */
 public class ConfirmDeletePoiDialog extends DialogFragment {
     private static final String MESSAGE = "message";

@@ -25,7 +25,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
  * Fragment which represents the UI of the profile of a user.
  *
  * @author Baris Demirci
- * @license MIT
+ * @license GPL-3.0
  */
 @RunWith(AndroidJUnit4.class)
 public class MapControllerTest2 {

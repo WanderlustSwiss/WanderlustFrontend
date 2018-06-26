@@ -7,7 +7,7 @@ import io.objectbox.annotation.Id;
  * Represents a User in the database
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 @Entity
 public class Rating extends AbstractModel {

@@ -20,7 +20,7 @@ import retrofit2.Response;
  * EquipmentDao
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 public class EquipmentDao extends DatabaseObjectAbstract {
     private static class Holder {

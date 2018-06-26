@@ -26,7 +26,7 @@ import eu.wise_iot.wanderlust.views.TourFragment;
  * Provides adapter for recycler view which is used by the comment list
  *
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdapter.ViewHolder> {
     private List<UserComment> comments  = Collections.emptyList();
@@ -165,7 +165,7 @@ public class TourCommentRVAdapter extends RecyclerView.Adapter<TourCommentRVAdap
     /**
      * stores and recycles views as they are scrolled off screen
      * @author Alexander Weinbeck
-     * @license MIT
+     * @license GPL-3.0
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView tvUpdatedAt, tvText, tvNickname;

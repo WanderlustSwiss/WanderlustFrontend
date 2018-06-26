@@ -47,7 +47,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  * PoiEditDialog:
  *
  * @author Fabian Schwander
- * @license MIT
+ * @license GPL-3.0
  */
 public class PoiEditDialog extends DialogFragment {
     private static final String TAG = "PoiEditDialog";

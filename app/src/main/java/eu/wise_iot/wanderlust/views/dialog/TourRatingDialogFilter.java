@@ -23,7 +23,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Tour;
  * TourRatingDialogFilter:
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class TourRatingDialogFilter extends DialogFragment {

@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  *
  * @author Tobias Rüegsegger
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class ServiceGenerator {

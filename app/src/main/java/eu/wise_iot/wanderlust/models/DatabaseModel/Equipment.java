@@ -11,7 +11,7 @@ import io.objectbox.annotation.Id;
  *
  * @author Rilind Gashi
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 @Entity
 public class Equipment extends AbstractModel implements Serializable {

@@ -9,7 +9,7 @@ import io.objectbox.annotation.Id;
  * Represents Region entity in the database
  *
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 @Entity
 public class Region extends AbstractModel implements Serializable {

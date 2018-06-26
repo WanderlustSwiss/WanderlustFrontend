@@ -46,7 +46,7 @@ import eu.wise_iot.wanderlust.views.controls.LoadingDialog;
  *
  * @author Fabian Schwander
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class TourOverviewFragment extends Fragment {
 

@@ -7,7 +7,7 @@ import io.objectbox.annotation.Id;
  * Represents TourKit entity in the database
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 @Entity
 public class TourKit extends AbstractModel {

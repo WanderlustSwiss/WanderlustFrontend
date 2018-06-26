@@ -97,7 +97,7 @@ import static eu.wise_iot.wanderlust.controllers.EventType.OK;
  * @author Rilind Gashi
  * @author Baris Demirci
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 public class TourFragment extends Fragment {
     private static final String TAG = "TourFragment";

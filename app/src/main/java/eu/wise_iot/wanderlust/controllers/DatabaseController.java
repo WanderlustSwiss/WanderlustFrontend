@@ -21,7 +21,7 @@ import io.objectbox.BoxStore;
  *
  * @author Tobias Rüegsegger
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 public final class DatabaseController {
     private static class Holder {

@@ -80,7 +80,7 @@ import static android.content.Context.POWER_SERVICE;
  *
  * @author Fabian Schwander
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class MapFragment extends Fragment {
     private static final String TAG = "MapFragment";

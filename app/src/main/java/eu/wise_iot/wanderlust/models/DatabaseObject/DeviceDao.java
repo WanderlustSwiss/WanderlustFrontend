@@ -13,7 +13,7 @@ import io.objectbox.Property;
  * DeviceDao
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class DeviceDao extends DatabaseObjectAbstract {

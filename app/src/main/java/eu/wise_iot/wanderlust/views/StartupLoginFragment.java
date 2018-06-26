@@ -42,7 +42,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  * Handles front end inputs of the user for login
  *
  * @author Joshua Meier
- * @license MIT
+ * @license GPL-3.0
  */
 public class StartupLoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "StartupLoginFragment";
@@ -312,7 +312,7 @@ public class StartupLoginFragment extends Fragment implements GoogleApiClient.On
      * this will keep the UI responsive
      *
      * @author Alexander Weinbeck
-     * @license MIT
+     * @license GPL-3.0
      */
 //    private class AsyncLoginOnClick extends AsyncTask<Void, Void, Void> {
 //        private final LoginUser user;

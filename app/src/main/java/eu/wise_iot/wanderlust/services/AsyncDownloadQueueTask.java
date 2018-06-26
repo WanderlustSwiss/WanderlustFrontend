@@ -16,7 +16,7 @@ import eu.wise_iot.wanderlust.BuildConfig;
  * for example downloads
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class AsyncDownloadQueueTask {
     private static final String TAG = "AsyncUITask";

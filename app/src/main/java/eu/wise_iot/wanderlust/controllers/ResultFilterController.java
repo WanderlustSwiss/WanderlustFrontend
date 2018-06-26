@@ -17,7 +17,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.UserTourDao;
  * Handles the tour-fragment and its in and output
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class ResultFilterController {
 

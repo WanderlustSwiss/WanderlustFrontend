@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Provides helper classes for encoding poly lines
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 public class PolyLineEncoder {
     private static StringBuffer encodeSignedNumber(int num) {

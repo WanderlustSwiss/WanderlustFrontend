@@ -33,7 +33,7 @@ import retrofit2.Response;
  * @author Alexander Weinbeck
  * @author Tobias Rüegsegger
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 public class PoiDao extends DatabaseObjectAbstract {
 

@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Handles an offline queue used for TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class OfflineQueueController {
 
@@ -70,7 +70,7 @@ public class OfflineQueueController {
      * Handles network changes
      *
      * @author TODO ??
-     * @license MIT
+     * @license GPL-3.0
      */
     public static class NetworkChangeReceiver extends BroadcastReceiver {
 
@@ -98,7 +98,7 @@ public class OfflineQueueController {
      * Helper class for network
      *
      * @author TODO ??
-     * @license MIT
+     * @license GPL-3.0
      */
     private static class NetworkUtil {
 

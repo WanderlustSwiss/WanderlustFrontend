@@ -19,7 +19,7 @@ import retrofit2.Response;
  * The asynchronous task for receiving all images from a specific poi
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class GetImagesTask extends AsyncTask<ImagesTaskParameters, Void, List<File>> {
 

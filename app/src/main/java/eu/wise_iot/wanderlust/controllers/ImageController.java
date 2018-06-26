@@ -39,7 +39,7 @@ import okhttp3.Request;
  * Handles logic related to Images
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class ImageController {
     private static final String TAG = "ImageController";

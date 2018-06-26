@@ -21,7 +21,7 @@ import eu.wise_iot.wanderlust.services.GlideApp;
  * Adapter for the tour saved UI. Represents all saved tours in a custom recycler view
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAdapter.ViewHolder> {
 
@@ -89,7 +89,7 @@ public class ProfileSavedRVAdapter extends RecyclerView.Adapter<ProfileSavedRVAd
     /**
      * stores and recycles views as they are scrolled off screen
      * @author Alexander Weinbeck
-     * @license MIT
+     * @license GPL-3.0
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

@@ -65,7 +65,7 @@ import static eu.wise_iot.wanderlust.controllers.EventType.OK;
  * @author Alexander Weinbeck
  * @author Rilind Gashi
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 public class TourController {
 
@@ -549,7 +549,7 @@ public class TourController {
      * structure needs to be kept like this for retrofit
      *
      * @author Alexander Weinbeck
-     * @license MIT
+     * @license GPL-3.0
      */
     public class Violation{
         int tour_id;

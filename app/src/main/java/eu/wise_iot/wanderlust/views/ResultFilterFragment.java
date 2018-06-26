@@ -30,7 +30,7 @@ import eu.wise_iot.wanderlust.views.adapters.ResultFilterRVAdapter;
  * Contains the filtering functionality for all tours
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class ResultFilterFragment extends Fragment {
     private static final String TAG = "ResultFilterFragment";

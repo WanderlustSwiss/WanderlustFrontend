@@ -66,7 +66,7 @@ import io.objectbox.BoxStore;
  *
  * @author Fabian Schwander
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileEditFragment.ProfileEdited, TourFragment.EditedTour {
     private static final String TAG = "MainActivity";
@@ -488,7 +488,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //     * this will keep the UI responsive
 //     *
 //     * @author Alexander Weinbeck
-//     * @license MIT
+//     * @license GPL-3.0
 //     */
 //    private class AsyncLoginOnLoad extends AsyncTask<Void, Void, ControllerEvent> {
 //        private final LoginUser loginUser;

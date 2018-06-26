@@ -6,7 +6,7 @@ import android.location.Location;
  * CommunityTours: DEPRECATED
  *
  * @author Fabian Schwander
- * @license MIT
+ * @license GPL-3.0
  */
 @Deprecated
 public class Tour {

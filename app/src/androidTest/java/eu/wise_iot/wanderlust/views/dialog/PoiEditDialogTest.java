@@ -25,7 +25,7 @@
 //
 ///**
 // * @author Fabian Schwander
-// * @license MIT
+// * @license GPL-3.0
 // */
 //@RunWith(AndroidJUnit4.class)
 //public class PoiEditDialogTest {

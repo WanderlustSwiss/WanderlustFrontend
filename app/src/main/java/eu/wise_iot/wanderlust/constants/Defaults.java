@@ -6,7 +6,7 @@ import org.osmdroid.util.GeoPoint;
  * Defaults:
  *
  * @author Fabian Schwander
- * @license MIT
+ * @license GPL-3.0
  */
 public interface Defaults {
 

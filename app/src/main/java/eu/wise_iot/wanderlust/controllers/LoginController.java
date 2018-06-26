@@ -40,7 +40,7 @@ import retrofit2.Response;
  * Handles all logic involved with login process and its fragment
  *
  * @author Joshua Meier
- * @license MIT
+ * @license GPL-3.0
  */
 public class LoginController {
 

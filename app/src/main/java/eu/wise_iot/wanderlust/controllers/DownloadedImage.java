@@ -6,7 +6,7 @@ import java.io.File;
  * Represents a downloaded Image
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class DownloadedImage {
     private final File image;

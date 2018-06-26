@@ -39,7 +39,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  * Contains the filtering functionality for all tours
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class FilterFragment extends Fragment {
 

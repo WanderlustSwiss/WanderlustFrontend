@@ -6,7 +6,7 @@ package eu.wise_iot.wanderlust.controllers;
  *
  * @author Tobias Rüegsegger
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class ControllerEvent<T> {
 

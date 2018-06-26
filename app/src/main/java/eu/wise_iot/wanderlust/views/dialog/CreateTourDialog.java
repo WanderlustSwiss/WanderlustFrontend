@@ -62,7 +62,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  * CreateTour: TODO description
  *
  * @author Joshua Meier
- * @license MIT
+ * @license GPL-3.0
  */
 public class CreateTourDialog extends DialogFragment {
     private static final String TAG = "CreateTourDialog";

@@ -13,7 +13,7 @@ import okhttp3.Response;
  * AddCookiesInterceptor adds the cookie to each request
  *
  * @author Tobias Rüegsegger
- * @license MIT
+ * @license GPL-3.0
  */
 public class AddCookiesInterceptor implements Interceptor {
 

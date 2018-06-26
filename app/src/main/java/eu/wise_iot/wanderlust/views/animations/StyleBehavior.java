@@ -9,7 +9,7 @@ import android.view.View;
  *
  * @author Fabian Schwander
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class StyleBehavior {
     public static void buttonEffectOnTouched(final View button) {

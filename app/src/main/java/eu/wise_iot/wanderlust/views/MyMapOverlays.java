@@ -51,7 +51,7 @@ import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
  * @author Fabian Schwander
  * @author Alexander Weinbeck
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 public class MyMapOverlays implements Serializable, DatabaseListener {
     private static final String TAG = "MyMapOverlays";

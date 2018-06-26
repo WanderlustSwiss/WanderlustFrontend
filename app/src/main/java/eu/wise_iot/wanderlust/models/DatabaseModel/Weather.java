@@ -4,7 +4,7 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
  * Represents Weather
  *
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 public class Weather {
 

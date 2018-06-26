@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Gashi Rilind
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 public class TourRate {
 

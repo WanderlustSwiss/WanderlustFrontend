@@ -20,7 +20,7 @@ import io.objectbox.converter.PropertyConverter;
  *
  * @author Rilind Gashi
  * @author Tobias Rüegsegger
- * @license MIT
+ * @license GPL-3.0
  */
 
 @Entity

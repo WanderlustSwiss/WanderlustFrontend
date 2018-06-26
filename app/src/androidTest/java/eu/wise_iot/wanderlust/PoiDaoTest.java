@@ -55,7 +55,7 @@
 ///**
 // * Poi Dao testclass
 // * @author Rilind Gashi, Alexander Weinbeck
-// * @license MIT
+// * @license GPL-3.0
 // */
 //public class PoiDaoTest {
 //

@@ -20,7 +20,7 @@ import okhttp3.Request;
  * Glide Module which provides overridden functions to enhance glide usage
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 @GlideModule
 public class GlideService extends AppGlideModule {

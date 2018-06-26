@@ -28,7 +28,7 @@ import retrofit2.Response;
  * @author Rilind Gashi
  * @author Alexander Weinbeck
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 public class CommunityTourDao extends DatabaseObjectAbstract {
     private static class Holder {

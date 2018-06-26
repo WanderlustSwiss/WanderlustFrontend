@@ -24,7 +24,7 @@ import eu.wise_iot.wanderlust.views.WanderlustMapView;
  *
  * @author Baris Demirci
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class MapCacheHandler {
     private static final String TAG = "MapCacheHandler";

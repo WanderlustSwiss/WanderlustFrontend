@@ -36,7 +36,7 @@ import retrofit2.Response;
  * and all the lists of the user
  *
  * @author Baris Demirci
- * @license MIT
+ * @license GPL-3.0
  */
 public class ProfileController {
 

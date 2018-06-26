@@ -38,7 +38,7 @@ import eu.wise_iot.wanderlust.services.ServiceGenerator;
  * PoiViewDialog:
  *
  * @author Fabian Schwander
- * @license MIT
+ * @license GPL-3.0
  */
 public class PoiViewDialog extends DialogFragment {
     private static final String TAG = "PoiViewDialog";

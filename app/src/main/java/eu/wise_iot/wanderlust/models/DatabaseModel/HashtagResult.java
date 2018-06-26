@@ -4,7 +4,7 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
  * HashtagResult with Tag and Hash ID
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class HashtagResult {
 

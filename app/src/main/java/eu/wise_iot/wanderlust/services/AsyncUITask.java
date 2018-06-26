@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadFactory;
  * heavy load tasks on the UI if needed
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class AsyncUITask {
     private static final String TAG = "AsyncUITask";

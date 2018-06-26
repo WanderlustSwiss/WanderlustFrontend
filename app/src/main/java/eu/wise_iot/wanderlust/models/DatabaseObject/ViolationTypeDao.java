@@ -18,7 +18,7 @@ import retrofit2.Response;
  * ViolationTypeDao provides access to its model ViolationType
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class ViolationTypeDao extends DatabaseObjectAbstract{

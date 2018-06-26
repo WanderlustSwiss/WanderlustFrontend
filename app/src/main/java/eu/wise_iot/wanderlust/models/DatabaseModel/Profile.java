@@ -14,7 +14,7 @@ import io.objectbox.converter.PropertyConverter;
  * Represents a Profile entity
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 @Entity
 public class Profile extends AbstractModel {

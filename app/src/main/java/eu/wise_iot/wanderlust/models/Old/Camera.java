@@ -22,7 +22,7 @@ import eu.wise_iot.wanderlust.views.MapFragment;
  * Camera related actions
  *
  * @author Fabian Schwander
- * @license MIT
+ * @license GPL-3.0
  */
 public class Camera {
     private static final String TAG = "Camera";

@@ -10,7 +10,7 @@ import eu.wise_iot.wanderlust.R;
  * Helper class for showing and hiding a loading dialog
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class LoadingDialog {
     private Dialog dialog;

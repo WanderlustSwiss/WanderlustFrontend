@@ -30,7 +30,7 @@ import eu.wise_iot.wanderlust.views.MainActivity;
  * A background service which is collecting geoPoints for creating a tour
  *
  * @author Joshua Meier
- * @license MIT
+ * @license GPL-3.0
  */
 public class CreateTourBackgroundTask extends Service {
     private static final String TAG = "CreateTourContoller";

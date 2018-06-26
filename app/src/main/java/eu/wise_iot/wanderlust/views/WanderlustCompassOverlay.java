@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Provides the wanderlust compass overlay
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 class WanderlustCompassOverlay extends CompassOverlay {
 

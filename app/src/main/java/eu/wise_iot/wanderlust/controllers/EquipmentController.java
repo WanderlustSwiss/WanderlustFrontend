@@ -26,7 +26,7 @@ import retrofit2.Response;
  * Represents logic handler for equipment related operations
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class EquipmentController {
     private final EquipmentService service;

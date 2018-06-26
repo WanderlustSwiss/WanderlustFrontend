@@ -47,7 +47,7 @@ import eu.wise_iot.wanderlust.services.ServiceGenerator;
  * Web-login Fragment which handles front end inputs of the user for login
  *
  * @author Simon Kaspar
- * @license MIT
+ * @license GPL-3.0
  */
 public class WebLoginFragment extends Fragment  {
     public enum LoginProvider {

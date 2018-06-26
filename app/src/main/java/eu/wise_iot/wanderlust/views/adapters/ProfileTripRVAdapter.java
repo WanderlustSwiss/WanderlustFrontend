@@ -21,7 +21,7 @@ import eu.wise_iot.wanderlust.services.GlideApp;
  * Adapter for the Trip UI. Represents all trips in a custom list view
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdapter.ViewHolder> {
 
@@ -85,7 +85,7 @@ public class ProfileTripRVAdapter extends RecyclerView.Adapter<ProfileTripRVAdap
     /**
      * stores and recycles views as they are scrolled off screen
      * @author Alexander Weinbeck
-     * @license MIT
+     * @license GPL-3.0
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

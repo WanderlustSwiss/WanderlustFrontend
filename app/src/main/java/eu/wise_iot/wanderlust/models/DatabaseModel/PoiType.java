@@ -7,7 +7,7 @@ import io.objectbox.annotation.Id;
  * Represents a Poi Type in the database
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 @Entity
 public class PoiType extends AbstractModel {

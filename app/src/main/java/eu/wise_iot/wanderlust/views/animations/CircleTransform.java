@@ -12,7 +12,7 @@ import com.squareup.picasso.Transformation;
  * TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 //TODO useful anymore?
 @Deprecated

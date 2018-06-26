@@ -26,7 +26,7 @@ import retrofit2.Response;
  *
  * @author Rilind Gashi
  * @author Simon Kaspar
- * @license MIT license
+ * @license GPL-3.0 license
  */
 
 public class UserDao extends DatabaseObjectAbstract {

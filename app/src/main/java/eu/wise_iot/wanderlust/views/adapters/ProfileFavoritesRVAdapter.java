@@ -21,7 +21,7 @@ import eu.wise_iot.wanderlust.services.GlideApp;
  * Adapter for the profile UI. Represents all favorites in a custom recycler view
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavoritesRVAdapter.ViewHolder> {
 
@@ -90,7 +90,7 @@ public class ProfileFavoritesRVAdapter extends RecyclerView.Adapter<ProfileFavor
     /**
      * stores and recycles views as they are scrolled off screen
      * @author Alexander Weinbeck
-     * @license MIT
+     * @license GPL-3.0
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

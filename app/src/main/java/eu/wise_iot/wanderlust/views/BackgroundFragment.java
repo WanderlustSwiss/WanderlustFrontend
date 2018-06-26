@@ -13,7 +13,7 @@ import eu.wise_iot.wanderlust.R;
  * Serves as placeholder until map is loaded
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class BackgroundFragment extends Fragment {
 

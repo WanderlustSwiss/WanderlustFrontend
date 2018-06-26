@@ -11,7 +11,7 @@ import android.view.MotionEvent;
  * Detects gestures for the map
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 class RotationGestureDetector {
     private static final int INVALID_POINTER_ID = -1;

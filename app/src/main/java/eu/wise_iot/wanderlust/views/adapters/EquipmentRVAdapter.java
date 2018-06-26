@@ -23,7 +23,7 @@ import eu.wise_iot.wanderlust.services.GlideApp;
  * Provides adapter for recycler view which is used to show equipment needed on an equipment
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.ViewHolder> {
 
@@ -118,7 +118,7 @@ public class EquipmentRVAdapter extends RecyclerView.Adapter<EquipmentRVAdapter.
     /**
      * stores and recycles views as they are scrolled off screen
      * @author Alexander Weinbeck
-     * @license MIT
+     * @license GPL-3.0
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //properties list for each equipment part

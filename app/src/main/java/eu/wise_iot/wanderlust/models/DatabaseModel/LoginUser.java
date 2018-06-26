@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class LoginUser {
 

@@ -19,7 +19,7 @@ import eu.wise_iot.wanderlust.controllers.WeatherController;
  * Get the Weather asynchronous TODO
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class GetWeatherTask extends AsyncTask<List<GeoPoint>, Void, List<Weather>> {
 

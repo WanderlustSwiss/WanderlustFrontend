@@ -11,7 +11,7 @@ import io.objectbox.annotation.Id;
  *
  * @author Alexander Weinbeck
  * @author Tobias Ruegsegger
- * @license MIT
+ * @license GPL-3.0
  */
 @Entity
 public class Trip extends AbstractModel {

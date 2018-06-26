@@ -20,7 +20,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.RegionDao;
  * see TokenCompleteTextView for reference inside the filter
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class RegionsCompletionView extends TokenCompleteTextView<Region> {
     public RegionsCompletionView(Context context, AttributeSet attrs) {

@@ -7,7 +7,7 @@ import io.objectbox.annotation.Id;
  * Represents Favorite entity in database
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 @Entity
 public class Favorite extends AbstractModel{

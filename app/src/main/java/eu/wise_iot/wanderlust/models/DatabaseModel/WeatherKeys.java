@@ -4,7 +4,7 @@ package eu.wise_iot.wanderlust.models.DatabaseModel;
  * TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class WeatherKeys {
     private int key;

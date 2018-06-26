@@ -33,7 +33,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  * Handles front end inputs of the user
  *
  * @author Joshua Meier
- * @license MIT
+ * @license GPL-3.0
  */
 public class StartupRegistrationFragment extends Fragment {
 
@@ -257,7 +257,7 @@ public class StartupRegistrationFragment extends Fragment {
 //     * this will keep the UI responsive
 //     *
 //     * @author Alexander Weinbeck
-//     * @license MIT
+//     * @license GPL-3.0
 //     */
 //    private class AsyncRegistration extends AsyncTask<Void, Void, Void> {
 //        private final User user;

@@ -20,7 +20,7 @@ import eu.wise_iot.wanderlust.R;
  * Serves as disclaimer for the whole application
  *
  * @author Fabian Schwander
- * @license MIT
+ * @license GPL-3.0
  */
 public class DisclaimerFragment extends Fragment {
 

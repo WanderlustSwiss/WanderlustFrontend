@@ -8,7 +8,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.TourKitDao;
  * TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class TourKitController {
     private final TourKitDao tourKitDao;

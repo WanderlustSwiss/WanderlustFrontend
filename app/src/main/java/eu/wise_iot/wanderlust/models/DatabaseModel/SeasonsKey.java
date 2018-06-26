@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
  * TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class SeasonsKey {
 

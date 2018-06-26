@@ -21,7 +21,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
  *
  * @author Rilind Gashi
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class TourReportDialog extends DialogFragment {
 

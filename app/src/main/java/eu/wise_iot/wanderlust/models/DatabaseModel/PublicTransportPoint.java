@@ -6,7 +6,7 @@ import org.osmdroid.util.GeoPoint;
  * PublicTransportPoint with Coordinates and and description
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class PublicTransportPoint {
     private GeoPoint geoPoint;

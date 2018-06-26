@@ -31,7 +31,7 @@ import retrofit2.Response;
  * frontend & backend database
  *
  * @author Tobias Rüegsegger
- * @license MIT
+ * @license GPL-3.0
  */
 public class PoiController {
 
@@ -215,7 +215,7 @@ public class PoiController {
      * structure needs to be kept like this for retrofit
      *
      * @author Alexander Weinbeck
-     * @license MIT
+     * @license GPL-3.0
      */
     public class Violation{
         int poi_id;

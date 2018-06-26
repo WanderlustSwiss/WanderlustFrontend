@@ -22,7 +22,7 @@ import eu.wise_iot.wanderlust.services.GlideApp;
  * Shows dialog for showing equipment
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class EquipmentDialog extends DialogFragment{
 

@@ -18,7 +18,7 @@ import io.objectbox.converter.PropertyConverter;
  * Represents a CommunityTour in the database
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 @Entity
 public class Tour extends AbstractModel {

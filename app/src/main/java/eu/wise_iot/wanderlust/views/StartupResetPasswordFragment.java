@@ -33,7 +33,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  * Represents the Reset Password section
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class StartupResetPasswordFragment extends Fragment {
 
@@ -183,7 +183,7 @@ public class StartupResetPasswordFragment extends Fragment {
 //     * this will keep the UI responsive
 //     *
 //     * @author Alexander Weinbeck
-//     * @license MIT
+//     * @license GPL-3.0
 //     */
 //    private class AsyncResetPassword extends AsyncTask<Void, Void, Void> {
 //        private final String email;

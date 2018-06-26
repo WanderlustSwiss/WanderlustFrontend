@@ -10,7 +10,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.Poi;
  * Poi command class for adding POIs
  *
  * @author TODO ?
- * @license MIT
+ * @license GPL-3.0
  */
 public class AddPoiCommand implements QueueCommand {
 

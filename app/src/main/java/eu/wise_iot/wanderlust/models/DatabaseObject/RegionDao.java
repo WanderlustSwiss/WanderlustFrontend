@@ -17,7 +17,7 @@ import retrofit2.Response;
  * TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class RegionDao extends DatabaseObjectAbstract {
 

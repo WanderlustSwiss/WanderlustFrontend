@@ -11,7 +11,7 @@ import okhttp3.Response;
  * ReceivedCookiesInterceptor saves the cookie from backend
  *
  * @author Tobias Rüegsegger
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class ReceivedCookiesInterceptor implements Interceptor {

@@ -31,7 +31,7 @@ import eu.wise_iot.wanderlust.views.UserGuideFragment;
  * for correct usage also set a new fragment in the activity under all fragments
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class FragmentService extends Application {
     private static final String TAG = "FragmentService";

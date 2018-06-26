@@ -16,7 +16,7 @@ import retrofit2.Response;
  * TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class DifficultyTypeDao extends DatabaseObjectAbstract {
 

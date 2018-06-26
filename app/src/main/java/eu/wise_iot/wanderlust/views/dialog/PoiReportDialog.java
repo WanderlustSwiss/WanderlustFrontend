@@ -19,7 +19,7 @@ import eu.wise_iot.wanderlust.models.DatabaseObject.ViolationTypeDao;
  * TourReportDialog:
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class PoiReportDialog extends DialogFragment {

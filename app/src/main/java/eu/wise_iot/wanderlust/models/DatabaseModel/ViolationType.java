@@ -7,7 +7,7 @@ import io.objectbox.annotation.Id;
  * represents the ViolationType and contains reference to given Violation
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 
 @Entity

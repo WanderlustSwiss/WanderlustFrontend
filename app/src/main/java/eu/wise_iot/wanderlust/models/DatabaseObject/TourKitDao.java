@@ -19,7 +19,7 @@ import retrofit2.Callback;
  * TourKitDao
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 public class TourKitDao extends DatabaseObjectAbstract {
 

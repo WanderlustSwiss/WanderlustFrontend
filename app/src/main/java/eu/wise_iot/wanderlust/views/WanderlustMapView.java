@@ -24,7 +24,7 @@ import eu.wise_iot.wanderlust.controllers.MotionEventListener;
  * Map-view that is shown to the user
  *
  * @author TODO ?
- * @license MIT
+ * @license GPL-3.0
  */
 public class WanderlustMapView extends MapView implements RotationGestureDetector.OnRotationGestureListener {
 

@@ -16,7 +16,7 @@ import io.objectbox.Property;
  * Provides all calls on recent tour model
  *
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class RecentTourDao extends DatabaseObjectAbstract {

@@ -9,7 +9,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.AbstractModel;
  * DatabaseObjectAbstract
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class DatabaseObjectAbstract implements DatabaseObject {

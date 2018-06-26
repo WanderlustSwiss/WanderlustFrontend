@@ -30,7 +30,7 @@
 ///**
 // * Testing for DifficultyType DAO
 // * @author Alexander Weinbeck
-// * @license MIT
+// * @license GPL-3.0
 // */
 //
 //public class DifficultTypeDaoTest {

@@ -3,7 +3,7 @@ package eu.wise_iot.wanderlust.controllers;
 /**
  * EventType which represents the Request Message
  * @author Tobias Rüegsegger, Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public enum EventType {
 

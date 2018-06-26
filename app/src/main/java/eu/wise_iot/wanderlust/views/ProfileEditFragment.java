@@ -56,7 +56,7 @@ import static eu.wise_iot.wanderlust.controllers.EventType.OK;
  * Represents section to edit the profile
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class ProfileEditFragment extends Fragment {
     private static final String TAG = "ProfileEditFragment";

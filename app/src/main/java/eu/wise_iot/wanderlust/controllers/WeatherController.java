@@ -24,7 +24,7 @@ import retrofit2.Response;
  * Handles Weather IO
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class WeatherController {
 

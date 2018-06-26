@@ -27,7 +27,7 @@ import retrofit2.Response;
  * ProfileDao
  *
  * @author Rilind Gashi
- * @license MIT
+ * @license GPL-3.0
  */
 
 public class ProfileDao extends DatabaseObjectAbstract {

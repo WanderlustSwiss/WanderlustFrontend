@@ -22,7 +22,7 @@ import eu.wise_iot.wanderlust.constants.Constants;
  * Fragment that contains a manual / user guide. Explains the most important features of the app.
  *
  * @author Fabian Schwander
- * @license MIT
+ * @license GPL-3.0
  */
 public class UserGuideFragment extends Fragment {
 

@@ -54,7 +54,7 @@ import eu.wise_iot.wanderlust.views.dialog.PoiViewDialog;
  *
  * @author Baris Demirci
  * @author Alexander Weinbeck
- * @license MIT
+ * @license GPL-3.0
  */
 public class ProfileFragment extends Fragment {
 
@@ -467,7 +467,7 @@ public class ProfileFragment extends Fragment {
      * this will keep the UI responsive
      *
      * @author Alexander Weinbeck
-     * @license MIT
+     * @license GPL-3.0
      */
     private class AsyncCheckTourExists extends AsyncTask<Void, Void, Void> {
         private final Tour tour;

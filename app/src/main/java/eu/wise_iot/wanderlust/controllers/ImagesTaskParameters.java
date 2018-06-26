@@ -8,7 +8,7 @@ import eu.wise_iot.wanderlust.models.DatabaseModel.ImageInfo;
  * Represents Tasks related to images TODO ??
  *
  * @author TODO ??
- * @license MIT
+ * @license GPL-3.0
  */
 public class ImagesTaskParameters {
     final long id;

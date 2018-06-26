@@ -4,7 +4,7 @@ package eu.wise_iot.wanderlust.controllers;
  * ControllerEvent has information of a made request
  *
  * @author Tobias Rüegsegger
- * @license MIT
+ * @license GPL-3.0
  */
 public class DatabaseEvent<T> {
 
