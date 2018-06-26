@@ -212,6 +212,7 @@
 
 
     <string name="share_title_tour">Teilen</string>
+    <string name="rating_dialog_description">Deine Tourbewertung:</string>
     <string name="poi_mode_is_private">Dieser POI ist privat und nur für dich sichtbar</string>
 
     <string name="tour_comment_before">vor</string>

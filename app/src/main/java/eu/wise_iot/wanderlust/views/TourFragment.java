@@ -425,9 +425,6 @@ public class TourFragment extends Fragment {
             tourSavedButton.setColorFilter(ContextCompat.getColor(context, R.color.white));
         }
 
-        // TODO: add tour region here
-//        tourRegion.setText("Region <Namen>");
-
         tourTitle.setText(tourController.getTitle());
 
         tourController.getTourRating(controllerEvent -> {
