@@ -266,16 +266,16 @@
     <string name="already_rated">Du hast die Tour bereits bewerted</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="manual_welcome">Willkommen bei Wanderlust! Hier eine kurze Anleitung über die Funktionen, die dich erwarten.</string>
+    <string name="manual_welcome">Handbuch</string>
     <string name="manual_header">Wanderlust-Anleitung</string>
     <string name="manual_finish_text1">Jetzt weisst du alles, was es über die Wanderlust-App zu wissen gibt.</string>
-    <string name="manual_finish_text2">Klicke auf <b>los geht\'s</b> um das Abenteuer zu starten!</string>
+    <string name="manual_finish_text2">Das Wanderlust-Team wünscht dir viel Vergnügen bei deiner Wanderung!</string>
     <string name="manual_poi_header">POI (Point of Interest)</string>
     <string name="manual_poi_text">Mit dem POI-Button kannst du eindrückliche Orte fotografieren und den POI entweder nur privat für dich speichern oder ihn mit der Community teilen.</string>
     <string name="manual_header_search">Suche</string>
     <string name="manual_search_text">Die Suche ermöglicht dir nach Orten, Regionen oder Wanderwegen zu suchen.</string>
-    <string name="manual_filter_header">Toursuche filtern</string>
-    <string name="manual_filter_text">Filtere deine Suchresultate nach Eigenschaften wie Distanz, Schwierigkeit, Region und vielem mehr.</string>
+    <string name="manual_filter_header">Touren filtern</string>
+    <string name="manual_filter_text">Filtere die Touren im Tourendashboard nach Eigenschaften wie Distanz, Schwierigkeit, Region und vielem mehr.</string>
     <string name="manual_profile_header">Profil</string>
     <string name="manual_profile_text">In deinem Profil kannst du deine persönlichen Daten sowie deine Favoriten, deine erstellten Touren, deine POIs und deine gesichterten Routen verwalten.</string>
     <string name="manual_dashboard_header">Tourendashboard</string>
@@ -330,4 +330,9 @@
     <string name="msg_accept_disclaimer">Die Haftungsbedingungen müssen akzeptiert sein.</string>
     <string name="user_guide_accept_disclaimer">Ich bin mir bewusst, dass Wandern immer ein Restrisiko birgt. Die Haftungsbedingungen von Wanderlust habe ich gelesen und akzeptiert.</string>
     <string name="read_disclaimer_link">Haftungsbedingungen lesen</string>
+    <string name="manual_weather_header">Wetter</string>
+    <string name="manual_weather_text">Wähle deinen Wandertag aus und du siehst die Entwicklung des Wetters für die komplette Zeit deiner Wanderung. Auch wenn das Wetter am Morgen also schön ist siehst du es, wenn es am Mittag oben auf der Bergspitze kühl wird. Ein Regenschauer kommt wenn du am Tagesende auf das Postauto wartest? Du weisst es. ;)</string>
+    <string name="manual_tracking_header">Tour tracken</string>
+    <string name="manual_tracking_text">Mit dieser Funktion kannst du deine aktuelle Wandertour aufnehmen, sie abspeichern und sie mit einer Beschreibung anderen Wanderinnen und Wandern zur Verfügung stellen.</string>
+    <string name="manual_welcome_explanation">Eine kurze Anleitung für die tollen Funktionen der WanderlustApp.</string>
 </resources>
